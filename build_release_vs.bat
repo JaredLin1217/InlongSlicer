@@ -5,8 +5,10 @@ set _START_TIME=%TIME%
 
 @REM Check for Ninja Multi-Config option (-x)
 set USE_NINJA=0
+set FAST_BUILD=0
 for %%a in (%*) do (
     if "%%a"=="-x" set USE_NINJA=1
+    if "%%a"=="fast" set FAST_BUILD=1
 )
 
 if "%USE_NINJA%"=="1" (
@@ -107,6 +109,9 @@ if defined ORCA_UPDATER_SIG_KEY set "SIG_FLAG=-DORCA_UPDATER_SIG_KEY=%ORCA_UPDAT
 if "%1"=="slicer" (
     GOTO :slicer
 )
+if "%FAST_BUILD%"=="1" (
+    GOTO :slicer
+)
 echo "building deps.."
 
 echo on
@@ -139,6 +144,11 @@ if "%USE_NINJA%"=="1" (
     cmake --build . --config %build_type% --target ALL_BUILD -- -m
 )
 @echo off
+if "%FAST_BUILD%"=="1" (
+    echo Fast build completed. Skipping gettext and install.
+    echo Output directory: %WP%\%build_dir%\src\%build_type%
+    goto :done
+)
 cd ..
 call scripts/run_gettext.bat
 cd %build_dir%
