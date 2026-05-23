@@ -1,57 +1,67 @@
-# CLAUDE.md
+# AGENTS.md
 
-OrcaSlicer — open-source C++17 3D slicer. wxWidgets GUI, CMake build system.
+InlongSlicer is forked from OrcaSlicer 2.4.x. Treat `inlong/orca-2.4-base` as the clean upstream base for comparison, rebase analysis, and separating Inlong-specific changes from upstream OrcaSlicer behavior.
 
-## Build Commands
+## Use Existing Documentation First
 
-```bash
-# macOS
-cmake --build build/arm64 --config RelWithDebInfo --target all --
+Do not duplicate OrcaSlicer documentation here. Before modifying code, inspect the relevant existing files:
 
-# Linux
-cmake --build build --config RelWithDebInfo --target all --
+- Project overview and install notes: `README.md`
+- Current agent/developer guidance: `CLAUDE.md`
+- Build system and packaging rules: `CMakeLists.txt`, `src/CMakeLists.txt`
+- Windows build scripts: `build_release_vs.bat`, `build_release_vs2022.bat`, `build_release.bat`
+- Linux/macOS build scripts: `build_linux.sh`, `build_release_macos.sh`
+- Flatpak/package scripts: `build_flatpak.sh`, `scripts/flatpak/`
+- CI build/package workflows: `.github/workflows/build_*.yml`
+- Profile validation: `.github/workflows/check_profiles.yml`, `scripts/orca_extra_profile_check.py`, `scripts/orca_filament_lib.py`
+- Translation/i18n: `scripts/run_gettext.sh`, `scripts/run_gettext.bat`, `localization/i18n/`, `resources/i18n/`
+- Tests: `tests/CLAUDE.md`, `tests/`, `scripts/run_unit_tests.sh`
 
-# Windows (replace %build_type% with Debug/Release/RelWithDebInfo)
-cmake --build . --config %build_type% --target ALL_BUILD -- -m
-```
+## Safe Working Rules For Codex
 
-## Testing
+- Read the relevant docs, scripts, CMake files, and nearby source before editing.
+- Keep changes small, focused, and reviewable.
+- Prefer existing OrcaSlicer/InlongSlicer patterns over new abstractions.
+- Preserve cross-platform behavior on Windows, macOS, and Linux.
+- Preserve backward compatibility for printer profiles, project files, presets, and user configuration.
+- Treat profile changes as high risk; validate against the existing profile checks whenever possible.
+- Treat branding, installer IDs, bundle IDs, resource paths, and executable names as high risk.
+- Do not assume a README statement is current when scripts or CI disagree. Prefer live scripts/CMake/CI as the implementation source of truth.
+- When changing behavior, include verification notes: what was built, what tests ran, what profile/resource checks ran, or why verification was not possible.
 
-Catch2 framework. Tests in `tests/` directory.
+## Forbidden Without Explicit Approval
 
-```bash
-cd build && ctest --output-on-failure           # all tests
-ctest --test-dir ./tests/libslic3r              # individual suite
-ctest --test-dir ./tests/fff_print
-```
+Do not perform these actions unless the user explicitly asks for them:
 
-## Code Style
+- Broad renaming of OrcaSlicer to InlongSlicer across the repository.
+- Changing package IDs, bundle IDs, installer registry keys, executable names, or update identities.
+- Dependency upgrades, dependency removals, or toolchain changes.
+- Mass formatting, mass refactoring, or large mechanical rewrites.
+- Reorganizing profile directories or changing profile schema conventions.
+- Changing CI release/deploy destinations.
+- Removing compatibility code or migration behavior.
+- Reverting user changes or using destructive git commands.
+- Editing generated or vendored files unless the task specifically requires it.
 
-- C++17, selective C++20. PascalCase classes, snake_case functions/variables
-- `#pragma once` for headers. Smart pointers and RAII preferred
-- Parallelization via TBB — be mindful of shared state
+## Build And Test Expectations
 
-## Key Entry Points
+For code changes, document at least one targeted verification step. Prefer the narrowest useful check:
 
-- App startup: `src/OrcaSlicer.cpp`
-- Slicing pipeline: `src/libslic3r/Print.cpp`
-- All print/printer/material settings: `src/libslic3r/PrintConfig.cpp`
-- GUI: `src/slic3r/GUI/`
-- Core algorithms: `src/libslic3r/` (GCode/, Fill/, Support/, Geometry/, Format/, Arachne/)
-- Printer profiles: `resources/profiles/[manufacturer].json`
+- C++/GUI/build changes: run the relevant platform build target or explain why not.
+- Windows build changes: inspect or run the relevant `build_release_vs*.bat` path.
+- Profile changes: run `scripts/orca_extra_profile_check.py` and, when available, `OrcaSlicer_profile_validator`.
+- Translation changes: run the relevant gettext script.
+- Test changes: run the affected Catch2 suite or `scripts/run_unit_tests.sh`.
+- Packaging changes: inspect the matching CMake/CI/package script path and note the expected artifact impact.
 
-## Critical Constraints
+If verification cannot be run, state the blocker clearly.
 
-- **Backward compatibility required** for .3mf project files and printer profiles
-- **Cross-platform** — all changes must work on Windows, macOS, and Linux
-- Profile/format changes need version migration handling
-- Dependencies built separately in `deps/build/`, then linked to main app
+## Recommended First-Task Workflow
 
-## Code review focus areas
-
-- Changes must not cause regressions in existing functionality, defaults, profiles, or project compatibility.
-- Features gated by options must not affect existing behavior when those options are disabled.
-- Changes should follow the existing code style and architecture. Architectural changes should be justified in code comments and the PR description.
-- Add helper functions or utilities only when existing code cannot reasonably be reused. Avoid duplication.
-- Keep code concise and clear. Manually simplify AI generated bloated codes before review.
-- Include targeted tests or documented verification for behavior changes, especially in slicing logic, profiles, formats, and GUI defaults.
+1. Identify the task area: build, packaging, branding, profiles, translation, GUI, slicing logic, or tests.
+2. Read the relevant documentation and implementation files listed above.
+3. Compare against `inlong/orca-2.4-base` when the task involves fork-specific behavior or upstream divergence.
+4. Inspect nearby source and existing patterns before proposing edits.
+5. Make the smallest change that solves the request.
+6. Run targeted verification, or record why it was not run.
+7. Summarize the changed files, behavior impact, and verification result.
