@@ -3570,10 +3570,10 @@ msgid "Right AMS"
 msgstr ""
 
 msgid "Left Nozzle"
-msgstr ""
+msgstr "Main Nozzle"
 
 msgid "Right Nozzle"
-msgstr ""
+msgstr "Sub Nozzle"
 
 msgid "Nozzle"
 msgstr ""

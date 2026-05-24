@@ -25,6 +25,7 @@ BBLStatusBarBind::BBLStatusBarBind(wxWindow *parent, int id)
     m_self->SetMinSize(wxSize(m_self->FromDIP(450), m_self->FromDIP(30)));
 
     m_prog = new wxGauge(m_self, wxID_ANY, 100, wxDefaultPosition, wxSize(m_self->FromDIP(400), m_self->FromDIP(6)), wxGA_HORIZONTAL);
+    m_prog->SetForegroundColour(wxColour("#D66C47"));
     m_prog->SetValue(0);
 
     m_stext_percent = new wxStaticText(m_self, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0);

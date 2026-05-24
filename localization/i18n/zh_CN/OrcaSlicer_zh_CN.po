@@ -3622,10 +3622,10 @@ msgid "Right AMS"
 msgstr "右侧AMS"
 
 msgid "Left Nozzle"
-msgstr "左喷嘴"
+msgstr "主喷头"
 
 msgid "Right Nozzle"
-msgstr "右喷嘴"
+msgstr "副喷头"
 
 msgid "Nozzle"
 msgstr "喷嘴"

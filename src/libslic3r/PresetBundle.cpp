@@ -2663,13 +2663,19 @@ void PresetBundle::update_selections(AppConfig &config)
     if (!f_colors.empty()) {
         boost::algorithm::split(filament_colors, f_colors, boost::algorithm::is_any_of(","));
     }
-    filament_colors.resize(filament_presets.size(), "#26A69A");
+    for (std::string &color : filament_colors)
+        if (color == "#26A69A")
+            color = "#D66C47";
+    filament_colors.resize(filament_presets.size(), "#D66C47");
     project_config.option<ConfigOptionStrings>("filament_colour")->values = filament_colors;
 
     std::vector<std::string> multi_filament_colors;
     if (config.has_printer_setting(initial_printer_profile_name, "filament_multi_colors")) {
         boost::algorithm::split(multi_filament_colors, config.get_printer_setting(initial_printer_profile_name, "filament_multi_colors"), boost::algorithm::is_any_of(","));
     }
+    for (std::string &color : multi_filament_colors)
+        if (color == "#26A69A")
+            color = "#D66C47";
     if (multi_filament_colors.size() == 0) project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = filament_colors;
     else project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = multi_filament_colors;
 
@@ -2808,13 +2814,19 @@ void PresetBundle::load_selections(AppConfig &config, const PresetPreferences& p
     if (!f_colors.empty()) {
         boost::algorithm::split(filament_colors, f_colors, boost::algorithm::is_any_of(","));
     }
-    filament_colors.resize(filament_presets.size(), "#26A69A");
+    for (std::string &color : filament_colors)
+        if (color == "#26A69A")
+            color = "#D66C47";
+    filament_colors.resize(filament_presets.size(), "#D66C47");
     project_config.option<ConfigOptionStrings>("filament_colour")->values = filament_colors;
 
     std::vector<std::string> multi_filament_colors;
     if (config.has_printer_setting(initial_printer_profile_name, "filament_multi_colors")) {
         boost::algorithm::split(multi_filament_colors, config.get_printer_setting(initial_printer_profile_name, "filament_multi_colors"), boost::algorithm::is_any_of(","));
     }
+    for (std::string &color : multi_filament_colors)
+        if (color == "#26A69A")
+            color = "#D66C47";
     if (multi_filament_colors.size() == 0) project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = filament_colors;
     else project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = multi_filament_colors;
 

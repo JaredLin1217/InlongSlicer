@@ -31,6 +31,7 @@ BBLStatusBar::BBLStatusBar(wxWindow *parent, int id)
     , m_slice_info_sizer(new wxBoxSizer(wxHORIZONTAL))
     , m_object_info_sizer(new wxBoxSizer(wxHORIZONTAL))
 {
+    m_prog->SetForegroundColour(wxColour("#D66C47"));
     m_status_text = new wxStaticText(m_self, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
     m_status_text->SetForegroundColour(*wxBLACK);
 

@@ -71,7 +71,7 @@ BBLStatusBarPrint::BBLStatusBarPrint(wxWindow *parent, int id)
 
     m_sizer_status_text = new wxBoxSizer(wxHORIZONTAL);
     m_link_show_error = new Label(top_panel, _L("Check the reason"));
-    m_link_show_error->SetForegroundColour(wxColour("#009688"));
+    m_link_show_error->SetForegroundColour(wxColour("#D66C47"));
     m_link_show_error->SetFont(::Label::Head_13);
     m_link_show_error->Bind(wxEVT_ENTER_WINDOW, [this](auto &e) { this->m_self->SetCursor(wxCURSOR_HAND); });
     m_link_show_error->Bind(wxEVT_LEAVE_WINDOW, [this](auto &e) { this->m_self->SetCursor(wxCURSOR_ARROW); });
@@ -107,6 +107,7 @@ BBLStatusBarPrint::BBLStatusBarPrint(wxWindow *parent, int id)
 
 
     m_prog = new wxGauge(m_self, wxID_ANY, 100, wxDefaultPosition, wxSize(-1, m_self->FromDIP(6)), wxGA_HORIZONTAL);
+    m_prog->SetForegroundColour(wxColour("#D66C47"));
     m_prog->SetMinSize(wxSize(m_self->FromDIP(550), m_self->FromDIP(6)));
     m_prog->SetMaxSize(wxSize(m_self->FromDIP(550), m_self->FromDIP(6)));
     m_prog->SetValue(0);

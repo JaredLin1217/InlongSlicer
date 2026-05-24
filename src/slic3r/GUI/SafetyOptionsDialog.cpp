@@ -19,7 +19,7 @@ namespace Slic3r { namespace GUI {
 static StateColor btn_bg_green(std::pair<wxColour, int>(wxColour(194, 194, 194), StateColor::Disabled),
                                std::pair<wxColour, int>(wxColour(27, 136, 68), StateColor::Pressed),
                                std::pair<wxColour, int>(wxColour(61, 203, 115), StateColor::Hovered),
-                               std::pair<wxColour, int>(wxColour(0, 177, 66), StateColor::Normal));
+                               std::pair<wxColour, int>(wxColour(214, 108, 71), StateColor::Normal));
 
 SafetyOptionsDialog::SafetyOptionsDialog(wxWindow* parent)
     : DPIDialog(parent, wxID_ANY, _L("Safety Options"), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX)

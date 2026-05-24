@@ -40,7 +40,7 @@
     "extruder_clearance_height_to_rod":  "100",
     "extruder_clearance_radius":  "65",
     "extruder_colour":  [
-                            "#808080"
+                            "#D66C47"
                         ],
     "extruder_offset":  [
                             "0x0"

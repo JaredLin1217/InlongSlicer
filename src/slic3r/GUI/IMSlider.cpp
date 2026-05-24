@@ -28,7 +28,7 @@ static const ImU32 BACKGROUND_COLOR_DARK  = IM_COL32(65, 65, 71, 255);
 static const ImU32 BACKGROUND_COLOR_LIGHT = IM_COL32(255, 255, 255, 255);
 static const ImU32 GROOVE_COLOR_DARK      = IM_COL32(45, 45, 49, 255);
 static const ImU32 GROOVE_COLOR_LIGHT     = IM_COL32(206, 206, 206, 255);
-static const ImU32 BRAND_COLOR            = IM_COL32(0, 150, 136, 255);
+static const ImU32 BRAND_COLOR            = IM_COL32(214, 108, 71, 255);
 
 
 static int m_tick_value = -1;
@@ -1700,5 +1700,4 @@ std::array<int, 2> IMSlider::get_active_extruders_for_tick(int tick) const
 }
 
 } // Slic3r
-
 
