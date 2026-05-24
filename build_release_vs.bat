@@ -6,9 +6,14 @@ set _START_TIME=%TIME%
 @REM Check for Ninja Multi-Config option (-x)
 set USE_NINJA=0
 set FAST_BUILD=0
+set FULL_FAST_BUILD=0
 for %%a in (%*) do (
     if "%%a"=="-x" set USE_NINJA=1
     if "%%a"=="fast" set FAST_BUILD=1
+    if "%%a"=="allfast" (
+        set FAST_BUILD=1
+        set FULL_FAST_BUILD=1
+    )
 )
 
 if "%USE_NINJA%"=="1" (
@@ -98,10 +103,13 @@ if "%debug%"=="ON" (
     )
 )
 echo build type set to %build_type%
+set BUILD_TARGET=ALL_BUILD
+if "%FAST_BUILD%"=="1" set BUILD_TARGET=OrcaSlicer_app_gui
+if "%FULL_FAST_BUILD%"=="1" set BUILD_TARGET=ALL_BUILD
 
 setlocal DISABLEDELAYEDEXPANSION 
 cd deps
-mkdir %build_dir%
+if not exist %build_dir% mkdir %build_dir%
 cd %build_dir%
 set "SIG_FLAG="
 if defined ORCA_UPDATER_SIG_KEY set "SIG_FLAG=-DORCA_UPDATER_SIG_KEY=%ORCA_UPDATER_SIG_KEY%"
@@ -118,11 +126,11 @@ echo on
 REM Set minimum CMake policy to avoid <3.5 errors
 set CMAKE_POLICY_VERSION_MINIMUM=3.5
 if "%USE_NINJA%"=="1" (
-    cmake ../ -G %CMAKE_GENERATOR% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake ../ -G %CMAKE_GENERATOR% -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target deps
 ) else (
-    cmake ../ -G %CMAKE_GENERATOR% -A x64 -DCMAKE_BUILD_TYPE=%build_type%
-    cmake --build . --config %build_type% --target deps -- -m
+    cmake ../ -G %CMAKE_GENERATOR% -A x64 -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
+    cmake --build . --config %build_type% --target deps -- /m /nr:false
 )
 @echo off
 
@@ -131,17 +139,18 @@ if "%1"=="deps" goto :done
 :slicer
 echo "building Orca Slicer..."
 cd %WP%
-mkdir %build_dir%
+if not exist %build_dir% mkdir %build_dir%
 cd %build_dir%
+echo Build target set to %BUILD_TARGET%
 
 echo on
 set CMAKE_POLICY_VERSION_MINIMUM=3.5
 if "%USE_NINJA%"=="1" (
-    cmake .. -G %CMAKE_GENERATOR% -DORCA_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
-    cmake --build . --config %build_type% --target ALL_BUILD
+    cmake .. -G %CMAKE_GENERATOR% -Wno-dev -DORCA_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake --build . --config %build_type% --target %BUILD_TARGET%
 ) else (
-    cmake .. -G %CMAKE_GENERATOR% -A x64 -DORCA_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
-    cmake --build . --config %build_type% --target ALL_BUILD -- -m
+    cmake .. -G %CMAKE_GENERATOR% -A x64 -Wno-dev -DORCA_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake --build . --config %build_type% --target %BUILD_TARGET% -- /m /nr:false
 )
 @echo off
 if "%FAST_BUILD%"=="1" (
@@ -156,8 +165,8 @@ cmake --build . --target install --config %build_type%
 
 :done
 @echo off
-for /f "tokens=1-3 delims=:.," %%a in ("%_START_TIME: =0%") do set /a "_start_s=%%a*3600+%%b*60+%%c"
-for /f "tokens=1-3 delims=:.," %%a in ("%TIME: =0%") do set /a "_end_s=%%a*3600+%%b*60+%%c"
+for /f "tokens=1-3 delims=:.," %%a in ("%_START_TIME: =0%") do set /a "_start_s=(1%%a-100)*3600+(1%%b-100)*60+(1%%c-100)"
+for /f "tokens=1-3 delims=:.," %%a in ("%TIME: =0%") do set /a "_end_s=(1%%a-100)*3600+(1%%b-100)*60+(1%%c-100)"
 set /a "_elapsed=_end_s - _start_s"
 if %_elapsed% lss 0 set /a "_elapsed+=86400"
 set /a "_hours=_elapsed / 3600"
