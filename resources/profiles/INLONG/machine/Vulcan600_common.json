@@ -10,10 +10,7 @@
     "bed_custom_model":  "",
     "bed_custom_texture":  "",
     "bed_exclude_area":  [
-                             "0x0",
-                             "0x0",
-                             "0x0",
-                             "0x0"
+
                          ],
     "bed_mesh_max":  "600,500",
     "bed_mesh_min":  "0,0",

@@ -673,9 +673,11 @@ void PresetUpdater::priv::sync_vendor_config(const std::string& vendor_id)
     Http::get(url)
         .timeout_connect(5)
         .on_progress(check_cancel)
-        .on_error([&vendor_id](std::string body, std::string error, unsigned http_status) {
+        .on_error([&vendor_id, &url](std::string body, std::string error, unsigned http_status) {
+            const std::string detail = !error.empty() ? error : (!body.empty() ? body : "no error detail");
             BOOST_LOG_TRIVIAL(warning) << "[Orca Updater] vendor check HTTP error for "
-                                       << vendor_id << ": " << error;
+                                       << vendor_id << ", status=" << http_status
+                                       << ", url=" << url << ": " << detail;
         })
         .on_complete([&](std::string body, unsigned http_status) {
             if (http_status != 200) return;

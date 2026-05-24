@@ -234,7 +234,7 @@ std::string BBLNetworkPlugin::get_version() const
     if (m_get_version) {
         return m_get_version();
     }
-    BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << boost::format(", get_version not supported, return 00.00.00.00!");
+    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(", get_version not supported, return 00.00.00.00!");
     return "00.00.00.00";
 }
 

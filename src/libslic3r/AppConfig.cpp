@@ -1718,7 +1718,7 @@ std::string AppConfig::version_check_url() const
 
 std::string AppConfig::profile_update_url() const
 {
-    return PROFILE_UPDATE_URL;
+    return "";
 }
 
 bool AppConfig::exists()

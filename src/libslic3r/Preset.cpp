@@ -3532,6 +3532,11 @@ bool PresetCollection::select_preset_by_name_strict(const std::string &name)
 {
     //BBS: add config related logs
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": %1%, try to select by name %2%")%Preset::get_type_string(m_type) %name;
+    if (name.empty()) {
+        m_idx_selected = (size_t)-1;
+        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": %1%, skip empty preset name")%Preset::get_type_string(m_type);
+        return false;
+    }
     const std::string canonical_name = this->canonical_preset_name(name);
     // 1) Try to find the preset by its name.
     auto it = this->find_preset_internal(canonical_name);

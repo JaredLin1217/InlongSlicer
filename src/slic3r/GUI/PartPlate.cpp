@@ -447,6 +447,13 @@ void PartPlate::calc_exclude_triangles(const ExPolygon &poly)
 {
     m_exclude_triangles.reset();
 
+    if (poly.empty())
+        return;
+
+    const BoundingBox bbox = poly.contour.bounding_box();
+    if (bbox.size().x() <= 0 || bbox.size().y() <= 0)
+        return;
+
     if (!init_model_from_poly(m_exclude_triangles, poly, GROUND_Z))
 		BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ":Unable to create exclude triangles\n";
 }
