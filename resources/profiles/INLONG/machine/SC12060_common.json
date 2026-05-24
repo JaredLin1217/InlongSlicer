@@ -138,7 +138,7 @@
     "preferred_orientation":  "0",
     "resonance_avoidance":  "0",
     "printable_height":  "600",
-    "printer_variant":  "0.4",
+    "printer_variant":  "0.6",
     "printhost_authorization_type":  "key",
     "printhost_ssl_ignore_revoke":  "0",
     "printing_by_object_gcode":  "",
