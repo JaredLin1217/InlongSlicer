@@ -2,6 +2,19 @@
 
 InlongSlicer is forked from OrcaSlicer 2.4.x. Treat `inlong/orca-2.4-base` as the clean upstream base for comparison, rebase analysis, and separating Inlong-specific changes from upstream OrcaSlicer behavior.
 
+This file is the repository-level agent entrypoint. Keep broad workflow policy here; keep tool-specific prompts inside their own command or skill files.
+
+## Markdown File Map
+
+- `README.md`: user-facing OrcaSlicer overview and install notes. Keep it close to upstream unless the task is explicitly about fork-facing documentation.
+- `AGENTS.md`: repository-wide instructions for Codex and compatible coding agents.
+- `CLAUDE.md`: compatibility shim that points to `AGENTS.md`; keep it short unless a Claude-only exception is required.
+- `.agents/README.md`: local index for Codex agent assets.
+- `.agents/skills/*/SKILL.md`: Codex skill entrypoints for migrated source commands.
+- `.claude/commands/*.md`: legacy Claude command prompts. Keep matching command behavior aligned with the corresponding Codex skill when both exist.
+- `tests/CLAUDE.md`: test-specific guidance for the `tests/` tree.
+- `.github/pull_request_template.md`: PR summary and verification expectations.
+
 ## Use Existing Documentation First
 
 Do not duplicate OrcaSlicer documentation here. Before modifying code, inspect the relevant existing files:
@@ -16,6 +29,7 @@ Do not duplicate OrcaSlicer documentation here. Before modifying code, inspect t
 - Profile validation: `.github/workflows/check_profiles.yml`, `scripts/orca_extra_profile_check.py`, `scripts/orca_filament_lib.py`
 - Translation/i18n: `scripts/run_gettext.sh`, `scripts/run_gettext.bat`, `localization/i18n/`, `resources/i18n/`
 - Tests: `tests/CLAUDE.md`, `tests/`, `scripts/run_unit_tests.sh`
+- Agent skills and command prompts: `.agents/README.md`, `.agents/skills/`, `.claude/commands/`
 
 ## Safe Working Rules For Codex
 
@@ -28,6 +42,14 @@ Do not duplicate OrcaSlicer documentation here. Before modifying code, inspect t
 - Treat branding, installer IDs, bundle IDs, resource paths, and executable names as high risk.
 - Do not assume a README statement is current when scripts or CI disagree. Prefer live scripts/CMake/CI as the implementation source of truth.
 - When changing behavior, include verification notes: what was built, what tests ran, what profile/resource checks ran, or why verification was not possible.
+
+## Documentation Maintenance
+
+- Update the most specific Markdown file that owns the workflow instead of copying the same guidance into several places.
+- Keep `CLAUDE.md` as a pointer to `AGENTS.md` unless a tool requires separate content.
+- When changing a migrated source command, update both `.agents/skills/<name>/SKILL.md` and the matching `.claude/commands/<name>.md` if both exist.
+- Avoid editing generated, vendored, or build-output Markdown under `build/`, `deps/`, or `deps_src/` unless the task specifically requires it.
+- Prefer links to existing upstream documentation over pasted copies of long build, packaging, test, or release instructions.
 
 ## Forbidden Without Explicit Approval
 

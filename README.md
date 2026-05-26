@@ -17,7 +17,7 @@ Optimize your prints with ultra-fast slicing, intelligent support generation, an
 #### Official Website:
 <a href="https://www.orcaslicer.com/" style="font-size:2em;">OrcaSlicer.com</a>
 
-#### Github Repository:
+#### GitHub Repository:
 <a href="https://github.com/OrcaSlicer/OrcaSlicer"><img src="https://img.shields.io/badge/OrcaSlicer-181717?style=flat&logo=github&logoColor=white" width="200" alt="GitHub Logo"/> </a>
 
 #### Follow us:
@@ -41,6 +41,12 @@ If you come across any of these in search results, please <b>report them</b> as 
 </table>
 
 </div>
+
+# InlongSlicer Fork Note
+
+This repository carries InlongSlicer changes on top of OrcaSlicer 2.4.x. The upstream OrcaSlicer README is kept mostly intact for user-facing product context and links.
+
+For repository-specific development guidance, start with [AGENTS.md](AGENTS.md); [CLAUDE.md](CLAUDE.md) currently forwards to the same instructions. Use `inlong/orca-2.4-base` as the clean upstream comparison branch when separating Inlong-specific changes from upstream OrcaSlicer behavior.
 
 # Main features
 

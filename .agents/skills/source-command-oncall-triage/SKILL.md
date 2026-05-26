@@ -25,7 +25,7 @@ Task overview:
 3. For each issue in your TODO list:
    - Use `gh issue view <number> --repo OrcaSlicer/OrcaSlicer --json title,body,labels,comments` to get full details
    - Read and understand the full issue content and comments to determine actual user impact
-   - Evaluate: Is this truly blocking users from using Codex?
+   - Evaluate: Is this truly blocking users from using the slicer?
      - Consider: "crash", "stuck", "frozen", "hang", "unresponsive", "cannot use", "blocked", "broken"
      - Does it prevent core functionality? Can users work around it?
    - Be conservative - only flag issues that truly prevent users from getting work done
