@@ -3939,7 +3939,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             /*if (m_check_version && (m_version > VERSION_BBS_3MF_COMPATIBLE)) {
                 // std::string msg = _(L("The selected 3mf file has been saved with a newer version of " + std::string(SLIC3R_APP_NAME) + " and is not compatible."));
                 // throw version_error(msg.c_str());
-                const std::string msg = (boost::format(_(L("The selected 3mf file has been saved with a newer version of %1% and is not compatible."))) % std::string(SLIC3R_APP_NAME)).str();
+                const std::string msg = (boost::format(_(L("The selected 3mf file has been saved with a newer version of %1% and is not compatible."))) % std::string(SLIC3R_APP_FULL_NAME)).str();
                 throw version_error(msg);
             }*/
         } else if (m_curr_metadata_name == BBL_APPLICATION_TAG) {

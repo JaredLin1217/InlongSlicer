@@ -9,6 +9,7 @@
 
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/Config.hpp"
+#include "libslic3r/libslic3r.h"
 
 #include "boost/nowide/convert.hpp"
 #include <boost/log/trivial.hpp>
@@ -630,7 +631,7 @@ void OtherInstanceMessageHandler::listen()
 	    return;
 	}
 	if (DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER != name_req_val) {
-		BOOST_LOG_TRIVIAL(error) << "Not primary owner of DBus name - probably another OrcaSlicer instance is running.";
+		BOOST_LOG_TRIVIAL(error) << "Not primary owner of DBus name - probably another " << SLIC3R_APP_FULL_NAME << " instance is running.";
 	    BOOST_LOG_TRIVIAL(error) << "Dbus Messages listening terminating.";
 	    dbus_connection_unref(conn);
 	    return;

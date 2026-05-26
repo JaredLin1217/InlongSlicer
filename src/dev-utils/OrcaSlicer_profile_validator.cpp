@@ -85,7 +85,7 @@ void generate_custom_presets(PresetBundle* preset_bundle, AppConfig& app_config)
 }
 int main(int argc, char* argv[])
 {
-    po::options_description desc("Orca Profile Validator\nUsage");
+    po::options_description desc("Inlong Profile Validator\nUsage");
     // clang-format off
     desc.add_options()("help,h", "help")
 #ifdef __APPLE__

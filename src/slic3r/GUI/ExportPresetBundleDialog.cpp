@@ -111,7 +111,7 @@ void ExportPresetBundleDialog::OnScriptMessage(wxWebViewEvent& e)
             InitExportData();
             OnRequestPresets();
         } else if (strCmd == "export_local") {
-            wxFileDialog dlg(this, _L("Save preset bundle"), "", "export.orca_bundle", "Orca Preset Bundle (*.orca_bundle)|*.orca_bundle",
+            wxFileDialog dlg(this, _L("Save preset bundle"), "", "export.orca_bundle", "Inlong Preset Bundle (*.orca_bundle)|*.orca_bundle",
                              wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
             wxString path;
             wxString name;

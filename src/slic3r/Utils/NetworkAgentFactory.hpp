@@ -25,7 +25,7 @@ using PrinterAgentFactory =
 struct PrinterAgentInfo
 {
     std::string         id;           // e.g., "orca", "bbl"
-    std::string         display_name; // e.g., "Orca Native", "Bambu Lab"
+    std::string         display_name; // e.g., "Inlong Native", "Bambu Lab"
     PrinterAgentFactory factory;      // Function to create the agent
 
     PrinterAgentInfo(const std::string& id_, const std::string& display_name_, PrinterAgentFactory factory_)

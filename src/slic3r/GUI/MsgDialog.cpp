@@ -595,16 +595,16 @@ wxBoxSizer *Newer3mfVersionDialog::get_msg_sizer()
     wxBoxSizer *     horizontal_sizer = new wxBoxSizer(wxHORIZONTAL);
     wxString    msg_str;
     if (file_version_newer) { 
-        text1 = new wxStaticText(this, wxID_ANY, _L("The 3MF file version is in Beta and it is newer than the current OrcaSlicer version."));
-        wxStaticText *   text2       = new wxStaticText(this, wxID_ANY, _L("If you would like to try Orca Slicer Beta, you may click to"));
+        text1 = new wxStaticText(this, wxID_ANY, wxString::Format(_L("The 3MF file version is in Beta and it is newer than the current %s version."), wxString(SLIC3R_APP_FULL_NAME)));
+        wxStaticText *   text2       = new wxStaticText(this, wxID_ANY, wxString::Format(_L("If you would like to try %s Beta, you may click to"), wxString(SLIC3R_APP_FULL_NAME)));
         // ORCA standardized HyperLink
-        HyperLink *      github_link = new HyperLink(this, _L("Download Beta Version"), "https://github.com/SoftFever/OrcaSlicer/releases");
+        HyperLink *      github_link = new HyperLink(this, _L("Download Beta Version"), "https://github.com/JaredLin1217/InlongSlicer/releases");
         horizontal_sizer->Add(text2, 0, wxEXPAND, 0);
         horizontal_sizer->Add(github_link, 0, wxEXPAND | wxLEFT, 5);
         
     } else {
-        text1 = new wxStaticText(this, wxID_ANY, _L("The 3MF file version is newer than the current OrcaSlicer version."));
-        wxStaticText *text2 = new wxStaticText(this, wxID_ANY, _L("Updating your OrcaSlicer could enable all functionality in the 3MF file."));
+        text1 = new wxStaticText(this, wxID_ANY, wxString::Format(_L("The 3MF file version is newer than the current %s version."), wxString(SLIC3R_APP_FULL_NAME)));
+        wxStaticText *text2 = new wxStaticText(this, wxID_ANY, wxString::Format(_L("Updating your %s could enable all functionality in the 3MF file."), wxString(SLIC3R_APP_FULL_NAME)));
         horizontal_sizer->Add(text2, 0, wxEXPAND, 0);
     }
     Semver        app_version = *(Semver::parse(SLIC3R_VERSION));

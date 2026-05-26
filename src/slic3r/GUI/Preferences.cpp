@@ -1160,7 +1160,7 @@ wxBoxSizer* PreferencesDialog::create_item_downloads(wxString title, wxString to
 wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix, wxString website_name)
 {
     wxString title = _L("Associate") + (boost::format(" %1%://") % url_prefix.c_str()).str();
-    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with OrcaSlicer so that Orca can open models from") + " " + website_name;
+    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with") + " " + wxString(SLIC3R_APP_FULL_NAME) + " " + _L("so it can open models from") + " " + website_name;
 
     std::wstring registered_bin; // not used, just here to provide a ref to check fn
     bool reg_to_current_instance = wxGetApp().check_url_association(url_prefix.ToStdWstring(), registered_bin);
@@ -1356,12 +1356,12 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_darkmode);
 #endif
 
-    auto item_single_instance  = create_item_checkbox(_L("Allow only one OrcaSlicer instance"),
+    auto item_single_instance  = create_item_checkbox(wxString::Format(_L("Allow only one %s instance"), wxString(SLIC3R_APP_FULL_NAME)),
     #if __APPLE__
             _L("On OSX there is always only one instance of app running by default. However it is allowed to run multiple instances "
                 "of same app from the command line. In such case this settings will allow only one instance."),
     #else
-            _L("If this is enabled, when starting OrcaSlicer and another instance of the same OrcaSlicer is already running, that instance will be reactivated instead."),
+            wxString::Format(_L("If this is enabled, when starting %s and another instance of the same %s is already running, that instance will be reactivated instead."), wxString(SLIC3R_APP_FULL_NAME), wxString(SLIC3R_APP_FULL_NAME)),
     #endif
             "single_instance");
     g_sizer->Add(item_single_instance);
@@ -1413,7 +1413,7 @@ void PreferencesDialog::create_items()
     //// GENERAL > Preset
     g_sizer->Add(create_item_title(_L("Preset")), 1, wxEXPAND);
 
-    auto item_remember_printer = create_item_checkbox(_L("Remember printer configuration"), _L("If enabled, Orca will remember and switch filament/process configuration for each printer automatically."), "remember_printer_config");
+    auto item_remember_printer = create_item_checkbox(_L("Remember printer configuration"), _L("If enabled, Inlong Slicer will remember and switch filament/process configuration for each printer automatically."), "remember_printer_config");
     g_sizer->Add(item_remember_printer);
 
     auto item_filament_preset_grouping = create_item_combobox(_L("Group user filament presets"), _L("Group user filament presets based on selection"),
@@ -1477,7 +1477,7 @@ void PreferencesDialog::create_items()
 
     auto item_auto_reslice = create_item_auto_reslice(
         _L("Auto slice after changes"),
-        _L("If enabled, OrcaSlicer will re-slice automatically whenever slicing-related settings change."),
+        wxString::Format(_L("If enabled, %s will re-slice automatically whenever slicing-related settings change."), wxString(SLIC3R_APP_FULL_NAME)),
         _L("Delay in seconds before auto slicing starts, allowing multiple edits to be grouped. Use 0 to slice immediately."));
     g_sizer->Add(item_auto_reslice);
 
@@ -1604,7 +1604,7 @@ void PreferencesDialog::create_items()
     auto item_region           = create_item_region_combobox(_L("Login region"), "");
     g_sizer->Add(item_region);
  
-    auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud services e.g. Orca Cloud and Bambu Cloud. This stops the transmission of data to Bambu's cloud services too. Users who don't use BBL machines or use LAN mode only can safely turn on this function."), "stealth_mode");
+    auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud services e.g. Inlong Cloud and Bambu Cloud. This stops the transmission of data to Bambu's cloud services too. Users who don't use BBL machines or use LAN mode only can safely turn on this function."), "stealth_mode");
     g_sizer->Add(item_stealth_mode);
 
     auto item_network_test     = create_item_button(_L("Network test"), _L("Test") + " " + dots, "", _L("Open Network Test"), []() {
@@ -1624,7 +1624,7 @@ void PreferencesDialog::create_items()
             wxDefaultPosition, DESIGN_TITLE_SIZE, wxST_NO_AUTORESIZE);
         text->SetForegroundColour(DESIGN_GRAY900_COLOR);
         text->SetFont(::Label::Body_14);
-        text->SetToolTip(_L("Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."));
+        text->SetToolTip(_L("Allow logging into Bambu Cloud alongside Inlong Cloud. When enabled, a Bambu login section appears on the homepage."));
         text->Wrap(DESIGN_TITLE_SIZE.x);
 
         auto cb = new ::CheckBox(m_parent);
@@ -1811,22 +1811,22 @@ void PreferencesDialog::create_items()
     g_sizer->AddGrowableCol(0, 1);
 
     //// ASSOCIATE > Extensions
-    g_sizer->Add(create_item_title(_L("Associate files to OrcaSlicer")), 1, wxEXPAND);
+    g_sizer->Add(create_item_title(wxString::Format(_L("Associate files to %s"), wxString(SLIC3R_APP_FULL_NAME))), 1, wxEXPAND);
 
-    auto item_associate_3mf    = create_item_checkbox(_L("Associate 3MF files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open 3MF files.") , "associate_3mf");
+    auto item_associate_3mf    = create_item_checkbox(wxString::Format(_L("Associate 3MF files to %s"), wxString(SLIC3R_APP_FULL_NAME)), wxString::Format(_L("If enabled, sets %s as default application to open 3MF files."), wxString(SLIC3R_APP_FULL_NAME)) , "associate_3mf");
     g_sizer->Add(item_associate_3mf);
 
-    auto item_associate_drc = create_item_checkbox(_L("Associate DRC files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open DRC files."), "associate_drc");
+    auto item_associate_drc = create_item_checkbox(wxString::Format(_L("Associate DRC files to %s"), wxString(SLIC3R_APP_FULL_NAME)), wxString::Format(_L("If enabled, sets %s as default application to open DRC files."), wxString(SLIC3R_APP_FULL_NAME)), "associate_drc");
     g_sizer->Add(item_associate_drc);
 
-    auto item_associate_stl    = create_item_checkbox(_L("Associate STL files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open STL files.") , "associate_stl");
+    auto item_associate_stl    = create_item_checkbox(wxString::Format(_L("Associate STL files to %s"), wxString(SLIC3R_APP_FULL_NAME)), wxString::Format(_L("If enabled, sets %s as default application to open STL files."), wxString(SLIC3R_APP_FULL_NAME)) , "associate_stl");
     g_sizer->Add(item_associate_stl);
 
-    auto item_associate_step   = create_item_checkbox(_L("Associate STEP files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open STEP files."), "associate_step");
+    auto item_associate_step   = create_item_checkbox(wxString::Format(_L("Associate STEP files to %s"), wxString(SLIC3R_APP_FULL_NAME)), wxString::Format(_L("If enabled, sets %s as default application to open STEP files."), wxString(SLIC3R_APP_FULL_NAME)), "associate_step");
     g_sizer->Add(item_associate_step);
 
     //// ASSOCIATE > WebLinks
-    g_sizer->Add(create_item_title(_L("Associate web links to OrcaSlicer")), 1, wxEXPAND);
+    g_sizer->Add(create_item_title(wxString::Format(_L("Associate web links to %s"), wxString(SLIC3R_APP_FULL_NAME))), 1, wxEXPAND);
 
     auto associate_url_prusa   = create_item_link_association(L"prusaslicer", "Printables.com");
     g_sizer->Add(associate_url_prusa);

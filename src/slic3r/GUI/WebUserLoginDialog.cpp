@@ -86,7 +86,7 @@ int ZUserLogin::ensure_loopback_port()
 }
 
 ZUserLogin::ZUserLogin(std::shared_ptr<ICloudServiceAgent> cloud_agent)
-    : wxDialog((wxWindow*) (wxGetApp().mainframe), wxID_ANY, "OrcaSlicer"), m_cloud_agent(cloud_agent)
+    : wxDialog((wxWindow*) (wxGetApp().mainframe), wxID_ANY, SLIC3R_APP_DISPLAY_NAME), m_cloud_agent(cloud_agent)
 {
     SetBackgroundColour(*wxWHITE);
 
@@ -97,7 +97,7 @@ ZUserLogin::ZUserLogin(std::shared_ptr<ICloudServiceAgent> cloud_agent)
         m_sizer_main->Add(m_line_top, 0, wxEXPAND, 0);
 
         auto* m_message = new wxStaticText(this, wxID_ANY,
-                                          _L("Cloud agent is not available. Please restart OrcaSlicer and try again."),
+                                          wxString::Format(_L("Cloud agent is not available. Please restart %s and try again."), wxString(SLIC3R_APP_DISPLAY_NAME)),
                                           wxDefaultPosition, wxDefaultSize, 0);
         m_message->SetForegroundColour(*wxBLACK);
         m_message->Wrap(FromDIP(360));

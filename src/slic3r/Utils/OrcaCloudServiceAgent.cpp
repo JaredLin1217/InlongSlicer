@@ -299,7 +299,7 @@ int choose_loopback_port()
                 base_port = parsed;
             }
         } catch (...) {
-            BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: invalid ORCA_LOOPBACK_PORT value, falling back to default";
+            BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: invalid ORCA_LOOPBACK_PORT value, falling back to default";
         }
     }
 
@@ -568,7 +568,7 @@ int OrcaCloudServiceAgent::change_user(std::string user_info)
         std::string command = safe_str(tree, "command");
         if (command == "user_login") {
             if (!tree.contains("data") || !tree["data"].is_object()) {
-                BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: WebView login payload missing data field";
+                BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: WebView login payload missing data field";
                 return BAMBU_NETWORK_ERR_INVALID_HANDLE;
             }
             const auto& data = tree["data"];
@@ -599,7 +599,7 @@ int OrcaCloudServiceAgent::change_user(std::string user_info)
             return success ? BAMBU_NETWORK_SUCCESS : BAMBU_NETWORK_ERR_INVALID_HANDLE;
         }
 
-        // Orca cloud session payload (default flow)
+        // Inlong Cloud session payload (default flow)
         const json* session_node = nullptr;
         if (tree.contains("data") && tree["data"].is_object()) {
             const auto& data = tree["data"];
@@ -622,11 +622,11 @@ int OrcaCloudServiceAgent::change_user(std::string user_info)
                 ? BAMBU_NETWORK_SUCCESS : BAMBU_NETWORK_ERR_INVALID_HANDLE;
         }
 
-        BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: Username/password login is disabled. Use the Orca cloud PKCE flow.";
+        BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: Username/password login is disabled. Use the Inlong Cloud PKCE flow.";
         return BAMBU_NETWORK_ERR_INVALID_HANDLE;
 
     } catch (const std::exception& e) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: change_user exception - " << e.what();
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: change_user exception - " << e.what();
         return BAMBU_NETWORK_ERR_INVALID_RESULT;
     }
 }
@@ -660,7 +660,7 @@ int OrcaCloudServiceAgent::user_logout(bool request)
 
             int result = http_post_auth(auth_constants::LOGOUT_PATH, logout_req.dump(), &response, &http_code) ? BAMBU_NETWORK_SUCCESS : BAMBU_NETWORK_ERR_INVALID_HANDLE;
             if (result != BAMBU_NETWORK_SUCCESS || http_code >= 400) {
-                BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: Orca cloud logout request failed - http_code=" << http_code;
+                BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: Inlong Cloud logout request failed - http_code=" << http_code;
             }
         }
     }
@@ -856,7 +856,7 @@ int OrcaCloudServiceAgent::get_user_presets(std::map<std::string, std::map<std::
     if (!user_presets) return BAMBU_NETWORK_ERR_INVALID_HANDLE;
 
     if (!is_user_login()) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: Not logged in";
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: Not logged in";
         return BAMBU_NETWORK_ERR_INVALID_HANDLE;
     }
 
@@ -934,7 +934,7 @@ std::string OrcaCloudServiceAgent::request_setting_id(std::string name, std::map
 {
     std::string new_id = generate_uuid_for_setting_id(name, get_user_id());
     if (new_id.empty()) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: request_setting_id failed - name is empty";
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: request_setting_id failed - name is empty";
         return "";
     }
 
@@ -961,7 +961,7 @@ std::string OrcaCloudServiceAgent::request_setting_id(std::string name, std::map
         return new_id;
     }
 
-    BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: request_setting_id failed - " << result.error_message << " - http code: " << result.http_code;
+    BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: request_setting_id failed - " << result.error_message << " - http code: " << result.http_code;
     return "";
 }
 
@@ -1004,11 +1004,11 @@ int OrcaCloudServiceAgent::put_setting(std::string setting_id, std::string name,
         if (values_map && result.server_version.updated_time != 0) {
             (*values_map)[IOT_JSON_KEY_UPDATED_TIME] = std::to_string(result.server_version.updated_time);
         }
-        BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: put_setting conflict - server_updated_time="
+        BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: put_setting conflict - server_updated_time="
                                    << result.server_version.updated_time;
     }
 
-    BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: put_setting failed - " << result.error_message;
+    BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: put_setting failed - " << result.error_message;
     return BAMBU_NETWORK_ERR_PUT_SETTING_FAILED;
 }
 
@@ -1152,7 +1152,7 @@ int OrcaCloudServiceAgent::sync_pull(
 
     // Handle 410 Gone - cursor too old, need full resync
     if (http_code == 410) {
-        BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: sync_pull returned 410 Gone - cursor too old, triggering full resync";
+        BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: sync_pull returned 410 Gone - cursor too old, triggering full resync";
         clear_sync_state();
         // Retry without cursor
         path = ORCA_SYNC_PULL_PATH;
@@ -1160,7 +1160,7 @@ int OrcaCloudServiceAgent::sync_pull(
     }
 
     if (result != BAMBU_NETWORK_SUCCESS || (http_code != 200 && http_code != 304)) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: sync_pull failed - http_code=" << http_code << " - path=" << path;
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: sync_pull failed - http_code=" << http_code << " - path=" << path;
         if (on_error) on_error(http_code, response);
         return BAMBU_NETWORK_ERR_GET_SETTING_LIST_FAILED;
     }
@@ -1202,7 +1202,7 @@ int OrcaCloudServiceAgent::sync_pull(
         return BAMBU_NETWORK_SUCCESS;
 
     } catch (const std::exception& e) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: sync_pull parse error - " << e.what();
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: sync_pull parse error - " << e.what();
         if (on_error) on_error(http_code, e.what());
         return BAMBU_NETWORK_ERR_INVALID_RESULT;
     }
@@ -1234,7 +1234,7 @@ SyncPushResult OrcaCloudServiceAgent::sync_push(
         result.success = false;
         result.error_message = "Preset content exceeds 1MB size limit (actual: " +
                               std::to_string(body_str.size()) + " bytes)";
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: sync_push payload too large - "
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: sync_push payload too large - "
                                  << "size=" << body_str.size() << " bytes, "
                                  << "limit=" << ORCA_SYNC_MAX_PAYLOAD_SIZE << " bytes, "
                                  << "profile_id=" << profile_id;
@@ -1390,13 +1390,13 @@ void OrcaCloudServiceAgent::persist_refresh_token(const std::string& token)
         // Use encrypted file only
         auto key = sha256_bytes(get_encryption_key());
         if (key.empty()) {
-            BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: cannot derive key for refresh-token file storage";
+            BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: cannot derive key for refresh-token file storage";
             return;
         }
 
         std::string payload;
         if (!aes256gcm_encrypt(token, key, payload)) {
-            BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: failed to encrypt refresh token for file storage";
+            BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: failed to encrypt refresh token for file storage";
             return;
         }
 
@@ -1423,10 +1423,10 @@ void OrcaCloudServiceAgent::persist_refresh_token(const std::string& token)
                 stored = true;
             } else {
                 wxRemoveFile(wxString::FromUTF8(tmp_path.c_str()));
-                BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: failed to atomically replace refresh-token file";
+                BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: failed to atomically replace refresh-token file";
             }
         } else {
-            BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: cannot open refresh-token file for write - " << refresh_fallback_path;
+            BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: cannot open refresh-token file for write - " << refresh_fallback_path;
         }
     } else {
         // Use wxSecretStore only
@@ -1436,10 +1436,10 @@ void OrcaCloudServiceAgent::persist_refresh_token(const std::string& token)
             if (store.Save(SECRET_STORE_SERVICE, SECRET_STORE_USER, secret)) {
                 stored = true;
             } else {
-                BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: System Keychain save failed";
+                BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: System Keychain save failed";
             }
         } else {
-            BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: System Keychain not available";
+            BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: System Keychain not available";
         }
     }
 
@@ -1477,7 +1477,7 @@ bool OrcaCloudServiceAgent::load_refresh_token(std::string& out_token)
                         std::transform(computed_hmac.begin(), computed_hmac.end(), computed_hmac.begin(), ::tolower);
                         if (computed_hmac.empty() || computed_hmac != lower_stored) {
                             integrity_ok = false;
-                            BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: refresh token integrity check failed (HMAC mismatch)";
+                            BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: refresh token integrity check failed (HMAC mismatch)";
                         }
                     }
                 }
@@ -1558,7 +1558,7 @@ bool OrcaCloudServiceAgent::decode_jwt_expiry(const std::string& token, std::chr
             return true;
         }
     } catch (const std::exception& e) {
-        BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: failed to decode JWT exp - " << e.what();
+        BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: failed to decode JWT exp - " << e.what();
     }
     return false;
 }
@@ -1569,7 +1569,7 @@ bool OrcaCloudServiceAgent::refresh_now(const std::string& refresh_token, const 
 
     bool expected = false;
     if (!refresh_running.compare_exchange_strong(expected, true)) {
-        BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: refresh already running, skip (reason=" << reason << ")";
+        BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: refresh already running, skip (reason=" << reason << ")";
         return false;
     }
 
@@ -1598,7 +1598,7 @@ bool OrcaCloudServiceAgent::refresh_from_storage(const std::string& reason, bool
         load_refresh_token(refresh_token);
     }
     if (refresh_token.empty()) {
-        BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: no refresh token available for refresh (reason=" << reason << ")";
+        BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: no refresh token available for refresh (reason=" << reason << ")";
         return false;
     }
 
@@ -1629,7 +1629,7 @@ bool OrcaCloudServiceAgent::refresh_session_with_token(const std::string& refres
     unsigned int http_code = 0;
     if (!http_post_token(body, &response, &http_code, url) || http_code >= 400) {
         std::string truncated_response = response.size() > 200 ? response.substr(0, 200) + "..." : response;
-        BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: token refresh failed - http_code=" << http_code
+        BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: token refresh failed - http_code=" << http_code
                                    << ", response_body=" << truncated_response;
         return false;
     }
@@ -1643,7 +1643,7 @@ bool OrcaCloudServiceAgent::refresh_session_with_token(const std::string& refres
     try {
         return set_user_session(json::parse(response));
     } catch (const std::exception& e) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: token refresh parse exception - " << e.what();
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: token refresh parse exception - " << e.what();
         return false;
     }
 }
@@ -1688,7 +1688,7 @@ bool OrcaCloudServiceAgent::set_user_session(const std::string& token,
         load_sync_state();
     }
 
-    BOOST_LOG_TRIVIAL(info) << "OrcaCloudServiceAgent: set_user_session - user_id=" << user_id << ", username=" << username;
+    BOOST_LOG_TRIVIAL(info) << "InlongCloudServiceAgent: set_user_session - user_id=" << user_id << ", username=" << username;
     return true;
 }
 
@@ -1702,15 +1702,15 @@ bool OrcaCloudServiceAgent::set_user_session(const json& session_json, bool noti
 
     std::string user_id, username, nickname, avatar;
     if (session_json.contains("user") && session_json["user"].is_object()) {
-        // Nested format (Orca cloud / GoTrue response)
+        // Nested format (Inlong Cloud / GoTrue response)
         const auto& user = session_json["user"];
         user_id = get_json_string_field(user, "id");
 
         if (user.contains("user_metadata") && user["user_metadata"].is_object()) {
             const auto& meta = user["user_metadata"];
-            username = get_json_string_field(meta, "username"); // Orca Cloud's unique username
+            username = get_json_string_field(meta, "username"); // Inlong Cloud's unique username
 
-            // Orca Cloud's primary display name field is display_name.
+            // Inlong Cloud's primary display name field is display_name.
             // Fallback to different names from different providers if display_name is not set.
             nickname = resolve_display_name(
                 get_json_string_field(meta, "display_name"),
@@ -1734,7 +1734,7 @@ bool OrcaCloudServiceAgent::set_user_session(const json& session_json, bool noti
     }
 
     if (access_token.empty() || user_id.empty()) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: session payload missing access_token or user id";
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: session payload missing access_token or user id";
         return false;
     }
 
@@ -1782,7 +1782,7 @@ std::map<std::string, std::string> OrcaCloudServiceAgent::data_headers()
 int OrcaCloudServiceAgent::http_get(const std::string& path, std::string* response_body, unsigned int* http_code)
 {
     std::string url = api_base_url + path;
-    BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: GET " << url;
+    BOOST_LOG_TRIVIAL(trace) << "InlongCloudServiceAgent: GET " << url;
 
     if (!ensure_token_fresh("http_get_" + path))
         BOOST_LOG_TRIVIAL(warning) << "ensure_token_fresh returned false";
@@ -1819,13 +1819,13 @@ int OrcaCloudServiceAgent::http_get(const std::string& path, std::string* respon
                     result.success = false;
                     result.status  = resp_status == 0 ? 404 : resp_status;
                     result.body    = body;
-                    BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: HTTP error - " << error;
+                    BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: HTTP error - " << error;
                 })
                 .timeout_max(30)
                 .perform_sync();
 
         } catch (const std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: http_get exception - " << e.what();
+            BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: http_get exception - " << e.what();
         }
         return result;
     };
@@ -1850,7 +1850,7 @@ int OrcaCloudServiceAgent::http_get(const std::string& path, std::string* respon
 int OrcaCloudServiceAgent::http_post(const std::string& path, const std::string& body, std::string* response_body, unsigned int* http_code)
 {
     std::string url = api_base_url + path;
-    BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: POST " << url;
+    BOOST_LOG_TRIVIAL(trace) << "InlongCloudServiceAgent: POST " << url;
 
     ensure_token_fresh("http_post_" + path);
 
@@ -1889,13 +1889,13 @@ int OrcaCloudServiceAgent::http_post(const std::string& path, const std::string&
                     result.success = false;
                     result.status  = resp_status == 0 ? 404 : resp_status;
                     result.body    = body;
-                    BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: HTTP error - " << error;
+                    BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: HTTP error - " << error;
                 })
                 .timeout_max(30)
                 .perform_sync();
 
         } catch (const std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: http_post exception - " << e.what();
+            BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: http_post exception - " << e.what();
         }
         return result;
     };
@@ -1920,7 +1920,7 @@ int OrcaCloudServiceAgent::http_post(const std::string& path, const std::string&
 int OrcaCloudServiceAgent::http_put(const std::string& path, const std::string& body, std::string* response_body, unsigned int* http_code)
 {
     std::string url = api_base_url + path;
-    BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: PUT " << url;
+    BOOST_LOG_TRIVIAL(trace) << "InlongCloudServiceAgent: PUT " << url;
 
     ensure_token_fresh("http_put_" + path);
 
@@ -1959,13 +1959,13 @@ int OrcaCloudServiceAgent::http_put(const std::string& path, const std::string& 
                     result.success = false;
                     result.status  = resp_status == 0 ? 404 : resp_status;
                     result.body    = body;
-                    BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: HTTP error - " << error;
+                    BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: HTTP error - " << error;
                 })
                 .timeout_max(30)
                 .perform_sync();
 
         } catch (const std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: http_put exception - " << e.what();
+            BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: http_put exception - " << e.what();
         }
         return result;
     };
@@ -1990,7 +1990,7 @@ int OrcaCloudServiceAgent::http_put(const std::string& path, const std::string& 
 int OrcaCloudServiceAgent::http_delete(const std::string& path, std::string* response_body, unsigned int* http_code)
 {
     std::string url = api_base_url + path;
-    BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: DELETE " << url;
+    BOOST_LOG_TRIVIAL(trace) << "InlongCloudServiceAgent: DELETE " << url;
 
     ensure_token_fresh("http_delete_" + path);
 
@@ -2026,13 +2026,13 @@ int OrcaCloudServiceAgent::http_delete(const std::string& path, std::string* res
                     result.success = false;
                     result.status  = resp_status == 0 ? 404 : resp_status;
                     result.body    = resp_body;
-                    BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: HTTP error - " << error;
+                    BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: HTTP error - " << error;
                 })
                 .timeout_max(30)
                 .perform_sync();
 
         } catch (const std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: http_delete exception - " << e.what();
+            BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: http_delete exception - " << e.what();
         }
         return result;
     };
@@ -2072,7 +2072,7 @@ bool OrcaCloudServiceAgent::http_post_token(const std::string& body, std::string
         }
     }
 
-    BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: POST " << url;
+    BOOST_LOG_TRIVIAL(trace) << "InlongCloudServiceAgent: POST " << url;
 
     bool has_apikey = false;
     for (const auto& pair : headers_copy) {
@@ -2080,7 +2080,7 @@ bool OrcaCloudServiceAgent::http_post_token(const std::string& body, std::string
             has_apikey = true;
     }
     if (!has_apikey) {
-        BOOST_LOG_TRIVIAL(warning) << "OrcaCloudServiceAgent: http_post_token - apikey header MISSING! Token request will likely fail.";
+        BOOST_LOG_TRIVIAL(warning) << "InlongCloudServiceAgent: http_post_token - apikey header MISSING! Token request will likely fail.";
     }
 
     try {
@@ -2109,7 +2109,7 @@ bool OrcaCloudServiceAgent::http_post_token(const std::string& body, std::string
                 success   = false;
                 status    = resp_status == 0 ? 404 : resp_status;
                 resp_body = body;
-                BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: HTTP error - " << error;
+                BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: HTTP error - " << error;
             })
             .timeout_max(30)
             .perform_sync();
@@ -2121,7 +2121,7 @@ bool OrcaCloudServiceAgent::http_post_token(const std::string& body, std::string
         return success;
 
     } catch (const std::exception& e) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: http_post_token exception - " << e.what();
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: http_post_token exception - " << e.what();
         if (http_code)
             *http_code = 0;
         return false;
@@ -2148,7 +2148,7 @@ bool OrcaCloudServiceAgent::http_post_auth(const std::string& path, const std::s
         }
     }
 
-    BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: POST (auth) " << url;
+    BOOST_LOG_TRIVIAL(trace) << "InlongCloudServiceAgent: POST (auth) " << url;
 
     try {
         auto http = Http::post(url);
@@ -2179,7 +2179,7 @@ bool OrcaCloudServiceAgent::http_post_auth(const std::string& path, const std::s
                 success   = false;
                 status    = resp_status == 0 ? 404 : resp_status;
                 resp_body = body;
-                BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: HTTP (auth) error - " << error;
+                BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: HTTP (auth) error - " << error;
             })
             .timeout_max(30)
             .perform_sync();
@@ -2191,7 +2191,7 @@ bool OrcaCloudServiceAgent::http_post_auth(const std::string& path, const std::s
         return success;
 
     } catch (const std::exception& e) {
-        BOOST_LOG_TRIVIAL(error) << "OrcaCloudServiceAgent: http_post_auth exception - " << e.what();
+        BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: http_post_auth exception - " << e.what();
         if (http_code)
             *http_code = 0;
         return false;
@@ -2319,7 +2319,7 @@ int OrcaCloudServiceAgent::set_queue_on_main_fn(QueueOnMainFn fn)
 
 int OrcaCloudServiceAgent::get_my_message(int type, int after, int limit, unsigned int* http_code, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_my_message (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_my_message (stub)";
     if (http_code) *http_code = 200;
     if (http_body) *http_body = "[]";
     return BAMBU_NETWORK_SUCCESS;
@@ -2327,7 +2327,7 @@ int OrcaCloudServiceAgent::get_my_message(int type, int after, int limit, unsign
 
 int OrcaCloudServiceAgent::check_user_task_report(int* task_id, bool* printable)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: check_user_task_report (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: check_user_task_report (stub)";
     if (task_id) *task_id = 0;
     if (printable) *printable = false;
     return BAMBU_NETWORK_SUCCESS;
@@ -2335,7 +2335,7 @@ int OrcaCloudServiceAgent::check_user_task_report(int* task_id, bool* printable)
 
 int OrcaCloudServiceAgent::get_user_print_info(unsigned int* http_code, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_user_print_info (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_user_print_info (stub)";
     if (http_code) *http_code = 200;
     if (http_body) *http_body = "{}";
     return BAMBU_NETWORK_SUCCESS;
@@ -2343,14 +2343,14 @@ int OrcaCloudServiceAgent::get_user_print_info(unsigned int* http_code, std::str
 
 int OrcaCloudServiceAgent::get_user_tasks(TaskQueryParams params, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_user_tasks (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_user_tasks (stub)";
     if (http_body) *http_body = "[]";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_printer_firmware(std::string dev_id, unsigned* http_code, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_printer_firmware (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_printer_firmware (stub)";
     if (http_code) *http_code = 200;
     if (http_body) *http_body = "{}";
     return BAMBU_NETWORK_SUCCESS;
@@ -2358,21 +2358,21 @@ int OrcaCloudServiceAgent::get_printer_firmware(std::string dev_id, unsigned* ht
 
 int OrcaCloudServiceAgent::get_task_plate_index(std::string task_id, int* plate_index)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_task_plate_index (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_task_plate_index (stub)";
     if (plate_index) *plate_index = 0;
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_user_info(int* identifier)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_user_info (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_user_info (stub)";
     if (identifier) *identifier = 0;
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_subtask_info(std::string subtask_id, std::string* task_json, unsigned int* http_code, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_subtask_info (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_subtask_info (stub)";
     if (task_json) *task_json = "{}";
     if (http_code) *http_code = 200;
     if (http_body) *http_body = "{}";
@@ -2381,14 +2381,14 @@ int OrcaCloudServiceAgent::get_subtask_info(std::string subtask_id, std::string*
 
 int OrcaCloudServiceAgent::get_slice_info(std::string project_id, std::string profile_id, int plate_index, std::string* slice_json)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_slice_info (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_slice_info (stub)";
     if (slice_json) *slice_json = "{}";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::query_bind_status(std::vector<std::string> query_list, unsigned int* http_code, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: query_bind_status (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: query_bind_status (stub)";
     if (http_code) *http_code = 200;
     if (http_body) *http_body = "{}";
     return BAMBU_NETWORK_SUCCESS;
@@ -2396,60 +2396,60 @@ int OrcaCloudServiceAgent::query_bind_status(std::vector<std::string> query_list
 
 int OrcaCloudServiceAgent::modify_printer_name(std::string dev_id, std::string dev_name)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: modify_printer_name (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: modify_printer_name (stub)";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_camera_url(std::string dev_id, std::function<void(std::string)> callback)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_camera_url (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_camera_url (stub)";
     if (callback) callback("");
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_design_staffpick(int offset, int limit, std::function<void(std::string)> callback)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_design_staffpick (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_design_staffpick (stub)";
     if (callback) callback("[]");
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::start_publish(PublishParams params, OnUpdateStatusFn update_fn, WasCancelledFn cancel_fn, std::string* out)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: start_publish (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: start_publish (stub)";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_model_publish_url(std::string* url)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_model_publish_url (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_model_publish_url (stub)";
     if (url) *url = "";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_subtask(BBLModelTask* task, OnGetSubTaskFn getsub_fn)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_subtask (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_subtask (stub)";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_model_mall_home_url(std::string* url)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_model_mall_home_url (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_model_mall_home_url (stub)";
     if (url) *url = "";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_model_mall_detail_url(std::string* url, std::string id)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_model_mall_detail_url (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_model_mall_detail_url (stub)";
     if (url) *url = "";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_my_profile(std::string token, unsigned int* http_code, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_my_profile (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_my_profile (stub)";
     if (http_code) *http_code = 200;
     if (http_body) *http_body = "{}";
     return BAMBU_NETWORK_SUCCESS;
@@ -2457,7 +2457,7 @@ int OrcaCloudServiceAgent::get_my_profile(std::string token, unsigned int* http_
 
 int OrcaCloudServiceAgent::get_my_token(std::string ticket, unsigned int* http_code, std::string* http_body)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_my_token (stub) - Orca cloud uses code-based OAuth, not tickets";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_my_token (stub) - Inlong Cloud uses code-based OAuth, not tickets";
     if (http_code) *http_code = 0;
     if (http_body) *http_body = "";
     return -1;
@@ -2472,31 +2472,31 @@ int OrcaCloudServiceAgent::track_enable(bool enable)
 
 int OrcaCloudServiceAgent::track_remove_files()
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: track_remove_files (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: track_remove_files (stub)";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::track_event(std::string evt_key, std::string content)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: track_event (stub) - " << evt_key;
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: track_event (stub) - " << evt_key;
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::track_header(std::string header)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: track_header (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: track_header (stub)";
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::track_update_property(std::string name, std::string value, std::string type)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: track_update_property (stub) - " << name;
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: track_update_property (stub) - " << name;
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::track_get_property(std::string name, std::string& value, std::string type)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: track_get_property (stub) - " << name;
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: track_get_property (stub) - " << name;
     value = "";
     return BAMBU_NETWORK_SUCCESS;
 }
@@ -2509,14 +2509,14 @@ bool OrcaCloudServiceAgent::get_track_enable()
 
 int OrcaCloudServiceAgent::put_model_mall_rating(int design_id, int score, std::string content, std::vector<std::string> images, unsigned int& http_code, std::string& http_error)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: put_model_mall_rating (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: put_model_mall_rating (stub)";
     http_code = 200;
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_oss_config(std::string& config, std::string country_code, unsigned int& http_code, std::string& http_error)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_oss_config (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_oss_config (stub)";
     config = "{}";
     http_code = 200;
     return BAMBU_NETWORK_SUCCESS;
@@ -2524,14 +2524,14 @@ int OrcaCloudServiceAgent::get_oss_config(std::string& config, std::string count
 
 int OrcaCloudServiceAgent::put_rating_picture_oss(std::string& config, std::string& pic_oss_path, std::string model_id, int profile_id, unsigned int& http_code, std::string& http_error)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: put_rating_picture_oss (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: put_rating_picture_oss (stub)";
     http_code = 200;
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_model_mall_rating_result(int job_id, std::string& rating_result, unsigned int& http_code, std::string& http_error)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_model_mall_rating_result (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_model_mall_rating_result (stub)";
     rating_result = "{}";
     http_code = 200;
     return BAMBU_NETWORK_SUCCESS;
@@ -2553,21 +2553,21 @@ std::string OrcaCloudServiceAgent::get_cloud_login_url(const std::string& langua
 
 int OrcaCloudServiceAgent::get_mw_user_preference(std::function<void(std::string)> callback)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_mw_user_preference (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_mw_user_preference (stub)";
     if (callback) callback("{}");
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int OrcaCloudServiceAgent::get_mw_user_4ulist(int seed, int limit, std::function<void(std::string)> callback)
 {
-    BOOST_LOG_TRIVIAL(debug) << "OrcaCloudServiceAgent: get_mw_user_4ulist (stub)";
+    BOOST_LOG_TRIVIAL(debug) << "InlongCloudServiceAgent: get_mw_user_4ulist (stub)";
     if (callback) callback("[]");
     return BAMBU_NETWORK_SUCCESS;
 }
 
 std::string OrcaCloudServiceAgent::get_version()
 {
-    return "OrcaCloudServiceAgent 1.0.0";
+    return "InlongCloudServiceAgent 1.0.0";
 }
 
 // ============================================================================

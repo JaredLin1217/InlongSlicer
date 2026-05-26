@@ -316,7 +316,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
         }
     }
     if(target_dir_icons.empty()) {
-        BOOST_LOG_TRIVIAL(error) << "Copying OrcaSlicer icon to icons directory failed.";
+        BOOST_LOG_TRIVIAL(error) << "Copying Inlong Slicer icon to icons directory failed.";
     } else 
     	// save path to icon
         app_config->set("desktop_integration_icon_slicer_path", GUI::format("%1%/images/%2%OrcaSlicer%3%.png", target_dir_icons, icon_theme_path, version_suffix));
@@ -330,7 +330,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
             // Write slicer desktop file
             std::string desktop_file = GUI::format(
                 "[Desktop Entry]\n"
-                "Name=OrcaSlicer%1%\n"
+                "Name=Inlong Slicer%1%\n"
                 "GenericName=3D Printing Software\n"
                 "Icon=OrcaSlicer%2%\n"
                 "Exec=\"%3%\" %%F\n"
@@ -401,7 +401,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
         // Desktop file
         std::string desktop_file = GUI::format(
             "[Desktop Entry]\n"
-            "Name=Bambu Gcode Viewer%1%\n"
+            "Name=Inlong Slicer G-code Viewer%1%\n"
             "GenericName=3D Printing Software\n"
             "Icon=OrcaSlicer-gcodeviewer%2%\n"
             "Exec=\"%3%\" --gcodeviewer %%F\n"
@@ -420,7 +420,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
             app_config->set("desktop_integration_app_viewer_path", desktop_path);
         else {
             BOOST_LOG_TRIVIAL(error) << "Performing desktop integration failed - could not create Gcodeviewer desktop file";
-            show_error(nullptr, _L("Performing desktop integration failed - could not create Gcodeviewer desktop file. OrcaSlicer desktop file was probably created successfully."));
+            show_error(nullptr, _L("Performing desktop integration failed - could not create Gcodeviewer desktop file. Inlong Slicer desktop file was probably created successfully."));
         }
     }
     
@@ -535,7 +535,7 @@ void DesktopIntegrationDialog::perform_downloader_desktop_integration(std::strin
 
     std::string desktop_file_downloader = GUI::format(
         "[Desktop Entry]\n"
-        "Name=OrcaSlicer URL Protocol %1% %2%\n"
+        "Name=Inlong Slicer URL Protocol %1% %2%\n"
         "Exec=%3% %%u\n"
         "Terminal=false\n"
         "Type=Application\n"

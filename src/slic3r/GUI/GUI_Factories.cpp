@@ -572,17 +572,17 @@ wxMenu* MenuFactory::append_submenu_add_generic(wxMenu* menu, ModelVolumeType ty
 wxMenu* MenuFactory::append_submenu_add_handy_model(wxMenu* menu, ModelVolumeType type) {
     auto sub_menu = new wxMenu;
 
-    for (auto &item : {L("Orca Cube"), L("Orca Tolerance Test"), L("3DBenchy"), L("Cali Cat"), L("Autodesk FDM Test"),
-                       L("Voron Cube"), L("Stanford Bunny"), L("Orca String Hell") }) {
+    for (auto &item : {L("Inlong Cube"), L("Inlong Tolerance Test"), L("3DBenchy"), L("Cali Cat"), L("Autodesk FDM Test"),
+                       L("Voron Cube"), L("Stanford Bunny"), L("Inlong String Hell") }) {
         append_menu_item(
             sub_menu, wxID_ANY, _(item), "",
             [type, item](wxCommandEvent&) {
                 std::vector<boost::filesystem::path> input_files;
                 bool                                 is_stringhell = false;
                 std::string                          file_name     = item;
-                if (file_name == L("Orca Cube"))
+                if (file_name == L("Inlong Cube"))
                     file_name = "OrcaCube_v2.3mf";
-                else if (file_name == L("Orca Tolerance Test"))
+                else if (file_name == L("Inlong Tolerance Test"))
                     file_name = "OrcaToleranceTest.drc";
                 else if (file_name == L("3DBenchy"))
                     file_name = "3DBenchy.drc";
@@ -594,7 +594,7 @@ wxMenu* MenuFactory::append_submenu_add_handy_model(wxMenu* menu, ModelVolumeTyp
                     file_name = "Voron_Design_Cube_v7.drc";
                 else if (file_name == L("Stanford Bunny"))
                     file_name = "Stanford_Bunny.drc";
-                else if (file_name == L("Orca String Hell")) {
+                else if (file_name == L("Inlong String Hell")) {
                     file_name     = "Orca_stringhell.drc";
                     is_stringhell = true;
                 } else
