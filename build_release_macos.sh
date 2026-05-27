@@ -148,7 +148,7 @@ function build_deps() {
 
             PROJECT_BUILD_DIR="$PROJECT_DIR/build/$_ARCH"
             DEPS_BUILD_DIR="$DEPS_DIR/build/$_ARCH"
-            DEPS="$DEPS_BUILD_DIR/OrcaSlicer_dep"
+            DEPS="$DEPS_BUILD_DIR/InlongSlicer_dep"
 
             echo "Building deps..."
             (
@@ -175,7 +175,7 @@ function pack_deps() {
     (
         set -x
         cd "$DEPS_DIR"
-        tar -zcvf "OrcaSlicer_dep_mac_${ARCH}_$(date +"%Y%m%d").tar.gz" "build"
+        tar -zcvf "InlongSlicer_dep_mac_${ARCH}_$(date +"%Y%m%d").tar.gz" "build"
     )
 }
 
@@ -187,7 +187,7 @@ function build_slicer() {
 
             PROJECT_BUILD_DIR="$PROJECT_DIR/build/$_ARCH"
             DEPS_BUILD_DIR="$DEPS_DIR/build/$_ARCH"
-            DEPS="$DEPS_BUILD_DIR/OrcaSlicer_dep"
+            DEPS="$DEPS_BUILD_DIR/InlongSlicer_dep"
 
             echo "Building slicer for $_ARCH..."
             (
@@ -197,8 +197,8 @@ function build_slicer() {
             if [ "1." != "$BUILD_ONLY". ]; then
                 cmake "${PROJECT_DIR}" \
                     -G "${SLICER_CMAKE_GENERATOR}" \
-                    -DORCA_TOOLS=ON \
-                    ${ORCA_UPDATER_SIG_KEY:+-DORCA_UPDATER_SIG_KEY="$ORCA_UPDATER_SIG_KEY"} \
+                    -DINLONG_TOOLS=ON \
+                    ${INLONG_UPDATER_SIG_KEY:+-DINLONG_UPDATER_SIG_KEY="$INLONG_UPDATER_SIG_KEY"} \
                     ${BUILD_TESTS:+-DBUILD_TESTS=ON} \
                     -DCMAKE_BUILD_TYPE="$BUILD_CONFIG" \
                     -DCMAKE_OSX_ARCHITECTURES="${_ARCH}" \
@@ -227,31 +227,31 @@ function build_slicer() {
         echo "Fix macOS app package..."
         (
             cd "$PROJECT_BUILD_DIR"
-            mkdir -p OrcaSlicer
-            cd OrcaSlicer
+            mkdir -p InlongSlicer
+            cd InlongSlicer
             # remove previously built app
-            rm -rf ./OrcaSlicer.app
+            rm -rf ./InlongSlicer.app
             # fully copy newly built app
-            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer.app" ./OrcaSlicer.app
+            cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/InlongSlicer.app" ./InlongSlicer.app
             # fix resources
-            resources_path=$(readlink ./OrcaSlicer.app/Contents/Resources)
-            rm ./OrcaSlicer.app/Contents/Resources
-            cp -R "$resources_path" ./OrcaSlicer.app/Contents/Resources
+            resources_path=$(readlink ./InlongSlicer.app/Contents/Resources)
+            rm ./InlongSlicer.app/Contents/Resources
+            cp -R "$resources_path" ./InlongSlicer.app/Contents/Resources
             # delete .DS_Store file
-            find ./OrcaSlicer.app/ -name '.DS_Store' -delete
+            find ./InlongSlicer.app/ -name '.DS_Store' -delete
             
-            # Copy OrcaSlicer_profile_validator.app if it exists
-            if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer_profile_validator.app/Contents/MacOS/OrcaSlicer_profile_validator" ]; then
-                echo "Copying OrcaSlicer_profile_validator.app..."
-                rm -rf ./OrcaSlicer_profile_validator.app
-                cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/OrcaSlicer_profile_validator.app" ./OrcaSlicer_profile_validator.app
+            # Copy InlongSlicer_profile_validator.app if it exists
+            if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/InlongSlicer_profile_validator.app/Contents/MacOS/InlongSlicer_profile_validator" ]; then
+                echo "Copying InlongSlicer_profile_validator.app..."
+                rm -rf ./InlongSlicer_profile_validator.app
+                cp -pR "../src$BUILD_DIR_CONFIG_SUBDIR/InlongSlicer_profile_validator.app" ./InlongSlicer_profile_validator.app
                 # delete .DS_Store file
-                find ./OrcaSlicer_profile_validator.app/ -name '.DS_Store' -delete
+                find ./InlongSlicer_profile_validator.app/ -name '.DS_Store' -delete
             fi
         )
 
         # extract version
-        # export ver=$(grep '^#define SoftFever_VERSION' ../src/libslic3r/libslic3r_version.h | cut -d ' ' -f3)
+        # export ver=$(grep '^#define INLONGSLICER_VERSION' ../src/libslic3r/libslic3r_version.h | cut -d ' ' -f3)
         # ver="_V${ver//\"}"
         # echo $PWD
         # if [ "1." != "$NIGHTLY_BUILD". ];
@@ -259,7 +259,7 @@ function build_slicer() {
         #     ver=${ver}_dev
         # fi
 
-        # zip -FSr OrcaSlicer${ver}_Mac_${_ARCH}.zip OrcaSlicer.app
+        # zip -FSr InlongSlicer${ver}_Mac_${_ARCH}.zip InlongSlicer.app
 
     fi
     done
@@ -291,28 +291,28 @@ function build_universal() {
     echo "Building universal binary..."
 
     PROJECT_BUILD_DIR="$PROJECT_DIR/build/$ARCH"
-    ARM64_APP="$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer.app"
-    X86_64_APP="$PROJECT_DIR/build/x86_64/OrcaSlicer/OrcaSlicer.app"
+    ARM64_APP="$PROJECT_DIR/build/arm64/InlongSlicer/InlongSlicer.app"
+    X86_64_APP="$PROJECT_DIR/build/x86_64/InlongSlicer/InlongSlicer.app"
 
-    mkdir -p "$PROJECT_BUILD_DIR/OrcaSlicer"
-    UNIVERSAL_APP="$PROJECT_BUILD_DIR/OrcaSlicer/OrcaSlicer.app"
+    mkdir -p "$PROJECT_BUILD_DIR/InlongSlicer"
+    UNIVERSAL_APP="$PROJECT_BUILD_DIR/InlongSlicer/InlongSlicer.app"
     rm -rf "$UNIVERSAL_APP"
     cp -R "$ARM64_APP" "$UNIVERSAL_APP"
 
-    echo "Creating universal binaries for OrcaSlicer.app..."
+    echo "Creating universal binaries for InlongSlicer.app..."
     lipo_dir "$UNIVERSAL_APP" "$X86_64_APP"
-    echo "Universal OrcaSlicer.app created at $UNIVERSAL_APP"
+    echo "Universal InlongSlicer.app created at $UNIVERSAL_APP"
 
     # Create universal binary for profile validator if it exists
-    ARM64_VALIDATOR="$PROJECT_DIR/build/arm64/OrcaSlicer/OrcaSlicer_profile_validator.app"
-    X86_64_VALIDATOR="$PROJECT_DIR/build/x86_64/OrcaSlicer/OrcaSlicer_profile_validator.app"
+    ARM64_VALIDATOR="$PROJECT_DIR/build/arm64/InlongSlicer/InlongSlicer_profile_validator.app"
+    X86_64_VALIDATOR="$PROJECT_DIR/build/x86_64/InlongSlicer/InlongSlicer_profile_validator.app"
     if [ -d "$ARM64_VALIDATOR" ] && [ -d "$X86_64_VALIDATOR" ]; then
-        echo "Creating universal binaries for OrcaSlicer_profile_validator.app..."
-        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/OrcaSlicer/OrcaSlicer_profile_validator.app"
+        echo "Creating universal binaries for InlongSlicer_profile_validator.app..."
+        UNIVERSAL_VALIDATOR_APP="$PROJECT_BUILD_DIR/InlongSlicer/InlongSlicer_profile_validator.app"
         rm -rf "$UNIVERSAL_VALIDATOR_APP"
         cp -R "$ARM64_VALIDATOR" "$UNIVERSAL_VALIDATOR_APP"
         lipo_dir "$UNIVERSAL_VALIDATOR_APP" "$X86_64_VALIDATOR"
-        echo "Universal OrcaSlicer_profile_validator.app created at $UNIVERSAL_VALIDATOR_APP"
+        echo "Universal InlongSlicer_profile_validator.app created at $UNIVERSAL_VALIDATOR_APP"
     fi
 }
 

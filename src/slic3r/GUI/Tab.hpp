@@ -40,7 +40,7 @@
 #include "ParamsPanel.hpp"
 #include "Widgets/RoundedRectangle.hpp"
 #include "Widgets/TextInput.hpp"
-#include "Widgets/CheckBox.hpp" // ORCA
+#include "Widgets/CheckBox.hpp" // INLONG
 
 class TabCtrl;
 class ModeSwitchButton;
@@ -306,7 +306,7 @@ public:
     int                 m_update_cnt = 0;
 
 	ModeSwitchButton *m_mode_view = nullptr;
-	ScalableButton* m_mode_icon = nullptr; // ORCA m_static_title replacement
+	ScalableButton* m_mode_icon = nullptr; // INLONG m_static_title replacement
     SwitchButton *m_extruder_switch = nullptr;
     MultiSwitchButton *m_variant_combo = nullptr;
 

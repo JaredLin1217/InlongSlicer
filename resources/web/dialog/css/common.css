@@ -101,7 +101,7 @@ body
 
 #AcceptArea
 {
-	height:var(--dialog-button-sizer-height); /*----ORCA Use fixed size to prevent position change----*/
+	height:var(--dialog-button-sizer-height); /*----INLONG Use fixed size to prevent position change----*/
 	max-height:var(--dialog-button-sizer-height);
 	min-height:var(--dialog-button-sizer-height);
 	padding: 0 var(--dialog-button-gap);
@@ -120,7 +120,7 @@ body
 	cursor: pointer;
 }
 
-/*---Checkboxes ORCA ---*/
+/*---Checkboxes INLONG ---*/
 label:has(input[type="checkbox"]){
 	margin:0;
 	padding: 0;

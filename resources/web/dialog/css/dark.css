@@ -29,7 +29,7 @@
 
 body
 {
-	background-color:#2D2D31; /* ORCA match background color */
+	background-color:#2D2D31; /* INLONG match background color */
 	color: #efeff0;
 }
 
@@ -50,7 +50,7 @@ body
 	background-color:#2D2D31;
 }
 
-/*---Checkboxes ORCA---*/
+/*---Checkboxes INLONG---*/
 input[type=checkbox]{
 	background-color:#2D2D31;
 	border-color:#4A4A51;

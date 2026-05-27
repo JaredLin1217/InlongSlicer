@@ -341,8 +341,8 @@ void SendMultiMachinePage::on_dpi_changed(const wxRect& suggested_rect)
     print_weight->msw_rescale();
     timeimg->SetBitmap(print_time->bmp());
     weightimg->SetBitmap(print_weight->bmp());
-    m_button_add->Rescale(); // ORCA no need to re set size
-    m_button_send->Rescale(); // ORCA no need to re set size
+    m_button_add->Rescale(); // INLONG no need to re set size
+    m_button_send->Rescale(); // INLONG no need to re set size
 
     for (auto it = m_device_items.begin(); it != m_device_items.end(); ++it) {
         it->second->Refresh();

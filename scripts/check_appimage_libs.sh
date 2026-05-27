@@ -34,7 +34,7 @@ if [[ -n "$ENTRYPOINT" ]]; then
 fi
 
 declare -a lib_paths=(
-    "$APPDIR/lib/orca-runtime"
+    "$APPDIR/lib/inlong-runtime"
     "$APPDIR/lib"
     "$APPDIR/bin"
 )

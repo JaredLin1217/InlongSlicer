@@ -79,7 +79,7 @@ using Interval = std::array<std::size_t, 2>;
 //
 enum class EViewType : uint8_t
 {
-    Summary, // ORCA
+    Summary, // INLONG
     FeatureType,
     ColorPrint,
     Speed,
@@ -92,11 +92,11 @@ enum class EViewType : uint8_t
     LayerTimeLogarithmic,
     FanSpeed,
     Temperature,
-// ORCA: Add Pressure Advance visualization support
+// INLONG: Add Pressure Advance visualization support
     PressureAdvance,
-    // ORCA: Add Acceleration visualization support
+    // INLONG: Add Acceleration visualization support
     Acceleration,
-    // ORCA: Add Jerk visualization support
+    // INLONG: Add Jerk visualization support
     Jerk,
     Tool,
     COUNT
@@ -147,7 +147,7 @@ enum class EGCodeExtrusionRole : uint8_t
 	  SupportMaterialInterface,
 	  WipeTower,
 	  Custom,
-      // ORCA
+      // INLONG
       BottomSurface,
       InternalBridgeInfill,
       Brim,

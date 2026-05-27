@@ -488,7 +488,7 @@ void PressureEqualizer::output_gcode_line(const size_t line_idx)
     // number of segments this line can be broken down to
     auto nSegments = size_t(ceil(l / m_max_segment_length));
     
-    // Orca:
+    // Inlong:
     // Calculate the absolute difference in volumetric extrusion rate between the start and end point of the line.
     // Quantize it to 1mm3/min (0.016mm3/sec).
     int delta_volumetric_rate = std::round(std::max({
@@ -499,7 +499,7 @@ void PressureEqualizer::output_gcode_line(const size_t line_idx)
     }));
     
     // Emit the line with lowered extrusion rates.
-    // Orca:
+    // Inlong:
     // First, check if the change in volumetric extrusion rate is trivial (less than 10mm3/min -> 0.16mm3/sec (5mm/sec speed for a 0.25 mm nozzle).
     // Or if the line size is equal in length with the smallest segment.
     // If so, then emit the line as a single extrusion, i.e. dont split into segments.
@@ -762,7 +762,7 @@ void PressureEqualizer::adjust_volumetric_rate(const size_t first_line_idx, cons
 
             // don't alter the flow rate for these extrusion types
             if (!line.adjustable_flow || line.extrusion_role == ExtrusionRole::erBridgeInfill || line.extrusion_role == ExtrusionRole::erIroning ||
-                // Orca: Limit ERS to external perimeters and overhangs if option selected by user
+                // Inlong: Limit ERS to external perimeters and overhangs if option selected by user
                 (m_extrusion_rate_smoothing_external_perimeter_only && line.extrusion_role != ExtrusionRole::erOverhangPerimeter && line.extrusion_role != ExtrusionRole::erExternalPerimeter)) {
                 rate_end = line.volumetric_extrusion_rate_end;
             } else if (line.volumetric_extrusion_rate_end > rate_end) {
@@ -819,7 +819,7 @@ void PressureEqualizer::adjust_volumetric_rate(const size_t first_line_idx, cons
             float rate_start = feedrate_per_extrusion_role[iRole];
             // don't alter the flow rate for these extrusion types
             if (!line.adjustable_flow || line.extrusion_role == ExtrusionRole::erBridgeInfill || line.extrusion_role == ExtrusionRole::erIroning ||
-                // Orca: Limit ERS to external perimeters and overhangs if option selected by user
+                // Inlong: Limit ERS to external perimeters and overhangs if option selected by user
                 (m_extrusion_rate_smoothing_external_perimeter_only && line.extrusion_role != ExtrusionRole::erOverhangPerimeter && line.extrusion_role != ExtrusionRole::erExternalPerimeter)) {
                 rate_start = line.volumetric_extrusion_rate_start;
             } else if (iRole == size_t(line.extrusion_role) && rate_prec < rate_start)
@@ -917,7 +917,7 @@ inline bool is_just_line_with_extrude_set_speed_tag(const std::string &line)
 
 void PressureEqualizer::push_line_to_output(const size_t line_idx, float new_feedrate, const char *comment)
 {
-    // Orca: sanity check, 1 mm/s is the minimum feedrate.
+    // Inlong: sanity check, 1 mm/s is the minimum feedrate.
     if (new_feedrate < 60)
         new_feedrate = 60;
     // Quantize speed changes to a minimum of 1mm/sec, to reduce gcode volume for trivial speed changes.

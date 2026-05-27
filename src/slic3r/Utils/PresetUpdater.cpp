@@ -87,7 +87,7 @@ struct Update
 	//BBS: use changelog string instead of url
 	std::string change_log;
 	std::string descriptions;
-    // Orca: add file filter support
+    // Inlong: add file filter support
     std::function<bool(const std::string)> file_filter;
 
 	bool forced_update;
@@ -651,7 +651,7 @@ void PresetUpdater::priv::sync_resources(std::string http_url, std::map<std::str
     }
 }
 
-// Orca: per-vendor config update check
+// Inlong: per-vendor config update check
 void PresetUpdater::priv::sync_vendor_config(const std::string& vendor_id)
 {
     if (!enabled_config_update) return;
@@ -665,9 +665,9 @@ void PresetUpdater::priv::sync_vendor_config(const std::string& vendor_id)
     AppConfig *app_config = GUI::wxGetApp().app_config;
     std::string url = app_config->profile_update_url()
         + "?vendor=" + Http::url_encode(vendor_id)
-        + "&orca_version=" + Http::url_encode(SoftFever_VERSION);
+        + "&inlong_version=" + Http::url_encode(INLONGSLICER_VERSION);
 
-    std::string online_version_str; // this represents the PROFILE VERSION, not ORCA VERSION
+    std::string online_version_str; // this represents the PROFILE VERSION, not INLONG VERSION
     std::string download_url_str;
 
     Http::get(url)
@@ -1067,7 +1067,7 @@ bool PresetUpdater::priv::install_bundles_rsrc(const std::vector<std::string>& b
 }
 
 
-// Orca: copy/update the vendor profiles from resource to system folder
+// Inlong: copy/update the vendor profiles from resource to system folder
 void PresetUpdater::priv::check_installed_vendor_profiles() const
 {
     BOOST_LOG_TRIVIAL(info) << "[Inlong Updater]:Checking whether the profile from resource is newer";
@@ -1076,8 +1076,8 @@ void PresetUpdater::priv::check_installed_vendor_profiles() const
     const auto enabled_vendors = app_config->vendors();
 
     std::set<std::string> bundles;
-    // Orca: always install filament library
-    bundles.insert(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    // Inlong: always install filament library
+    bundles.insert(PresetBundle::INLONG_FILAMENT_LIBRARY);
     for (auto &dir_entry : boost::filesystem::directory_iterator(rsrc_path)) {
         const auto &path = dir_entry.path();
         std::string file_path = path.string();
@@ -1088,7 +1088,7 @@ void PresetUpdater::priv::check_installed_vendor_profiles() const
             vendor_name.erase(vendor_name.size() - 5);
             if (bundles.find(vendor_name) != bundles.end())continue;
 
-            const auto is_vendor_enabled = (vendor_name == PresetBundle::ORCA_DEFAULT_BUNDLE) // always update configs from resource to vendor for ORCA_DEFAULT_BUNDLE
+            const auto is_vendor_enabled = (vendor_name == PresetBundle::INLONG_DEFAULT_BUNDLE) // always update configs from resource to vendor for INLONG_DEFAULT_BUNDLE
                                            || (enabled_vendors.find(vendor_name) != enabled_vendors.end());
             if (enabled_config_update) {
                 if ( fs::exists(path_in_vendor)) {
@@ -1176,7 +1176,7 @@ Updates PresetUpdater::priv::get_printer_config_updates(bool update) const
 // Generates a list of bundle updates that are to be performed.
 // Version of slic3r that was running the last time and which was read out from PrusaSlicer.ini is provided
 // as a parameter.
-// Orca: OTA profile updates should be loacated in ota/profiles folder
+// Inlong: OTA profile updates should be loacated in ota/profiles folder
 Updates PresetUpdater::priv::get_config_updates(const Semver &old_slic3r_version) const
 {
 	Updates updates;
@@ -1235,9 +1235,9 @@ Updates PresetUpdater::priv::get_config_updates(const Semver &old_slic3r_version
                     Version version;
                     version.config_version = cache_ver;
                     version.comment        = description;
-                    // Orca: update vendor.json
+                    // Inlong: update vendor.json
                     updates.updates.emplace_back(std::move(file_path), std::move(path_in_vendor.string()), std::move(version), vendor_name, changelog, "", force_update, false);
-                    //Orca: update vendor folder
+                    //Inlong: update vendor folder
                     updates.updates.emplace_back(cache_profile_path / vendor_name, vendor_path / vendor_name, Version(), vendor_name, "", "", force_update, true);
                 } else {
                     BOOST_LOG_TRIVIAL(info) << "[Inlong Updater]:cached settings for " << vendor_name

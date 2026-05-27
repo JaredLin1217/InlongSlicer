@@ -2558,7 +2558,7 @@ ModelVolumeType type_from_string(const std::string &s)
             stream << " <" << METADATA_TAG << " name=\"Copyright\">" << "</" << METADATA_TAG << ">\n";
             stream << " <" << METADATA_TAG << " name=\"LicenseTerms\">" << "</" << METADATA_TAG << ">\n";
             stream << " <" << METADATA_TAG << " name=\"Rating\">" << "</" << METADATA_TAG << ">\n";
-            // Orca: PRIVACY: do not store creation & modification date in 3mf
+            // Inlong: PRIVACY: do not store creation & modification date in 3mf
             stream << " <" << METADATA_TAG << " name=\"CreationDate\">" << "</" << METADATA_TAG << ">\n";
             stream << " <" << METADATA_TAG << " name=\"ModificationDate\">" << "</" << METADATA_TAG << ">\n";
             stream << " <" << METADATA_TAG << " name=\"Application\">" << SLIC3R_APP_KEY << "-" << SLIC3R_VERSION << "</" << METADATA_TAG << ">\n";

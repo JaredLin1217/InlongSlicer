@@ -172,7 +172,7 @@ namespace GUI {
             }
 #endif // !SLIC3R_OPENGL_ES
 
-            m_rectangle.set_color(ColorRGBA::ORCA()); // ORCA: use orca color for selection rectangle
+            m_rectangle.set_color(ColorRGBA::INLONG()); // INLONG: use Inlong color for selection rectangle
             m_rectangle.render();
             shader->stop_using();
         }

@@ -699,7 +699,7 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
 
     bool have_skirt = config->opt_int("skirt_loops") > 0;
     toggle_field("skirt_height", have_skirt && config->opt_enum<DraftShield>("draft_shield") != dsEnabled);
-    toggle_line("single_loop_draft_shield", have_skirt); // ORCA: Display one wall if skirt enabled
+    toggle_line("single_loop_draft_shield", have_skirt); // INLONG: Display one wall if skirt enabled
     for (auto el : {"skirt_type", "min_skirt_length", "skirt_distance", "skirt_start_angle", "skirt_speed", "draft_shield"})
         toggle_field(el, have_skirt);
 
@@ -749,14 +749,14 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     bool support_is_normal_tree = support_is_tree && !support_is_organic;
 
     // hide settings that are not used by tree supports
-    toggle_line("support_threshold_overlap", !support_is_tree); // ORCA: tree supports do not use Threshold Overlap
+    toggle_line("support_threshold_overlap", !support_is_tree); // INLONG: tree supports do not use Threshold Overlap
     // settings specific to normal trees
     for (auto el : {"tree_support_branch_angle", "tree_support_branch_distance", "tree_support_branch_diameter", "tree_support_auto_brim", "tree_support_brim_width"})
         toggle_line(el, support_is_normal_tree);
     // settings specific to organic trees
     for (auto el : {"tree_support_branch_angle_organic", "tree_support_branch_distance_organic", "tree_support_branch_diameter_organic", "tree_support_angle_slow", "tree_support_tip_diameter", "tree_support_top_rate", "tree_support_branch_diameter_angle"})
         toggle_line(el, support_is_organic);
-    // ORCA: Independent support layer height is not compatible with organic tree supports,
+    // INLONG: Independent support layer height is not compatible with organic tree supports,
     // as they rely on the support layers being the same as the object layers to determine where to place branches.
     toggle_line("independent_support_layer_height", have_support_material && !support_is_organic);
 
@@ -775,7 +775,7 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     bool has_support_ironing = can_ironing_support && config->opt_bool("support_ironing");
     for (auto el : {"support_ironing_pattern", "support_ironing_flow", "support_ironing_spacing" })
         toggle_line(el, has_support_ironing);
-    // Orca: Force solid support interface when using support ironing
+    // Inlong: Force solid support interface when using support ironing
     toggle_field("support_interface_spacing", have_support_material && have_support_interface && !has_support_ironing);
 
 //    see issue #10915
@@ -792,9 +792,9 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
 
     toggle_line("raft_contact_distance", have_raft && !have_support_soluble);
 
-    // Orca: First-layer density is available for supports broadly.
+    // Inlong: First-layer density is available for supports broadly.
     toggle_field("raft_first_layer_density", have_support_material);
-    // Orca: For regular tree (Slim/Strong) without raft, hide first-layer expansion.
+    // Inlong: For regular tree (Slim/Strong) without raft, hide first-layer expansion.
     // Keep it enabled for non-tree supports, organic tree, hybrid tree, and any raft case.
     toggle_field("raft_first_layer_expansion",
                  have_support_material && ((!support_is_normal_tree || support_style == smsTreeHybrid) || have_raft));
@@ -902,7 +902,7 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
         toggle_line(el, have_arachne);
     toggle_field("detect_thin_wall", !have_arachne);
 
-    // Orca
+    // Inlong
     auto is_role_based_wipe_speed = config->opt_bool("role_based_wipe_speed");
     toggle_field("wipe_speed",!is_role_based_wipe_speed);
 
@@ -968,7 +968,7 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     // Adaptative Cubic and support cubic infill patterns do not support infill rotation.
     bool FillAdaptive = (pattern == InfillPattern::ipAdaptiveCubic || pattern == InfillPattern::ipSupportCubic);
 
-    //Orca: disable infill_direction/solid_infill_direction if sparse_infill_rotate_template/solid_infill_rotate_template is not empty value and adaptive cubic/support cubic infill pattern is not selected
+    //Inlong: disable infill_direction/solid_infill_direction if sparse_infill_rotate_template/solid_infill_rotate_template is not empty value and adaptive cubic/support cubic infill pattern is not selected
     toggle_field("sparse_infill_rotate_template", !FillAdaptive);
     toggle_field("infill_direction", config->opt_string("sparse_infill_rotate_template") == "" && !FillAdaptive);
     toggle_field("solid_infill_direction", config->opt_string("solid_infill_rotate_template") == "");

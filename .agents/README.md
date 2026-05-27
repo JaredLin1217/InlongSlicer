@@ -6,6 +6,7 @@ This directory contains local Codex agent assets for this repository.
 
 - `skills/source-command-dedupe/SKILL.md`: migrated source command for finding likely duplicate GitHub issues.
 - `skills/source-command-oncall-triage/SKILL.md`: migrated source command for identifying high-impact GitHub issues that need oncall attention.
+- `skills/inlong-branding-migration/SKILL.md`: entrypoint for preserving the OrcaSlicer-to-InlongSlicer migration during upstream updates. It points to `../InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md` for the full checklist.
 
 ## Maintenance
 

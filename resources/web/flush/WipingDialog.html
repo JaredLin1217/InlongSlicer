@@ -256,7 +256,7 @@
     </style>
   </head>
 
-  <link rel="stylesheet" type="text/css" href="../include/global.css" /> <!-- ORCA One for all-->
+  <link rel="stylesheet" type="text/css" href="../include/global.css" /> <!-- INLONG One for all-->
 
   <body>
     <div class="container">
@@ -452,7 +452,7 @@
       }
 
       function updateVolumeRange(min_volume,max_volume){
-        // Orca: "Typical" guidance only unlinked from upper bound in the slicer.
+        // Inlong: "Typical" guidance only unlinked from upper bound in the slicer.
         const TYPICAL_MAX_FLUSH_VOLUME = 900;
         const panel = document.getElementById('volume_range_panel');
         panel.innerText = panel.innerText.replace(/\[.*\]/, `[${min_volume}, ${TYPICAL_MAX_FLUSH_VOLUME}]`);

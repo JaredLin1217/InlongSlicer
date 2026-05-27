@@ -815,7 +815,7 @@ void AMSMaterialsSetting::update_widgets()
 bool AMSMaterialsSetting::Show(bool show)
 {
     if (show) {
-        m_button_confirm->Rescale(); // ORCA re applies size
+        m_button_confirm->Rescale(); // INLONG re applies size
         m_input_nozzle_max->GetTextCtrl()->SetSize(wxSize(-1, FromDIP(20)));
         m_input_nozzle_min->GetTextCtrl()->SetSize(wxSize(-1, FromDIP(20)));
         //m_clr_picker->set_color(m_clr_picker->GetParent()->GetBackgroundColour());
@@ -1172,7 +1172,7 @@ void AMSMaterialsSetting::on_select_filament(wxCommandEvent &evt)
     if ( !this->obj || m_filament_selection < 0) {
         m_input_k_val->Enable(false);
         m_input_n_val->Enable(false);
-        m_button_confirm->Disable(); // ORCA No need to change style
+        m_button_confirm->Disable(); // INLONG No need to change style
         m_comboBox_cali_result->Clear();
         m_comboBox_cali_result->SetValue(wxEmptyString);
         m_input_k_val->GetTextCtrl()->SetValue(wxEmptyString);
@@ -1181,7 +1181,7 @@ void AMSMaterialsSetting::on_select_filament(wxCommandEvent &evt)
         return;
     }
     else {
-        m_button_confirm->Enable(true);  // ORCA No need to change style
+        m_button_confirm->Enable(true);  // INLONG No need to change style
     }
 
     //filament id
@@ -1331,9 +1331,9 @@ void AMSMaterialsSetting::on_dpi_changed(const wxRect &suggested_rect)
     degree->msw_rescale();
     bitmap_max_degree->SetBitmap(degree->bmp());
     bitmap_min_degree->SetBitmap(degree->bmp());
-    m_button_reset->Rescale(); // ORCA
-    m_button_confirm->Rescale(); // ORCA
-    m_button_close->Rescale(); // ORCA
+    m_button_reset->Rescale(); // INLONG
+    m_button_confirm->Rescale(); // INLONG
+    m_button_close->Rescale(); // INLONG
     this->Refresh();
 }
 

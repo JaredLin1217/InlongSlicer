@@ -383,7 +383,7 @@ Model Model::read_from_archive(const std::string& input_file, DynamicPrintConfig
 
     bool result = false;
     bool is_bbl_3mf = false;
-    bool is_orca_3mf = false;
+    bool is_inlong_3mf = false;
     if (boost::algorithm::iends_with(input_file, ".3mf")) {
         PrusaFileParser prusa_file_parser;
         if (prusa_file_parser.check_3mf_from_prusa(input_file)) {
@@ -393,7 +393,7 @@ Model Model::read_from_archive(const std::string& input_file, DynamicPrintConfig
         } else {
             // BBS: add part plate related logic
             // BBS: backup & restore
-            result = load_bbs_3mf(input_file.c_str(), config, config_substitutions, &model, plate_data, project_presets, &is_bbl_3mf, &is_orca_3mf, file_version, proFn, options, project);
+            result = load_bbs_3mf(input_file.c_str(), config, config_substitutions, &model, plate_data, project_presets, &is_bbl_3mf, &is_inlong_3mf, file_version, proFn, options, project);
         }
     }
     else if (boost::algorithm::iends_with(input_file, ".zip.amf"))
@@ -402,8 +402,8 @@ Model Model::read_from_archive(const std::string& input_file, DynamicPrintConfig
         throw Slic3r::RuntimeError(_L("Unknown file format. Input file must have .3mf or .zip.amf extension."));
 
     if (out_file_type != En3mfType::From_Prusa) {
-        if (is_orca_3mf)
-            out_file_type = En3mfType::From_Orca;
+        if (is_inlong_3mf)
+            out_file_type = En3mfType::From_Inlong;
         else
             out_file_type = is_bbl_3mf ? En3mfType::From_BBS : En3mfType::From_Other;
     }
@@ -2920,7 +2920,7 @@ void ModelVolume::convert_from_meters()
     this->source.is_converted_from_meters = true;
 }
 
-// Orca: Implement prusa's filament shrink compensation approach
+// Inlong: Implement prusa's filament shrink compensation approach
 // Returns 0-based indices of extruders painted by multi-material painting gizmo.
 std::vector<size_t> ModelVolume::get_extruders_from_multi_material_painting() const {
      if (!this->is_mm_painted())

@@ -22,9 +22,9 @@ namespace GLGizmoUtils {
 	// Sets up ImGui to render buttons that are right-aligned within the current window, using the provided labels to calculate spacing.
 	void begin_right_aligned_buttons(const std::vector<wxString>& labels);
 
-	void push_orca_button_style();
+	void push_inlong_button_style();
 
-	void pop_orca_button_style();
+	void pop_inlong_button_style();
 
 } // namespace GLGizmoUtils
 } // namespace Slic3r::GUI

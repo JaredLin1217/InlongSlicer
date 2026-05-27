@@ -1,6 +1,6 @@
 @echo off
-REM OrcaSlicer gettext
-REM Created by SoftFever on 27/5/23.
+REM InlongSlicer gettext
+REM Created by Inlong on 27/5/23.
 setlocal EnableExtensions EnableDelayedExpansion
 
 REM Check for --full argument
@@ -10,12 +10,12 @@ for %%a in (%*) do (
 )
 
 set "list_file=./localization/i18n/list.txt"
-set "pot_file=./localization/i18n/OrcaSlicer.pot"
-set "filtered_list=%TEMP%\orca_gettext_filtered_%RANDOM%_%RANDOM%.txt"
-set "missing_list=%TEMP%\orca_gettext_missing_%RANDOM%_%RANDOM%.txt"
-set "generated_root=%TEMP%\orca_gettext_generated_%RANDOM%_%RANDOM%"
+set "pot_file=./localization/i18n/InlongSlicer.pot"
+set "filtered_list=%TEMP%\inlong_gettext_filtered_%RANDOM%_%RANDOM%.txt"
+set "missing_list=%TEMP%\inlong_gettext_missing_%RANDOM%_%RANDOM%.txt"
+set "generated_root=%TEMP%\inlong_gettext_generated_%RANDOM%_%RANDOM%"
 set "generated_i18n=%generated_root%\i18n"
-set "generated_pot=%generated_i18n%\OrcaSlicer.pot"
+set "generated_pot=%generated_i18n%\InlongSlicer.pot"
 set "has_sources=0"
 set "script_exit_code=0"
 
@@ -119,9 +119,9 @@ exit /b %errorlevel%
 :processFile
     set "file=%~1"
     set "name=%~n1"
-    set "lang=%name:OrcaSlicer_=%"
+    set "lang=%name:InlongSlicer_=%"
     if %FULL_MODE%==1 if exist "%pot_file%" (
-        set "merged_file=%TEMP%\orca_gettext_merged_%RANDOM%_%RANDOM%.po"
+        set "merged_file=%TEMP%\inlong_gettext_merged_%RANDOM%_%RANDOM%.po"
         .\tools\msgmerge.exe -N -o "!merged_file!" "%file%" "%pot_file%"
         if errorlevel 1 (
             if exist "!merged_file!" del "!merged_file!"
@@ -132,7 +132,7 @@ exit /b %errorlevel%
         if errorlevel 1 exit /b 1
     )
     if not exist "./resources/i18n/!lang!" mkdir "./resources/i18n/!lang!"
-    .\tools\msgfmt.exe --check-format -o "./resources/i18n/!lang!/OrcaSlicer.mo" "%file%"
+    .\tools\msgfmt.exe --check-format -o "./resources/i18n/!lang!/InlongSlicer.mo" "%file%"
     if errorlevel 1 (
         echo Error encountered with msgfmt command for language !lang!.
         exit /b 1

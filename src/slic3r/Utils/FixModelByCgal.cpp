@@ -16,17 +16,17 @@
 #include "libslic3r/Thread.hpp"
 #include "../GUI/I18N.hpp"
 
-// Orca: This file provides utilities for repairing 3D model meshes using the CGAL library, handling mesh splitting, merging, and boolean operations.
+// Inlong: This file provides utilities for repairing 3D model meshes using the CGAL library, handling mesh splitting, merging, and boolean operations.
 
 namespace Slic3r {
 
 namespace {
 
-// Orca: Helper functions for analyzing mesh properties and transformations.
+// Inlong: Helper functions for analyzing mesh properties and transformations.
 
 bool is_not_3dimensional_part(const TriangleMesh &mesh)
 {
-    // Orca: Determines if a mesh is degenerate or represents a non-3dimensional part by checking volume and bounding box dimensions.
+    // Inlong: Determines if a mesh is degenerate or represents a non-3dimensional part by checking volume and bounding box dimensions.
     if (mesh.its.indices.empty())
         return true;
 
@@ -59,17 +59,17 @@ bool is_not_3dimensional_part(const TriangleMesh &mesh)
 
 } // namespace
 
-// Orca: Exception class for handling user-initiated cancellation of model repair operations.
+// Inlong: Exception class for handling user-initiated cancellation of model repair operations.
 class RepairCanceledException : public std::exception {
 public:
     const char* what() const noexcept override { return "Model repair has been canceled"; }
 };
 
-// Orca: Main function to repair model objects using CGAL, with progress dialog and cancellation support.
+// Inlong: Main function to repair model objects using CGAL, with progress dialog and cancellation support.
 // Returns false if fixing was canceled. fix_result contains error message if failed.
 bool fix_model_with_cgal_gui(ModelObject &model_object, int volume_idx, GUI::ProgressDialog &progress_dialog, const wxString &msg_header, std::string &fix_result, bool keep_painting)
 {
-    // Orca: Synchronization primitives for progress updates between worker thread and GUI.
+    // Inlong: Synchronization primitives for progress updates between worker thread and GUI.
     std::mutex mtx;
     std::condition_variable condition;
     struct Progress {
@@ -84,7 +84,7 @@ bool fix_model_with_cgal_gui(ModelObject &model_object, int volume_idx, GUI::Pro
     bool   success = false;
     size_t ivolume = 0;
 
-    // Orca: Lambda for updating progress from worker thread.
+    // Inlong: Lambda for updating progress from worker thread.
     auto on_progress = [&mtx, &condition, &ivolume, &model_object, &progress](const char *msg, unsigned prcnt) {
         std::unique_lock<std::mutex> lock(mtx);
         progress.message = msg;
@@ -94,7 +94,7 @@ bool fix_model_with_cgal_gui(ModelObject &model_object, int volume_idx, GUI::Pro
         condition.notify_all();
     };
 
-    // Orca: Worker thread that performs the actual model repair operations.
+    // Inlong: Worker thread that performs the actual model repair operations.
     auto worker_thread = std::thread([&model_object, volume_idx, &ivolume, on_progress, &success, &canceled, &finished, &fix_result, keep_painting]() {
         try {
 	        set_current_thread_name("cgal_fix_model");
@@ -112,7 +112,7 @@ bool fix_model_with_cgal_gui(ModelObject &model_object, int volume_idx, GUI::Pro
 
                 ModelVolume *volume = model_object.volumes[ivolume];
 
-                // Orca: Split splittable volumes into parts for individual processing.
+                // Inlong: Split splittable volumes into parts for individual processing.
                 size_t parts_count = 1;
                 if (volume->is_splittable()) {
                     parts_count = volume->split(1, keep_painting);
@@ -197,7 +197,7 @@ bool fix_model_with_cgal_gui(ModelObject &model_object, int volume_idx, GUI::Pro
         }
     });
 
-    // Orca: Main GUI loop to update progress dialog and handle cancellation.
+    // Inlong: Main GUI loop to update progress dialog and handle cancellation.
     while (!finished) {
         std::unique_lock<std::mutex> lock(mtx);
         condition.wait_for(lock, std::chrono::milliseconds(250), [&progress]{ return progress.updated; });

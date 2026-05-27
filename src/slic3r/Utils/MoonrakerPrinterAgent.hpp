@@ -117,7 +117,7 @@ protected:
     // Trim whitespace and convert to uppercase
     static std::string trim_and_upper(const std::string& input);
 
-    // Map filament type to OrcaFilamentLibrary preset ID for AMS sync compatibility
+    // Map filament type to InlongFilamentLibrary preset ID for AMS sync compatibility
     static std::string map_filament_type_to_generic_id(const std::string& filament_type);
 
 private:

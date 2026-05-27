@@ -1153,7 +1153,7 @@ PrinterPartsDialog::PrinterPartsDialog(wxWindow* parent)
     change_nozzle_tips->SetFont(Label::Body_13);
     change_nozzle_tips->SetForegroundColour(STATIC_TEXT_CAPTION_COL);
 
-    m_wiki_link = new HyperLink(single_panel, _L("Wiki Guide")); // ORCA
+    m_wiki_link = new HyperLink(single_panel, _L("Wiki Guide")); // INLONG
     m_wiki_link->SetFont(Label::Body_13);
     m_wiki_link->Bind(wxEVT_LEFT_DOWN, &PrinterPartsDialog::OnWikiClicked, this);
 
@@ -1264,7 +1264,7 @@ PrinterPartsDialog::PrinterPartsDialog(wxWindow* parent)
     multiple_change_nozzle_tips->SetFont(Label::Body_13);
     multiple_change_nozzle_tips->SetForegroundColour(STATIC_TEXT_CAPTION_COL);
 
-    multiple_wiki_link = new HyperLink(multiple_panel, _L("Wiki Guide")); // ORCA
+    multiple_wiki_link = new HyperLink(multiple_panel, _L("Wiki Guide")); // INLONG
     multiple_wiki_link->SetFont(Label::Body_13);
     multiple_wiki_link->Bind(wxEVT_LEFT_DOWN, &PrinterPartsDialog::OnWikiClicked, this);
 

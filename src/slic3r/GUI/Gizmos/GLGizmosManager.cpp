@@ -271,12 +271,12 @@ bool GLGizmosManager::init_icon_textures()
     else
         return false;
 
-    if (IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/toolbar_tooltip.svg", 25, 25, texture_id)) // ORCA: Use same resolution with gizmos to prevent blur on icon
+    if (IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/toolbar_tooltip.svg", 25, 25, texture_id)) // INLONG: Use same resolution with gizmos to prevent blur on icon
         icon_list.insert(std::make_pair((int)IC_TOOLBAR_TOOLTIP, texture_id));
     else
         return false;
 
-    if (IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/toolbar_tooltip_hover.svg", 25, 25, texture_id)) // ORCA: Use same resolution with gizmos to prevent blur on icon
+    if (IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/toolbar_tooltip_hover.svg", 25, 25, texture_id)) // INLONG: Use same resolution with gizmos to prevent blur on icon
         icon_list.insert(std::make_pair((int)IC_TOOLBAR_TOOLTIP_HOVER, texture_id));
     else
         return false;
@@ -377,7 +377,7 @@ void GLGizmosManager::reset_all_states()
         open_gizmo(current);
 
     activate_gizmo(Undefined);
-    // Orca: do not clear hover state, as Emboss gizmo can be used without selection
+    // Inlong: do not clear hover state, as Emboss gizmo can be used without selection
     //m_hover = Undefined;
 }
 
@@ -444,7 +444,7 @@ void GLGizmosManager::update_data()
                                    : CommonGizmosDataID(0));
     if (m_current != Undefined) m_gizmos[m_current]->data_changed(m_serializing);
 
-    // Orca: hack: Fix issue that flatten gizmo faces not updated after reload from disk
+    // Inlong: hack: Fix issue that flatten gizmo faces not updated after reload from disk
     if (m_current != Flatten && !m_gizmos.empty()) m_gizmos[Flatten]->data_changed(m_serializing);
 
     //BBS: GUI refactor: add object manipulation in gizmo
@@ -1252,7 +1252,7 @@ void GLGizmosManager::do_render_overlay() const
 
         GLTexture::render_sub_texture(icons_texture_id, top_x, top_x + icons_size_x, top_y - icons_size_y, top_y, { { u_left, v_bottom }, { u_right, v_bottom }, { u_right, v_top }, { u_left, v_top } });
         if (idx == m_current
-            // Orca: Show Svg dialog at the same place as emboss gizmo
+            // Inlong: Show Svg dialog at the same place as emboss gizmo
             || (m_current == Svg && idx == Emboss)) {
             //BBS: GUI refactor: GLToolbar&&Gizmo adjust
             //render_input_window uses a different coordination(imgui)

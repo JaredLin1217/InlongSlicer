@@ -77,7 +77,7 @@ Generator::Generator(const PrintObject &print_object, const std::function<void()
     const double               layer_thickness      = scaled<double>(object_config.layer_height.value);
 
     m_infill_extrusion_width = scaled<float>(region_config.sparse_infill_line_width.get_abs_value(max_nozzle_diameter));
-    // Orca: fix lightning infill divide by zero when infill line width is set to 0.
+    // Inlong: fix lightning infill divide by zero when infill line width is set to 0.
     // firstly attempt to set it to the default line width. If that is not provided either, set it to a sane default
     // based on the nozzle diameter.
     if (m_infill_extrusion_width < EPSILON)
@@ -113,7 +113,7 @@ Generator::Generator(PrintObject* m_object, std::vector<Polygons>& contours, std
     const double               layer_thickness      = scaled<double>(object_config.layer_height.value);
 
     m_infill_extrusion_width = scaled<float>(region_config.sparse_infill_line_width.get_abs_value(max_nozzle_diameter));
-    // Orca: fix lightning infill divide by zero when infill line width is set to 0.
+    // Inlong: fix lightning infill divide by zero when infill line width is set to 0.
     // firstly attempt to set it to the default line width. If that is not provided either, set it to a sane default
     // based on the nozzle diameter.
     if (m_infill_extrusion_width < EPSILON)

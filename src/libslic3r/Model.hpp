@@ -719,7 +719,7 @@ enum class ConversionType : int {
 };
 
 enum class En3mfType : int {
-    From_Orca,
+    From_Inlong,
     From_BBS,
     From_Prusa,
     From_Other
@@ -1015,7 +1015,7 @@ public:
     bool is_fuzzy_skin_painted() const { return !this->fuzzy_skin_facets.empty(); }
     bool is_any_painted() const { return is_fdm_support_painted() || is_seam_painted() || is_mm_painted() || is_fuzzy_skin_painted(); }
     
-    // Orca: Implement prusa's filament shrink compensation approach
+    // Inlong: Implement prusa's filament shrink compensation approach
     // Returns 0-based indices of extruders painted by multi-material painting gizmo.
      std::vector<size_t> get_extruders_from_multi_material_painting() const;
 

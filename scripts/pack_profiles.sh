@@ -3,7 +3,7 @@
 # Check if required arguments are provided
 if [ "$#" -lt 3 ]; then
     echo "Usage: $0 VERSION NUMBER VENDOR1 [VENDOR2 ...]"
-    echo "Example: $0 2.3.0 1 OrcaFilamentLibrary BBL"
+    echo "Example: $0 2.3.0 1 InlongFilamentLibrary BBL"
     exit 1
 fi
 
@@ -16,8 +16,8 @@ shift 2  # Remove first two arguments, leaving only vendor names
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RESOURCES_DIR="$SCRIPT_DIR/../resources/profiles"
 ORIGINAL_DIR="$(pwd)"
-OUTPUT_FILE="orcaslicer-profiles_ota_${VERSION}.${NUMBER}.zip"
-TEMP_DIR="/tmp/orca_profiles_$$"  # Use PID to make temp dir unique
+OUTPUT_FILE="inlongslicer-profiles_ota_${VERSION}.${NUMBER}.zip"
+TEMP_DIR="/tmp/inlong_profiles_$$"  # Use PID to make temp dir unique
 
 # Check if resources directory exists
 if [ ! -d "$RESOURCES_DIR" ]; then

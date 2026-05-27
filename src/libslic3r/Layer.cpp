@@ -159,7 +159,7 @@ bool Layer::is_perimeter_compatible(const PrintRegion& a, const PrintRegion& b)
 		&& config.detect_thin_wall                  == other_config.detect_thin_wall
 		&& config.infill_wall_overlap              == other_config.infill_wall_overlap
         && config.top_bottom_infill_wall_overlap              == other_config.top_bottom_infill_wall_overlap
-        // Orca: these flags directly change the effective wall count produced by the perimeter
+        // Inlong: these flags directly change the effective wall count produced by the perimeter
         // generator. If two regions disagree on any of them, merging their slices into one shared make_perimeters
         // call would silently use the first region's flag for both.
         && config.only_one_wall_first_layer == other_config.only_one_wall_first_layer

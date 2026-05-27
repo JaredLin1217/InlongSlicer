@@ -39,7 +39,7 @@
 #define AUFILE_GREY300 wxColour(238, 238, 238)
 #define AUFILE_GREY200 wxColour(248, 248, 248)
 #define AUFILE_BRAND wxColour(214, 108, 71)
-#define AUFILE_BRAND_TRANSPARENT wxColour("#FBF0ED") // ORCA color with %10 opacity
+#define AUFILE_BRAND_TRANSPARENT wxColour("#FBF0ED") // INLONG color with %10 opacity
 //#define AUFILE_PICTURES_SIZE wxSize(FromDIP(300), FromDIP(300))
 //#define AUFILE_PICTURES_PANEL_SIZE wxSize(FromDIP(300), FromDIP(340))
 #define AUFILE_PICTURES_SIZE wxSize(FromDIP(168), FromDIP(168))

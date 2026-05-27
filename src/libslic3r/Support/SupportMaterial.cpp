@@ -2884,7 +2884,7 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::raft_and_intermediate_supp
                 intermediate_layers.push_back(&layer_new);
             }
         } else {
-            // ORCA: Bias by EPSILON so a gap effectively equal to
+            // INLONG: Bias by EPSILON so a gap effectively equal to
             // max_suport_layer_height is not split by floating-point noise.
             size_t n_layers_extra = size_t(ceil((dist - EPSILON) / m_slicing_params.max_suport_layer_height));
             assert(n_layers_extra > 0);
@@ -2901,7 +2901,7 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::raft_and_intermediate_supp
                 layer_new.height   = extr1->height;
                 intermediate_layers.push_back(&layer_new);
                 dist = extr2z - extr1z;
-                // ORCA: Recalculate with the same EPSILON bias after re-anchoring at the top
+                // INLONG: Recalculate with the same EPSILON bias after re-anchoring at the top
                 // contact layer so near-equal gaps do not gain an extra split here either.
                 n_layers_extra = size_t(ceil((dist - EPSILON) / m_slicing_params.max_suport_layer_height));
                 if (n_layers_extra == 0)

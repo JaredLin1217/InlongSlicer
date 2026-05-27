@@ -69,7 +69,7 @@ namespace Slic3r {
 
 PlaceholderParser::PlaceholderParser(const DynamicConfig *external_config) : m_external_config(external_config)
 {
-    this->set("version", std::string(SoftFever_VERSION));
+    this->set("version", std::string(INLONGSLICER_VERSION));
     this->apply_env_variables();
     this->update_timestamp();
     this->update_user_name();
@@ -1012,9 +1012,9 @@ namespace client
         {
             if (! ctx->skipping()) {
                 if (index < 0)
-                    index = 0; // Orca: fallback to first element if index < 0, this matches the behavior of BambuStudio
+                    index = 0; // Inlong: fallback to first element if index < 0, this matches the behavior of BambuStudio
                 if (!opt.opt->is_vector())
-                    index = -1; // Orca: ignore the index if variable is scalar, this matches the behavior of BambuStudio
+                    index = -1; // Inlong: ignore the index if variable is scalar, this matches the behavior of BambuStudio
                 output = opt;
                 output.index = index;
             } else

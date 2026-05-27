@@ -92,7 +92,7 @@ size_t get_extruder_index(const GCodeConfig& config, unsigned int filament_id)
 }
 
 
-// Orca: input shaping values types by flavor
+// Inlong: input shaping values types by flavor
 std::vector<std::string> get_shaper_type_values_for_flavor(GCodeFlavor flavor)
 {
     switch (flavor) {
@@ -181,7 +181,7 @@ static t_config_enum_values s_keys_map_BedTempFormula {
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(BedTempFormula)
 
-// Orca
+// Inlong
 static t_config_enum_values s_keys_map_PowerLossRecoveryMode {
     { "printer_configuration", int(PowerLossRecoveryMode::PrinterConfiguration) },
     { "enable",                 int(PowerLossRecoveryMode::Enable) },
@@ -204,7 +204,7 @@ static t_config_enum_values s_keys_map_NoiseType {
     { "perlin",         int(NoiseType::Perlin) },
     { "billow",         int(NoiseType::Billow) },
     { "ridgedmulti",    int(NoiseType::RidgedMulti) },
-    { "voronoi",        int(NoiseType::Voronoi) }, 
+    { "voronoi",        int(NoiseType::Voronoi) },
     { "ripple",         int(NoiseType::Ripple) }
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(NoiseType)
@@ -282,7 +282,7 @@ static t_config_enum_values s_keys_map_WallSequence {
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(WallSequence)
 
-//Orca
+//Inlong
 static t_config_enum_values s_keys_map_WallDirection{
     { "ccw",  int(WallDirection::CounterClockwise) },
     { "cw",   int(WallDirection::Clockwise)},
@@ -356,7 +356,7 @@ static t_config_enum_values s_keys_map_SeamPosition {
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(SeamPosition)
 
-// Orca
+// Inlong
 static t_config_enum_values s_keys_map_SeamScarfType{
     { "none",           int(SeamScarfType::None) },
     { "external",       int(SeamScarfType::External) },
@@ -364,7 +364,7 @@ static t_config_enum_values s_keys_map_SeamScarfType{
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(SeamScarfType)
 
-// Orca
+// Inlong
 static t_config_enum_values s_keys_map_EnsureVerticalShellThickness{
     { "none",           int(EnsureVerticalShellThickness::evstNone) },
     { "ensure_critical_only",         int(EnsureVerticalShellThickness::evstCriticalOnly) },
@@ -373,7 +373,7 @@ static t_config_enum_values s_keys_map_EnsureVerticalShellThickness{
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(EnsureVerticalShellThickness)
 
-// Orca
+// Inlong
 static t_config_enum_values s_keys_map_InternalBridgeFilter {
     { "disabled",        ibfDisabled },
     { "limited",        ibfLimited },
@@ -389,7 +389,7 @@ static t_config_enum_values s_keys_map_EnableExtraBridgeLayer {
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(EnableExtraBridgeLayer)
 
-// Orca
+// Inlong
 static t_config_enum_values s_keys_map_GapFillTarget {
     { "everywhere",        gftEverywhere },
     { "topbottom",        gftTopBottom },
@@ -422,7 +422,7 @@ static const t_config_enum_values s_keys_map_BrimType = {
     {"inner_only",      btInnerOnly},
     {"outer_and_inner", btOuterAndInner},
     {"auto_brim", btAutoBrim},  // BBS
-    {"brim_ears", btEar},     // Orca
+    {"brim_ears", btEar},     // Inlong
     {"painted", btPainted},  // BBS
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(BrimType)
@@ -732,7 +732,7 @@ void PrintConfigDef::init_common_params()
     def->sidetext = L("layers");
     def->min      = 1;
     def->mode     = comAdvanced;
-    def->set_default_value(new ConfigOptionInt(1));	
+    def->set_default_value(new ConfigOptionInt(1));
 
     def           = this->add("elefant_foot_layers_density", coPercent);
     def->label    = L("Elephant foot layers density");
@@ -886,7 +886,7 @@ void PrintConfigDef::init_common_params()
     def->mode = comAdvanced;
     def->cli = ConfigOptionDef::nocli;
     def->set_default_value(new ConfigOptionEnum<AuthorizationType>(atKeyPassword));
-    
+
     // temporary workaround for compatibility with older Slicer
     {
         def = this->add("preset_name", coString);
@@ -1045,7 +1045,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Bed types supported by the printer.");
     def->mode = comSimple;
     def->enum_keys_map = &s_keys_map_BedType;
-    // Orca: make sure the order of the values is the same as the BedType enum 
+    // Inlong: make sure the order of the values is the same as the BedType enum
     def->enum_values.emplace_back("Cool Plate");
     def->enum_values.emplace_back("Engineering Plate");
     def->enum_values.emplace_back("High Temp Plate");
@@ -1060,7 +1060,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_labels.emplace_back(L("Cool Plate (SuperTack)"));
     def->set_default_value(new ConfigOptionEnum<BedType>(btPC));
 
-    // Orca: allow profile maker to set default bed type in machine profile
+    // Inlong: allow profile maker to set default bed type in machine profile
     // This option won't be shown in the UI
     def = this->add("default_bed_type", coString);
     def->label = L("Default bed type");
@@ -1119,7 +1119,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("bottom_shell_layers", coInt);
     def->label = L("Bottom shell layers");
     def->category = L("Strength");
-    def->sidetext = L("layers"); // ORCA add side text
+    def->sidetext = L("layers"); // INLONG add side text
     def->tooltip =  L("This is the number of solid layers of bottom shell, including the bottom "
                       "surface layer. When the thickness calculated by this value is thinner "
                       "than bottom shell thickness, the bottom shell layers will be increased.");
@@ -1221,8 +1221,8 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0.));
-    
-    // ORCA: Internal bridge angle override
+
+    // INLONG: Internal bridge angle override
     def = this->add("internal_bridge_angle", coFloat);
     def->label = L("Internal bridge infill direction");
     def->category = L("Strength");
@@ -1503,7 +1503,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Enable this option to slow printing down for different overhang degree.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool{ true });
-    
+
     def = this->add("slowdown_for_curled_perimeters", coBool);
     def->label = L("Slow down for curled perimeters");
     def->category = L("Speed");
@@ -1802,7 +1802,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Activate for better air filtration. G-code command: M106 P3 S(0-255)");
     def->mode = comSimple;
     def->set_default_value(new ConfigOptionBools{false});
-    
+
 
     def = this->add("activate_air_filtration_during_print", coBools);
     def->full_label = L("During print");
@@ -1867,7 +1867,7 @@ void PrintConfigDef::init_fff_params()
                        "consider turning it off if you are using large nozzles.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(true));
-    
+
     def = this->add("enable_extra_bridge_layer", coEnum);
     def->label = L("Extra bridge layers (beta)");
     def->category = L("Quality");
@@ -1982,7 +1982,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_labels.push_back(L("All"));
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<EnsureVerticalShellThickness>(EnsureVerticalShellThickness::evstAll));
-    
+
     auto def_top_fill_pattern = def = this->add("top_surface_pattern", coEnum);
     def->label = L("Top surface pattern");
     def->category = L("Strength");
@@ -2023,7 +2023,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_values   = def_top_fill_pattern->enum_values;
     def->enum_labels   = def_top_fill_pattern->enum_labels;
     def->set_default_value(new ConfigOptionEnum<InfillPattern>(ipMonotonic));
-    
+
     def = this->add("outer_wall_line_width", coFloatOrPercent);
     def->label = L("Outer wall");
     def->category = L("Quality");
@@ -2260,8 +2260,8 @@ void PrintConfigDef::init_fff_params()
     def->max = 2;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloats { 0.02 });
-    
-    // Orca: Adaptive pressure advance option and calibration values
+
+    // Inlong: Adaptive pressure advance option and calibration values
     def = this->add("adaptive_pressure_advance", coBools);
     def->label = L("Enable adaptive pressure advance (beta)");
     // xgettext:no-c-format, no-boost-format
@@ -2277,7 +2277,7 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBools{ false });
 
-    // Orca: Adaptive pressure advance option and calibration values
+    // Inlong: Adaptive pressure advance option and calibration values
     def = this->add("adaptive_pressure_advance_model", coStrings);
     def->label = L("Adaptive pressure advance measurements (beta)");
     // xgettext:no-c-format, no-boost-format
@@ -2301,7 +2301,7 @@ void PrintConfigDef::init_fff_params()
     def->full_width = true;
     def->height = 15;
     def->set_default_value(new ConfigOptionStrings{"0,0,0\n0,0,0"});
-    
+
     // xgettext:no-c-format, no-boost-format
     def = this->add("adaptive_pressure_advance_overhangs", coBools);
     def->label = L("Enable adaptive pressure advance for overhangs (beta)");
@@ -2524,20 +2524,20 @@ void PrintConfigDef::init_fff_params()
 
     /*
         Large format printers with print volumes in the order of 1m^3 generally use pellets for printing.
-        The overall tech is very similar to FDM printing. 
+        The overall tech is very similar to FDM printing.
         It is FDM printing, but instead of filaments, it uses pellets.
 
-        The difference here is that where filaments have a filament_diameter that is used to calculate 
-        the volume of filament ingested, pellets have a particular flow_coefficient that is empirically 
+        The difference here is that where filaments have a filament_diameter that is used to calculate
+        the volume of filament ingested, pellets have a particular flow_coefficient that is empirically
         devised for that particular pellet.
 
         pellet_flow_coefficient is basically a measure of the packing density of a particular pellet.
         Shape, material and density of an individual pellet will determine the packing density and
-        the only thing that matters for 3d printing is how much of that pellet material is extruded by 
+        the only thing that matters for 3d printing is how much of that pellet material is extruded by
         one turn of whatever feeding mehcanism/gear your printer uses. You can emperically derive that
         for your own pellets for a particular printer model.
 
-        We are translating the pellet_flow_coefficient into filament_diameter so that everything works just like it 
+        We are translating the pellet_flow_coefficient into filament_diameter so that everything works just like it
         does already with very minor adjustments.
 
         filament_diameter = sqrt( (4 * pellet_flow_coefficient) / PI )
@@ -2580,7 +2580,7 @@ void PrintConfigDef::init_fff_params()
     def->max = 150;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionPercents{ 100 });
-    
+
     def = this->add("filament_shrinkage_compensation_z", coPercents);
     def->label = L("Shrinkage (Z)");
     // xgettext:no-c-format, no-boost-format
@@ -2772,7 +2772,7 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloats { 10. });
-    
+
     def = this->add("filament_density", coFloats);
     def->label = L("Density");
     def->tooltip = L("Filament density. For statistics only.");
@@ -2887,7 +2887,7 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->max = 100;
     def->set_default_value(new ConfigOptionPercent(20));
-        
+
     def           = this->add("align_infill_direction_to_model", coBool);
     def->label    = L("Align infill direction to model");
     def->category = L("Strength");
@@ -3155,7 +3155,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Klipper's max_accel_to_decel will be adjusted automatically.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(true));
-    
+
     def = this->add("accel_to_decel_factor", coPercent);
     def->label = L("accel_to_decel");
     def->category = L("Speed");
@@ -3165,7 +3165,7 @@ void PrintConfigDef::init_fff_params()
     def->max = 100;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionPercent(50));
-    
+
     def = this->add("default_jerk", coFloat);
     def->label = L("Default");
     def->category = L("Speed");
@@ -3308,7 +3308,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("The first few layers are printed slower than normal. "
                      "The speed is gradually increased in a linear fashion over the specified number of layers.");
     def->category = L("Speed");
-    def->sidetext = L("layers"); // ORCA add side text
+    def->sidetext = L("layers"); // INLONG add side text
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionInt(0));
@@ -3328,12 +3328,12 @@ void PrintConfigDef::init_fff_params()
                   "to maximum at layer \"full_fan_speed_layer\". "
                   "\"full_fan_speed_layer\" will be ignored if lower than \"close_fan_the_first_x_layers\", in which case "
                   "the fan will be running at maximum allowed speed at layer \"close_fan_the_first_x_layers\" + 1.");
-    def->sidetext = L("layer"); // ORCA add side text
+    def->sidetext = L("layer"); // INLONG add side text
     def->min = 0;
     def->max = 1000;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionInts { 0 });
-    
+
     def = this->add("support_material_interface_fan_speed", coInts);
     def->label = L("Support interface fan speed");
     def->tooltip = L("This part cooling fan speed is applied when printing support interfaces. Setting this parameter to a higher than regular speed "
@@ -3345,8 +3345,8 @@ void PrintConfigDef::init_fff_params()
     def->max = 100;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionInts{ -1 });
-    
-    // ORCA: Add support for separate internal bridge fan speed control
+
+    // INLONG: Add support for separate internal bridge fan speed control
     def = this->add("internal_bridge_fan_speed", coInts);
     def->label = L("Internal bridges fan speed");
     def->tooltip = L("The part cooling fan speed used for all internal bridges. Set to -1 to use the overhang fan speed settings instead.\n\n"
@@ -3357,7 +3357,7 @@ void PrintConfigDef::init_fff_params()
     def->max = 100;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionInts{ -1 });
-    
+
     def = this->add("ironing_fan_speed", coInts);
     def->label = L("Ironing fan speed");
     def->tooltip = L("This part cooling fan speed is applied when ironing. Setting this parameter to a lower than regular speed "
@@ -3583,7 +3583,7 @@ void PrintConfigDef::init_fff_params()
     def->sidetext = L("mm");	// millimeters, CIS languages need translation
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0));
-    
+
     def = this->add("gap_infill_speed", coFloat);
     def->label = L("Gap infill");
     def->category = L("Speed");
@@ -3628,7 +3628,7 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
-    // Orca
+    // Inlong
     def = this->add("enable_power_loss_recovery", coEnum);
     def->label = L("Power Loss Recovery");
     def->tooltip = L("Choose how to control power loss recovery. When set to Printer configuration, the slicer will not emit power loss recovery G-code and will leave the printer's configuration unchanged. Applicable to Bambu Lab or Marlin 2 firmware based printers.");
@@ -3737,7 +3737,7 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0));
 
-    // ORCA: minimum non-zero part cooling fan speed.
+    // INLONG: minimum non-zero part cooling fan speed.
     def = this->add("part_cooling_fan_min_pwm", coInt);
     def->label = L("Minimum non-zero part cooling fan speed");
     def->tooltip = L("Some part-cooling fans cannot start spinning when commanded below a certain PWM duty cycle. "
@@ -3768,7 +3768,7 @@ void PrintConfigDef::init_fff_params()
     def->mode    = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0));
 
-    // Orca: may remove this option later
+    // Inlong: may remove this option later
     def =this->add("support_chamber_temp_control",coBool);
     def->label=L("Support control chamber temperature");
     def->tooltip=L("This option is enabled if machine support controlling chamber temperature\nG-code command: M141 S(0-255)");
@@ -3849,7 +3849,7 @@ void PrintConfigDef::init_fff_params()
                    "slow down.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(0));
-    
+
     //BBS
     def = this->add("infill_combination", coBool);
     def->label = L("Infill combination");
@@ -3869,7 +3869,7 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0.4));
 
-    //Orca
+    //Inlong
     def           = this->add("sparse_infill_rotate_template", coString);
     def->label    = L("Sparse infill rotation template");
     def->category = L("Strength");
@@ -3883,7 +3883,7 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionString(""));
 
-    //Orca
+    //Inlong
     def           = this->add("solid_infill_rotate_template", coString);
     def->label    = L("Solid infill rotation template");
     def->category = L("Strength");
@@ -3969,7 +3969,7 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
-    // Orca: max layer height for combined infill
+    // Inlong: max layer height for combined infill
     def = this->add("infill_combination_max_layer_height", coFloatOrPercent);
     def->label = L("Infill combination - Max layer height");
     def->category = L("Strength");
@@ -4037,7 +4037,7 @@ void PrintConfigDef::init_fff_params()
     def->ratio_over = "inner_wall_line_width";
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionPercent(15));
-    
+
     def = this->add("top_bottom_infill_wall_overlap", coPercent);
     def->label = L("Top/Bottom solid infill/wall overlap");
     def->category = L("Strength");
@@ -4097,7 +4097,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip  = L("Interlocking depth of a segmented region. It will be ignored if "
                     "\"mmu_segmented_region_max_width\" is zero or if \"mmu_segmented_region_interlocking_depth\" "
                     "is bigger than \"mmu_segmented_region_max_width\". Zero disables this feature.");
-    def->sidetext = L("mm");	// millimeters, CIS languages need translation 
+    def->sidetext = L("mm");	// millimeters, CIS languages need translation
     def->min      = 0;
     def->category = L("Advanced");
     def->mode     = comAdvanced;
@@ -4153,7 +4153,7 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionInt(2));
 
-    // ORCA: special flag for flow rate calibration
+    // INLONG: special flag for flow rate calibration
     def           = this->add("calib_flowrate_topinfill_special_order", coBool);
     def->mode     = comDevelop;
     def->set_default_value(new ConfigOptionBool(false));
@@ -4186,7 +4186,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_labels.push_back(L("Concentric"));
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<InfillPattern>(ipRectilinear));
-    
+
     def = this->add("ironing_flow", coPercent);
     def->label = L("Ironing flow");
     def->category = L("Quality");
@@ -4538,7 +4538,7 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(120));
 
-    // Orca: Input Shaping support
+    // Inlong: Input Shaping support
     def          = this->add("input_shaping_emit", coBool);
     def->label   = L("Emit input shaping");
     def->tooltip = L("Override firmware input shaping settings.\nIf disabled, firmware settings are used.");
@@ -4609,11 +4609,11 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("max_volumetric_extrusion_rate_slope", coFloat);
     def->label = L("Extrusion rate smoothing");
-    def->tooltip = L("This parameter smooths out sudden extrusion rate changes that happen when " 
+    def->tooltip = L("This parameter smooths out sudden extrusion rate changes that happen when "
                      "the printer transitions from printing a high flow (high speed/larger width) "
                      "extrusion to a lower flow (lower speed/smaller width) extrusion and vice versa.\n\n"
                      "It defines the maximum rate by which the extruded volumetric flow in mm³/s can change over time. "
-                     "Higher values mean higher extrusion rate changes are allowed, resulting in faster speed transitions.\n\n" 
+                     "Higher values mean higher extrusion rate changes are allowed, resulting in faster speed transitions.\n\n"
                      "A value of 0 disables the feature.\n\n"
                      "For a high speed, high flow direct drive printer (like the Bambu lab or Voron) this value is usually not needed. "
                      "However it can provide some marginal benefit in certain cases where feature speeds vary greatly. For example, "
@@ -4639,7 +4639,7 @@ void PrintConfigDef::init_fff_params()
     def->sidetext = L("mm");	// millimeters, CIS languages need translation
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(3.0));
-    
+
     def = this->add("extrusion_rate_smoothing_external_perimeter_only", coBool);
     def->label = L("Apply only on external features");
     def->tooltip = L("Applies extrusion rate smoothing only on external perimeters and overhangs. This can help reduce artefacts due to sharp speed transitions on externally visible "
@@ -4922,7 +4922,7 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->max = 1000;
     def->set_default_value(new ConfigOptionInt(2));
-    
+
     def = this->add("alternate_extra_wall", coBool);
     def->label = L("Alternate extra wall");
     def->category = L("Strength");
@@ -4931,7 +4931,7 @@ void PrintConfigDef::init_fff_params()
                      "Using lightning infill together with this option is not recommended as there is limited infill to anchor the extra perimeters to.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
-    
+
     def = this->add("post_process", coStrings);
     def->label = L("Post-processing Scripts");
     def->tooltip = L("If you want to process the output G-code through custom scripts, "
@@ -4953,7 +4953,7 @@ void PrintConfigDef::init_fff_params()
     def->height = 5;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionString());
-    
+
     def = this->add("printer_model", coString);
     def->label = L("Printer type");
     def->tooltip = L("Type of the printer.");
@@ -4968,7 +4968,7 @@ void PrintConfigDef::init_fff_params()
     def->height = 13;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionString());
-    
+
     def = this->add("printer_variant", coString);
     def->label = L("Printer variant");
     //def->tooltip = L("Name of the printer variant. For example, the printer variants may be differentiated by a nozzle diameter.");
@@ -5378,7 +5378,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("This option causes the inner seams to be shifted backwards based on their depth, forming a zigzag pattern.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
-    
+
     def = this->add("seam_gap", coFloatOrPercent);
     def->label = L("Seam gap");
     def->category = L("Quality");
@@ -5506,7 +5506,7 @@ void PrintConfigDef::init_fff_params()
                      "e.g. if a wipe action is executed immediately following an outer wall extrusion, the speed of the outer wall extrusion will be utilized for the wipe action.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(true));
-    
+
     def = this->add("wipe_on_loops", coBool);
     def->label = L("Wipe on loops");
     def->category = L("Quality");
@@ -5563,7 +5563,7 @@ void PrintConfigDef::init_fff_params()
     def->mode = comSimple;
     def->max = 10000;
     def->set_default_value(new ConfigOptionInt(1));
-    
+
     def = this->add("single_loop_draft_shield", coBool);
     def->label = L("Single loop after first layer");
     def->tooltip = L("Limits the skirt/draft shield loops to one wall after the first layer. This is useful, on occasion, to conserve filament but may cause the draft shield/skirt to warp / crack.");
@@ -5596,7 +5596,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_labels.push_back(L("Per object"));
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<SkirtType>(stCombined));
-    
+
     def = this->add("skirt_loops", coInt);
     def->label = L("Skirt loops");
     def->full_label = L("Skirt loops");
@@ -5845,7 +5845,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Tool change on wipe tower");
     def->tooltip = L("Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx). "
                      "Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. "
-                     "By default Orca skips the travel on multi-toolhead machines because the firmware handles the head swap, "
+                     "By default Inlong skips the travel on multi-toolhead machines because the firmware handles the head swap, "
                      "which can result in the Tx command being issued above the printed part. "
                      "Enable this option if you want the tool change to always be issued above the wipe tower instead.");
     def->mode = comAdvanced;
@@ -5899,7 +5899,7 @@ void PrintConfigDef::init_fff_params()
     def->sidetext = L("mm");	// millimeters, CIS languages need translation
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0));
-    
+
     def = this->add("enable_support", coBool);
     //BBS: remove material behind support
     def->label = L("Enable support");
@@ -6328,13 +6328,13 @@ void PrintConfigDef::init_fff_params()
     def->max_literal = 35;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionPercent(30));
-    
+
     def = this->add("tree_support_auto_brim", coBool);
     def->label = L("Auto brim width");
     def->category = L("Quality");
     def->tooltip = L("Enabling this option means the width of the brim for tree support will be automatically calculated.");
     def->set_default_value(new ConfigOptionBool(1));
-    
+
     def = this->add("tree_support_brim_width", coFloat);
     def->label = L("Tree support brim width");
     def->category = L("Quality");
@@ -6364,7 +6364,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionFloat(5.));
 
     def = this->add("tree_support_branch_diameter_angle", coFloat);
-    // TRN PrintSettings: #lmFIXME 
+    // TRN PrintSettings: #lmFIXME
     def->label = L("Branch Diameter Angle");
     def->category = L("Support");
     // TRN PrintSettings: "Organic supports" > "Branch Diameter Angle"
@@ -6402,7 +6402,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("This setting specifies whether to add infill inside large hollows of tree support.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
-    
+
     def = this->add("support_ironing", coBool);
     def->label = L("Ironing Support Interface");
     def->category = L("Support");
@@ -6422,7 +6422,7 @@ void PrintConfigDef::init_fff_params()
     def->enum_labels.push_back(L("Concentric"));
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<InfillPattern>(ipRectilinear));
-    
+
     def = this->add("support_ironing_flow", coPercent);
     def->label = L("Support Ironing flow");
     def->category = L("Support");
@@ -6564,7 +6564,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("top_shell_layers", coInt);
     def->label = L("Top shell layers");
     def->category = L("Strength");
-    def->sidetext = L("layers"); // ORCA add side text
+    def->sidetext = L("layers"); // INLONG add side text
     def->tooltip = L("This is the number of solid layers of top shell, including the top "
                      "surface layer. When the thickness calculated by this value is thinner "
                      "than top shell thickness, the top shell layers will be increased.");
@@ -6742,7 +6742,7 @@ void PrintConfigDef::init_fff_params()
     def->min = 0.;
     def->max = 90.;
     def->set_default_value(new ConfigOptionFloat(30.0));
-    
+
     def = this->add("wipe_tower_max_purge_speed", coFloat);
     def->label = L("Maximum wipe tower print speed");
     def->tooltip = L("The maximum print speed when purging in the wipe tower and printing the wipe tower sparse layers. "
@@ -8043,7 +8043,7 @@ void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &va
             }
         }
     }
-    // Orca: Rename wipe tower ribs related options
+    // Inlong: Rename wipe tower ribs related options
     else if (opt_key == "prime_tower_rib_wall") {
         if (value == "1") {
             opt_key = "wipe_tower_wall_type";
@@ -8070,7 +8070,7 @@ void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &va
     static std::set<std::string> ignore = {
         "acceleration", "scale", "rotate", "duplicate", "duplicate_grid",
         "bed_size",
-        "print_center", "g0", "wipe_tower_per_color_wipe", 
+        "print_center", "g0", "wipe_tower_per_color_wipe",
         "support_sharp_tails","support_remove_small_overhangs", "support_with_sheath",
         "tree_support_collision_resolution", "tree_support_with_infill",
         "max_volumetric_speed", "max_print_speed",
@@ -8555,7 +8555,7 @@ size_t DynamicPrintConfig::get_parameter_size(const std::string& param_name, siz
     return extruder_nums;
 }
 
-// Orca: Special handling for extruder variants
+// Inlong: Special handling for extruder variants
 // BBL printers have extruder variants pre-defined in system profiles, however for customized multi-extruder profile,
 // we need to set up these parameters automatically, otherwise per-extruder options won't work properly.
 static void extend_extruder_variant(DynamicPrintConfig& config, const unsigned int num_extruders)
@@ -9440,7 +9440,7 @@ void DynamicPrintConfig::update_values_to_printer_extruders(DynamicPrintConfig& 
                 //variant index
                 variant_index[e_index] = get_index_for_extruder(e_index+1, id_name, extruder_type, nozzle_volume_type, variant_name);
                 if (variant_index[e_index] < 0) {
-                    // Orca: This is expected during transient UI states (e.g. popup windows),
+                    // Inlong: This is expected during transient UI states (e.g. popup windows),
                     // fall back to 0 silently.
                     variant_index[e_index] = 0;
                 }
@@ -10143,7 +10143,7 @@ std::map<std::string, std::string> validate(const FullPrintConfig &cfg, bool und
         for (unsigned char wipe : cfg.wipe.values)
              if (wipe)
                 error_message.emplace("use_firmware_retraction", "--use-firmware-retraction is not compatible with --wipe");
-                
+
     // --gcode-flavor
     if (! print_config_def.get("gcode_flavor")->has_enum_value(cfg.gcode_flavor.serialize())) {
         error_message.emplace("gcode_flavor", L("invalid value ") + cfg.gcode_flavor.serialize());
@@ -10178,7 +10178,7 @@ std::map<std::string, std::string> validate(const FullPrintConfig &cfg, bool und
     if (cfg.bridge_flow <= 0) {
         error_message.emplace("bridge_flow", L("invalid value ") + std::to_string(cfg.bridge_flow));
     }
-    
+
     // --bridge-flow-ratio
     if (cfg.bridge_flow <= 0) {
         error_message.emplace("internal_bridge_flow", L("invalid value ") + std::to_string(cfg.internal_bridge_flow));
@@ -10887,7 +10887,7 @@ OtherSlicingStatesConfigDef::OtherSlicingStatesConfigDef()
     def->label   = L("Number of extruders");
     def->tooltip = L("Total number of extruders, regardless of whether they are used in the current print.");
 
-    // Options from PS not used in Orca
+    // Options from PS not used in Inlong
     //    def = this->add("initial_filament_type", coString);
     //    def->label = L("Initial filament type");
     //    def->tooltip = L("String containing filament type of the first used extruder.");

@@ -20,10 +20,10 @@ function usage() {
     echo "   -F: rebuild the cached Docker/Podman runner image from scratch when used with -g"
     echo "   -g: run the requested build steps inside a Docker/Podman Ubuntu 24.04 container similar to the GitHub Actions Linux runner"
     echo "   -h: prints this help text"
-    echo "   -i: build the Orca Slicer AppImage (optional)"
+    echo "   -i: build the Inlong Slicer AppImage (optional)"
     echo "   -p: boost ccache hit rate by disabling precompiled headers (default: ON)"
     echo "   -r: skip RAM and disk checks (low RAM compiling)"
-    echo "   -s: build the Orca Slicer (optional)"
+    echo "   -s: build the Inlong Slicer (optional)"
     echo "   -t: build tests (optional), requires -s flag"
     echo "   -u: install system dependencies (asks for sudo password; build prerequisite)"
     echo "   -l: use Clang instead of GCC (default: GCC)"
@@ -32,7 +32,7 @@ function usage() {
     echo "   and then './${SCRIPT_NAME} -dsi'"
     echo "For a GitHub Actions-like Linux build locally, use './${SCRIPT_NAME} -g -istrlL'"
     echo "Use './${SCRIPT_NAME} -gF -istrlL' to rebuild the cached runner image first."
-    echo "Set ORCA_CONTAINER_CLI, ORCA_DOCKER_IMAGE, ORCA_DOCKER_BASE_IMAGE, or ORCA_DOCKER_CMAKE_VERSION to override the container runtime, cached image tag, base image, or CMake version."
+    echo "Set INLONG_CONTAINER_CLI, INLONG_DOCKER_IMAGE, INLONG_DOCKER_BASE_IMAGE, or INLONG_DOCKER_CMAKE_VERSION to override the container runtime, cached image tag, base image, or CMake version."
 }
 
 SLIC3R_PRECOMPILED_HEADERS="ON"
@@ -99,7 +99,7 @@ while getopts ":1j:bcCdDeFghiprstulL" opt ; do
         FORWARDED_ARGS+=("-r")
         ;;
     s )
-        BUILD_ORCA="1"
+        BUILD_INLONG="1"
         FORWARDED_ARGS+=("-s")
         ;;
     t )
@@ -143,14 +143,14 @@ function check_available_memory_and_disk() {
     MIN_DISK_KB=$((10 * 1024 * 1024))
 
     if [[ ${FREE_MEM_GB} -le ${MIN_MEM_GB} ]] ; then
-        echo -e "\nERROR: Orca Slicer Builder requires at least ${MIN_MEM_GB}G of 'available' mem (system has only ${FREE_MEM_GB}G available)"
+        echo -e "\nERROR: Inlong Slicer Builder requires at least ${MIN_MEM_GB}G of 'available' mem (system has only ${FREE_MEM_GB}G available)"
         echo && free --human && echo
         echo "Invoke with -r to skip RAM and disk checks."
         exit 2
     fi
 
     if [[ ${FREE_DISK_KB} -le ${MIN_DISK_KB} ]] ; then
-        echo -e "\nERROR: Orca Slicer Builder requires at least $(echo "${MIN_DISK_KB}" |awk '{ printf "%.1fG\n", $1/1024/1024; }') (system has only $(echo "${FREE_DISK_KB}" | awk '{ printf "%.1fG\n", $1/1024/1024; }') disk free)"
+        echo -e "\nERROR: Inlong Slicer Builder requires at least $(echo "${MIN_DISK_KB}" |awk '{ printf "%.1fG\n", $1/1024/1024; }') (system has only $(echo "${FREE_DISK_KB}" | awk '{ printf "%.1fG\n", $1/1024/1024; }') disk free)"
         echo && df --human-readable . && echo
         echo "Invoke with -r to skip ram and disk checks."
         exit 1
@@ -173,13 +173,13 @@ function print_and_run() {
 }
 
 function resolve_container_cli() {
-    if [[ -n "${ORCA_CONTAINER_CLI}" ]] ; then
-        if ! command -v "${ORCA_CONTAINER_CLI}" >/dev/null 2>&1 ; then
-            echo "Error: container runtime '${ORCA_CONTAINER_CLI}' was not found." >&2
+    if [[ -n "${INLONG_CONTAINER_CLI}" ]] ; then
+        if ! command -v "${INLONG_CONTAINER_CLI}" >/dev/null 2>&1 ; then
+            echo "Error: container runtime '${INLONG_CONTAINER_CLI}' was not found." >&2
             exit 1
         fi
 
-        echo "${ORCA_CONTAINER_CLI}"
+        echo "${INLONG_CONTAINER_CLI}"
         return
     fi
 
@@ -193,7 +193,7 @@ function resolve_container_cli() {
         return
     fi
 
-    echo "Error: neither docker nor podman is available. Install one of them or set ORCA_CONTAINER_CLI." >&2
+    echo "Error: neither docker nor podman is available. Install one of them or set INLONG_CONTAINER_CLI." >&2
     exit 1
 }
 
@@ -204,17 +204,17 @@ function get_docker_runner_image() {
     local sanitized_base_image
     local sanitized_cmake_version
 
-    if [[ -n "${ORCA_DOCKER_IMAGE}" ]] ; then
-        echo "${ORCA_DOCKER_IMAGE}"
+    if [[ -n "${INLONG_DOCKER_IMAGE}" ]] ; then
+        echo "${INLONG_DOCKER_IMAGE}"
         return
     fi
 
-    base_image="${ORCA_DOCKER_BASE_IMAGE:-ubuntu:24.04}"
-    docker_cmake_version="${ORCA_DOCKER_CMAKE_VERSION-4.3.0}"
+    base_image="${INLONG_DOCKER_BASE_IMAGE:-ubuntu:24.04}"
+    docker_cmake_version="${INLONG_DOCKER_CMAKE_VERSION-4.3.0}"
     recipe_hash=$(find "${SCRIPT_PATH}/build_linux.sh" "${SCRIPT_PATH}/scripts/linux.d" -type f -print0 | sort -z | xargs -0 cat | sha256sum | cut -c1-12)
     sanitized_base_image=$(echo "${base_image}" | tr '/:@' '---' | tr -cs 'A-Za-z0-9_.-' '-')
     sanitized_cmake_version=$(echo "${docker_cmake_version:-system}" | tr -cs 'A-Za-z0-9_.-' '-')
-    echo "orcaslicer-linux-builder:${sanitized_base_image}-cmake-${sanitized_cmake_version}-${recipe_hash}"
+    echo "inlongslicer-linux-builder:${sanitized_base_image}-cmake-${sanitized_cmake_version}-${recipe_hash}"
 }
 
 function docker_runner_dockerfile() {
@@ -229,10 +229,10 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && apt-get install -y sudo ca-certificates curl tar
 
-COPY build_linux.sh /tmp/orcaslicer/build_linux.sh
-COPY scripts/linux.d /tmp/orcaslicer/scripts/linux.d
+COPY build_linux.sh /tmp/inlongslicer/build_linux.sh
+COPY scripts/linux.d /tmp/inlongslicer/scripts/linux.d
 
-WORKDIR /tmp/orcaslicer
+WORKDIR /tmp/inlongslicer
 
 RUN chmod +x ./build_linux.sh
 RUN ./build_linux.sh -ur
@@ -253,7 +253,7 @@ RUN if [[ -n "${CMAKE_VERSION}" ]] ; then \
             echo "Skipping GitHub Actions CMake install for unsupported architecture $(uname -m)." ; \
         fi ; \
     fi
-RUN rm -rf /var/lib/apt/lists/* /tmp/orcaslicer
+RUN rm -rf /var/lib/apt/lists/* /tmp/inlongslicer
 EOF
 }
 
@@ -268,8 +268,8 @@ function ensure_docker_runner_image() {
 
     container_cli="$1"
     runner_image="$2"
-    base_image="${ORCA_DOCKER_BASE_IMAGE:-ubuntu:24.04}"
-    docker_cmake_version="${ORCA_DOCKER_CMAKE_VERSION-4.3.0}"
+    base_image="${INLONG_DOCKER_BASE_IMAGE:-ubuntu:24.04}"
+    docker_cmake_version="${INLONG_DOCKER_CMAKE_VERSION-4.3.0}"
 
     if "${container_cli}" image inspect "${runner_image}" >/dev/null 2>&1 ; then
         image_exists="1"
@@ -328,8 +328,8 @@ function run_in_docker() {
     runner_image=$(get_docker_runner_image)
     host_uid=$(id -u)
     host_gid=$(id -g)
-    host_user="${USER:-orca}"
-    container_workspace="/__w/OrcaSlicer/OrcaSlicer"
+    host_user="${USER:-inlong}"
+    container_workspace="/__w/InlongSlicer/InlongSlicer"
     build_args=()
     for item in "${FORWARDED_ARGS[@]}" ; do
         if [[ "${item}" == "-u" ]] || [[ "${item}" == "-D" ]] ; then
@@ -352,8 +352,8 @@ function run_in_docker() {
     if [[ -n "${CMAKE_BUILD_PARALLEL_LEVEL}" ]] ; then
         container_env+=( -e "CMAKE_BUILD_PARALLEL_LEVEL=${CMAKE_BUILD_PARALLEL_LEVEL}" )
     fi
-    if [[ -n "${ORCA_UPDATER_SIG_KEY}" ]] ; then
-        container_env+=( -e "ORCA_UPDATER_SIG_KEY=${ORCA_UPDATER_SIG_KEY}" )
+    if [[ -n "${INLONG_UPDATER_SIG_KEY}" ]] ; then
+        container_env+=( -e "INLONG_UPDATER_SIG_KEY=${INLONG_UPDATER_SIG_KEY}" )
     fi
 
     ensure_docker_runner_image "${container_cli}" "${runner_image}"
@@ -386,9 +386,9 @@ function create_builder_user() {
     if getent group "${HOST_GID}" >/dev/null 2>&1 ; then
         HOST_GROUP=$(getent group "${HOST_GID}" | cut -d: -f1)
     else
-        HOST_GROUP="orca-builder"
+        HOST_GROUP="inlong-builder"
         if getent group "${HOST_GROUP}" >/dev/null 2>&1 ; then
-            HOST_GROUP="orca-builder-${HOST_GID}"
+            HOST_GROUP="inlong-builder-${HOST_GID}"
         fi
         groupadd -g "${HOST_GID}" "${HOST_GROUP}"
     fi
@@ -402,8 +402,8 @@ function create_builder_user() {
         useradd -m -u "${HOST_UID}" -g "${HOST_GROUP}" -s /bin/bash "${HOST_USER}"
     fi
 
-    echo "${HOST_USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/orcaslicer-builder
-    chmod 0440 /etc/sudoers.d/orcaslicer-builder
+    echo "${HOST_USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/inlongslicer-builder
+    chmod 0440 /etc/sudoers.d/inlongslicer-builder
 }
 
 create_builder_user
@@ -422,7 +422,7 @@ fi
 sudo -H -u "${HOST_USER}" env \
     CMAKE_BUILD_PARALLEL_LEVEL="${CMAKE_BUILD_PARALLEL_LEVEL-}" \
     GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" \
-    ORCA_UPDATER_SIG_KEY="${ORCA_UPDATER_SIG_KEY-}" \
+    INLONG_UPDATER_SIG_KEY="${INLONG_UPDATER_SIG_KEY-}" \
     bash -c '
         set -e
         cd "${GITHUB_WORKSPACE}"
@@ -529,33 +529,33 @@ if [[ -n "${BUILD_DEPS}" ]] ; then
     print_and_run cmake --build deps/$BUILD_DIR -j1
 fi
 
-if [[ -n "${BUILD_ORCA}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
-    echo "Configuring OrcaSlicer..."
+if [[ -n "${BUILD_INLONG}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
+    echo "Configuring Inlong Slicer..."
     if [[ -n "${CLEAN_BUILD}" ]] ; then
         print_and_run rm -fr $BUILD_DIR
     fi
-    read -r -a BUILD_ARGS <<< "${ORCA_EXTRA_BUILD_ARGS}"
+    read -r -a BUILD_ARGS <<< "${INLONG_EXTRA_BUILD_ARGS}"
     if [[ $BUILD_CONFIG != Release ]] ; then
         BUILD_ARGS+=(-DCMAKE_BUILD_TYPE="${BUILD_CONFIG}")
     fi
     if [[ -n "${BUILD_TESTS}" ]] ; then
         BUILD_ARGS+=(-DBUILD_TESTS=ON)
     fi
-    if [[ -n "${ORCA_UPDATER_SIG_KEY}" ]] ; then
-        BUILD_ARGS+=(-DORCA_UPDATER_SIG_KEY="${ORCA_UPDATER_SIG_KEY}")
+    if [[ -n "${INLONG_UPDATER_SIG_KEY}" ]] ; then
+        BUILD_ARGS+=(-DINLONG_UPDATER_SIG_KEY="${INLONG_UPDATER_SIG_KEY}")
     fi
 
     print_and_run cmake -S . -B $BUILD_DIR "${CMAKE_C_CXX_COMPILER_CLANG[@]}" "${CMAKE_LLD_LINKER_ARGS[@]}" "${CMAKE_CCACHE_ARGS[@]}" -G "Ninja Multi-Config" \
 -DSLIC3R_PCH=${SLIC3R_PRECOMPILED_HEADERS} \
--DORCA_TOOLS=ON \
+-DINLONG_TOOLS=ON \
 "${COLORED_OUTPUT}" \
 "${BUILD_ARGS[@]}"
     echo "done"
-    if [[ -n "${BUILD_ORCA}" ]]; then
-	echo "Building OrcaSlicer ..."
-	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target OrcaSlicer
-	echo "Building OrcaSlicer_profile_validator .."
-	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target OrcaSlicer_profile_validator
+    if [[ -n "${BUILD_INLONG}" ]]; then
+	echo "Building Inlong Slicer ..."
+	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target InlongSlicer
+	echo "Building Inlong Slicer profile validator .."
+	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target InlongSlicer_profile_validator
 	./scripts/run_gettext.sh
     fi
     if [[ -n "${BUILD_TESTS}" ]] ; then
@@ -565,7 +565,7 @@ if [[ -n "${BUILD_ORCA}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
     echo "done"
 fi
 
-if [[ -n "${BUILD_IMAGE}" || -n "${BUILD_ORCA}" ]] ; then
+if [[ -n "${BUILD_IMAGE}" || -n "${BUILD_INLONG}" ]] ; then
     pushd $BUILD_DIR > /dev/null
     build_linux_image="./src/build_linux_image.sh"
     if [[ -e ${build_linux_image} ]] ; then

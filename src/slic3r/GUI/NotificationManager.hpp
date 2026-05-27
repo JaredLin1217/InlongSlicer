@@ -161,7 +161,7 @@ enum class NotificationType
 	BBLBedFilamentIncompatible,
     BBLMixUsePLAAndPETG,
 	BBLNozzleFilamentIncompatible,
-    OrcaSharedProfilesAvailable,
+    InlongSharedProfilesAvailable,
     NotificationTypeCount
 
 };

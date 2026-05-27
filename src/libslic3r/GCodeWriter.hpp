@@ -54,7 +54,7 @@ public:
     std::string set_print_acceleration(unsigned int acceleration)   { return set_acceleration_internal(Acceleration::Print, acceleration); }
     std::string set_travel_acceleration(unsigned int acceleration)  { return set_acceleration_internal(Acceleration::Travel, acceleration); }
     std::string set_jerk_xy(double jerk);
-    // Orca: set acceleration and jerk in one command for Klipper
+    // Inlong: set acceleration and jerk in one command for Klipper
     std::string set_accel_and_jerk(unsigned int acceleration, double jerk);
     std::string set_junction_deviation(double junction_deviation); 
     std::string set_pressure_advance(double pa) const;
@@ -71,7 +71,7 @@ public:
     std::string toolchange_prefix() const;
     std::string toolchange(unsigned int filament_id);
     std::string set_speed(double F, const std::string &comment = std::string(), const std::string &cooling_marker = std::string());
-    // SoftFever NOTE: the returned speed is mm/minute
+    // Inlong NOTE: the returned speed is mm/minute
     double      get_current_speed() const { return m_current_speed;}
     std::string travel_to_xy(const Vec2d &point, const std::string &comment = std::string());
     std::string travel_to_xyz(const Vec3d &point, const std::string &comment = std::string(), bool force_z = false);
@@ -98,7 +98,7 @@ public:
     void set_xy_offset(double x, double y) { m_x_offset = x; m_y_offset = y; }
     Vec2f get_xy_offset() { return Vec2f{m_x_offset, m_y_offset}; };
     // To be called by the CoolingBuffer from another thread.
-    // ORCA: `part_cooling_fan_min_pwm` (0-100, default 0) is a floor applied only when `speed` is non-zero, used to overcome
+    // INLONG: `part_cooling_fan_min_pwm` (0-100, default 0) is a floor applied only when `speed` is non-zero, used to overcome
     // PWM start-up thresholds on fans that won't spool below a certain duty cycle. A `speed` of 0 is always honoured.
     static std::string set_fan(const GCodeFlavor gcode_flavor, unsigned int speed, unsigned int part_cooling_fan_min_pwm = 0);
     // To be called by the main thread. It always emits the G-code, it does not remember the previous state.
@@ -121,7 +121,7 @@ public:
     bool is_current_position_clear() const { return m_is_current_pos_clear; };
     //BBS:
     static bool full_gcode_comment;
-    //SoftFever
+    //Inlong
     void set_is_bbl_machine(bool bval) {m_is_bbl_printers = bval;}
     const bool is_bbl_printers() const {return m_is_bbl_printers;}
     void set_is_first_layer(bool bval) { m_is_first_layer = bval; }
@@ -171,13 +171,13 @@ public:
     double          m_x_offset{ 0 };
     double          m_y_offset{ 0 };
 
-    // Orca: slicing resolution in mm
+    // Inlong: slicing resolution in mm
     double          m_resolution = 0.01;
     
     std::string m_gcode_label_objects_start;
     std::string m_gcode_label_objects_end;
 
-    //SoftFever
+    //Inlong
     bool            m_is_bbl_printers = false;
     double          m_current_speed;
     bool            m_is_first_layer = true;

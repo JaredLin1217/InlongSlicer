@@ -237,7 +237,7 @@ void AuFile::PaintBackground(wxDC &dc)
         dc.DrawText(m_add_file, pos);
     }
     else {
-        // ORCA match look with add button
+        // INLONG match look with add button
         auto pen_width = FromDIP(2);
         dc.SetPen(wxPen(AUFILE_GREY500, pen_width));
         dc.SetBrush(StateColor::darkModeColorFor(AUFILE_GREY200));
@@ -254,7 +254,7 @@ void AuFile::PaintForeground(wxDC &dc)
 
     if (m_hover) {
 
-        // ORCA add hover effect to borders
+        // INLONG add hover effect to borders
         if (m_type == BILL_OF_MATERIALS || m_type == ASSEMBLY_GUIDE || m_type == OTHERS || m_type == MODEL_PICTURE || m_type == AddFileButton) {
             auto pen_width = FromDIP(2);
             dc.SetPen(wxPen(AUFILE_BRAND, pen_width));
@@ -849,7 +849,7 @@ void AuxiliaryPanel::init_tabpanel()
     auto back_btn = new Button(this, _L("Return"), "assemble_return", wxBORDER_NONE | wxBU_LEFT | wxBU_EXACTFIT);
     back_btn->SetSize(wxSize(FromDIP(220), FromDIP(18)));
     back_btn->SetBackgroundColor(btn_bg_green);
-    back_btn->SetTextColor(StateColor (std::pair<wxColour, int>(wxColour("#FDFFFD"), StateColor::Normal))); // ORCA fixes color change on text. icon stays white color but text changes to black without this
+    back_btn->SetTextColor(StateColor (std::pair<wxColour, int>(wxColour("#FDFFFD"), StateColor::Normal))); // INLONG fixes color change on text. icon stays white color but text changes to black without this
     back_btn->SetCornerRadius(0);
     back_btn->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [this](wxEvent& e) {
         auto event = wxCommandEvent(EVT_AUXILIARY_DONE);

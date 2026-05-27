@@ -235,8 +235,8 @@ class  ConfigOptionDef;
 struct ConfigOptionDeleter { void operator()(ConfigOption* p); };
 using  ConfigOptionUniquePtr = std::unique_ptr<ConfigOption, ConfigOptionDeleter>;
 
-// When parsing a configuration value, if the old_value is not understood by this OrcaSlicer version,
-// it is being substituted with some default value that this OrcaSlicer could work with.
+// When parsing a configuration value, if the old_value is not understood by this InlongSlicer version,
+// it is being substituted with some default value that this InlongSlicer could work with.
 // This structure serves to inform the user about the substitutions having been done during file import.
 struct ConfigSubstitution {
     const ConfigOptionDef   *opt_def { nullptr };
@@ -1829,7 +1829,7 @@ public:
     {
         UNUSED(append);
 
-        // Orca: take the first value if input is an array
+        // Inlong: take the first value if input is an array
         std::istringstream is(str);
         std::string        item_str;
         if (std::getline(is, item_str, ',')) {

@@ -1,4 +1,4 @@
-@REM OrcaSlicer build script for Windows
+@REM Inlong Slicer build script for Windows
 @echo off
 set WP=%CD%
 
@@ -7,9 +7,10 @@ if "%1"=="pack" (
     setlocal ENABLEDELAYEDEXPANSION 
     cd %WP%/deps/build
     for /f "tokens=2-4 delims=/ " %%a in ('date /t') do set build_date=%%c%%b%%a
-    echo packing deps: OrcaSlicer_dep_win64_!build_date!_vs2022.zip
+    set DEPS_FOLDER=InlongSlicer_dep
+    echo packing deps: InlongSlicer_dep_win64_!build_date!_vs2022.zip
 
-    %WP%/tools/7z.exe a OrcaSlicer_dep_win64_!build_date!_vs2022.zip OrcaSlicer_dep
+    %WP%/tools/7z.exe a InlongSlicer_dep_win64_!build_date!_vs2022.zip !DEPS_FOLDER!
     exit /b 0
 )
 
@@ -38,7 +39,7 @@ cd deps
 mkdir %build_dir%
 cd %build_dir%
 set "SIG_FLAG="
-if defined ORCA_UPDATER_SIG_KEY set "SIG_FLAG=-DORCA_UPDATER_SIG_KEY=%ORCA_UPDATER_SIG_KEY%"
+if defined INLONG_UPDATER_SIG_KEY set "SIG_FLAG=-DINLONG_UPDATER_SIG_KEY=%INLONG_UPDATER_SIG_KEY%"
 
 if "%1"=="slicer" (
     GOTO :slicer
@@ -55,14 +56,14 @@ cmake --build . --config %build_type% --target deps -- -m
 if "%1"=="deps" exit /b 0
 
 :slicer
-echo "building Orca Slicer..."
+echo "building Inlong Slicer..."
 cd %WP%
 mkdir %build_dir%
 cd %build_dir%
 
 echo on
 set CMAKE_POLICY_VERSION_MINIMUM=3.5
-cmake .. -G "Visual Studio 17 2022" -A x64 -DORCA_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+cmake .. -G "Visual Studio 17 2022" -A x64 -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
 cmake --build . --config %build_type% --target ALL_BUILD -- -m
 @echo off
 cd ..

@@ -72,9 +72,9 @@ static const std::map<const wchar_t, std::string> font_icons = {
     {ImGui::GapFillIcon            , "gap_fill"                      },
     {ImGui::FoldButtonIcon         , "im_fold"                       },
     {ImGui::UnfoldButtonIcon       , "im_unfold"                     },
-    {ImGui::gCodeButtonIcon        , "im_code"                       }, //ORCA
-    {ImGui::VisibleIcon            , "im_visible"                    }, //ORCA
-    {ImGui::HiddenIcon             , "im_hidden"                     }, //ORCA
+    {ImGui::gCodeButtonIcon        , "im_code"                       }, //INLONG
+    {ImGui::VisibleIcon            , "im_visible"                    }, //INLONG
+    {ImGui::HiddenIcon             , "im_hidden"                     }, //INLONG
     {ImGui::SphereButtonIcon       , "toolbar_modifier_sphere"       },
     // dark mode icon
     {ImGui::MinimalizeDarkButton       , "notification_minimalize_dark"       },
@@ -100,7 +100,7 @@ static const std::map<const wchar_t, std::string> font_icons = {
     {ImGui::CollapseBtn                , "collapse_btn"               },
     {ImGui::RevertBtn                  , "revert_btn"                 },
 
-    //{ImGui::HorizontalHide        , "horizontal_hide"               }, // ORCA use ExpandBtn / CollapseBtn
+    //{ImGui::HorizontalHide        , "horizontal_hide"               }, // INLONG use ExpandBtn / CollapseBtn
     //{ImGui::HorizontalShow        , "horizontal_show"               },
 
     {ImGui::CloseBlockNotifButton      , "block_notification_close"           },
@@ -173,7 +173,7 @@ const ImVec4 ImGuiWrapper::COL_RED               = ImVec4(1.0f, 0.0f, 0.0f, 1.0f
 const ImVec4 ImGuiWrapper::COL_GREEN             = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
 const ImVec4 ImGuiWrapper::COL_BLUE              = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
 const ImVec4 ImGuiWrapper::COL_BLUE_LIGHT        = ImVec4(0.122f, 0.557f, 0.918f, 1.0f);
-const ImVec4 ImGuiWrapper::COL_GREEN_LIGHT       = { 214 / 255.f, 108 / 255.f, 71 / 255.f, 0.25f }; // ORCA used on various places like text selection bg. Replaced with orca color
+const ImVec4 ImGuiWrapper::COL_GREEN_LIGHT       = { 214 / 255.f, 108 / 255.f, 71 / 255.f, 0.25f }; // INLONG used on various places like text selection bg. Replaced with Inlong color
 const ImVec4 ImGuiWrapper::COL_HOVER             = { 0.933f, 0.933f, 0.933f, 1.0f };
 const ImVec4 ImGuiWrapper::COL_ACTIVE            = { 0.675f, 0.675f, 0.675f, 1.0f };
 const ImVec4 ImGuiWrapper::COL_SEPARATOR         = { 0.93f, 0.93f, 0.93f, 1.0f };
@@ -181,10 +181,10 @@ const ImVec4 ImGuiWrapper::COL_SEPARATOR_DARK    = { 0.24f, 0.24f, 0.27f, 1.0f }
 const ImVec4 ImGuiWrapper::COL_TITLE_BG          = { 0.745f, 0.745f, 0.745f, 1.0f };
 const ImVec4 ImGuiWrapper::COL_WINDOW_BG         = { 1.000f, 1.000f, 1.000f, 1.0f };
 const ImVec4 ImGuiWrapper::COL_WINDOW_BG_DARK    = { 45 / 255.f, 45 / 255.f, 49 / 255.f, 1.f };
-const ImVec4 ImGuiWrapper::COL_TOOLBAR_BG        = { 250 / 255.f, 250 / 255.f, 250 / 255.f, 1.f }; // ORCA color matches with toolbar_background.png
-const ImVec4 ImGuiWrapper::COL_TOOLBAR_BG_DARK   = { 57  / 255.f, 60  / 255.f, 66  / 255.f, 1.f }; // ORCA color matches with toolbar_background_dark.png
-const ImVec4 ImGuiWrapper::COL_ORCA              = to_ImVec4(ColorRGBA::ORCA());
-const ImVec4 ImGuiWrapper::COL_MODIFIED          = { 253.f / 255.f, 111.f / 255.f, 40.f / 255.f, 1}; // ORCA same color with m_color_label_modified
+const ImVec4 ImGuiWrapper::COL_TOOLBAR_BG        = { 250 / 255.f, 250 / 255.f, 250 / 255.f, 1.f }; // INLONG color matches with toolbar_background.png
+const ImVec4 ImGuiWrapper::COL_TOOLBAR_BG_DARK   = { 57  / 255.f, 60  / 255.f, 66  / 255.f, 1.f }; // INLONG color matches with toolbar_background_dark.png
+const ImVec4 ImGuiWrapper::COL_INLONG              = to_ImVec4(ColorRGBA::INLONG());
+const ImVec4 ImGuiWrapper::COL_MODIFIED          = { 253.f / 255.f, 111.f / 255.f, 40.f / 255.f, 1}; // INLONG same color with m_color_label_modified
 const ImVec4 ImGuiWrapper::COL_WARNING           = to_ImVec4(ColorRGB::WARNING());
 
 int ImGuiWrapper::TOOLBAR_WINDOW_FLAGS = ImGuiWindowFlags_AlwaysAutoResize
@@ -909,7 +909,7 @@ bool ImGuiWrapper::button(const wxString& label, const ImVec2 &size, bool enable
     return (enable) ? res : false;
 }
 
-// ORCA Glyph based button for correctly rendering icon size based Glyph
+// INLONG Glyph based button for correctly rendering icon size based Glyph
 // excludes spacings after Glyph and centers icon properly
 // compared to image_button this supports styling
 bool ImGuiWrapper::glyph_button(wchar_t icon_char, ImVec2 icon_size)
@@ -922,7 +922,7 @@ bool ImGuiWrapper::glyph_button(wchar_t icon_char, ImVec2 icon_size)
     float       rounding  = style.FrameRounding;
     std::string icon_str  = into_u8(icon_char);
     const char* icon      = icon_str.c_str();
-    
+
     float  width  = icon_size.x + (padding.x + border_w) * 2.f;
     float  height = icon_size.y + (padding.y + border_w) * 2.f;
     ImVec2 rc_min = ImGui::GetCursorScreenPos();
@@ -1164,12 +1164,12 @@ bool ImGuiWrapper::slider_float(const char* label, float* v, float v_min, float 
     const ImGuiStyle& style = ImGui::GetStyle();
     if (show_edit_btn) {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 1, style.ItemSpacing.y });
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);        // ORCA match edit button style
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);        // INLONG match edit button style
         ImGui::SameLine();
         std::wstring btn_name = ImGui::SliderFloatEditBtnIcon + boost::nowide::widen(str_label);
         ImGui::PushStyleColor(ImGuiCol_Button, { 0.25f, 0.25f, 0.25f, 0.0f });
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {0, 0, 0, 0 }); // ORCA match edit button style
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive,  {0, 0, 0, 0 }); // ORCA match edit button style
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {0, 0, 0, 0 }); // INLONG match edit button style
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive,  {0, 0, 0, 0 }); // INLONG match edit button style
         if (ImGui::Button(into_u8(btn_name).c_str())) {
             ImGui::SetKeyboardFocusHere(-1);
             this->set_requires_extra_frame();
@@ -1178,7 +1178,7 @@ bool ImGuiWrapper::slider_float(const char* label, float* v, float v_min, float 
         if (ImGui::IsItemHovered())
             this->tooltip(into_u8(_L("Edit")).c_str(), max_tooltip_width);
 
-        ImGui::PopStyleVar(2); // ORCA
+        ImGui::PopStyleVar(2); // INLONG
     }
 
     if (label_visible) {
@@ -2092,7 +2092,7 @@ ColorRGBA ImGuiWrapper::from_ImVec4(const ImVec4& color)
     return { color.x, color.y, color.z, color.w };
 }
 
-template <typename T, typename Func> 
+template <typename T, typename Func>
 static bool input_optional(std::optional<T> &v, Func& f, std::function<bool(const T&)> is_default, const T& def_val)
 {
     if (v.has_value()) {
@@ -2120,7 +2120,7 @@ bool ImGuiWrapper::input_optional_int(const char *        label,
     auto func = [&](int &value) {
         return ImGui::InputInt(label, &value, step, step_fast, flags);
     };
-    std::function<bool(const int &)> is_default = 
+    std::function<bool(const int &)> is_default =
         [def_val](const int &value) -> bool { return value == def_val; };
     return input_optional(v, func, is_default, def_val);
 }
@@ -2209,7 +2209,7 @@ bool ImGuiWrapper::slider_optional_int(const char         *label,
         if (val.has_value())
             v = static_cast<int>(std::round(*val));
         else
-            v.reset(); 
+            v.reset();
         return true;
     } else return false;
 }
@@ -2230,14 +2230,14 @@ std::optional<ImVec2> ImGuiWrapper::change_window_position(const char *window_na
     std::optional<ImVec2> output_window_offset;
     if (position.x < 0) {
         if (position.y < 0)
-            // top left 
-            output_window_offset = ImVec2(0, 0); 
+            // top left
+            output_window_offset = ImVec2(0, 0);
         else
             // only left
-            output_window_offset = ImVec2(0, position.y); 
+            output_window_offset = ImVec2(0, position.y);
     } else if (position.y < 0) {
         // only top
-        output_window_offset = ImVec2(position.x, 0); 
+        output_window_offset = ImVec2(position.x, 0);
     } else if (screen.x < (position.x + size.x)) {
         if (screen.y < (position.y + size.y))
             // right bottom
@@ -2256,8 +2256,8 @@ std::optional<ImVec2> ImGuiWrapper::change_window_position(const char *window_na
     return output_window_offset;
 }
 
-void ImGuiWrapper::left_inputs() { 
-    ImGui::ClearActiveID(); 
+void ImGuiWrapper::left_inputs() {
+    ImGui::ClearActiveID();
 }
 
 std::string ImGuiWrapper::trunc(const std::string &text,
@@ -2270,7 +2270,7 @@ std::string ImGuiWrapper::trunc(const std::string &text,
     assert(width > tail_width);
     if (width <= tail_width) return "Error: Can't add tail and not be under wanted width.";
     float allowed_width = width - tail_width;
-    
+
     // guess approx count of letter
     float average_letter_width = calc_text_size(std::string_view("n")).x; // average letter width
     unsigned count_letter  = static_cast<unsigned>(allowed_width / average_letter_width);
@@ -2293,8 +2293,8 @@ std::string ImGuiWrapper::trunc(const std::string &text,
             --count_letter;
             result_text = text_.substr(0, count_letter);
             text_width  = calc_text_size(result_text).x;
-            if (text_width < allowed_width) break;            
-        } 
+            if (text_width < allowed_width) break;
+        }
     }
     return std::string(result_text) + tail;
 }
@@ -2305,7 +2305,7 @@ void ImGuiWrapper::escape_double_hash(std::string &text)
     const std::string search  = "##";
     const std::string replace = "# #";
     size_t pos = 0;
-    while ((pos = text.find(search, pos)) != std::string::npos) 
+    while ((pos = text.find(search, pos)) != std::string::npos)
         text.replace(pos, search.length(), replace);
 }
 
@@ -2365,7 +2365,7 @@ ImVec2 ImGuiWrapper::suggest_location(const ImVec2 &dialog_size,
     double allowed_space = 10; // in px
     double allowed_space_sq = allowed_space * allowed_space;
     Vec2d  move_vec         = (center - (offset.cast<coord_t>() + half_dialog_size))
-                         .cast<double>();    
+                         .cast<double>();
     Vec2d result_move(0, 0);
     do {
         move_vec             = move_vec / 2.;
@@ -2374,7 +2374,7 @@ ImVec2 ImGuiWrapper::suggest_location(const ImVec2 &dialog_size,
         for (Point &p : moved_polygon) p += move_point;
         if (Slic3r::intersection(interest, Polygon(moved_polygon)).empty())
             result_move += move_vec;
-        
+
     } while (move_vec.squaredNorm() >= allowed_space_sq);
     offset += result_move;
 
@@ -2714,20 +2714,20 @@ void ImGuiWrapper::push_combo_style(const float scale)
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 1.0f * scale);
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f * scale);
         ImGui::PushStyleColor(ImGuiCol_PopupBg, ImGuiWrapper::COL_WINDOW_BG_DARK);
-        ImGui::PushStyleColor(ImGuiCol_BorderActive, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.6f));  // ORCA hovered item border color
-        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, {0.f, 0.f, 0.f, 0.f});                            // ORCA hovered item background color
-        ImGui::PushStyleColor(ImGuiCol_HeaderActive, COL_ORCA);
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.25f));       // ORCA active item background color
+        ImGui::PushStyleColor(ImGuiCol_BorderActive, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.6f));  // INLONG hovered item border color
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, {0.f, 0.f, 0.f, 0.f});                            // INLONG hovered item background color
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, COL_INLONG);
+        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.25f));       // INLONG active item background color
         ImGui::PushStyleColor(ImGuiCol_ScrollbarBg, ImGuiWrapper::COL_WINDOW_BG_DARK);
         ImGui::PushStyleColor(ImGuiCol_Button, {1.00f, 1.00f, 1.00f, 0.0f});
     } else {
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 1.0f * scale);
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f * scale);
         ImGui::PushStyleColor(ImGuiCol_PopupBg, ImGuiWrapper::COL_WINDOW_BG);
-        ImGui::PushStyleColor(ImGuiCol_BorderActive, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.6f));  // ORCA hovered item border color
-        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, {0.f, 0.f, 0.f, 0.f});                            // ORCA hovered item background color
-        ImGui::PushStyleColor(ImGuiCol_HeaderActive, COL_ORCA);
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.25f));       // ORCA active item background color
+        ImGui::PushStyleColor(ImGuiCol_BorderActive, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.6f));  // INLONG hovered item border color
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, {0.f, 0.f, 0.f, 0.f});                            // INLONG hovered item background color
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, COL_INLONG);
+        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 0.25f));       // INLONG active item background color
         ImGui::PushStyleColor(ImGuiCol_ScrollbarBg, ImGuiWrapper::COL_WINDOW_BG);
         ImGui::PushStyleColor(ImGuiCol_Button, {1.00f, 1.00f, 1.00f, 0.0f});
     }
@@ -2741,13 +2741,13 @@ void ImGuiWrapper::pop_combo_style()
 
 void ImGuiWrapper::push_radio_style(const float scale)
 {
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1.5f, 1.5f) * scale); // ORCA ensure icon size stays consistent
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1.5f, 1.5f) * scale); // INLONG ensure icon size stays consistent
     if (m_is_dark_mode) {
-        ImGui::PushStyleColor(ImGuiCol_CheckMark, to_ImVec4(decode_color_to_float_array("#D66C47"))); // ORCA use orca color for radio buttons
-        ImGui::PushStyleColor(ImGuiCol_Border   , to_ImVec4(decode_color_to_float_array("#949494"))); // ORCA match border color
+        ImGui::PushStyleColor(ImGuiCol_CheckMark, to_ImVec4(decode_color_to_float_array("#D66C47"))); // INLONG use Inlong color for radio buttons
+        ImGui::PushStyleColor(ImGuiCol_Border   , to_ImVec4(decode_color_to_float_array("#949494"))); // INLONG match border color
     } else {
-        ImGui::PushStyleColor(ImGuiCol_CheckMark, to_ImVec4(decode_color_to_float_array("#D66C47"))); // ORCA use orca color for radio buttons
-        ImGui::PushStyleColor(ImGuiCol_Border   , to_ImVec4(decode_color_to_float_array("#7C8282"))); // ORCA match border color
+        ImGui::PushStyleColor(ImGuiCol_CheckMark, to_ImVec4(decode_color_to_float_array("#D66C47"))); // INLONG use Inlong color for radio buttons
+        ImGui::PushStyleColor(ImGuiCol_Border   , to_ImVec4(decode_color_to_float_array("#7C8282"))); // INLONG match border color
     }
 }
 
@@ -2783,7 +2783,7 @@ void ImGuiWrapper::init_font(bool compress)
     //FIXME replace with io.Fonts->AddFontFromMemoryTTF(buf_decompressed_data, (int)buf_decompressed_size, m_font_size, nullptr, ranges.Data);
     //https://github.com/ocornut/imgui/issues/220
 
-    // Orca: temp fix for Korean font
+    // Inlong: temp fix for Korean font
     auto font_name_regular = "HarmonyOS_Sans_SC_Regular.ttf";
     auto font_name_bold = "HarmonyOS_Sans_SC_Bold.ttf";
     if(m_glyph_ranges == ImGui::GetIO().Fonts->GetGlyphRangesKorean()) {
@@ -3029,12 +3029,12 @@ void ImGuiWrapper::init_style()
 
     // ComboBox items
     set_color(ImGuiCol_Header, COL_ORANGE_DARK);
-    set_color(ImGuiCol_HeaderHovered,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.50f))); // ORCA Use orca color for headers
-    set_color(ImGuiCol_HeaderActive,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.75f)));  // ORCA Use orca color for headers
+    set_color(ImGuiCol_HeaderHovered,	to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.50f))); // INLONG Use Inlong color for headers
+    set_color(ImGuiCol_HeaderActive,	to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.75f)));  // INLONG Use Inlong color for headers
 
     // Slider
-    set_color(ImGuiCol_SliderGrab,			to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.50f))); // ORCA Use orca color for slider thumbs 
-    set_color(ImGuiCol_SliderGrabActive,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.75f))); // ORCA Use orca color for slider thumbs 
+    set_color(ImGuiCol_SliderGrab,			to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.50f))); // INLONG Use Inlong color for slider thumbs
+    set_color(ImGuiCol_SliderGrabActive,	to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.75f))); // INLONG Use Inlong color for slider thumbs
 
     // Separator
     set_color(ImGuiCol_Separator, COL_BLUE_LIGHT);

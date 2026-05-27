@@ -328,7 +328,7 @@ void OG_CustomCtrl::OnPaint(wxPaintEvent&)
 
     wxPaintDC dc(this);
 
-    wxCoord h_pos = get_title_width() * m_em_unit + 4; // ORCA Align label with group title. StaticLine.cpp uses 18px for icon 5px for spacing. Spacing doesnt scales on messureSize()
+    wxCoord h_pos = get_title_width() * m_em_unit + 4; // INLONG Align label with group title. StaticLine.cpp uses 18px for icon 5px for spacing. Spacing doesnt scales on messureSize()
     wxCoord v_pos = 0;
     // BBS: new layout
     if (!GetLabel().IsEmpty()) {
@@ -992,7 +992,7 @@ wxPoint OG_CustomCtrl::CtrlLine::draw_act_bmps(wxDC& dc, wxPoint pos, const wxBi
         pos.y += lround((height - get_bitmap_size(bmp_undo).GetHeight()) / 2);
     }
 #endif
-    wxCoord h_pos = pos.x - ctrl->m_h_gap;  // Orca: adjust position to the left
+    wxCoord h_pos = pos.x - ctrl->m_h_gap;  // Inlong: adjust position to the left
     wxCoord v_pos = pos.y;
 
 #ifndef DISABLE_UNDO_SYS

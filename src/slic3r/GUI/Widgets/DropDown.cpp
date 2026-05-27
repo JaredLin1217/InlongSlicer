@@ -41,7 +41,7 @@ DropDown::DropDown(std::vector<Item> &items)
         std::make_pair(0x363636, (int) StateColor::Normal))
     , selector_border_color(std::make_pair(0xD66C47, (int) StateColor::Hovered),
         std::make_pair(*wxWHITE, (int) StateColor::Normal))
-    , selector_background_color(std::make_pair(0xF5DAD1, (int) StateColor::Checked), // ORCA updated background color for checked item
+    , selector_background_color(std::make_pair(0xF5DAD1, (int) StateColor::Checked), // INLONG updated background color for checked item
         std::make_pair(*wxWHITE, (int) StateColor::Normal))
 {
 }
@@ -589,7 +589,7 @@ void DropDown::messureSize()
         subDropDown->use_content_width = true;
         subDropDown->Create(GetParent());
 #ifdef __WXGTK__
-        // Orca: On Wayland, while the sub holds an xdg_popup grab, motion events for
+        // Inlong: On Wayland, while the sub holds an xdg_popup grab, motion events for
         // the cursor over main may not be delivered (Mutter drops motion
         // outside the grabbing surface). Poll on idle and synthesize a
         // mouseMove on main so its hover highlight tracks and it can dismiss

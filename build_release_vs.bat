@@ -1,4 +1,4 @@
-@REM OrcaSlicer build script for Windows with VS auto-detect
+@REM Inlong Slicer build script for Windows with VS auto-detect
 @echo off
 set WP=%CD%
 set _START_TIME=%TIME%
@@ -78,9 +78,10 @@ if "%1"=="pack" (
     setlocal ENABLEDELAYEDEXPANSION 
     cd %WP%/deps/build
     for /f "tokens=2-4 delims=/ " %%a in ('date /t') do set build_date=%%c%%b%%a
-    echo packing deps: OrcaSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip
+    set DEPS_FOLDER=InlongSlicer_dep
+    echo packing deps: InlongSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip
 
-    %WP%/tools/7z.exe a OrcaSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip OrcaSlicer_dep
+    %WP%/tools/7z.exe a InlongSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip !DEPS_FOLDER!
     goto :done
 )
 
@@ -104,7 +105,7 @@ if "%debug%"=="ON" (
 )
 echo build type set to %build_type%
 set BUILD_TARGET=ALL_BUILD
-if "%FAST_BUILD%"=="1" set BUILD_TARGET=OrcaSlicer_app_gui
+if "%FAST_BUILD%"=="1" set BUILD_TARGET=InlongSlicer_app_gui
 if "%FULL_FAST_BUILD%"=="1" set BUILD_TARGET=ALL_BUILD
 
 setlocal DISABLEDELAYEDEXPANSION 
@@ -112,7 +113,7 @@ cd deps
 if not exist %build_dir% mkdir %build_dir%
 cd %build_dir%
 set "SIG_FLAG="
-if defined ORCA_UPDATER_SIG_KEY set "SIG_FLAG=-DORCA_UPDATER_SIG_KEY=%ORCA_UPDATER_SIG_KEY%"
+if defined INLONG_UPDATER_SIG_KEY set "SIG_FLAG=-DINLONG_UPDATER_SIG_KEY=%INLONG_UPDATER_SIG_KEY%"
 
 if "%1"=="slicer" (
     GOTO :slicer
@@ -137,7 +138,7 @@ if "%USE_NINJA%"=="1" (
 if "%1"=="deps" goto :done
 
 :slicer
-echo "building Orca Slicer..."
+echo "building Inlong Slicer..."
 cd %WP%
 if not exist %build_dir% mkdir %build_dir%
 cd %build_dir%
@@ -146,10 +147,10 @@ echo Build target set to %BUILD_TARGET%
 echo on
 set CMAKE_POLICY_VERSION_MINIMUM=3.5
 if "%USE_NINJA%"=="1" (
-    cmake .. -G %CMAKE_GENERATOR% -Wno-dev -DORCA_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake .. -G %CMAKE_GENERATOR% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET%
 ) else (
-    cmake .. -G %CMAKE_GENERATOR% -A x64 -Wno-dev -DORCA_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake .. -G %CMAKE_GENERATOR% -A x64 -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET% -- /m /nr:false
 )
 @echo off

@@ -114,9 +114,9 @@ void set_logging_level(unsigned int level)
 {
     logSeverity = level_to_boost(level);
 
-    // Orca: force at info or lower level logging for pre-release builds.
+    // Inlong: force at info or lower level logging for pre-release builds.
     // Note: not setting to debug or trace as they might affect long time usage especially with BBL printers.
-    const std::string version = SoftFever_VERSION;
+    const std::string version = INLONGSLICER_VERSION;
     if (level < (unsigned int) boost::log::trivial::info &&
         (boost::algorithm::icontains(version, "dev") || boost::algorithm::icontains(version, "alpha") ||
          boost::algorithm::icontains(version, "beta"))) {
@@ -351,7 +351,7 @@ void set_log_path_and_level(const std::string& file, unsigned int level)
 	}
 #endif
 
-	//BBS log file at C:\\Users\\[yourname]\\AppData\\Roaming\\OrcaSlicer\\log\\[log_filename].log
+	//BBS log file at C:\\Users\\[yourname]\\AppData\\Roaming\\InlongSlicer\\log\\[log_filename].log
 	auto log_folder = boost::filesystem::path(g_data_dir) / "log";
 	if (!boost::filesystem::exists(log_folder)) {
 		boost::filesystem::create_directory(log_folder);
@@ -1217,12 +1217,12 @@ std::string string_printf(const char *format, ...)
 
 std::string header_slic3r_generated()
 {
-	return std::string(SLIC3R_APP_NAME " " SoftFever_VERSION);
+	return std::string(SLIC3R_APP_NAME " " INLONGSLICER_VERSION);
 }
 
 std::string header_gcodeviewer_generated()
 {
-	return std::string(GCODEVIEWER_APP_NAME " " SoftFever_VERSION);
+	return std::string(GCODEVIEWER_APP_NAME " " INLONGSLICER_VERSION);
 }
 
 unsigned get_current_pid()
@@ -1605,7 +1605,7 @@ bool bbl_calc_md5(std::string &filename, std::string &md5_out)
     return true;
 }
 
-// SoftFever: copy directory recursively
+// Inlong: copy directory recursively
 void copy_directory_recursively(const boost::filesystem::path& source,
                                 const boost::filesystem::path& target,
                                 std::function<bool(const std::string)> filter,

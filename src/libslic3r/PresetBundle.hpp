@@ -80,10 +80,10 @@ enum BundleType{
     Subscribed,
 };
 
-// Orca: Bundle metadata structure for imported preset bundles
+// Inlong: Bundle metadata structure for imported preset bundles
 struct BundleMetadata
 {
-    std::string                     id;         // Bundle ID: UUID (OrcaCloud) or name+timestamp (external)
+    std::string                     id;         // Bundle ID: UUID (InlongCloud) or name+timestamp (external)
     std::string                     name;       // Display name
     std::string                     version;    // Bundle version
     std::string                     description;
@@ -111,8 +111,8 @@ struct BundleMetadata
 
 struct PresetBundleMetadata
 {
-    // To make sure write locks take precedent, pausereads needs to be true for when Orca needs to read or manipulate the container
-    // We only need to explicitly pause reads when entering a region in Orca which we deem necessary to quickly acquire write locks.
+    // To make sure write locks take precedent, pausereads needs to be true for when Inlong needs to read or manipulate the container
+    // We only need to explicitly pause reads when entering a region in Inlong which we deem necessary to quickly acquire write locks.
     std::unordered_map<std::string, BundleMetadata> m_bundles;
     std::shared_mutex RWMtx;
     std::atomic<bool> pauseReads{false};
@@ -158,7 +158,7 @@ public:
                                                     bool                            apply_extruder,
                                                     std::optional<std::vector<int>> filament_maps_new);
 
-    // ORCA: utility function to find the vendor for a given preset name
+    // INLONG: utility function to find the vendor for a given preset name
     static std::string find_preset_vendor(const std::string& preset_name, Preset::Type type);
 
     PresetBundle();
@@ -193,7 +193,7 @@ public:
     // BBS Load user presets
     PresetsConfigSubstitutions load_user_presets(std::string user, ForwardCompatibilitySubstitutionRule rule);
     PresetsConfigSubstitutions load_user_presets(AppConfig &config, std::map<std::string, std::map<std::string, std::string>>& my_presets, ForwardCompatibilitySubstitutionRule rule);
-    // Orca: Import subscribed bundle presets (load and save to disk in one operation), handles one bundle at a time
+    // Inlong: Import subscribed bundle presets (load and save to disk in one operation), handles one bundle at a time
     PresetsConfigSubstitutions update_subscribed_presets(AppConfig& config,
                                                          const std::map<std::string, std::map<std::string, std::string>>& bundle_presets,
                                                          const BundleMetadata& remote_metadata,
@@ -254,7 +254,7 @@ public:
 
     std::optional<FilamentBaseInfo> get_filament_by_filament_id(const std::string& filament_id, const std::string& printer_name = std::string()) const;
 
-    // Orca: get vendor type
+    // Inlong: get vendor type
     VendorType get_current_vendor_type();
     // Vendor related handy functions
     bool is_bbl_vendor() { return get_current_vendor_type() == VendorType::Marlin_BBL; }
@@ -292,7 +292,7 @@ public:
     void reset_default_nozzle_volume_type();
 
     std::vector<int> get_used_tpu_filaments(const std::vector<int> &used_filaments);
-    // Orca: update selected filament and print
+    // Inlong: update selected filament and print
     void           update_selections(AppConfig &config);
     void set_calibrate_printer(std::string name);
 
@@ -341,11 +341,11 @@ public:
     // and the system profiles will point to the VendorProfile instances owned by PresetBundle::vendors.
     VendorMap                   vendors;
 
-    // Orca: for OrcaFilamentLibrary
+    // Inlong: for InlongFilamentLibrary
     std::map<std::string, DynamicPrintConfig> m_config_maps;
     std::map<std::string, std::string> m_filament_id_maps;
 
-    // Orca: Bundle metadata and cached preset names
+    // Inlong: Bundle metadata and cached preset names
     // std::map<std::string, BundleMetadata>  m_bundles;
     fs::path dir_user_presets_local;
     fs::path dir_user_presets_subscribed;
@@ -372,7 +372,7 @@ public:
     int get_printer_extruder_count() const;
     bool support_different_extruders();
 
-    // Orca: Ensure filament_presets has at least one slot per nozzle on FFF printers.
+    // Inlong: Ensure filament_presets has at least one slot per nozzle on FFF printers.
     // Called from (load|update)_selections before the parallel project_config arrays
     // (filament_colour/colour_type/map) are sized off filament_presets.size(), so a
     // short saved filament list doesn't truncate the loaded colors.
@@ -414,7 +414,7 @@ public:
     // Don't do any config substitutions when loading a system profile, perform and report substitutions otherwise.
     /*std::pair<PresetsConfigSubstitutions, size_t> load_configbundle(
         const std::string &path, LoadConfigBundleAttributes flags, ForwardCompatibilitySubstitutionRule compatibility_rule);*/
-    //Orca: load config bundle from json, pass the base bundle to support cross vendor inheritance
+    //Inlong: load config bundle from json, pass the base bundle to support cross vendor inheritance
     std::pair<PresetsConfigSubstitutions, size_t> load_vendor_configs_from_json(
         const std::string &path, const std::string &vendor_name, LoadConfigBundleAttributes flags, ForwardCompatibilitySubstitutionRule compatibility_rule, const PresetBundle* base_bundle = nullptr);
 
@@ -465,13 +465,13 @@ public:
     std::pair<PresetsConfigSubstitutions, std::string> load_system_filaments_json(ForwardCompatibilitySubstitutionRule compatibility_rule);
     VendorProfile                                      get_custom_vendor_models() const;
 
-    //orca: add 'custom' as default
-    static const char *ORCA_DEFAULT_BUNDLE;
-	static const char *ORCA_DEFAULT_PRINTER_MODEL;
-	static const char *ORCA_DEFAULT_PRINTER_VARIANT;
-	static const char *ORCA_DEFAULT_FILAMENT;
-    static const char *ORCA_FILAMENT_LIBRARY;
-    static const char *ORCA_DEFAULT_FILAMENT_PLACEHOLDER;
+    // Inlong: add 'custom' as default
+    static const char *INLONG_DEFAULT_BUNDLE;
+	static const char *INLONG_DEFAULT_PRINTER_MODEL;
+	static const char *INLONG_DEFAULT_PRINTER_VARIANT;
+	static const char *INLONG_DEFAULT_FILAMENT;
+    static const char *INLONG_FILAMENT_LIBRARY;
+    static const char *INLONG_DEFAULT_FILAMENT_PLACEHOLDER;
 
 
     static std::array<Preset::Type, 3>  types_list(PrinterTechnology pt) {
@@ -480,7 +480,7 @@ public:
         return      { Preset::TYPE_PRINTER, Preset::TYPE_SLA_PRINT, Preset::TYPE_SLA_MATERIAL };
     }
 
-    // Orca: for validation only
+    // Inlong: for validation only
     bool has_errors() const;
 
 private:
@@ -509,7 +509,7 @@ private:
     DynamicPrintConfig          full_fff_config(bool apply_extruder, std::optional<std::vector<int>> filament_maps=std::nullopt) const;
     DynamicPrintConfig          full_sla_config() const;
 
-    // Orca: used for validation only
+    // Inlong: used for validation only
     bool validation_mode = false;
     std::string vendor_to_validate = "";
     int m_errors = 0;

@@ -70,7 +70,7 @@ SCENARIO("Placeholder parser scripting", "[PlaceholderParser]") {
     // min_width_top_surface ratio_over inner_wall_line_width.
     SECTION("line_width") { REQUIRE(std::stod(parser.process("{line_width}")) == Catch::Approx(0.67500001192092896)); }
     SECTION("min_width_top_surface") { REQUIRE(std::stod(parser.process("{min_width_top_surface}")) == Catch::Approx(2.7)); }
-    // Orca: this one is not coFloatOrPercent
+    // Inlong: this one is not coFloatOrPercent
     //SECTION("support_object_xy_distance") { REQUIRE(std::stod(parser.process("{support_object_xy_distance}")) == Catch::Approx(0.3375)); }
     // small_perimeter_speed over outer_wall_speed
     SECTION("small_perimeter_speed") { REQUIRE(std::stod(parser.process("{small_perimeter_speed}")) == Catch::Approx(30.)); }

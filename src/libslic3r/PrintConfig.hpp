@@ -121,7 +121,7 @@ enum class BedTempFormula {
     count,
 };
 
-// Orca
+// Inlong
 enum class PowerLossRecoveryMode {
     PrinterConfiguration,
     Enable,
@@ -136,7 +136,7 @@ enum class WallSequence {
     Count,
 };
 
-// Orca
+// Inlong
 enum class WallDirection
 {
     CounterClockwise,
@@ -212,14 +212,14 @@ enum SeamPosition {
     spNearest, spAligned, spAlignedBack, spRear, spRandom
 };
 
-// Orca
+// Inlong
 enum class SeamScarfType {
     None,
     External,
     All,
 };
 
-// Orca
+// Inlong
 enum EnsureVerticalShellThickness {
     evstNone,
     evstCriticalOnly,
@@ -227,17 +227,17 @@ enum EnsureVerticalShellThickness {
     evstAll,
 };
 
-//Orca
+//Inlong
 enum InternalBridgeFilter {
     ibfDisabled, ibfLimited, ibfNofilter
 };
 
-//Orca
+//Inlong
 enum EnableExtraBridgeLayer {
     eblDisabled, eblExternalBridgeOnly, eblInternalBridgeOnly, eblApplyToAll
 };
 
-//Orca
+//Inlong
 enum GapFillTarget {
      gftEverywhere, gftTopBottom, gftNowhere
  };
@@ -270,7 +270,7 @@ enum SLAPillarConnectionMode {
 
 enum BrimType {
     btAutoBrim,  // BBS
-    btEar, // Orca
+    btEar, // Inlong
     btPainted,  // BBS
     btOuterOnly,
     btInnerOnly,
@@ -974,19 +974,19 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,               support_speed))
     ((ConfigOptionEnum<SupportMaterialStyle>, support_style))
 
-    // Orca: a flag enabling the ability to override flow ratios
+    // Inlong: a flag enabling the ability to override flow ratios
     ((ConfigOptionBool,     set_other_flow_ratios))
-    // Orca: support-related flow ratios (available for overriding, if set_other_flow_ratios is enabled)
+    // Inlong: support-related flow ratios (available for overriding, if set_other_flow_ratios is enabled)
     ((ConfigOptionFloat,    support_flow_ratio))
     ((ConfigOptionFloat,    support_interface_flow_ratio))
 
     // BBS
     //((ConfigOptionBool,                independent_support_layer_height))
-    // Orca internal thick bridge
+    // Inlong internal thick bridge
     ((ConfigOptionBool,                thick_bridges))
     ((ConfigOptionBool,                thick_internal_bridges))
     ((ConfigOptionEnum<InternalBridgeFilter>,  dont_filter_internal_bridges))
-    // Orca
+    // Inlong
     ((ConfigOptionEnum<EnableExtraBridgeLayer>,  enable_extra_bridge_layer))
     ((ConfigOptionPercent,              internal_bridge_density))
     // Overhang angle threshold.
@@ -1026,7 +1026,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionPercent,            initial_layer_min_bead_width))
     ((ConfigOptionPercent,            min_bead_width))
 
-    // Orca
+    // Inlong
     ((ConfigOptionFloat,              wall_maximum_resolution))
     ((ConfigOptionFloat,              wall_maximum_deviation))
     ((ConfigOptionFloat,              make_overhang_printable_angle))
@@ -1066,8 +1066,8 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionInt,  interlocking_depth))
     ((ConfigOptionInt,  interlocking_boundary_avoidance))
 
-    // Orca: internal use only
-    ((ConfigOptionBool,  calib_flowrate_topinfill_special_order)) // ORCA: special flag for flow rate calibration
+    // Inlong: internal use only
+    ((ConfigOptionBool,  calib_flowrate_topinfill_special_order)) // INLONG: special flag for flow rate calibration
 )
 
 // This object is mapped to Perl as Slic3r::Config::PrintRegion.
@@ -1079,7 +1079,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionInt,                  bottom_shell_layers))
     ((ConfigOptionFloat,                bottom_shell_thickness))
     ((ConfigOptionFloat,                bridge_angle))
-    ((ConfigOptionFloat,                internal_bridge_angle)) // ORCA: Internal bridge angle override
+    ((ConfigOptionFloat,                internal_bridge_angle)) // INLONG: Internal bridge angle override
     ((ConfigOptionFloat,                bridge_flow))
     ((ConfigOptionFloat,                internal_bridge_flow))
     ((ConfigOptionFloat,                bridge_speed))
@@ -1130,7 +1130,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloatOrPercent, skin_infill_line_width))
     ((ConfigOptionFloatOrPercent, skeleton_infill_line_width))
     ((ConfigOptionBool, infill_combination))
-    // Orca:
+    // Inlong:
     ((ConfigOptionFloatOrPercent,                infill_combination_max_layer_height))
     ((ConfigOptionInt,                  fill_multiline))
     ((ConfigOptionBool,                 gyroid_optimized))
@@ -1175,7 +1175,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloatOrPercent,       overhang_4_4_speed))
     ((ConfigOptionBool,                 only_one_wall_top))
 
-    //SoftFever
+    //Inlong
     ((ConfigOptionFloatOrPercent,       min_width_top_surface))
     ((ConfigOptionBool,                 only_one_wall_first_layer))
     ((ConfigOptionFloat,                print_flow_ratio))
@@ -1195,7 +1195,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloatOrPercent,       infill_anchor))
     ((ConfigOptionFloatOrPercent,       infill_anchor_max))
 
-    // Orca
+    // Inlong
     ((ConfigOptionBool,                 make_overhang_printable))
     ((ConfigOptionBool,                 extra_perimeters_on_overhangs))
     ((ConfigOptionBool,                 slowdown_for_curled_perimeters))
@@ -1211,7 +1211,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBool,                small_area_infill_flow_compensation))
     ((ConfigOptionEnum<WallDirection>,  wall_direction))
 
-    // Orca: other flow ratios (available for overriding, if set_other_flow_ratios is enabled)
+    // Inlong: other flow ratios (available for overriding, if set_other_flow_ratios is enabled)
     ((ConfigOptionFloat,                first_layer_flow_ratio))
     ((ConfigOptionFloat,                outer_wall_flow_ratio))
     ((ConfigOptionFloat,                inner_wall_flow_ratio))
@@ -1220,7 +1220,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,                internal_solid_infill_flow_ratio))
     ((ConfigOptionFloat,                gap_fill_flow_ratio))
 
-    // Orca: seam slopes
+    // Inlong: seam slopes
     ((ConfigOptionEnum<SeamScarfType>,  seam_slope_type))
     ((ConfigOptionBool,                 seam_slope_conditional))
     ((ConfigOptionInt,                  scarf_angle_threshold))
@@ -1233,7 +1233,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,                scarf_joint_flow_ratio))
     ((ConfigOptionPercent,              scarf_overhang_threshold))
     
-    // Orca: Z Anti-Aliasing (aka Z Contouring)
+    // Inlong: Z Anti-Aliasing (aka Z Contouring)
     ((ConfigOptionBool, zaa_enabled))
     ((ConfigOptionBool, zaa_dont_alternate_fill_direction))
     ((ConfigOptionFloat, zaa_min_z))
@@ -1243,7 +1243,7 @@ PRINT_CONFIG_CLASS_DEFINE(
 PRINT_CONFIG_CLASS_DEFINE(
     MachineEnvelopeConfig,
 
-    // Orca: whether emit machine limits into the beginning of the G-code.
+    // Inlong: whether emit machine limits into the beginning of the G-code.
     ((ConfigOptionBool,                 emit_machine_limits_to_gcode))
     // M201 X... Y... Z... E... [mm/sec^2]
     ((ConfigOptionFloats,               machine_max_acceleration_x))
@@ -1278,7 +1278,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,                min_resonance_avoidance_speed))
     ((ConfigOptionFloat,                max_resonance_avoidance_speed))
 
-    //Orca: Input shaping
+    //Inlong: Input shaping
     ((ConfigOptionBool,                 input_shaping_emit))
     ((ConfigOptionEnum<InputShaperType>, input_shaping_type))
     ((ConfigOptionFloat,                input_shaping_freq_x))
@@ -1301,7 +1301,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloatsNullable,      filament_flow_ratio))
     ((ConfigOptionBools,               enable_pressure_advance))
     ((ConfigOptionFloats,              pressure_advance))
-    // Orca: adaptive pressure advance and calibration model
+    // Inlong: adaptive pressure advance and calibration model
     ((ConfigOptionBools,                adaptive_pressure_advance))
     ((ConfigOptionBools,                adaptive_pressure_advance_overhangs))
     ((ConfigOptionStrings,             adaptive_pressure_advance_model))
@@ -1310,7 +1310,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,               fan_kickstart))
     ((ConfigOptionBool,                fan_speedup_overhangs))
     ((ConfigOptionFloat,               fan_speedup_time))
-    // ORCA: minimum PWM (as a percent 0-100) emitted when the part-cooling fan is asked for a non-zero speed.
+    // INLONG: minimum PWM (as a percent 0-100) emitted when the part-cooling fan is asked for a non-zero speed.
     // Used to overcome the PWM start-up threshold on fans that cannot spool below a certain duty cycle.
     // A value of 0 (the default) leaves behaviour unchanged. A fan command of 0 (off) is always honoured.
     ((ConfigOptionInt,                 part_cooling_fan_min_pwm))
@@ -1413,7 +1413,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionStrings,             printer_extruder_variant))
 
 
-    // SoftFever
+    // Inlong
     ((ConfigOptionBool,                use_firmware_retraction))
     ((ConfigOptionBool,                use_relative_e_distances))
     ((ConfigOptionBool,                accel_to_decel_enable))
@@ -1424,7 +1424,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBool,                bbl_calib_mark_logo))
     ((ConfigOptionBool,                disable_m73))
 
-    // Orca: mmu
+    // Inlong: mmu
     ((ConfigOptionFloat,               cooling_tube_retraction))
     ((ConfigOptionFloat,               cooling_tube_length))
     ((ConfigOptionBool,                high_current_on_filament_swap))
@@ -1590,7 +1590,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionFloats,             flush_volumes_matrix))
     ((ConfigOptionFloats,             flush_volumes_vector))
 
-    // Orca: mmu support
+    // Inlong: mmu support
     ((ConfigOptionFloat,              wipe_tower_cone_angle))
     ((ConfigOptionPercent,            wipe_tower_extra_spacing))
     ((ConfigOptionFloat,              wipe_tower_max_purge_speed))
@@ -1617,7 +1617,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     // BBS: move from PrintObjectConfig
     ((ConfigOptionBool, independent_support_layer_height))
     ((ConfigOptionBool,               combine_brims))
-    // SoftFever
+    // Inlong
     ((ConfigOptionPercents,            filament_shrink))
     ((ConfigOptionPercents,            filament_shrinkage_compensation_z))
     ((ConfigOptionBool,                gcode_label_objects))
@@ -1626,9 +1626,9 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionBool,                gcode_comments))
     ((ConfigOptionInt,                 slow_down_layers))
     ((ConfigOptionInts,                support_material_interface_fan_speed))
-    ((ConfigOptionInts,                internal_bridge_fan_speed)) // ORCA: Add support for separate internal bridge fan speed control
+    ((ConfigOptionInts,                internal_bridge_fan_speed)) // INLONG: Add support for separate internal bridge fan speed control
     ((ConfigOptionInts,                ironing_fan_speed))
-    // Orca: notes for profiles from PrusaSlicer
+    // Inlong: notes for profiles from PrusaSlicer
     ((ConfigOptionStrings,             filament_notes))
     ((ConfigOptionString,              notes))
     ((ConfigOptionString,              printer_notes))
@@ -1636,7 +1636,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionBools,               activate_chamber_temp_control))
     ((ConfigOptionInts ,               chamber_temperature))
     
-    // Orca: support adaptive bed mesh
+    // Inlong: support adaptive bed mesh
     ((ConfigOptionFloat,               preferred_orientation))
     ((ConfigOptionPoint,               bed_mesh_min))
     ((ConfigOptionPoint,               bed_mesh_max))

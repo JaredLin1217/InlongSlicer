@@ -1,0 +1,13 @@
+{
+	"type": "filament",
+	"name": "InlongArena Generic ASA",
+	"inherits": "InlongArena Generic ASA @base",
+	"from": "system",
+	"setting_id": "GFSB98",
+	"instantiation": "true",
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

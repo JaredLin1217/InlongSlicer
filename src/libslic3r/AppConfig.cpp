@@ -41,7 +41,6 @@ using namespace nlohmann;
 namespace Slic3r {
 
 static const std::string VERSION_CHECK_URL = "https://api.github.com/repos/JaredLin1217/InlongSlicer/releases";
-static const std::string PROFILE_UPDATE_URL = "https://check-version.orcaslicer.com/profile";
 static const std::string MODELS_STR = "models";
 
 const std::string AppConfig::SECTION_FILAMENTS = "filaments";
@@ -343,7 +342,7 @@ void AppConfig::set_defaults()
         set("slicer_uuid", to_string(uuid));
     }
 
-    // Orca
+    // Inlong
     if (get("stealth_mode").empty()) {
         set_bool("stealth_mode", false);
     }
@@ -367,7 +366,7 @@ void AppConfig::set_defaults()
         set_bool("check_stable_update_only", false);
     }
 
-    // Orca
+    // Inlong
     if(get("show_splash_screen").empty()) {
         set_bool("show_splash_screen", true);
     }
@@ -769,7 +768,7 @@ std::string AppConfig::load()
                     }
                     m_printer_cali_infos.emplace_back(cali_info);
                 }
-            } else if (it.key() == "orca_presets") {
+            } else if (it.key() == "inlong_presets") {
                 for (auto& j_model : it.value()) {
                     m_printer_settings[j_model["machine"].get<std::string>()] = j_model;
                 }
@@ -844,13 +843,12 @@ std::string AppConfig::load()
 
         // Default for new installs
         if (get(SETTING_CLOUD_PROVIDERS).empty()) {
-            // Migrate add bbl cloud if installed_networking is true
+            // Enable Bambu cloud if the networking plugin is installed.
             bool enable_bbl_cloud = get_bool("installed_networking");
             if (enable_bbl_cloud) {
-                // Legacy Bambu-only user: give them both providers
-                set(SETTING_CLOUD_PROVIDERS, "orca;bbl");
+                set(SETTING_CLOUD_PROVIDERS, "inlong;bbl");
             } else {
-                set(SETTING_CLOUD_PROVIDERS, "orca");
+                set(SETTING_CLOUD_PROVIDERS, "inlong");
             }
         }
     }
@@ -987,7 +985,7 @@ void AppConfig::save()
 
     // write machine settings
     for (const auto& preset : m_printer_settings) {
-        j["orca_presets"].push_back(preset.second);
+        j["inlong_presets"].push_back(preset.second);
     }
     for (const auto& local_machine : m_local_machines) {
         json m_json;
@@ -1630,7 +1628,7 @@ std::vector<std::string> AppConfig::get_cloud_providers() const
     std::vector<std::string> result;
     std::string providers = get(SETTING_CLOUD_PROVIDERS);
     if (providers.empty()) {
-        result.push_back("orca");
+        result.push_back("inlong");
         return result;
     }
 
@@ -1640,9 +1638,9 @@ std::vector<std::string> AppConfig::get_cloud_providers() const
         if (!provider.empty())
             result.push_back(provider);
     }
-    // Ensure "orca" is always present
-    if (std::find(result.begin(), result.end(), "orca") == result.end()) {
-        result.insert(result.begin(), "orca");
+    // Ensure the primary Inlong cloud provider is always present.
+    if (std::find(result.begin(), result.end(), "inlong") == result.end()) {
+        result.insert(result.begin(), "inlong");
     }
     return result;
 }
@@ -1674,8 +1672,8 @@ void AppConfig::add_cloud_provider(const std::string& provider)
 
 void AppConfig::remove_cloud_provider(const std::string& provider)
 {
-    if (provider == "orca")
-        return; // Cannot remove orca
+    if (provider == "inlong")
+        return; // Cannot remove the primary provider.
     auto providers = get_cloud_providers();
     providers.erase(std::remove(providers.begin(), providers.end(), provider), providers.end());
     set_cloud_providers(providers);
@@ -1695,19 +1693,24 @@ void AppConfig::reset_selections()
     }
 }
 
-std::string AppConfig::config_path()
+std::string AppConfig::config_path_for_keys(const char *editor_key, const char *viewer_key)
 {
 #ifdef USE_JSON_CONFIG
     std::string path = (m_mode == EAppMode::Editor) ?
-        (boost::filesystem::path(Slic3r::data_dir()) / (SLIC3R_APP_KEY ".conf")).make_preferred().string() :
-        (boost::filesystem::path(Slic3r::data_dir()) / (GCODEVIEWER_APP_KEY ".conf")).make_preferred().string();
+        (boost::filesystem::path(Slic3r::data_dir()) / (std::string(editor_key) + ".conf")).make_preferred().string() :
+        (boost::filesystem::path(Slic3r::data_dir()) / (std::string(viewer_key) + ".conf")).make_preferred().string();
 #else
     std::string path = (m_mode == EAppMode::Editor) ?
-        (boost::filesystem::path(Slic3r::data_dir()) / (SLIC3R_APP_KEY ".ini")).make_preferred().string() :
-        (boost::filesystem::path(Slic3r::data_dir()) / (GCODEVIEWER_APP_KEY ".ini")).make_preferred().string();
+        (boost::filesystem::path(Slic3r::data_dir()) / (std::string(editor_key) + ".ini")).make_preferred().string() :
+        (boost::filesystem::path(Slic3r::data_dir()) / (std::string(viewer_key) + ".ini")).make_preferred().string();
 #endif
 
     return path;
+}
+
+std::string AppConfig::config_path()
+{
+    return config_path_for_keys(SLIC3R_APP_KEY, GCODEVIEWER_APP_KEY);
 }
 
 std::string AppConfig::version_check_url() const
@@ -1723,7 +1726,10 @@ std::string AppConfig::profile_update_url() const
 
 bool AppConfig::exists()
 {
-    return boost::filesystem::exists(config_path());
+    set_loading_path("");
+    if (boost::filesystem::exists(config_path()))
+        return true;
+    return false;
 }
 
 }; // namespace Slic3r

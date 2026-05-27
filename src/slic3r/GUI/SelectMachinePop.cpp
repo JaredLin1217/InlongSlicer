@@ -597,7 +597,7 @@ void SelectMachinePopup::update_other_devices()
     m_placeholder_panel = new wxWindow(m_scrolledWindow, wxID_ANY, wxDefaultPosition, wxSize(-1,FromDIP(26)));
     wxBoxSizer* placeholder_sizer = new wxBoxSizer(wxVERTICAL);
 
-    // ORCA standardized HyperLink
+    // INLONG standardized HyperLink
     m_hyperlink = new HyperLink(m_placeholder_panel, _L("Can't find my devices?"), wxT("https://wiki.bambulab.com/en/software/bambu-studio/failed-to-connect-printer"));
     m_hyperlink->SetFont(::Label::Body_12);
     placeholder_sizer->Add(m_hyperlink, 0, wxALIGN_CENTER | wxALL, 5);
@@ -1038,7 +1038,7 @@ PinCodePanel::PinCodePanel(wxWindow* parent, int type, wxWindowID winid /*= wxID
      auto size = GetSize();
      dc.DrawBitmap(m_bitmap.bmp(), wxPoint(FromDIP(12), (size.y - m_bitmap.GetBmpSize().y) / 2));
      dc.SetFont(::Label::Head_13);
-     dc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#262E30"))); // ORCA fix text not visible on dark theme
+     dc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#262E30"))); // INLONG fix text not visible on dark theme
      wxString txt;
      if (m_type == 0) {txt = _L("Bind with Pin Code");}
      else if (m_type == 1) {txt = _L("Bind with Access Code");}

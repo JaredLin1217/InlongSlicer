@@ -145,10 +145,10 @@ echo -n "[9/9] Generating Linux app..."
     APPDIR="package"
     BIN_DIR="$APPDIR/bin"
     LIB_DIR="$APPDIR/lib"
-    PRIVATE_LIB_DIR="$LIB_DIR/orca-runtime"
+    PRIVATE_LIB_DIR="$LIB_DIR/inlong-runtime"
     SHARE_DIR="$APPDIR/share"
     LIBEXEC_DIR="$APPDIR/libexec"
-    BUNDLE_DESKTOP_STACK="${ORCA_BUNDLE_DESKTOP_STACK:-0}"
+    BUNDLE_DESKTOP_STACK="${INLONG_BUNDLE_DESKTOP_STACK:-0}"
     GST_PLUGIN_DIR="$LIB_DIR/gstreamer-1.0"
     GIO_MODULE_DIR="$LIB_DIR/gio/modules"
     GDK_PIXBUF_DIR="$LIB_DIR/gdk-pixbuf-2.0/2.10.0/loaders"
@@ -242,7 +242,7 @@ if [ -e "\$APPDIR/lib/libwebkit2gtk-4.1.so.0" ] || [ -e "\$APPDIR/lib/libwebkit2
 fi
 
 export APPDIR
-PRIVATE_LIB_DIR="\$APPDIR/lib/orca-runtime"
+PRIVATE_LIB_DIR="\$APPDIR/lib/inlong-runtime"
 if [ -d "\$PRIVATE_LIB_DIR" ]; then
     export LD_LIBRARY_PATH="\$PRIVATE_LIB_DIR:\$APPDIR/bin\${LD_LIBRARY_PATH:+:\$LD_LIBRARY_PATH}"
 else
@@ -357,8 +357,8 @@ cat << EOF >@SLIC3R_APP_CMD@
 DIR=\$(dirname "\$(readlink -f "\$0")")
 export APPDIR="\${APPDIR:-\$DIR}"
 
-# FIXME: OrcaSlicer segfault workarounds
-# 1) OrcaSlicer will segfault on systems where locale info is not as expected (i.e. Holo-ISO arch-based distro)
+# FIXME: InlongSlicer segfault workarounds
+# 1) InlongSlicer will segfault on systems where locale info is not as expected (i.e. Holo-ISO arch-based distro)
 export LC_ALL=C
 
 if [ "\$XDG_SESSION_TYPE" = "wayland" ] && [ "\$ZINK_DISABLE_OVERRIDE" != "1" ]; then
@@ -386,7 +386,7 @@ EOF
     chmod ug+x @SLIC3R_APP_CMD@
     cp -fl @SLIC3R_APP_CMD@ "$APPDIR/@SLIC3R_APP_CMD@"
 
-    if [ -x "${CHECK_SCRIPT}" ] && [ -z "${ORCA_SKIP_APPIMAGE_AUDIT}" ]; then
+    if [ -x "${CHECK_SCRIPT}" ] && [ -z "${INLONG_SKIP_APPIMAGE_AUDIT}" ]; then
         "${CHECK_SCRIPT}" "$APPDIR" "$BIN_DIR/@SLIC3R_APP_CMD@"
     fi
 # } &> $ROOT/Build.log # Capture all command output
@@ -402,7 +402,7 @@ echo -n "Creating Appimage for distribution..."
     chmod +x ../build_appimage.sh
     if ../build_appimage.sh; then
         popd > /dev/null
-        mv package_appimage/"@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage" "@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"
+        mv package_appimage/"@SLIC3R_APP_KEY@_Linux_V@INLONGSLICER_VERSION@.AppImage" "@SLIC3R_APP_KEY@_Linux_V@INLONGSLICER_VERSION@.AppImage"
         rm -fR package_appimage
     else
         popd > /dev/null

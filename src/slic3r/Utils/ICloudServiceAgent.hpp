@@ -28,7 +28,7 @@ namespace Slic3r {
  * - Ratings and reviews
  *
  * Implementations:
- * - OrcaCloudServiceAgent: Native implementation for Orca Cloud (includes OAuth PKCE)
+ * - InlongCloudServiceAgent: Native implementation for Inlong Cloud (includes OAuth PKCE)
  * - BBLCloudServiceAgent: Wrapper around Bambu Lab's proprietary DLL
  *
  * Token Sharing Pattern:
@@ -37,11 +37,11 @@ namespace Slic3r {
  * implementation.
  */
 
-static const std::string ORCA_CLOUD_PROVIDER("orca");
+static const std::string INLONG_CLOUD_PROVIDER("inlong");
 static const std::string BBL_CLOUD_PROVIDER("bbl");
 
 struct CloudEvent {
-    std::string provider;  // ORCA_CLOUD_PROVIDER or BBL_CLOUD_PROVIDER
+    std::string provider;  // INLONG_CLOUD_PROVIDER or BBL_CLOUD_PROVIDER
 };
 
 using AppOnServerConnectedFn = std::function<void(CloudEvent event, int return_code, int reason_code)>;
@@ -68,7 +68,7 @@ public:
 
     /**
      * Register the client certificate file for TLS authentication.
-     * May be unused by some implementations (e.g., OrcaCloudServiceAgent).
+     * May be unused by some implementations (e.g., InlongCloudServiceAgent).
      */
     virtual int set_cert_file(std::string folder, std::string filename) = 0;
 

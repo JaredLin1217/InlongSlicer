@@ -207,13 +207,13 @@ void GLGizmoFuzzySkin::on_render_input_window(float x, float y, float bottom_lim
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.f);
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding  , 3.f * scale);
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding   , ImVec2(4.f * scale, 4.f * scale));
-        ImGui::PushStyleColor(ImGuiCol_Text         , ImVec4(1,1,1,1)); // ORCA Fixes icon rendered without colors while using Light theme
-        ImGui::PushStyleColor(ImGuiCol_Button       , is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(0,0,0,0));         // ORCA
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(.6f,.6f,.6f,.2f)); // ORCA
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive , is_active ? ImVec4(0.f, .59f, .53f, .30f) : ImVec4(0,0,0,0));         // ORCA
-        ImGui::PushStyleColor(ImGuiCol_Border       , is_active ? ImGuiWrapper::COL_ORCA        : ImVec4(0,0,0,0));         // ORCA
-        ImGui::PushStyleColor(ImGuiCol_BorderActive , is_active ? ImGuiWrapper::COL_ORCA        : ImVec4(0,0,0,0));         // ORCA matched color for fixing flicker on click
-        bool btn_clicked = m_imgui->glyph_button(icons[i], ImVec2(16.f  * scale, 16.f  * scale)); // ORCA glyph_button for fixing unequal paddings
+        ImGui::PushStyleColor(ImGuiCol_Text         , ImVec4(1,1,1,1)); // INLONG Fixes icon rendered without colors while using Light theme
+        ImGui::PushStyleColor(ImGuiCol_Button       , is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(0,0,0,0));         // INLONG
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(.6f,.6f,.6f,.2f)); // INLONG
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive , is_active ? ImVec4(0.f, .59f, .53f, .30f) : ImVec4(0,0,0,0));         // INLONG
+        ImGui::PushStyleColor(ImGuiCol_Border       , is_active ? ImGuiWrapper::COL_INLONG        : ImVec4(0,0,0,0));         // INLONG
+        ImGui::PushStyleColor(ImGuiCol_BorderActive , is_active ? ImGuiWrapper::COL_INLONG        : ImVec4(0,0,0,0));         // INLONG matched color for fixing flicker on click
+        bool btn_clicked = m_imgui->glyph_button(icons[i], ImVec2(16.f  * scale, 16.f  * scale)); // INLONG glyph_button for fixing unequal paddings
         ImGui::PopStyleColor(6);
         ImGui::PopStyleVar(3);
 
@@ -331,7 +331,7 @@ void GLGizmoFuzzySkin::on_render_input_window(float x, float y, float bottom_lim
     if (effective_fuzzy_skin_state == FuzzySkinType::Disabled_fuzzy) {
         float font_size = ImGui::GetFontSize();
         auto link_text = [&]() {
-            ImColor HyperColor = ImGuiWrapper::COL_ORCA;
+            ImColor HyperColor = ImGuiWrapper::COL_INLONG;
             ImGui::PushStyleColor(ImGuiCol_Text, ImGuiWrapper::COL_WARNING);
             float parent_width = ImGui::GetContentRegionAvail().x;
             m_imgui->text_wrapped(_L("Warning: Fuzzy skin is disabled, painted fuzzy skin will not take effect!"), parent_width);

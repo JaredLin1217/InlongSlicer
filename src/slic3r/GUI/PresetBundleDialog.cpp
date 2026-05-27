@@ -14,7 +14,7 @@
 #include "MainFrame.hpp"
 #include <slic3r/GUI/Widgets/WebView.hpp>
 #include <miniz.h>
-#include <OrcaCloudServiceAgent.hpp>
+#include <InlongCloudServiceAgent.hpp>
 #include <wx/event.h>
 #include <wx/utils.h>
 namespace Slic3r { namespace GUI {
@@ -113,8 +113,8 @@ bool PresetBundleDialog::CheckUpdateCloud()
     bool has_update = false;
     if (!wxGetApp().getAgent() || !wxGetApp().getAgent()->is_user_login())
         return false;
-    auto orca_agent = std::dynamic_pointer_cast<OrcaCloudServiceAgent>(wxGetApp().getAgent()->get_cloud_agent());
-    if (!orca_agent)
+    auto inlong_agent = std::dynamic_pointer_cast<InlongCloudServiceAgent>(wxGetApp().getAgent()->get_cloud_agent());
+    if (!inlong_agent)
         return false;
 
     BOOST_LOG_TRIVIAL(info) << "Preset Bundle Dialog: checking for bundle updates";
@@ -123,7 +123,7 @@ bool PresetBundleDialog::CheckUpdateCloud()
     std::vector<std::pair<std::string, std::string>> subscribed_bundles;
     std::vector<std::string> notfound;
     std::vector<std::string> unauthorized;
-    int result = orca_agent->get_subscribed_bundles(&subscribed_bundles, notfound, unauthorized);
+    int result = inlong_agent->get_subscribed_bundles(&subscribed_bundles, notfound, unauthorized);
 
     if (result != 0) {
         BOOST_LOG_TRIVIAL(warning) << "Preset Bundle Dialog: failed to fetch subscribed bundles, result=" << result;
@@ -463,10 +463,10 @@ void PresetBundleDialog::OpenBundleOnCloud(const std::string& id)
     if (!wxGetApp().getAgent())
         return;
 
-    auto orca_agent = std::dynamic_pointer_cast<OrcaCloudServiceAgent>(wxGetApp().getAgent()->get_cloud_agent());
-    if (!orca_agent)
+    auto inlong_agent = std::dynamic_pointer_cast<InlongCloudServiceAgent>(wxGetApp().getAgent()->get_cloud_agent());
+    if (!inlong_agent)
         return;
 
-    wxLaunchDefaultBrowser(wxString::FromUTF8(orca_agent->get_bundle_url(id)));
+    wxLaunchDefaultBrowser(wxString::FromUTF8(inlong_agent->get_bundle_url(id)));
 }
 }} // namespace Slic3r::GUI

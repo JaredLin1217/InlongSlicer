@@ -12,7 +12,7 @@
 #define L(s) (s)
 
 namespace Slic3r {
-    
+
 static const double slope_inner_outer_wall_gap = 0.4;
 
 void ExtrusionPath::intersect_expolygons(const ExPolygons &collection, ExtrusionEntityCollection* retval) const
@@ -75,7 +75,7 @@ void ExtrusionPath::polygons_covered_by_spacing(Polygons &out, const float scale
     // Instantiating the Flow class to get the line spacing.
     // Don't know the nozzle diameter, setting to zero. It shall not matter it shall be optimized out by the compiler.
     bool bridge = is_bridge(this->role());
-    // SoftFever: TODO Mac trigger assersion errors
+    // Inlong: TODO Mac trigger assersion errors
 //    assert(! bridge || this->width == this->height);
     auto flow = bridge ? Flow::bridging_flow(this->width, 0.f) : Flow(this->width, this->height, 0.f);
     polygons_append(out, offset(this->polyline.to_polyline(), 0.5f * float(flow.scaled_spacing()) + scaled_epsilon));
@@ -204,13 +204,13 @@ bool ExtrusionLoop::split_at_vertex(const Point &point, const double scaled_epsi
                     std::swap(p.polyline.fitting_result, p2.fitting_result);
                     if (p.polyline.is_valid()) new_paths.push_back(p);
                 }
-            
+
                 // then we add all paths until the end of current path list
                 new_paths.insert(new_paths.end(), path+1, this->paths.end());  // not including this path
-            
+
                 // then we add all paths since the beginning of current list up to the previous one
                 new_paths.insert(new_paths.end(), this->paths.begin(), path);  // not including this path
-            
+
                 // finally we add the first half of current path
                 {
                     ExtrusionPath p = *path;
@@ -262,7 +262,7 @@ void ExtrusionLoop::split_at(const Point &point, bool prefer_non_overhang, const
 {
     if (this->paths.empty())
         return;
-    
+
     auto [path_idx, segment_idx, p] = get_closest_path_and_point(point, prefer_non_overhang);
 
     // Snap p to start or end of segment_idx if closer than scaled_epsilon.
@@ -281,7 +281,7 @@ void ExtrusionLoop::split_at(const Point &point, bool prefer_non_overhang, const
             if (d2_2 < thr2) p = p2_2d;
         }
     }
-    
+
     // now split path_idx in two parts
     const ExtrusionPath &path = this->paths[path_idx];
     ExtrusionPath p1(path.role(), path.mm3_per_mm, path.width, path.height);
@@ -309,7 +309,7 @@ void ExtrusionLoop::split_at(const Point &point, bool prefer_non_overhang, const
         if (p2.polyline.is_valid()) this->paths.insert(this->paths.begin() + path_idx, p2);
         if (p1.polyline.is_valid()) this->paths.insert(this->paths.begin() + path_idx, p1);
     }
-    
+
     // split at the new vertex
     this->split_at_vertex(p);
 }
@@ -317,7 +317,7 @@ void ExtrusionLoop::split_at(const Point &point, bool prefer_non_overhang, const
 void ExtrusionLoop::clip_end(double distance, ExtrusionPaths* paths) const
 {
     *paths = this->paths;
-    
+
     while (distance > 0 && !paths->empty()) {
         ExtrusionPath &last = paths->back();
         double len = last.length();
@@ -364,7 +364,7 @@ double ExtrusionLoop::min_mm3_per_mm() const
     return min_mm3_per_mm;
 }
 
-// Orca: This function is used to check if the loop is smooth(continuous) or not. 
+// Inlong: This function is used to check if the loop is smooth(continuous) or not.
 // TODO: the main logic is largly copied from the calculate_polygon_angles_at_vertices function in SeamPlacer file. Need to refactor the code in the future.
 bool ExtrusionLoop::is_smooth(double angle_threshold, double min_arm_length) const
 {

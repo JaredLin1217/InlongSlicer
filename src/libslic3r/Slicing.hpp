@@ -29,7 +29,7 @@ struct SlicingParameters
 {
 	SlicingParameters() = default;
 
-    // Orca: XYZ filament compensation introduced object_shrinkage_compensation
+    // Inlong: XYZ filament compensation introduced object_shrinkage_compensation
     static SlicingParameters create_from_config(
          const PrintConfig               &print_config,
          const PrintObjectConfig         &object_config,
@@ -106,7 +106,7 @@ struct SlicingParameters
     // This value of maximum print Z is scaled by shrinkage compensation in the Z-axis.
     coordf_t 	object_print_z_max { 0 };
     
-    // Orca: XYZ shrinkage compensation
+    // Inlong: XYZ shrinkage compensation
     // This value of maximum print Z isn't scaled by shrinkage compensation.
      coordf_t     object_print_z_uncompensated_max { 0 };
      // Scaling factor for compensating shrinkage in Z-axis.

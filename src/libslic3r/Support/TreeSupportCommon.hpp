@@ -343,7 +343,7 @@ public:
             }
             if (double dist_to_go = slicing_params.object_print_z_min - z; dist_to_go > EPSILON) {
                 // Layers between the raft contacts and bottom of the object.
-                // ORCA: Bias by EPSILON so near-equal gaps do not get an extra split from FP noise.
+                // INLONG: Bias by EPSILON so near-equal gaps do not get an extra split from FP noise.
                 auto nsteps = int(ceil((dist_to_go - EPSILON) / slicing_params.max_suport_layer_height));
                 double step = dist_to_go / nsteps;
                 for (int i = 0; i < nsteps; ++ i) {
@@ -718,7 +718,7 @@ public:
     {
         assert(support_parameters.has_top_contacts);
         assert(dtt_roof <= support_parameters.num_top_interface_layers);
-        // ORCA: Reserve one top interface layer but only when top base-interface layers exist.
+        // INLONG: Reserve one top interface layer but only when top base-interface layers exist.
         // This prevents all interface layers from being classified as base-interface layers
         // and preserves correct top contact and interface behavior.
         size_t interface_threshold = support_parameters.num_top_interface_layers_only();

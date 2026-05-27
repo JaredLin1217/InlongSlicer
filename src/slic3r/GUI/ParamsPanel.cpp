@@ -168,7 +168,7 @@ Button *TipsDialog::add_button(wxWindowID btn_id, const wxString &label, bool se
 
 void TipsDialog::on_dpi_changed(const wxRect &suggested_rect)
 {
-    if (m_confirm) m_confirm->Rescale(); // ORCA
+    if (m_confirm) m_confirm->Rescale(); // INLONG
     Fit();
     Refresh();
 }
@@ -269,7 +269,7 @@ ParamsPanel::ParamsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
         m_tips_arrow = new ScalableButton(m_top_panel, wxID_ANY, "tips_arrow");
         m_tips_arrow->Hide();
 
-        m_mode_icon = new ScalableButton(m_top_panel, wxID_ANY, "advanced"); // ORCA
+        m_mode_icon = new ScalableButton(m_top_panel, wxID_ANY, "advanced"); // INLONG
         m_mode_icon->Bind(wxEVT_BUTTON, [this](wxCommandEvent e) {
             if (wxGetApp().get_mode() == comDevelop || m_mode_view == nullptr)
                 return; // prevent change on dev mode
@@ -789,7 +789,7 @@ void ParamsPanel::delete_subwindows()
         m_mode_view = nullptr;
     }
 
-    if (m_mode_icon) // ORCA m_title_view replacement
+    if (m_mode_icon) // INLONG m_title_view replacement
     {
         delete m_mode_icon;
         m_mode_icon = nullptr;

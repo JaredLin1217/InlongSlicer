@@ -98,7 +98,7 @@ PingCodeBindDialog::PingCodeBindDialog(Plater* plater /*= nullptr*/)
     m_status_text->Wrap(FromDIP(440));
     m_status_text->SetForegroundColour(wxColour(38, 46, 48));
 
-    // ORCA standardized HyperLink
+    // INLONG standardized HyperLink
     m_link_show_ping_code_wiki = new HyperLink(request_bind_panel, _L("Can't find Pin Code?"), "https://wiki.bambulab.com/en/bambu-studio/manual/pin-code");
 
     m_text_input_title = new wxStaticText(request_bind_panel, wxID_ANY, _L("Pin Code"));
@@ -444,7 +444,7 @@ PingCodeBindDialog::~PingCodeBindDialog() {
      m_st_privacy_title->SetFont(Label::Body_13);
      m_st_privacy_title->SetForegroundColour(wxColour(38, 46, 48));
 
-     // ORCA standardized HyperLink
+     // INLONG standardized HyperLink
      auto m_link_Terms_title = new HyperLink(m_panel_agreement, _L("Terms and Conditions"));
      m_link_Terms_title->SetFont(Label::Head_13);
      m_link_Terms_title->SetMaxSize(wxSize(FromDIP(450), -1));
@@ -453,7 +453,7 @@ PingCodeBindDialog::~PingCodeBindDialog() {
          wxString txt = _L("Thank you for purchasing a Bambu Lab device. Before using your Bambu Lab device, please read the terms and conditions. "
                            "By clicking to agree to use your Bambu Lab device, you agree to abide by the Privacy Policy and Terms of Use (collectively, the \"Terms\"). "
                            "If you do not comply with or agree to the Bambu Lab Privacy Policy, please do not use Bambu Lab equipment and services.");
-         ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Terms and Conditions"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM); // ORCA VisibleButtons instead ButtonStyle 
+         ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Terms and Conditions"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM); // INLONG VisibleButtons instead ButtonStyle
          confirm_dlg.update_text(txt);
          confirm_dlg.CenterOnParent();
          confirm_dlg.on_show();
@@ -463,7 +463,7 @@ PingCodeBindDialog::~PingCodeBindDialog() {
      m_st_and_title->SetFont(Label::Body_13);
      m_st_and_title->SetForegroundColour(wxColour(38, 46, 48));
 
-     // ORCA standardized HyperLink
+     // INLONG standardized HyperLink
      auto m_link_privacy_title = new HyperLink(m_panel_agreement, _L("Privacy Policy"));
      m_link_privacy_title->SetFont(Label::Head_13);
      m_link_privacy_title->SetMaxSize(wxSize(FromDIP(450), -1));
@@ -501,7 +501,7 @@ PingCodeBindDialog::~PingCodeBindDialog() {
      m_st_notice_title->SetFont(Label::Body_13);
      m_st_notice_title->SetForegroundColour(wxColour(38, 46, 48));
 
-     // ORCA standardized HyperLink
+     // INLONG standardized HyperLink
      auto m_link_notice_title = new HyperLink(m_panel_agreement, notice_link_title);
      m_link_notice_title->SetFont(Label::Head_13);
      m_link_notice_title->SetMaxSize(wxSize(FromDIP(450), -1));
@@ -516,7 +516,7 @@ PingCodeBindDialog::~PingCodeBindDialog() {
                            "Personal Data by which an individual can be identified directly or indirectly, including "
                            "without limitation names, addresses, payment information, or phone numbers. By enabling "
                            "this service, you agree to these terms and the statement about Privacy Policy.");
-         ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Statement on User Experience Improvement Plan"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM); // ORCA VisibleButtons instead ButtonStyle 
+         ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Statement on User Experience Improvement Plan"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM); // INLONG VisibleButtons instead ButtonStyle
 
          wxString model_id_text;
 
@@ -565,7 +565,7 @@ PingCodeBindDialog::~PingCodeBindDialog() {
      wxBoxSizer* m_sizer_bind_failed_info = new wxBoxSizer(wxVERTICAL);
      m_sw_bind_failed_info->SetSizer( m_sizer_bind_failed_info );
 
-     // ORCA standardized HyperLink
+     // INLONG standardized HyperLink
      m_link_network_state = new HyperLink(m_sw_bind_failed_info, _L("Check the status of current system services"), wxGetApp().link_to_network_check());
 
      wxBoxSizer* sizer_error_code = new wxBoxSizer(wxHORIZONTAL);
@@ -828,8 +828,8 @@ PingCodeBindDialog::~PingCodeBindDialog() {
 
 void BindMachineDialog::on_dpi_changed(const wxRect &suggested_rect)
 {
-    m_button_bind->Rescale(); // ORCA
-    m_button_cancel->Rescale(); // ORCA
+    m_button_bind->Rescale(); // INLONG
+    m_button_cancel->Rescale(); // INLONG
 }
 
 void BindMachineDialog::update_machine_info(MachineObject* info)
@@ -1055,8 +1055,8 @@ void UnBindMachineDialog::on_unbind_printer(wxCommandEvent &event)
 
  void UnBindMachineDialog::on_dpi_changed(const wxRect &suggested_rect)
 {
-      m_button_unbind->Rescale(); // ORCA
-      m_button_cancel->Rescale(); // ORCA
+      m_button_unbind->Rescale(); // INLONG
+      m_button_cancel->Rescale(); // INLONG
 }
 
 void UnBindMachineDialog::on_show(wxShowEvent &event)
@@ -1107,7 +1107,7 @@ void UnBindMachineDialog::on_show(wxShowEvent &event)
 
         Layout();
         event.Skip();
-    } 
+    }
 }
 
 }} // namespace Slic3r::GUI

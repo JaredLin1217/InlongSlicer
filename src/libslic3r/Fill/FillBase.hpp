@@ -123,7 +123,7 @@ public:
     // in radians, ccw, 0 = East
     float       angle;
 
-    // Orca: Fill direction is fixed absolute angle if SurfaceFillParams.fixed_angle or config.ironing_angle_fixed
+    // Inlong: Fill direction is fixed absolute angle if SurfaceFillParams.fixed_angle or config.ironing_angle_fixed
     bool        fixed_angle{false};
     // In scaled coordinates. Maximum lenght of a perimeter segment connecting two infill lines.
     // Used by the FillRectilinear2, FillGrid2, FillTriangles, FillStars and FillCubic.
@@ -138,7 +138,7 @@ public:
     FillAdaptive::Octree* adapt_fill_octree = nullptr;
 
     // PrintConfig and PrintObjectConfig are used by infills that use Arachne (Concentric and FillEnsuring).
-    // Orca: also used by gap fill function.
+    // Inlong: also used by gap fill function.
     const PrintConfig       *print_config        = nullptr;
     const PrintObjectConfig *print_object_config = nullptr;
 
@@ -212,7 +212,7 @@ protected:
 
     virtual std::pair<float, Point> _infill_direction(const Surface *surface) const;
     
-    // Orca: Dedicated function to calculate gap fill lines for the provided surface, according to the print object parameters
+    // Inlong: Dedicated function to calculate gap fill lines for the provided surface, according to the print object parameters
     // and append them to the out ExtrusionEntityCollection.
     void _create_gap_fill(const Surface* surface, const FillParams& params, ExtrusionEntityCollection* out);
 

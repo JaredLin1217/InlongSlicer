@@ -111,7 +111,7 @@ void ExportPresetBundleDialog::OnScriptMessage(wxWebViewEvent& e)
             InitExportData();
             OnRequestPresets();
         } else if (strCmd == "export_local") {
-            wxFileDialog dlg(this, _L("Save preset bundle"), "", "export.orca_bundle", "Inlong Preset Bundle (*.orca_bundle)|*.orca_bundle",
+            wxFileDialog dlg(this, _L("Save preset bundle"), "", "export.inlong_bundle", "Inlong Preset Bundle (*.inlong_bundle)|*.inlong_bundle",
                              wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
             wxString path;
             wxString name;
@@ -120,7 +120,7 @@ void ExportPresetBundleDialog::OnScriptMessage(wxWebViewEvent& e)
                 wxFileName file_name(path);
                 name = file_name.GetName();
                 if (file_name.GetExt().empty()) {
-                    file_name.SetExt("orca_bundle");
+                    file_name.SetExt("inlong_bundle");
                     path = file_name.GetFullPath();
                 }
             }
@@ -384,7 +384,7 @@ void ExportPresetBundleDialog::OnExportData(const wxString& path, const wxString
 
     boost::filesystem::path export_file_path = boost::filesystem::path(export_path).make_preferred();
     if (export_file_path.extension().empty())
-        export_file_path += ".orca_bundle";
+        export_file_path += ".inlong_bundle";
 
     const boost::filesystem::path export_dir = export_file_path.parent_path();
     if (!export_dir.empty() && !boost::filesystem::exists(export_dir)) {

@@ -68,7 +68,7 @@ Fill* Fill::new_from_type(const InfillPattern type)
     // BBS: for internal solid infill only
     case ipConcentricInternal:  return new FillConcentricInternal();
     // BBS: for bottom and top surface only
-    // Orca: Replace BBS implementation with Prusa implementation
+    // Inlong: Replace BBS implementation with Prusa implementation
     case ipMonotonicLine:       return new FillMonotonicLines();
     case ipZigZag:              return new FillZigZag();
     case ipCrossZag:            return new FillCrossZag();
@@ -162,7 +162,7 @@ void Fill::fill_surface_extrusion(const Surface* surface, const FillParams& para
         out.push_back(eec = new ExtrusionEntityCollection());
         // Only concentric fills are not sorted.
         eec->no_sort = this->no_sort();
-        // ORCA: special flag for flow rate calibration
+        // INLONG: special flag for flow rate calibration
         auto is_flow_calib = params.extrusion_role == erTopSolidInfill && this->print_object_config->has("calib_flowrate_topinfill_special_order") &&
                              this->print_object_config->option("calib_flowrate_topinfill_special_order")->getBool();
         if (is_flow_calib) {
@@ -185,19 +185,19 @@ void Fill::fill_surface_extrusion(const Surface* surface, const FillParams& para
                 eec->entities[i]->set_reverse();
         }
 
-        // Orca: run gap fill
+        // Inlong: run gap fill
         this->_create_gap_fill(surface, params, eec);
     }
 }
 
-// Orca: Dedicated function to calculate gap fill lines for the provided surface, according to the print object parameters
+// Inlong: Dedicated function to calculate gap fill lines for the provided surface, according to the print object parameters
 // and append them to the out ExtrusionEntityCollection.
 void Fill::_create_gap_fill(const Surface* surface, const FillParams& params, ExtrusionEntityCollection* out){
 
-    //Orca: just to be safe, check against null pointer for the print object config and if NULL return.
+    //Inlong: just to be safe, check against null pointer for the print object config and if NULL return.
     if (this->print_object_config == nullptr) return;
 
-    // Orca: Enable gap fill as per the user preference. Return early if gap fill is to not be applied.
+    // Inlong: Enable gap fill as per the user preference. Return early if gap fill is to not be applied.
     if ((this->print_object_config->gap_fill_target.value == gftNowhere) ||
         (surface->surface_type == stInternalSolid && this->print_object_config->gap_fill_target.value != gftEverywhere))
         return;
@@ -307,7 +307,7 @@ std::pair<float, Point> Fill::_infill_direction(const Surface *surface) const
         out_angle = float(surface->bridge_angle);
     } else if (this->layer_id != size_t(-1) && !fixed_angle) {
         // alternate fill direction
-        //Orca: Do not alternate direction if Fill.fixed_angle is true
+        //Inlong: Do not alternate direction if Fill.fixed_angle is true
         if (!this->dont_alternate_fill_direction) {
             out_angle += this->_layer_angle(this->layer_id / surface->thickness_layers);
         }
@@ -1710,7 +1710,7 @@ void Fill::connect_infill(Polylines &&infill_ordered, const std::vector<const Po
             size_t                    polyline_idx2  = get_and_update_merged_with(((cp2 - graph.map_infill_end_point_to_boundary.data()) / 2));
             const Points             &contour        = graph.boundary[cp1->contour_idx];
 
-            // Orca: If multiline infill is requested, skip connections that are too short.
+            // Inlong: If multiline infill is requested, skip connections that are too short.
             if (params.multiline > 1 && arc.arc_length < scale_(spacing) * params.multiline) {
                 continue;
             }

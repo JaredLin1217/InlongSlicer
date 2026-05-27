@@ -88,10 +88,10 @@ function HandleStudio( pVal )
 	
 	if (strCmd == "get_recent_projects") {
     ShowRecentFileList(pVal["response"]);
-  } else if (strCmd == "orca_userlogin") {
-    SetOrcaLoginInfo(pVal["data"]["avatar"], pVal["data"]["name"]);
-  } else if (strCmd == "orca_useroffline") {
-    SetOrcaUserOffline();
+  } else if (strCmd == "inlong_userlogin") {
+    SetInlongLoginInfo(pVal["data"]["avatar"], pVal["data"]["name"]);
+  } else if (strCmd == "inlong_useroffline") {
+    SetInlongUserOffline();
   } else if (strCmd == "studio_bambu_userlogin") {
     SetBambuLoginInfo(pVal["data"]["avatar"], pVal["data"]["name"]);
   } else if (strCmd == "studio_bambu_useroffline") {
@@ -112,7 +112,7 @@ function HandleStudio( pVal )
       $("#BambuCloudSection").hide();
     }
 
-    if (providers.indexOf("orca") >= 0) {
+    if (providers.indexOf("inlong") >= 0) {
       $("#LeftBoard").show();
     } else {
       $("#LeftBoard").hide();
@@ -170,10 +170,10 @@ function GotoMenu( strMenu )
 	}
 }
 
-function SetOrcaLoginInfo( strAvatar, strName )
+function SetInlongLoginInfo( strAvatar, strName )
 {
-	$("#OrcaLogin1").hide();
-	$("#OrcaStatusText").hide();
+	$("#InlongLogin1").hide();
+	$("#InlongStatusText").hide();
 
 	$("#UserName").text(strName);
 
@@ -185,19 +185,19 @@ function SetOrcaLoginInfo( strAvatar, strName )
 		//alert('Avatar is Same');
 	}
 
-	$("#OrcaLogin2").show();
-	$("#OrcaLogin2").css("display","flex");
+	$("#InlongLogin2").show();
+	$("#InlongLogin2").css("display","flex");
 }
 
-function SetOrcaUserOffline()
+function SetInlongUserOffline()
 {
 	$("#UserAvatarIcon").prop("src","img/c.jpg");
 	$("#UserName").text('');
-	$("#OrcaLogin2").hide();
+	$("#InlongLogin2").hide();
 
-	$("#OrcaLogin1").show();
-	$("#OrcaLogin1").css("display","flex");
-	$("#OrcaStatusText").show();
+	$("#InlongLogin1").show();
+	$("#InlongLogin1").css("display","flex");
+	$("#InlongStatusText").show();
 }
 
 function SetMallUrl( strUrl )
@@ -279,9 +279,9 @@ function SendSimpleCommand(command) {
   SendWXMessage(JSON.stringify(tSend));
 }
 
-function OnOrcaLoginOrRegister() { SendSimpleCommand("homepage_orca_login_or_register"); }
-function OnOrcaLogOut() { SendSimpleCommand("homepage_orca_logout"); }
-function SendMsg_GetOrcaLoginInfo() { SendSimpleCommand("get_orca_login_info"); }
+function OnInlongLoginOrRegister() { SendSimpleCommand("homepage_inlong_login_or_register"); }
+function OnInlongLogOut() { SendSimpleCommand("homepage_inlong_logout"); }
+function SendMsg_GetInlongLoginInfo() { SendSimpleCommand("get_inlong_login_info"); }
 
 
 function SendMsg_GetRecentFile()
@@ -440,7 +440,7 @@ function SetBambuLoginInfo(strAvatar, strName) {
   $("#BambuLogin2").css("display", "flex");
   $(".bambu-status-dot").addClass("online");
   $("#BambuStatusText").text("Connected");
-  $("#BambuStatusText").attr("tid", "orca11");
+  $("#BambuStatusText").attr("tid", "inlong11");
 }
 
 function SetBambuUserOffline() {
@@ -453,7 +453,7 @@ function SetBambuUserOffline() {
   }
   $(".bambu-status-dot").removeClass("online");
   $("#BambuStatusText").text("Not connected");
-  $("#BambuStatusText").attr("tid", "orca10");
+  $("#BambuStatusText").attr("tid", "inlong10");
 }
 
 function OnBambuLoginOrRegister() { SendSimpleCommand("homepage_bambu_login_or_register"); }

@@ -102,7 +102,7 @@ ThumbnailErrors validate_thumbnails_string(wxString& str, const wxString& def_ex
     return errors;
 }
 
-// Orca
+// Inlong
 wxString get_formatted_tooltip_text(const ConfigOptionDef& opt, const t_config_option_key& id)
 {
     wxString tooltip = _(opt.tooltip);
@@ -116,8 +116,8 @@ wxString get_formatted_tooltip_text(const ConfigOptionDef& opt, const t_config_o
 
     tooltip += (tooltip.empty() ? "" : "\n\n") + _(L("parameter name")) + ": " + opt_id;
 
-    // Orca: 
-    // We can't use Orca's default values as-is because they sometimes depend on other values. 
+    // Inlong:
+    // We can't use Inlong's default values as-is because they sometimes depend on other values.
     // Parent preset configuration values will be used instead.
     if (const Preset* print_parent_preset = wxGetApp().preset_bundle->prints.get_selected_preset_parent()) {
         const DynamicPrintConfig& parent_config = print_parent_preset->config;
@@ -127,7 +127,7 @@ wxString get_formatted_tooltip_text(const ConfigOptionDef& opt, const t_config_o
 
         wxString side_text = from_u8(opt.sidetext);
 
-        // Orca: a small hack for `layers` side text: adding a space before it for better looking text
+        // Inlong: a small hack for `layers` side text: adding a space before it for better looking text
         if (opt.sidetext == L("layers"))
             side_text = " " + _(side_text);
 
@@ -155,8 +155,8 @@ wxString get_formatted_tooltip_text(const ConfigOptionDef& opt, const t_config_o
             tooltip += "\n\n" + _(L("Default")) + ": " + _(double_to_string(default_value)) + _(side_text);
 
             if (opt.min > -FLT_MAX && opt.max < FLT_MAX) {
-                tooltip += "\n" + _(L("Range")) + ": [" + 
-                    _(double_to_string(opt.min)) + _(side_text) + ", " + 
+                tooltip += "\n" + _(L("Range")) + ": [" +
+                    _(double_to_string(opt.min)) + _(side_text) + ", " +
                     _(double_to_string(opt.max)) + _(side_text) + "]";
             }
         } else if (opt.type == coBool || opt.type == coString) {
@@ -337,7 +337,7 @@ void Field::get_value_by_opt_type(wxString& str, const bool check_value/* = true
             }
 
             if (!is_na_value) {
-                // Orca: no need to check ranges for the nil value
+                // Inlong: no need to check ranges for the nil value
                 show_error(m_parent, _L("Value is out of range."));
 
                 int min = static_cast<int>(m_opt.min);
@@ -437,7 +437,7 @@ void Field::get_value_by_opt_type(wxString& str, const bool check_value/* = true
                     }
                 }
                 else if (!is_na_value) {
-                    // Orca: no need to check ranges for the nil value
+                    // Inlong: no need to check ranges for the nil value
                     show_error(m_parent, _L("Value is out of range."));
                     if (m_opt.min > val) val = m_opt.min;
                     if (val > m_opt.max) val = m_opt.max;
@@ -861,7 +861,7 @@ void TextCtrl::BUILD() {
             propagate_value();
         }), text_ctrl->GetId());
     } else {
-        // Orca: adds logic that scrolls the parent if the text control doesn't have focus
+        // Inlong: adds logic that scrolls the parent if the text control doesn't have focus
         text_ctrl->Bind(wxEVT_MOUSEWHEEL, [text_ctrl](wxMouseEvent& event) {
             if (text_ctrl->HasFocus() && text_ctrl->GetScrollRange(wxVERTICAL) != 1)
                 event.Skip(); // don't consume the event so that the text control will scroll
@@ -1895,7 +1895,7 @@ void Choice::msw_rescale()
 
 void ColourPicker::BUILD()
 {
-    auto size = wxSize(def_width_wider() * m_em_unit, -1); // ORCA match color picker width
+    auto size = wxSize(def_width_wider() * m_em_unit, -1); // INLONG match color picker width
     if (m_opt.height >= 0) size.SetHeight(m_opt.height*m_em_unit);
     if (m_opt.width >= 0) size.SetWidth(m_opt.width*m_em_unit);
 
@@ -1925,7 +1925,7 @@ void ColourPicker::BUILD()
         on_change_field();
     }), temp->GetId());
 
-    // ORCA reset value to default on right click. previously no way to switch back on windows
+    // INLONG reset value to default on right click. previously no way to switch back on windows
     temp->GetPickerCtrl()->Bind(wxEVT_RIGHT_DOWN, [this, temp](wxMouseEvent e){
         #ifdef __WXMSW__
             temp->SetColour(wxTransparentColour);
@@ -1967,13 +1967,13 @@ void ColourPicker::set_undef_value(wxColourPickerCtrl* field)
     btn->SetBitmapLabel(bmp);
 }
 
-// ORCA match style with button on windows
+// INLONG match style with button on windows
 void ColourPicker::draw_bmp_btn(wxColourPickerCtrl* field, wxColour color)
 {
     wxButton* btn = dynamic_cast<wxButton*>(field->GetPickerCtrl());
 
     if (!btn->GetBitmap().IsOk()) return;
-    btn->SetWindowStyle(wxBORDER_NONE); // ORCA just in case to prevent any overflow
+    btn->SetWindowStyle(wxBORDER_NONE); // INLONG just in case to prevent any overflow
     btn->SetBackgroundColour(*wxWHITE);
     wxGetApp().UpdateDarkUI(btn);
 
@@ -2051,7 +2051,7 @@ void ColourPicker::msw_rescale()
     Field::msw_rescale();
 
 	wxColourPickerCtrl* field = dynamic_cast<wxColourPickerCtrl*>(window);
-    auto size = wxSize(def_width_wider() * m_em_unit, -1); // ORCA match color picker width with parameters
+    auto size = wxSize(def_width_wider() * m_em_unit, -1); // INLONG match color picker width with parameters
     if (m_opt.height >= 0)
         size.SetHeight(m_opt.height * m_em_unit);
     else if (parent_is_custom_ctrl && opt_height > 0)
@@ -2126,7 +2126,7 @@ void PointCtrl::BUILD()
 	m_combine_side_text = true; // Prefer using side text in input box
 
     //const wxSize field_size(4 * m_em_unit, -1);
-    const wxSize  field_size((m_opt.width >= 0 ? m_opt.width : def_width_wider()) * m_em_unit, -1); // ORCA match width with other components
+    const wxSize  field_size((m_opt.width >= 0 ? m_opt.width : def_width_wider()) * m_em_unit, -1); // INLONG match width with other components
     Slic3r::Vec2d default_pt;
     if(m_opt.type == coPoints)
 	    default_pt = m_opt.get_default_value<ConfigOptionPoints>()->values.at(0);
@@ -2141,7 +2141,7 @@ void PointCtrl::BUILD()
 //#ifdef _WIN32
 //	style |= wxBORDER_SIMPLE;
 //#endif
-    // ORCA add icons to point control boxes instead of using text for X / Y
+    // INLONG add icons to point control boxes instead of using text for X / Y
     x_input = new ::TextInput(m_parent, X, m_opt.sidetext, "inputbox_x", wxDefaultPosition, field_size, style);
     y_input = new ::TextInput(m_parent, Y, m_opt.sidetext, "inputbox_y", wxDefaultPosition, field_size, style);
     x_textctrl = x_input->GetTextCtrl();
@@ -2190,7 +2190,7 @@ void PointCtrl::msw_rescale()
     Field::msw_rescale();
 
     //wxSize field_size(4 * m_em_unit, -1);
-    wxSize  field_size((m_opt.width >= 0 ? m_opt.width : def_width_wider()) * m_em_unit, -1); // ORCA match width with other components
+    wxSize  field_size((m_opt.width >= 0 ? m_opt.width : def_width_wider()) * m_em_unit, -1); // INLONG match width with other components
 
     if (parent_is_custom_ctrl) {
         field_size.SetHeight(lround(opt_height * m_em_unit));

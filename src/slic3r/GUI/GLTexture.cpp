@@ -663,7 +663,7 @@ void GLTexture::render_texture(unsigned int tex_id, float left, float right, flo
 void GLTexture::render_sub_texture(unsigned int tex_id, float left, float right, float bottom, float top, const GLTexture::Quad_UVs& uvs)
 {
     glsafe(::glEnable(GL_BLEND));
-    // Orca: fix washed-out toolbar icons on Wayland: keep destination alpha at 1.0 so the compositor
+    // Inlong: fix washed-out toolbar icons on Wayland: keep destination alpha at 1.0 so the compositor
     // does not treat anti-aliased icon edges as window transparency.
     glsafe(::glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 

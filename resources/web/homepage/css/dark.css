@@ -67,7 +67,7 @@ body
 
 .FileImg
 {
-	background-color: #36363C; /*ORCA use darker color for dark theme for thumbnails*/
+	background-color: #36363C; /*INLONG use darker color for dark theme for thumbnails*/
 }
 
 #recnet_context_menu
@@ -80,7 +80,7 @@ body
 
 .CT_Item:hover
 {
-	background-color:#A64E33; /*ORCA color*/
+	background-color:#A64E33; /*INLONG color*/
 }
 
 /*----User Manual------*/
@@ -131,7 +131,7 @@ body
 
 /*--- Account Sections ---*/
 .AccountSectionLabel    { color: #818183; }
-.OrcaAccountText        { color: #efeff0; }
+.InlongAccountText        { color: #efeff0; }
 .AccountStatusText      { color: #818183; }
 
 /*--- Bambu Cloud Section ---*/

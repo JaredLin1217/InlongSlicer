@@ -26,7 +26,7 @@
         - [Confirm], [Cancel], [Done], ... are buttons that close the Tool Dialog
         - [Reset], [Button1], ... are buttons that do not!
         - Non-consequential buttons like [Cancel] and [Done] are always the right-most buttons
-        - [Confirm] buttons should use the orca_button_style to differentiate them from other buttons
+        - [Confirm] buttons should use the inlong_button_style to differentiate them from other buttons
         - Multiple warnings can show, but should only have one ImGui::Separator above
         - If no warnings is shown, dont render the ImGui::Separator
 
@@ -99,24 +99,24 @@ namespace Slic3r::GUI::GLGizmoUtils {
         ImGui::SetCursorPosX(posX);
     }
 
-    void push_orca_button_style()
+    void push_inlong_button_style()
     {
-        ImVec4 base_orca = ImGuiWrapper::COL_ORCA;
+        ImVec4 base_inlong = ImGuiWrapper::COL_INLONG;
 
         float h, s, v;
-        ImGui::ColorConvertRGBtoHSV(base_orca.x, base_orca.y, base_orca.z, h, s, v);
+        ImGui::ColorConvertRGBtoHSV(base_inlong.x, base_inlong.y, base_inlong.z, h, s, v);
 
         ImVec4 hover, active;
 
         // Lighter variant for Hover (Increase Value by ~12%)
         ImGui::ColorConvertHSVtoRGB(h, s, std::min(v + 0.12f, 1.0f), hover.x, hover.y, hover.z);
-        hover.w = base_orca.w;
+        hover.w = base_inlong.w;
 
         // Darker variant for Active (Decrease Value by ~12%)
         ImGui::ColorConvertHSVtoRGB(h, s, std::max(v - 0.12f, 0.0f), active.x, active.y, active.z);
-        active.w = base_orca.w;
+        active.w = base_inlong.w;
 
-        ImGui::PushStyleColor(ImGuiCol_Button, base_orca);
+        ImGui::PushStyleColor(ImGuiCol_Button, base_inlong);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hover);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, active);
 
@@ -125,7 +125,7 @@ namespace Slic3r::GUI::GLGizmoUtils {
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
     }
 
-    void pop_orca_button_style()
+    void pop_inlong_button_style()
     {
         ImGui::PopStyleVar(1);
         ImGui::PopStyleColor(4);

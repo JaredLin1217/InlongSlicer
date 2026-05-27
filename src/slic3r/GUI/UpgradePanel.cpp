@@ -1430,7 +1430,7 @@ void UpgradePanel::update(MachineObject *obj)
         if (m_obj->upgrade_force_upgrade) {
             m_show_forced_hint = false;   //lock hint
             if (force_dlg == nullptr) {
-                force_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // ORCA VisibleButtons instead ButtonStyle 
+                force_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // INLONG VisibleButtons instead ButtonStyle
                 force_dlg->Bind(EVT_SECONDARY_CHECK_CONFIRM, [this](wxCommandEvent& e) {
                     if (m_obj) {
                         m_obj->command_upgrade_confirm();
@@ -1455,7 +1455,7 @@ void UpgradePanel::update(MachineObject *obj)
         if (m_obj->upgrade_consistency_request) {
             m_show_consistency_hint = false;
             if (consistency_dlg == nullptr) {
-                consistency_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // ORCA VisibleButtons instead ButtonStyle 
+                consistency_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // INLONG VisibleButtons instead ButtonStyle
                 consistency_dlg->Bind(EVT_SECONDARY_CHECK_CONFIRM, [this](wxCommandEvent& e) {
                     if (m_obj) {
                         m_obj->command_consistency_upgrade_confirm();
@@ -1463,7 +1463,7 @@ void UpgradePanel::update(MachineObject *obj)
                 });
             }
             consistency_dlg->update_text(_L(
-                 "The firmware version is abnormal. Repairing and updating are required before printing. Do you want to update now? You can also update later on printer or update next time starting Orca."
+                 "The firmware version is abnormal. Repairing and updating are required before printing. Do you want to update now? You can also update later on printer or update next time starting Inlong."
             ));
             consistency_dlg->on_show();
         }

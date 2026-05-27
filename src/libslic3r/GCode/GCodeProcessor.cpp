@@ -107,7 +107,7 @@ const std::string GCodeProcessor::Flush_End_Tag = " FLUSH_END";
 const std::string GCodeProcessor::VFlush_Start_Tag = " VFLUSH_START";
 const std::string GCodeProcessor::VFlush_End_Tag  = " VFLUSH_END";
 
-//Orca: External device purge tag
+//Inlong: External device purge tag
 const std::string GCodeProcessor::External_Purge_Tag = " EXTERNAL_PURGE";
 
 const float GCodeProcessor::Wipe_Width = 0.05f;
@@ -455,12 +455,12 @@ void GCodeProcessor::TimeMachine::calculate_time(GCodeProcessorResult& result, P
                 if ((position - prev_move.position).norm() > EPSILON &&
                     (position - curr_move.position).norm() > EPSILON) {
                     const float delta_extruder = interpolate ? lerp(prev_move.delta_extruder, curr_move.delta_extruder, t) : curr_move.delta_extruder;
-                    const float feedrate = curr_move.feedrate; //  ORCA: set feedrate to the gcode feed rate to prevent visualiser from
+                    const float feedrate = curr_move.feedrate; //  INLONG: set feedrate to the gcode feed rate to prevent visualiser from
                                                                 // displaying erroneous speed transition when actual speed/actual flow views are NOT selected.
                                                                 // interpolate ? lerp(prev_move.feedrate, curr_move.feedrate, t) : curr_move.feedrate;
                     const float width = interpolate ? lerp(prev_move.width, curr_move.width, t) : curr_move.width;
                     const float height = interpolate ? lerp(prev_move.height, curr_move.height, t) : curr_move.height;
-                    // ORCA: Fix issue with flow rate changes being visualized incorrectly
+                    // INLONG: Fix issue with flow rate changes being visualized incorrectly
                     const float mm3_per_mm = curr_move.mm3_per_mm;
                     const float fan_speed = interpolate ? lerp(prev_move.fan_speed, curr_move.fan_speed, t) : curr_move.fan_speed;
                     const float temperature = interpolate ? lerp(prev_move.temperature, curr_move.temperature, t) : curr_move.temperature;
@@ -486,12 +486,12 @@ void GCodeProcessor::TimeMachine::calculate_time(GCodeProcessorResult& result, P
                 if ((position - prev_move.position).norm() > EPSILON &&
                     (position - curr_move.position).norm() > EPSILON) {
                     const float delta_extruder = interpolate ? lerp(prev_move.delta_extruder, curr_move.delta_extruder, t) : curr_move.delta_extruder;
-                    const float feedrate = curr_move.feedrate; //  ORCA: set feedrate to the gcode feed rate to prevent visualiser from
+                    const float feedrate = curr_move.feedrate; //  INLONG: set feedrate to the gcode feed rate to prevent visualiser from
                                                                 // displaying erroneous speed transition when actual speed/actual flow views are NOT selected.
                                                                 // interpolate ? lerp(prev_move.feedrate, curr_move.feedrate, t) : curr_move.feedrate;
                     const float width = interpolate ? lerp(prev_move.width, curr_move.width, t) : curr_move.width;
                     const float height = interpolate ? lerp(prev_move.height, curr_move.height, t) : curr_move.height;
-                    // ORCA: Fix issue with flow rate changes being visualized incorrectly
+                    // INLONG: Fix issue with flow rate changes being visualized incorrectly
                     const float mm3_per_mm = curr_move.mm3_per_mm;
                     const float fan_speed = interpolate ? lerp(prev_move.fan_speed, curr_move.fan_speed, t) : curr_move.fan_speed;
                     const float temperature = interpolate ? lerp(prev_move.temperature, curr_move.temperature, t) : curr_move.temperature;
@@ -766,7 +766,7 @@ public:
                       std::function<std::string(unsigned int, const std::vector<float>&)> line_inserter,
                       std::function<std::string(const std::string&)>                      line_replacer)
     {
-        // Orca: find start pos by seaching G28/G29/PRINT_START/START_PRINT commands
+        // Inlong: find start pos by seaching G28/G29/PRINT_START/START_PRINT commands
         auto is_start_pos = [](const std::string& curr_cmd) {
             return boost::iequals(curr_cmd, "G28") || boost::iequals(curr_cmd, "G29") || boost::iequals(curr_cmd, "PRINT_START") ||
                    boost::iequals(curr_cmd, "START_PRINT");
@@ -1040,7 +1040,7 @@ void GCodeProcessor::run_post_process()
                     if (mode == PrintEstimatedStatistics::ETimeMode::Normal || machine.enabled) {
                         char buf[128];
                         if (!s_IsBBLPrinter)
-                            // Orca: compatibility with klipper_estimator
+                            // Inlong: compatibility with klipper_estimator
                             sprintf(buf, "; estimated printing time (%s mode) = %s\n",
                                     (mode == PrintEstimatedStatistics::ETimeMode::Normal) ? "normal" : "silent",
                                     get_time_dhms(machine.time).c_str());
@@ -1064,7 +1064,7 @@ void GCodeProcessor::run_post_process()
                     }
                 }
             }
-            // Orca: write total layer number, this is used by Bambu printers only as of now
+            // Inlong: write total layer number, this is used by Bambu printers only as of now
             else if (line == reserved_tag(ETags::Total_Layer_Number_Placeholder)) {
                 char buf[128];
                 sprintf(buf, "; total layer number: %u\n", m_layer_id);
@@ -1230,10 +1230,10 @@ void GCodeProcessor::run_post_process()
         }
     };
 
-    // Orca: track the current layer during the post-processing pass so that preheat M104s emitted
+    // Inlong: track the current layer during the post-processing pass so that preheat M104s emitted
     // for tool changes on the first layer use the correct first-layer temperature. The member
     // m_layer_id is populated during the analysis pass and ends at the total layer count, so it
-    // cannot be used here — it would always select the "other layers" temperature for multi-layer
+    // cannot be used here ??it would always select the "other layers" temperature for multi-layer
     // prints.
     unsigned int current_layer_id = 0;
 
@@ -1257,7 +1257,7 @@ void GCodeProcessor::run_post_process()
                     warning += gcode_line;
                     warning += "Generated M104 lines may be incorrect.";
                     BOOST_LOG_TRIVIAL(error) << warning;
-                    // Orca todo
+                    // Inlong todo
                     if (m_print != nullptr)
                         m_print->active_step_add_warning(PrintStateBase::WarningLevel::CRITICAL, warning);
                 }
@@ -1265,14 +1265,14 @@ void GCodeProcessor::run_post_process()
                     backtrace, cmd,
                     // line inserter
                     [tool_number, this, &current_layer_id](unsigned int id, const std::vector<float>& time_diffs) {
-                        // Orca: use the locally-tracked layer index (current_layer_id) rather than
+                        // Inlong: use the locally-tracked layer index (current_layer_id) rather than
                         // the stale m_layer_id from the analysis pass. current_layer_id == 0 means
                         // we haven't reached the first ;LAYER_CHANGE marker yet (e.g. tool change
                         // inside start gcode); == 1 means we are inside the first printed layer.
                         // Both cases should use the first-layer nozzle temperature.
                         const int temperature = int(current_layer_id > 1 ? m_filament_nozzle_temp[tool_number] :
                                                                          m_filament_nozzle_temp_first_layer[tool_number]);
-                        // Orca: M104.1 for XL printers, I can't find the documentation for this so I copied the C++ comments from
+                        // Inlong: M104.1 for XL printers, I can't find the documentation for this so I copied the C++ comments from
                         // Prusa-Firmware-Buddy here
                         /**
                         * M104.1: Early Set Hotend Temperature (preheat, and with stealth mode support)
@@ -1363,7 +1363,7 @@ void GCodeProcessor::run_post_process()
                 if (eol) {
                     ++line_id;
                     const unsigned int internal_g1_lines_counter = export_line.update(gcode_line, line_id, g1_lines_counter);
-                    // Orca: track the current layer for preheat temperature selection.
+                    // Inlong: track the current layer for preheat temperature selection.
                     // The line is ";" + reserved_tag(Layer_Change) + EOL; match it independent of
                     // BBL vs. compatible flavor (which differ in the tag text).
                     if (gcode_line.size() > 1 && gcode_line.front() == ';') {
@@ -1620,12 +1620,11 @@ void GCodeProcessorResult::reset() {
 }
 
 const std::vector<std::pair<GCodeProcessor::EProducer, std::string>> GCodeProcessor::Producers = {
-    //BBS: OrcaSlicer is also "bambu". Otherwise the time estimation didn't work.
+    //BBS: InlongSlicer is also "bambu". Otherwise the time estimation didn't work.
     //FIXME: Workaround and should be handled when do removing-bambu
-    { EProducer::OrcaSlicer, SLIC3R_APP_NAME },
-    { EProducer::OrcaSlicer, "generated by OrcaSlicer" },
-    { EProducer::OrcaSlicer, "generated by BambuStudio" },
-    { EProducer::OrcaSlicer, "BambuStudio" }
+    { EProducer::InlongSlicer, SLIC3R_APP_NAME },
+    { EProducer::InlongSlicer, "generated by BambuStudio" },
+    { EProducer::InlongSlicer, "BambuStudio" }
     //{ EProducer::Slic3rPE,    "generated by Slic3r Bambu Edition" },
     //{ EProducer::Slic3r,      "generated by Slic3r" },
     //{ EProducer::SuperSlicer, "generated by SuperSlicer" },
@@ -1759,7 +1758,7 @@ void GCodeProcessor::register_commands()
         {"M702", [this](const GCodeReader::GCodeLine& line) { process_M702(line); }}, // Unload the current filament into the MK3 MMU2 unit at the end of print.
         {"M1020", [this](const GCodeReader::GCodeLine& line) { process_M1020(line); }}, // Select Tool
 
-// ORCA: Add Pressure Advance visualization support
+// INLONG: Add Pressure Advance visualization support
         {"M900", [this](const GCodeReader::GCodeLine& line) { process_M900(line); }}, // Marlin: Set pressure advance
         {"M572", [this](const GCodeReader::GCodeLine& line) { process_M572(line); }}, // RepRapFirmware/Duet: Set pressure advance
 
@@ -1964,7 +1963,7 @@ void GCodeProcessor::apply_config(const PrintConfig& config)
     size_t filament_count = config.filament_diameter.values.size();
     m_result.filaments_count = filament_count;
 
-    // Orca:
+    // Inlong:
     m_is_XL_printer = is_XL_printer(config);
     m_preheat_time = config.preheat_time;
     m_preheat_steps = config.preheat_steps;
@@ -2546,12 +2545,12 @@ void GCodeProcessor::process_file(const std::string& filename, std::function<voi
         });
         m_parser.reset();
 
-        // if the gcode was produced by OrcaSlicer,
+        // if the gcode was produced by InlongSlicer,
         // extract the config from it
-        if (m_producer == EProducer::OrcaSlicer || m_producer == EProducer::Slic3rPE || m_producer == EProducer::Slic3r) {
+        if (m_producer == EProducer::InlongSlicer || m_producer == EProducer::Slic3rPE || m_producer == EProducer::Slic3r) {
             DynamicPrintConfig config;
             config.apply(FullPrintConfig::defaults());
-            // Silently substitute unknown values by new ones for loading configurations from OrcaSlicer's own G-code.
+            // Silently substitute unknown values by new ones for loading configurations from InlongSlicer's own G-code.
             // Showing substitution log or errors may make sense, but we are not really reading many values from the G-code config,
             // thus a probability of incorrect substitution is low and the G-code viewer is a consumer-only anyways.
             config.load_from_gcode_file(filename, ForwardCompatibilitySubstitutionRule::EnableSilent);
@@ -2559,7 +2558,7 @@ void GCodeProcessor::process_file(const std::string& filename, std::function<voi
             // Get the correct printer vendor based on the `printer_model` field
             auto printer_model_opt = config.opt<ConfigOptionString>("printer_model");
             if (printer_model_opt && !printer_model_opt->value.empty()) {
-                // TODO: Orca hack, proper vendor check?
+                // TODO: Inlong hack, proper vendor check?
                 GCodeProcessor::s_IsBBLPrinter = boost::starts_with(printer_model_opt->value, "Bambu Lab");
             }
 
@@ -2824,7 +2823,7 @@ void GCodeProcessor::process_gcode_line(const GCodeReader::GCodeLine& line, bool
             process_SET_VELOCITY_LIMIT(line);
             return;
         }
-// ORCA: Add Pressure Advance visualization support
+// INLONG: Add Pressure Advance visualization support
         if (boost::iequals(cmd, "SET_PRESSURE_ADVANCE"))
         {
             process_SET_PRESSURE_ADVANCE(line);
@@ -3117,7 +3116,7 @@ void GCodeProcessor::process_tags(const std::string_view comment, bool producers
         return;
     }
 
-    // Orca: Integrate filament consumption for purging performed to an external device and controlled via macros
+    // Inlong: Integrate filament consumption for purging performed to an external device and controlled via macros
     // (eg. Happy Hare) in the filament consumption stats.
     if (boost::starts_with(comment, GCodeProcessor::External_Purge_Tag)) {
         std::regex numberRegex(R"(\d+\.\d+)");
@@ -3136,7 +3135,7 @@ void GCodeProcessor::process_tags(const std::string_view comment, bool producers
         return;
     }
 
-    if (!producers_enabled || m_producer == EProducer::OrcaSlicer) {
+    if (!producers_enabled || m_producer == EProducer::InlongSlicer) {
         // height tag
         if (boost::starts_with(comment, reserved_tag(ETags::Height))) {
             if (!parse_number(comment.substr(reserved_tag(ETags::Height).size()), m_forced_height))
@@ -3149,7 +3148,7 @@ void GCodeProcessor::process_tags(const std::string_view comment, bool producers
                 BOOST_LOG_TRIVIAL(error) << "GCodeProcessor encountered an invalid value for Width (" << comment << ").";
             return;
         }
-        // Orca: manual tool change tag
+        // Inlong: manual tool change tag
         if (m_manual_filament_change && boost::starts_with(comment, reserved_tag(ETags::Manual_Tool_Change))) {
             std::string_view tool_change_cmd = comment.substr(reserved_tag(ETags::Manual_Tool_Change).length());
             if (boost::starts_with(tool_change_cmd, "T")) {
@@ -3262,7 +3261,7 @@ bool GCodeProcessor::process_producers_tags(const std::string_view comment)
     case EProducer::Slic3rPE:
     case EProducer::Slic3r:
     case EProducer::SuperSlicer:
-    case EProducer::OrcaSlicer: { return process_bambuslicer_tags(comment); }
+    case EProducer::InlongSlicer: { return process_bambuslicer_tags(comment); }
     case EProducer::Cura:        { return process_cura_tags(comment); }
     case EProducer::Simplify3D:  { return process_simplify3d_tags(comment); }
     case EProducer::CraftWare:   { return process_craftware_tags(comment); }
@@ -4957,7 +4956,7 @@ void GCodeProcessor::process_M106(const GCodeReader::GCodeLine& line)
     }
 }
 
-// ORCA: Add Pressure Advance visualization support
+// INLONG: Add Pressure Advance visualization support
 void GCodeProcessor::process_M900(const GCodeReader::GCodeLine &line)
 {
     float pa_value = m_pressure_advance;
@@ -5091,7 +5090,7 @@ void GCodeProcessor::process_M201(const GCodeReader::GCodeLine& line)
     // see http://reprap.org/wiki/G-code#M201:_Set_max_printing_acceleration
     float factor = ((m_flavor != gcfRepRapSprinter && m_flavor != gcfRepRapFirmware) && m_units == EUnits::Inches) ? INCHES_TO_MM : 1.0f;
 
-    // Write to index i (0=Normal, 1=Stealth) — matches get_axis_max_acceleration's read pattern.
+    // Write to index i (0=Normal, 1=Stealth) ??matches get_axis_max_acceleration's read pattern.
     for (size_t i = 0; i < static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count); ++i) {
         if (static_cast<PrintEstimatedStatistics::ETimeMode>(i) == PrintEstimatedStatistics::ETimeMode::Normal || m_time_processor.machine_envelope_processing_enabled) {
             if (line.has_x()) set_option_value(m_time_processor.machine_limits.machine_max_acceleration_x, i, line.x() * factor);
@@ -5115,7 +5114,7 @@ void GCodeProcessor::process_M203(const GCodeReader::GCodeLine& line)
     // http://smoothieware.org/supported-g-codes
     float factor = (m_flavor == gcfMarlinLegacy || m_flavor == gcfMarlinFirmware || m_flavor == gcfSmoothie || m_flavor == gcfKlipper) ? 1.0f : MMMIN_TO_MMSEC;
 
-    // Write to index i (0=Normal, 1=Stealth) — matches get_axis_max_feedrate's read pattern.
+    // Write to index i (0=Normal, 1=Stealth) ??matches get_axis_max_feedrate's read pattern.
     for (size_t i = 0; i < static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count); ++i) {
         if (static_cast<PrintEstimatedStatistics::ETimeMode>(i) == PrintEstimatedStatistics::ETimeMode::Normal || m_time_processor.machine_envelope_processing_enabled) {
             if (line.has_x())
@@ -5590,11 +5589,11 @@ void GCodeProcessor::store_move_vertex(EMoveType type, EMovePathType path_type, 
         m_travel_dist,
         m_fan_speed,
         m_extruder_temps[filament_id],
-// ORCA: Add Pressure Advance visualization support
+// INLONG: Add Pressure Advance visualization support
         m_pressure_advance,
-        // ORCA: Add Acceleration visualization support
+        // INLONG: Add Acceleration visualization support
         move_acceleration,
-        // ORCA: Add Jerk visualization support
+        // INLONG: Add Jerk visualization support
         move_jerk,
         { 0.0f, 0.0f }, // time
         static_cast<float>(m_layer_id), //layer_duration: set later
@@ -5643,7 +5642,7 @@ float GCodeProcessor::minimum_travel_feedrate(PrintEstimatedStatistics::ETimeMod
 }
 
 // Machine limit arrays hold 2 values: [0]=Normal, [1]=Stealth. Index by mode only.
-// BambuStudio used extruder_id*2+mode to support per-nozzle limits, but OrcaSlicer
+// BambuStudio used extruder_id*2+mode to support per-nozzle limits, but InlongSlicer
 // never ported that system (filament_map_2 / get_config_idx_for_filament), so the
 // extruder_id offset was always wrong: uninitialized extruder (255) or extruder > 0
 // would overshoot the array and fall back to values.back() (stealth limits).

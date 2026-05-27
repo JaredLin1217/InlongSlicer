@@ -192,7 +192,7 @@ protected:
     virtual void on_start(wxCommandEvent& event);
 
     RadioGroup* m_rbType;
-    // ORCA: use standard OrcaSlicer ComboBox instead of BitmapComboBox
+    // INLONG: use standard InlongSlicer ComboBox instead of BitmapComboBox
     ComboBox* m_rbPattern;
     Plater* m_plater;
 };

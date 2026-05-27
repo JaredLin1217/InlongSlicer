@@ -582,7 +582,7 @@ void desktop_open_any_folder( const std::string& path )
     openFolderForFile(from_u8(path));
 #else
 
-    // Orca#6449: Open containing dir instead of opening the file directly.
+    // Inlong#6449: Open containing dir instead of opening the file directly.
     std::string new_path = path;
     boost::filesystem::path p(new_path);
     if (!fs::is_directory(p)) {

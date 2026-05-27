@@ -222,7 +222,7 @@ ConflictResultOpt ConflictChecker::find_inter_of_lines_in_diff_objs(PrintObjectP
 {
     if (objs.empty() && !wtdptr) { return {}; }
     
-    // Orca: check if we have enough items to potentially conflict (instances count)
+    // Inlong: check if we have enough items to potentially conflict (instances count)
     size_t total_instances = 0;
     for (auto obj : objs) total_instances += obj->instances().size();
     if (total_instances <= 1 && !wtdptr) return {};
@@ -244,7 +244,7 @@ ConflictResultOpt ConflictChecker::find_inter_of_lines_in_diff_objs(PrintObjectP
     }
     for (PrintObject *obj : objs) {
         auto layers = getAllLayersExtrusionPathsFromObject(obj);
-        // Orca: check for collisions between all instances
+        // Inlong: check for collisions between all instances
         const auto& instances = obj->instances();
         for (size_t inst_idx = 0; inst_idx < instances.size(); ++inst_idx) {
             const PrintInstance& inst = instances[inst_idx];

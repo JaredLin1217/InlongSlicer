@@ -4,7 +4,7 @@
 #include "libslic3r_version.h"
 #define SLIC3R_APP_FULL_NAME SLIC3R_APP_DISPLAY_NAME
 #define GCODEVIEWER_APP_NAME SLIC3R_APP_DISPLAY_NAME " G-code Viewer"
-#define GCODEVIEWER_APP_KEY  "OrcaSlicerGcodeViewer"
+#define GCODEVIEWER_APP_KEY  "InlongSlicerGcodeViewer"
 #define GCODEVIEWER_BUILD_ID std::string(GCODEVIEWER_APP_NAME "-") + std::string(SLIC3R_VERSION) + std::string("-RC")
 
 // this needs to be included early for MSVC (listing it in Build.PL is not enough)
@@ -56,22 +56,22 @@ static constexpr double EPSILON = 1e-4;
 // int32_t fits an interval of (-2147.48mm, +2147.48mm)
 // with int64_t we don't have to worry anymore about the size of the int.
 
-// Orca todo: might be better to use 1e-5 for all, namometer resolution is not needed for 3D printing
+// Inlong todo: might be better to use 1e-5 for all, namometer resolution is not needed for 3D printing
 static constexpr double SCALING_FACTOR_INTERNAL = 0.000001;
 static constexpr double SCALING_FACTOR_INTERNAL_LARGE_PRINTER = 0.00001;
 static constexpr double LARGE_BED_THRESHOLD = 2147;
 
-// Orca: maximum number of extruders is 64. For SEMM printers, it defines maximum filament number.
+// Inlong: maximum number of extruders is 64. For SEMM printers, it defines maximum filament number.
 static constexpr size_t MAXIMUM_EXTRUDER_NUMBER = 64;
 
-// Orca: maximum line width is 5 times the nozzle diameter
+// Inlong: maximum line width is 5 times the nozzle diameter
 static constexpr float MAX_LINE_WIDTH_MULTIPLIER = 5;
 
 extern double SCALING_FACTOR;
 static constexpr double PI = 3.141592653589793238;
 #define POLY_SIDE_COUNT 24 // for brim ear circle
 // When extruding a closed loop, the loop is interrupted and shortened a bit to reduce the seam.
-// SoftFever: replaced by seam_gap now
+// Inlong: replaced by seam_gap now
 // static constexpr double LOOP_CLIPPING_LENGTH_OVER_NOZZLE_DIAMETER = 0.15;
 static constexpr double RESOLUTION = 0.0125;
 #define                 SCALED_RESOLUTION (RESOLUTION / SCALING_FACTOR)

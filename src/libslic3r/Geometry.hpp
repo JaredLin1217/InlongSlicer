@@ -467,7 +467,7 @@ public:
     Transform3d get_matrix_no_offset() const;
     Transform3d get_matrix_no_scaling_factor() const;
 
-    // Orca: Implement prusa's filament shrink compensation approach
+    // Inlong: Implement prusa's filament shrink compensation approach
     Transform3d get_matrix_with_applied_shrinkage_compensation(const Vec3d &shrinkage_compensation) const;
     
     void set_matrix(const Transform3d& transform) { m_matrix = transform; }

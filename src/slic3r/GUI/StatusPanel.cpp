@@ -461,8 +461,8 @@ bool ExtruderSwithingStatus::has_content_shown() const
 
 void ExtruderSwithingStatus::msw_rescale()
 {
-    m_button_quit->Rescale(); // ORCA
-    m_button_retry->Rescale(); // ORCA
+    m_button_quit->Rescale(); // INLONG
+    m_button_retry->Rescale(); // INLONG
     Layout();
 }
 
@@ -604,7 +604,7 @@ void PrintingTaskPanel::create_panel(wxWindow* parent)
                           std::pair<wxColour, int>(wxColour(255, 255, 255), StateColor::Hovered), std::pair<wxColour, int>(wxColour(255, 255, 255), StateColor::Enabled),
                           std::pair<wxColour, int>(wxColour(255, 255, 255), StateColor::Normal));
 
-    m_button_partskip = new Button(progress_lr_panel, wxEmptyString, "print_control_partskip_disable", 0, 16, wxID_ANY); // ORCA match icon size
+    m_button_partskip = new Button(progress_lr_panel, wxEmptyString, "print_control_partskip_disable", 0, 16, wxID_ANY); // INLONG match icon size
     m_button_partskip->Enable(false);
     m_button_partskip->Hide();
     m_button_partskip->SetBackgroundColor(white_bg);
@@ -786,7 +786,7 @@ void PrintingTaskPanel::create_panel(wxWindow* parent)
     printingstage_vertical_sizer->Add(m_printing_stage_underline, 0, wxEXPAND, 0);
     m_printing_stage_panel->SetSizer(printingstage_vertical_sizer);
 
-    // Orca: display the end time of the print
+    // Inlong: display the end time of the print
     m_staticText_progress_end = new wxStaticText(penel_finish_time, wxID_ANY, L("N/A"), wxDefaultPosition, wxDefaultSize, 0);
     m_staticText_progress_end->Wrap(-1);
     m_staticText_progress_end->SetFont(
@@ -979,7 +979,7 @@ void PrintingTaskPanel::paint(wxPaintEvent&)
         dc.DrawBitmap(m_thumbnail_bmp_display, wxPoint(0, 0));
     }
     dc.SetFont(Label::Body_12);
-    
+
     if (m_plate_index >= 0) {
         wxString plate_id_str = wxString::Format("%d", m_plate_index);
         dc.DrawText(plate_id_str, wxPoint(4, 4));
@@ -1059,7 +1059,7 @@ void PrintingTaskPanel::enable_partskip_button(MachineObject* obj, bool enable)
         m_button_partskip->SetIcon("print_control_partskip_disable");
     }else if(obj && obj->is_support_brtc){
         m_button_partskip->Enable(true);
-        m_button_partskip->SetIcon("print_control_partskip");   
+        m_button_partskip->SetIcon("print_control_partskip");
     }
 }
 
@@ -1267,7 +1267,7 @@ void PrintingTaskPanel::set_plate_index(int plate_idx)
 }
 
 void PrintingTaskPanel::market_scoring_show()
-{ 
+{
     m_score_staticline->Show();
     m_score_subtask_info->Show();
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " show market scoring page";
@@ -1398,7 +1398,7 @@ void StatusBasePanel::init_bitmaps()
     m_bitmap_fan_off         = ScalableBitmap(this, "monitor_fan_off", 22);
     m_bitmap_speed           = ScalableBitmap(this, "monitor_speed", 24);
     m_bitmap_speed_active    = ScalableBitmap(this, "monitor_speed_active", 24);
-    
+
     m_thumbnail_brokenimg    = ScalableBitmap(this, "monitor_brokenimg", 120);
     m_thumbnail_sdcard       = ScalableBitmap(this, "monitor_sdcard_thumbnail", 120);
     //m_bitmap_camera          = create_scaled_bitmap("monitor_camera", nullptr, 18);
@@ -1585,14 +1585,14 @@ wxBoxSizer *StatusBasePanel::create_machine_control_page(wxWindow *parent)
 
     m_options_btn = new Button(m_panel_control_title, _L("Print Options"));
     m_options_btn->SetStyle(ButtonStyle::Confirm, ButtonType::Window);
-  
+
     m_safety_btn = new Button(m_panel_control_title, _L("Safety Options"));
     m_safety_btn->SetStyle(ButtonStyle::Confirm, ButtonType::Window);
 
     m_calibration_btn = new Button(m_panel_control_title, _L("Calibration"));
     m_calibration_btn->SetStyle(ButtonStyle::Confirm, ButtonType::Window);
     m_calibration_btn->EnableTooltipEvenDisabled();
-  
+
     m_options_btn->Hide();
     m_safety_btn->Hide();
 
@@ -1899,7 +1899,7 @@ wxPanel *StatusBasePanel::create_bed_control(wxWindow *parent)
     StateColor z_1_ctrl_bg(std::pair<wxColour, int>(BUTTON_PRESS_COL, StateColor::Pressed), std::pair<wxColour, int>(BUTTON_NORMAL2_COL, StateColor::Normal));
     StateColor z_1_ctrl_bd(std::pair<wxColour, int>(BUTTON_HOVER_COL, StateColor::Hovered), std::pair<wxColour, int>(BUTTON_NORMAL2_COL, StateColor::Normal));
 
-    m_bpButton_z_10 = new Button(panel, wxString("10"), "monitor_bed_up", 0, 15); // Orca Dont scale icon size 
+    m_bpButton_z_10 = new Button(panel, wxString("10"), "monitor_bed_up", 0, 15); // Inlong Dont scale icon size
     m_bpButton_z_10->SetFont(::Label::Body_12);
     m_bpButton_z_10->SetBorderWidth(0);
     m_bpButton_z_10->SetBackgroundColor(z_10_ctrl_bg);
@@ -1908,7 +1908,7 @@ wxPanel *StatusBasePanel::create_bed_control(wxWindow *parent)
     m_bpButton_z_10->SetMinSize(Z_BUTTON_SIZE);
     m_bpButton_z_10->SetSize(Z_BUTTON_SIZE);
     m_bpButton_z_10->SetCornerRadius(0);
-    m_bpButton_z_1 = new Button(panel, wxString(" 1"), "monitor_bed_up", 0, 15); // Orca Dont scale icon size 
+    m_bpButton_z_1 = new Button(panel, wxString(" 1"), "monitor_bed_up", 0, 15); // Inlong Dont scale icon size
     m_bpButton_z_1->SetFont(::Label::Body_12);
     m_bpButton_z_1->SetBorderWidth(0);
     m_bpButton_z_1->SetBackgroundColor(z_1_ctrl_bg);
@@ -1924,7 +1924,7 @@ wxPanel *StatusBasePanel::create_bed_control(wxWindow *parent)
     if (wxGetApp().app_config->get("language") == "de_DE") m_staticText_z_tip->SetFont(::Label::Body_11);
     m_staticText_z_tip->Wrap(-1);
     m_staticText_z_tip->SetForegroundColour(TEXT_LIGHT_FONT_COL);
-    m_bpButton_z_down_1 = new Button(panel, wxString(" 1"), "monitor_bed_down", 0, 15); // Orca Dont scale icon size 
+    m_bpButton_z_down_1 = new Button(panel, wxString(" 1"), "monitor_bed_down", 0, 15); // Inlong Dont scale icon size
     m_bpButton_z_down_1->SetFont(::Label::Body_12);
     m_bpButton_z_down_1->SetBorderWidth(0);
     m_bpButton_z_down_1->SetBackgroundColor(z_1_ctrl_bg);
@@ -1933,7 +1933,7 @@ wxPanel *StatusBasePanel::create_bed_control(wxWindow *parent)
     m_bpButton_z_down_1->SetSize(Z_BUTTON_SIZE);
     m_bpButton_z_down_1->SetTextColor(StateColor(std::make_pair(DISCONNECT_TEXT_COL, (int) StateColor::Disabled), std::make_pair(NORMAL_TEXT_COL, (int) StateColor::Normal)));
 
-    m_bpButton_z_down_10 = new Button(panel, wxString("10"), "monitor_bed_down", 0, 15); // Orca Dont scale icon size 
+    m_bpButton_z_down_10 = new Button(panel, wxString("10"), "monitor_bed_down", 0, 15); // Inlong Dont scale icon size
     m_bpButton_z_down_10->SetFont(::Label::Body_12);
     m_bpButton_z_down_10->SetBorderWidth(0);
     m_bpButton_z_down_10->SetBackgroundColor(z_10_ctrl_bg);
@@ -1972,7 +1972,7 @@ wxBoxSizer *StatusBasePanel::create_extruder_control(wxWindow *parent)
     m_nozzle_btn_panel = new SwitchBoard(panel, _L("Left"), _L("Right"), wxSize(FromDIP(126), FromDIP(26)));
     m_nozzle_btn_panel->SetAutoDisableWhenSwitch();
 
-    m_bpButton_e_10 = new Button(panel, "", "monitor_extruder_up", 0, 22); // Orca Dont scale icon size 
+    m_bpButton_e_10 = new Button(panel, "", "monitor_extruder_up", 0, 22); // Inlong Dont scale icon size
     m_bpButton_e_10->SetBorderWidth(2);
     m_bpButton_e_10->SetBackgroundColor(e_ctrl_bg);
     m_bpButton_e_10->SetBorderColor(e_ctrl_bd);
@@ -1988,7 +1988,7 @@ wxBoxSizer *StatusBasePanel::create_extruder_control(wxWindow *parent)
     }
     m_extruder_book->SetSelection(0);
 
-    m_bpButton_e_down_10 = new Button(panel, "", "monitor_extruder_down", 0, 22); // Orca Dont scale icon size 
+    m_bpButton_e_down_10 = new Button(panel, "", "monitor_extruder_down", 0, 22); // Inlong Dont scale icon size
     m_bpButton_e_down_10->SetBorderWidth(2);
     m_bpButton_e_down_10->SetBackgroundColor(e_ctrl_bg);
     m_bpButton_e_down_10->SetBorderColor(e_ctrl_bd);
@@ -2388,7 +2388,7 @@ StatusPanel::StatusPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, co
     m_project_task_panel->get_pause_resume_button()->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_subtask_pause_resume), NULL, this);
     m_project_task_panel->get_abort_button()->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_subtask_abort), NULL, this);
     m_project_task_panel->get_market_scoring_button()->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_market_scoring), NULL, this);
-    m_project_task_panel->get_market_retry_buttom()->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_market_retry), NULL, this); 
+    m_project_task_panel->get_market_retry_buttom()->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_market_retry), NULL, this);
     m_project_task_panel->get_clean_button()->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_print_error_clean), NULL, this);
 
     m_setting_button->Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(StatusPanel::on_camera_enter), NULL, this);
@@ -2450,7 +2450,7 @@ StatusPanel::~StatusPanel()
     m_project_task_panel->get_pause_resume_button()->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_subtask_pause_resume), NULL, this);
     m_project_task_panel->get_abort_button()->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_subtask_abort), NULL, this);
     m_project_task_panel->get_market_scoring_button()->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_market_scoring), NULL, this);
-    m_project_task_panel->get_market_retry_buttom()->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_market_retry), NULL, this); 
+    m_project_task_panel->get_market_retry_buttom()->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_market_retry), NULL, this);
     m_project_task_panel->get_clean_button()->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(StatusPanel::on_print_error_clean), NULL, this);
 
     m_setting_button->Disconnect(wxEVT_LEFT_DOWN, wxMouseEventHandler(StatusPanel::on_camera_enter), NULL, this);
@@ -2496,7 +2496,7 @@ StatusPanel::~StatusPanel()
     if (sdcard_hint_dlg != nullptr)
         delete sdcard_hint_dlg;
 
-    if (m_score_data != nullptr) { 
+    if (m_score_data != nullptr) {
         delete m_score_data;
     }
 }
@@ -2520,7 +2520,7 @@ void StatusPanel::init_scaled_buttons()
     m_bpButton_e_down_10->SetCornerRadius(FromDIP(12));
 }
 
-void StatusPanel::on_market_scoring(wxCommandEvent &event) { 
+void StatusPanel::on_market_scoring(wxCommandEvent &event) {
     if (obj && obj->is_makeworld_subtask() && obj->rating_info && obj->rating_info->request_successful) { // model is mall model and has rating_id
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": on_market_scoring" ;
         if (m_score_data && m_score_data->rating_id == obj->rating_info->rating_id) { // current score data for model is same as mall model
@@ -2529,7 +2529,7 @@ void StatusPanel::on_market_scoring(wxCommandEvent &event) {
             int ret = m_score_dlg.ShowModal();
             BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": old data";
 
-            if (ret == wxID_OK) { 
+            if (ret == wxID_OK) {
                 BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": old data is upload";
                 m_score_data->rating_id = -1;
                 m_project_task_panel->set_star_count_dirty(false);
@@ -2551,11 +2551,11 @@ void StatusPanel::on_market_scoring(wxCommandEvent &event) {
 
             std::string comment = obj->rating_info->content;
             if (!comment.empty()) { m_score_dlg.set_comment(comment); }
-            
+
             std::vector<std::string> images_json_array;
             images_json_array = obj->rating_info->image_url_paths;
             if (!images_json_array.empty()) m_score_dlg.set_cloud_bitmap(images_json_array);
-            
+
             int ret = m_score_dlg.ShowModal();
 
             if (ret == wxID_OK) {
@@ -2601,7 +2601,7 @@ void StatusPanel::on_subtask_partskip(wxCommandEvent &event)
     if (m_partskip_dlg == nullptr) {
         m_partskip_dlg = new PartSkipDialog(this->GetParent());
     }
-    
+
     auto dm = GUI::wxGetApp().getDeviceManager();
     m_partskip_dlg->InitSchedule(dm->get_selected_machine());
     BOOST_LOG_TRIVIAL(info) << "part skip: initial part skip dialog.";
@@ -3561,14 +3561,14 @@ void StatusPanel::update_basic_print_data(bool def)
 void StatusPanel::update_model_info()
 {
     auto get_subtask_fn = [this](BBLModelTask* subtask) {
-        CallAfter([this, subtask]() { 
+        CallAfter([this, subtask]() {
             if (obj && obj->subtask_id_ == subtask->task_id) {
                 obj->set_modeltask(subtask);
             }
         });
     };
 
-     
+
     if (wxGetApp().getAgent() && obj) {
         BBLSubTask* curr_task = obj->get_subtask();
         if (curr_task) {
@@ -3788,7 +3788,7 @@ void StatusPanel::update_partskip_subtask(MachineObject *obj){
     if (!obj->subtask_) return;
 
     auto partskip_button = m_project_task_panel->get_partskip_button();
-    if (partskip_button) { 
+    if (partskip_button) {
         int part_cnt = 0;
         if(m_project_task_panel->get_part_skipped_dirty() > 0){
             m_project_task_panel->set_part_skipped_dirty(m_project_task_panel->get_part_skipped_dirty() - 1);
@@ -3800,7 +3800,7 @@ void StatusPanel::update_partskip_subtask(MachineObject *obj){
         }
         if (part_cnt > 0)
             partskip_button->SetLabel(wxString::Format("(%d)", part_cnt));
-        else 
+        else
             partskip_button->SetLabel("");
     }
 
@@ -3892,7 +3892,7 @@ void StatusPanel::reset_printing_values()
     m_project_task_panel->update_left_time(NA_STR);
     m_project_task_panel->update_layers_num(true, wxString::Format(_L("Layer: %s"), NA_STR));
     update_calib_bitmap();
-    
+
     task_thumbnail_state = ThumbnailState::PLACE_HOLDER;
     m_start_loading_thumbnail = false;
     m_load_sdcard_thumbnail   = false;
@@ -3947,7 +3947,7 @@ bool StatusPanel::check_axis_z_at_home(MachineObject* obj)
 }
 
 void StatusPanel::on_axis_ctrl_z_up_10(wxCommandEvent &event)
-{    
+{
     if (obj) {
         obj->command_axis_control("Z", 1.0, -10.0f, 900);
         if (!check_axis_z_at_home(obj))
@@ -4831,7 +4831,7 @@ void StatusPanel::on_camera_enter(wxMouseEvent& event)
         m_camera_popup->Bind(EVT_VCAMERA_SWITCH, &StatusPanel::on_switch_vcamera, this);
         m_camera_popup->Bind(EVT_SDCARD_ABSENT_HINT, [this](wxCommandEvent &e) {
             if (sdcard_hint_dlg == nullptr) {
-                sdcard_hint_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Warning"), SecondaryCheckDialog::VisibleButtons::ONLY_CONFIRM); // ORCA VisibleButtons instead ButtonStyle 
+                sdcard_hint_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Warning"), SecondaryCheckDialog::VisibleButtons::ONLY_CONFIRM); // INLONG VisibleButtons instead ButtonStyle
                 sdcard_hint_dlg->update_text(_L("Can't start this without storage."));
             }
             sdcard_hint_dlg->on_show();
@@ -5269,7 +5269,7 @@ void StatusPanel::msw_rescale()
     m_calibration_btn->Rescale();
 
     m_options_btn->SetMinSize(wxSize(-1, FromDIP(26)));
-    m_options_btn->Rescale(); 
+    m_options_btn->Rescale();
 
     m_safety_btn->SetMinSize(wxSize(-1, FromDIP(26)));
     m_safety_btn->Rescale();
@@ -5433,11 +5433,11 @@ ScoreDialog::ScoreDialog(wxWindow *parent, ScoreData *score_data)
     , m_upload_status_code(StatusCode::CODE_NUMBER)
 {
     m_tocken.reset(new int(0));
-    
+
     wxBoxSizer *m_main_sizer = get_main_sizer(score_data->local_to_url_image, score_data->comment_text);
 
     m_image_url_paths        = score_data->image_url_paths;
-    
+
 
     this->SetSizer(m_main_sizer);
     Fit();
@@ -5453,16 +5453,16 @@ void ScoreDialog::on_dpi_changed(const wxRect &suggested_rect) {}
 void ScoreDialog::OnBitmapClicked(wxMouseEvent &event)
 {
     wxStaticBitmap *clickedBitmap = dynamic_cast<wxStaticBitmap *>(event.GetEventObject());
-    if (m_image.find(clickedBitmap) != m_image.end()) { 
+    if (m_image.find(clickedBitmap) != m_image.end()) {
         if (!m_image[clickedBitmap].is_selected) {
-            for (auto panel : m_image[clickedBitmap].image_broad) { 
+            for (auto panel : m_image[clickedBitmap].image_broad) {
                 panel->Show();
             }
             m_image[clickedBitmap].is_selected = true;
             m_selected_image_list.insert(clickedBitmap);
         } else {
-            for (auto panel : m_image[clickedBitmap].image_broad) { 
-                panel->Hide(); 
+            for (auto panel : m_image[clickedBitmap].image_broad) {
+                panel->Hide();
             }
             m_image[clickedBitmap].is_selected = false;
             m_selected_image_list.erase(clickedBitmap);
@@ -5479,9 +5479,9 @@ void ScoreDialog::OnBitmapClicked(wxMouseEvent &event)
 }
 
  std::set <std::pair<wxStaticBitmap * ,wxString>> ScoreDialog::add_need_upload_imgs()
-{ 
+{
     std::set<std::pair<wxStaticBitmap *, wxString>> need_upload_images;
-    for (auto bitmap : m_image) { 
+    for (auto bitmap : m_image) {
         if (!bitmap.second.is_uploaded) {
             wxString &local_image_path = bitmap.second.local_image_url;
             if (!local_image_path.empty()) { need_upload_images.insert(std::make_pair(bitmap.first, local_image_path)); }
@@ -5501,7 +5501,7 @@ std::pair<wxStaticBitmap *, ScoreDialog::ImageMsg> ScoreDialog::create_local_thu
     cur_image_msg.local_image_url = local_path;
     cur_image_msg.img_url_paths   = "";
     cur_image_msg.is_uploaded     = false;
-    
+
     wxStaticBitmap *imageCtrl = new wxStaticBitmap(this, wxID_ANY, wxBitmap(wxImage(local_path, wxBITMAP_TYPE_ANY).Rescale(FromDIP(80), FromDIP(60))), wxDefaultPosition,
                                                    wxDefaultSize, 0);
     imageCtrl->Bind(wxEVT_LEFT_DOWN, &ScoreDialog::OnBitmapClicked, this);
@@ -5566,7 +5566,7 @@ void ScoreDialog::update_static_bitmap(wxStaticBitmap* static_bitmap, wxImage im
 }
 
 wxBoxSizer *ScoreDialog::create_broad_sizer(wxStaticBitmap *bitmap, ImageMsg& cur_image_msg)
-{ 
+{
     // tb: top and bottom  lr: left and right
     auto m_image_tb_broad = new wxBoxSizer(wxVERTICAL);
     auto line_top         = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 1), wxTAB_TRAVERSAL);
@@ -5610,7 +5610,7 @@ void ScoreDialog::init() {
     fail_image = wxImage(Slic3r::resources_dir() + "/images/oss_picture_load_failed.png", wxBITMAP_TYPE_ANY);
 }
 
-wxBoxSizer *ScoreDialog::get_score_sizer() { 
+wxBoxSizer *ScoreDialog::get_score_sizer() {
     wxBoxSizer    *score_sizer      = new wxBoxSizer(wxHORIZONTAL);
     wxStaticText *static_score_text = new wxStaticText(this, wxID_ANY, _L("Rate"), wxDefaultPosition, wxDefaultSize, 0);
     static_score_text->Wrap(-1);
@@ -5733,18 +5733,18 @@ wxBoxSizer *ScoreDialog::get_photo_btn_sizer() {
         for (int i = 0; i < filePaths.GetCount(); i++) { //It's ugly, but useful
             bool is_repeat = false;
             for (auto image : m_image) {
-                if (filePaths[i] == image.second.local_image_url) { 
+                if (filePaths[i] == image.second.local_image_url) {
                     is_repeat = true;
                     continue;
                 }
             }
             if (!is_repeat) {
                 local_path.push_back(std::make_pair(filePaths[i], ""));
-                if (local_path.size() + m_image.size() > m_photo_nums) { 
-                    break; 
+                if (local_path.size() + m_image.size() > m_photo_nums) {
+                    break;
                 }
             }
-            
+
         }
 
         load_photo(local_path);
@@ -5862,7 +5862,7 @@ wxBoxSizer *ScoreDialog::get_button_sizer()
                     }
                 }
                 progress_dialog->Hide();
-                if (progress_dialog) { 
+                if (progress_dialog) {
                     delete progress_dialog;
                     progress_dialog = nullptr;
                 }
@@ -5996,7 +5996,7 @@ wxBoxSizer *ScoreDialog::get_main_sizer(const std::vector<std::pair<wxString, st
     m_main_sizer->Add(m_photo_sizer, 0, wxEXPAND | wxTOP, FromDIP(8));
 
     m_image_sizer = new wxGridSizer(5, FromDIP(5), FromDIP(5));
-    if (!images.empty()) { 
+    if (!images.empty()) {
         load_photo(images);
     }
     m_main_sizer->Add(m_image_sizer, 0, wxEXPAND | wxLEFT, FromDIP(24));
@@ -6008,7 +6008,7 @@ wxBoxSizer *ScoreDialog::get_main_sizer(const std::vector<std::pair<wxString, st
     return m_main_sizer;
 }
 
-ScoreData ScoreDialog::get_score_data() { 
+ScoreData ScoreDialog::get_score_data() {
     ScoreData score_data;
     score_data.rating_id          = m_rating_id;
     score_data.design_id          = m_design_id;
@@ -6019,20 +6019,20 @@ ScoreData ScoreDialog::get_score_data() {
     score_data.comment_text       = m_comment_text->GetValue();
     score_data.image_url_paths    = m_image_url_paths;
     for (auto img : m_image) { score_data.local_to_url_image.push_back(std::make_pair(img.second.local_image_url, img.second.img_url_paths)); }
-    
+
     return score_data;
 }
 
 void ScoreDialog::set_comment(std::string comment)
 {
-    if (m_comment_text) { 
+    if (m_comment_text) {
 
         m_comment_text->SetValue(wxString::FromUTF8(comment));
     }
 }
 
 void ScoreDialog::set_cloud_bitmap(std::vector<std::string> cloud_bitmaps)
-{ 
+{
     m_image_url_paths = cloud_bitmaps;
     for (std::string &url : cloud_bitmaps) {
         if (std::string::npos == url.find(m_model_id)) continue;

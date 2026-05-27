@@ -19,6 +19,6 @@ add_executable(${_TEST_NAME}_tests
 target_link_libraries(${_TEST_NAME}_tests test_common libslic3r Catch2::Catch2WithMain)
 set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 
-orcaslicer_copy_test_dlls()
+inlongslicer_copy_test_dlls()
 
 catch_discover_tests(${_TEST_NAME}_tests)

@@ -314,7 +314,7 @@ void FileGet::priv::get_perform()
 			//}
 			try
 			{
-				// Orca: thingiverse need this
+				// Inlong: thingiverse need this
 				if (m_written < body.size())
 				{
 					// this code should never be entered. As there should be on_progress call after last bit downloaded.

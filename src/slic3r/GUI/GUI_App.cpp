@@ -1,5 +1,5 @@
 #include "ExportPresetBundleDialog.hpp"
-#include "OrcaCloudServiceAgent.hpp"
+#include "InlongCloudServiceAgent.hpp"
 #include "libslic3r/Technologies.hpp"
 #include "GUI_App.hpp"
 #include "GUI_Init.hpp"
@@ -24,6 +24,7 @@
 #include "slic3r/GUI/I18N.hpp"
 
 #include <algorithm>
+#include <array>
 #include <iterator>
 #include <exception>
 #include <cstdlib>
@@ -259,7 +260,7 @@ bool is_associate_files(std::wstring extend)
     wchar_t app_path[MAX_PATH];
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
-    std::wstring prog_id             = L" Orca.Slicer.1";
+    std::wstring prog_id             = L"Inlong.Slicer.1";
     std::wstring reg_base            = L"Software\\Classes";
     std::wstring reg_extension       = reg_base + L"\\." + extend;
 
@@ -282,7 +283,7 @@ class SplashScreen : public wxSplashScreen
 {
 public:
     SplashScreen(wxPoint pos = wxDefaultPosition)
-        // No wxSPLASH_TIMEOUT — the splash is closed explicitly once MainFrame
+        // No wxSPLASH_TIMEOUT ??the splash is closed explicitly once MainFrame
         // is shown. The previous 1500 ms auto-timeout closed the splash long
         // before init finished, leaving the user staring at a frozen blank
         // screen during the slow load_presets / new MainFrame phases.
@@ -378,37 +379,6 @@ private:
 };
 
 #ifdef __linux__
-static void migrate_flatpak_legacy_datadir(const boost::filesystem::path &data_dir_path)
-{
-    if(!boost::filesystem::exists("/.flatpak-info"))
-        return; // Not running as a Flatpak, nothing to migrate.
-    
-    namespace fs = boost::filesystem;
-
-    if (fs::exists(data_dir_path)){
-        std::cerr << "New Flatpak data dir: " << data_dir_path << std::endl;
-        return;
-    }
-    std::cerr << "Migrating Flatpak data dir: " << data_dir_path << std::endl;
-
-    std::string legacy_data_dir_str = data_dir_path.string();
-    boost::replace_first(legacy_data_dir_str, "com.orcaslicer.OrcaSlicer", "io.github.orcaslicer.OrcaSlicer");
-    const fs::path legacy_data_dir(legacy_data_dir_str);
-
-    std::cerr << "Legacy Flatpak data dir: " << legacy_data_dir << std::endl;
-
-    if ( ! fs::exists(legacy_data_dir) || ! fs::is_directory(legacy_data_dir))
-        return;
-    std::cerr << "Legacy Flatpak data dir exists: " << legacy_data_dir << std::endl;
-
-    try {
-        std::cerr << "Migrating Flatpak data dir from " << legacy_data_dir << " to " << data_dir_path << std::endl;
-        copy_directory_recursively(legacy_data_dir, data_dir_path);
-    } catch (const std::exception &ex) {
-        std::cerr << "Failed to migrate Flatpak data dir from " << legacy_data_dir << " to " << data_dir_path << ": " << ex.what() << std::endl;
-    }
-}
-
 bool static check_old_linux_datadir(const wxString& app_name) {
     // If we are on Linux and the datadir does not exist yet, look into the old
     // location where the datadir was before version 2.3. If we find it there,
@@ -1015,7 +985,7 @@ GUI_App::GUI_App()
     , m_downloader(std::make_unique<Downloader>())
 	, m_other_instance_message_handler(std::make_unique<OtherInstanceMessageHandler>())
 {
-	//app config initializes early becasuse it is used in instance checking in OrcaSlicer.cpp
+	//app config initializes early becasuse it is used in instance checking in InlongSlicer.cpp
     this->init_app_config();
     this->init_download_path();
 #if wxUSE_WEBVIEW_EDGE
@@ -2009,7 +1979,7 @@ void GUI_App::init_networking_callbacks()
                                 event.SetInt(0);
                                 event.SetString(obj->get_dev_id());
                             } else if (state == ConnectStatus::ConnectStatusFailed) {
-                                // Orca: only update status if same device id
+                                // Inlong: only update status if same device id
                                 if (m_device_manager->selected_machine != dev_id) return;
 
                                 m_device_manager->set_selected_machine("");
@@ -2120,7 +2090,7 @@ void GUI_App::init_networking_callbacks()
 
                 if (MachineObject* obj = m_device_manager->get_my_machine(dev_id)) {
                     obj->parse_json("lan", msg);
-                    // Orca: skip it if it doesn't support subscription based filament sync
+                    // Inlong: skip it if it doesn't support subscription based filament sync
                     if (this->m_device_manager->get_selected_machine() == obj &&
                         m_agent->get_filament_sync_mode() == FilamentSyncMode::subscription) {
                         GUI::wxGetApp().sidebar().load_ams_list(obj);
@@ -2221,20 +2191,23 @@ bool GUI_App::init_opengl()
 #endif
 }
 
-// gets path to PrusaSlicer.ini, returns semver from first line comment
+// Gets path to the app config and returns semver from first line comment.
 static boost::optional<Semver> parse_semver_from_ini(std::string path)
 {
     std::ifstream stream(path);
     std::stringstream buffer;
     buffer << stream.rdbuf();
     std::string body = buffer.str();
-    size_t start = body.find("OrcaSlicer ");
-    if (start == std::string::npos) {
-        start = body.find("OrcaSlicer ");
-        if (start == std::string::npos)
-            return boost::none;
+    size_t start = std::string::npos;
+    size_t prefix_len = 0;
+    const std::string prefix = std::string(SLIC3R_APP_NAME) + " ";
+    start = body.find(prefix);
+    if (start != std::string::npos) {
+        prefix_len = prefix.size();
     }
-    body = body.substr(start + 12);
+    if (start == std::string::npos)
+        return boost::none;
+    body = body.substr(start + prefix_len);
     size_t end = body.find_first_of(" \n");
     if (end < body.size())
         body.resize(end);
@@ -2287,7 +2260,7 @@ void GUI_App::init_app_config()
 	// Mac : "~/Library/Application Support/Slic3r"
 
     if (data_dir().empty()) {
-        // Orca: check if data_dir folder exists in application folder use it if it exists
+        // Inlong: check if data_dir folder exists in application folder use it if it exists
         // Note:wxStandardPaths::Get().GetExecutablePath() return following paths
         // Unix: /usr/local/bin/exename
         // Windows: "C:\Programs\AppFolder\exename.exe"
@@ -2316,7 +2289,6 @@ void GUI_App::init_app_config()
                 if (! wxGetEnv(wxS("XDG_CONFIG_HOME"), &dir) || dir.empty() )
                     dir = wxFileName::GetHomeDir() + wxS("/.config");
                 data_dir_path = boost::filesystem::path((dir + "/" + GetAppName()).ToUTF8().data());
-                migrate_flatpak_legacy_datadir(data_dir_path);
                 set_data_dir(data_dir_path.string());
             #endif
             if (!boost::filesystem::exists(data_dir_path)){
@@ -2349,7 +2321,7 @@ void GUI_App::init_app_config()
     set_log_path_and_level(log_filename, 3);
 #endif
 
-    BOOST_LOG_TRIVIAL(info) << boost::format("gui mode, Current %1% Version %2% build %3%") % SLIC3R_APP_FULL_NAME % SoftFever_VERSION % GIT_COMMIT_HASH;
+    BOOST_LOG_TRIVIAL(info) << boost::format("gui mode, Current %1% Version %2% build %3%") % SLIC3R_APP_FULL_NAME % INLONGSLICER_VERSION % GIT_COMMIT_HASH;
 
     //BBS: remove GCodeViewer as seperate APP logic
 	if (!app_config)
@@ -2362,7 +2334,7 @@ void GUI_App::init_app_config()
 	if (m_app_conf_exists) {
         std::string error = app_config->load();
         if (!error.empty()) {
-            // Orca: if the config file is corrupted, we will show a error dialog and create a default config file.
+            // Inlong: if the config file is corrupted, we will show a error dialog and create a default config file.
             m_config_corrupted = true;
 
         }
@@ -2491,7 +2463,7 @@ int GUI_App::OnExit()
         m_agent = nullptr;
     }
 
-    // Orca: clean up encrypted bbl network log file if plugin is used
+    // Inlong: clean up encrypted bbl network log file if plugin is used
     // No point to keep them as they are encrypted and can't be used for debugging
     try {
         auto              log_folder  = boost::filesystem::path(data_dir()) / "log";
@@ -2559,7 +2531,7 @@ bool GUI_App::on_init_inner()
     wxLog::SetActiveTarget(new wxBoostLog());
 
 #ifdef __APPLE__
-    // Override wxWidgets' kAEGetURL handler so orcaslicer:// deep links keep
+    // Override wxWidgets' kAEGetURL handler so inlongslicer:// deep links keep
     // working after the wxWidgets 3.3.2 upgrade on macOS (#13119).
     register_mac_deep_link_handler();
 #endif
@@ -2716,7 +2688,7 @@ bool GUI_App::on_init_inner()
      // Inform wxWidgets 3.3's dark mode system so it tracks NppDarkMode's state.
      // Must be called before NppDarkMode::InitDarkMode() so that NppDarkMode's
      // SetPreferredAppMode(ForceDark) overrides the AllowDark state set here.
-     // Orca: todo switch to native dark mode support in wxWidgets and remove NppDarkMode
+     // Inlong: todo switch to native dark mode support in wxWidgets and remove NppDarkMode
      MSWEnableDarkMode(DarkMode_Auto);
      NppDarkMode::InitDarkMode(init_dark_color_mode, init_sys_menu_enabled);
 #endif // __WINDOWS__
@@ -2803,7 +2775,7 @@ bool GUI_App::on_init_inner()
             associate_files(L"step");
             associate_files(L"stp");
         }
-        associate_url(L"orcaslicer");
+        associate_url(L"inlongslicer");
 
         if (app_config->get("associate_gcode") == "true")
             associate_files(L"gcode");
@@ -2920,7 +2892,7 @@ bool GUI_App::on_init_inner()
 
 
 
-    // Orca: select network plugin version based on configured version string
+    // Inlong: select network plugin version based on configured version string
     std::string configured_version = app_config->get_network_plugin_version();
     NetworkAgent::use_legacy_network = (configured_version == BAMBU_NETWORK_AGENT_VERSION_LEGACY);
     BOOST_LOG_TRIVIAL(info) << "Network plugin mode: "
@@ -3354,7 +3326,7 @@ bool GUI_App::on_init_network(bool try_backup)
         m_agent->start();
     }
 
-    // When using Orca cloud alongside the BBL network plugin, the BBL DLL agent still
+    // When using Inlong cloud alongside the BBL network plugin, the BBL DLL agent still
     // needs to be created and configured (config dir, certs, country, start) so that
     // BBLPrinterAgent can use it for LAN discovery and printer communication.
     if (should_load_networking_plugin && !m_networking_need_update) {
@@ -3425,8 +3397,8 @@ void GUI_App::switch_printer_agent()
     }
 
     // Read printer_agent from config, falling back to default
-    std::string effective_agent_id = ORCA_PRINTER_AGENT_ID;
-    std::string cloud_agent_id = ORCA_CLOUD_PROVIDER;
+    std::string effective_agent_id = INLONG_PRINTER_AGENT_ID;
+    std::string cloud_agent_id = INLONG_CLOUD_PROVIDER;
     if (preset_bundle->is_bbl_vendor()) {
         effective_agent_id = BBL_PRINTER_AGENT_ID;
         cloud_agent_id = BBL_CLOUD_PROVIDER;
@@ -3435,7 +3407,7 @@ void GUI_App::switch_printer_agent()
         if (config.has("printer_agent")) {
             const std::string& value = config.option<ConfigOptionString>("printer_agent")->value;
             if (!value.empty())
-                effective_agent_id = value;
+                effective_agent_id = canonical_printer_agent_id(value);
         }
     }
 
@@ -3478,7 +3450,7 @@ void GUI_App::switch_printer_agent()
 void GUI_App::select_machine(const std::string& agent_id)
 {
     // Skip for BBL agent for now - uses its own device discovery/selection
-    // Orca todo: revisit in future if we want to support auto-switching for BBL printers
+    // Inlong todo: revisit in future if we want to support auto-switching for BBL printers
     if (agent_id == BBL_PRINTER_AGENT_ID) {
         return;
     }
@@ -3524,7 +3496,7 @@ void GUI_App::select_machine(const std::string& agent_id)
         machine.dev_name = dev_id;
         machine.printer_type = preset.config.opt_string("printer_model");
         auto access_code = preset.config.opt_string("printhost_apikey");
-        // Orca expect non empty access code
+        // Inlong expect non empty access code
         if (access_code.empty()) {
             access_code = "88888888";
         }
@@ -3597,7 +3569,7 @@ void GUI_App::init_label_colours()
 #if defined(_WIN32) || defined(__linux__) || defined(__APPLE__)
     m_color_label_default           = is_dark_mode ? wxColour(250, 250, 250) : m_color_label_sys; // wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
     m_color_highlight_label_default = is_dark_mode ? wxColour(230, 230, 230): wxSystemSettings::GetColour(/*wxSYS_COLOUR_HIGHLIGHTTEXT*/wxSYS_COLOUR_WINDOWTEXT);
-    m_color_highlight_default       = is_dark_mode ? wxColour("#36363B") : wxColour("#F1F1F1"); // ORCA row highlighting
+    m_color_highlight_default       = is_dark_mode ? wxColour("#36363B") : wxColour("#F1F1F1"); // INLONG row highlighting
     m_color_hovered_btn_label       = is_dark_mode ? wxColour(255, 255, 254) : wxColour(0,0,0);
     m_color_default_btn_label       = is_dark_mode ? wxColour(255, 255, 254): wxColour(0,0,0);
     m_color_selected_btn_bg         = is_dark_mode ? wxColour(84, 84, 91)   : wxColour(206, 206, 206);
@@ -3931,7 +3903,7 @@ std::string GUI_App::link_to_network_check()
         url = "https://status.bambulab.com";
     }
     //wxLaunchDefaultBrowser(url);
-    return url; // ORCA
+    return url; // INLONG
 }
 
 std::string GUI_App::link_to_lan_only_wiki()
@@ -3949,7 +3921,7 @@ std::string GUI_App::link_to_lan_only_wiki()
         url = "https://wiki.bambulab.com/en/knowledge-sharing/enable-lan-mode";
     }
     //wxLaunchDefaultBrowser(url);
-    return url; // ORCA
+    return url; // INLONG
 }
 
 bool GUI_App::tabs_as_menu() const
@@ -4361,7 +4333,7 @@ wxString GUI_App::transition_tridid(int trid_id) const
 }
 
 //BBS
-void GUI_App::request_login(bool show_user_info, const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+void GUI_App::request_login(bool show_user_info, const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     ShowUserLogin(true, provider);
 
@@ -4372,7 +4344,7 @@ void GUI_App::request_login(bool show_user_info, const std::string& provider/* =
     }
 }
 
-void GUI_App::get_login_info(const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+void GUI_App::get_login_info(const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     if (m_agent) {
         if (m_agent->is_user_login(provider)) {
@@ -4389,7 +4361,7 @@ void GUI_App::get_login_info(const std::string& provider/* = ORCA_CLOUD_PROVIDER
     }
 }
 
-bool GUI_App::is_user_login(const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+bool GUI_App::is_user_login(const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     if (m_agent) {
         return m_agent->is_user_login(provider);
@@ -4399,13 +4371,13 @@ bool GUI_App::is_user_login(const std::string& provider/* = ORCA_CLOUD_PROVIDER*
 
 const std::string& GUI_App::get_printer_cloud_provider() const
 {
-    // Orca todo: this need to be revisted. currently it is mainly used for device manager and related clausses and only bambu machines use them.
+    // Inlong todo: this need to be revisted. currently it is mainly used for device manager and related clausses and only bambu machines use them.
     // 
     return BBL_CLOUD_PROVIDER;
 }
 
 
-bool GUI_App::check_login(const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+bool GUI_App::check_login(const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     bool result = false;
     if (m_agent) {
@@ -4418,7 +4390,7 @@ bool GUI_App::check_login(const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
     return result;
 }
 
-void GUI_App::request_user_handle(int online_login, const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+void GUI_App::request_user_handle(int online_login, const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     auto evt = new wxCommandEvent(EVT_USER_LOGIN_HANDLE);
     evt->SetInt(online_login);
@@ -4426,7 +4398,7 @@ void GUI_App::request_user_handle(int online_login, const std::string& provider/
     wxQueueEvent(this, evt);
 }
 
-void GUI_App::request_user_login(int online_login, const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+void GUI_App::request_user_login(int online_login, const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     auto evt = new wxCommandEvent(EVT_USER_LOGIN);
     evt->SetInt(online_login);
@@ -4443,7 +4415,7 @@ void GUI_App::post_logout_to_webview(const std::string& provider)
     }
 }
 
-void GUI_App::request_user_logout(const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+void GUI_App::request_user_logout(const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     if (m_agent && m_agent->is_user_login(provider)) {
         m_agent->user_logout(true, provider);
@@ -4455,7 +4427,7 @@ void GUI_App::request_user_logout(const std::string& provider/* = ORCA_CLOUD_PRO
             }
         }
 
-        if (provider == ORCA_CLOUD_PROVIDER) {
+        if (provider == INLONG_CLOUD_PROVIDER) {
             /* delete old user settings */
             bool     transfer_preset_changes = false;
             wxString header = _L("Some presets are modified.") + "\n" +
@@ -4474,7 +4446,7 @@ void GUI_App::request_user_logout(const std::string& provider/* = ORCA_CLOUD_PRO
     }
 }
 
-int GUI_App::request_user_unbind(std::string dev_id, const std::string& provider/* = ORCA_CLOUD_PROVIDER*/)
+int GUI_App::request_user_unbind(std::string dev_id, const std::string& provider/* = INLONG_CLOUD_PROVIDER*/)
 {
     int result = -1;
     if (m_agent) {
@@ -4501,10 +4473,10 @@ std::string GUI_App::handle_web_request(std::string cmd)
             std::string command_str = command.value();
             static const std::unordered_set<std::string> stealth_blocked_commands = {
                 "get_login_info",
-                "get_orca_login_info",
+                "get_inlong_login_info",
                 "get_bambu_login_info",
                 "homepage_login_or_register",
-                "homepage_orca_login_or_register",
+                "homepage_inlong_login_or_register",
                 "homepage_bambu_login_or_register",
             };
             if (app_config->get_stealth_mode() && stealth_blocked_commands.count(command_str)) {
@@ -4548,8 +4520,8 @@ std::string GUI_App::handle_web_request(std::string cmd)
                     request_user_logout();
                 });
             }
-            else if (command_str.compare("get_orca_login_info") == 0) {
-                CallAfter([this] { get_login_info(ORCA_CLOUD_PROVIDER); });
+            else if (command_str.compare("get_inlong_login_info") == 0) {
+                CallAfter([this] { get_login_info(INLONG_CLOUD_PROVIDER); });
             }
             else if (command_str.compare("get_bambu_login_info") == 0) {
                 CallAfter([this] { get_login_info(BBL_CLOUD_PROVIDER); });
@@ -4563,13 +4535,13 @@ std::string GUI_App::handle_web_request(std::string cmd)
                     request_user_logout(BBL_CLOUD_PROVIDER);
                 });
             }
-            else if (command_str.compare("homepage_orca_login_or_register") == 0) {
-                CallAfter([this] { request_login(true, ORCA_CLOUD_PROVIDER); });
+            else if (command_str.compare("homepage_inlong_login_or_register") == 0) {
+                CallAfter([this] { request_login(true, INLONG_CLOUD_PROVIDER); });
             }
-            else if (command_str.compare("homepage_orca_logout") == 0) {
+            else if (command_str.compare("homepage_inlong_logout") == 0) {
                 CallAfter([this] {
-                    BOOST_LOG_TRIVIAL(info) << "logout: homepage_orca_logout";
-                    request_user_logout(ORCA_CLOUD_PROVIDER);
+                    BOOST_LOG_TRIVIAL(info) << "logout: homepage_inlong_logout";
+                    request_user_logout(INLONG_CLOUD_PROVIDER);
                 });
             }
             else if (command_str.compare("homepage_modeldepot") == 0) {
@@ -4880,7 +4852,7 @@ void GUI_App::on_http_error(wxCommandEvent &evt)
 
     static bool m_is_error_shown = false;
     // Show general error notification for the primary cloud API failures (not Bambu).
-    if (provider == ORCA_CLOUD_PROVIDER && status >= 400 && code != HttpErrorVersionLimited) {
+    if (provider == INLONG_CLOUD_PROVIDER && status >= 400 && code != HttpErrorVersionLimited) {
         wxString msg;
         if (!error.empty()) {
             msg = wxString::Format(_L("Failed to connect to Inlong Cloud.\nPlease check your network connectivity\n(HTTP %u): %s"), status, wxString::FromUTF8(error));
@@ -4938,7 +4910,7 @@ void GUI_App::on_user_login_handle(wxCommandEvent &evt)
 
     int online_login = evt.GetInt();
     std::string provider = evt.GetString().ToStdString();
-    if (provider.empty()) provider = ORCA_CLOUD_PROVIDER;
+    if (provider.empty()) provider = INLONG_CLOUD_PROVIDER;
 
     // Reset 401 grace period so transient token-propagation 401s
     // during login warmup don't trigger immediate logout.
@@ -4953,7 +4925,7 @@ void GUI_App::on_user_login_handle(wxCommandEvent &evt)
         dev->update_user_machine_list_info(provider);
     });
 
-    if (online_login && provider == ORCA_CLOUD_PROVIDER) {
+    if (online_login && provider == INLONG_CLOUD_PROVIDER) {
         maybe_migrate_user_presets_on_login();
         remove_user_presets();
         enable_user_preset_folder(true);
@@ -4973,7 +4945,7 @@ void GUI_App::on_user_login_handle(wxCommandEvent &evt)
 
 void GUI_App::check_track_enable()
 {
-    // Orca: alaways disable track event
+    // Inlong: alaways disable track event
     if (m_agent) {
         m_agent->track_enable(false);
         m_agent->track_remove_files();
@@ -4985,7 +4957,7 @@ void GUI_App::on_user_login(wxCommandEvent &evt)
     if (!m_agent) { return; }
     int online_login = evt.GetInt();
     std::string provider = evt.GetString().ToStdString();
-    if (provider.empty()) provider = ORCA_CLOUD_PROVIDER;
+    if (provider.empty()) provider = INLONG_CLOUD_PROVIDER;
 
     // check privacy before handle
     check_privacy_version(online_login, provider);
@@ -5035,7 +5007,7 @@ void GUI_App::check_update(bool show_tips, int by_user)
 
 void GUI_App::check_new_version(bool show_tips, int by_user)
 {
-    return; // orca: not used, see check_new_version_sf
+    return; // Inlong updater path uses check_new_version_sf.
     std::string platform = "windows";
 
 #ifdef __WINDOWS__
@@ -5173,7 +5145,7 @@ std::string detect_updater_os_info()
     if (description.empty())
         description = wxGetOsDescription();
 
-    //Orca: workaround: wxGetOsVersion can't recognize Windows 11
+    //Inlong: workaround: wxGetOsVersion can't recognize Windows 11
     // For Windows, use actual version numbers to properly detect Windows 11
     // Windows 11 starts at build 22000
 #if defined(_WIN32)
@@ -5196,7 +5168,7 @@ std::string detect_updater_os_info()
 
 std::string detect_updater_version()
 {
-    return SoftFever_VERSION;
+    return INLONGSLICER_VERSION;
 }
 
 std::string detect_updater_iid(AppConfig* config)
@@ -5274,8 +5246,8 @@ std::string base64url_encode(const unsigned char* data, std::size_t length)
 
 std::optional<std::vector<unsigned char>> load_signature_key()
 {
-#if ORCA_UPDATER_SIG_KEY_AVAILABLE
-    std::string key = ORCA_UPDATER_SIG_KEY_B64;
+#if INLONG_UPDATER_SIG_KEY_AVAILABLE
+    std::string key = INLONG_UPDATER_SIG_KEY_B64;
     boost::algorithm::trim(key);
     if (key.empty())
         return std::nullopt;
@@ -5368,8 +5340,8 @@ void maybe_attach_updater_signature(Http& http, const std::string& canonical_que
         return;
 
     const std::string signature = base64url_encode(digest, digest_length);
-    http.header("X-Orca-Ts", timestamp);
-    http.header("X-Orca-Sig", "v1:" + signature);
+    http.header("X-Inlong-Ts", timestamp);
+    http.header("X-Inlong-Sig", "v1:" + signature);
 }
 
 } // namespace
@@ -5425,7 +5397,7 @@ void GUI_App::check_new_version_sf(bool show_tips, int by_user)
             boost::property_tree::read_json(json_stream, root);
 
             std::regex matcher("[0-9]+\\.[0-9]+(\\.[0-9]+)*(-[A-Za-z0-9]+)?(\\+[A-Za-z0-9]+)?");
-            Semver    current_version = get_version(SoftFever_VERSION, matcher);
+            Semver    current_version = get_version(INLONGSLICER_VERSION, matcher);
             Semver    best_pre(0, 0, 0);
             Semver    best_release(0, 0, 0);
             bool      best_pre_valid = false;
@@ -5658,7 +5630,7 @@ void GUI_App::show_check_privacy_dlg(wxCommandEvent& evt)
 {
     int online_login = evt.GetInt();
     std::string provider = evt.GetString().ToStdString();
-    if (provider.empty()) provider = ORCA_CLOUD_PROVIDER;
+    if (provider.empty()) provider = INLONG_CLOUD_PROVIDER;
     PrivacyUpdateDialog privacy_dlg(this->mainframe, wxID_ANY, _L("Privacy Policy Update"));
     privacy_dlg.Bind(EVT_PRIVACY_UPDATE_CONFIRM, [this, online_login, provider](wxCommandEvent &e) {
         app_config->set("privacy_version", privacy_version_info.version_str);
@@ -5708,7 +5680,7 @@ void GUI_App::on_check_privacy_update(wxCommandEvent& evt)
 {
     int online_login = evt.GetInt();
     std::string provider = evt.GetString().ToStdString();
-    if (provider.empty()) provider = ORCA_CLOUD_PROVIDER;
+    if (provider.empty()) provider = INLONG_CLOUD_PROVIDER;
     bool result = check_privacy_update();
     if (result)
         on_show_check_privacy_dlg(online_login, provider);
@@ -5782,7 +5754,7 @@ std::string GUI_App::format_display_version()
 {
     if (!version_display.empty()) return version_display;
 
-    version_display = SoftFever_VERSION;
+    version_display = INLONGSLICER_VERSION;
     return version_display;
 }
 
@@ -5868,7 +5840,7 @@ void GUI_App::reload_settings()
             preset_bundle->load_user_presets(*app_config, user_presets, ForwardCompatibilitySubstitutionRule::Enable);
             preset_bundle->save_user_presets(*app_config, get_delete_cache_presets());
 
-            // Orca: settings changed, refresh ui to reflect the new preset values
+            // Inlong: settings changed, refresh ui to reflect the new preset values
             mainframe->update_side_preset_ui();
             for (auto tab : tabs_list) {
                 tab->reload_config();
@@ -6154,7 +6126,7 @@ void GUI_App::sync_preset(Preset* preset)
             if (!new_setting_id.empty()) {
                 setting_id = new_setting_id;
                 result = 0;
-                auto update_time_str = values_map[ORCA_JSON_KEY_UPDATE_TIME];
+                auto update_time_str = values_map[INLONG_JSON_KEY_UPDATE_TIME];
                 if (!update_time_str.empty())
                     update_time = std::atoll(update_time_str.c_str());
             }
@@ -6183,7 +6155,7 @@ void GUI_App::sync_preset(Preset* preset)
             if (!new_setting_id.empty()) {
                 setting_id = new_setting_id;
                 result = 0;
-                auto update_time_str = values_map[ORCA_JSON_KEY_UPDATE_TIME];
+                auto update_time_str = values_map[INLONG_JSON_KEY_UPDATE_TIME];
                 if (!update_time_str.empty())
                     update_time = std::atoll(update_time_str.c_str());
             } else {
@@ -6213,7 +6185,7 @@ void GUI_App::sync_preset(Preset* preset)
                         updated_info = "hold";
                         BOOST_LOG_TRIVIAL(error) << "[sync_preset] put setting_id = " << setting_id << " failed, http_code = " << http_code;
                     } else {
-                            auto update_time_str = values_map[ORCA_JSON_KEY_UPDATE_TIME];
+                            auto update_time_str = values_map[INLONG_JSON_KEY_UPDATE_TIME];
                             if (!update_time_str.empty())
                                 update_time = std::atoll(update_time_str.c_str());
                     }
@@ -6286,15 +6258,15 @@ void GUI_App::sync_preset(Preset* preset)
 void GUI_App::update_single_bundle(wxCommandEvent& evt)
 {
     if (!m_agent || !m_agent->is_user_login()) return;
-    auto orca_agent = std::dynamic_pointer_cast<OrcaCloudServiceAgent>(m_agent->get_cloud_agent());
-    if (!orca_agent) return;
+    auto inlong_agent = std::dynamic_pointer_cast<InlongCloudServiceAgent>(m_agent->get_cloud_agent());
+    if (!inlong_agent) return;
 
     const std::string bundle_id = evt.GetString().ToStdString();
 
     // Fetch the latest bundle data from cloud
     std::map<std::string, std::map<std::string, std::string>> bundle_presets;
     BundleMetadata remote_metadata;
-    int result = orca_agent->get_shared_bundle(bundle_id, &bundle_presets, &remote_metadata);
+    int result = inlong_agent->get_shared_bundle(bundle_id, &bundle_presets, &remote_metadata);
 
     if (result != 0) {
         BOOST_LOG_TRIVIAL(warning) << "sync_bundle: failed to fetch bundle " << bundle_id << ", result=" << result;
@@ -6316,7 +6288,7 @@ void GUI_App::update_single_bundle(wxCommandEvent& evt)
             std::string initial_version = preset_bundle->bundles.m_bundles[bundle_id].version;
             preset_bundle->bundles.ReadUnlock();
 
-            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "ORCA : CallAfter from update_single_bundle function actually updating subscribed presets";
+            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "INLONG : CallAfter from update_single_bundle function actually updating subscribed presets";
             
             preset_bundle->bundles.WriteLock();
             
@@ -6347,12 +6319,12 @@ void GUI_App::sync_bundle(std::string bundle_id, std::string version)
 {
     // if(preset_bundle->bundles.pauseReads.load())
     // {
-    //     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "ORCA : Update thread sync_bundle function yielded to main thread. 1";
+    //     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "INLONG : Update thread sync_bundle function yielded to main thread. 1";
     //     return; // if the main thread acquires the lock at the start of our operations, we will yield
     // }
     if (!m_agent || !m_agent->is_user_login()) return;
-    auto orca_agent = std::dynamic_pointer_cast<OrcaCloudServiceAgent>(m_agent->get_cloud_agent());
-    if (!orca_agent) return;
+    auto inlong_agent = std::dynamic_pointer_cast<InlongCloudServiceAgent>(m_agent->get_cloud_agent());
+    if (!inlong_agent) return;
 
     BOOST_LOG_TRIVIAL(info) << "sync_bundle: checking bundle " << bundle_id << " for updates";
 
@@ -6411,7 +6383,7 @@ void GUI_App::sync_bundle(std::string bundle_id, std::string version)
         // Fetch the latest bundle data from cloud
         std::map<std::string, std::map<std::string, std::string>> bundle_presets;
         BundleMetadata remote_metadata;
-        int result = orca_agent->get_shared_bundle(bundle_id, &bundle_presets, &remote_metadata);
+        int result = inlong_agent->get_shared_bundle(bundle_id, &bundle_presets, &remote_metadata);
 
         if (result != 0) {
             BOOST_LOG_TRIVIAL(warning) << "sync_bundle: failed to fetch bundle " << bundle_id << ", result=" << result;
@@ -6431,7 +6403,7 @@ void GUI_App::sync_bundle(std::string bundle_id, std::string version)
 
                 // if(!preset_bundle->bundles.pauseReads.load()) // check again if we can actually update so as to not block the main thread 
                 // {
-                    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "ORCA : CallAfter from sync_bundle function actually updating subscribed presets";
+                    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "INLONG : CallAfter from sync_bundle function actually updating subscribed presets";
                     
                     preset_bundle->bundles.WriteLock();
                     
@@ -6470,8 +6442,8 @@ void GUI_App::sync_bundle(std::string bundle_id, std::string version)
 void GUI_App::check_bundle_updates()
 {
     if (!m_agent || !m_agent->is_user_login()) return;
-    auto orca_agent = std::dynamic_pointer_cast<OrcaCloudServiceAgent>(m_agent->get_cloud_agent());
-    if (!orca_agent) return;
+    auto inlong_agent = std::dynamic_pointer_cast<InlongCloudServiceAgent>(m_agent->get_cloud_agent());
+    if (!inlong_agent) return;
 
     BOOST_LOG_TRIVIAL(info) << "check_bundle_updates: checking for bundle updates";
 
@@ -6479,7 +6451,7 @@ void GUI_App::check_bundle_updates()
     std::vector<std::pair<std::string, std::string>> subscribed_bundles;
     std::vector<std::string> notfound;
     std::vector<std::string> unauthorized;
-    int result = orca_agent->get_subscribed_bundles(&subscribed_bundles,notfound,unauthorized);
+    int result = inlong_agent->get_subscribed_bundles(&subscribed_bundles,notfound,unauthorized);
 
     if (result != 0) {
         BOOST_LOG_TRIVIAL(warning) << "check_bundle_updates: failed to fetch subscribed bundles, result=" << result;
@@ -6510,7 +6482,7 @@ void GUI_App::check_bundle_updates()
     for (const auto& bundle : subscribed_bundles) {
         std::map<std::string, std::map<std::string, std::string>> presets;
         BundleMetadata metadata;
-        int preset_result = orca_agent->get_shared_bundle(bundle.first, &presets, &metadata);
+        int preset_result = inlong_agent->get_shared_bundle(bundle.first, &presets, &metadata);
 
         if (preset_result == 0) {
             subscribed_bundle_presets[bundle.first] = presets;
@@ -6528,7 +6500,7 @@ void GUI_App::check_bundle_updates()
     int updates_available = 0;
 
     for (auto& [bundle_id, local_metadata] : preset_bundle->bundles.m_bundles) {
-        // Only check subscribed bundles (those with UUID-style IDs from Orca Cloud)
+        // Only check subscribed bundles (those with UUID-style IDs from Inlong Cloud)
         // Skip external bundles (those with name+timestamp IDs)
         if (!local_metadata.is_subscribed) {
             continue;
@@ -6573,8 +6545,8 @@ void GUI_App::check_bundle_updates()
 
 bool GUI_App::unsubscribe_bundle(const std::string& id)
 {
-    auto orca_agent = std::dynamic_pointer_cast<OrcaCloudServiceAgent>(m_agent->get_cloud_agent());
-    return orca_agent->unsubscribe_bundle(id);
+    auto inlong_agent = std::dynamic_pointer_cast<InlongCloudServiceAgent>(m_agent->get_cloud_agent());
+    return inlong_agent->unsubscribe_bundle(id);
 }
 
 void GUI_App::start_sync_user_preset(bool with_progress_dlg)
@@ -6630,7 +6602,7 @@ void GUI_App::start_sync_user_preset(bool with_progress_dlg)
             process_delete_presets();
 
             // get setting list, update setting list
-            std::string version = preset_bundle->get_vendor_profile_version(PresetBundle::ORCA_DEFAULT_BUNDLE).to_string();
+            std::string version = preset_bundle->get_vendor_profile_version(PresetBundle::INLONG_DEFAULT_BUNDLE).to_string();
 
             // run check_and_fix_user_presets_syncinfo once before syncing to make sure all presets have correct sync_info
             // So that we can sync presets that are migrated from old version or users manually put preset files in preset folder
@@ -6640,7 +6612,7 @@ void GUI_App::start_sync_user_preset(bool with_progress_dlg)
                 auto type = info[BBL_JSON_KEY_TYPE];
                 auto name = info[BBL_JSON_KEY_NAME];
                 auto setting_id = info[BBL_JSON_KEY_SETTING_ID];
-                auto update_time_str = info[ORCA_JSON_KEY_UPDATE_TIME];
+                auto update_time_str = info[INLONG_JSON_KEY_UPDATE_TIME];
                 long long update_time = 0;
                 if (!update_time_str.empty())
                     update_time = std::atoll(update_time_str.c_str());
@@ -6661,8 +6633,8 @@ void GUI_App::start_sync_user_preset(bool with_progress_dlg)
             if (ret == 0 && m_agent && !t.expired())
                 reload_settings();
 
-            // For orca specific syncing
-            auto orca_agent = std::dynamic_pointer_cast<OrcaCloudServiceAgent>(m_agent->get_cloud_agent());
+            // For Inlong-specific syncing.
+            auto inlong_agent = std::dynamic_pointer_cast<InlongCloudServiceAgent>(m_agent->get_cloud_agent());
             int tick_tock = -1, sync_count = 0; // tick_tock = -1 to immediately run sync the frist time this thread runs
             std::vector<Preset> presets_to_sync;
             std::vector<std::pair<std::string, std::string>> bundles_to_sync;
@@ -6717,15 +6689,15 @@ void GUI_App::start_sync_user_preset(bool with_progress_dlg)
                         process_delete_presets();
                     }
 
-                    // sync subscribed bundles, if orca
-                    if (orca_agent)
+                    // Sync subscribed bundles when the Inlong cloud agent is available.
+                    if (inlong_agent)
                     {
                         bundles_to_sync.clear();
                         bundles_synced.clear();
                         std::vector<std::string> not_found;
                         std::vector<std::string> unauthorized;
                         
-                        int result = orca_agent->get_subscribed_bundles(&bundles_to_sync, not_found, unauthorized);
+                        int result = inlong_agent->get_subscribed_bundles(&bundles_to_sync, not_found, unauthorized);
                         if (result != 0) {
                             BOOST_LOG_TRIVIAL(warning) << "start_sync_user_preset: failed to fetch subscribed bundles, result=" << result;
                             continue;
@@ -6761,7 +6733,7 @@ void GUI_App::start_sync_user_preset(bool with_progress_dlg)
                                 // Sync each bundle individually
                                 // if(!preset_bundle->bundles.pauseReads.load()) // if pause is true we will skip updating this frame altogether
                                 // {   
-                                    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "ORCA : Update thread syncing bundles";
+                                    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << __LINE__ << "INLONG : Update thread syncing bundles";
                                     sync_bundle(bundle_entry.first, bundle_entry.second);
                                 // }
                                 // Small delay between bundle syncs to avoid overwhelming the server
@@ -6851,7 +6823,7 @@ void GUI_App::restart_sync_user_preset()
 {
     if (!m_user_sync_token) {
         // No sync running. If a restart helper is already in flight it will
-        // start the new sync once the old thread is joined — don't race it.
+        // start the new sync once the old thread is joined ??don't race it.
         if (!m_restart_sync_pending)
             start_sync_user_preset(true);
         return;
@@ -6859,8 +6831,7 @@ void GUI_App::restart_sync_user_preset()
 
     // Resetting the token signals the old thread to stop (cancelFn checks
     // t.expired(), so it exits after its current HTTP request completes).
-    // A helper thread joins the old thread off the UI thread — no freeze —
-    // then starts the new sync via CallAfter once the old one is fully done.
+    // A helper thread joins the old thread off the UI thread ??no freeze ??    // then starts the new sync via CallAfter once the old one is fully done.
     m_user_sync_token.reset();
     m_restart_sync_pending = true;
 
@@ -6882,7 +6853,7 @@ void GUI_App::on_stealth_mode_enter()
 {
     stop_sync_user_preset();
     BOOST_LOG_TRIVIAL(info) << "logout: on_stealth_mode_enter";
-    request_user_logout(ORCA_CLOUD_PROVIDER);
+    request_user_logout(INLONG_CLOUD_PROVIDER);
     request_user_logout(BBL_CLOUD_PROVIDER);
     if (mainframe && mainframe->m_webview) {
         mainframe->m_webview->SendCloudProvidersInfo();
@@ -7704,7 +7675,7 @@ void GUI_App::open_preferences(size_t open_on_tab, const std::string& highlight_
                     associate_files(L"step");
                     associate_files(L"stp");
                 }
-                associate_url(L"orcaslicer");
+                associate_url(L"inlongslicer");
             }
             else {
                 if (app_config->get("associate_gcode") == "true")
@@ -7976,7 +7947,7 @@ void GUI_App::load_current_presets(bool active_preset_combox/*= false*/, bool ch
 
     auto& edited_printer_preset = preset_bundle->printers.get_edited_preset();
     PrinterTechnology printer_technology = edited_printer_preset.printer_technology();
-    // ORCA: Sync filament count with the printer's nozzle count before loading presets for multi-tool printers.
+    // INLONG: Sync filament count with the printer's nozzle count before loading presets for multi-tool printers.
     // This ensures filament_presets vector is properly sized when combo boxes are created/updated.
     if (printer_technology == ptFFF && !edited_printer_preset.config.opt_bool("single_extruder_multi_material")) {
         auto* nozzle_diameter = edited_printer_preset.config.option<ConfigOptionFloats>("nozzle_diameter");
@@ -8163,7 +8134,7 @@ void GUI_App::OSXStoreOpenFiles(const wxArrayString &fileNames)
         if (is_gcode_file(into_u8(filename)))
             ++ num_gcodes;
     if (fileNames.size() == num_gcodes) {
-        // Opening PrusaSlicer by drag & dropping a G-Code onto OrcaSlicer icon in Finder,
+        // Opening PrusaSlicer by drag & dropping a G-Code onto InlongSlicer icon in Finder,
         // just G-codes were passed. Switch to G-code viewer mode.
         m_app_mode = EAppMode::GCodeViewer;
         unlock_lockfile(get_instance_hash_string() + ".lock", data_dir() + "/cache/");
@@ -8348,9 +8319,9 @@ void GUI_App::open_mall_page_dialog()
     }
 
     if (link_url.find("?") != std::string::npos) {
-        link_url += "&from=orcaslicer";
+        link_url += "&from=inlongslicer";
     } else {
-        link_url += "?from=orcaslicer";
+        link_url += "?from=inlongslicer";
     }
 
     wxLaunchDefaultBrowser(link_url);
@@ -8883,7 +8854,7 @@ void GUI_App::associate_files(std::wstring extend)
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
     std::wstring prog_path = L"\"" + std::wstring(app_path) + L"\"";
-    std::wstring prog_id = L" Orca.Slicer.1";
+    std::wstring prog_id = L"Inlong.Slicer.1";
     std::wstring prog_desc = L"Inlong Slicer";
     std::wstring prog_command = prog_path + L" \"%1\"";
     std::wstring reg_base = L"Software\\Classes";
@@ -8908,7 +8879,7 @@ void GUI_App::disassociate_files(std::wstring extend)
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
     std::wstring prog_path = L"\"" + std::wstring(app_path) + L"\"";
-    std::wstring prog_id = L" Orca.Slicer.1";
+    std::wstring prog_id = L"Inlong.Slicer.1";
     std::wstring prog_desc = L"Inlong Slicer";
     std::wstring prog_command = prog_path + L" \"%1\"";
     std::wstring reg_base = L"Software\\Classes";

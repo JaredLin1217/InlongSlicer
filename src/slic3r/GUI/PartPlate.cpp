@@ -54,7 +54,7 @@ static unsigned int GLOBAL_PLATE_INDEX = 0;
 
 static const double LOGICAL_PART_PLATE_GAP = 1. / 5.;
 static const int PARTPLATE_ICON_SIZE = 16;
-static const int PARTPLATE_EDIT_PLATE_NAME_ICON_SIZE = 9; // ORCA this also scales height of plate name
+static const int PARTPLATE_EDIT_PLATE_NAME_ICON_SIZE = 9; // INLONG this also scales height of plate name
 static const int PARTPLATE_ICON_GAP_TOP = 3;
 static const int PARTPLATE_ICON_GAP_LEFT = 3;
 static const int PARTPLATE_ICON_GAP_Y = 5;
@@ -933,8 +933,8 @@ void PartPlate::render_exclude_area(bool force_default_color) {
 	if (force_default_color) //for thumbnail case
 		return;
 
-	ColorRGBA select_color{   .9f, .86f, .82f, .7f }; // ORCA
-	ColorRGBA unselect_color{ .6f, .6f, .6f, .3f }; // ORCA
+	ColorRGBA select_color{   .9f, .86f, .82f, .7f }; // INLONG
+	ColorRGBA unselect_color{ .6f, .6f, .6f, .3f }; // INLONG
 	//ColorRGBA default_color{ 0.9f, 0.9f, 0.9f, 1.0f };
 
 	// draw exclude area
@@ -968,7 +968,7 @@ void PartPlate::render_grid(bool bottom) {
 	//glsafe(::glEnable(GL_MULTISAMPLE));
 	// draw grid
 
-    // ORCA: OpenGL Core Profile support
+    // INLONG: OpenGL Core Profile support
     // FIXME: ideally, we'd use the same shader for both the thin and thick lines, but for some reason setting the uniforms has no effect
     GLShaderProgram* shader = wxGetApp().get_shader("flat");
     if (shader == nullptr) {
@@ -1006,7 +1006,7 @@ void PartPlate::render_grid(bool bottom) {
 
     shader->stop_using();
 
-    // ORCA: OpenGL Core Profile support
+    // INLONG: OpenGL Core Profile support
 #if SLIC3R_OPENGL_ES
     shader = wxGetApp().get_shader("dashed_lines");
 #else
@@ -1042,7 +1042,7 @@ void PartPlate::render_height_limit(PartPlate::HeightLimitMode mode)
 	if (m_print && m_print->config().print_sequence == PrintSequence::ByObject && mode != HEIGHT_LIMIT_NONE)
 	{
 		// draw lower limit
-	    // ORCA: OpenGL Core Profile
+	    // INLONG: OpenGL Core Profile
 #if !SLIC3R_OPENGL_ES
 	    if (!OpenGLManager::get_gl_info().is_core_profile())
 	        glsafe(::glLineWidth(3.0f * m_scale_factor));
@@ -1051,7 +1051,7 @@ void PartPlate::render_height_limit(PartPlate::HeightLimitMode mode)
         m_height_limit_common.render();
 
 		if ((mode == HEIGHT_LIMIT_BOTTOM) || (mode == HEIGHT_LIMIT_BOTH)) {
-		    // ORCA: OpenGL Core Profile
+		    // INLONG: OpenGL Core Profile
 #if !SLIC3R_OPENGL_ES
 		    if (!OpenGLManager::get_gl_info().is_core_profile())
 		        glsafe(::glLineWidth(3.0f * m_scale_factor));
@@ -1062,7 +1062,7 @@ void PartPlate::render_height_limit(PartPlate::HeightLimitMode mode)
 
 		// draw upper limit
 		if ((mode == HEIGHT_LIMIT_TOP) || (mode == HEIGHT_LIMIT_BOTH)){
-		    // ORCA: OpenGL Core Profile
+		    // INLONG: OpenGL Core Profile
 #if !SLIC3R_OPENGL_ES
 		    if (!OpenGLManager::get_gl_info().is_core_profile())
 		        glsafe(::glLineWidth(3.0f * m_scale_factor));
@@ -1900,7 +1900,7 @@ bool PartPlate::check_mixture_of_pla_and_petg(const DynamicPrintConfig &config)
     if (tool_change_time && tool_change_time->value > 0)
         is_toolchanger = true;
 
-    // nozzle index → whether it carries PLA / PETG
+    // nozzle index ??whether it carries PLA / PETG
     std::map<int, bool> nozzle_has_pla;
     std::map<int, bool> nozzle_has_petg;
 
@@ -1926,7 +1926,7 @@ bool PartPlate::check_mixture_of_pla_and_petg(const DynamicPrintConfig &config)
     }
 
     if (!has_pla || !has_petg)
-        return true; // no mixture — no warning
+        return true; // no mixture ??no warning
 
     if (is_toolchanger) {
         // Warn only if any single nozzle slot carries both PLA and PETG (e.g. future MMU
@@ -1934,12 +1934,12 @@ bool PartPlate::check_mixture_of_pla_and_petg(const DynamicPrintConfig &config)
         // will never fire and the warning is correctly suppressed. (#12073)
         for (const auto &kv : nozzle_has_pla) {
             if (nozzle_has_petg.count(kv.first))
-                return false; // same nozzle → warn
+                return false; // same nozzle ??warn
         }
-        return true; // different nozzles → safe, no warning
+        return true; // different nozzles ??safe, no warning
     }
 
-    return false; // non-toolchanger with both PLA and PETG → warn
+    return false; // non-toolchanger with both PLA and PETG ??warn
 }
 
 bool PartPlate::check_mixture_filament_compatible(const DynamicPrintConfig &config, std::string &error_msg)
@@ -2349,7 +2349,7 @@ void PartPlate::generate_plate_name_texture()
 	m_name_texture.reset();
 	auto text = m_name.empty()? _L("Untitled") : from_u8(m_name);
 
-    // ORCA also scale font size to prevent low res texture
+    // INLONG also scale font size to prevent low res texture
     int size = wxGetApp().em_unit() * PARTPLATE_EDIT_PLATE_NAME_ICON_SIZE;
     auto l = Label::sysFont(size, true);
     wxFont* font = &l;
@@ -2547,7 +2547,7 @@ bool PartPlate::check_outside(int obj_id, int instance_id, BoundingBoxf3* boundi
 		plate_box.min.z() += instance_box.min.z(); // not considering outsize if sinking
 
 	if (instance_box.min.z() < SINKING_Z_THRESHOLD) {
-		// Orca: For sinking object, we use a more expensive algorithm so part below build plate won't be considered
+		// Inlong: For sinking object, we use a more expensive algorithm so part below build plate won't be considered
 		if (plate_box.intersects(instance_box)) {
 			// TODO: FIXME: this does not take exclusion area into account
             const BuildVolume build_volume(get_shape(), m_plater->build_volume().printable_height(), m_extruder_areas, m_extruder_heights);
@@ -3054,7 +3054,7 @@ void PartPlate::generate_exclude_polygon(ExPolygon &exclude_polygon)
 			const Vec2d& p = m_exclude_area[i];
 			Vec2d center;
 			double start_angle, stop_angle, radius;
-			radius = 1.f; // ORCA use equal rounding for all corners
+			radius = 1.f; // INLONG use equal rounding for all corners
 			switch (i) {
 				case 0: // Left-Bottom
 					center(0)   = p(0) + radius;
@@ -3172,7 +3172,7 @@ bool PartPlate::set_shape(const Pointfs& shape, const Pointfs& exclude_areas, co
 			calc_vertex_for_icons(2, m_arrange_icon);
 			calc_vertex_for_icons(3, m_lock_icon);
 			calc_vertex_for_icons(4, m_plate_settings_icon);
-			// ORCA also change bed_icon_count number in calc_vertex_for_icons() after adding or removing icons for circular shaped beds that uses vertical alingment for icons
+			// INLONG also change bed_icon_count number in calc_vertex_for_icons() after adding or removing icons for circular shaped beds that uses vertical alingment for icons
 			bool dual_bbl = false;
 			PresetBundle* preset = wxGetApp().preset_bundle;
 			dual_bbl = (preset->is_bbl_vendor() && preset->get_printer_extruder_count() == 2);
@@ -3210,7 +3210,7 @@ BoundingBoxf3 PartPlate::get_build_volume(bool use_share)
 		low_point = Vec3d(unscale_(bbox.min.x()) - eps, unscale_(bbox.min.y()) - eps, m_origin.z() - eps);
 	}
 	else {
-		// Orca: support non-rectangular bed
+		// Inlong: support non-rectangular bed
 		up_point  = m_bounding_box.max + Vec3d(eps, eps, m_origin.z() + m_height + eps);
 		low_point = m_bounding_box.min + Vec3d(-eps, -eps, m_origin.z() - eps);
 	}
@@ -4048,7 +4048,7 @@ void PartPlateList::generate_icon_textures()
 	}
 
 	std::string text_str = "01";
-    // ORCA also scale font size to prevent low res texture
+    // INLONG also scale font size to prevent low res texture
     int size = wxGetApp().em_unit() * PARTPLATE_ICON_SIZE;
     auto l = Label::sysFont(int(size), true);
     wxFont* font = &l;
@@ -4644,7 +4644,7 @@ std::vector<PartPlate*> PartPlateList::get_nonempty_plate_list()
 	std::vector<PartPlate*> nonempty_plate_list;
 	for (auto plate : m_plate_list){
         //if (plate->get_extruders().size() != 0) {
-		if (!plate->empty()) { // ORCA counts failed slices as non empty because they have model and should be calculated on total count
+		if (!plate->empty()) { // INLONG counts failed slices as non empty because they have model and should be calculated on total count
 			nonempty_plate_list.push_back(plate);
 		}
 	}
@@ -5906,7 +5906,7 @@ int PartPlateList::rebuild_plates_after_deserialize(std::vector<bool>& previous_
 	int ret = 0;
 
 	BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(": plates count %1%") % m_plate_list.size();
-	// SoftFever: assign plater info first
+	// Inlong: assign plater info first
     for (auto partplate : m_plate_list) {
         partplate->m_plater = this->m_plater;
         partplate->m_partplate_list = this;
@@ -6339,7 +6339,7 @@ void PartPlateList::BedTextureInfo::reset()
 
 void PartPlateList::init_bed_type_info()
 {
-	BedTextureInfo::TexturePart pct_part_left(10, 130,  10, 110, "orca_bed_pct_left.svg");
+	BedTextureInfo::TexturePart pct_part_left(10, 130,  10, 110, "inlong_bed_pct_left.svg");
     BedTextureInfo::TexturePart st_part1(9, 70, 12.5, 170, "bbl_bed_st_left.svg");
     BedTextureInfo::TexturePart st_part2(74, -10, 148, 12, "bbl_bed_st_bottom.svg");
 	BedTextureInfo::TexturePart pc_part1(10, 130, 10, 110, "bbl_bed_pc_left.svg");

@@ -36,14 +36,14 @@ struct SupportParameters {
             bool different_support_interface_filament = object_config.support_interface_filament != 0 &&
                                                        object_config.support_interface_filament != object_config.support_filament;
  
-            if (non_soluble_base_top) { // ORCA: Try to support soluble dense interfaces with non-soluble dense interfaces.
+            if (non_soluble_base_top) { // INLONG: Try to support soluble dense interfaces with non-soluble dense interfaces.
                 this->num_top_base_interface_layers = size_t(std::min(int(num_top_interface_layers) / 2, 2));
             } else {
                 this->num_top_base_interface_layers =
                     (different_support_interface_filament && this->zero_gap_interface_top) ? 1 : 0;
             }
 
-            if (non_soluble_base_bottom) { // ORCA: Try to support soluble dense interfaces with non-soluble dense interfaces.
+            if (non_soluble_base_bottom) { // INLONG: Try to support soluble dense interfaces with non-soluble dense interfaces.
                 this->num_bottom_base_interface_layers = size_t(std::min(int(num_bottom_interface_layers) / 2, 2));
             } else {
                 this->num_bottom_base_interface_layers =
@@ -102,13 +102,13 @@ struct SupportParameters {
 
         this->base_angle = Geometry::deg2rad(float(object_config.support_angle.value));
         this->interface_angle = Geometry::deg2rad(float(object_config.support_angle.value + 90.));
-        // ORCA: split top/bottom interface spacing and density, and force solid top when ironing.
+        // INLONG: split top/bottom interface spacing and density, and force solid top when ironing.
         this->top_interface_spacing = (this->ironing ? 0 : object_config.support_interface_spacing.value) + this->support_material_interface_flow.spacing();
         this->top_interface_density = std::min(1., this->support_material_interface_flow.spacing() / this->top_interface_spacing);
-        // ORCA: bottom interface spacing/density separated from top settings.
+        // INLONG: bottom interface spacing/density separated from top settings.
         this->bottom_interface_spacing = object_config.support_bottom_interface_spacing.value + this->support_material_interface_flow.spacing();
         this->bottom_interface_density = std::min(1., this->support_material_interface_flow.spacing() / this->bottom_interface_spacing);
-        // ORCA: force solid raft interface when ironing (top spacing).
+        // INLONG: force solid raft interface when ironing (top spacing).
         double raft_interface_spacing = (this->ironing ? 0 : object_config.support_interface_spacing.value) + this->raft_interface_flow.spacing();
         this->raft_interface_density = std::min(1., this->raft_interface_flow.spacing() / raft_interface_spacing);
         this->support_spacing = object_config.support_base_pattern_spacing.value + this->support_material_flow.spacing();
@@ -189,7 +189,7 @@ struct SupportParameters {
         }
         if (support_style == smsDefault) {
             if (is_tree(object_config.support_type)) {
-                // Orca: use organic as default
+                // Inlong: use organic as default
                 support_style = smsTreeOrganic;
             } else {
                 support_style = smsGrid;

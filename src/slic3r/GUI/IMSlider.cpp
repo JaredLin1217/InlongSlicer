@@ -18,7 +18,7 @@ inline double miscalculation() { return scale_(scale_(1)); }
 
 static const float  LEFT_MARGIN       = 13.0f + 100.0f;  // avoid thumbnail toolbar
 static const float  HORIZONTAL_SLIDER_WINDOW_HEIGHT  = 64.0f;
-// ORCA: widen slider window to account for one-layer label box left shift.
+// INLONG: widen slider window to account for one-layer label box left shift.
 static const float  VERTICAL_SLIDER_WINDOW_WIDTH     = 164.0f;
 static const float  GROOVE_WIDTH      = 12.0f;
 static const ImVec2 ONE_LAYER_MARGIN  = ImVec2(20.0f, 20.0f);
@@ -34,7 +34,7 @@ static const ImU32 BRAND_COLOR            = IM_COL32(214, 108, 71, 255);
 static int m_tick_value = -1;
 static ImVec4 m_tick_rect;
 
-// ORCA: keep the slider window width in one place for layout alignment.
+// INLONG: keep the slider window width in one place for layout alignment.
 float IMSlider::vertical_slider_window_width()
 {
     return VERTICAL_SLIDER_WINDOW_WIDTH;
@@ -198,7 +198,7 @@ void IMSlider::SetSelectionSpan(const int lower_val, const int higher_val)
     m_higher_value = std::max(std::min(higher_val, m_max_value), m_lower_value);
     if (m_lower_value < m_higher_value) m_is_one_layer = false;
 
-    // ORCA reset single layer position when min max values changed
+    // INLONG reset single layer position when min max values changed
     // This will trigger when print height changed. but stays same on reslicing if layer count is same 
     m_one_layer_value = int((m_higher_value - m_lower_value)/2); 
 
@@ -455,19 +455,19 @@ bool IMSlider::switch_one_layer_mode()
 
     m_is_one_layer = !m_is_one_layer;
     if (!m_is_one_layer) {                       // DEACTIVATE
-        m_one_layer_value = GetHigherValue();       // ORCA Backup value on deactivate
+        m_one_layer_value = GetHigherValue();       // INLONG Backup value on deactivate
         SetLowerValue(m_min_value);
         SetHigherValue(m_max_value);             // Higher value resets on toggling off one layer mode to show whole model
     }else{                                       // ACTIVATE
-                                                 // ORCA Ensure value fits range. value set in IMSlider::SetSelectionSpan but added this just in case
+                                                 // INLONG Ensure value fits range. value set in IMSlider::SetSelectionSpan but added this just in case
         if(!m_one_layer_value || m_one_layer_value > m_max_value || m_one_layer_value < m_min_value){
             m_one_layer_value = int((m_max_value - m_min_value)/2);
             SetHigherValue(m_one_layer_value);  
         }
-        else if(GetHigherValue() == m_max_value) // ORCA Prefer backup value if higher value reseted
-            SetHigherValue(m_one_layer_value);      // ORCA Restore value
-        else                                     // ORCA Prefer higher value if user changed higher value. so it will show section on same view
-            SetHigherValue(GetHigherValue());    // ORCA use same position with higher value if user changed its position. visible section stays same when switching one layer mode with this
+        else if(GetHigherValue() == m_max_value) // INLONG Prefer backup value if higher value reseted
+            SetHigherValue(m_one_layer_value);      // INLONG Restore value
+        else                                     // INLONG Prefer higher value if user changed higher value. so it will show section on same view
+            SetHigherValue(GetHigherValue());    // INLONG use same position with higher value if user changed its position. visible section stays same when switching one layer mode with this
     }
     m_selection == ssLower ? correct_lower_value() : correct_higher_value();
     if (m_selection == ssUndef) m_selection = ssHigher;
@@ -899,7 +899,7 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
     const ImRect groove = ImRect(groove_start, groove_start + groove_size);
     const ImRect bg_rect = ImRect(groove.Min - ImVec2(6.0f, 6.0f) * m_scale, groove.Max + ImVec2(6.0f, 6.0f) * m_scale);
     const float mid_x = groove.GetCenter().x;
-    // ORCA: tune label box width to fit the slider window without overlapping the groove.
+    // INLONG: tune label box width to fit the slider window without overlapping the groove.
     const float label_extra_padding = 10.0f * m_scale;
     const float one_layer_extra_padding = 6.0f * m_scale;
     const float max_label_width = std::max(0.0f,
@@ -1011,7 +1011,7 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
             window->DrawList->AddLine(lower_handle_center + ImVec2(0.0f, -0.5f * line_length), lower_handle_center + ImVec2(0.0f, 0.5f * line_length), white_bg, line_width);
         }
 
-    // ORCA: render fixed-width label boxes
+    // INLONG: render fixed-width label boxes
     // draw higher label
     auto text_utf8 = into_u8(higher_label);
     text_content_size = ImGui::CalcTextSize(text_utf8.c_str());
@@ -1077,7 +1077,7 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
         // draw label
         auto text_utf8 = into_u8(higher_label);
         text_content_size = ImGui::CalcTextSize(text_utf8.c_str());
-        // ORCA: slightly narrower label box in one-layer mode to avoid left shift.
+        // INLONG: slightly narrower label box in one-layer mode to avoid left shift.
         text_size = ImVec2(std::max(0.0f, max_label_width - label_extra_padding - one_layer_extra_padding),
             text_content_size.y) + text_padding * 2;
         ImVec2 text_start = ImVec2(one_handle.Min.x - text_size.x, handle_center.y - 0.5 * text_size.y);
@@ -1104,7 +1104,7 @@ bool IMSlider::render(int canvas_width, int canvas_height)
     ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-    ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, ImGuiWrapper::COL_ORCA); // ORCA: Use orca color for slider value text
+    ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, ImGuiWrapper::COL_INLONG); // INLONG: Use Inlong color for slider value text
 
     int windows_flag = ImGuiWindowFlags_NoTitleBar
                        | ImGuiWindowFlags_NoCollapse
@@ -1524,7 +1524,7 @@ void IMSlider::on_mouse_wheel(wxMouseEvent& evt) {
             if (is_one_layer()) {
                 const int new_pos = GetHigherValue() + wheel;
                 SetHigherValue(new_pos);
-                m_one_layer_value = new_pos; // ORCA backup value for single layer mode
+                m_one_layer_value = new_pos; // INLONG backup value for single layer mode
             }
             else {
                 const int new_pos = m_selection == ssLower ? GetLowerValue() + wheel : GetHigherValue() + wheel;

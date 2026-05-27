@@ -2,7 +2,7 @@
 #include "IPrinterAgent.hpp"
 #include "ICloudServiceAgent.hpp"
 #include "BBLPrinterAgent.hpp"
-#include "OrcaPrinterAgent.hpp"
+#include "InlongPrinterAgent.hpp"
 #include "QidiPrinterAgent.hpp"
 #include "SnapmakerPrinterAgent.hpp"
 #include "MoonrakerPrinterAgent.hpp"
@@ -58,14 +58,16 @@ bool NetworkAgentFactory::is_printer_agent_registered(const std::string& id)
 {
     std::lock_guard<std::mutex> lock(s_registry_mutex);
     auto&                       agents = get_printer_agents();
-    return agents.find(id) != agents.end();
+    const std::string           canonical_id = canonical_printer_agent_id(id);
+    return agents.find(canonical_id) != agents.end();
 }
 
 const PrinterAgentInfo* NetworkAgentFactory::get_printer_agent_info(const std::string& id)
 {
     std::lock_guard<std::mutex> lock(s_registry_mutex);
     auto&                       agents = get_printer_agents();
-    auto                        it     = agents.find(id);
+    const std::string           canonical_id = canonical_printer_agent_id(id);
+    auto                        it     = agents.find(canonical_id);
     return (it != agents.end()) ? &it->second : nullptr;
 }
 
@@ -88,20 +90,21 @@ std::shared_ptr<IPrinterAgent> NetworkAgentFactory::create_printer_agent_by_id(c
                                                                                const std::string&                  log_dir)
 {
     std::lock_guard<std::mutex> lock(s_registry_mutex);
+    const std::string           canonical_id = canonical_printer_agent_id(id);
 
     // Check cache first
     auto& cache    = get_printer_agent_cache();
-    auto  cache_it = cache.find(id);
+    auto  cache_it = cache.find(canonical_id);
     if (cache_it != cache.end()) {
-        BOOST_LOG_TRIVIAL(info) << "Reusing cached printer agent: " << id;
+        BOOST_LOG_TRIVIAL(info) << "Reusing cached printer agent: " << canonical_id;
         if (cloud_agent)
             cache_it->second->set_cloud_agent(cloud_agent);
         return cache_it->second;
     }
 
-    // Not cached — create via factory
+    // Not cached ??create via factory
     auto& agents = get_printer_agents();
-    auto  it     = agents.find(id);
+    auto  it     = agents.find(canonical_id);
 
     if (it == agents.end()) {
         BOOST_LOG_TRIVIAL(warning) << "Unknown printer agent ID: " << id;
@@ -110,8 +113,8 @@ std::shared_ptr<IPrinterAgent> NetworkAgentFactory::create_printer_agent_by_id(c
 
     auto agent = it->second.factory(cloud_agent, log_dir);
     if (agent) {
-        BOOST_LOG_TRIVIAL(info) << "Created and cached printer agent: " << id;
-        cache[id] = agent;
+        BOOST_LOG_TRIVIAL(info) << "Created and cached printer agent: " << canonical_id;
+        cache[canonical_id] = agent;
     }
     return agent;
 }
@@ -130,7 +133,7 @@ void NetworkAgentFactory::clear_printer_agent_cache()
 
 void NetworkAgentFactory::register_all_agents()
 {
-    register_agent<OrcaPrinterAgent>();
+    register_agent<InlongPrinterAgent>();
     register_agent<QidiPrinterAgent>();
     register_agent<SnapmakerPrinterAgent>();
     register_agent<MoonrakerPrinterAgent>();
@@ -154,8 +157,8 @@ std::unique_ptr<NetworkAgent> create_agent_from_config(const std::string& log_di
     if (!app_config)
         return std::make_unique<NetworkAgent>(nullptr, nullptr);
 
-    // Always create Orca cloud agent as the primary provider
-    auto cloud_agent = NetworkAgentFactory::create_cloud_agent(ORCA_CLOUD_PROVIDER, log_dir);
+    // Always create Inlong cloud agent as the primary provider
+    auto cloud_agent = NetworkAgentFactory::create_cloud_agent(INLONG_CLOUD_PROVIDER, log_dir);
     if (!cloud_agent) {
         BOOST_LOG_TRIVIAL(error) << "Failed to create cloud agent";
     }
@@ -163,16 +166,16 @@ std::unique_ptr<NetworkAgent> create_agent_from_config(const std::string& log_di
     auto agent = std::make_unique<NetworkAgent>(std::move(cloud_agent), nullptr);
 
     if (agent) {
-        // create orca cloud agent first
-        auto* orca_cloud = dynamic_cast<OrcaCloudServiceAgent*>(agent->get_cloud_agent().get());
-        if (orca_cloud) {
-            orca_cloud->configure_urls(app_config);
+        // Create Inlong cloud agent first.
+        auto* inlong_cloud = dynamic_cast<InlongCloudServiceAgent*>(agent->get_cloud_agent().get());
+        if (inlong_cloud) {
+            inlong_cloud->configure_urls(app_config);
         }
 
         // Initialize third-party cloud agents from config
         auto providers = app_config->get_cloud_providers();
         for (const auto& provider : providers) {
-            if (provider == ORCA_CLOUD_PROVIDER)
+            if (provider == INLONG_CLOUD_PROVIDER)
                 continue; // Primary agent already created above
             auto third_party_agent = NetworkAgentFactory::create_cloud_agent(provider, log_dir);
             if (third_party_agent) {

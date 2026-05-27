@@ -18,7 +18,7 @@
 #include "Tab.hpp"
 #include "MainFrame.hpp"
 #include "libslic3r_version.h"
-#include "Widgets/HyperLink.hpp" // ORCA
+#include "Widgets/HyperLink.hpp" // INLONG
 
 #define NAME_OPTION_COMBOBOX_SIZE wxSize(FromDIP(200), FromDIP(24))
 #define FILAMENT_PRESET_COMBOBOX_SIZE wxSize(FromDIP(300), FromDIP(24))
@@ -27,7 +27,7 @@
 #define FILAMENT_LIST_SIZE wxSize(FromDIP(560), FromDIP(100))
 #define FILAMENT_OPTION_SIZE wxSize(FromDIP(-1), FromDIP(30))
 #define PRESET_TEMPLATE_SIZE wxSize(FromDIP(-1), FromDIP(100))
-#define PRINTER_SPACE_SIZE wxSize(FromDIP(100), FromDIP(24)) // ORCA Match size with other components
+#define PRINTER_SPACE_SIZE wxSize(FromDIP(100), FromDIP(24)) // INLONG Match size with other components
 #define ORIGIN_TEXT_SIZE wxSize(FromDIP(10), FromDIP(24))
 #define PRINTER_PRESET_VENDOR_SIZE wxSize(FromDIP(150), FromDIP(24))
 #define PRINTER_PRESET_MODEL_SIZE wxSize(FromDIP(280), FromDIP(24))
@@ -74,7 +74,7 @@ static const std::vector<std::string> printer_vendors =
      "Creality",           "DeltaMaker",         "Dremel",             "Elegoo",             "Flashforge",
      "FLSun",              "FlyingBear",         "Folgertech",         "Geeetech",           "Ginger Additive",
      "InfiMech",           "Kingroon",           "Lulzbot",            "MagicMaker",         "Mellow",
-     "Orca Arena Printer", "Peopoly",            "Positron 3D",        "Prusa",              "Qidi",
+     "Inlong Arena Printer", "Peopoly",            "Positron 3D",        "Prusa",              "Qidi",
      "Raise3D",            "RatRig",             "re3D",               "RolohaunDesign",     "SecKit",             
      "Snapmaker",          "Sovol",              "Thinker X400",       "Tronxy",             "TwoTrees",           
      "UltiMaker",          "Vivedino",           "Volumic",            "Voron",              "Voxelab",            
@@ -124,7 +124,7 @@ static const std::unordered_map<std::string, std::vector<std::string>> printer_m
      {"Lulzbot",           {"Lulzbot Taz 6",        "Lulzbot Taz 4 or 5",   "Lulzbot Taz Pro Dual", "Lulzbot Taz Pro S"}},
      {"MagicMaker",        {"MM hqs hj",   "MM hqs SF",   "MM hj SK",    "MM BoneKing", "MM slb"}},
      {"Mellow",            {"M1"}},
-     {"Orca Arena Printer",{"Orca Arena X1 Carbon"}},
+     {"Inlong Arena Printer",{"Inlong Arena X1 Carbon"}},
      {"Peopoly",           {"Peopoly Magneto X"}},
      {"Positron 3D",       {"The Positron"}},
      {"Prusa",             {"Prusa CORE One", "Prusa CORE One HF", "Prusa CORE One L", "Prusa CORE One L HF", "MK4IS", "MK4S", "MK4S HF",
@@ -1602,7 +1602,7 @@ CreatePrinterPresetDialog::CreatePrinterPresetDialog(wxWindow *parent)
 
     page_sizer->Add(m_page1, 1, wxEXPAND, 0);
     page_sizer->Add(m_page2, 1, wxEXPAND, 0);
-    m_main_sizer->Add(page_sizer, 0, wxEXPAND | wxRIGHT | wxLEFT, FromDIP(5)); // ORCA use equal border for both sides
+    m_main_sizer->Add(page_sizer, 0, wxEXPAND | wxRIGHT | wxLEFT, FromDIP(5)); // INLONG use equal border for both sides
     select_curr_radiobox(m_create_type_btns, 0);
     select_curr_radiobox(m_create_presets_btns, 0);
 
@@ -1968,7 +1968,7 @@ wxBoxSizer *CreatePrinterPresetDialog::create_bed_size_item(wxWindow *parent)
     horizontal_sizer->Add(optionSizer, 0, wxEXPAND | wxALL, FromDIP(10));
 
     wxBoxSizer *  length_sizer          = new wxBoxSizer(wxVERTICAL);
-     // ORCA use icon on input box to match style with other Point fields
+     // INLONG use icon on input box to match style with other Point fields
     horizontal_sizer->Add(length_sizer, 0, wxEXPAND | wxLEFT | wxTOP, FromDIP(10));
     wxBoxSizer *length_input_sizer      = new wxBoxSizer(wxVERTICAL);
     m_bed_size_x_input = new TextInput(parent, "200", _L("mm"), "inputbox_x", wxDefaultPosition, PRINTER_SPACE_SIZE, wxTE_PROCESS_ENTER);
@@ -1978,7 +1978,7 @@ wxBoxSizer *CreatePrinterPresetDialog::create_bed_size_item(wxWindow *parent)
     horizontal_sizer->Add(length_input_sizer, 0, wxEXPAND | wxALL, FromDIP(5));
 
     wxBoxSizer *  width_sizer      = new wxBoxSizer(wxVERTICAL);
-    // ORCA use icon on input box to match style with other Point fields
+    // INLONG use icon on input box to match style with other Point fields
     horizontal_sizer->Add(width_sizer, 0, wxEXPAND | wxLEFT | wxTOP, FromDIP(10));
     wxBoxSizer *width_input_sizer      = new wxBoxSizer(wxVERTICAL);
     m_bed_size_y_input            = new TextInput(parent, "200", _L("mm"), "inputbox_y", wxDefaultPosition, PRINTER_SPACE_SIZE, wxTE_PROCESS_ENTER);
@@ -2001,7 +2001,7 @@ wxBoxSizer *CreatePrinterPresetDialog::create_origin_item(wxWindow *parent)
     horizontal_sizer->Add(optionSizer, 0, wxEXPAND | wxALL, FromDIP(10));
 
     wxBoxSizer *  length_sizer       = new wxBoxSizer(wxVERTICAL);
-    // ORCA use icon on input box to match style with other Point fields
+    // INLONG use icon on input box to match style with other Point fields
     horizontal_sizer->Add(length_sizer, 0, wxEXPAND | wxLEFT | wxTOP, FromDIP(10));
     wxBoxSizer *length_input_sizer = new wxBoxSizer(wxVERTICAL);
     m_bed_origin_x_input           = new TextInput(parent, "0", _L("mm"), "inputbox_x", wxDefaultPosition, PRINTER_SPACE_SIZE, wxTE_PROCESS_ENTER);
@@ -2011,7 +2011,7 @@ wxBoxSizer *CreatePrinterPresetDialog::create_origin_item(wxWindow *parent)
     horizontal_sizer->Add(length_input_sizer, 0, wxEXPAND | wxALL, FromDIP(5));
 
     wxBoxSizer *  width_sizer       = new wxBoxSizer(wxVERTICAL);
-    // ORCA use icon on input box to match style with other Point fields
+    // INLONG use icon on input box to match style with other Point fields
     horizontal_sizer->Add(width_sizer, 0, wxEXPAND | wxLEFT | wxTOP, FromDIP(10));
     wxBoxSizer *width_input_sizer = new wxBoxSizer(wxVERTICAL);
     m_bed_origin_y_input          = new TextInput(parent, "0", _L("mm"), "inputbox_y", wxDefaultPosition, PRINTER_SPACE_SIZE, wxTE_PROCESS_ENTER);
@@ -3378,7 +3378,7 @@ bool CreatePrinterPresetDialog::validate_input_valid()
 
     if (auto preset = wxGetApp().preset_bundle->printers.find_preset(custom_printer_name)) {
         if (preset->is_system) {
-            // ORCA offer switcing to existing preset to reduce confusion
+            // INLONG offer switcing to existing preset to reduce confusion
             std::string diameters;
             auto printer_model = preset->config.opt_string("printer_model");
             for (auto &preset : wxGetApp().preset_bundle->printers) {
@@ -3535,8 +3535,8 @@ void CreatePresetSuccessfulDialog::on_dpi_changed(const wxRect &suggested_rect) 
 ExportConfigsDialog::ExportConfigsDialog(wxWindow *parent)
     : DPIDialog(parent ? parent : nullptr, wxID_ANY, _L("Export Preset Bundle"), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX)
 {
-    m_exprot_type.preset_bundle   = _L("Printer config bundle(.orca_printer)");
-    m_exprot_type.filament_bundle = _L("Filament bundle(.orca_filament)");
+    m_exprot_type.preset_bundle   = _L("Printer config bundle(.inlong_printer)");
+    m_exprot_type.filament_bundle = _L("Filament bundle(.inlong_filament)");
     m_exprot_type.printer_preset  = _L("Printer presets(.zip)");
     m_exprot_type.filament_preset = _L("Filament presets(.zip)");
     m_exprot_type.process_preset  = _L("Process presets(.zip)");
@@ -3952,7 +3952,7 @@ ExportConfigsDialog::ExportCase ExportConfigsDialog::archive_preset_bundle_to_fi
             json process_configs  = json::array();
 
             mz_zip_archive zip_archive;
-            mz_bool        status = initial_zip_archive(zip_archive, export_path + "/" + printer_preset->name + ".orca_printer");
+            mz_bool        status = initial_zip_archive(zip_archive, export_path + "/" + printer_preset->name + ".inlong_printer");
             if (MZ_FALSE == status) {
                 BOOST_LOG_TRIVIAL(info) << "Failed to initialize ZIP archive";
                 return ExportCase::INITIALIZE_FAIL;
@@ -4069,7 +4069,7 @@ ExportConfigsDialog::ExportCase ExportConfigsDialog::archive_filament_bundle_to_
             std::unordered_map<std::string, json> vendor_structure;
 
             mz_zip_archive zip_archive;
-            mz_bool        status = initial_zip_archive(zip_archive, export_path + "/" + filament_name + ".orca_filament");
+            mz_bool        status = initial_zip_archive(zip_archive, export_path + "/" + filament_name + ".inlong_filament");
             if (MZ_FALSE == status) {
                 BOOST_LOG_TRIVIAL(info) << "Failed to initialize ZIP archive";
                 return ExportCase::INITIALIZE_FAIL;
@@ -5052,7 +5052,7 @@ wxPanel *PresetTree::get_child_item(wxPanel *parent, std::shared_ptr<Preset> pre
     bool base_id_error = false;
     if (preset->inherits() == "" && preset->base_id != "") base_id_error = true;
     if (base_id_error) {
-        // ORCA standardized HyperLink
+        // INLONG standardized HyperLink
         HyperLink *m_download_hyperlink = new HyperLink(panel, _L("[Delete Required]"), "https://wiki.bambulab.com/en/software/bambu-studio/custom-filament-issue");
         m_download_hyperlink->SetFont(Label::Body_10);
         sizer->Add(m_download_hyperlink, 0, wxEXPAND | wxALL, 5);

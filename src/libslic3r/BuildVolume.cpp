@@ -328,7 +328,7 @@ BuildVolume::ObjectState object_state_templ(const indexed_triangle_set &its, con
         // 2) Calculate intersections of triangle edges with the build surface.
         inside  = num_inside > 0;
         outside = num_inside < num_above;
-        // Orca: for convex shape, if everything inside then don't bother check intersection
+        // Inlong: for convex shape, if everything inside then don't bother check intersection
         if (num_above < its.vertices.size() && !(inside && outside) && (!(inside && !below_outside) || !convex)) {
             // Not completely above the build surface and status may still change by testing edges intersecting the build platform.
             for (const stl_triangle_vertex_indices &tri : its.indices) {

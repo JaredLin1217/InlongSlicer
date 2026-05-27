@@ -1,4 +1,4 @@
-// Orca: WipeTower2 for all non bbl printers, support all MMU device and toolchanger.
+// Inlong: WipeTower2 for all non bbl printers, support all MMU device and toolchanger.
 #include "WipeTower2.hpp"
 
 #include <cassert>
@@ -577,7 +577,7 @@ public:
         m_gcode_flavor(flavor), m_filpar(filament_parameters)
         //m_enable_arc_fitting(enable_arc_fitting)
     {
-            // ORCA: This class is only used by non BBL printers, so set the parameter appropriately.
+            // INLONG: This class is only used by non BBL printers, so set the parameter appropriately.
             // This fixes an issue where the wipe tower was using BBL tags resulting in statistics for purging in the purge tower not being displayed.
             GCodeProcessor::s_IsBBLPrinter = false;
             // adds tag for analyzer:
@@ -1236,7 +1236,7 @@ WipeTower::ToolChangeResult WipeTower2::construct_tcr(WipeTowerWriter2& writer,
     result.wipe_path    = std::move(writer.wipe_path());
     result.is_finish_first = is_finish;
     result.is_contact = is_contact;
-    // ORCA: Always initialize the tool_change_start_pos with a valid position
+    // INLONG: Always initialize the tool_change_start_pos with a valid position
     // to avoid undefined variable travel on X in Gcode.cpp function std::string WipeTowerIntegration::post_process_wipe_tower_moves
     result.tool_change_start_pos = result.start_pos;  // always valid fallback
 
@@ -1653,7 +1653,7 @@ void WipeTower2::toolchange_Unload(
 	float remaining = xr - xl ;							// keeps track of distance to the next turnaround
 	float e_done = 0;									// measures E move done from each segment   
 
-    // Orca: Do ramming when SEMM and ramming is enabled or when multi tool head when ramming is enabled on the multi tool.
+    // Inlong: Do ramming when SEMM and ramming is enabled or when multi tool head when ramming is enabled on the multi tool.
     const bool do_ramming = (m_semm && m_enable_filament_ramming) || m_filpar[m_current_tool].multitool_ramming;
     const bool cold_ramming = m_is_mk4mmu3;
 
@@ -2228,19 +2228,19 @@ void WipeTower2::plan_toolchange(float z_par, float layer_height_par, unsigned i
 	float length_to_extrude = volume_to_length(0.25f * std::accumulate(m_filpar[old_tool].ramming_speed.begin(), m_filpar[old_tool].ramming_speed.end(), 0.f),
 										m_perimeter_width * m_filpar[old_tool].ramming_line_width_multiplicator,
 										layer_height_par);
-    // Orca: Set ramming depth to 0 if ramming is disabled.
+    // Inlong: Set ramming depth to 0 if ramming is disabled.
     float ramming_depth = m_enable_filament_ramming ? ((int(length_to_extrude / width) + 1) * (m_perimeter_width * m_filpar[old_tool].ramming_line_width_multiplicator * m_filpar[old_tool].ramming_step_multiplicator) * m_extra_spacing_ramming) : 0;
     float first_wipe_line = - (width*((length_to_extrude / width)-int(length_to_extrude / width)) - width);
 
     float first_wipe_volume = length_to_volume(first_wipe_line, m_perimeter_width * m_extra_flow, layer_height_par);
 
-    // ORCA: Keep wipe-depth planning consistent with toolchange_Wipe().
-    // ORCA: On the first layer, toolchange_Wipe() advances purge rows using
-    // ORCA: m_extra_flow * m_perimeter_width, while later layers use
-    // ORCA: m_extra_spacing_wipe * m_perimeter_width.
-    // ORCA: float dy = (is_first_layer() ? m_extra_flow : m_extra_spacing_wipe) * m_perimeter_width;
-    // ORCA: Use the same spacing here so reserved depth matches consumed depth
-    // ORCA: and first-layer purge segments do not leave visible gaps.
+    // INLONG: Keep wipe-depth planning consistent with toolchange_Wipe().
+    // INLONG: On the first layer, toolchange_Wipe() advances purge rows using
+    // INLONG: m_extra_flow * m_perimeter_width, while later layers use
+    // INLONG: m_extra_spacing_wipe * m_perimeter_width.
+    // INLONG: float dy = (is_first_layer() ? m_extra_flow : m_extra_spacing_wipe) * m_perimeter_width;
+    // INLONG: Use the same spacing here so reserved depth matches consumed depth
+    // INLONG: and first-layer purge segments do not leave visible gaps.
     const bool first_layer_plan = (m_plan.size() - 1) == m_first_layer_idx;
     const float planning_spacing = first_layer_plan ? m_extra_flow : m_extra_spacing_wipe;
 
@@ -2302,13 +2302,13 @@ void WipeTower2::save_on_last_wipe()
                 float volume_left_to_wipe = std::max(m_filpar[toolchange.new_tool].filament_minimal_purge_on_wipe_tower, toolchange.wipe_volume_total - volume_to_save);
                 float volume_we_need_depth_for = std::max(0.f, volume_left_to_wipe - length_to_volume(toolchange.first_wipe_line, m_perimeter_width*m_extra_flow, m_layer_info->height));
                 
-                // ORCA: Keep wipe-depth planning consistent with toolchange_Wipe().
-                // ORCA: On the first layer, toolchange_Wipe() advances purge rows using
-                // ORCA: m_extra_flow * m_perimeter_width, while later layers use
-                // ORCA: m_extra_spacing_wipe * m_perimeter_width.
-                // ORCA: float dy = (is_first_layer() ? m_extra_flow : m_extra_spacing_wipe) * m_perimeter_width;
-                // ORCA: Use the same spacing here so reserved depth matches consumed depth
-                // ORCA: and first-layer purge segments do not leave visible gaps.
+                // INLONG: Keep wipe-depth planning consistent with toolchange_Wipe().
+                // INLONG: On the first layer, toolchange_Wipe() advances purge rows using
+                // INLONG: m_extra_flow * m_perimeter_width, while later layers use
+                // INLONG: m_extra_spacing_wipe * m_perimeter_width.
+                // INLONG: float dy = (is_first_layer() ? m_extra_flow : m_extra_spacing_wipe) * m_perimeter_width;
+                // INLONG: Use the same spacing here so reserved depth matches consumed depth
+                // INLONG: and first-layer purge segments do not leave visible gaps.
                 const bool first_layer_plan = size_t(m_layer_info - m_plan.begin()) == m_first_layer_idx;
                 const float planning_spacing = first_layer_plan ? m_extra_flow : m_extra_spacing_wipe;
                 
@@ -2335,7 +2335,7 @@ int WipeTower2::first_toolchange_to_nonsoluble(
         }
         return -1;
     }
-    // Orca: allow calculation of the required depth and wipe volume for soluble toolchanges as well.
+    // Inlong: allow calculation of the required depth and wipe volume for soluble toolchanges as well.
     return tool_changes.empty() ? -1 : 0;
 }
 

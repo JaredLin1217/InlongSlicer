@@ -79,7 +79,7 @@ bool open_filament_group_wiki()
 
 void FilamentGroupPopup::CreateBmps()
 {
-    checked_bmp = create_scaled_bitmap("radio_on", nullptr, 16);; // ORCA match icons
+    checked_bmp = create_scaled_bitmap("radio_on", nullptr, 16);; // INLONG match icons
     unchecked_bmp = create_scaled_bitmap("radio_off", nullptr, 16);
     disabled_bmp = create_scaled_bitmap("radio_disabled", nullptr, 16);
     checked_hover_bmp = create_scaled_bitmap("radio_on_hover", nullptr, 16);
@@ -176,7 +176,7 @@ FilamentGroupPopup::FilamentGroupPopup(wxWindow *parent) : PopupWindow(parent, w
 
     {
         wxBoxSizer *button_sizer = new wxBoxSizer(wxHORIZONTAL);
-        // ORCA Unified hyperlinks
+        // INLONG Unified hyperlinks
         video_link = new HyperLink(this, _L("Video tutorial"));
         video_link->Bind(wxEVT_LEFT_DOWN, [](wxMouseEvent& e)
             {

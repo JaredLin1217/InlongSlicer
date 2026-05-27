@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Cache-Control" content="max-age=7200" />
 <title>引导_P21</title>
-<link rel="stylesheet" type="text/css" href="../../include/global.css" />	<!-- ORCA One for all-->
+<link rel="stylesheet" type="text/css" href="../../include/global.css" />	<!-- INLONG One for all-->
 <link rel="stylesheet" type="text/css" href="../css/common.css" />	
 <link rel="stylesheet" type="text/css" href="21.css" />
 <link rel="stylesheet" type="text/css" href="../css/dark.css" />	
@@ -162,7 +162,7 @@
 	document.onkeydown = function (event) {
 		var e = event || window.event || arguments.callee.caller.arguments[0];
 
-		// ORCA focus search bar on key input
+		// INLONG focus search bar on key input
 		// SearchBox not in focus && writable character && non modifier
 		if (document.activeElement != SearchBox && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
 			SearchBox.focus();
@@ -328,7 +328,7 @@
 		}
 	});
 
-	// ORCA unfocus search bar while scrolling and its content empty
+	// INLONG unfocus search bar while scrolling and its content empty
 	$content[0].addEventListener("scroll", () => {
 		if (document.activeElement === SearchBox && SearchBox.value == "")
 			SearchBox.blur();

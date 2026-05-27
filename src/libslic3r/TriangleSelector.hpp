@@ -348,7 +348,7 @@ public:
     // Remove all unnecessary data.
     void garbage_collect();
 
-    // Orca: remap the state of triangles according to the state_map
+    // Inlong: remap the state of triangles according to the state_map
     void remap_triangle_state(const EnforcerBlockerStateMap& state_map);
 
 
@@ -449,7 +449,7 @@ protected:
         // Is this triangle valid or marked to be removed?
         bool m_valid : 1;
 
-        // Orca:
+        // Inlong:
         // IMPORTANT: `state` is intentionally placed after all other small members
         // to prevent compilers from packing it in a way that would create
         // data races during parallel processing. A write to `state` could

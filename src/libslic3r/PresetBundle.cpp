@@ -56,13 +56,13 @@ static std::vector<std::string> s_project_options {
     "filament_map"
 };
 
-//Orca: add custom as default
-const char *PresetBundle::ORCA_DEFAULT_BUNDLE = "Custom";
-const char *PresetBundle::ORCA_DEFAULT_PRINTER_MODEL = "MyKlipper 0.4 nozzle";
-const char *PresetBundle::ORCA_DEFAULT_PRINTER_VARIANT = "0.4";
-const char *PresetBundle::ORCA_DEFAULT_FILAMENT = "Generic PLA @System";
-const char *PresetBundle::ORCA_FILAMENT_LIBRARY = "OrcaFilamentLibrary";
-const char *PresetBundle::ORCA_DEFAULT_FILAMENT_PLACEHOLDER = "Default Filament";
+//Inlong: add custom as default
+const char *PresetBundle::INLONG_DEFAULT_BUNDLE = "Custom";
+const char *PresetBundle::INLONG_DEFAULT_PRINTER_MODEL = "MyKlipper 0.4 nozzle";
+const char *PresetBundle::INLONG_DEFAULT_PRINTER_VARIANT = "0.4";
+const char *PresetBundle::INLONG_DEFAULT_FILAMENT = "Generic PLA @System";
+const char *PresetBundle::INLONG_FILAMENT_LIBRARY = "InlongFilamentLibrary";
+const char *PresetBundle::INLONG_DEFAULT_FILAMENT_PLACEHOLDER = "Default Filament";
 
 DynamicPrintConfig PresetBundle::construct_full_config(
     Preset& in_printer_preset,
@@ -320,7 +320,7 @@ std::string PresetBundle::find_preset_vendor(const std::string &preset_name, Pre
 
 PresetBundle::PresetBundle()
     : prints(Preset::TYPE_PRINT, Preset::print_options(), static_cast<const PrintRegionConfig &>(FullPrintConfig::defaults()))
-    , filaments(Preset::TYPE_FILAMENT, Preset::filament_options(), static_cast<const PrintRegionConfig &>(FullPrintConfig::defaults()), ORCA_DEFAULT_FILAMENT_PLACEHOLDER)
+    , filaments(Preset::TYPE_FILAMENT, Preset::filament_options(), static_cast<const PrintRegionConfig &>(FullPrintConfig::defaults()), INLONG_DEFAULT_FILAMENT_PLACEHOLDER)
     , sla_materials(Preset::TYPE_SLA_MATERIAL, Preset::sla_material_options(), static_cast<const SLAMaterialConfig &>(SLAFullPrintConfig::defaults()))
     , sla_prints(Preset::TYPE_SLA_PRINT, Preset::sla_print_options(), static_cast<const SLAPrintObjectConfig &>(SLAFullPrintConfig::defaults()))
     , printers(Preset::TYPE_PRINTER, Preset::printer_options(), static_cast<const PrintRegionConfig &>(FullPrintConfig::defaults()), "Default Printer")
@@ -659,7 +659,7 @@ bool PresetBundle::use_bbl_device_tab() {
 
 bool PresetBundle::backup_user_folder() const
 {
-    const std::string backup_folderpath = data_dir() + "/" + (boost::format("user_backup-v%1%") % SoftFever_VERSION).str();
+    const std::string backup_folderpath = data_dir() + "/" + (boost::format("user_backup-v%1%") % INLONGSLICER_VERSION).str();
 
     // Check if backup file already exists
     if (boost::filesystem::exists(boost::filesystem::path(backup_folderpath)))
@@ -1183,13 +1183,13 @@ bool PresetBundle::apply_vendor_config(
     // When printers from the default bundle are also selected, keep @System
     // too since those printers need it.
     static const std::string system_suffix              = " @System";
-    auto                     it_default                 = new_vendors.find(PresetBundle::ORCA_DEFAULT_BUNDLE);
+    auto                     it_default                 = new_vendors.find(PresetBundle::INLONG_DEFAULT_BUNDLE);
     bool                     has_default_bundle_printer = it_default != new_vendors.end() && !it_default->second.empty();
 
     // Check if any non-default vendor has selected printers
     bool has_vendor_printer = false;
     for (const auto& [vendor, models] : new_vendors) {
-        if (vendor != PresetBundle::ORCA_DEFAULT_BUNDLE && !models.empty()) {
+        if (vendor != PresetBundle::INLONG_DEFAULT_BUNDLE && !models.empty()) {
             has_vendor_printer = true;
             break;
         }
@@ -1206,7 +1206,7 @@ bool PresetBundle::apply_vendor_config(
                 // For @System filaments, we check if the short_name exists as a vendor-specific filament
                 bool has_vendor_filament = false;
                 for (const auto& [vendor, models] : new_vendors) {
-                    if (vendor != PresetBundle::ORCA_DEFAULT_BUNDLE) {
+                    if (vendor != PresetBundle::INLONG_DEFAULT_BUNDLE) {
                         auto vendor_it = this->vendors.find(vendor);
                         // Check if this vendor is loaded in the preset bundle
                         if (vendor_it != this->vendors.end()) {
@@ -1338,7 +1338,7 @@ PresetsConfigSubstitutions PresetBundle::import_presets(std::vector<std::string>
             import_json_presets(substitutions, file, override_confirm, rule, overwrite, result);
         }
         // Determine if it is a preset bundle
-        if (boost::iends_with(file, ".orca_printer") || boost::iends_with(file, ".orca_bundle") || boost::iends_with(file, ".orca_filament") || boost::iends_with(file, ".zip")) {
+        if (boost::iends_with(file, ".inlong_printer") || boost::iends_with(file, ".inlong_bundle") || boost::iends_with(file, ".inlong_filament") || boost::iends_with(file, ".zip")) {
             boost::system::error_code ec;
             // create user folder
             fs::path user_folder(data_dir() + "/" + PRESET_USER_DIR);
@@ -1630,7 +1630,7 @@ void PresetBundle::check_and_fix_user_presets_syncinfo(const std::string& user_i
     process_collection(this->printers);
 }
 
-//Orca: Import subscribed bundle presets (load and save to disk in one operation)
+//Inlong: Import subscribed bundle presets (load and save to disk in one operation)
 PresetsConfigSubstitutions PresetBundle::update_subscribed_presets(
     AppConfig& config,
     const std::map<std::string, std::map<std::string, std::string>>& bundle_presets,
@@ -2109,7 +2109,7 @@ void PresetBundle::remove_users_preset(AppConfig &config, std::map<std::string, 
     bool need_reset_printer_preset = false;
     for (auto it = printers.begin(); it != printers.end();) {
         if (it->is_user() && it->user_id.compare(preset_folder_user_id) == 0 && check_removed(*it)) {
-            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(":printers erase %1%, type %2%， user_id %3%") % it->name % Preset::get_type_string(it->type) % it->user_id;
+            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(":printers erase %1%, type %2%嚗?user_id %3%") % it->name % Preset::get_type_string(it->type) % it->user_id;
             if (it->name == printer_selected_preset_name)
                 need_reset_printer_preset = true;
             it = printers.erase(it);
@@ -2120,7 +2120,7 @@ void PresetBundle::remove_users_preset(AppConfig &config, std::map<std::string, 
     }
 
     if (need_reset_printer_preset) {
-        std::string default_printer_model = ORCA_DEFAULT_PRINTER_MODEL;
+        std::string default_printer_model = INLONG_DEFAULT_PRINTER_MODEL;
         std::string default_printer_name;
         for (auto it = printers.begin(); it != printers.end(); it++) {
             if (it->config.has("printer_model")) {
@@ -2140,7 +2140,7 @@ void PresetBundle::remove_users_preset(AppConfig &config, std::map<std::string, 
     // remove preset if user_id is not current user
     for (auto it = prints.begin(); it != prints.end();) {
         if (it->is_user() && it->user_id.compare(preset_folder_user_id) == 0 && check_removed(*it)) {
-            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(":prints erase %1%, type %2%， user_id %3%")%it->name %Preset::get_type_string(it->type) %it->user_id;
+            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(":prints erase %1%, type %2%嚗?user_id %3%")%it->name %Preset::get_type_string(it->type) %it->user_id;
             if (it->name == selected_print_name)
                 need_reset_print_preset = true;
             it = prints.erase(it);
@@ -2160,7 +2160,7 @@ void PresetBundle::remove_users_preset(AppConfig &config, std::map<std::string, 
     bool need_reset_filament_preset = false;
     for (auto it = filaments.begin(); it != filaments.end();) {
         if (it->is_user() && it->user_id.compare(preset_folder_user_id) == 0 && check_removed(*it)) {
-            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(":filaments erase %1%, type %2%， user_id %3%")%it->name %Preset::get_type_string(it->type) %it->user_id;
+            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(":filaments erase %1%, type %2%嚗?user_id %3%")%it->name %Preset::get_type_string(it->type) %it->user_id;
             if (it->name == selected_filament_name)
                 need_reset_filament_preset = true;
             it = filaments.erase(it);
@@ -2223,24 +2223,24 @@ std::pair<PresetsConfigSubstitutions, std::string> PresetBundle::load_system_pre
         vendor_name.erase(vendor_name.size() - 5);
         vendor_names.push_back(vendor_name);
     }
-    // Separate ORCA_FILAMENT_LIBRARY from other vendors. It must be loaded
+    // Separate INLONG_FILAMENT_LIBRARY from other vendors. It must be loaded
     // first because other vendors' filaments may inherit from it via the
     // `base_bundle` lookup in parse_subfile. The remaining vendors are
     // independent (no cross-vendor inheritance) and can be loaded in parallel.
-    std::string orca_lib_vendor;
+    std::string inlong_lib_vendor;
     std::vector<std::string> other_vendors;
     other_vendors.reserve(vendor_names.size());
     for (auto& vn : vendor_names) {
-        if (vn == ORCA_FILAMENT_LIBRARY)
-            orca_lib_vendor = vn;
+        if (vn == INLONG_FILAMENT_LIBRARY)
+            inlong_lib_vendor = vn;
         else if (!(validation_mode && !vendor_to_validate.empty() && vn != vendor_to_validate))
             other_vendors.push_back(vn);
     }
 
-    // Step 1: Load ORCA_FILAMENT_LIBRARY into `this` synchronously.
-    if (!orca_lib_vendor.empty()) {
+    // Step 1: Load INLONG_FILAMENT_LIBRARY into `this` synchronously.
+    if (!inlong_lib_vendor.empty()) {
         try {
-            append(substitutions, this->load_vendor_configs_from_json(dir.string(), orca_lib_vendor, PresetBundle::LoadSystem, compatibility_rule).first);
+            append(substitutions, this->load_vendor_configs_from_json(dir.string(), inlong_lib_vendor, PresetBundle::LoadSystem, compatibility_rule).first);
             first = false;
         } catch (const std::runtime_error &err) {
             if (validation_mode)
@@ -2251,7 +2251,7 @@ std::pair<PresetsConfigSubstitutions, std::string> PresetBundle::load_system_pre
     }
 
     // Step 2: Load remaining vendors in parallel. Each gets its own
-    // PresetBundle and uses `this` (which contains ORCA_FILAMENT_LIBRARY)
+    // PresetBundle and uses `this` (which contains INLONG_FILAMENT_LIBRARY)
     // as the base_bundle for cross-bundle inheritance lookups.
     std::vector<std::unique_ptr<PresetBundle>>      parallel_bundles(other_vendors.size());
     std::vector<PresetsConfigSubstitutions>         parallel_substitutions(other_vendors.size());
@@ -2634,7 +2634,7 @@ void PresetBundle::load_installed_sla_materials(AppConfig &config)
 void PresetBundle::update_selections(AppConfig &config)
 {
     std::string initial_printer_profile_name    = printers.get_selected_preset_name();
-    // Orca: load from orca_presets
+    // Inlong: load from inlong_presets
     std::string initial_print_profile_name        = config.get_printer_setting(initial_printer_profile_name, PRESET_PRINT_NAME);
     std::string initial_filament_profile_name     = config.get_printer_setting(initial_printer_profile_name, PRESET_FILAMENT_NAME);
 
@@ -2721,10 +2721,10 @@ void PresetBundle::update_selections(AppConfig &config)
 
     std::string first_visible_filament_name;
     for (auto & fp : filament_presets) {
-        // Orca: also match the ORCA_DEFAULT_FILAMENT_PLACEHOLDER placeholder. update_compatible_internal
+        // Inlong: also match the INLONG_DEFAULT_FILAMENT_PLACEHOLDER placeholder. update_compatible_internal
         // iterates from m_num_default_presets, so the placeholder's is_compatible flag
         // stays true and the not-found/visible/compatible predicate alone would miss it.
-        if (auto it = filaments.find_preset_internal(fp); fp == ORCA_DEFAULT_FILAMENT_PLACEHOLDER || it == filaments.end() || !it->is_visible || !it->is_compatible) {
+        if (auto it = filaments.find_preset_internal(fp); fp == INLONG_DEFAULT_FILAMENT_PLACEHOLDER || it == filaments.end() || !it->is_visible || !it->is_compatible) {
             if (first_visible_filament_name.empty())
                 first_visible_filament_name = filaments.first_compatible().name;
             fp = first_visible_filament_name;
@@ -2762,7 +2762,7 @@ void PresetBundle::load_selections(AppConfig &config, const PresetPreferences& p
     printers.select_preset_by_name(preferred_printer ? preferred_printer->name : initial_printer_profile_name, true);
     CNumericLocalesSetter locales_setter;
 
-    // Orca: load from orca_presets
+    // Inlong: load from inlong_presets
     // const auto os_presets = config.get_machine_settings(initial_printer_profile_name);
     const std::string selected_printer_profile_name = preferred_printer ? preferred_printer->name : initial_printer_profile_name;
     std::string initial_print_profile_name        = config.get_printer_setting(selected_printer_profile_name, PRESET_PRINT_NAME);
@@ -2776,13 +2776,13 @@ void PresetBundle::load_selections(AppConfig &config, const PresetPreferences& p
             initial_print_profile_name = prefered_print_profile;
 
         const std::vector<std::string>& prefered_filament_profiles = preferred_printer->config.option<ConfigOptionStrings>("default_filament_profile")->values;
-        if ((initial_filament_profile_name.empty() || !initial_filament_profile_name.compare(ORCA_DEFAULT_FILAMENT_PLACEHOLDER)) && (prefered_filament_profiles.size() > 0)) {
+        if ((initial_filament_profile_name.empty() || !initial_filament_profile_name.compare(INLONG_DEFAULT_FILAMENT_PLACEHOLDER)) && (prefered_filament_profiles.size() > 0)) {
             // Check if preferred filament is visible
             const Preset* preferred_preset = this->filaments.find_preset(prefered_filament_profiles[0], false);
             if (preferred_preset && preferred_preset->is_visible) {
                 initial_filament_profile_name = prefered_filament_profiles[0];
             }
-            // If not visible, keep the default ORCA_DEFAULT_FILAMENT_PLACEHOLDER which will be resolved later
+            // If not visible, keep the default INLONG_DEFAULT_FILAMENT_PLACEHOLDER which will be resolved later
         }
     }
 
@@ -2891,8 +2891,8 @@ void PresetBundle::load_selections(AppConfig &config, const PresetPreferences& p
 
     std::string first_visible_filament_name;
     for (auto & fp : filament_presets) {
-        // Orca: also match the ORCA_DEFAULT_FILAMENT_PLACEHOLDER placeholder — see update_selections.
-        if (auto it = filaments.find_preset_internal(fp); fp == ORCA_DEFAULT_FILAMENT_PLACEHOLDER || it == filaments.end() || !it->is_visible || !it->is_compatible) {
+        // Inlong: also match the INLONG_DEFAULT_FILAMENT_PLACEHOLDER placeholder ??see update_selections.
+        if (auto it = filaments.find_preset_internal(fp); fp == INLONG_DEFAULT_FILAMENT_PLACEHOLDER || it == filaments.end() || !it->is_visible || !it->is_compatible) {
             if (first_visible_filament_name.empty())
                 first_visible_filament_name = filaments.first_compatible().name;
             fp = first_visible_filament_name;
@@ -2936,7 +2936,7 @@ void PresetBundle::export_selections(AppConfig &config)
     auto printer_name = printers.get_selected_preset_name();
     config.set("presets", PRESET_PRINTER_NAME, printer_name);
 
-    // Don't persist settings for the built-in "Default Printer" placeholder —
+    // Don't persist settings for the built-in "Default Printer" placeholder ??
     // it's only the initial state before a real printer is loaded/selected.
     // Also clean up any stale entry that other code paths (e.g. bed type change)
     // may have created for "Default Printer".
@@ -3227,7 +3227,7 @@ unsigned int PresetBundle::sync_ams_list(std::vector<std::pair<DynamicPrintConfi
                 }
                 ams_multi_color_filment.push_back(filament_multi_color);
             } else if (is_placeholder) {
-                // Orca: push placeholders to keep index alignment with ams_infos
+                // Inlong: push placeholders to keep index alignment with ams_infos
                 ams_filament_presets.push_back("");
                 ams_filament_colors.push_back("");
                 ams_filament_color_types.push_back("");
@@ -3512,7 +3512,7 @@ unsigned int PresetBundle::sync_ams_list(std::vector<std::pair<DynamicPrintConfi
         bool has_placeholders = std::any_of(ams_infos.begin(), ams_infos.end(),
                                              [](const AmsInfo& a) { return a.is_placeholder; });
         if (has_placeholders) {
-            // Orca: merge — keep existing filaments for empty slots
+            // Inlong: merge ??keep existing filaments for empty slots
             auto exist_colors       = filament_color->values;
             auto exist_color_types  = filament_color_type->values;
             auto exist_presets      = this->filament_presets;
@@ -3765,7 +3765,7 @@ Preset *PresetBundle::get_similar_printer_preset(std::string printer_model, std:
 {
     if (printer_model.empty())
         printer_model = printers.get_selected_preset().config.opt_string("printer_model");
-    if (printer_model.empty()) // ORCA ensure a compatible model exist. fixes switches to blank preset if preset has no inherited value
+    if (printer_model.empty()) // INLONG ensure a compatible model exist. fixes switches to blank preset if preset has no inherited value
         return nullptr;
     auto printer_variant_old = printers.get_selected_preset().config.opt_string("printer_variant");
     std::map<std::string, Preset*> printer_presets;
@@ -3777,7 +3777,7 @@ Preset *PresetBundle::get_similar_printer_preset(std::string printer_model, std:
     }
     if (printer_presets.empty())
         return nullptr;
-    auto prefer_printer = printers.get_selected_preset().alias; //.name ORCA use alias instead "name" for calling system presets. otherwise nozzle combo will not change printer presets if they custom named
+    auto prefer_printer = printers.get_selected_preset().alias; //.name INLONG use alias instead "name" for calling system presets. otherwise nozzle combo will not change printer presets if they custom named
 
     if (!printer_variant.empty())
         boost::replace_all(prefer_printer, printer_variant_old, printer_variant);
@@ -4351,7 +4351,7 @@ void PresetBundle::load_config_file_config(const std::string &name_or_path, bool
             filament_self_indice[index] = index + 1;
     }
     std::vector<int> filament_self_indice = std::move(config.option<ConfigOptionInts>("filament_self_index")->values);
-    // ORCA: Initialize filament_extruder_variant for backward compatibility with old 3mf files
+    // INLONG: Initialize filament_extruder_variant for backward compatibility with old 3mf files
     // that don't have this option saved or have it with default single-element value
     ConfigOptionStrings* filament_extruder_variant_opt = config.option<ConfigOptionStrings>("filament_extruder_variant");
     if (!filament_extruder_variant_opt || filament_extruder_variant_opt->size() < num_filaments) {
@@ -4954,8 +4954,8 @@ std::pair<PresetsConfigSubstitutions, size_t> PresetBundle::load_vendor_configs_
             if (config.has("alias"))
                 alias_name = (dynamic_cast<const ConfigOptionString *>(config.option("alias")))->value;
 
-            if (key_values.find(ORCA_JSON_KEY_RENAMED_FROM) != key_values.end()) {
-                if (!unescape_strings_cstyle(key_values[ORCA_JSON_KEY_RENAMED_FROM], renamed_from)) {
+            if (key_values.find(INLONG_JSON_KEY_RENAMED_FROM) != key_values.end()) {
+                if (!unescape_strings_cstyle(key_values[INLONG_JSON_KEY_RENAMED_FROM], renamed_from)) {
                     BOOST_LOG_TRIVIAL(error) << "Error in a Config \"" << path << "\": The preset \"" << preset_name
                                              << "\" contains invalid \"renamed_from\" key, which is being ignored.";
                 }
@@ -5037,7 +5037,7 @@ std::pair<PresetsConfigSubstitutions, size_t> PresetBundle::load_vendor_configs_
             loaded.description = description;
             loaded.setting_id = setting_id;
             loaded.filament_id = filament_id;
-            loaded.m_from_orca_filament_lib = is_from_lib;
+            loaded.m_from_inlong_filament_lib = is_from_lib;
             BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << " " << __LINE__ << ", " << loaded.name << " load filament_id: " << filament_id;
             if (presets_collection->type() == Preset::TYPE_FILAMENT) {
                 if (filament_id.empty() && "Template" != vendor_name) {
@@ -5104,11 +5104,11 @@ std::pair<PresetsConfigSubstitutions, size_t> PresetBundle::load_vendor_configs_
     presets = &this->filaments;
     configs.clear();
     filament_id_maps.clear();
-    const auto is_orca_lib = vendor_name == ORCA_FILAMENT_LIBRARY;
+    const auto is_inlong_lib = vendor_name == INLONG_FILAMENT_LIBRARY;
     for (auto& subfile : filament_subfiles)
     {
         std::string reason = parse_subfile(substitution_context, substitutions, flags, subfile, configs, filament_id_maps, presets,
-                                           presets_loaded, is_orca_lib);
+                                           presets_loaded, is_inlong_lib);
         if (!reason.empty()) {
             ++m_errors;
             //parse error
@@ -5117,7 +5117,7 @@ std::pair<PresetsConfigSubstitutions, size_t> PresetBundle::load_vendor_configs_
             throw ConfigurationError((boost::format("Failed loading configuration file %1%\nSuggest cleaning the directory %2% firstly") % subfile_path % path).str());
         }
     }
-    if (is_orca_lib) {
+    if (is_inlong_lib) {
         m_config_maps      = configs;
         m_filament_id_maps = filament_id_maps;
     }
@@ -5156,7 +5156,7 @@ void PresetBundle::update_multi_material_filament_presets(size_t to_delete_filam
     if (printers.get_edited_preset().printer_technology() != ptFFF)
         return;
 
-    // Orca: when the number of existing filament presets is less than the number of extruders, we will append new filament presets with the
+    // Inlong: when the number of existing filament presets is less than the number of extruders, we will append new filament presets with the
     // same value as the last existing one.
     //
     // Verify and select the filament presets.
@@ -5206,7 +5206,7 @@ void PresetBundle::update_multi_material_filament_presets(size_t to_delete_filam
                     unsigned int old_i = i >= to_delete_filament_id ? i + 1 : i;
                     unsigned int old_j = j >= to_delete_filament_id ? j + 1 : j;
                     for (size_t nozzle_id = 0; nozzle_id < nozzle_nums; ++nozzle_id) {
-                        // Orca: only copy from old_matrix when the old layout actually has data
+                        // Inlong: only copy from old_matrix when the old layout actually has data
                         // for this nozzle slot; otherwise initialize from the per-filament
                         // flush volumes the same way the (i,j) out-of-range branch does.
                         if (nozzle_id < old_nozzle_nums) {
@@ -5359,10 +5359,10 @@ void PresetBundle::update_compatible(PresetSelectCompatibleType select_other_pri
         BOOST_LOG_TRIVIAL(info) << boost::format("prefered filaments: size %1%, previous selected %2%") %prefered_filament_profiles.size() % this->filaments.get_selected_idx();
         if (this->filaments.get_selected_idx() != size_t(-1))
         {
-            BOOST_LOG_TRIVIAL(info) << boost::format("previous selected filament： %1%") % this->filaments.get_edited_preset().name;
+            BOOST_LOG_TRIVIAL(info) << boost::format("previous selected filament嚗?%1%") % this->filaments.get_edited_preset().name;
         }
         for (size_t idx = 0; idx < prefered_filament_profiles.size(); ++idx) {
-            BOOST_LOG_TRIVIAL(info) << boost::format("prefered filament： %1%") % prefered_filament_profiles[idx];
+            BOOST_LOG_TRIVIAL(info) << boost::format("prefered filament嚗?%1%") % prefered_filament_profiles[idx];
         }
         this->filaments.update_compatible(printer_preset_with_vendor_profile, &print_preset_with_vendor_profile, select_other_filament_if_incompatible,
             PreferedFilamentsProfileMatch(this->filaments.get_selected_idx() == size_t(-1) ? nullptr : &this->filaments.get_edited_preset(), prefered_filament_profiles));
@@ -5462,12 +5462,12 @@ bool PresetBundle::has_errors() const
         return true;
 
     bool has_errors = false;
-    // Orca: check if all filament presets have compatible_printers setting
+    // Inlong: check if all filament presets have compatible_printers setting
     for (auto& preset : filaments) {
         if (!preset.is_system)
             continue;
-        // It's per design that the Orca Filament Library can have the empty compatible_printers.
-        if(preset.vendor->name == PresetBundle::ORCA_FILAMENT_LIBRARY)
+        // It's per design that the Inlong Filament Library can have the empty compatible_printers.
+        if(preset.vendor->name == PresetBundle::INLONG_FILAMENT_LIBRARY)
             continue;
         auto* compatible_printers = dynamic_cast<const ConfigOptionStrings*>(preset.config.option("compatible_printers"));
         if (compatible_printers == nullptr || compatible_printers->values.empty()) {
@@ -5479,7 +5479,7 @@ bool PresetBundle::has_errors() const
     return has_errors;
 }
 
-// Orca: BundleMetadata method implementations
+// Inlong: BundleMetadata method implementations
 bool BundleMetadata::load_from_json(const std::string& path)
 {
     try {

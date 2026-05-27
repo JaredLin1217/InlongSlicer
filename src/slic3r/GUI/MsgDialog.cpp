@@ -118,7 +118,7 @@ void MsgDialog::on_dpi_changed(const wxRect &suggested_rect)
 
          while (i != m_buttons.end()) {
              MsgButton *bd   = i->second;
-             /* ORCA not required since all buttons has same size and Rescale re applies its style
+             /* INLONG not required since all buttons has same size and Rescale re applies its style
              wxSize     bsize;
 
 
@@ -149,7 +149,7 @@ void MsgDialog::SetButtonLabel(wxWindowID btn_id, const wxString& label, bool se
 Button* MsgDialog::add_button(wxWindowID btn_id, bool set_focus /*= false*/, const wxString& label/* = wxString()*/)
 {
     Button* btn = new Button(this, label, "", 0, 0, btn_id);
-    /* ORCA not required since all buttons has same size and Rescale re applies its style
+    /* INLONG not required since all buttons has same size and Rescale re applies its style
     ButtonSizeType type;
 
     if (label.length() < 5) {
@@ -213,9 +213,9 @@ void MsgDialog::apply_style(long style)
     if (style & wxCANCEL)   add_button(wxID_CANCEL, false, _L("Cancel"));
 
     logo->SetBitmap( create_scaled_bitmap(style & wxAPPLY        ? "completed" :
-                                          style & wxICON_WARNING        ? "exclamation" : // ORCA "exclamation" used for dialogs "obj_warning" used for 16x16 areas
+                                          style & wxICON_WARNING        ? "exclamation" : // INLONG "exclamation" used for dialogs "obj_warning" used for 16x16 areas
                                           style & wxICON_INFORMATION    ? "info"        :
-                                          style & wxICON_QUESTION       ? "question"    : "OrcaSlicer", this, 64, style & wxICON_ERROR));
+                                          style & wxICON_QUESTION       ? "question"    : "InlongSlicer", this, 64, style & wxICON_ERROR));
 }
 
 void MsgDialog::finalize()
@@ -299,7 +299,7 @@ static void add_msg_content(wxWindow   *parent,
     }
     else {
         wxClientDC dc(parent);
-        dc.SetFont(font); // ORCA without this it calculates bigger size
+        dc.SetFont(font); // INLONG without this it calculates bigger size
         wxSize msg_sz = dc.GetMultiLineTextExtent(msg) + parent->FromDIP(wxSize(10,5)); // added extra spacing to prevent wrapping
 
         page_size = wxSize(std::min(msg_sz.GetX(), info_width), std::min(msg_sz.GetY(), info_width));
@@ -366,7 +366,7 @@ ErrorDialog::ErrorDialog(wxWindow *parent, const wxString &temp_msg, bool monosp
     add_msg_content(this, content_sizer, msg, monospaced_font);
 
 	// Use a small bitmap with monospaced font, as the error text will not be wrapped.
-	logo->SetBitmap(create_scaled_bitmap("OrcaSlicer_192px_grayscale.png", this, monospaced_font ? 48 : /*1*/64));
+	logo->SetBitmap(create_scaled_bitmap("InlongSlicer_192px_grayscale.png", this, monospaced_font ? 48 : /*1*/64));
 
     SetMaxSize(MSG_DLG_MAX_SIZE);
 
@@ -597,7 +597,7 @@ wxBoxSizer *Newer3mfVersionDialog::get_msg_sizer()
     if (file_version_newer) { 
         text1 = new wxStaticText(this, wxID_ANY, wxString::Format(_L("The 3MF file version is in Beta and it is newer than the current %s version."), wxString(SLIC3R_APP_FULL_NAME)));
         wxStaticText *   text2       = new wxStaticText(this, wxID_ANY, wxString::Format(_L("If you would like to try %s Beta, you may click to"), wxString(SLIC3R_APP_FULL_NAME)));
-        // ORCA standardized HyperLink
+        // INLONG standardized HyperLink
         HyperLink *      github_link = new HyperLink(this, _L("Download Beta Version"), "https://github.com/JaredLin1217/InlongSlicer/releases");
         horizontal_sizer->Add(text2, 0, wxEXPAND, 0);
         horizontal_sizer->Add(github_link, 0, wxEXPAND | wxLEFT, 5);
@@ -684,7 +684,7 @@ NetworkErrorDialog::NetworkErrorDialog(wxWindow* parent)
 
     wxBoxSizer* sizer_link = new wxBoxSizer(wxVERTICAL);
 
-    // ORCA standardized HyperLink
+    // INLONG standardized HyperLink
     m_link_server_state = new HyperLink(this, _L("Check the status of current system services"), wxGetApp().link_to_network_check());
     m_link_server_state->SetFont(::Label::Body_13);
 
@@ -700,7 +700,7 @@ NetworkErrorDialog::NetworkErrorDialog(wxWindow* parent)
     m_text_proposal->SetFont(::Label::Body_14);
     m_text_proposal->SetForegroundColour(0x323A3C);
 
-    // ORCA standardized HyperLink
+    // INLONG standardized HyperLink
     m_text_wiki = new HyperLink(this, _L("How to use LAN only mode"), wxGetApp().link_to_lan_only_wiki());
     m_text_wiki->SetFont(::Label::Body_13);
 

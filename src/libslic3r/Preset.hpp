@@ -29,7 +29,7 @@
 #define PRESET_TEMPLATE_DIR "Template"
 #define PRESET_CUSTOM_VENDOR "Custom"
 
-// Orca: bundle import directories
+// Inlong: bundle import directories
 #define PRESET_LOCAL_DIR          "_local"
 #define PRESET_SUBSCRIBED_DIR     "_subscribed"
 #define PRESET_BUNDLE_METADATA    "bundle_metadata.json"
@@ -59,8 +59,8 @@
 #define BBL_JSON_KEY_USER_ID        "user_id"
 #define BBL_JSON_KEY_FILAMENT_ID    "filament_id"
 #define UNKNOWN_FILAMENT_ID         "__unknown__"
-#define ORCA_JSON_KEY_UPDATE_TIME    "updated_time"
-#define ORCA_JSON_KEY_CREATED_TIME    "created_time"
+#define INLONG_JSON_KEY_UPDATE_TIME    "updated_time"
+#define INLONG_JSON_KEY_CREATED_TIME    "created_time"
 #define BBL_JSON_KEY_INHERITS       "inherits"
 #define BBL_JSON_KEY_INSTANTIATION  "instantiation"
 #define BBL_JSON_KEY_NOZZLE_DIAMETER            "nozzle_diameter"
@@ -79,8 +79,8 @@
 #define BBL_JSON_KEY_NOT_SUPPORT_BED_TYPE       "not_support_bed_type"
 #define BBL_JSON_KEY_MODEL_ID                   "model_id"
 
-// Orca extension
-#define ORCA_JSON_KEY_RENAMED_FROM              "renamed_from"
+// Inlong extension
+#define INLONG_JSON_KEY_RENAMED_FROM              "renamed_from"
 
 
 static constexpr const char* GENERIC_PREFIX = "Generic ";
@@ -259,15 +259,15 @@ public:
     // and to match the "inherits" field of user profiles with updated system profiles.
     std::vector<std::string> renamed_from;
 
-    // Orca: maintain a list of printer models that are excluded from this preset, designed for filaments without compatible_printer defined
-    // (hence they are visible to all printer models by default) in Orca Filament Library. However, we might have speciliazed filament for
+    // Inlong: maintain a list of printer models that are excluded from this preset, designed for filaments without compatible_printer defined
+    // (hence they are visible to all printer models by default) in Inlong Filament Library. However, we might have speciliazed filament for
     // certain printer models defined in the vendor profile as well, in this case we want to hide this generic preset for these printer models.
     std::set<std::string> m_excluded_from;
 
-    // Orca: flag to indicate if this preset is from Orca Filament Library
-    bool m_from_orca_filament_lib = false;
+    // Inlong: flag to indicate if this preset is from Inlong Filament Library
+    bool m_from_inlong_filament_lib = false;
 
-    // Orca: bundle tracking - imported preset bundles. Bundle ID: UUID (OrcaCloud) or name+timestamp (external).
+    // Inlong: bundle tracking - imported preset bundles. Bundle ID: UUID (InlongCloud) or name+timestamp (external).
     // Presence of bundle_id is the source of truth for "came from a bundle".
     std::string         bundle_id;
     bool                is_from_bundle() const { return ! bundle_id.empty(); }
@@ -422,7 +422,7 @@ struct PresetOrigin {
 // Prepend the bundle folder to `preset_bare_name` based on `origin`. No-op for non-bundle origins.
 std::string get_preset_canonical_name(const std::string &preset_bare_name, const PresetOrigin &origin);
 
-// Tail segment of a canonical name — what's written to the bundle's .json filename and JSON "name" field.
+// Tail segment of a canonical name ??what's written to the bundle's .json filename and JSON "name" field.
 std::string get_preset_bare_name(const std::string &canonical_name);
 
 // Resolve an origin from a directory path when the caller passes Kind::Auto.
@@ -667,7 +667,7 @@ public:
     {
         return const_cast<PresetCollection*>(this)->find_preset(name, first_visible_if_not_found);
     }
-    // Orca: find preset, if not found, keep searching in the renamed history. This is function should only be used when find
+    // Inlong: find preset, if not found, keep searching in the renamed history. This is function should only be used when find
     // system(parent) presets for custom preset.
     Preset* find_preset2(const std::string& name, bool auto_match = true);
     const Preset* find_preset2(const std::string& name, bool auto_match = true) const
@@ -805,7 +805,7 @@ protected:
     // Update m_map_system_profile_renamed from loaded system profiles.
     void 			update_map_system_profile_renamed();
 
-    // Orca: update m_excluded_from loaded system profiles.
+    // Inlong: update m_excluded_from loaded system profiles.
     void 			update_library_profile_excluded_from();
 
 
@@ -835,8 +835,8 @@ private:
     // The "-- default -- " preset is always the first, so it needs
     // to be handled differently.
     // If a preset does not exist, an iterator is returned indicating where to insert a preset with the same name.
-    // `name` must already be canonical — callers canonicalize via find_preset / canonical_preset_name.
-    std::deque<Preset>::iterator find_preset_internal(const std::string &name, bool from_orca_lib_only = false)
+    // `name` must already be canonical ??callers canonicalize via find_preset / canonical_preset_name.
+    std::deque<Preset>::iterator find_preset_internal(const std::string &name, bool from_inlong_lib_only = false)
     {
         auto it = Slic3r::lower_bound_by_predicate(m_presets.begin() + m_num_default_presets, m_presets.end(),
             [&name, this](const auto& l) {
@@ -851,7 +851,7 @@ private:
         if (it == m_presets.end() || it->name != name) {
             // Preset has not been not found in the sorted list of non-default presets. Try the defaults.
             for (size_t i = 0; i < m_num_default_presets; ++ i)
-                if (m_presets[i].name == name && (!from_orca_lib_only || m_presets[i].m_from_orca_filament_lib)) {
+                if (m_presets[i].name == name && (!from_inlong_lib_only || m_presets[i].m_from_inlong_filament_lib)) {
                     it = m_presets.begin() + i;
                     break;
                 }
@@ -907,7 +907,7 @@ private:
     //BBS: mutex
     std::recursive_mutex          m_mutex;
 
-    // Orca: used for validation only
+    // Inlong: used for validation only
     int m_errors = 0;
 };
 

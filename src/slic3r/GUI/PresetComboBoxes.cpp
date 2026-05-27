@@ -1132,7 +1132,7 @@ void PlaterPresetComboBox::update()
     std::map<wxString, wxBitmap*> nonsys_presets;
     //BBS: add project embedded presets logic
     std::map<wxString, wxBitmap*>  project_embedded_presets;
-    // ORCA: add bundle presets
+    // INLONG: add bundle presets
     std::map<wxString, wxBitmap*> bundle_presets;
     std::map<wxString, wxBitmap *> system_presets;
     std::map<wxString, wxBitmap *>  uncompatible_presets;
@@ -1140,7 +1140,7 @@ void PlaterPresetComboBox::update()
     std::map<wxString, wxString>   preset_descriptions;
     std::map<wxString, std::string> preset_filament_vendors;
     std::map<wxString, std::string> preset_filament_types;
-    std::map<wxString, std::string> preset_aliases; // ORCA
+    std::map<wxString, std::string> preset_aliases; // INLONG
     std::map<wxString, std::string> preset_bundle_ids;
     std::map<wxString, std::string> preset_bundle_names;
     //BBS:  move system to the end
@@ -1175,7 +1175,7 @@ void PlaterPresetComboBox::update()
 
         bool single_bar = false;
         wxString name = from_u8(preset.name);
-        preset_aliases[name] = get_preset_name(preset).utf8_string(); // ORCA
+        preset_aliases[name] = get_preset_name(preset).utf8_string(); // INLONG
 
         // Track bundle names for bundled presets
         if (preset.is_from_bundle()) {
@@ -1200,7 +1200,7 @@ void PlaterPresetComboBox::update()
 
             bitmap_key += single_bar ? filament_rgb : filament_rgb + extruder_rgb;
 #endif
-            // ORCA allow caching vendor and type values for all presets instead just system ones
+            // INLONG allow caching vendor and type values for all presets instead just system ones
             // if (preset.is_system) { 
                 if (!preset.is_compatible && preset_filament_vendors.count(name) > 0)
                     continue;
@@ -1227,11 +1227,11 @@ void PlaterPresetComboBox::update()
             if (m_type == Preset::TYPE_PRINTER) {
                 auto printer_model = preset.config.opt_string("printer_model");
 
-                // ORCA: Make system printer presets display the dirty "*" prefix when edited.
+                // INLONG: Make system printer presets display the dirty "*" prefix when edited.
                 name = from_u8(is_selected && preset.is_dirty ? Preset::suffix_modified() + printer_model : printer_model);
 
                 if (system_printer_models.count(printer_model) == 0) {
-                    preset_aliases[name] = name.utf8_string(); // ORCA
+                    preset_aliases[name] = name.utf8_string(); // INLONG
                     system_presets.emplace(name, bmp);
                     system_printer_models.insert(printer_model);
                 }
@@ -1241,7 +1241,7 @@ void PlaterPresetComboBox::update()
                     if (system_presets.erase(alternate_name))
                         system_presets.emplace(name, bmp);
 
-                    preset_aliases.erase(alternate_name);  // ORCA: do this to aliases too
+                    preset_aliases.erase(alternate_name);  // INLONG: do this to aliases too
                     preset_aliases[name] = name.utf8_string();
                 }
             } else {
@@ -1267,7 +1267,7 @@ void PlaterPresetComboBox::update()
                 tooltip = wxString::FromUTF8(preset.name.c_str());
             }
         }
-        // ORCA: add bundle presets
+        // INLONG: add bundle presets
         else if (preset.is_from_bundle())
         {
             bundle_presets.emplace(name, bmp);
@@ -1335,7 +1335,7 @@ void PlaterPresetComboBox::update()
                         }
                         return l->first < r->first;
                     });
-                // ORCA add sorting support for vendor / type for user presets. also non grouped items
+                // INLONG add sorting support for vendor / type for user presets. also non grouped items
                 if (groupName == "by_bundle" || groupName == "by_vendor" || groupName == "by_type" || groupName == ""){
                     auto by = groupName == "by_bundle" ? preset_bundle_names
                             : groupName == "by_vendor" ? preset_filament_vendors
@@ -1356,7 +1356,7 @@ void PlaterPresetComboBox::update()
                 }
                 bool unsupported = group == "Unsupported presets";
                 for (auto it : list) {
-                    // ORCA add sorting support for vendor / type for user presets
+                    // INLONG add sorting support for vendor / type for user presets
                     auto groupName2 = groupName == "by_bundle"   ? (preset_bundle_names[it->first].empty()     ? _L("Unspecified") : from_u8(preset_bundle_names[it->first]))
                                     : groupName == "by_type"     ? (preset_filament_types[it->first].empty()   ? _L("Unspecified") : from_u8(preset_filament_types[it->first]))
                                     : groupName == "by_vendor"   ? (preset_filament_vendors[it->first].empty() ? _L("Unspecified") : from_u8(preset_filament_vendors[it->first]))
@@ -1395,14 +1395,14 @@ void PlaterPresetComboBox::update()
 
     //BBS: add project embedded preset logic
     add_presets(project_embedded_presets, selected_user_preset, L("Project-inside presets"), _L("Project") + " ");
-    // ORCA add sorting support for vendor / type for user presets
+    // INLONG add sorting support for vendor / type for user presets
     auto group_filament_presets    = wxGetApp().app_config->get("group_filament_presets");
     auto group_filament_presets_by = group_filament_presets  == "0" ? (_L("Custom") + " ") // Append all to "Custom" sub menu
                                    : group_filament_presets  == "2" ? "by_type"            // Create sub menus with filament type
                                    : group_filament_presets  == "3" ? "by_vendor"          // Create sub menus with filament vendor
                                    : "";                                                   // Use without sub menu
     add_presets(nonsys_presets, selected_user_preset, L("User presets"), group_filament_presets_by);
-    // ORCA: add bundle presets with sub-dropdown grouping for filament and printer
+    // INLONG: add bundle presets with sub-dropdown grouping for filament and printer
     auto bundle_group_name = (m_type == Preset::TYPE_FILAMENT || m_type == Preset::TYPE_PRINTER) ? "by_bundle" : "";
     add_presets(bundle_presets, selected_bundle_preset, L("Bundle presets"), bundle_group_name);
     // BBS: move system to the end
@@ -1646,10 +1646,10 @@ void TabPresetComboBox::update()
     std::map<wxString, std::pair<wxBitmap*, bool>>  project_embedded_presets;
     //BBS:  move system to the end
     std::map<wxString, std::pair<wxBitmap*, bool>>  system_presets;
-    // ORCA: add bundle presets
+    // INLONG: add bundle presets
     std::map<wxString, std::pair<wxBitmap*, bool>>  bundle_presets;
     std::map<wxString, wxString>                    preset_descriptions;
-    std::map<wxString, std::string>                 preset_aliases; // ORCA
+    std::map<wxString, std::string>                 preset_aliases; // INLONG
     std::map<wxString, std::string>                 preset_bundle_ids;
     std::map<wxString, std::string>                 preset_bundle_names;
 
@@ -1683,7 +1683,7 @@ void TabPresetComboBox::update()
         if (preset.is_system)
             preset_descriptions.emplace(name, from_u8(preset.description));
 
-        // ORCA: Track bundle names for bundled presets
+        // INLONG: Track bundle names for bundled presets
         if (preset.is_from_bundle()) {
              m_preset_bundle->bundles.ReadLock();
             auto bundle_it = m_preset_bundle->bundles.m_bundles.find(preset.bundle_id);
@@ -1713,7 +1713,7 @@ void TabPresetComboBox::update()
             if (i == idx_selected)
                 selected = name;
         }
-        // ORCA: add bundle presets
+        // INLONG: add bundle presets
         else if (preset.is_from_bundle())
         {
             bundle_presets.emplace(name, std::pair<wxBitmap*, bool>(bmp, is_enabled));
@@ -1761,7 +1761,7 @@ void TabPresetComboBox::update()
             validate_selection(it->first == selected);
         }
     }
-    // ORCA: add bundle presets with sub-dropdown grouping
+    // INLONG: add bundle presets with sub-dropdown grouping
     if (!bundle_presets.empty())
     {
         set_label_marker(Append(_L("Bundle presets"), wxNullBitmap, DD_ITEM_STYLE_SPLIT_ITEM));

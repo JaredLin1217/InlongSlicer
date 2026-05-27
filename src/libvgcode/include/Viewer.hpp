@@ -169,11 +169,11 @@ public:
     // EViewType::ActualSpeed
     // EViewType::FanSpeed
     // EViewType::Temperature
-    // ORCA: Add Pressure Advance visualization support
+    // INLONG: Add Pressure Advance visualization support
     // EViewType::PressureAdvance
-    // ORCA: Add Acceleration visualization support
+    // INLONG: Add Acceleration visualization support
     // EViewType::Acceleration
-    // ORCA: Add Jerk visualization support
+    // INLONG: Add Jerk visualization support
     // EViewType::Jerk
     // EViewType::VolumetricFlowRate
     // EViewType::ActualVolumetricFlowRate
@@ -191,11 +191,11 @@ public:
     // EViewType::ActualSpeed
     // EViewType::FanSpeed
     // EViewType::Temperature
-    // ORCA: Add Pressure Advance visualization support
+    // INLONG: Add Pressure Advance visualization support
     // EViewType::PressureAdvance
-    // ORCA: Add Acceleration visualization support
+    // INLONG: Add Acceleration visualization support
     // EViewType::Acceleration
-    // ORCA: Add Jerk visualization support
+    // INLONG: Add Jerk visualization support
     // EViewType::Jerk
     // EViewType::VolumetricFlowRate
     // EViewType::ActualVolumetricFlowRate
@@ -383,7 +383,7 @@ public:
         EGCodeExtrusionRole::Ironing, EGCodeExtrusionRole::BridgeInfill, EGCodeExtrusionRole::GapFill,
         EGCodeExtrusionRole::Skirt, EGCodeExtrusionRole::SupportMaterial, EGCodeExtrusionRole::SupportMaterialInterface,
         EGCodeExtrusionRole::WipeTower, EGCodeExtrusionRole::Custom,
-        // ORCA
+        // INLONG
         EGCodeExtrusionRole::BottomSurface, EGCodeExtrusionRole::InternalBridgeInfill, EGCodeExtrusionRole::Brim,
         EGCodeExtrusionRole::SupportTransition, EGCodeExtrusionRole::Mixed
     }) const;

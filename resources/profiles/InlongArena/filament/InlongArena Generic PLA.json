@@ -1,0 +1,13 @@
+{
+	"type": "filament",
+	"name": "InlongArena Generic PLA",
+	"inherits": "InlongArena Generic PLA @base",
+	"from": "system",
+	"setting_id": "GFSL99",
+	"instantiation": "true",
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

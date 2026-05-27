@@ -99,7 +99,7 @@ public:
     static Points visivalingam(const Points& pts, const double tolerance);
     static Points concave_hull_2d(const Points& pts, const double tolerence);
     
-    //Orca: Distancing function used by IOI wall ordering algorithm for arachne
+    //Inlong: Distancing function used by IOI wall ordering algorithm for arachne
     static double minimumDistanceBetweenLinesDefinedByPoints(const Points& A, const Points& B);
 
     inline auto begin()        { return points.begin(); }
@@ -110,7 +110,7 @@ public:
     inline auto cend()   const { return points.end();   }
     
 private:
-    //Orca: Distancing function used by IOI wall ordering algorithm for arachne
+    //Inlong: Distancing function used by IOI wall ordering algorithm for arachne
     static double squaredDistanceToLineSegment(const Point& p, const Point& v, const Point& w);
 };
 

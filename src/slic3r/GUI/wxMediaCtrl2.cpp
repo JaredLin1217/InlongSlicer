@@ -164,13 +164,13 @@ wxMediaCtrl2::~wxMediaCtrl2()
 #if defined(__LINUX__) && defined(__WXGTK__)
 bool wxMediaCtrl2::CreateGtkSinkPlayer()
 {
-    GstElement *playbin = gst_element_factory_make("playbin", "orca-wayland-gtk-playbin");
+    GstElement *playbin = gst_element_factory_make("playbin", "inlong-wayland-gtk-playbin");
     if (!playbin)
         return false;
 
     GError *error = nullptr;
     GstElement *video_sink = gst_parse_bin_from_description(
-        "videoconvert ! videoscale ! video/x-raw,format=BGRx ! gtksink name=orca_wayland_gtksink sync=false",
+        "videoconvert ! videoscale ! video/x-raw,format=BGRx ! gtksink name=inlong_wayland_gtksink sync=false",
         TRUE,
         &error);
     if (!video_sink) {
@@ -182,7 +182,7 @@ bool wxMediaCtrl2::CreateGtkSinkPlayer()
         return false;
     }
 
-    GstElement *gtk_sink = gst_bin_get_by_name(GST_BIN(video_sink), "orca_wayland_gtksink");
+    GstElement *gtk_sink = gst_bin_get_by_name(GST_BIN(video_sink), "inlong_wayland_gtksink");
     if (!gtk_sink) {
         BOOST_LOG_TRIVIAL(warning) << "wxMediaCtrl2: failed to find gtksink in video bin";
         gst_object_unref(video_sink);

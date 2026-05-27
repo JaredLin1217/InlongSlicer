@@ -200,14 +200,14 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     m_rename_text->SetFont(::Label::Head_14);
     m_rename_text->SetBackgroundColour(*wxWHITE);
     m_rename_text->SetMaxSize(wxSize(FromDIP(340), -1));
-    rename_editable       = new ScalableBitmap(m_scroll_area, "rename_edit", FromDIP(13)); // ORCA Match edit icon and its size
-    rename_editable_light = new ScalableBitmap(m_scroll_area, "rename_edit", FromDIP(13)); // ORCA Match edit icon and its size
+    rename_editable       = new ScalableBitmap(m_scroll_area, "rename_edit", FromDIP(13)); // INLONG Match edit icon and its size
+    rename_editable_light = new ScalableBitmap(m_scroll_area, "rename_edit", FromDIP(13)); // INLONG Match edit icon and its size
     m_rename_button = new wxStaticBitmap(m_rename_normal_panel, wxID_ANY, rename_editable->bmp(), wxDefaultPosition, wxSize(FromDIP(20), FromDIP(20)), 0);
     m_rename_button->Bind(wxEVT_ENTER_WINDOW, [this](auto& e) {SetCursor(wxCURSOR_HAND); });
     m_rename_button->Bind(wxEVT_LEAVE_WINDOW, [this](auto& e) {SetCursor(wxCURSOR_ARROW); });
 
-    rename_sizer_h->Add(m_rename_text, 0, wxALIGN_CENTER, 0); // ORCA align text with icon
-    rename_sizer_h->Add(m_rename_button, 0, wxALIGN_CENTER| wxLEFT, FromDIP(3)); // ORCA add gap between text and icon
+    rename_sizer_h->Add(m_rename_text, 0, wxALIGN_CENTER, 0); // INLONG align text with icon
+    rename_sizer_h->Add(m_rename_button, 0, wxALIGN_CENTER| wxLEFT, FromDIP(3)); // INLONG add gap between text and icon
     rename_sizer_v->Add(rename_sizer_h, 1, wxTOP, 0);
 
     m_rename_normal_panel->SetSizer(rename_sizer_v);
@@ -688,7 +688,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     sizer_extra_info->Add(st_title_extra_info_doc, 0, wxALL, 0);
     sizer_extra_info->Add(m_st_txt_extra_info, 0, wxALL, 0);
 
-    // ORCA standardized HyperLink
+    // INLONG standardized HyperLink
     m_link_network_state = new HyperLink(m_sw_print_failed_info, _L("Check the status of current system services"), wxGetApp().link_to_network_check());
     m_link_network_state->SetFont(::Label::Body_12);
 
@@ -1888,7 +1888,7 @@ bool SelectMachineDialog::is_same_printer_model()
     if(preset_bundle == nullptr) return result;
     const auto source_model = preset_bundle->printers.get_edited_preset().get_printer_type(preset_bundle);
     const auto target_model = obj_->printer_type;
-    // Orca: ignore P1P -> P1S
+    // Inlong: ignore P1P -> P1S
     if (source_model != target_model) {
         if ((source_model == "C12" && target_model == "C11") || (source_model == "C11" && target_model == "C12") ||
             ((obj_->is_support_upgrade_kit && obj_->installed_upgrade_kit) && (source_model == "C12"))) {
@@ -3516,7 +3516,7 @@ void SelectMachineDialog::update_show_status(MachineObject* obj_)
         }
     }
 
-    // Orca: show warning if external filament does not match
+    // Inlong: show warning if external filament does not match
     for (auto& m : m_ams_mapping_result) {
         if (devPrinterUtil::IsVirtualSlot(m.ams_id)) {
             for (auto& fs : m_filaments) {
@@ -3678,12 +3678,12 @@ void SelectMachineDialog::Enable_Send_Button(bool en)
     if (!en) {
         if (m_button_ensure->IsEnabled()) {
             m_button_ensure->Disable();
-            // ORCA no need to set colors again
+            // INLONG no need to set colors again
         }
     } else {
         if (!m_button_ensure->IsEnabled()) {
             m_button_ensure->Enable();
-            // ORCA no need to set colors again
+            // INLONG no need to set colors again
         }
     }
 }
@@ -3700,7 +3700,7 @@ void SelectMachineDialog::on_dpi_changed(const wxRect &suggested_rect)
         ams_mapping_help_icon->msw_rescale();
         if (img_amsmapping_tip)img_amsmapping_tip->SetBitmap(ams_mapping_help_icon->bmp());
     }
-    m_button_ensure->Rescale(); // ORCA
+    m_button_ensure->Rescale(); // INLONG
     m_status_bar->msw_rescale();
 
     for (auto material1 : m_materialList) {
@@ -4305,9 +4305,9 @@ void SelectMachineDialog::set_default_normal(const ThumbnailData &data)
 
     char weight[64];
     if (wxGetApp().app_config->get("use_inches") == "1") {
-        ::sprintf(weight, "%.2f oz", aprint_stats.total_weight * 0.035274); // ORCA remove spacing before text
+        ::sprintf(weight, "%.2f oz", aprint_stats.total_weight * 0.035274); // INLONG remove spacing before text
     } else {
-        ::sprintf(weight, "%.2f g", aprint_stats.total_weight); // ORCA remove spacing before text
+        ::sprintf(weight, "%.2f g", aprint_stats.total_weight); // INLONG remove spacing before text
     }
 
     m_stext_time->SetLabel(time);
@@ -4508,7 +4508,7 @@ void SelectMachineDialog::set_default_from_sdcard()
         wxString   time;
         time = wxString::Format("%s", short_time(get_time_dhms(float_time)));
         char weight[64];
-        ::sprintf(weight, "%.2f g", float_weight); // ORCA remove spacing before text
+        ::sprintf(weight, "%.2f g", float_weight); // INLONG remove spacing before text
         m_stext_time->SetLabel(time);
         m_stext_weight->SetLabel(weight);
     }

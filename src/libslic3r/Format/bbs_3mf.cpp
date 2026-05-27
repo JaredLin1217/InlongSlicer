@@ -172,10 +172,10 @@ const std::string BBL_LICENSE_TAG                   = "License";
 const std::string BBL_REGION_TAG                    = "Region";
 const std::string BBL_MODIFICATION_TAG              = "ModificationDate";
 const std::string BBL_CREATION_DATE_TAG             = "CreationDate";
-// Orca: BBL current version
+// Inlong: BBL current version
 const std::string BBL_APPLICATION_TAG               = "Application";
-// OrcaSlicer version tag
-const std::string ORCASLICER_TAG                    = "OrcaSlicer";
+// InlongSlicer version tag.
+const std::string INLONGSLICER_TAG                  = "InlongSlicer";
 const std::string BBL_MAKERLAB_TAG                  = "MakerLab";
 const std::string BBL_MAKERLAB_VERSION_TAG          = "MakerLabVersion";
 
@@ -1079,10 +1079,10 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         bool m_load_restore = false;
         std::string m_backup_path;
         std::string m_origin_file;
-        // Semantic version of Orca Slicer, that generated this 3MF.
+        // Semantic version of InlongSlicer or a compatible legacy slicer that generated this 3MF.
         boost::optional<Semver> m_bambuslicer_generator_version;
-        // Semantic version from the OrcaSlicer metadata tag (if present).
-        boost::optional<Semver> m_orca_slicer_version;
+        // Semantic version from the InlongSlicer metadata tag (if present).
+        boost::optional<Semver> m_inlong_slicer_version;
         unsigned int m_fdm_supports_painting_version = 0;
         unsigned int m_seam_painting_version         = 0;
         unsigned int m_mm_painting_version           = 0;
@@ -1154,7 +1154,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         //BBS: add plate data related logic
         // add backup & restore logic
         bool load_model_from_file(const std::string& filename, Model& model, PlateDataPtrs& plate_data_list, std::vector<Preset*>& project_presets, DynamicPrintConfig& config,
-            ConfigSubstitutionContext& config_substitutions, LoadStrategy strategy, bool* is_bbl_3mf, bool* is_orca_3mf, Semver& file_version, Import3mfProgressFn proFn = nullptr, BBLProject *project = nullptr, int plate_id = 0);
+            ConfigSubstitutionContext& config_substitutions, LoadStrategy strategy, bool* is_bbl_3mf, bool* is_inlong_3mf, Semver& file_version, Import3mfProgressFn proFn = nullptr, BBLProject *project = nullptr, int plate_id = 0);
         bool get_thumbnail(const std::string &filename, std::string &data);
         bool load_gcode_3mf_from_stream(std::istream & data, Model& model, PlateDataPtrs& plate_data_list, DynamicPrintConfig& config, Semver& file_version);
         unsigned int version() const { return m_version; }
@@ -1363,7 +1363,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
     //BBS: add plate data related logic
         // add backup & restore logic
     bool _BBS_3MF_Importer::load_model_from_file(const std::string& filename, Model& model, PlateDataPtrs& plate_data_list, std::vector<Preset*>& project_presets, DynamicPrintConfig& config,
-        ConfigSubstitutionContext& config_substitutions, LoadStrategy strategy, bool* is_bbl_3mf, bool* is_orca_3mf, Semver& file_version, Import3mfProgressFn proFn, BBLProject *project, int plate_id)
+        ConfigSubstitutionContext& config_substitutions, LoadStrategy strategy, bool* is_bbl_3mf, bool* is_inlong_3mf, Semver& file_version, Import3mfProgressFn proFn, BBLProject *project, int plate_id)
     {
         m_version = 0;
         m_fdm_supports_painting_version = 0;
@@ -1419,17 +1419,17 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         if (is_bbl_3mf) {
             *is_bbl_3mf = m_is_bbl_3mf;
         }
-        // If the OrcaSlicer tag is present, use it as file_version (ignoring the Bambu Application version).
+        // If the InlongSlicer tag is present, use it as file_version (ignoring the Bambu Application version).
         // Otherwise fall back to the version parsed from the Application tag.
-        if (m_orca_slicer_version) {
-            file_version = *m_orca_slicer_version;
-            if (is_orca_3mf)
-                *is_orca_3mf = true;
+        if (m_inlong_slicer_version) {
+            file_version = *m_inlong_slicer_version;
+            if (is_inlong_3mf)
+                *is_inlong_3mf = true;
         } else {
             if (m_bambuslicer_generator_version)
                 file_version = *m_bambuslicer_generator_version;
-            if (is_orca_3mf)
-                *is_orca_3mf = false;
+            if (is_inlong_3mf)
+                *is_inlong_3mf = false;
         }
         // save for restore
         if (result && m_load_aux && !m_load_restore) {
@@ -1855,10 +1855,10 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             project->project_country_code = m_contry_code;
         }
 
-        // Orca: skip version check
+        // Inlong: skip version check
         bool dont_load_config = !m_load_config;
         // if (m_bambuslicer_generator_version) {
-        //     Semver app_version = *(Semver::parse(SoftFever_VERSION));
+        //     Semver app_version = *(Semver::parse(INLONGSLICER_VERSION));
         //     Semver file_version = *m_bambuslicer_generator_version;
         //     if (file_version.maj() != app_version.maj())
         //         dont_load_config = true;
@@ -1995,7 +1995,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         lock.close();
 
         if (!m_is_bbl_3mf) {
-            // if the 3mf was not produced by OrcaSlicer and there is more than one instance,
+            // if the 3mf was not produced by InlongSlicer and there is more than one instance,
             // split the object in as many objects as instances
             BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ":" << __LINE__ << boost::format(", found 3mf from other vendor, split as instance");
             for (const IdToModelObjectMap::value_type& object : m_objects) {
@@ -3543,7 +3543,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         }
 
         if (!m_is_bbl_3mf) {
-            // if the 3mf was not produced by OrcaSlicer and there is only one object,
+            // if the 3mf was not produced by InlongSlicer and there is only one object,
             // set the object name to match the filename
             if (m_model->objects.size() == 1)
                 m_model->objects.front()->name = m_name;
@@ -3944,34 +3944,34 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             }*/
         } else if (m_curr_metadata_name == BBL_APPLICATION_TAG) {
             // Generator application of the 3MF.
-            // SLIC3R_APP_KEY - SoftFever_VERSION
+            // SLIC3R_APP_KEY - INLONGSLICER_VERSION
             if (boost::starts_with(m_curr_characters, "BambuStudio-")) {
                 m_is_bbl_3mf = true;
                 m_bambuslicer_generator_version = Semver::parse(m_curr_characters.substr(12));
             }
-            else if (boost::starts_with(m_curr_characters, "OrcaSlicer-")) {
+            else if (boost::starts_with(m_curr_characters, "InlongSlicer-")) {
                 m_is_bbl_3mf = true;
-                m_bambuslicer_generator_version = Semver::parse(m_curr_characters.substr(11));
+                m_bambuslicer_generator_version = Semver::parse(m_curr_characters.substr(13));
             }
-        } else if (m_curr_metadata_name == ORCASLICER_TAG) {
-            // OrcaSlicer version tag (written from OrcaSlicer 2.3.2 onwards)
-            m_orca_slicer_version = Semver::parse(m_curr_characters);
-            if (m_orca_slicer_version) {
+        } else if (m_curr_metadata_name == INLONGSLICER_TAG) {
+            // InlongSlicer version tag.
+            m_inlong_slicer_version = Semver::parse(m_curr_characters);
+            if (m_inlong_slicer_version) {
                 m_is_bbl_3mf = true;
             }
         //TODO: currently use version 0, no need to load&&save this string
         /*} else if (m_curr_metadata_name == BBS_FDM_SUPPORTS_PAINTING_VERSION) {
             m_fdm_supports_painting_version = (unsigned int) atoi(m_curr_characters.c_str());
             check_painting_version(m_fdm_supports_painting_version, FDM_SUPPORTS_PAINTING_VERSION,
-                _(L("The selected 3MF contains FDM supports painted object using a newer version of OrcaSlicer and is not compatible.")));
+                _(L("The selected 3MF contains FDM supports painted object using a newer version of InlongSlicer and is not compatible.")));
         } else if (m_curr_metadata_name == BBS_SEAM_PAINTING_VERSION) {
             m_seam_painting_version = (unsigned int) atoi(m_curr_characters.c_str());
             check_painting_version(m_seam_painting_version, SEAM_PAINTING_VERSION,
-                _(L("The selected 3MF contains seam painted object using a newer version of OrcaSlicer and is not compatible.")));
+                _(L("The selected 3MF contains seam painted object using a newer version of InlongSlicer and is not compatible.")));
         } else if (m_curr_metadata_name == BBS_MM_PAINTING_VERSION) {
             m_mm_painting_version = (unsigned int) atoi(m_curr_characters.c_str());
             check_painting_version(m_mm_painting_version, MM_PAINTING_VERSION,
-                _(L("The selected 3MF contains multi-material painted object using a newer version of OrcaSlicer and is not compatible.")));*/
+                _(L("The selected 3MF contains multi-material painted object using a newer version of InlongSlicer and is not compatible.")));*/
         } else if (m_curr_metadata_name == BBL_MODEL_ID_TAG) {
             m_model_id = xml_unescape(m_curr_characters);
         } else if (m_curr_metadata_name == BBL_MODEL_NAME_TAG) {
@@ -4766,7 +4766,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             return true;
         }
 
-        // TODO: Orca: support legacy text info
+        // TODO: Inlong: support legacy text info
         /*
         TextInfo text_info;
         text_info.m_text      = xml_unescape(bbs_get_attribute_value_string(attributes, num_attributes, TEXT_ATTR));
@@ -5194,7 +5194,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             TriangleMesh triangle_mesh(std::move(its), volume_data.mesh_stats);
 
             if (!m_is_bbl_3mf) {
-                // if the 3mf was not produced by OrcaSlicer and there is only one instance,
+                // if the 3mf was not produced by InlongSlicer and there is only one instance,
                 // bake the transformation into the geometry to allow the reload from disk command
                 // to work properly
                 if (object.instances.size() == 1) {
@@ -6082,7 +6082,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         }
 
         // Adds content types file ("[Content_Types].xml";).
-        // The content of this file is the same for each OrcaSlicer 3mf.
+        // The content of this file is the same for each InlongSlicer 3mf.
         if (!_add_content_types_file_to_archive(archive)) {
             return false;
         }
@@ -6470,7 +6470,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         }
 
         // Adds relationships file ("_rels/.rels").
-        // The content of this file is the same for each OrcaSlicer 3mf.
+        // The content of this file is the same for each InlongSlicer 3mf.
         // The relationshis file contains a reference to the geometry file "3D/3dmodel.model", the name was chosen to be compatible with CURA.
         if (!_add_relationships_file_to_archive(archive, {}, {}, {}, temp_data, export_plate_idx)) {
             BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ":" <<__LINE__ << boost::format(", _add_relationships_file_to_archive failed\n");
@@ -6818,7 +6818,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 metadata_item_map[BBL_MODEL_NAME_TAG]           = xml_escape(name);
                 metadata_item_map[BBL_ORIGIN_TAG]               = xml_escape(origin);
                 metadata_item_map[BBL_DESIGNER_TAG]             = xml_escape(user_name);
-                metadata_item_map[BBL_DESIGNER_USER_ID_TAG]     = ""; // Orca: PRIVACY: do not store BBL user id in 3mf
+                metadata_item_map[BBL_DESIGNER_USER_ID_TAG]     = ""; // Inlong: PRIVACY: do not store BBL user id in 3mf
                 metadata_item_map[BBL_DESIGNER_COVER_FILE_TAG]  = xml_escape(design_cover);
                 metadata_item_map[BBL_DESCRIPTION_TAG]          = xml_escape(description);
                 metadata_item_map[BBL_COPYRIGHT_NORMATIVE_TAG]  = xml_escape(copyright);
@@ -6830,11 +6830,10 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                     metadata_item_map[BBL_REGION_TAG]   = region_code;
                 }
 
-                // Orca: PRIVACY: do not store creation & modification date in 3mf
+                // Inlong: PRIVACY: do not store creation & modification date in 3mf
                 metadata_item_map[BBL_CREATION_DATE_TAG] = "";
                 metadata_item_map[BBL_MODIFICATION_TAG]  = "";
-                // Orca: Write the BambuStudio compatibility version string using SLIC3R_VERSION
-                metadata_item_map[BBL_APPLICATION_TAG] = (boost::format("%1%-%2%") % "BambuStudio" % SLIC3R_VERSION).str();
+                metadata_item_map[BBL_APPLICATION_TAG] = (boost::format("%1%-%2%") % SLIC3R_APP_KEY % INLONGSLICER_VERSION).str();
             }
             metadata_item_map[BBS_3MF_VERSION] = std::to_string(VERSION_BBS_3MF);
 
@@ -6860,8 +6859,8 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 stream << " <" << METADATA_TAG << " name=\"" << item.first << "\">"
                        << xml_escape(item.second) << "</" << METADATA_TAG << ">\n";
                 if (item.first == BBL_APPLICATION_TAG) {
-                    stream << " <" << METADATA_TAG << " name=\"" << ORCASLICER_TAG << "\">"
-                           << xml_escape(SoftFever_VERSION) << "</" << METADATA_TAG << ">\n";
+                    stream << " <" << METADATA_TAG << " name=\"" << INLONGSLICER_TAG << "\">"
+                           << xml_escape(INLONGSLICER_VERSION) << "</" << METADATA_TAG << ">\n";
                 }
             }
 
@@ -7216,10 +7215,10 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 return false;
             }
 
-            // Orca#7574: always use "model" type to follow the 3MF Core Specification:
+            // Inlong#7574: always use "model" type to follow the 3MF Core Specification:
             // https://github.com/3MFConsortium/spec_core/blob/20c079eef39e45ed223b8443dc9f34cbe32dc2c2/3MF%20Core%20Specification.md#3431-item-element
             // > Note: items MUST NOT reference objects of type "other", either directly or recursively.
-            // This won't break anything because when loading the file Orca (and Bambu) simply does not care about the actual object type at all (as long as it's one of "model" & "other");
+            // This won't break anything because when loading the file Inlong (and Bambu) simply does not care about the actual object type at all (as long as it's one of "model" & "other");
             // But PrusaSlicer requires the type to be "model".
             std::string type = "model";
 
@@ -8151,7 +8150,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         stream << "  <" << SLICE_HEADER_TAG << ">\n";
         stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "X-BBL-Client-Type"    << "\" " << VALUE_ATTR << "=\"" << "slicer" << "\"/>\n";
         stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "X-BBL-Client-Version" << "\" " << VALUE_ATTR << "=\"" << convert_to_full_version(SLIC3R_VERSION) << "\"/>\n";
-        stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "OrcaSlicer-Version" << "\" " << VALUE_ATTR << "=\"" << SoftFever_VERSION << "\"/>\n";
+        stream << "    <" << SLICE_HEADER_ITEM_TAG << " " << KEY_ATTR << "=\"" << "InlongSlicer-Version" << "\" " << VALUE_ATTR << "=\"" << INLONGSLICER_VERSION << "\"/>\n";
         stream << "  </" << SLICE_HEADER_TAG << ">\n";
 
         for (unsigned int i = 0; i < (unsigned int)plate_data_list.size(); ++i)
@@ -8902,7 +8901,7 @@ private:
 
 //BBS: add plate data list related logic
 bool load_bbs_3mf(const char* path, DynamicPrintConfig* config, ConfigSubstitutionContext* config_substitutions, Model* model, PlateDataPtrs* plate_data_list, std::vector<Preset*>* project_presets,
-                    bool* is_bbl_3mf, bool* is_orca_3mf, Semver* file_version, Import3mfProgressFn proFn, LoadStrategy strategy, BBLProject *project, int plate_id)
+                    bool* is_bbl_3mf, bool* is_inlong_3mf, Semver* file_version, Import3mfProgressFn proFn, LoadStrategy strategy, BBLProject *project, int plate_id)
 {
     if (path == nullptr || config == nullptr || model == nullptr)
         return false;
@@ -8910,7 +8909,7 @@ bool load_bbs_3mf(const char* path, DynamicPrintConfig* config, ConfigSubstituti
     // All import should use "C" locales for number formatting.
     CNumericLocalesSetter locales_setter;
     _BBS_3MF_Importer importer;
-    bool res = importer.load_model_from_file(path, *model, *plate_data_list, *project_presets, *config, *config_substitutions, strategy, is_bbl_3mf, is_orca_3mf, *file_version, proFn, project, plate_id);
+    bool res = importer.load_model_from_file(path, *model, *plate_data_list, *project_presets, *config, *config_substitutions, strategy, is_bbl_3mf, is_inlong_3mf, *file_version, proFn, project, plate_id);
     importer.log_errors();
     //BBS: remove legacy project logic currently
     //handle_legacy_project_loaded(importer.version(), *config);
@@ -9277,7 +9276,7 @@ Transform3d create_fix(const std::optional<Transform3d> &prev, const ModelVolume
     // when no change do not calculate transformation only store original fix matrix
 
     // Create transformation used after load actual stored volume
-    // Orca: do not bake volume transformation into meshes
+    // Inlong: do not bake volume transformation into meshes
     // const Transform3d &actual_trmat = volume.get_matrix();
     const Transform3d& actual_trmat = Transform3d::Identity();
 

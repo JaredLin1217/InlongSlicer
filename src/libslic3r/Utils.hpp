@@ -248,12 +248,12 @@ extern bool is_shapes_dir(const std::string& dir);
 //BBS: add json support
 extern bool is_json_file(const std::string& path);
 
-// Orca: custom protocal support utils
-inline bool is_orca_open(const std::string& url) { return boost::starts_with(url, "orcaslicer://open"); }
+// Custom protocol support utils.
+inline bool is_inlong_open(const std::string& url) { return boost::starts_with(url, "inlongslicer://open"); }
 inline bool is_prusaslicer_open(const std::string& url) { return boost::starts_with(url, "prusaslicer://open"); }
 inline bool is_bambustudio_open(const std::string& url) { return boost::starts_with(url, "bambustudio://open") || boost::starts_with(url, "bambustudioopen://"); }
 inline bool is_cura_open(const std::string& url) { return boost::starts_with(url, "cura://open"); }
-inline bool is_supported_open_protocol(const std::string& url) { return is_orca_open(url) || is_prusaslicer_open(url) || is_bambustudio_open(url) || is_cura_open(url); }
+inline bool is_supported_open_protocol(const std::string& url) { return is_inlong_open(url) || is_prusaslicer_open(url) || is_bambustudio_open(url) || is_cura_open(url); }
 inline bool is_printables_link(const std::string& url) {
     const std::regex url_regex("(http|https)://printables.com", std::regex_constants::icase);
     return std::regex_match(url, url_regex);
@@ -721,7 +721,7 @@ bool install_vendor_bundles_from_resources(const std::vector<std::string>& bundl
                                            const std::string& resource_subdir = "profiles",
                                            const std::string& data_subdir     = "system");
 
-// Orca: Since 1.7.9 Boost deprecated save_string_file and load_string_file, copy and modified from boost 1.7.8
+// Inlong: Since 1.7.9 Boost deprecated save_string_file and load_string_file, copy and modified from boost 1.7.8
 void save_string_file(const boost::filesystem::path& p, const std::string& str);
 void load_string_file(const boost::filesystem::path& p, std::string& str);
 

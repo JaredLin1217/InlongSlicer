@@ -87,17 +87,17 @@ struct PathVertex
     //
     float layer_duration{ 0.0f };
     //
-    // ORCA: Add Pressure Advance visualization support
+    // INLONG: Add Pressure Advance visualization support
     // Pressure advance value
     //
     float pressure_advance{ 0.0f };
     //
-    // ORCA: Add Acceleration visualization support
+    // INLONG: Add Acceleration visualization support
     // Acceleration value
     //
     float acceleration{ 0.0f };
     //
-    // ORCA: Add Jerk visualization support
+    // INLONG: Add Jerk visualization support
     // Jerk value
     //
     float jerk{ 0.0f };

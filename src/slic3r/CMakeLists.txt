@@ -616,10 +616,10 @@ set(SLIC3R_GUI_SOURCES
     Utils/NetworkAgentFactory.cpp
     Utils/ICloudServiceAgent.hpp
     Utils/IPrinterAgent.hpp
-    Utils/OrcaCloudServiceAgent.cpp
-    Utils/OrcaCloudServiceAgent.hpp
-    Utils/OrcaPrinterAgent.cpp
-    Utils/OrcaPrinterAgent.hpp
+    Utils/InlongCloudServiceAgent.cpp
+    Utils/InlongCloudServiceAgent.hpp
+    Utils/InlongPrinterAgent.cpp
+    Utils/InlongPrinterAgent.hpp
     Utils/QidiPrinterAgent.cpp
     Utils/QidiPrinterAgent.hpp
     Utils/SnapmakerPrinterAgent.cpp
@@ -707,16 +707,16 @@ if (UNIX AND NOT APPLE)
     )
 endif ()
 
-set(ORCA_UPDATER_SIG_KEY_B64 "${ORCA_UPDATER_SIG_KEY}")
-string(STRIP "${ORCA_UPDATER_SIG_KEY_B64}" ORCA_UPDATER_SIG_KEY_B64)
-string(REPLACE "\n" "" ORCA_UPDATER_SIG_KEY_B64 "${ORCA_UPDATER_SIG_KEY_B64}")
-string(REPLACE "\r" "" ORCA_UPDATER_SIG_KEY_B64 "${ORCA_UPDATER_SIG_KEY_B64}")
-string(REPLACE "\t" "" ORCA_UPDATER_SIG_KEY_B64 "${ORCA_UPDATER_SIG_KEY_B64}")
-string(REPLACE " "  "" ORCA_UPDATER_SIG_KEY_B64 "${ORCA_UPDATER_SIG_KEY_B64}")
+set(INLONG_UPDATER_SIG_KEY_B64 "${INLONG_UPDATER_SIG_KEY}")
+string(STRIP "${INLONG_UPDATER_SIG_KEY_B64}" INLONG_UPDATER_SIG_KEY_B64)
+string(REPLACE "\n" "" INLONG_UPDATER_SIG_KEY_B64 "${INLONG_UPDATER_SIG_KEY_B64}")
+string(REPLACE "\r" "" INLONG_UPDATER_SIG_KEY_B64 "${INLONG_UPDATER_SIG_KEY_B64}")
+string(REPLACE "\t" "" INLONG_UPDATER_SIG_KEY_B64 "${INLONG_UPDATER_SIG_KEY_B64}")
+string(REPLACE " "  "" INLONG_UPDATER_SIG_KEY_B64 "${INLONG_UPDATER_SIG_KEY_B64}")
 
-set(ORCA_UPDATER_SIG_KEY_AVAILABLE 0)
-if(ORCA_UPDATER_SIG_KEY_B64)
-    set(ORCA_UPDATER_SIG_KEY_AVAILABLE 1)
+set(INLONG_UPDATER_SIG_KEY_AVAILABLE 0)
+if(INLONG_UPDATER_SIG_KEY_B64)
+    set(INLONG_UPDATER_SIG_KEY_AVAILABLE 1)
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GeneratedConfig.hpp.in

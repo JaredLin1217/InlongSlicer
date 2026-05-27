@@ -286,7 +286,7 @@ private:
     wxStaticText*   m_staticText_progress_percent;
     wxStaticText*   m_staticText_progress_percent_icon;
     wxStaticText*   m_staticText_progress_left;
-    // Orca: show print end time
+    // Inlong: show print end time
     wxStaticText * m_staticText_progress_end;
     wxStaticText*   m_staticText_layers;
     wxStaticText *  m_has_rated_prompt;

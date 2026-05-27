@@ -354,7 +354,7 @@ namespace Slic3r
             }
         }
 
-        // Orca: special cases that no AMS available, we select ext slot automatically because we don't have other choice anyway
+        // Inlong: special cases that no AMS available, we select ext slot automatically because we don't have other choice anyway
         if (tray_filaments.size() == 1 && devPrinterUtil::IsVirtualSlot(tray_filaments.begin()->first)) {
             auto ext_tray = tray_filaments.begin();
             for (auto & r : result) {

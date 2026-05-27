@@ -609,8 +609,8 @@ std::string MoonrakerPrinterAgent::map_filament_type_to_generic_id(const std::st
 {
     const std::string upper = trim_and_upper(filament_type);
 
-    // Map to OrcaFilamentLibrary preset IDs (compatible with all printers)
-    // Source: resources/profiles/OrcaFilamentLibrary/filament/
+    // Map to InlongFilamentLibrary preset IDs (compatible with all printers)
+    // Source: resources/profiles/InlongFilamentLibrary/filament/
 
     // PLA variants
     if (upper == "PLA")           return "OGFL99";
@@ -983,7 +983,7 @@ int MoonrakerPrinterAgent::handle_request(const std::string& dev_id, const std::
 
         const std::string cmd = command.get<std::string>();
 
-        // Handle gcode_line command - this is how G-code commands are sent from OrcaSlicer
+        // Handle gcode_line command - this is how G-code commands are sent from InlongSlicer
         if (cmd == "gcode_line") {
             if (!json["print"].contains("param") || !json["print"]["param"].is_string()) {
                 BOOST_LOG_TRIVIAL(error) << "MoonrakerPrinterAgent: gcode_line missing param value, full json: " << json_str;
@@ -2065,7 +2065,7 @@ void MoonrakerPrinterAgent::perform_connection_async(const std::string& dev_id, 
         MoonrakerDeviceInfo fetched_info;
         if (!fetch_device_info(base_url, api_key, fetched_info, error_msg)) {
             BOOST_LOG_TRIVIAL(error) << "MoonrakerPrinterAgent: Failed to fetch server info: " << error_msg;
-            // Orca todo: revist here, for now don't send error, this is set current MachineObject to null
+            // Inlong todo: revist here, for now don't send error, this is set current MachineObject to null
             // dispatch_local_connect(ConnectStatusFailed, dev_id, "server_info_failed");
             return;
         }
@@ -2081,7 +2081,7 @@ void MoonrakerPrinterAgent::perform_connection_async(const std::string& dev_id, 
             device_info.klippy_state = fetched_info.klippy_state;
         }
 
-// Orca todo: disable websocket for now, as we don't use MonitorPanel for Moonraker printers yet
+// Inlong todo: disable websocket for now, as we don't use MonitorPanel for Moonraker printers yet
 #if 0
         // Query initial status
         nlohmann::json initial_status;
@@ -2113,7 +2113,7 @@ void MoonrakerPrinterAgent::perform_connection_async(const std::string& dev_id, 
         dispatch_printer_connected(dev_id);
         BOOST_LOG_TRIVIAL(info) << "MoonrakerPrinterAgent: connect_printer completed - dev_id=" << dev_id;
     } else if (result != BAMBU_NETWORK_SUCCESS && result != BAMBU_NETWORK_ERR_CANCELED) {
-        // Orca todo: revist here, for now don't send error, this is set current MachineObject to null
+        // Inlong todo: revist here, for now don't send error, this is set current MachineObject to null
         // dispatch_local_connect(ConnectStatusFailed, dev_id, error_msg);
     }
 }

@@ -21,15 +21,16 @@ struct Params
         const std::vector<std::string> &filament_types, float max_acceleration, int raft_layers_count, BrimType brim_type, float brim_width)
         : max_acceleration(max_acceleration), raft_layers_count(raft_layers_count), brim_type(brim_type), brim_width(brim_width)
     {
-        if (filament_types.size() > 1) {
-            BOOST_LOG_TRIVIAL(warning)
-                << "SupportSpotsGenerator does not currently handle different materials properly, only first will be used";
-        }
         if (filament_types.empty() || filament_types[0].empty()) {
             BOOST_LOG_TRIVIAL(error) << "SupportSpotsGenerator error: empty filament_type";
             filament_type = std::string("PLA");
         } else {
             filament_type = filament_types[0];
+            if (filament_types.size() > 1) {
+                BOOST_LOG_TRIVIAL(debug)
+                    << "SupportSpotsGenerator: curled perimeter estimator received " << filament_types.size()
+                    << " filament slots; active estimation is geometry-based";
+            }
             BOOST_LOG_TRIVIAL(debug) << "SupportSpotsGenerator: applying filament type: " << filament_type;
         }
     }

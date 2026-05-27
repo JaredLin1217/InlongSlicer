@@ -33,6 +33,6 @@ This issue will be automatically closed as a duplicate in 3 days.
 - If your issue is a duplicate, please close it and react to the existing issue instead
 - To prevent auto-closure, add a comment or react to this comment
 
-OrcaSlicer bot
+InlongSlicer bot
 
 ---

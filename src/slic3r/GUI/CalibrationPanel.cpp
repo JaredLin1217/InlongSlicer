@@ -476,7 +476,7 @@ void CalibrationPanel::init_tabpanel() {
 
     m_tabpanel = new Tabbook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, sizer_side_tools, wxNB_LEFT | wxTAB_TRAVERSAL | wxNB_NOPAGETHEME);
     m_side_tools->set_table_panel(m_tabpanel);
-    m_tabpanel->SetBackgroundColour(wxColour("#FEFFFF")); // ORCA match sidebar background color
+    m_tabpanel->SetBackgroundColour(wxColour("#FEFFFF")); // INLONG match sidebar background color
 
     m_cali_panels[0] = new PressureAdvanceWizard(m_tabpanel);
     m_cali_panels[1] = new FlowRateWizard(m_tabpanel);
@@ -492,7 +492,7 @@ void CalibrationPanel::init_tabpanel() {
             selected);
     }
 
-    // ORCA use standard paddings and keep arrow icon for consistent look between sidebars
+    // INLONG use standard paddings and keep arrow icon for consistent look between sidebars
     //for (int i = 0; i < (int)CALI_MODE_COUNT; i++)
     //    m_tabpanel->SetPageImage(i, "");
 

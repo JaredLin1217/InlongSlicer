@@ -130,9 +130,9 @@ enum ConfigMenuIDs {
     ConfigMenuCnt,
 };
 
-enum OrcaSlicerMenuIDs {
-  OrcaSlicerMenuAbout,
-  OrcaSlicerMenuPreferences,
+enum InlongSlicerMenuIDs {
+  InlongSlicerMenuAbout,
+  InlongSlicerMenuPreferences,
 };
 
 enum CameraMenuIDs {
@@ -302,7 +302,7 @@ private:
     bool m_networking_cancel_update { false };
     std::shared_ptr<UpgradeNetworkJob> m_upgrade_network_job;
 
-    // ORCA: for installing vendors on the main thread when presets to be synced requires it
+    // INLONG: for installing vendors on the main thread when presets to be synced requires it
     // vendor structure is:
     // [vendor_name]: { model: variants, model: variants, ... }
     // filaments structure is:
@@ -363,12 +363,12 @@ public:
     bool is_editor() const { return m_app_mode == EAppMode::Editor; }
     bool is_gcode_viewer() const { return m_app_mode == EAppMode::GCodeViewer; }
     bool is_recreating_gui() const { return m_is_recreating_gui; }
-    std::string logo_name() const { return is_editor() ? "OrcaSlicer" : "OrcaSlicer-gcodeviewer"; }
+    std::string logo_name() const { return is_editor() ? "InlongSlicer" : "InlongSlicer-gcodeviewer"; }
 
     bool is_closing() const { return m_is_closing.load(std::memory_order_acquire); }
     void set_closing(bool closing) { m_is_closing.store(closing, std::memory_order_release); }
     
-    // SoftFever
+    // Inlong
     bool show_gcode_window() const { return m_show_gcode_window; }
     void toggle_show_gcode_window();
 
@@ -429,8 +429,8 @@ public:
     //update side popup status
     bool            get_side_menu_popup_status();
     void            set_side_menu_popup_status(bool status);
-    std::string     link_to_network_check(); // ORCA
-    std::string     link_to_lan_only_wiki(); // ORCA
+    std::string     link_to_network_check(); // INLONG
+    std::string     link_to_lan_only_wiki(); // INLONG
 
     const wxColour& get_label_clr_modified() { return m_color_label_modified; }
     const wxColour& get_label_clr_sys()     { return m_color_label_sys; }
@@ -472,22 +472,22 @@ public:
     wxString        transition_tridid(int trid_id) const;
     void            ShowUserGuide();
     void            ShowDownNetPluginDlg();
-    void            ShowUserLogin(bool show = true, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    void            ShowUserLogin(bool show = true, const std::string& provider = INLONG_CLOUD_PROVIDER);
     void            ShowOnlyFilament();
-    // Orca auth
-    void            request_login(bool show_user_info = false, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    bool            check_login(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    void            get_login_info(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    bool            is_user_login(const std::string& provider = ORCA_CLOUD_PROVIDER);
+    // Inlong auth
+    void            request_login(bool show_user_info = false, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    bool            check_login(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    void            get_login_info(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    bool            is_user_login(const std::string& provider = INLONG_CLOUD_PROVIDER);
     const std::string& get_printer_cloud_provider() const;
 
-    void            request_user_login(int online_login = 0, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    void            request_user_handle(int online_login = 0, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    void            request_user_logout(const std::string& provider = ORCA_CLOUD_PROVIDER);
+    void            request_user_login(int online_login = 0, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    void            request_user_handle(int online_login = 0, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    void            request_user_logout(const std::string& provider = INLONG_CLOUD_PROVIDER);
     void            post_logout_to_webview(const std::string& provider);
-    int             request_user_unbind(std::string dev_id, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    int             request_user_unbind(std::string dev_id, const std::string& provider = INLONG_CLOUD_PROVIDER);
     std::string     handle_web_request(std::string cmd);
-    void            handle_script_message(std::string msg, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    void            handle_script_message(std::string msg, const std::string& provider = INLONG_CLOUD_PROVIDER);
     void            request_model_download(wxString url);
     void            download_project(std::string project_id);
     void            request_project_download(std::string project_id);
@@ -524,7 +524,7 @@ public:
 
     bool            maybe_migrate_user_presets_on_login();
 
-    // ORCA: functions for loading unloaded vendors to allow for proper inheritance when syncing user presets/bundles
+    // INLONG: functions for loading unloaded vendors to allow for proper inheritance when syncing user presets/bundles
     bool            check_preset_parent_available(const std::pair<std::string, std::map<std::string, std::string>>& preset_data);
     void            add_pending_vendor_preset(const std::pair<std::string, std::map<std::string, std::string>>& preset_data);
     void            load_pending_vendors();
@@ -543,16 +543,16 @@ public:
 
     PresetBundleDialog* m_preset_bundle_dlg{nullptr};
 
-    void            start_http_server(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    void            start_http_server(int port, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    void            start_http_server(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    void            start_http_server(int port, const std::string& provider = INLONG_CLOUD_PROVIDER);
     void            stop_http_server();
     void            switch_staff_pick(bool on);
 
-    void            on_show_check_privacy_dlg(int online_login = 0, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    void            on_show_check_privacy_dlg(int online_login = 0, const std::string& provider = INLONG_CLOUD_PROVIDER);
     void            show_check_privacy_dlg(wxCommandEvent& evt);
     void            on_check_privacy_update(wxCommandEvent &evt);
     bool            check_privacy_update();
-    void            check_privacy_version(int online_login = 0, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    void            check_privacy_version(int online_login = 0, const std::string& provider = INLONG_CLOUD_PROVIDER);
     void            check_track_enable();
 
     static bool     catch_error(std::function<void()> cb, const std::string& err);
@@ -744,7 +744,7 @@ public:
     bool            hot_reload_network_plugin();
     std::string     get_latest_network_version() const;
     bool            has_network_update_available() const;
-    // Orca: return the client version to report to Bambu servers. Pinned to
+    // Inlong: return the client version to report to Bambu servers. Pinned to
     // 01.10.01.50 when the legacy network plugin lacks get_my_token support
     // so the auth server stays on the ?access_token= redirect path.
     std::string     get_bbl_client_version();

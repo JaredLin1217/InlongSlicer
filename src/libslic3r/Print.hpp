@@ -200,11 +200,11 @@ struct PrintInstance
     
     BoundingBoxf3   get_bounding_box() const;
     Polygon get_convex_hull_2d();
-    // SoftFever
+    // Inlong
     // 
     // instance id
     size_t               id;
-    // Orca: unique id used by marlin/rrf cancel object feature
+    // Inlong: unique id used by marlin/rrf cancel object feature
     size_t               unique_id;
 
     //BBS: instance_shift is too large because of multi-plate, apply without plate offset.
@@ -417,7 +417,7 @@ public:
     // The slicing parameters are dependent on various configuration values
     // (layer height, first layer height, raft settings, print nozzle diameter etc).
     const SlicingParameters&    slicing_parameters() const { return m_slicing_params; }
-    // Orca: XYZ shrinkage compensation has introduced the const Vec3d &object_shrinkage_compensation parameter to the function below
+    // Inlong: XYZ shrinkage compensation has introduced the const Vec3d &object_shrinkage_compensation parameter to the function below
     static SlicingParameters    slicing_parameters(const DynamicPrintConfig &full_config, const ModelObject &model_object, float object_max_z, const Vec3d &object_shrinkage_compensation);
 
     size_t                      num_printing_regions() const throw() { return m_shared_regions->all_regions.size(); }
@@ -464,7 +464,7 @@ public:
     // BBS: returns 1-based indices of extruders used to print the first layer wall of objects
     std::vector<int>            object_first_layer_wall_extruders;
 
-    // SoftFever
+    // Inlong
     size_t get_id() const { return m_id; }
     void set_id(size_t id) { m_id = id; }
 
@@ -576,7 +576,7 @@ private:
     PrintObject*                            m_shared_object{ nullptr };
 
     
-    // SoftFever
+    // Inlong
     // 
     // object id
     size_t               m_id;
@@ -1066,7 +1066,7 @@ public:
     // Return 4 wipe tower corners in the world coordinates (shifted and rotated), including the wipe tower brim.
     Points first_layer_wipe_tower_corners(bool check_wipe_tower_existance=true) const;
 
-    //SoftFever
+    //Inlong
     bool &is_BBL_printer() { return m_isBBLPrinter; }
     const bool is_BBL_printer() const { return m_isBBLPrinter; }
     WipeTowerType wipe_tower_type() const { return is_BBL_printer() ? WipeTowerType::Type1 : m_config.wipe_tower_type.value; }
@@ -1107,7 +1107,7 @@ public:
         return std::all_of(this->objects().begin(), this->objects().end(), [&](PrintObject* obj) { return obj->height() < scale_(this->config().nozzle_height.value); });
     }
     
-    // Orca: Implement prusa's filament shrink compensation approach
+    // Inlong: Implement prusa's filament shrink compensation approach
     // Returns if all used filaments have same shrinkage compensations.
      bool has_same_shrinkage_compensations() const;
     // Returns scaling for each axis representing shrinkage compensations in each axis.
@@ -1139,7 +1139,7 @@ private:
     PrintObjectPtrs                         m_objects;
     PrintRegionPtrs                         m_print_regions;
     
-    //SoftFever
+    //Inlong
     bool m_isBBLPrinter;
 
     // Ordered collections of extrusion paths to build skirt loops and brim.
@@ -1180,7 +1180,7 @@ private:
     
     std::vector<std::set<int>> m_geometric_unprintable_filaments;
 
-    //SoftFever: calibration
+    //Inlong: calibration
     Calib_Params m_calib_params;
 
     bool m_need_check_multi_filaments_compatibility{true};
@@ -1192,7 +1192,7 @@ private:
 
 public:
     //BBS: this was a print config and now seems to be useless so we move it to here
-    // ORCA: parameter below is now back to being a user option (min_skirt_length)
+    // INLONG: parameter below is now back to being a user option (min_skirt_length)
     //static float min_skirt_length;
 };
 

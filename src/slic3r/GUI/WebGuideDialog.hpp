@@ -106,7 +106,7 @@ private:
 
     wxString m_SectionName;
 
-    bool orca_bundle_rsrc;
+    bool inlong_bundle_rsrc;
     boost::filesystem::path vendor_dir;
     boost::filesystem::path rsrc_vendor_dir;
 
@@ -123,8 +123,8 @@ private:
     bool InstallNetplugin;
     bool network_plugin_ready {false};
 
-    json m_OrcaFilaList;
-    std::string m_OrcaFilaLibPath;
+    json m_InlongFilaList;
+    std::string m_InlongFilaLibPath;
 
 #if wxUSE_WEBVIEW_IE
     wxMenuItem *m_script_object_el;

@@ -31,7 +31,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          python3 ./scripts/orca_extra_profile_check.py 2>&1 | tee ${{ runner.temp }}/extra_json_check.log
+          python3 ./scripts/inlong_extra_profile_check.py 2>&1 | tee ${{ runner.temp }}/extra_json_check.log
           exit ${PIPESTATUS[0]}
 
       - name: Check profile indentation
@@ -67,7 +67,7 @@ jobs:
               else:
                 print(f"[ERROR] Could not validate indentation in {path}")
             print("Use tab indentation in profile JSON files (1 tab per indentation level).")
-            print("Tip: run python3 ./scripts/orca_filament_lib.py --fix --force to normalize formatting.")
+            print("Tip: run python3 ./scripts/inlong_filament_lib.py --fix --force to normalize formatting.")
             sys.exit(1)
 
           print("All profile JSON files use tab-only indentation.")
@@ -78,8 +78,8 @@ jobs:
       - name: Download
         working-directory: ${{ github.workspace }}
         run: |
-          curl -LJO https://github.com/SoftFever/Orca_tools/releases/download/1/OrcaSlicer_profile_validator
-          chmod +x ./OrcaSlicer_profile_validator
+          curl -L -o InlongSlicer_profile_validator https://github.com/JaredLin1217/InlongSlicer/releases/download/nightly-builds/InlongSlicer_profile_validator_Linux_Ubuntu2404_nightly
+          chmod +x ./InlongSlicer_profile_validator
 
       # validate profiles
       - name: validate system profiles
@@ -87,7 +87,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          ./OrcaSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 2>&1 | tee ${{ runner.temp }}/validate_system.log
+          ./InlongSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 2>&1 | tee ${{ runner.temp }}/validate_system.log
           exit ${PIPESTATUS[0]}
 
       - name: validate custom presets
@@ -96,9 +96,9 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           set +e
-          curl -LJO https://github.com/OrcaSlicer/OrcaSlicer/releases/download/nightly-builds/orca_custom_preset_tests.zip
-          unzip -q ./orca_custom_preset_tests.zip -d ${{ github.workspace }}/resources/profiles
-          ./OrcaSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 2>&1 | tee ${{ runner.temp }}/validate_custom.log
+          curl -LJO https://github.com/JaredLin1217/InlongSlicer/releases/download/nightly-builds/inlong_custom_preset_tests.zip
+          unzip -q ./inlong_custom_preset_tests.zip -d ${{ github.workspace }}/resources/profiles
+          ./InlongSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 2>&1 | tee ${{ runner.temp }}/validate_custom.log
           exit ${PIPESTATUS[0]}
 
       - name: Prepare comment artifact

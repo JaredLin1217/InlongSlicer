@@ -23,9 +23,9 @@ echo build type set to %build_type%
 cd deps
 mkdir %build_dir%
 cd %build_dir%
-set DEPS=%CD%/OrcaSlicer_dep
+set DEPS=%CD%/InlongSlicer_dep
 set "SIG_FLAG="
-if defined ORCA_UPDATER_SIG_KEY set "SIG_FLAG=-DORCA_UPDATER_SIG_KEY=%ORCA_UPDATER_SIG_KEY%"
+if defined INLONG_UPDATER_SIG_KEY set "SIG_FLAG=-DINLONG_UPDATER_SIG_KEY=%INLONG_UPDATER_SIG_KEY%"
 if "%1"=="slicer" (
     GOTO :slicer
 )
@@ -38,7 +38,7 @@ cmake --build . --config %build_type% --target deps -- -m
 if "%1"=="deps" exit /b 0
 
 :slicer
-echo "building Orca Slicer..."
+echo "building Inlong Slicer..."
 cd %WP%
 mkdir %build_dir%
 cd %build_dir%

@@ -1,4 +1,4 @@
-name: Orca Issue Dedupe
+name: Inlong Issue Dedupe
 description: Automatically dedupe GitHub issues using AI
 on:
   issues:

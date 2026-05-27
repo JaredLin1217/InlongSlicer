@@ -337,7 +337,7 @@ void MaterialItem::doRender(wxDC& dc)
 //    dc.DrawRoundedRectangle(FromDIP(1), FromDIP(1), MATERIAL_ITEM_SIZE.x - FromDIP(1), MATERIAL_ITEM_SIZE.y - FromDIP(1), 5);
 //
 //    if (m_selected) {
-//        dc.SetPen(AMS_CONTROL_BRAND_COLOUR); // ORCA Highlight color for selected AMS in send job dialog
+//        dc.SetPen(AMS_CONTROL_BRAND_COLOUR); // INLONG Highlight color for selected AMS in send job dialog
 //        dc.SetBrush(*wxTRANSPARENT_BRUSH);
 //        dc.DrawRoundedRectangle(FromDIP(1), FromDIP(1), MATERIAL_ITEM_SIZE.x - FromDIP(1), MATERIAL_ITEM_SIZE.y - FromDIP(1), 5);
 //    }

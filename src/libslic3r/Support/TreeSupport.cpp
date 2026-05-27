@@ -74,7 +74,7 @@ inline Point normal(Point pt, double scale)
 
     return pt * (scale / length);
 }
-// ORCA:
+// INLONG:
 // Collect all polygons of a given SurfaceType from all regions of a layer.
 // Used for top-contact probing across region/modifier boundaries.
 static Polygons collect_region_slices_by_type(const Layer &layer, SurfaceType surface_type)
@@ -1184,10 +1184,10 @@ void TreeSupport::create_tree_support_layers()
 
         // Layers between the raft contacts and bottom of the object.
         double dist_to_go = m_slicing_params.object_print_z_min - raft_print_z;
-        // ORCA: Guard tiny residual raft-to-object gaps so the EPSILON-biased ceil()
+        // INLONG: Guard tiny residual raft-to-object gaps so the EPSILON-biased ceil()
         // below cannot turn them into zero steps after floating-point accumulation.
         if (dist_to_go > EPSILON) {
-            // ORCA: Bias by EPSILON so near-equal gaps do not get an extra split from FP noise.
+            // INLONG: Bias by EPSILON so near-equal gaps do not get an extra split from FP noise.
             auto nsteps = int(ceil((dist_to_go - EPSILON) / m_slicing_params.max_suport_layer_height));
             double height = dist_to_go / nsteps;
             for (int i = 0; i < nsteps; ++i) {
@@ -1473,7 +1473,7 @@ void TreeSupport::generate_toolpaths()
         return;
 
     BoundingBox bbox_object(Point(-scale_(1.), -scale_(1.0)), Point(scale_(1.), scale_(1.)));
-    // ORCA: base angle used for explicit interlaced interface orientation.
+    // INLONG: base angle used for explicit interlaced interface orientation.
     const float base_support_angle = Geometry::deg2rad(object_config.support_angle.value);
 
     // generate tree support tool paths
@@ -1493,7 +1493,7 @@ void TreeSupport::generate_toolpaths()
                 coordf_t support_spacing         = object_config.support_base_pattern_spacing.value + support_flow.spacing();
                 coordf_t support_density         = std::min(1., support_flow.spacing() / support_spacing);
                 ts_layer->support_fills.no_sort = false;
-                // ORCA: per-layer Fill instances to avoid shared-state races during interlaced interfaces.
+                // INLONG: per-layer Fill instances to avoid shared-state races during interlaced interfaces.
                 std::shared_ptr<Fill> filler_interface = std::shared_ptr<Fill>(Fill::new_from_type(m_support_params.contact_fill_pattern));
                 std::shared_ptr<Fill> filler_Roof1stLayer = std::shared_ptr<Fill>(Fill::new_from_type(ipRectilinear));
                 filler_interface->set_bounding_box(bbox_object);
@@ -1503,7 +1503,7 @@ void TreeSupport::generate_toolpaths()
                     ExPolygon& poly = *area_group.area;
                     ExPolygons polys;
                     FillParams fill_params;
-                    // ORCA: reset interface Fill state per area group to keep angles deterministic.
+                    // INLONG: reset interface Fill state per area group to keep angles deterministic.
                     filler_interface->fixed_angle = false;
                     filler_interface->layer_id = size_t(-1);
                     filler_interface->angle = base_support_angle + M_PI_2; // default interface angle is perpendicular to support angle
@@ -1527,7 +1527,7 @@ void TreeSupport::generate_toolpaths()
                     }
                     if (area_group.type == SupportLayer::Roof1stLayer) {
                         // roof_1st_layer
-                        // ORCA: Roof1stLayer may be printed with base material when it acts as a contact layer.
+                        // INLONG: Roof1stLayer may be printed with base material when it acts as a contact layer.
                         bool interface_as_base = area_group.interface_as_base;
                         fill_params.density = interface_density;
                         // Note: spacing means the separation between two lines as if they are tightly extruded
@@ -1557,7 +1557,7 @@ void TreeSupport::generate_toolpaths()
                         }
 
                         if (m_object_config->support_interface_pattern == smipRectilinearInterlaced) {
-                            // ORCA: explicit 0/90 alternation for rectilinear interlaced interfaces.
+                            // INLONG: explicit 0/90 alternation for rectilinear interlaced interfaces.
                             filler_interface->fixed_angle = true;
                             filler_interface->angle = base_support_angle + ((area_group.interface_id & 1) * M_PI_2);
                             fill_params.dont_sort = true;
@@ -1580,7 +1580,7 @@ void TreeSupport::generate_toolpaths()
                         }
 
                         if (m_object_config->support_interface_pattern == smipRectilinearInterlaced) {
-                            // ORCA: explicit 0/90 alternation for rectilinear interlaced interfaces.
+                            // INLONG: explicit 0/90 alternation for rectilinear interlaced interfaces.
                             filler_interface->fixed_angle = true;
                             filler_interface->angle = base_support_angle + ((area_group.interface_id & 1) * M_PI_2);
                             fill_params.dont_sort = true;
@@ -1598,14 +1598,14 @@ void TreeSupport::generate_toolpaths()
                         bool need_infill = with_infill;
                         if(m_object_config->support_base_pattern==smpDefault)
                             need_infill &= area_group.need_infill;
-                        // Orca: Use rectilinear for support base on the bed
+                        // Inlong: Use rectilinear for support base on the bed
                         const InfillPattern base_fill_pattern = support_base_on_bed ? ipRectilinear : m_support_params.base_fill_pattern;
                         std::shared_ptr<Fill> filler_support = std::shared_ptr<Fill>(Fill::new_from_type(base_fill_pattern));
                         filler_support->set_bounding_box(bbox_object);
 
                         filler_support->spacing =
                             support_base_on_bed ?
-                            flow.spacing() : // Orca: On the bed-contacting support base layer, use first-layer flow spacing directly.
+                            flow.spacing() : // Inlong: On the bed-contacting support base layer, use first-layer flow spacing directly.
                             support_spacing * support_density; // constant spacing to align support infill lines
                         filler_support->angle = Geometry::deg2rad(object_config.support_angle.value);
 
@@ -2105,7 +2105,7 @@ void TreeSupport::draw_circles()
                         break;
 
                     const SupportNode& node = *p_node;
-                    // ORCA: Cap top interface height in mm based on per-node support layer height.
+                    // INLONG: Cap top interface height in mm based on per-node support layer height.
                     const coordf_t top_interface_height = coordf_t(top_interface_layers) * node.height;
                     ExPolygons area;
                     // Generate directly from overhang polygon if one of the following is true:
@@ -2158,7 +2158,7 @@ void TreeSupport::draw_circles()
                         // Merge the overhang into the roof area so tree tips can still produce
                         // a continuous support interface. Suppressing this for build-plate-only
                         // support drops the roof polygons entirely in valid tree branches.
-                        // ORCA: Only keep top interface polygons that fully fit in the mm height cap.
+                        // INLONG: Only keep top interface polygons that fully fit in the mm height cap.
                         if (top_interface_layers > 0 && node.support_roof_layers_below > 0 &&
                             (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON &&
                             !node.is_sharp_tail) {
@@ -2174,14 +2174,14 @@ void TreeSupport::draw_circles()
 
                     if (obj_layer_nr>0 && node.distance_to_top < 0)
                         append(roof_gap_areas, area);
-                    // ORCA: Roof1stLayer must also fit inside the mm cap.
+                    // INLONG: Roof1stLayer must also fit inside the mm cap.
                     else if (obj_layer_nr > 0 && node.support_roof_layers_below == 1 &&
                              (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON && node.is_sharp_tail==false)
                     {
                         append(roof_1st_layer, area);
                         max_layers_above_roof1 = std::max(max_layers_above_roof1, node.dist_mm_to_top);
                     }
-                    // ORCA: Roof layers must also fit inside the mm cap.
+                    // INLONG: Roof layers must also fit inside the mm cap.
                     else if (obj_layer_nr > 0 && node.support_roof_layers_below > 1 &&
                              (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON && node.is_sharp_tail == false)
                     {
@@ -2227,7 +2227,7 @@ void TreeSupport::draw_circles()
                     for (auto &area : base_areas) { area.simplify(scale_(line_width / 2), &base_areas_simplified); }
                     base_areas = std::move(base_areas_simplified);
                 }
-                // ORCA:
+                // INLONG:
                 // Bottom interface / bottom gap must be anchored to the *true* support-to-model contact surface.
                 // Do NOT window the contact search by gap or interface height.
                 // First find the real contact below, then enforce:
@@ -2308,7 +2308,7 @@ void TreeSupport::draw_circles()
                                             break;
                                         --first_interface_layer;
                                     }
-                                    // ORCA: Use support-layer index for base-interface selection (robust with independent heights).
+                                    // INLONG: Use support-layer index for base-interface selection (robust with independent heights).
                                     if (m_support_params.num_bottom_base_interface_layers > 0) {
                                         const int bottom_interface_idx =
                                             std::max(0, int(layer_nr) - int(first_interface_layer));
@@ -2349,7 +2349,7 @@ void TreeSupport::draw_circles()
                     floor_areas = std::move(new_floor_areas);
                 }
 
-                // Orca: Hybrid tree first-layer expansion belongs only to the normal-support
+                // Inlong: Hybrid tree first-layer expansion belongs only to the normal-support
                 // part. area_poly is collected from ePolygon nodes above, which are the normal
                 // support nodes in Hybrid mode. Apply the expansion before area_groups and
                 // lslices are built so toolpaths and brim avoidance use the same footprint.
@@ -2359,7 +2359,7 @@ void TreeSupport::draw_circles()
                     const float inflate_factor_1st_layer = float(scale_(m_object_config->raft_first_layer_expansion.value));
                     Polygons trimming = offset(m_object->layers().front()->lslices, float(scale_(m_support_params.gap_xy_first_layer)),
                                                SUPPORT_SURFACES_OFFSET_PARAMETERS);
-                    // Orca: Match normal support expansion: grow in steps and re-trim against the object each time.
+                    // Inlong: Match normal support expansion: grow in steps and re-trim against the object each time.
                     const int nsteps = std::max(5, int(ceil(inflate_factor_1st_layer / m_support_params.first_layer_flow.scaled_width())));
                     const float step = inflate_factor_1st_layer / nsteps;
                     for (const ExPolygon &expoly : ts_layer->base_areas) {
@@ -2421,7 +2421,7 @@ void TreeSupport::draw_circles()
 
             }
         });
-        // ORCA: normalize interface_id sequencing to follow printed interface layers only.
+        // INLONG: normalize interface_id sequencing to follow printed interface layers only.
         const int top_base_layers = int(m_support_params.num_top_base_interface_layers);
         const bool interlaced = m_object_config->support_interface_pattern == smipRectilinearInterlaced;
         int roof_interface_id = 0;
@@ -3338,7 +3338,7 @@ std::vector<LayerHeightData> TreeSupport::plan_layer_heights()
     for (size_t i = 0; i < layer_heights.size(); i++, support_layer_nr++) {
         // SupportLayer *ts_layer = m_object->add_tree_support_layer(support_layer_nr, layer_heights[i].print_z, layer_heights[i].height, layer_heights[i].print_z);
 
-        // ORCA: add_tree_support_layer() argument order is (id, height, print_z, slice_z).
+        // INLONG: add_tree_support_layer() argument order is (id, height, print_z, slice_z).
         // Passing print_z as height breaks support layer geometry.
         SupportLayer *ts_layer = m_object->add_tree_support_layer(support_layer_nr, layer_heights[i].height, layer_heights[i].print_z, layer_heights[i].print_z);
 
@@ -3393,7 +3393,7 @@ std::vector<LayerHeightData> TreeSupport::plan_layer_heights()
         }
     }
 
-    // ORCA: Recompute support_roof_layers_below from remaining interface height (independent heights).
+    // INLONG: Recompute support_roof_layers_below from remaining interface height (independent heights).
     const int top_layers = m_object->config().support_interface_top_layers.value;
     if (m_support_params.independent_layer_height && top_layers > 0) {
         const coordf_t interface_height_mm = coordf_t(top_layers) * m_slicing_params.layer_height;

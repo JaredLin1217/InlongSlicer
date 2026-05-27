@@ -135,7 +135,7 @@ private:
     void OnPaint(wxPaintEvent&)
     {
         wxPaintDC dc(this);
-        // Transparent — draw nothing
+        // Transparent ??draw nothing
     }
 
     GdkWindowEdge get_gdk_edge(const wxPoint& pos) const
@@ -213,10 +213,10 @@ private:
 #endif // __WXGTK__
 
 #ifdef __APPLE__
-class OrcaSlicerTaskBarIcon : public wxTaskBarIcon
+class InlongSlicerTaskBarIcon : public wxTaskBarIcon
 {
 public:
-    OrcaSlicerTaskBarIcon(wxTaskBarIconType iconType = wxTBI_DEFAULT_TYPE) : wxTaskBarIcon(iconType) {}
+    InlongSlicerTaskBarIcon(wxTaskBarIconType iconType = wxTBI_DEFAULT_TYPE) : wxTaskBarIcon(iconType) {}
     wxMenu *CreatePopupMenu() override {
         wxMenu *menu = new wxMenu;
         if (wxGetApp().app_config->get("single_instance") == "false") {
@@ -267,7 +267,7 @@ static wxIcon main_frame_icon(GUI_App::EAppMode app_mode)
     }
     return wxIcon(path, wxBITMAP_TYPE_ICO);
 #else // _WIN32
-    return wxIcon(Slic3r::var("OrcaSlicer_128px.png"), wxBITMAP_TYPE_PNG);
+    return wxIcon(Slic3r::var("InlongSlicer_128px.png"), wxBITMAP_TYPE_PNG);
 #endif // _WIN32
 }
 
@@ -283,7 +283,7 @@ wxDEFINE_EVENT(EVT_SYNC_CLOUD_PRESET,     SimpleEvent);
 #ifdef __APPLE__
 static const wxString ctrl = ("Ctrl+");
 // FIXME: maybe should be using GUI::shortkey_ctrl_prefix() or equivalent?
-static const std::string ctrl_t = u8"\u2318+"; // "⌘" (Mac Command)
+static const std::string ctrl_t = u8"\u2318+"; // "?? (Mac Command)
 #else
 static const wxString ctrl = _L("Ctrl+");
 // FIXME: maybe should be using GUI::shortkey_ctrl_prefix() or equivalent?
@@ -393,8 +393,8 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, BORDERLESS_FRAME_
     switch (wxGetApp().get_app_mode()) {
     default:
     case GUI_App::EAppMode::Editor:
-        m_taskbar_icon = std::make_unique<OrcaSlicerTaskBarIcon>(wxTBI_DOCK);
-        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("OrcaSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), SLIC3R_APP_FULL_NAME);
+        m_taskbar_icon = std::make_unique<InlongSlicerTaskBarIcon>(wxTBI_DOCK);
+        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("InlongSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), SLIC3R_APP_FULL_NAME);
         break;
     case GUI_App::EAppMode::GCodeViewer:
         break;
@@ -488,7 +488,7 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, BORDERLESS_FRAME_
 #endif
         wxQueueEvent(wxGetApp().plater(), new SimpleEvent(EVT_NOTICE_CHILDE_SIZE_CHANGED));
 
-        fit_tab_labels(); // ORCA on resize
+        fit_tab_labels(); // INLONG on resize
     });
 
     //BBS
@@ -732,7 +732,7 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, BORDERLESS_FRAME_
         if (evt.CmdDown() && evt.GetKeyCode() == 'P')
 #endif
         {
-            // Orca: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
+            // Inlong: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
             wxGetApp().open_preferences();
             plater()->get_current_canvas3D()->force_set_focus();
             return;
@@ -796,7 +796,7 @@ void MainFrame::bind_diff_dialog()
 
 #ifdef __WXMSW__
 
-// Orca: Fix maximized window overlaps taskbar when taskbar auto hide is enabled (#8085)
+// Inlong: Fix maximized window overlaps taskbar when taskbar auto hide is enabled (#8085)
 // Adopted from https://gist.github.com/MortenChristiansen/6463580
 static void AdjustWorkingAreaForAutoHide(const HWND hWnd, MINMAXINFO* mmi)
 {
@@ -1107,7 +1107,7 @@ void MainFrame::shutdown()
 {
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "MainFrame::shutdown enter";
 #ifdef __WXGTK__
-    // Edge panels are child windows — wxWidgets destroys them automatically.
+    // Edge panels are child windows ??wxWidgets destroys them automatically.
     m_edge_bottom = nullptr;
     m_edge_left   = nullptr;
     m_edge_right  = nullptr;
@@ -1266,7 +1266,7 @@ void MainFrame::init_tabpanel() {
                 wxPostEvent(m_plater, SimpleEvent(EVT_GLVIEWTOOLBAR_PREVIEW));
                 m_param_panel->OnActivate();
             }
-            fit_tab_labels(); // ORCA on switching prepare / preview
+            fit_tab_labels(); // INLONG on switching prepare / preview
         }
         //else if (panel == m_param_panel)
         //    m_param_panel->OnActivate();
@@ -1366,12 +1366,12 @@ void MainFrame::init_tabpanel() {
     }
 }
 
-// SoftFever
+// Inlong
 void MainFrame::show_device(bool bBBLPrinter) {
     auto idx = -1;
     if (bBBLPrinter) {
         if (m_tabpanel->FindPage(m_monitor) != wxNOT_FOUND) {
-            fit_tab_labels(); // ORCA on printer change - same button layout
+            fit_tab_labels(); // INLONG on printer change - same button layout
             return;
         }
         // Remove printer view
@@ -1414,7 +1414,7 @@ void MainFrame::show_device(bool bBBLPrinter) {
 
     } else {
         if (m_tabpanel->FindPage(m_printer_view) != wxNOT_FOUND) {
-            fit_tab_labels(); // ORCA on printer change - same button layout
+            fit_tab_labels(); // INLONG on printer change - same button layout
             return;
         }
         if ((idx = m_tabpanel->FindPage(m_calibration)) != wxNOT_FOUND) {
@@ -1442,7 +1442,7 @@ void MainFrame::show_device(bool bBBLPrinter) {
         m_tabpanel->InsertPage(tpMonitor, m_printer_view, _L("Device"), std::string("tab_monitor_active"),
                                std::string("tab_monitor_active"));
     }
-    fit_tab_labels(); // ORCA on printer change
+    fit_tab_labels(); // INLONG on printer change
 }
 
 void MainFrame::fit_tab_labels()
@@ -1972,7 +1972,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                 m_slice_enable = get_enable_slice_status();
                 m_slice_btn->Enable(m_slice_enable);
                 this->Layout();
-                fit_tab_labels(); // ORCA on label change
+                fit_tab_labels(); // INLONG on label change
                 if(m_slice_option_pop_up)
                     m_slice_option_pop_up->Dismiss();
                 });
@@ -1983,7 +1983,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                 m_slice_enable = get_enable_slice_status();
                 m_slice_btn->Enable(m_slice_enable);
                 this->Layout();
-                fit_tab_labels(); // ORCA on label change
+                fit_tab_labels(); // INLONG on label change
                 if(m_slice_option_pop_up)
                     m_slice_option_pop_up->Dismiss();
                 });
@@ -2008,7 +2008,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2021,7 +2021,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2029,7 +2029,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                 p->append_button(export_gcode_btn);
             }
             else {
-                //Orca Slicer Buttons
+                //Inlong Slicer Buttons
                 SideButton* print_plate_btn = new SideButton(p, _L("Print plate"), "");
                 print_plate_btn->SetCornerRadius(0);
 
@@ -2048,7 +2048,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2060,7 +2060,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2070,7 +2070,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2082,7 +2082,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2092,7 +2092,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2102,7 +2102,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                     });
 
@@ -2141,7 +2141,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                         m_print_enable = get_enable_print_status();
                         m_print_btn->Enable(m_print_enable);
                         this->Layout();
-                        fit_tab_labels(); // ORCA on label change
+                        fit_tab_labels(); // INLONG on label change
                         p->Dismiss();
                     });
                     p->append_button(print_multi_machine_btn);
@@ -2156,7 +2156,7 @@ wxBoxSizer* MainFrame::create_side_tools()
                     m_print_enable = get_enable_print_status();
                     m_print_btn->Enable(m_print_enable);
                     this->Layout();
-                    fit_tab_labels(); // ORCA on label change
+                    fit_tab_labels(); // INLONG on label change
                     p->Dismiss();
                 });
                 p->append_button(export_gcode_btn);
@@ -2475,7 +2475,7 @@ void MainFrame::on_dpi_changed(const wxRect& suggested_rect)
 
     this->Maximize(is_maximized);
 
-    fit_tab_labels(); // ORCA
+    fit_tab_labels(); // INLONG
 }
 
 void MainFrame::on_sys_color_changed()
@@ -2527,7 +2527,7 @@ void MainFrame::on_sys_color_changed()
 }
 
 // On macOS, we use system menu bar, which handles the key accelerators automatically and breaks key handling in normal typing
-// See https://github.com/OrcaSlicer/OrcaSlicer/issues/8152
+// See upstream issue #8152.
 // So we disable some of the accelerators on macOS, by replacing the accelerator seperator to a hyphen.
 #ifdef __APPLE__
 static const wxString sep = " - ";
@@ -2556,7 +2556,7 @@ static wxMenu* generate_help_menu()
         });
 
     // Report a bug
-    //append_menu_item(helpMenu, wxID_ANY, _L("Report Bug(TODO)"), _L("Report a bug of OrcaSlicer"),
+    //append_menu_item(helpMenu, wxID_ANY, _L("Report Bug(TODO)"), _L("Report a bug of InlongSlicer"),
     //    [](wxCommandEvent&) {
     //        //TODO
     //    });
@@ -3131,7 +3131,7 @@ void MainFrame::init_menubar_as_editor()
 #ifdef __APPLE__
     wxWindowID bambu_studio_id_base = wxWindow::NewControlId(int(2));
     wxMenu* parent_menu = m_menubar->OSXGetAppleMenu();
-    //auto preference_item = new wxMenuItem(parent_menu, OrcaSlicerMenuPreferences + bambu_studio_id_base, _L("Preferences") + "\t" + ctrl + ",", "");
+    //auto preference_item = new wxMenuItem(parent_menu, InlongSlicerMenuPreferences + bambu_studio_id_base, _L("Preferences") + "\t" + ctrl + ",", "");
 #else
     wxMenu* parent_menu = m_topbar->GetTopMenu();
     auto preference_item = new wxMenuItem(parent_menu, ConfigMenuPreferences + config_id_base, _L("Preferences") + "\t" + ctrl + "P", "");
@@ -3206,13 +3206,13 @@ void MainFrame::init_menubar_as_editor()
 
 #ifdef __APPLE__
     wxString about_title = wxString::Format(_L("&About %s"), SLIC3R_APP_FULL_NAME);
-    //auto about_item = new wxMenuItem(parent_menu, OrcaSlicerMenuAbout + bambu_studio_id_base, about_title, "");
+    //auto about_item = new wxMenuItem(parent_menu, InlongSlicerMenuAbout + bambu_studio_id_base, about_title, "");
         //parent_menu->Bind(wxEVT_MENU, [this, bambu_studio_id_base](wxEvent& event) {
         //    switch (event.GetId() - bambu_studio_id_base) {
-        //        case OrcaSlicerMenuAbout:
+        //        case InlongSlicerMenuAbout:
         //            Slic3r::GUI::about();
         //            break;
-        //        case OrcaSlicerMenuPreferences:
+        //        case InlongSlicerMenuPreferences:
         //            CallAfter([this] {
         //                PreferencesDialog dlg(this);
         //                dlg.ShowModal();
@@ -3255,7 +3255,7 @@ void MainFrame::init_menubar_as_editor()
     append_menu_item(
         m_topbar->GetTopMenu(), wxID_ANY, _L("Preferences") + "\t" + ctrl + "P", "",
         [this](wxCommandEvent &) {
-            // Orca: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
+            // Inlong: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
             wxGetApp().open_preferences();
         },
         "", nullptr, []() { return true; }, this);
@@ -3263,7 +3263,7 @@ void MainFrame::init_menubar_as_editor()
         append_menu_item(
         m_topbar->GetTopMenu(), wxID_ANY, _L("Preset Bundle") + "\t", "",
         [this](wxCommandEvent &) {
-            // Orca: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
+            // Inlong: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
             wxGetApp().open_presetbundledialog();
             plater()->get_current_canvas3D()->force_set_focus();
         },
@@ -3293,7 +3293,7 @@ void MainFrame::init_menubar_as_editor()
     //m_topbar->AddDropDownMenuItem(config_item);
     m_topbar->AddDropDownSubMenu(helpMenu, _L("Help"));
 
-    // SoftFever calibrations
+    // Inlong calibrations
 
     // Temperature
     append_menu_item(m_topbar->GetCalibMenu(), wxID_ANY, _L("Temperature"), _L("Temperature Calibration"),
@@ -3404,7 +3404,7 @@ void MainFrame::init_menubar_as_editor()
     /*if (publishMenu)
         m_menubar->Append(publishMenu, wxString::Format("&%s", _L("3D Models")));*/
 
-    // SoftFever calibrations
+    // Inlong calibrations
     auto calib_menu = new wxMenu();
 
     // Temperature
@@ -3435,7 +3435,7 @@ void MainFrame::init_menubar_as_editor()
         [this]() {return m_plater->is_view3D_shown();; }, this);
 
     // Flowrate (with submenu)
-    // ORCA: Flow rate (Wizard Dialog)
+    // INLONG: Flow rate (Wizard Dialog)
     append_menu_item(calib_menu, wxID_ANY, _L("Flow ratio"), _L("Flow Rate Calibration"),
         [this](wxCommandEvent&) {
             if (!m_plater) return;
@@ -3698,7 +3698,7 @@ void MainFrame::load_config_file()
  //       return;
     wxFileDialog dlg(this, _L("Select profile to load:"),
         !m_last_config.IsEmpty() ? get_dir_name(m_last_config) : wxGetApp().app_config->get_last_dir(),
-        "config.json", "Config files (*.json;*.zip;*.orca_printer;*.orca_bundle;*.orca_filament)|*.json;*.zip;*.orca_printer;*.orca_bundle;*.orca_filament", wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
+        "config.json", "Config files (*.json;*.zip;*.inlong_printer;*.inlong_bundle;*.inlong_filament)|*.json;*.zip;*.inlong_printer;*.inlong_bundle;*.inlong_filament", wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
      wxArrayString files;
     if (dlg.ShowModal() != wxID_OK)
         return;
@@ -4345,7 +4345,7 @@ SettingsDialog::SettingsDialog(MainFrame* mainframe)
         SetIcon(wxIcon(szExeFileName, wxBITMAP_TYPE_ICO));
     }
 #else
-    SetIcon(wxIcon(var("OrcaSlicer_128px.png"), wxBITMAP_TYPE_PNG));
+    SetIcon(wxIcon(var("InlongSlicer_128px.png"), wxBITMAP_TYPE_PNG));
 #endif // _WIN32
 
     //just hide the Frame on closing

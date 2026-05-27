@@ -3387,7 +3387,7 @@ bool FillRectilinear::fill_surface_trapezoidal(
 Polylines FillRectilinear::fill_surface(const Surface *surface, const FillParams &params)
 {
     Polylines polylines_out;
-    // Orca Todo: fow now don't use fill_surface_by_multilines for zipzag infill
+    // Inlong Todo: fow now don't use fill_surface_by_multilines for zipzag infill
     if (params.full_infill() || params.multiline == 1 || params.pattern == ipCrossZag || params.pattern == ipZigZag || params.pattern == ipLockedZag) {
         if (!fill_surface_by_lines(surface, params, 0.f, 0.f, polylines_out))
             BOOST_LOG_TRIVIAL(error) << "FillRectilinear::fill_surface() fill_surface_by_lines() failed to fill a region.";
@@ -3671,7 +3671,7 @@ Points sample_grid_pattern(const Polygons& polygons, coord_t spacing, const Boun
     return sample_grid_pattern(union_ex(polygons), spacing, global_bounding_box);
 }
 
-// Orca: Introduced FillMonotonicLines from Prusa slicer, inhereting from FillRectilinear
+// Inlong: Introduced FillMonotonicLines from Prusa slicer, inhereting from FillRectilinear
 // This replaces the FillMonotonicLineWGapFill from BBS
 Polylines FillMonotonicLines::fill_surface(const Surface *surface, const FillParams &params)
 {
@@ -3684,7 +3684,7 @@ Polylines FillMonotonicLines::fill_surface(const Surface *surface, const FillPar
     return polylines_out;
 }
     
-// Orca: Replaced with FillMonotonicLines from Prusa slicer. Moved gap fill algorithm to
+// Inlong: Replaced with FillMonotonicLines from Prusa slicer. Moved gap fill algorithm to
 // FillBase to perform gap fill for all fill types.
 /*void FillMonotonicLineWGapFill::fill_surface_extrusion(const Surface* surface, const FillParams& params, ExtrusionEntitiesPtr& out)
 {
@@ -3705,7 +3705,7 @@ Polylines FillMonotonicLines::fill_surface(const Surface *surface, const FillPar
     //    fill_surface_by_lines(&rectilinear_surface, params2, polylines_rectilinear);
     //}
     
-    // Orca: The above causes pockmarks in top layer surfaces with a properly calibrated printer with PA and EM tuned.
+    // Inlong: The above causes pockmarks in top layer surfaces with a properly calibrated printer with PA and EM tuned.
     // Revert implementation to the prusa slicer approach that respects the infill/wall overlap setting
     // while retaining the gap fill logic below. The user can adjust the overlap calue to reduce overflow if needed.
     fill_surface_by_lines(surface, params2, polylines_rectilinear);

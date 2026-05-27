@@ -1,11 +1,11 @@
-# CLAUDE.md - Testing Guide for OrcaSlicer
+# CLAUDE.md - Testing Guide for InlongSlicer
 
-This guide provides comprehensive instructions for Claude Code when writing, maintaining, and understanding tests in the OrcaSlicer codebase.
+This guide provides comprehensive instructions for Claude Code when writing, maintaining, and understanding tests in the InlongSlicer codebase.
 
-## ⚠️ CRITICAL RULES - MUST FOLLOW
+## ?? CRITICAL RULES - MUST FOLLOW
 
 ### 1. **SECTIONS IN LOOPS - NEVER REUSE NAMES**
-❌ **WRONG**: Will cause unpredictable behavior
+??**WRONG**: Will cause unpredictable behavior
 ```cpp
 TEST_CASE("Bad loop sections") {
     for (int i = 0; i < 3; ++i) {
@@ -16,7 +16,7 @@ TEST_CASE("Bad loop sections") {
 }
 ```
 
-✅ **CORRECT**: Use DYNAMIC_SECTION or incorporate counter
+??**CORRECT**: Use DYNAMIC_SECTION or incorporate counter
 ```cpp
 TEST_CASE("Good loop sections") {
     for (int i = 0; i < 3; ++i) {
@@ -28,7 +28,7 @@ TEST_CASE("Good loop sections") {
 ```
 
 ### 2. **THREAD SAFETY - ASSERTIONS ARE NOT THREAD-SAFE**
-❌ **WRONG**: Will cause undefined behavior or crashes
+??**WRONG**: Will cause undefined behavior or crashes
 ```cpp
 TEST_CASE("Multi-threaded test") {
     std::vector<std::thread> threads;
@@ -40,7 +40,7 @@ TEST_CASE("Multi-threaded test") {
 }
 ```
 
-✅ **CORRECT**: Synchronize results, test on main thread
+??**CORRECT**: Synchronize results, test on main thread
 ```cpp
 TEST_CASE("Multi-threaded test") {
     std::vector<std::thread> threads;
@@ -60,24 +60,24 @@ TEST_CASE("Multi-threaded test") {
 ```
 
 ### 3. **EXPRESSION DECOMPOSITION - AVOID BINARY OPERATORS**
-❌ **WRONG**: Cannot decompose properly
+??**WRONG**: Cannot decompose properly
 ```cpp
 REQUIRE(a > 0 && b < 10);  // Shows "false" on failure, not individual values
 ```
 
-✅ **CORRECT**: Split into separate assertions
+??**CORRECT**: Split into separate assertions
 ```cpp
 REQUIRE(a > 0);
 REQUIRE(b < 10);  // Each shows individual values on failure
 ```
 
 ### 4. **FLOATING POINT - NEVER USE APPROX**
-❌ **WRONG**: Approx is deprecated and asymmetric
+??**WRONG**: Approx is deprecated and asymmetric
 ```cpp
 REQUIRE(calculated_value == Catch::Approx(expected));  // Deprecated!
 ```
 
-✅ **CORRECT**: Use floating point matchers
+??**CORRECT**: Use floating point matchers
 ```cpp
 REQUIRE_THAT(calculated_value, WithinAbs(expected, 0.001));
 REQUIRE_THAT(calculated_value, WithinRel(expected, 0.01));  // 1% tolerance
@@ -85,7 +85,7 @@ REQUIRE_THAT(calculated_value, WithinULP(expected, 4));     // 4 ULPs apart
 ```
 
 ### 5. **TEST ORDERING - ALWAYS USE RANDOM ORDER**
-✅ **REQUIRED**: For CI/CD and development
+??**REQUIRED**: For CI/CD and development
 ```bash
 # Essential flags for running tests
 ./tests --order rand --warn NoAssertions
@@ -96,24 +96,24 @@ REQUIRE_THAT(calculated_value, WithinULP(expected, 4));     // 4 ULPs apart
 ./tests --order rand --shard-index 2 --shard-count 3 --rng-seed 0xBEEF
 ```
 
-## Overview of OrcaSlicer's Testing Framework
+## Overview of InlongSlicer's Testing Framework
 
-OrcaSlicer uses **Catch2 v2** as its primary testing framework. The test suite is organized into several modules that mirror the project's architectural components:
+InlongSlicer uses **Catch2 v2** as its primary testing framework. The test suite is organized into several modules that mirror the project's architectural components:
 
-> **Note**: OrcaSlicer currently uses Catch2 v2 (based on `#include <catch2/catch.hpp>` includes). Some features mentioned in this guide are only available in v3 and marked accordingly.
+> **Note**: InlongSlicer currently uses Catch2 v2 (based on `#include <catch2/catch.hpp>` includes). Some features mentioned in this guide are only available in v3 and marked accordingly.
 
 ### Test Structure
 ```
 tests/
-├── CMakeLists.txt              # Main test configuration
-├── catch_main.hpp              # Custom test reporter
-├── libslic3r/                  # Core library tests (21 test files)
-├── fff_print/                  # FFF printing tests (12 test files)
-├── sla_print/                  # SLA printing tests (4 test files)
-├── libnest2d/                  # 2D nesting tests
-├── slic3rutils/               # Utility tests
-├── data/                      # Test data files and meshes
-└── catch2/                    # Catch2 framework files
+??? CMakeLists.txt              # Main test configuration
+??? catch_main.hpp              # Custom test reporter
+??? libslic3r/                  # Core library tests (21 test files)
+??? fff_print/                  # FFF printing tests (12 test files)
+??? sla_print/                  # SLA printing tests (4 test files)
+??? libnest2d/                  # 2D nesting tests
+??? slic3rutils/               # Utility tests
+??? data/                      # Test data files and meshes
+??? catch2/                    # Catch2 framework files
 ```
 
 ### Build Integration
@@ -443,7 +443,7 @@ TEST_CASE("Performance testing", "[Benchmark]") {
 }
 ```
 
-## OrcaSlicer-Specific Testing Patterns
+## InlongSlicer-Specific Testing Patterns
 
 ### Geometry Testing
 ```cpp
@@ -681,13 +681,13 @@ DynamicPrintConfig config = config(TestConfig::PLA_default);
 
 > **CRITICAL**: Never use Approx - it's deprecated due to asymmetry and other issues
 
-❌ **Incorrect**:
+??**Incorrect**:
 ```cpp
 REQUIRE(calculated_volume == expected_volume);           // Exact equality
 REQUIRE(calculated_volume == Catch::Approx(expected));   // Deprecated! Asymmetric!
 ```
 
-✅ **Correct**: Always use floating point matchers
+??**Correct**: Always use floating point matchers
 ```cpp
 // Absolute tolerance - good when values are near zero
 REQUIRE_THAT(calculated_volume, WithinAbs(expected_volume, 0.001));
@@ -712,19 +712,19 @@ Catch::StringMaker<double>::precision = 15;  // Show more decimal places
 - **Default behavior**: Only uses relative comparison, so `Approx(0) == X` only works for `X == 0`
 
 ### Path Handling
-❌ **Incorrect**:
+??**Incorrect**:
 ```cpp
 std::string path = TEST_DATA_DIR + "/model.obj";  // May have path separator issues
 ```
 
-✅ **Correct**:
+??**Correct**:
 ```cpp
 std::string path = std::string(TEST_DATA_DIR) + "/model.obj";
 // or use boost::filesystem for complex path operations
 ```
 
 ### Exception Testing
-❌ **Incorrect**:
+??**Incorrect**:
 ```cpp
 bool threw_exception = false;
 try {
@@ -735,7 +735,7 @@ try {
 REQUIRE(threw_exception);
 ```
 
-✅ **Correct**:
+??**Correct**:
 ```cpp
 REQUIRE_THROWS(risky_function());
 // or for specific exceptions
@@ -744,11 +744,11 @@ REQUIRE_THROWS_AS(risky_function(), SpecificException);
 
 ### Thread Safety
 
-⚠️ **CRITICAL**: Catch2 assertions are **NOT thread-safe** by default!
+?? **CRITICAL**: Catch2 assertions are **NOT thread-safe** by default!
 
-> **Note**: Catch2 v3.9.0+ has opt-in thread-safe assertions via `CATCH_CONFIG_EXPERIMENTAL_THREAD_SAFE_ASSERTIONS`, but OrcaSlicer uses v2
+> **Note**: Catch2 v3.9.0+ has opt-in thread-safe assertions via `CATCH_CONFIG_EXPERIMENTAL_THREAD_SAFE_ASSERTIONS`, but InlongSlicer uses v2
 
-❌ **Incorrect**: Will cause undefined behavior or crashes
+??**Incorrect**: Will cause undefined behavior or crashes
 ```cpp
 std::thread t([&]() {
     REQUIRE(threaded_operation() == expected);  // NOT THREAD-SAFE!
@@ -756,7 +756,7 @@ std::thread t([&]() {
 });
 ```
 
-✅ **Correct**: Collect results, assert on main thread
+??**Correct**: Collect results, assert on main thread
 ```cpp
 std::atomic<bool> success{false};
 std::atomic<int> error_count{0};
@@ -923,7 +923,7 @@ std::foo_function();     // Always call qualified
 
 ### Catch2 Version-Specific Limitations
 ```cpp
-// OrcaSlicer uses Catch2 v2 - these features are NOT available:
+// InlongSlicer uses Catch2 v2 - these features are NOT available:
 // SKIP() macro                          - Available in v3.3.0+
 // Thread-safe assertions                - Available in v3.9.0+  
 // BENCHMARK improvements                 - Many in v3.x
@@ -958,4 +958,4 @@ std::foo_function();     // Always call qualified
 ./tests --order rand --warn NoAssertions --durations yes
 ```
 
-This comprehensive guide ensures robust, maintainable, and efficient testing practices for OrcaSlicer development with Claude Code, incorporating all critical knowledge from the official Catch2 documentation.
+This comprehensive guide ensures robust, maintainable, and efficient testing practices for InlongSlicer development with Claude Code, incorporating all critical knowledge from the official Catch2 documentation.

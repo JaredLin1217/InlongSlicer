@@ -916,7 +916,7 @@ wxBoxSizer *PreferencesDialog::create_item_checkbox(wxString title, wxString too
     wxBoxSizer *m_sizer_checkbox  = new wxBoxSizer(wxHORIZONTAL);
 
     m_sizer_checkbox->AddSpacer(FromDIP(DESIGN_LEFT_MARGIN));
-    
+
     auto tip = tooltip.IsEmpty() ? title : tooltip; // auto fill tooltips with title if its empty
 
     auto checkbox_title = new wxStaticText(m_parent, wxID_ANY, title, wxDefaultPosition, DESIGN_TITLE_SIZE, wxST_NO_AUTORESIZE);
@@ -1087,7 +1087,7 @@ wxBoxSizer* PreferencesDialog::create_item_button(wxString title, wxString title
     m_staticTextPath->SetForegroundColour(DESIGN_GRAY900_COLOR);
     m_staticTextPath->SetFont(::Label::Body_14);
     m_staticTextPath->Wrap(DESIGN_TITLE_SIZE.x);
-    
+
     m_staticTextPath->SetToolTip(tooltip.IsEmpty() ? tooltip2 : tooltip); // use button tooltip if label tooltip empty
 
     auto m_button_download = new Button(m_parent, title2);
@@ -1320,7 +1320,7 @@ void PreferencesDialog::Split(const std::string &src, const std::string &separat
 
 void PreferencesDialog::create_items()
 {
-    // ORCA
+    // INLONG
     // Window focus follows item creation order. so below code has to be in same order with UI
     // Create functions for custom controls to keep list clean
     // Tooltips added automatically from related title if its empty
@@ -1330,7 +1330,7 @@ void PreferencesDialog::create_items()
     auto v_gap = FromDIP(4);
 
     //////////////////////////
-    //// GENERAL TAB 
+    //// GENERAL TAB
     /////////////////////////////////////
     m_pref_tabs->AppendItem(_L("General"));
     f_sizers.push_back(new wxFlexGridSizer(1, 1, v_gap, 0));
@@ -1408,7 +1408,7 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_step_dialog);
 
     auto item_backup           = create_item_backup(_L("Auto backup"), _L("Backup your project periodically for restoring from the occasional crash."));
-    g_sizer->Add(item_backup); 
+    g_sizer->Add(item_backup);
 
     //// GENERAL > Preset
     g_sizer->Add(create_item_title(_L("Preset")), 1, wxEXPAND);
@@ -1427,7 +1427,7 @@ void PreferencesDialog::create_items()
     });
     auto item_filament_area_height = create_item_spinctrl(_L("Optimize filaments area height for..."), "", _L("filaments"), _L("Optimizes filament area maximum height by chosen filament count."),
         "filaments_area_preferred_count", 8, 99, [this](int value) {m_filament_height_timer.StartOnce(500);});
-    g_sizer->Add(item_filament_area_height); 
+    g_sizer->Add(item_filament_area_height);
 
     //// GENERAL > Features
     g_sizer->Add(create_item_title(_L("Features")), 1, wxEXPAND);
@@ -1454,7 +1454,7 @@ void PreferencesDialog::create_items()
     sizer_page->Add(g_sizer, 0, wxEXPAND);
 
     //////////////////////////
-    //// CONTROL TAB 
+    //// CONTROL TAB
     /////////////////////////////////////
     m_pref_tabs->AppendItem(_L("Control"));
     f_sizers.push_back(new wxFlexGridSizer(1, 1, v_gap, 0));
@@ -1483,7 +1483,7 @@ void PreferencesDialog::create_items()
 
     auto item_mix_print_high_low_temperature = create_item_checkbox(_L("Remove mixed temperature restriction"), _L("With this option enabled, you can print materials with a large temperature difference together."), "enable_high_low_temp_mixed_printing");
     g_sizer->Add(item_mix_print_high_low_temperature);
- 
+
     //// CONTROL > Camera
     g_sizer->Add(create_item_title(_L("Camera")), 1, wxEXPAND);
 
@@ -1591,7 +1591,7 @@ void PreferencesDialog::create_items()
     sizer_page->Add(g_sizer, 0, wxEXPAND);
 
     //////////////////////////
-    //// ONLINE TAB 
+    //// ONLINE TAB
     /////////////////////////////////////
     m_pref_tabs->AppendItem(_L("Online"));
     f_sizers.push_back(new wxFlexGridSizer(1, 1, v_gap, 0));
@@ -1603,7 +1603,7 @@ void PreferencesDialog::create_items()
 
     auto item_region           = create_item_region_combobox(_L("Login region"), "");
     g_sizer->Add(item_region);
- 
+
     auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud services e.g. Inlong Cloud and Bambu Cloud. This stops the transmission of data to Bambu's cloud services too. Users who don't use BBL machines or use LAN mode only can safely turn on this function."), "stealth_mode");
     g_sizer->Add(item_stealth_mode);
 
@@ -1802,7 +1802,7 @@ void PreferencesDialog::create_items()
     sizer_page->Add(g_sizer, 0, wxEXPAND);
 
     //////////////////////////
-    //// ASSOCIATE TAB 
+    //// ASSOCIATE TAB
     /////////////////////////////////////
 #ifdef _WIN32
     m_pref_tabs->AppendItem(_L("Associate"));
@@ -1975,7 +1975,7 @@ wxBoxSizer* PreferencesDialog::create_debug_page()
     auto item_internal_developer = create_item_checkbox(_L("Internal developer mode"), _L("Internal developer mode"), "internal_developer_mode");
 
     auto title_host = create_item_title(_L("Host Setting"));
-    // ORCA RadioGroup
+    // INLONG RadioGroup
     auto radio_group = new RadioGroup(m_parent, {
         _L("DEV host: api-dev.bambu-lab.com/v1"), // 0
         _L("QA  host: api-qa.bambu-lab.com/v1"),  // 1
@@ -2063,7 +2063,7 @@ wxBoxSizer* PreferencesDialog::create_debug_page()
                     wxGetApp().request_user_logout();
                     agent->set_country_code(country_code);
                 }
-                ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Warning"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM);  // ORCA VisibleButtons instead ButtonStyle 
+                ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Warning"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM);  // INLONG VisibleButtons instead ButtonStyle
                 confirm_dlg.update_text(_L("Cloud environment switched, please login again!"));
                 confirm_dlg.on_show();
             }

@@ -227,7 +227,7 @@ struct SurfaceFillParams
     coordf_t    	overlap = 0.;
     // Angle as provided by the region config, in radians.
     float       	angle = 0.f;
-    // Orca: fixed_angle
+    // Inlong: fixed_angle
     bool        fixed_angle = false;
     // Is bridging used for this fill? Bridging parameters may be used even if this->flow.bridge() is not set.
     bool 			bridge;
@@ -608,7 +608,7 @@ void split_solid_surface(size_t layer_id, const SurfaceFill &fill, ExPolygons &n
         fill.params.pattern == ipRectilinear || fill.params.pattern == ipMonotonic ||
         fill.params.pattern == ipMonotonicLine || fill.params.pattern == ipAlignedRectilinear;
 
-    // ORCA: For non-line patterns, split by a geometric "core" so only thin areas get rerouted.
+    // INLONG: For non-line patterns, split by a geometric "core" so only thin areas get rerouted.
     if (!line_based_pattern) {
         const coord_t scaled_spacing = scaled<coord_t>(fill.params.spacing);
 
@@ -922,7 +922,7 @@ std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_p
                         params.extrusion_role = erSolidInfill;
                     }
                 }
-                // Orca: apply fill multiline only for sparse infill
+                // Inlong: apply fill multiline only for sparse infill
                 params.multiline = params.extrusion_role == erInternalInfill ? int(region_config.fill_multiline) : 1;
 
                 // Pass through gyroid_optimized only when the effective pattern is Gyroid,
@@ -951,7 +951,7 @@ std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_p
 		        params.bridge = is_bridge || Fill::use_bridge_flow(params.pattern);
                 const bool is_thick_bridge = surface.is_bridge() && (surface.is_internal_bridge() ? object_config.thick_internal_bridges : object_config.thick_bridges);
 				params.flow   = params.bridge ?
-					//Orca: enable thick bridge based on config
+					//Inlong: enable thick bridge based on config
 					layerm.bridging_flow(extrusion_role, is_thick_bridge) :
 					layerm.flow(extrusion_role, (surface.thickness == -1) ? layer.height : surface.thickness);
 				// record speed params
@@ -1336,7 +1336,7 @@ void Layer::make_fills(FillAdaptive::Octree* adaptive_fill_octree, FillAdaptive:
                 params.density = f->print_object_config->internal_bridge_density.get_abs_value(1.0);
                 params.dont_adjust = true;
             }
-            // Orca: Elephant foot compensation for solid layers above bottommost by infill density manipulation.
+            // Inlong: Elephant foot compensation for solid layers above bottommost by infill density manipulation.
             float elefant_density = f->print_object_config->elefant_foot_layers_density.get_abs_value(1.0);
             if (!is_approx(elefant_density, 1.0f) && surface_fill.surface.is_solid_infill()) {
                 size_t elefant_layers = f->print_object_config->elefant_foot_compensation_layers.value;

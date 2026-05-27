@@ -6,7 +6,7 @@ static bool gDarkMode = false;
 static bool operator<(wxColour const &l, wxColour const &r) { return l.GetRGBA() < r.GetRGBA(); }
 
 static std::map<wxColour, wxColour> gDarkColors{
-    {"#D66C47", "#A64E33"}, // rgb(214, 108, 71)    ORCA color
+    {"#D66C47", "#A64E33"}, // rgb(214, 108, 71)    INLONG color
     {"#1F8EEA", "#2778D2"}, // rgb(31, 142, 234)   ???
     {"#FF6F00", "#D15B00"}, // rgb(255, 111, 0)    Secondary color
     {"#D01B1B", "#BB2A3A"}, // rgb(208, 27, 27)    ???
@@ -14,7 +14,7 @@ static std::map<wxColour, wxColour> gDarkColors{
     {"#DFDFDF", "#3E3E45"}, // rgb(223, 223, 223)  Button Background color
     {"#D4D4D4", "#4D4D54"}, // rgb(212, 212, 212)  Button Background color on Hover
     {"#6B6A6A", "#909090"}, // rgb(107, 107, 106)  Button Dimmed text
-    {"#E18263", "#B9573A"}, // rgb(214, 108, 71)    Button Confirm Color hover | ORCA Color Hover
+    {"#E18263", "#B9573A"}, // rgb(214, 108, 71)    Button Confirm Color hover | INLONG Color Hover
     {"#6B6B6A", "#B3B3B5"}, // rgb(107, 107, 106)  Input box side text
     {"#2C2C2E", "#B3B3B4"}, // rgb(44, 44, 46)     ???
     {"#6B6B6B", "#818183"}, // rgb(107, 107, 107)  Disabled Text
@@ -37,7 +37,7 @@ static std::map<wxColour, wxColour> gDarkColors{
     {"#FEFFFF", "#242428"}, // rgb(254, 255, 255)  Side Tabbar bg | 
     {"#A6A9AA", "#2D2D29"}, // rgb(166, 169, 170)  Seperator color
     {"#363636", "#B2B3B5"}, // rgb(54, 54, 54)     Sidebar > Parameter Label/Title color | Sidebar tab text | Create Filament window text
-    {"#F0F0F1", "#333337"}, // rgb(240, 240, 241)  Disabled element background // ORCA Used better background color for dark mode
+    {"#F0F0F1", "#333337"}, // rgb(240, 240, 241)  Disabled element background // INLONG Used better background color for dark mode
     {"#9E9E9E", "#53545A"}, // rgb(158, 158, 158)  ???
     {"#D7E8DE", "#1F2B27"}, // rgb(215, 232, 222)  Not Used anymore // Leftover from BBS
     {"#2B3436", "#808080"}, // rgb(43, 52, 54)     Not Used anymore // Leftover from BBS. Was used as main fill color of icons
@@ -46,9 +46,9 @@ static std::map<wxColour, wxColour> gDarkColors{
     {"#FFFEFE", "#D9D9D9"}, // rgb(255, 254, 254)  Sidebar > Toggle button thumb color
     {"#EBF9F0", "#293F34"},
     //{"#F0F0F0", "#4C4C54"},
-    // ORCA
-    {"#F5DAD1", "#3C2D27"}, // rgb(191, 225, 222)  Dropdown checked item background color > ORCA color with %25 opacity
-    {"#FBF0ED", "#332A27"}, // rgb(229, 240, 238)  Combo / Dropdown focused background color > ORCA color with %10 opacity
+    // INLONG
+    {"#F5DAD1", "#3C2D27"}, // rgb(191, 225, 222)  Dropdown checked item background color > INLONG color with %25 opacity
+    {"#FBF0ED", "#332A27"}, // rgb(229, 240, 238)  Combo / Dropdown focused background color > INLONG color with %10 opacity
 };
 
 std::tuple<double, double, double> StateColor::GetLAB(const wxColour& color) {

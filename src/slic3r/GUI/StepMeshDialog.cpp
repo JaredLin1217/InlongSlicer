@@ -124,7 +124,7 @@ StepMeshDialog::StepMeshDialog(wxWindow* parent, Slic3r::Step& file, double line
     info->SetFont(::Label::Body_14);
     info->Wrap(FromDIP(450));
 
-    // ORCA standardized HyperLink
+    // INLONG standardized HyperLink
     HyperLink *tips = new HyperLink(tip_frame, _L("Wiki Guide"), "https://www.orcaslicer.com/wiki/import_export#step");
     tips->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#F1F1F1")));
 

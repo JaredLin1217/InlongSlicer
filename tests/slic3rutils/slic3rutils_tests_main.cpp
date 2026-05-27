@@ -1,7 +1,7 @@
 #include <catch2/catch_all.hpp>
 
 #include "slic3r/Utils/Http.hpp"
-#include "slic3r/Utils/OrcaCloudServiceAgent.hpp"
+#include "slic3r/Utils/InlongCloudServiceAgent.hpp"
 
 namespace {
 
@@ -28,7 +28,7 @@ nlohmann::json nested_session_json(const nlohmann::json& metadata)
 
 std::string resolved_display_name(const nlohmann::json& session)
 {
-    Slic3r::OrcaCloudServiceAgent agent("");
+    Slic3r::InlongCloudServiceAgent agent("");
     REQUIRE(agent.set_user_session(session, false));
     return agent.get_user_nickname();
 }
@@ -53,60 +53,60 @@ TEST_CASE("Check SSL certificates paths", "[Http][NotWorking]") {
     REQUIRE(status == 200);
 }
 
-TEST_CASE("Orca cloud flat session resolves display name consistently", "[OrcaCloudServiceAgent]")
+TEST_CASE("Inlong cloud flat session resolves display name consistently", "[InlongCloudServiceAgent]")
 {
     CHECK(resolved_display_name(flat_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"display_name", "Display Name"},
         {"nickname", "Nickname"}
     })) == "Display Name");
 
     CHECK(resolved_display_name(flat_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"nickname", "Nickname"}
     })) == "Nickname");
 
     CHECK(resolved_display_name(flat_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"full_name", "Full Name"}
     })) == "Full Name");
 
     CHECK(resolved_display_name(flat_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"name", "Provider Name"}
     })) == "Provider Name");
 
     CHECK(resolved_display_name(flat_session_json({
-        {"username", "orca_username"}
-    })) == "orca_username");
+        {"username", "inlong_username"}
+    })) == "inlong_username");
 }
 
-TEST_CASE("Orca cloud nested session resolves display name consistently", "[OrcaCloudServiceAgent]")
+TEST_CASE("Inlong cloud nested session resolves display name consistently", "[InlongCloudServiceAgent]")
 {
     CHECK(resolved_display_name(nested_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"display_name", "Display Name"},
         {"nickname", "Nickname"}
     })) == "Display Name");
 
     CHECK(resolved_display_name(nested_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"nickname", "Nickname"}
     })) == "Nickname");
 
     CHECK(resolved_display_name(nested_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"full_name", "Full Name"}
     })) == "Full Name");
 
     CHECK(resolved_display_name(nested_session_json({
-        {"username", "orca_username"},
+        {"username", "inlong_username"},
         {"name", "Provider Name"}
     })) == "Provider Name");
 
     CHECK(resolved_display_name(nested_session_json({
-        {"username", "orca_username"}
-    })) == "orca_username");
+        {"username", "inlong_username"}
+    })) == "inlong_username");
 }
 
 TEST_CASE("Http digest authentication", "[Http][NotWorking]") {

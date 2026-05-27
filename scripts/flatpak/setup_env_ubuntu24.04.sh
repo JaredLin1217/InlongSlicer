@@ -7,9 +7,9 @@ flatpak install flathub org.gnome.Platform//50 org.gnome.Sdk//50 org.freedesktop
 
 
 ##
-# in OrcaSlicer folder, run following command to build Orca
+# in InlongSlicer folder, run following command to build InlongSlicer
 # # First time build
-# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/com.orcaslicer.OrcaSlicer.yml
+# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/io.github.JaredLin1217.InlongSlicer.yml
 
-# # Subsequent builds (only rebuilding OrcaSlicer)
-# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user build-dir scripts/flatpak/com.orcaslicer.OrcaSlicer.yml --build-only=OrcaSlicer
+# # Subsequent builds (only rebuilding InlongSlicer)
+# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user build-dir scripts/flatpak/io.github.JaredLin1217.InlongSlicer.yml --build-only=InlongSlicer

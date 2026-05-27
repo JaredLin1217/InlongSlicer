@@ -487,7 +487,7 @@ private:
 	// A fill-in direction (positive Y, negative Y) alternates with each layer.
 	wipe_shape   	m_current_shape = SHAPE_NORMAL;
     size_t 	m_current_tool  = 0;
-	// Orca: support mmu wipe tower
+	// Inlong: support mmu wipe tower
     std::vector<std::vector<float>> wipe_volumes;
 
 	float           m_depth_traversed = 0.f; // Current y position at the wipe tower.

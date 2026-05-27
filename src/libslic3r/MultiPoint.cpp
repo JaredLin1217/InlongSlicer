@@ -370,7 +370,7 @@ Points MultiPoint::concave_hull_2d(const Points& pts, const double tolerence)
 }
 
 
-//Orca: Distancing function used by IOI wall ordering algorithm for arachne
+//Inlong: Distancing function used by IOI wall ordering algorithm for arachne
 /**
  * @brief Calculates the squared distance between a point and a line segment defined by two points.
  *
@@ -392,7 +392,7 @@ Points MultiPoint::concave_hull_2d(const Points& pts, const double tolerence)
     return (p - projection).squaredNorm();
 }
 
-//Orca: Distancing function used by IOI wall ordering algorithm for arachne
+//Inlong: Distancing function used by IOI wall ordering algorithm for arachne
 /**
  * @brief Calculates the minimum distance between two lines defined by sets of points.
  *

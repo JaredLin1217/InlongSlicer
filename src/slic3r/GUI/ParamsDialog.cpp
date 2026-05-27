@@ -52,7 +52,7 @@ ParamsDialog::ParamsDialog(wxWindow * parent)
         }
 #else
         auto tab = dynamic_cast<Tab *>(m_panel->get_current_tab());
-        // ORCA: Validate filament temperature pairs before closing the material settings dialog.
+        // INLONG: Validate filament temperature pairs before closing the material settings dialog.
         if (tab && !tab->validate_filament_temperature_pairs()) {
             if (event.CanVeto())
                 event.Veto();

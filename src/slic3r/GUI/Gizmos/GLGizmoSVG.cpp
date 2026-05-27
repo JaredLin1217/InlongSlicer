@@ -397,7 +397,7 @@ IconManager::VIcons init_icons(IconManager &mng, const GuiCfg &cfg)
         "open.svg",          // changhe_file
         "burn.svg",          // bake
         "save.svg",          // save
-        "obj_warning.svg",   // exclamation // ORCA: use obj_warning instead exclamation. exclamation is not compatible with low res
+        "obj_warning.svg",   // exclamation // INLONG: use obj_warning instead exclamation. exclamation is not compatible with low res
         "lock_closed.svg",   // lock
         "lock_open.svg",     // unlock
         "reflection_x.svg",  // reflection_x
@@ -437,7 +437,7 @@ bool reset_button(const IconManager::VIcons &icons)
     //return ImGui::Button((btn_label + "##" + label_id).c_str());
 
     auto icon = get_icon(icons, IconType::reset_value, IconState::hovered);
-    return clickable(icon, icon); // ORCA use orange color for both states
+    return clickable(icon, icon); // INLONG use orange color for both states
 }
 
 } // namespace 
@@ -448,7 +448,7 @@ void GLGizmoSVG::on_render_input_window(float x, float y, float bottom_limit)
 
     double screen_scale = wxDisplay(wxGetApp().plater()).GetScaleFactor();
 
-    // Orca
+    // Inlong
     ImGuiWrapper::push_toolbar_style(m_parent.get_scale());
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0, 5.0) * screen_scale);
     ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarSize, 4.0f * screen_scale);
@@ -506,7 +506,7 @@ void GLGizmoSVG::on_render_input_window(float x, float y, float bottom_limit)
 
     GizmoImguiEnd();
 
-    // Orca
+    // Inlong
     ImGui::PopStyleVar(2);
     ImGuiWrapper::pop_toolbar_style();
 }
@@ -1668,7 +1668,7 @@ void GLGizmoSVG::draw_size()
 {
     ImGui::AlignTextToFramePadding();
     bool can_reset = m_scale_width.has_value() || m_scale_height.has_value();
-    ImVec4 text_color = can_reset ? ImGuiWrapper::COL_MODIFIED : ImGui::GetStyleColorVec4(ImGuiCol_Text); // ORCA use modified color on text
+    ImVec4 text_color = can_reset ? ImGuiWrapper::COL_MODIFIED : ImGui::GetStyleColorVec4(ImGuiCol_Text); // INLONG use modified color on text
     ImGuiWrapper::text_colored(text_color, m_gui_cfg->translations.size);
     if (ImGui::IsItemHovered()){
         size_t count_points = 0;
@@ -1773,7 +1773,7 @@ void GLGizmoSVG::draw_size()
     
 
     // reset button
-    //bool can_reset = m_scale_width.has_value() || m_scale_height.has_value(); // ORCA update variable above if condition change
+    //bool can_reset = m_scale_width.has_value() || m_scale_height.has_value(); // INLONG update variable above if condition change
     if (can_reset) {
         if (reset_button(m_icons)) {
             new_relative_scale = Vec3d(1./m_scale_width.value_or(1.f), 1./m_scale_height.value_or(1.f), 1.);
@@ -1841,7 +1841,7 @@ void GLGizmoSVG::draw_distance()
     ScopeGuard sg([imgui = m_imgui]() { imgui->disabled_end(); });
 
     ImGui::AlignTextToFramePadding();
-    ImVec4 text_color = m_distance.has_value() ? ImGuiWrapper::COL_MODIFIED : ImGui::GetStyleColorVec4(ImGuiCol_Text); // ORCA use modified color on text
+    ImVec4 text_color = m_distance.has_value() ? ImGuiWrapper::COL_MODIFIED : ImGui::GetStyleColorVec4(ImGuiCol_Text); // INLONG use modified color on text
     ImGuiWrapper::text_colored(text_color, m_gui_cfg->translations.distance);
     ImGui::SameLine(m_gui_cfg->input_offset);
     ImGui::SetNextItemWidth(m_gui_cfg->input_width);
@@ -1885,7 +1885,7 @@ void GLGizmoSVG::draw_distance()
 void GLGizmoSVG::draw_rotation()
 {
     ImGui::AlignTextToFramePadding();
-    ImVec4 text_color = m_angle.has_value() ? ImGuiWrapper::COL_MODIFIED : ImGui::GetStyleColorVec4(ImGuiCol_Text); // ORCA use modified color on text
+    ImVec4 text_color = m_angle.has_value() ? ImGuiWrapper::COL_MODIFIED : ImGui::GetStyleColorVec4(ImGuiCol_Text); // INLONG use modified color on text
     ImGuiWrapper::text_colored(text_color, m_gui_cfg->translations.rotation);
     ImGui::SameLine(m_gui_cfg->input_offset);
     ImGui::SetNextItemWidth(m_gui_cfg->input_width);
@@ -2006,7 +2006,7 @@ void GLGizmoSVG::draw_model_type()
     ModelVolumeType type = m_volume->type();
 
     //TRN EmbossOperation
-    ImGuiWrapper::push_radio_style(m_parent.get_scale()); //ORCA
+    ImGuiWrapper::push_radio_style(m_parent.get_scale()); //INLONG
     if (ImGui::RadioButton(_u8L("Join").c_str(), type == part))
         new_type = part;
     else if (ImGui::IsItemHovered())

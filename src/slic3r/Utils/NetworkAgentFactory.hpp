@@ -4,7 +4,7 @@
 #include "ICloudServiceAgent.hpp"
 #include "IPrinterAgent.hpp"
 #include "NetworkAgent.hpp"
-#include "OrcaCloudServiceAgent.hpp"
+#include "InlongCloudServiceAgent.hpp"
 #include "BBLCloudServiceAgent.hpp"
 #include "BBLNetworkPlugin.hpp"
 #include "libslic3r/AppConfig.hpp"
@@ -14,8 +14,13 @@
 #include <vector>
 
 namespace Slic3r {
-static constexpr char ORCA_PRINTER_AGENT_ID[] = "orca";
+static constexpr char INLONG_PRINTER_AGENT_ID[] = "inlong";
 static constexpr char BBL_PRINTER_AGENT_ID[] = "bbl";
+
+inline std::string canonical_printer_agent_id(const std::string& id)
+{
+    return id;
+}
 
 // Factory function type for creating printer agents
 using PrinterAgentFactory =
@@ -24,7 +29,7 @@ using PrinterAgentFactory =
 // Information about a registered printer agent
 struct PrinterAgentInfo
 {
-    std::string         id;           // e.g., "orca", "bbl"
+    std::string         id;           // e.g., "inlong", "bbl"
     std::string         display_name; // e.g., "Inlong Native", "Bambu Lab"
     PrinterAgentFactory factory;      // Function to create the agent
 
@@ -53,7 +58,7 @@ struct PrinterAgentInfo
  *   auto agent = create_agent_from_config(log_dir, app_config);
  *
  *   // When printer is selected - create printer agent from registry
- *   auto printer = NetworkAgentFactory::create_printer_agent_by_id("orca", cloud, log_dir);
+ *   auto printer = NetworkAgentFactory::create_printer_agent_by_id("inlong", cloud, log_dir);
  */
 class NetworkAgentFactory
 {
@@ -72,7 +77,7 @@ public:
     /**
      * Register a printer agent type
      *
-     * @param id Unique identifier for the agent (e.g., "orca", "bbl")
+     * @param id Unique identifier for the agent (e.g., "inlong", "bbl")
      * @param display_name Human-readable name for UI
      * @param factory Factory function to create the agent
      * @return true if registration succeeded, false if already registered
@@ -124,14 +129,14 @@ public:
      * Create a cloud service agent based on provider type.
      * Handles authentication, project sync, and other cloud services.
      *
-     * @param provider Which implementation to use (Orca or BBL)
+     * @param provider Which implementation to use (Inlong or BBL)
      * @param log_dir Directory for log files
      * @return Shared pointer to ICloudServiceAgent implementation
      */
     static std::shared_ptr<ICloudServiceAgent> create_cloud_agent(const std::string& provider, const std::string& log_dir)
     {
-        if (provider == ORCA_CLOUD_PROVIDER) {
-            return std::make_shared<OrcaCloudServiceAgent>(log_dir);
+        if (provider == INLONG_CLOUD_PROVIDER) {
+            return std::make_shared<InlongCloudServiceAgent>(log_dir);
         } else if (provider == BBL_CLOUD_PROVIDER) {
             auto& plugin = BBLNetworkPlugin::instance();
             if (!plugin.is_loaded()) {
@@ -162,7 +167,7 @@ private:
  * Creates a NetworkAgent with cloud agent only. The printer agent is created
  * separately when a printer is selected, via create_printer_agent_by_id().
  *
- * Cloud provider: Always creates OrcaCloudServiceAgent as the primary provider.
+ * Cloud provider: Always creates InlongCloudServiceAgent as the primary provider.
  * Third-party cloud agents (e.g., Bambu) are created from the cloud_providers
  * AppConfig setting and added via NetworkAgent::add_cloud_agent().
  *

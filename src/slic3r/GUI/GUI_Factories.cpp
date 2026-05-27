@@ -568,7 +568,7 @@ wxMenu* MenuFactory::append_submenu_add_generic(wxMenu* menu, ModelVolumeType ty
     return sub_menu;
 }
 
-// Orca: add submenu for adding handy models
+// Inlong: add submenu for adding handy models
 wxMenu* MenuFactory::append_submenu_add_handy_model(wxMenu* menu, ModelVolumeType type) {
     auto sub_menu = new wxMenu;
 
@@ -581,9 +581,9 @@ wxMenu* MenuFactory::append_submenu_add_handy_model(wxMenu* menu, ModelVolumeTyp
                 bool                                 is_stringhell = false;
                 std::string                          file_name     = item;
                 if (file_name == L("Inlong Cube"))
-                    file_name = "OrcaCube_v2.3mf";
+                    file_name = "InlongCube_v2.3mf";
                 else if (file_name == L("Inlong Tolerance Test"))
-                    file_name = "OrcaToleranceTest.drc";
+                    file_name = "InlongToleranceTest.drc";
                 else if (file_name == L("3DBenchy"))
                     file_name = "3DBenchy.drc";
                 else if (file_name == L("Cali Cat"))
@@ -595,7 +595,7 @@ wxMenu* MenuFactory::append_submenu_add_handy_model(wxMenu* menu, ModelVolumeTyp
                 else if (file_name == L("Stanford Bunny"))
                     file_name = "Stanford_Bunny.drc";
                 else if (file_name == L("Inlong String Hell")) {
-                    file_name     = "Orca_stringhell.drc";
+                    file_name     = "Inlong_stringhell.drc";
                     is_stringhell = true;
                 } else
                     return;
@@ -832,7 +832,7 @@ wxMenuItem* MenuFactory::append_menu_item_change_type(wxMenu* menu)
             }
             evt.Check(has_type);
 
-            // ORCA Fix crash caused by SVG/TEXT volumes cant be Support Enforcer/Blocker type
+            // INLONG Fix crash caused by SVG/TEXT volumes cant be Support Enforcer/Blocker type
             for (auto item : sels) {
                 if (model->GetItemType(item) == itVolume){
                     auto vol_idx = model->GetVolumeIdByItem(item);
@@ -1378,7 +1378,7 @@ void MenuFactory::create_default_menu()
         []() {return true; }, m_parent);
     append_submenu(&m_default_menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "menu_add_part",
         []() {return true; }, m_parent);
-    append_menu_item(&m_default_menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
+    append_menu_item(&m_default_menu, wxID_ANY, _L("Add Models"), "", // INLONG: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "menu_add_part", &m_default_menu,
         []() {return wxGetApp().plater()->can_add_model(); }, m_parent);
 #else
@@ -1386,7 +1386,7 @@ void MenuFactory::create_default_menu()
         []() {return true; }, m_parent);
     append_submenu(&m_default_menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "",
         []() {return true; }, m_parent);
-    append_menu_item(&m_default_menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
+    append_menu_item(&m_default_menu, wxID_ANY, _L("Add Models"), "", // INLONG: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "", &m_default_menu,
         []() {return wxGetApp().plater()->can_add_model(); }, m_parent);
 #endif
@@ -1665,7 +1665,7 @@ void MenuFactory::create_filament_action_menu(bool init, int active_filament_men
     append_submenu(menu, sub_menu, wxID_ANY, _L("Merge with"), "", "",
         [filaments_cnt]() { return filaments_cnt > 1; }, m_parent);
 
-    // ORCA use delete item on end of menu to prevent accidental clicks. clicking to submenus(merge) already not allowed by OS
+    // INLONG use delete item on end of menu to prevent accidental clicks. clicking to submenus(merge) already not allowed by OS
     const int delete_id = menu->FindItem(_L("Delete"));
     if (delete_id != wxNOT_FOUND)
         menu->Destroy(delete_id);
@@ -1675,7 +1675,7 @@ void MenuFactory::create_filament_action_menu(bool init, int active_filament_men
             plater()->sidebar().delete_filament(-2); }, "", nullptr,
         []() {
             return plater()->sidebar().combos_filament().size() > 1
-                // Orca: only show delete filament option for SEMM machines unless is BBL
+                // Inlong: only show delete filament option for SEMM machines unless is BBL
                 && Sidebar::should_show_SEMM_buttons();
         }, m_parent);
 }
@@ -1771,7 +1771,7 @@ void MenuFactory::create_plate_menu()
         []() {return true; }, m_parent);
     append_submenu(menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "menu_add_part",
         []() {return true; }, m_parent);
-    append_menu_item(menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
+    append_menu_item(menu, wxID_ANY, _L("Add Models"), "", // INLONG: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "menu_add_part", menu,
         []() {return wxGetApp().plater()->can_add_model(); }, m_parent);
 #else
@@ -1779,7 +1779,7 @@ void MenuFactory::create_plate_menu()
         []() {return true; }, m_parent);
     append_submenu(menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "",
         []() {return true; }, m_parent);
-    append_menu_item(menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
+    append_menu_item(menu, wxID_ANY, _L("Add Models"), "", // INLONG: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "", menu,
         []() {return wxGetApp().plater()->can_add_model(); }, m_parent);
 #endif

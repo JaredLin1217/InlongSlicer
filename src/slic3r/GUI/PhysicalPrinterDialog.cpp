@@ -173,9 +173,10 @@ void PhysicalPrinterDialog::build_printhost_settings(ConfigOptionsGroup* m_optgr
 
             // Resolve selected agent: use config value if valid, otherwise fall back to default
             std::string selected_agent = m_config->opt_string("printer_agent");
+            selected_agent = canonical_printer_agent_id(selected_agent);
             auto it = std::find_if(agents.begin(), agents.end(), [&selected_agent](const auto& a) { return a.id == selected_agent; });
             if (it == agents.end()) {
-                selected_agent = ORCA_PRINTER_AGENT_ID;
+                selected_agent = INLONG_PRINTER_AGENT_ID;
                 it = std::find_if(agents.begin(), agents.end(), [&selected_agent](const auto& a) { return a.id == selected_agent; });
             }
 
@@ -531,7 +532,7 @@ void PhysicalPrinterDialog::update_preset_input() {
     }
 
     if (m_valid_type == Valid &&
-        (m_preset_name == "Default Setting" || m_preset_name == PresetBundle::ORCA_DEFAULT_FILAMENT_PLACEHOLDER || m_preset_name == "Default Printer")) {
+        (m_preset_name == "Default Setting" || m_preset_name == PresetBundle::INLONG_DEFAULT_FILAMENT_PLACEHOLDER || m_preset_name == "Default Printer")) {
         info_line    = _L("Name is unavailable.");
         m_valid_type = NoValid;
     }
@@ -757,7 +758,7 @@ void PhysicalPrinterDialog::update_printer_agent_type()
         return;
 
     // Sync selection with current config value
-    const std::string current_agent = m_config->opt_string("printer_agent");
+    const std::string current_agent = canonical_printer_agent_id(m_config->opt_string("printer_agent"));
 
     auto agents = NetworkAgentFactory::get_registered_printer_agents();
     for (size_t i = 0; i < agents.size(); ++i) {

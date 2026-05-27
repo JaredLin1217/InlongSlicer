@@ -91,7 +91,7 @@ void GLGizmoAssembly::on_render_input_window(float x, float y, float bottom_limi
         if (last_y != y)
             last_y = y;
     }
-    // Orca
+    // Inlong
     ImGuiWrapper::push_toolbar_style(m_parent.get_scale());
     GizmoImguiBegin(get_name(), ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
     init_render_input_window();
@@ -133,7 +133,7 @@ void GLGizmoAssembly::on_render_input_window(float x, float y, float bottom_limi
     m_last_active_item_imgui = m_current_active_imgui_id;
     
     GizmoImguiEnd();
-    // Orca
+    // Inlong
     ImGui::PopStyleVar(1); // ImGuiStyleVar_FramePadding
     ImGuiWrapper::pop_toolbar_style();
 }

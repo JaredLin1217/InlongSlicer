@@ -131,7 +131,7 @@ std::string SpiralVase::process_layer(const std::string &gcode, bool last_layer)
     m_reader.parse_buffer(gcode, [&new_gcode, &z, total_layer_length, layer_height, transition_in, &len, &current_layer, &previous_layer, &transition_gcode, transition_out, smooth_spiral, &max_xy_dist_for_smoothing, &last_point, starting_flowrate, finishing_flowrate, min_segment_length]
         (GCodeReader &reader, GCodeReader::GCodeLine line) {
         if (line.cmd_is("G1")) {
-            // Orca: Filter out retractions at layer change
+            // Inlong: Filter out retractions at layer change
             if (line.retracting(reader) || (line.extruding(reader) && line.dist_XY(reader) < min_segment_length)) return;
             if (line.has_z() && !(line.has_x() || line.has_y())) {
                 // If this is the initial Z move of the layer, replace it with a

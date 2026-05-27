@@ -51,7 +51,7 @@ bool QidiPrinterAgent::fetch_filament_info(std::string dev_id)
         }
     }
     if (series_id.empty()) {
-        // Fall back to the configured Orca model if Moonraker doesn't expose a usable identifier.
+        // Fall back to the configured Inlong model if Moonraker doesn't expose a usable identifier.
         series_id = infer_series_id(device_info.model_id, device_info.model_name);
     }
 

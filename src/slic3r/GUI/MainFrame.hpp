@@ -357,9 +357,9 @@ public:
     void        refresh_plugin_tips();
     void RunScript(wxString js);
 
-    //SoftFever
+    //Inlong
     void show_device(bool bBBLPrinter);
-    void fit_tab_labels(); // ORCA
+    void fit_tab_labels(); // INLONG
 
     PA_Calibration_Dlg* m_pa_calib_dlg{ nullptr };
     FlowRateCalibrationDialog* m_flow_rate_calib_dlg{ nullptr };

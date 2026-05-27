@@ -317,12 +317,12 @@ void PartSkipDialog::on_dpi_changed(const wxRect &suggested_rect)
     m_line->SetMinSize(wxSize(FromDIP(267), 1));
     m_line->SetMaxSize(wxSize(FromDIP(267), 1));
 
-    m_apply_btn->Rescale(); // ORCA no need to set size again with SetStyle
+    m_apply_btn->Rescale(); // INLONG no need to set size again with SetStyle
 
     m_dlg_placeholder->SetMinSize(wxSize(-1, FromDIP(15)));
     m_dlg_placeholder->SetMaxSize(wxSize(-1, FromDIP(15)));
 
-    m_second_retry_btn->Rescale(); // ORCA no need to set size again with SetStyle
+    m_second_retry_btn->Rescale(); // INLONG no need to set size again with SetStyle
 
     m_all_checkbox->SetMinSize(wxSize(FromDIP(18), FromDIP(18)));
     m_all_checkbox->Rescale();
@@ -988,7 +988,7 @@ bool PartSkipConfirmDialog::Show(bool show)
 
 void PartSkipConfirmDialog::on_dpi_changed(const wxRect &suggested_rect)
 {
-    m_apply_button->Rescale(); // ORCA no need to set size again with SetStyle
+    m_apply_button->Rescale(); // INLONG no need to set size again with SetStyle
     Layout();
     Fit();
 }

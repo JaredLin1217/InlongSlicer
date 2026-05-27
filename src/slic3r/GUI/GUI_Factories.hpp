@@ -127,7 +127,7 @@ private:
     void        create_filament_action_menu(bool init, int active_filament_menu_id);
 
     wxMenu*     append_submenu_add_generic(wxMenu* menu, ModelVolumeType type);
-    // Orca: add submenu for adding handy models
+    // Inlong: add submenu for adding handy models
     wxMenu*     append_submenu_add_handy_model(wxMenu* menu, ModelVolumeType type);
     void        append_menu_item_add_text(wxMenu* menu, ModelVolumeType type, bool is_submenu_item = true);
     void        append_menu_item_add_svg(wxMenu *menu, ModelVolumeType type, bool is_submenu_item = true);    

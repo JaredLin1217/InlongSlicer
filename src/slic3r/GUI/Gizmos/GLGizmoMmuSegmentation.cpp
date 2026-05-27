@@ -304,7 +304,7 @@ void GLGizmoMmuSegmentation::render_tooltip_button(float x, float y)
     GLGizmoUtils::render_tooltip_button(m_imgui, m_parent, get_shortcuts(), x, y);
 }
 
-// ORCA
+// INLONG
 bool GLGizmoMmuSegmentation::draw_color_button(int idx, std::string id_str, const ColorRGBA& color, ColorRGBA& map_color, bool active, float scale)
 {
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -312,7 +312,7 @@ bool GLGizmoMmuSegmentation::draw_color_button(int idx, std::string id_str, cons
     ImVec2      pos       = ImGui::GetCursorScreenPos();
     ImVec2      size      = ImVec2(27.f * scale, 27.f * scale);
     ImVec4      color_vec = ImGuiWrapper::to_ImVec4(color);
-    ImU32       br_color  = ImGui::ColorConvertFloat4ToU32(active ? ImGuiWrapper::COL_ORCA : m_is_dark_mode ? ImVec4(.35f, .35f, .35f, 1) : ImVec4(.85f, .85f, .85f, 1));
+    ImU32       br_color  = ImGui::ColorConvertFloat4ToU32(active ? ImGuiWrapper::COL_INLONG : m_is_dark_mode ? ImVec4(.35f, .35f, .35f, 1) : ImVec4(.85f, .85f, .85f, 1));
     bool        dark_tone = (0.299f * color.r() + 0.587f * color.g() + 0.114f * color.b()) < 0.51f; // matching values used by wxWidgets with clr.GetLuminance() < 0.51
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
@@ -435,7 +435,7 @@ void GLGizmoMmuSegmentation::on_render_input_window(float x, float y, float bott
 
         if (extruder_idx < 16 && ImGui::IsItemHovered()) m_imgui->tooltip(_L("Shortcut Key ") + std::to_string(extruder_idx + 1), max_tooltip_width);
     }
-    // ORCA: Remap filaments section (Border only, Title in border). 
+    // INLONG: Remap filaments section (Border only, Title in border).
     // Styled as a panel for visual grouping.
     if (ImGui::TreeNodeEx(m_desc.at("perform_remap").c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding)){
         render_filament_remap_ui(window_width, max_tooltip_width, scale);
@@ -450,7 +450,7 @@ void GLGizmoMmuSegmentation::on_render_input_window(float x, float y, float bott
 
         ImGui::Dummy(ImVec2(0,0));
 
-        // ORCA: Add Remap and Cancel buttons (outside the panel)
+        // INLONG: Add Remap and Cancel buttons (outside the panel)
         m_imgui->disabled_begin(!has_mapping); // disable when no mapping
         if (m_imgui->button(m_desc.at("remap"))) {
             this->remap_filament_assignments();
@@ -494,13 +494,13 @@ void GLGizmoMmuSegmentation::on_render_input_window(float x, float y, float bott
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.f);
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding  , 3.f * scale);
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding   , ImVec2(4.f * scale, 4.f * scale));
-        ImGui::PushStyleColor(ImGuiCol_Text         , ImVec4(1,1,1,1)); // ORCA Fixes icon rendered without colors while using Light theme
-        ImGui::PushStyleColor(ImGuiCol_Button       , is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(0,0,0,0));         // ORCA
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(.6f,.6f,.6f,.2f)); // ORCA
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive , is_active ? ImVec4(0.f, .59f, .53f, .30f) : ImVec4(0,0,0,0));         // ORCA
-        ImGui::PushStyleColor(ImGuiCol_Border       , is_active ? ImGuiWrapper::COL_ORCA        : ImVec4(0,0,0,0));         // ORCA
-        ImGui::PushStyleColor(ImGuiCol_BorderActive , is_active ? ImGuiWrapper::COL_ORCA        : ImVec4(0,0,0,0));         // ORCA matched color for fixing flicker on click
-        bool btn_clicked = m_imgui->glyph_button(icons[i], ImVec2(16.f  * scale, 16.f  * scale)); // ORCA glyph_button for fixing unequal paddings
+        ImGui::PushStyleColor(ImGuiCol_Text         , ImVec4(1,1,1,1)); // INLONG Fixes icon rendered without colors while using Light theme
+        ImGui::PushStyleColor(ImGuiCol_Button       , is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(0,0,0,0));         // INLONG
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, is_active ? ImVec4(0.f, .59f, .53f, .25f) : ImVec4(.6f,.6f,.6f,.2f)); // INLONG
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive , is_active ? ImVec4(0.f, .59f, .53f, .30f) : ImVec4(0,0,0,0));         // INLONG
+        ImGui::PushStyleColor(ImGuiCol_Border       , is_active ? ImGuiWrapper::COL_INLONG        : ImVec4(0,0,0,0));         // INLONG
+        ImGui::PushStyleColor(ImGuiCol_BorderActive , is_active ? ImGuiWrapper::COL_INLONG        : ImVec4(0,0,0,0));         // INLONG matched color for fixing flicker on click
+        bool btn_clicked = m_imgui->glyph_button(icons[i], ImVec2(16.f  * scale, 16.f  * scale)); // INLONG glyph_button for fixing unequal paddings
         ImGui::PopStyleColor(6);
         ImGui::PopStyleVar(3);
 
@@ -548,7 +548,7 @@ void GLGizmoMmuSegmentation::on_render_input_window(float x, float y, float bott
                 m_vertical_only = false;
             }
         }
-    } 
+    }
     else if (m_current_tool == ImGui::TriangleButtonIcon) {
         m_cursor_type = TriangleSelector::CursorType::POINTER;
         m_tool_type   = ToolType::BRUSH;
@@ -563,7 +563,7 @@ void GLGizmoMmuSegmentation::on_render_input_window(float x, float y, float bott
                 m_vertical_only = false;
             }
         }
-    } 
+    }
     else if (m_current_tool == ImGui::FillButtonIcon) {
         m_cursor_type = TriangleSelector::CursorType::POINTER;
         m_tool_type = ToolType::BUCKET_FILL;
@@ -587,9 +587,9 @@ void GLGizmoMmuSegmentation::on_render_input_window(float x, float y, float bott
             // set to negative value to disable edge detection
             m_smart_fill_angle = -1.f;
         }
-                
+
         m_imgui->bbl_checkbox(m_desc["edge_detection"], m_detect_geometry_edge);
-    } 
+    }
     else if (m_current_tool == ImGui::HeightRangeIcon) {
         m_tool_type   = ToolType::BRUSH;
         m_cursor_type = TriangleSelector::CursorType::HEIGHT_RANGE;
@@ -707,7 +707,7 @@ void GLGizmoMmuSegmentation::update_model_object()
         wxGetApp().plater()->get_partplate_list().notify_instance_update(obj_idx, 0);
         m_parent.post_event(SimpleEvent(EVT_GLCANVAS_SCHEDULE_BACKGROUND_PROCESS));
 
-        // ORCA: Refresh cache
+        // INLONG: Refresh cache
         this->update_used_filaments();
     }
 }
@@ -772,7 +772,7 @@ void GLGizmoMmuSegmentation::update_from_model_object(bool first_update)
 
     this->init_model_triangle_selectors();
 
-    // ORCA: Refresh cache when model changes
+    // INLONG: Refresh cache when model changes
     this->update_used_filaments();
 }
 
@@ -959,7 +959,7 @@ void GLMmSegmentationGizmo3DScene::finalize_triangle_indices()
     }
 }
 
-// ORCA: Update the cache of used filaments (both base volume extruders and painted triangles)
+// INLONG: Update the cache of used filaments (both base volume extruders and painted triangles)
 void GLGizmoMmuSegmentation::update_used_filaments()
 {
     m_used_filaments.clear();
@@ -967,7 +967,7 @@ void GLGizmoMmuSegmentation::update_used_filaments()
     // Add base extruder IDs from volumes (unpainted areas)
     for (int ext_id : m_volumes_extruder_idxs) {
         // ext_id is 1-based (1 = Extruder 1), 0 = Default (usually maps to first available or object default)
-        // Here we assume 0 maps to index 0 (Extruder 1) for simplicity in display, 
+        // Here we assume 0 maps to index 0 (Extruder 1) for simplicity in display,
         // or we should check logic in init_model_triangle_selectors where it does:
         // int extruder_idx = (mv->extruder_id() > 0) ? mv->extruder_id() - 1 : 0;
         int idx = (ext_id > 0) ? ext_id - 1 : 0;
@@ -995,14 +995,14 @@ void GLGizmoMmuSegmentation::render_filament_remap_ui(float window_width, float 
     int displayed_count = 0;
     const int max_per_line = 8;
 
-    // ORCA: Use m_used_filaments to show only relevant source filaments
+    // INLONG: Use m_used_filaments to show only relevant source filaments
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(7.f * scale, 7.f * scale));
     for (size_t src : m_used_filaments) {
         if (src >= n_extr) continue;
 
         if (displayed_count > 0 && (displayed_count % max_per_line != 0))
             ImGui::SameLine();
-        
+
         std::string pop_id = "popup_" + std::to_string(src);
 
         bool src_clicked = draw_color_button(
@@ -1038,15 +1038,15 @@ void GLGizmoMmuSegmentation::render_filament_remap_ui(float window_width, float 
 
         if (ImGui::IsItemHovered() && src != m_extruder_remap[src]) // show tooltip if it has mapping info
             m_imgui->tooltip(std::to_string(src + 1) + " >> " + std::to_string(m_extruder_remap[src] + 1), max_tooltip_width);
-        
-        // Apply popup styling before BeginPopup using standard Orca colors
+
+        // Apply popup styling before BeginPopup using standard Inlong colors
         ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding  , 8.0f * scale);
         ImGui::PushStyleVar(ImGuiStyleVar_PopupBorderSize, 2.0f * scale); // thicker & colored border to prevent mixing with main window. Current ImGui version not supports shadows
         ImGui::PushStyleColor(ImGuiCol_PopupBg, ImGui::GetStyleColorVec4(ImGuiCol_WindowBg));
-        ImGui::PushStyleColor(ImGuiCol_Border , ImGui::ColorConvertFloat4ToU32(ImGuiWrapper::COL_ORCA));
-        
+        ImGui::PushStyleColor(ImGuiCol_Border , ImGui::ColorConvertFloat4ToU32(ImGuiWrapper::COL_INLONG));
+
         if (ImGui::BeginPopup(pop_id.c_str())) {
-            
+
             m_imgui->text(_L("To:"));
 
             for (int dst = 0; dst < (int)n_extr; ++dst) {
@@ -1069,11 +1069,11 @@ void GLGizmoMmuSegmentation::render_filament_remap_ui(float window_width, float 
             ImGui::Dummy(ImVec2(0.0f, 2.f * scale));
             ImGui::EndPopup();
         }
-        
+
         // Clean up popup styling (always pop, whether popup was open or not)
         ImGui::PopStyleColor(2); // PopupBg and Border
         ImGui::PopStyleVar(2);   // PopupRounding and PopupBorderSize
-        
+
         displayed_count++;
     }
     ImGui::PopStyleVar(1); // ItemSpacing
@@ -1125,22 +1125,22 @@ void GLGizmoMmuSegmentation::remap_filament_assignments()
         ts->remap_triangle_state(state_map);
         ts->request_update_render_data(true);
 
-        // ORCA: Remap base volume extruder as well if selected
+        // INLONG: Remap base volume extruder as well if selected
         int current_ext_id = mv->extruder_id();
         int current_idx = (current_ext_id > 0) ? current_ext_id - 1 : 0;
 
         if (current_idx >= 0 && current_idx < m_extruder_remap.size()) {
             size_t dest_idx = m_extruder_remap[current_idx];
             if (dest_idx != current_idx) {
-                // Check if volume has its own extruder config or uses object's fallback                                                                                                                                            
-                const ConfigOption *vol_opt = mv->config.option("extruder");                                                                                                                                                        
-                if (vol_opt != nullptr && vol_opt->getInt() != 0) {                                                                                                                                                                 
-                    // Volume has its own extruder setting, update it                                                                                                                                                               
-                    mv->config.set("extruder", (int)dest_idx + 1);                                                                                                                                                                  
-                } else {                                                                                                                                                                                                            
-                    // Volume uses object's extruder setting, update the object                                                                                                                                                     
-                    mo->config.set("extruder", (int)dest_idx + 1);                                                                                                                                                                  
-                }      
+                // Check if volume has its own extruder config or uses object's fallback
+                const ConfigOption *vol_opt = mv->config.option("extruder");
+                if (vol_opt != nullptr && vol_opt->getInt() != 0) {
+                    // Volume has its own extruder setting, update it
+                    mv->config.set("extruder", (int)dest_idx + 1);
+                } else {
+                    // Volume uses object's extruder setting, update the object
+                    mo->config.set("extruder", (int)dest_idx + 1);
+                }
                 if (idx < m_volumes_extruder_idxs.size())
                     m_volumes_extruder_idxs[idx] = (int)dest_idx + 1;
                 volume_extruder_changed = true;
@@ -1151,18 +1151,18 @@ void GLGizmoMmuSegmentation::remap_filament_assignments()
     }
 
     if (updated) {
-        // ORCA: Update renderer colors if base volume extruder changed
+        // INLONG: Update renderer colors if base volume extruder changed
         if (volume_extruder_changed) {
             this->update_triangle_selectors_colors();
-            // ORCA: Update GUI_ObjectList extruder column to reflect the new extruder value
+            // INLONG: Update GUI_ObjectList extruder column to reflect the new extruder value
             wxGetApp().obj_list()->update_objects_list_filament_column(wxGetApp().filaments_cnt());
         }
 
-        // ORCA: Removed "Filament remapping finished" notification to reduce UI noise.
+        // INLONG: Removed "Filament remapping finished" notification to reduce UI noise.
         update_model_object();
         m_parent.set_as_dirty();
-        
-        // ORCA: Refresh used filaments cache
+
+        // INLONG: Refresh used filaments cache
         this->update_used_filaments();
     }
 }

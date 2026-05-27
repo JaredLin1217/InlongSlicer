@@ -213,7 +213,7 @@ public:
 	void 				set_vendors(VendorMap &&vendors) { m_vendors = std::move(vendors); m_dirty = true; }
 	const VendorMap&    vendors() const { return m_vendors; }
 
-	// Orca printer settings
+	// Inlong printer settings
     typedef std::map<std::string, nlohmann::json> MachineSettingMap;
     bool has_printer_settings(std::string printer) const {
         return m_printer_settings.find(printer) != m_printer_settings.end();
@@ -317,7 +317,7 @@ public:
 	// This returns a hardcoded string unless it is overriden by "version_check_url" in the ini file.
 	std::string 		version_check_url() const;
 
-	// Get the Orca profile update url.
+	// Get the Inlong profile update url.
 	std::string 		profile_update_url() const;
 
 	// Returns the original Slic3r version found in the ini file before it was overwritten
@@ -379,7 +379,7 @@ public:
     void set_remind_network_update_later(bool remind);
     void clear_remind_network_update_later();
 
-    // Cloud providers (semicolon-delimited, e.g. "orca;bambu")
+    // Cloud providers (semicolon-delimited, e.g. "inlong;bambu")
     std::vector<std::string> get_cloud_providers() const;
     void set_cloud_providers(const std::vector<std::string>& providers);
     bool has_cloud_provider(const std::string& provider) const;
@@ -387,6 +387,8 @@ public:
     void remove_cloud_provider(const std::string& provider);
 
 private:
+	std::string			config_path_for_keys(const char *editor_key, const char *viewer_key);
+
 	template<typename T>
 	bool get_3dmouse_device_numeric_value(const std::string &device_name, const char *parameter_name, T &out) const
 	{

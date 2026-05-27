@@ -2246,7 +2246,7 @@ bool TriangleSelector::Capsule2D::is_edge_inside_cursor(const Triangle &tr, cons
     return false;
 }
 
-// ORCA: Helper to extract used states from serialized data
+// INLONG: Helper to extract used states from serialized data
 std::vector<EnforcerBlockerType> TriangleSelector::extract_used_facet_states(const TriangleSplittingData &data)
 {
     std::vector<EnforcerBlockerType> out;

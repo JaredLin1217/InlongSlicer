@@ -18,7 +18,7 @@ AboutDialogLogo::AboutDialogLogo(wxWindow* parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 {
     this->SetBackgroundColour(*wxWHITE);
-    this->logo = ScalableBitmap(this, Slic3r::var("OrcaSlicer_192px.png"), wxBITMAP_TYPE_PNG);
+    this->logo = ScalableBitmap(this, Slic3r::var("InlongSlicer_192px.png"), wxBITMAP_TYPE_PNG);
     this->SetMinSize(this->logo.GetBmpSize());
 
     this->Bind(wxEVT_PAINT, &AboutDialogLogo::onRepaint, this);
@@ -230,7 +230,7 @@ AboutDialog::AboutDialog()
 	bool is_dark = wxGetApp().app_config->get("dark_color_mode") == "1";
 
     // logo
-    m_logo_bitmap = ScalableBitmap(this, is_dark ? "OrcaSlicer_about_dark" : "OrcaSlicer_about", 125);
+    m_logo_bitmap = ScalableBitmap(this, is_dark ? "InlongSlicer_about_dark" : "InlongSlicer_about", 125);
     m_logo = new wxStaticBitmap(this, wxID_ANY, m_logo_bitmap.bmp(), wxDefaultPosition,wxDefaultSize, 0);
     m_logo->SetSizer(vesizer);
 
@@ -243,7 +243,7 @@ AboutDialog::AboutDialog()
         // _build_string_font.SetStyle(wxFONTSTYLE_ITALIC);
 
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
-        auto          version_string = std::string(SoftFever_VERSION); // _L("Orca Slicer ") + " " + std::string(SoftFever_VERSION);
+        auto          version_string = std::string(INLONGSLICER_VERSION); // _L("Inlong Slicer ") + " " + std::string(INLONGSLICER_VERSION);
         wxStaticText* version = new wxStaticText(this, wxID_ANY, version_string.c_str(), wxDefaultPosition, wxDefaultSize);
         wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format("Build %s", std::string(GIT_COMMIT_HASH)), wxDefaultPosition, wxDefaultSize);
         credits_string->SetFont(_build_string_font);
@@ -266,10 +266,11 @@ AboutDialog::AboutDialog()
     text_sizer_horiz->Add( 0, 0, 0, wxLEFT, FromDIP(20));
 
     std::vector<wxString> text_list;
-    text_list.push_back(_L("Inlong Slicer 针对 INLONG 设备开发，整合切片体验与设备适配优化"));
+    text_list.push_back(_L("InlongSlicer is developed for research and development purposes based on OrcaSlicer. It respects the open-source licenses of upstream projects, and all derived results are shared publicly according to the applicable open-source terms. This software is provided for study, testing, and lawful use without any warranty; users are responsible for evaluating suitability, print results, and related risks."));
 
     text_sizer->Add( 0, 0, 0, wxTOP, FromDIP(33));
-    bool is_zh = wxGetApp().app_config->get("language") == "zh_CN";
+    const auto language = wxGetApp().app_config->get("language");
+    bool is_zh = language == "zh_CN" || language == "zh_TW";
     for (int i = 0; i < text_list.size(); i++)
     {
         auto staticText = new wxStaticText( this, wxID_ANY, wxEmptyString,wxDefaultPosition,wxSize(FromDIP(520), -1), wxALIGN_LEFT );

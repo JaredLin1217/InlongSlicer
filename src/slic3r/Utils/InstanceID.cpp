@@ -27,7 +27,6 @@ namespace instance_id {
 namespace {
 
 constexpr const char* CONFIG_KEY = "updater_iid";
-constexpr const char* LEGACY_KEY = "iid";
 
 std::mutex& cache_mutex()
 {
@@ -74,37 +73,35 @@ std::optional<std::string> read_config_value(AppConfig& config)
         return std::nullopt;
     };
 
-    if (auto value = read_key(CONFIG_KEY))
-        return value;
-    return read_key(LEGACY_KEY);
+    return read_key(CONFIG_KEY);
 }
 
 void write_config_value(AppConfig& config, const std::string& value)
 {
     config.set(CONFIG_KEY, value);
-    if (config.get(LEGACY_KEY) != value)
-        config.set(LEGACY_KEY, value);
 }
 
 void prune_config_value(AppConfig& config)
 {
     if (config.has(CONFIG_KEY))
         config.erase("app", CONFIG_KEY);
-    if (config.has(LEGACY_KEY))
-        config.erase("app", LEGACY_KEY);
 }
 
-boost::filesystem::path storage_path()
+boost::filesystem::path storage_path(const char* filename)
 {
     const std::string& base_dir = Slic3r::data_dir();
     if (base_dir.empty())
         return {};
-    return boost::filesystem::path(base_dir) / ".orcaslicer_machine_id";
+    return boost::filesystem::path(base_dir) / filename;
 }
 
-std::optional<std::string> read_storage_file()
+boost::filesystem::path current_storage_path()
 {
-    const auto path = storage_path();
+    return storage_path(".inlongslicer_machine_id");
+}
+
+std::optional<std::string> read_storage_file_at(const boost::filesystem::path& path)
+{
     if (path.empty() || !boost::filesystem::exists(path))
         return std::nullopt;
 
@@ -119,12 +116,22 @@ std::optional<std::string> read_storage_file()
     return normalize_uuid(value);
 }
 
+bool write_storage_file(const std::string& value);
+
+std::optional<std::string> read_storage_file()
+{
+    if (auto value = read_storage_file_at(current_storage_path()))
+        return value;
+
+    return std::nullopt;
+}
+
 bool write_storage_file(const std::string& value)
 {
     if (value.empty())
         return false;
 
-    const auto path = storage_path();
+    const auto path = current_storage_path();
     if (path.empty())
         return false;
 

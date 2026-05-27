@@ -68,7 +68,7 @@ function HandleModelList( pVal )
 
     pModel=pVal['model'];
 
-	// ORCA ensure list correctly ordered
+	// INLONG ensure list correctly ordered
 	pModel = pModel.sort((a, b)=>(a["vendor"].localeCompare(b["vendor"])))
 	pModel = [ // move custom printers to top
 		...pModel.filter(i=>i.vendor === "Custom"),
@@ -92,7 +92,7 @@ function HandleModelList( pVal )
 			if( sVV=="Custom")
 				sVV="Custom Printer";
 			if( sVV=="Other")
-				sVV="Orca colosseum";
+				sVV="Inlong colosseum";
 
 			let HtmlNewVendor='<div class="OneVendorBlock" Vendor="'+strVendor+'">'+
 '<div class="BlockBanner">'+
@@ -119,7 +119,7 @@ function HandleModelList( pVal )
 		if( !ModelHtml.hasOwnProperty(strVendor))
 			ModelHtml[strVendor]='';
 			
-		ModelHtml[strVendor]+=CreatePrinterBlock(OneModel); // ORCA
+		ModelHtml[strVendor]+=CreatePrinterBlock(OneModel); // INLONG
 	}
 	
 	//Update Nozzel Html Append
@@ -235,7 +235,7 @@ function FilterModelList(keyword) {
 			if (sVV == "Custom")
 				sVV = "Custom Printer";
 			if (sVV == "Other")
-				sVV = "Orca colosseum";
+				sVV = "Inlong colosseum";
 
 			let HtmlNewVendor = '<div class="OneVendorBlock" Vendor="' + strVendor + '">' +
 				'<div class="BlockBanner">' +
@@ -260,7 +260,7 @@ function FilterModelList(keyword) {
 		if (!ModelHtml.hasOwnProperty(strVendor))
 			ModelHtml[strVendor] = '';
 
-		ModelHtml[strVendor]+=CreatePrinterBlock(OneModel); // ORCA
+		ModelHtml[strVendor]+=CreatePrinterBlock(OneModel); // INLONG
 	}
 
 	//Update Nozzel Html Append
@@ -310,7 +310,7 @@ function FilterModelList(keyword) {
 
 function CreatePrinterBlock(OneModel)
 {
-	// ORCA use single functuon to create blocks to simplify code
+	// INLONG use single functuon to create blocks to simplify code
 	let vendor = OneModel['vendor']
 	vendorName = vendor=="BBL" ? "Bambu Lab" : vendor=="Custom" ? "Generic Printer" : vendor;
 
@@ -324,8 +324,8 @@ function CreatePrinterBlock(OneModel)
 	// these not matches. have to fix in profiles to reduce conditions in here;
 	else if (vendor == "MagicMaker" && modelName.startsWith("MM"))
 	modelName = modelName.slice(("MM").length);
-	else if (vendor == "OrcaArena")
-	modelName = modelName.slice(("Orca Arena").length);
+	else if (vendor == "InlongArena")
+	modelName = modelName.slice(("Inlong Arena").length);
 	else if (vendor == "RolohaunDesign" && modelName.startsWith("Rolohaun"))
 	modelName = modelName.slice(("Rolohaun").length);
 

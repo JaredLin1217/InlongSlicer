@@ -15,7 +15,7 @@ struct TempPresetDir {
 
     TempPresetDir()
     {
-        path = fs::temp_directory_path() / fs::unique_path("orcaslicer-preset-%%%%-%%%%-%%%%");
+        path = fs::temp_directory_path() / fs::unique_path("inlongslicer-preset-%%%%-%%%%-%%%%");
         fs::create_directories(path);
     }
 
@@ -104,11 +104,11 @@ TEST_CASE("Current vendor type tolerates missing printer model", "[Preset][Bundl
 {
     PresetBundle bundle;
 
-    VendorProfile orca_vendor("ORCA");
+    VendorProfile inlong_vendor("INLONG");
     VendorProfile::PrinterModel model;
-    model.name = "Orca Test";
-    orca_vendor.models.emplace_back(model);
-    bundle.vendors.emplace("ORCA", std::move(orca_vendor));
+    model.name = "Inlong Test";
+    inlong_vendor.models.emplace_back(model);
+    bundle.vendors.emplace("INLONG", std::move(inlong_vendor));
 
     bundle.printers.get_edited_preset().config.erase("printer_model");
 

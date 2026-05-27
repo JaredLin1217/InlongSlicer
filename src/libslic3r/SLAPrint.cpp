@@ -1234,7 +1234,10 @@ std::string SLAPrintStatistics::finalize_output_path(const std::string &path_in)
         boost::filesystem::path path(path_in);
         DynamicConfig cfg = this->config();
         PlaceholderParser pp;
-        std::string new_stem = pp.process(path.stem().string(), 0, &cfg);
+        // The parser's skipper runs before text parsing and rejects a leading UTF-8 byte.
+        // Prefix an ASCII sentinel so localized file names are parsed as literal text.
+        std::string new_stem = pp.process("_" + path.stem().string(), 0, &cfg);
+        new_stem.erase(0, 1);
         final_path = (path.parent_path() / (new_stem + path.extension().string())).string();
     }
     catch (const std::exception &ex) {

@@ -16,10 +16,10 @@ class ICloudServiceAgent;
  * implementation, used for discovery and selection purposes.
  */
 struct AgentInfo {
-    std::string id;         ///< Unique identifier for the agent, e.g. "orca", "bbl"
+    std::string id;         ///< Unique identifier for the agent, e.g. "inlong", "bbl"
     std::string name;       ///< Human-readable agent name, e.g. "Inlong", "Bambu Lab"
     std::string version;    ///< Agent version string, e.g. "1.0.0"
-    std::string description; ///< Brief description of the agent's capabilities, e.g. "Orca printer agent"
+    std::string description; ///< Brief description of the agent's capabilities, e.g. "Inlong printer agent"
 };
 
 /**
@@ -47,7 +47,7 @@ enum class FilamentSyncMode {
  * - Print job operations
  *
  * Implementations:
- * - OrcaPrinterAgent: Stub implementation (printer ops not yet supported)
+ * - InlongPrinterAgent: Stub implementation (printer ops not yet supported)
  * - BBLPrinterAgent: Wrapper around Bambu Lab's proprietary DLL
  *
  * Token Access:

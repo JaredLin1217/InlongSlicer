@@ -158,7 +158,7 @@ private:
     // BBS
     DynamicPrintConfig m_config;
 
-    // SoftFever
+    // Inlong
     // part plate name
     std::string m_name;
     GLModel m_plate_name_icon;
@@ -293,7 +293,7 @@ public:
     //get the plate's index
     int get_index() { return m_plate_index; }
 
-    // SoftFever
+    // Inlong
     //get the plate's name
     std::string get_plate_name() const { return m_name; }
     void generate_plate_name_texture();

@@ -146,7 +146,7 @@ SCENARIO("2D convex hull of sinking object", "[3mf][.]") {
             object->center_around_origin(false);
 
 	    // This outputs the same exact data as the Prusaslicer test
-	    object->volumes[0]->mesh().write_ascii("/tmp/orca.ascii");
+	    object->volumes[0]->mesh().write_ascii("/tmp/inlong.ascii");
 
             // set instance's attitude so that it is rotated, scaled (and sinking? how is it sinking? the rotation? does it matter if it's sinking?)
             ModelInstance* instance = object->instances[0];

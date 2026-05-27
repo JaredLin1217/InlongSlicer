@@ -466,7 +466,7 @@ void CaliPageCaption::init_bitmaps() {
 
 void CaliPageCaption::create_wiki(wxWindow* parent)
 {
-    // ORCA standardized HyperLink
+    // INLONG standardized HyperLink
     m_wiki_text = new HyperLink(parent, _L("Wiki Guide"));
     m_wiki_text->Bind(wxEVT_LEFT_UP, [this](wxMouseEvent& e) {
         if (!m_wiki_url.empty())

@@ -15,6 +15,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <iostream>
+#include <algorithm>
 #include <unordered_map>
 #include <fcntl.h>
 #include <errno.h>
@@ -30,6 +31,18 @@
 #endif //__linux__
 
 namespace Slic3r {
+
+static std::string dbus_instance_check_base_name()
+{
+    return std::string(SLIC3R_APP_ID) + ".InstanceCheck";
+}
+
+static std::string dbus_instance_check_base_path()
+{
+    std::string app_id = SLIC3R_APP_ID;
+    std::replace(app_id.begin(), app_id.end(), '.', '/');
+    return "/" + app_id + "/InstanceCheck";
+}
 
 #ifdef __APPLE__
 	bool unlock_lockfile(const std::string& name, const std::string& path)
@@ -88,10 +101,10 @@ namespace instance_check_internal
 
 #ifdef _WIN32
 
-	static HWND orca_slicer_hwnd;
+	static HWND inlong_slicer_hwnd;
 	static BOOL CALLBACK EnumWindowsProc(_In_ HWND   hwnd, _In_ LPARAM lParam)
 	{
-		// ORCA: Find the already-running instance by its window properties
+		// INLONG: Find the already-running instance by its window properties
 		TCHAR className[256]; // class names are limited to 255 characters, see https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassa
 		if (GetClassName(hwnd, className, 256) == 0)
 			return true;
@@ -100,7 +113,7 @@ namespace instance_check_internal
 			return true;
 
 		// Check if the candidate window has the same instance hash. If the
-		// properties are missing, it is not an OrcaSlicer main window.
+		// properties are missing, it is not an InlongSlicer main window.
 		HANDLE handle_minor = GetProp(hwnd, L"Instance_Hash_Minor");
 		HANDLE handle_major = GetProp(hwnd, L"Instance_Hash_Major");
 		if (handle_minor == nullptr || handle_major == nullptr)
@@ -114,7 +127,7 @@ namespace instance_check_internal
 		uint64_t my_instance_hash = GUI::wxGetApp().get_instance_hash_int();
 		if (my_instance_hash == other_instance_hash) {
 			BOOST_LOG_TRIVIAL(debug) << "win enum - found correct instance";
-			orca_slicer_hwnd = hwnd;
+			inlong_slicer_hwnd = hwnd;
 			ShowWindow(hwnd, SW_SHOWMAXIMIZED);
 			SetForegroundWindow(hwnd);
 			return false;
@@ -140,7 +153,7 @@ namespace instance_check_internal
 			data_to_send.dwData = 1;
 			data_to_send.cbData = sizeof(TCHAR) * (wcslen(*command_line_args.get()) + 1);
 			data_to_send.lpData = *command_line_args.get();
-			SendMessage(orca_slicer_hwnd, WM_COPYDATA, 0, (LPARAM)&data_to_send);
+			SendMessage(inlong_slicer_hwnd, WM_COPYDATA, 0, (LPARAM)&data_to_send);
 			return true;  
 		}
 	    return false;
@@ -231,9 +244,9 @@ namespace instance_check_internal
 			DBusError 		err;
 			dbus_uint32_t 	serial = 0;
 			const char* sigval = message_text.c_str();
-			std::string		interface_name = "com.orcaslicer.OrcaSlicer.InstanceCheck.Object" + version;
+			std::string		interface_name = dbus_instance_check_base_name() + ".Object" + version;
 			std::string   	method_name = "AnotherInstance";
-			std::string		object_name = "/com/orcaslicer/OrcaSlicer/InstanceCheck/Object" + version;
+			std::string		object_name = dbus_instance_check_base_path() + "/Object" + version;
 
 
 			// initialise the error value
@@ -494,8 +507,8 @@ void OtherInstanceMessageHandler::handle_message(const std::string& message)
 
 	std::vector<boost::filesystem::path> paths;
 	std::vector<std::string> downloads;
-	boost::regex re(R"(^(orcaslicer|prusaslicer|cura|bambustudio):\/\/open[\/]?\?file=)", boost::regbase::icase);
-	boost::regex re2(R"(^(bambustudioopen):\/\/)", boost::regex::icase);
+	boost::regex re(R"(^(inlongslicer|prusaslicer|cura|bambustudio):\/\/open[\/]?\?file=)", boost::regbase::icase);
+	boost::regex re2(R"(^(inlongsliceropen|bambustudioopen):\/\/)", boost::regex::icase);
 	boost::smatch results;
 
 	// Skip the first argument, it is the path to the slicer executable.
@@ -544,7 +557,7 @@ namespace MessageHandlerDBusInternal
 	        "       <arg name=\"data\" direction=\"out\" type=\"s\" />"
 	        "     </method>"
 	        "   </interface>"
-	        "   <interface name=\"com.orcaslicer.OrcaSlicer.InstanceCheck\">"
+	        "   <interface name=\"" SLIC3R_APP_ID ".InstanceCheck\">"
 	        "     <method name=\"AnotherInstance\">"
 	        "       <arg name=\"data\" direction=\"in\" type=\"s\" />"
 	        "     </method>"
@@ -556,7 +569,7 @@ namespace MessageHandlerDBusInternal
 	    dbus_connection_send(connection, reply, NULL);
 	    dbus_message_unref(reply);
 	}
-	//method AnotherInstance receives message from another OrcaSlicer instance 
+	//method AnotherInstance receives message from another InlongSlicer instance
 	static void handle_method_another_instance(DBusConnection *connection, DBusMessage *request)
 	{
 	    DBusError     err;
@@ -582,7 +595,7 @@ namespace MessageHandlerDBusInternal
 	{
 		const char* interface_name = dbus_message_get_interface(message);
 	    const char* member_name    = dbus_message_get_member(message);
-	    std::string our_interface  = "com.orcaslicer.OrcaSlicer.InstanceCheck.Object" + wxGetApp().get_instance_hash_string();
+	    std::string our_interface  = dbus_instance_check_base_name() + ".Object" + wxGetApp().get_instance_hash_string();
 	    BOOST_LOG_TRIVIAL(trace) << "DBus message received: interface: " << interface_name << ", member: " << member_name;
 	    if (0 == strcmp("org.freedesktop.DBus.Introspectable", interface_name) && 0 == strcmp("Introspect", member_name)) {		
 	        respond_to_introspect(connection, message);
@@ -602,8 +615,8 @@ void OtherInstanceMessageHandler::listen()
     int 				 name_req_val;
     DBusObjectPathVTable vtable;
     std::string 		 instance_hash  = wxGetApp().get_instance_hash_string();
-	std::string			 interface_name = "com.orcaslicer.OrcaSlicer.InstanceCheck.Object" + instance_hash;
-	std::string			 object_name 	= "/com/orcaslicer/OrcaSlicer/InstanceCheck/Object" + instance_hash;
+	std::string			 interface_name = dbus_instance_check_base_name() + ".Object" + instance_hash;
+	std::string			 object_name 	= dbus_instance_check_base_path() + "/Object" + instance_hash;
 
     //BOOST_LOG_TRIVIAL(debug) << "init dbus listen " << interface_name << " " << object_name;
     dbus_error_init(&err);

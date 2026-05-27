@@ -49,13 +49,13 @@ public:
     ~NetworkAgent();
 
     // Sub-agent accessors
-    std::shared_ptr<ICloudServiceAgent> get_cloud_agent(const std::string& provider = ORCA_CLOUD_PROVIDER) const;
+    std::shared_ptr<ICloudServiceAgent> get_cloud_agent(const std::string& provider = INLONG_CLOUD_PROVIDER) const;
     std::shared_ptr<IPrinterAgent> get_printer_agent() const { return m_printer_agent; }
 
     // Shared agent management
     void add_cloud_agent(const std::string& provider, std::shared_ptr<ICloudServiceAgent> agent);
     void set_printer_agent(std::shared_ptr<IPrinterAgent> printer_agent);
-    int set_queue_on_main_fn(QueueOnMainFn fn, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    int set_queue_on_main_fn(QueueOnMainFn fn, const std::string& provider = INLONG_CLOUD_PROVIDER);
 
     // Get underlying agent handle from BBLNetworkPlugin
     void* get_network_agent();
@@ -73,64 +73,64 @@ public:
     int connect_server();
     int refresh_connection(const std::string& provider = "");
 
-    int change_user(std::string user_info, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    bool is_user_login(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int user_logout(bool request = false, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string get_user_id(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string get_user_name(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string get_user_avatar(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string get_user_nickname(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string build_login_cmd(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string build_logout_cmd(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string build_login_info(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string get_cloud_service_host(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string get_cloud_login_url(const std::string& language = "", const std::string& provider = ORCA_CLOUD_PROVIDER);
-    bool is_server_connected(const std::string& provider = ORCA_CLOUD_PROVIDER);
+    int change_user(std::string user_info, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    bool is_user_login(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int user_logout(bool request = false, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string get_user_id(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string get_user_name(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string get_user_avatar(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string get_user_nickname(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string build_login_cmd(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string build_logout_cmd(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string build_login_info(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string get_cloud_service_host(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string get_cloud_login_url(const std::string& language = "", const std::string& provider = INLONG_CLOUD_PROVIDER);
+    bool is_server_connected(const std::string& provider = INLONG_CLOUD_PROVIDER);
 
-    void enable_multi_machine(bool enable, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    void enable_multi_machine(bool enable, const std::string& provider = INLONG_CLOUD_PROVIDER);
 
     // Profile synchronization methods
-    // NOTE: this should always call only OrcaCloud
-    int get_user_presets(std::map<std::string, std::map<std::string, std::string>>* user_presets, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    std::string request_setting_id(std::string name, std::map<std::string, std::string>* values_map, unsigned int* http_code, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int put_setting(std::string setting_id, std::string name, std::map<std::string, std::string>* values_map, unsigned int* http_code, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_setting_list(std::string bundle_version, ProgressFn pro_fn = nullptr, WasCancelledFn cancel_fn = nullptr, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_setting_list2(std::string bundle_version, CheckFn chk_fn, ProgressFn pro_fn = nullptr, WasCancelledFn cancel_fn = nullptr, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int delete_setting(std::string setting_id, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    // NOTE: this should always call only the primary Inlong cloud agent.
+    int get_user_presets(std::map<std::string, std::map<std::string, std::string>>* user_presets, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    std::string request_setting_id(std::string name, std::map<std::string, std::string>* values_map, unsigned int* http_code, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int put_setting(std::string setting_id, std::string name, std::map<std::string, std::string>* values_map, unsigned int* http_code, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_setting_list(std::string bundle_version, ProgressFn pro_fn = nullptr, WasCancelledFn cancel_fn = nullptr, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_setting_list2(std::string bundle_version, CheckFn chk_fn, ProgressFn pro_fn = nullptr, WasCancelledFn cancel_fn = nullptr, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int delete_setting(std::string setting_id, const std::string& provider = INLONG_CLOUD_PROVIDER);
 
-    int get_my_message(int type, int after, int limit, unsigned int* http_code, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int check_user_task_report(int* task_id, bool* printable, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_user_print_info(unsigned int* http_code, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_user_tasks(TaskQueryParams params, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_printer_firmware(std::string dev_id, unsigned* http_code, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_task_plate_index(std::string task_id, int* plate_index, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_user_info(int* identifier, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_subtask_info(std::string subtask_id, std::string* task_json, unsigned int* http_code, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_slice_info(std::string project_id, std::string profile_id, int plate_index, std::string* slice_json, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int query_bind_status(std::vector<std::string> query_list, unsigned int* http_code, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int modify_printer_name(std::string dev_id, std::string dev_name, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_camera_url(std::string dev_id, std::function<void(std::string)> callback, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_design_staffpick(int offset, int limit, std::function<void(std::string)> callback, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int start_publish(PublishParams params, OnUpdateStatusFn update_fn, WasCancelledFn cancel_fn, std::string* out, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_model_publish_url(std::string* url, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_subtask(BBLModelTask* task, OnGetSubTaskFn getsub_fn, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_model_mall_home_url(std::string* url, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_model_mall_detail_url(std::string* url, std::string id, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_my_profile(std::string token, unsigned int* http_code, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_my_token(std::string ticket, unsigned int* http_code, std::string* http_body, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int track_enable(bool enable, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int track_remove_files(const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int track_event(std::string evt_key, std::string content, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int track_header(std::string header, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int track_update_property(std::string name, std::string value, std::string type = "string", const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int track_get_property(std::string name, std::string& value, std::string type = "string", const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int put_model_mall_rating(int design_id, int score, std::string content, std::vector<std::string> images, unsigned int &http_code, std::string &http_error, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_oss_config(std::string &config, std::string country_code, unsigned int &http_code, std::string &http_error, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int put_rating_picture_oss(std::string &config, std::string &pic_oss_path, std::string model_id, int profile_id, unsigned int &http_code, std::string &http_error, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_model_mall_rating_result(int job_id, std::string &rating_result, unsigned int &http_code, std::string &http_error, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    int get_my_message(int type, int after, int limit, unsigned int* http_code, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int check_user_task_report(int* task_id, bool* printable, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_user_print_info(unsigned int* http_code, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_user_tasks(TaskQueryParams params, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_printer_firmware(std::string dev_id, unsigned* http_code, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_task_plate_index(std::string task_id, int* plate_index, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_user_info(int* identifier, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_subtask_info(std::string subtask_id, std::string* task_json, unsigned int* http_code, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_slice_info(std::string project_id, std::string profile_id, int plate_index, std::string* slice_json, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int query_bind_status(std::vector<std::string> query_list, unsigned int* http_code, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int modify_printer_name(std::string dev_id, std::string dev_name, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_camera_url(std::string dev_id, std::function<void(std::string)> callback, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_design_staffpick(int offset, int limit, std::function<void(std::string)> callback, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int start_publish(PublishParams params, OnUpdateStatusFn update_fn, WasCancelledFn cancel_fn, std::string* out, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_model_publish_url(std::string* url, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_subtask(BBLModelTask* task, OnGetSubTaskFn getsub_fn, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_model_mall_home_url(std::string* url, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_model_mall_detail_url(std::string* url, std::string id, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_my_profile(std::string token, unsigned int* http_code, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_my_token(std::string ticket, unsigned int* http_code, std::string* http_body, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int track_enable(bool enable, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int track_remove_files(const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int track_event(std::string evt_key, std::string content, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int track_header(std::string header, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int track_update_property(std::string name, std::string value, std::string type = "string", const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int track_get_property(std::string name, std::string& value, std::string type = "string", const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int put_model_mall_rating(int design_id, int score, std::string content, std::vector<std::string> images, unsigned int &http_code, std::string &http_error, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_oss_config(std::string &config, std::string country_code, unsigned int &http_code, std::string &http_error, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int put_rating_picture_oss(std::string &config, std::string &pic_oss_path, std::string model_id, int profile_id, unsigned int &http_code, std::string &http_error, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_model_mall_rating_result(int job_id, std::string &rating_result, unsigned int &http_code, std::string &http_error, const std::string& provider = INLONG_CLOUD_PROVIDER);
     bool get_track_enable() { return enable_track; }
-    int get_mw_user_preference(std::function<void(std::string)> callback, const std::string& provider = ORCA_CLOUD_PROVIDER);
-    int get_mw_user_4ulist(int seed, int limit, std::function<void(std::string)> callback, const std::string& provider = ORCA_CLOUD_PROVIDER);
+    int get_mw_user_preference(std::function<void(std::string)> callback, const std::string& provider = INLONG_CLOUD_PROVIDER);
+    int get_mw_user_4ulist(int seed, int limit, std::function<void(std::string)> callback, const std::string& provider = INLONG_CLOUD_PROVIDER);
 
     // Printer agent methods
     int set_on_ssdp_msg_fn(OnMsgArrivedFn fn);
@@ -187,7 +187,7 @@ private:
 
     // Sub-agent composition
     // We support dynamic switching of printer agents (e.g. for different printer types), but the cloud agent is fixed at construction since
-    // it's tied to the user's cloud account OrcaCloudServiceAgent is designed to be the primary cloud agent, but we support the possibility
+    // it's tied to the user's cloud account InlongCloudServiceAgent is designed to be the primary cloud agent, but we support the possibility
     // of adding third-party cloud agents (e.g. BBLCloudServiceAgent) and delegating calls to them as needed
     std::map<std::string, std::shared_ptr<ICloudServiceAgent>> m_cloud_agents;
     std::shared_ptr<IPrinterAgent> m_printer_agent;
