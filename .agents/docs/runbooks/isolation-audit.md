@@ -60,10 +60,11 @@ Required checks:
 - `git status -sb --untracked-files=all`
 - `git diff --check`
 - `rg --files .agents AGENTS.md`
-- `rg -n "Global Skill|Project-external|Isolation: GM|招聘一個員工|global Codex Memory" AGENTS.md .agents`
+- `rg -n "Global Skill|Project-external|Isolation: GM|招聘一個員工|hire employee|spawn employee|task-closeout|Status Sync Checkpoints|global Codex Memory" AGENTS.md .agents`
 - `rg -n "TODO|\[TODO\]" AGENTS.md .agents`
 
 If `rg` is unavailable on a device, use an equivalent text search and report the substituted command.
+If terminal output appears corrupted, verify important phrases by searching for the expected text, such as `招聘一個員工`, `hire employee`, or `spawn employee`, before editing.
 
 ## Validation Checklist
 

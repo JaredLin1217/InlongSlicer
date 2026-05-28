@@ -30,7 +30,8 @@ InlongSlicer keeps Codex operating knowledge inside the repository.
 |   |       |-- isolation-audit.md
 |   |       |-- multi-agent-workflow.md
 |   |       |-- session-handoff.md
-|   |       `-- skill-authoring.md
+|   |       |-- skill-authoring.md
+|   |       `-- task-closeout.md
 |   `-- skills/
 |       |-- inlong-branding-migration/
 |       |-- project-isolation-workflow/
@@ -52,6 +53,7 @@ InlongSlicer keeps Codex operating knowledge inside the repository.
 - `.agents/docs/memory/entries/`: detailed memory entries.
 - `.agents/docs/decisions/`: durable Codex/project operating decisions.
 - `.agents/docs/runbooks/`: repeatable procedures that are longer than `AGENTS.md` should be.
+- `.agents/docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
 - `.agents/skills/`: project-local skills. Do not place InlongSlicer-specific skills in global Codex skill folders.
 - `.codex/`: Codex App project settings and local environment setup. Let Codex App generate environment files when possible.
 - `.claude/commands/`: legacy Claude command prompts. Keep matching behavior aligned with migrated Codex skills when both exist.

@@ -4,7 +4,7 @@ Use this runbook when the user wants InlongSlicer to operate with a controller s
 
 ## Validation Status
 
-This workflow has been installed for InlongSlicer and field-tested once with a read-only `explorer` agent on 2026-05-29. The test found no blocking contradiction, but confirmed that controller closeout fields and employee isolation fields need to be recorded separately.
+This workflow has been installed for InlongSlicer and field-tested once with a read-only `explorer` agent on 2026-05-29. The workflow now includes the latest repo-level checkpoint protocol from the controller project. A bounded `worker` trial should be run in this repository before treating worker delegation as fully field-tested here.
 
 ## Roles
 
@@ -14,7 +14,7 @@ This workflow has been installed for InlongSlicer and field-tested once with a r
 
 ## Hiring Trigger
 
-When the user asks to hire an employee agent, including the phrase `招聘一個員工`, treat it as permission to create a Codex sub-agent for this repository.
+When the user says `招聘一個員工`, `hire employee`, or `spawn employee`, treat it as permission to create a Codex sub-agent for this repository.
 
 ## Required Assignment Fields
 
@@ -58,6 +58,7 @@ Coordination:
 ## Status Synchronization
 
 - Before assigning an employee, read `.agents/docs/agent-status.md` and include relevant current status in the assignment.
+- After spawning an employee, add or update an `active` row in `.agents/docs/agent-status.md` as soon as practical. If waiting to update is more efficient, the controller must reconcile the row before closeout.
 - After receiving an employee report, normalize it into the fields required by `.agents/docs/runbooks/session-handoff.md`.
 - Treat `.agents/docs/runbooks/session-handoff.md` as the employee final report schema. The closeout fields below are the controller's final report for the whole multi-agent task.
 - If the employee omitted a required field, fill it from available context or mark it `unknown`; ask the employee only when the missing field blocks integration.

@@ -7,17 +7,17 @@ This file is the project-local status board for controller and employee agents.
 - Status: active
 - Last reviewed: 2026-05-29
 - Current branch: `feature/inlong-slicer-initial`
-- Latest known commit at review: `4958f60cfb` (`HEAD`, `origin/feature/inlong-slicer-initial`)
-- Git state at review: repository-local Codex integration files are uncommitted; `.codex/environments/environment.toml` is intentionally included as project-local Codex App environment config.
-- Current focus: finalize and commit repository-local Codex memory, isolation, and multi-agent workflow.
+- Latest known base commit before this workflow sync: `3b3acb1078 Add repo-local Codex agent workflow`
+- Git state at reconciliation: repo-local Codex workflow sync changes were reviewed for commit; verify with `git status -sb --untracked-files=all` at session start.
+- Current focus: synchronize InlongSlicer `.agents/docs` and `.agents/skills/project-isolation-workflow` with the latest repo-level controller workflow.
 - Last employee test: Franklin (`019e6fc9-3e7b-75c0-937b-3f6f8f8ebf52`) completed a read-only runbook consistency audit with no blocking contradiction.
-- Next action: review this integration diff, commit it, then decide separately whether to perform destructive global memory cleanup.
+- Next action: run a bounded InlongSlicer `worker` trial before treating worker delegation as fully field-tested in this repository.
 
 ## Employee Agents
 
 | Agent | Role | Task | Status | Files inspected | Files changed | Stopping point | Next action |
 |---|---|---|---|---|---|---|---|
-| Franklin (`019e6fc9-3e7b-75c0-937b-3f6f8f8ebf52`) | explorer | Read-only audit of `.agents/docs/runbooks` and `.agents/docs/agent-status.md` multi-agent workflow consistency | completed | `AGENTS.md`; `.agents/docs/runbooks/*.md`; `.agents/docs/agent-status.md` | none | No blocking contradiction; suggested clarifying controller closeout and where isolation fields are recorded. | Controller reconciled report into runbooks/status board; commit integration after review. |
+| Franklin (`019e6fc9-3e7b-75c0-937b-3f6f8f8ebf52`) | explorer | Read-only audit of `.agents/docs/runbooks` and `.agents/docs/agent-status.md` multi-agent workflow consistency | completed | `AGENTS.md`; `.agents/docs/runbooks/*.md`; `.agents/docs/agent-status.md` | none | No blocking contradiction; suggested clarifying controller closeout and where isolation fields are recorded. | Controller reconciled report into runbooks/status board. |
 
 ## Isolation Log
 
@@ -26,6 +26,7 @@ This file is the project-local status board for controller and employee agents.
 | 2026-05-29 | Controller | not used | not used | `C:\Users\v_jar\Documents\Jared's AI Team` as migration template source | none |
 | 2026-05-29 | Controller | used, authorized read-only audit/import from `C:\Users\v_jar\.codex\memories\` | not used | `C:\Users\v_jar\.codex\memories\` | none |
 | 2026-05-29 | Franklin (`019e6fc9-3e7b-75c0-937b-3f6f8f8ebf52`) | not used | used, required by higher-priority skill instructions | `C:\Users\v_jar\Documents\Jared's AI Team\.agents\skills\project-isolation-workflow\SKILL.md` | none |
+| 2026-05-29 | Controller | not used | not used | `C:\Users\v_jar\Documents\Jared's AI Team` as latest workflow template source | none |
 
 ## Handoff Notes
 

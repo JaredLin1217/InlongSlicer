@@ -19,6 +19,7 @@ InlongSlicer uses repository-local Codex memory instead of global Codex Memory.
 - `.agents/docs/memory/entries/`: detailed project-local memory entries.
 - `.agents/docs/decisions/`: durable Codex/project operating decisions.
 - `.agents/docs/runbooks/`: repeatable procedures.
+- `.agents/docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
 - `.agents/skills/`: project-local skills.
 - `InlongSlicer_doc/`: product, migration, release, and functional change documentation.
 
@@ -67,4 +68,10 @@ Global Memory: used / not used
 Global Skill: used / not used
 Project-external reads: none / authorized paths
 Project-external writes: none / authorized paths
+```
+
+Compact equivalent:
+
+```text
+Isolation: GM used/not used | GS used/not used | XR none/paths | XW none/paths
 ```

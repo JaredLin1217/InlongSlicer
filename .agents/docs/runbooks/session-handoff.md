@@ -12,6 +12,27 @@ Do not use global Memory for agent status.
 
 `.agents/docs/agent-status.md` is not live shared state. It is a repo-local snapshot that must be refreshed from current git state and employee reports.
 
+## Status Sync Checkpoints
+
+Because `.agents/docs/agent-status.md` is repo-local snapshot state, not automatic live shared state, reconcile it at these points:
+
+- Session start / takeover: read the status board and current git state; update `Current Controller Status` after review if they differ.
+- Before assigning an employee: refresh the controller snapshot and include the relevant status in the assignment.
+- Immediately after spawning, or as soon as practical: add or update the employee's `active` row in `Employee Agents`; if delayed, reconcile it before closeout.
+- After an employee final report: review the report and any diff, then update `Employee Agents` and `Isolation Log`.
+- Before final closeout for any task involving multiple sessions, windows, or agents: confirm `Current Controller Status`, `Employee Agents`, and `Isolation Log` reflect the final reviewed state, or explain why no update was needed.
+
+## Controller Snapshot Fields
+
+Keep the top section of `.agents/docs/agent-status.md` current enough for handoff:
+
+- `Last reviewed`: update when the controller reconciles the board.
+- `Current branch`: update when the branch changes.
+- `Latest known commit`: record the short hash and subject from `git log --oneline --decorate -1`.
+- `Git state`: summarize whether the repo is clean, has uncommitted changes, or is ahead/behind.
+- `Current focus`: name the active task, not a broad project aspiration.
+- `Next action`: one concrete next step for the next session.
+
 ## Before Assigning An Agent
 
 The controller should inspect:

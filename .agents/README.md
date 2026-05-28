@@ -17,6 +17,7 @@ This directory contains local Codex agent assets for this repository.
 - `docs/memory/entries/`: detailed project-local memory entries.
 - `docs/decisions/`: durable Codex/project operating decisions.
 - `docs/runbooks/`: repeatable Codex workflows.
+- `docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
 
 ## Maintenance
 

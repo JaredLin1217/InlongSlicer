@@ -17,6 +17,7 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `.agents/docs/memory/index.md`: searchable index for verified reusable project lessons.
 - `.agents/docs/agent-status.md`: current controller and employee-agent status board.
 - `.agents/docs/runbooks/`: repeatable Codex workflows that are too long for this file.
+- `.agents/docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
 - `.agents/skills/*/SKILL.md`: Codex skill entrypoints for migrated source commands.
 - `.claude/commands/*.md`: legacy Claude command prompts. Keep matching command behavior aligned with the corresponding Codex skill when both exist.
 - `tests/CLAUDE.md`: test-specific guidance for the `tests/` tree.
@@ -50,12 +51,13 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 ## Multi-Agent Mode
 
 - The main session is the controller: it plans work, assigns sub-agents, reviews results, integrates changes, and reports outcome.
-- When the user says `招聘一個員工`, treat it as explicit permission to create a Codex sub-agent for this repository.
+- When the user says `招聘一個員工`, `hire employee`, or `spawn employee`, treat it as explicit permission to create a Codex sub-agent for this repository.
 - Each sub-agent must have a clear role, task, allowed scope, forbidden scope, verification expectation, and final report format.
 - Use `explorer` for read-only investigation and `worker` for bounded implementation.
 - Prefer disjoint write scopes for workers. Do not assign multiple agents to edit the same files unless the user accepts the conflict risk.
 - Use `.agents/docs/runbooks/multi-agent-workflow.md` for the delegation protocol.
 - Before assigning or closing employee-agent work, read and reconcile `.agents/docs/agent-status.md`.
+- For multi-session or multi-agent work, keep `.agents/docs/agent-status.md` current at assignment, report, and final-closeout checkpoints.
 
 ## Use Existing Documentation First
 
@@ -96,6 +98,7 @@ Do not duplicate InlongSlicer or retained upstream documentation here. Before mo
 - When fixing bugs, changing user-visible behavior, changing profile behavior, changing build/package workflow, or adding features, update `InlongSlicer_doc/functional_change_log.md` in the same change unless the edit is truly documentation-only.
 - Avoid editing generated, vendored, or build-output Markdown under `build/`, `deps/`, or `deps_src/` unless the task specifically requires it.
 - Prefer links to existing upstream documentation over pasted copies of long build, packaging, test, or release instructions.
+- For non-trivial Codex workflow or documentation tasks, use `.agents/docs/runbooks/task-closeout.md` before final response.
 
 ## Forbidden Without Explicit Approval
 

@@ -24,11 +24,12 @@ Use this skill to keep InlongSlicer Codex work self-contained. Prefer repository
 11. Read `.agents/docs/runbooks/isolation-audit.md` when skill-source classification, project-external access, or closeout reporting is in scope.
 12. Read `.agents/docs/runbooks/session-handoff.md` when work may continue across multiple sessions, windows, or sub-agents.
 13. Read and update or explicitly reconcile `.agents/docs/agent-status.md` when assigning agents, receiving agent results, or handing off unfinished work.
-14. Read `.agents/docs/runbooks/global-knowledge-migration.md` before importing any global Codex Memory or global skill content.
-15. Keep all new project knowledge inside this repo unless the user explicitly asks to re-enable global Memory.
-16. Do not intentionally use global/system skills for normal project work.
-17. If system/global Codex resources are used because of explicit user request or higher-priority runtime instructions, report what was used and keep project-specific outputs in repo-local files.
-18. Do not read or write filesystem paths outside this repository unless the user explicitly authorizes the exact external path and action.
+14. Read `.agents/docs/runbooks/task-closeout.md` for non-trivial single-session task closeout.
+15. Read `.agents/docs/runbooks/global-knowledge-migration.md` before importing any global Codex Memory or global skill content.
+16. Keep all new project knowledge inside this repo unless the user explicitly asks to re-enable global Memory.
+17. Do not intentionally use global/system skills for normal project work.
+18. If system/global Codex resources are used because of explicit user request or higher-priority runtime instructions, report what was used and keep project-specific outputs in repo-local files.
+19. Do not read or write filesystem paths outside this repository unless the user explicitly authorizes the exact external path and action.
 
 ## File Placement Rules
 
@@ -40,6 +41,7 @@ Use this skill to keep InlongSlicer Codex work self-contained. Prefer repository
 - Put durable operating decisions in `.agents/docs/decisions/`.
 - Put repeatable procedures in `.agents/docs/runbooks/`.
 - Put current multi-agent status in `.agents/docs/agent-status.md`.
+- Put non-trivial task closeout guidance in `.agents/docs/runbooks/task-closeout.md`.
 - Put project-local skills in `.agents/skills/<skill-name>/SKILL.md`.
 - Put Codex App project settings in `.codex/`.
 - Put product, migration, release, and functional change docs in `InlongSlicer_doc/`.
@@ -57,7 +59,7 @@ Use this skill to keep InlongSlicer Codex work self-contained. Prefer repository
 
 ## Multi-Agent Rules
 
-When the user says `招聘一個員工`:
+When the user says `招聘一個員工`, `hire employee`, or `spawn employee`:
 
 1. Create a Codex sub-agent only for a bounded task.
 2. Assign one role: `explorer` for read-only investigation, or `worker` for bounded implementation.
