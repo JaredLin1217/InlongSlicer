@@ -1,0 +1,7 @@
+interface:
+  display_name: "Project Isolation Workflow"
+  short_description: "Repo-local Codex memory and agent workflow."
+  default_prompt: "Use $project-isolation-workflow to maintain repo-local Codex knowledge and agent coordination."
+
+policy:
+  allow_implicit_invocation: true

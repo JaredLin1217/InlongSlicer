@@ -12,10 +12,50 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md`: source-of-truth checklist for preserving the OrcaSlicer-to-InlongSlicer migration across upstream updates, including naming, colors, assets, profiles, package identity, and allowlisted Orca references.
 - `InlongSlicer_doc/functional_change_log.md`: source-of-truth record for Inlong-specific bug fixes, functional changes, profile behavior changes, build workflow changes, packaging behavior changes, and verification notes outside the pure branding migration checklist.
 - `.agents/README.md`: local index for Codex agent assets.
+- `.agents/docs/`: repository-local Codex memory, runbooks, decisions, and agent handoff status.
+- `.agents/docs/project-memory.md`: entry point for project-local memory.
+- `.agents/docs/memory/index.md`: searchable index for verified reusable project lessons.
+- `.agents/docs/agent-status.md`: current controller and employee-agent status board.
+- `.agents/docs/runbooks/`: repeatable Codex workflows that are too long for this file.
 - `.agents/skills/*/SKILL.md`: Codex skill entrypoints for migrated source commands.
 - `.claude/commands/*.md`: legacy Claude command prompts. Keep matching command behavior aligned with the corresponding Codex skill when both exist.
 - `tests/CLAUDE.md`: test-specific guidance for the `tests/` tree.
 - `.github/pull_request_template.md`: PR summary and verification expectations.
+
+## Codex Project Isolation
+
+- Keep InlongSlicer-specific Codex knowledge inside this repository.
+- Do not use global Codex Memory as project context or project storage unless the user explicitly authorizes that use.
+- Do not place project-specific rules, memory, skills, runbooks, or decisions in `C:\Users\v_jar\.codex\` global locations.
+- Do not read, list, create, edit, delete, move, stage, commit, or configure project-external filesystem paths unless the user explicitly authorizes the exact path and action.
+- `AGENTS.md` and `.agents/docs/` define behavior rules, not a runtime sandbox. Codex system tools, plugins, built-in skills, and higher-priority instructions may still exist.
+- Project-local skills under this repository's `.agents/skills/` are allowed for normal project work. A Global Skill is any `SKILL.md` outside this repository's `.agents/skills/`.
+- Do not intentionally use Global Skills for normal InlongSlicer work unless the user explicitly requests that capability or a higher-priority runtime instruction requires it.
+- If a global/system tool, Global Skill, global Memory path, or project-external path is used under an allowed exception, report what was used and why.
+- Use `.agents/docs/runbooks/isolation-audit.md` for source classification, project-external access checks, and closeout reporting.
+
+## Project-Local Knowledge Layers
+
+- `AGENTS.md`: rules every session must know before working in this repo.
+- `.agents/README.md`: index of local agent assets.
+- `.agents/docs/project-memory.md`: overview of project-local memory.
+- `.agents/docs/memory/index.md`: searchable memory index.
+- `.agents/docs/memory/entries/`: detailed verified memory entries.
+- `.agents/docs/agent-status.md`: current multi-session and employee-agent status.
+- `.agents/docs/decisions/`: durable decisions about Codex/project operations.
+- `.agents/docs/runbooks/`: repeatable procedures.
+- `.agents/skills/`: project-local skills and migrated command workflows.
+- `.codex/`: Codex App project settings. Treat environment files as project/machine-specific; do not blindly copy them between repositories.
+
+## Multi-Agent Mode
+
+- The main session is the controller: it plans work, assigns sub-agents, reviews results, integrates changes, and reports outcome.
+- When the user says `招聘一個員工`, treat it as explicit permission to create a Codex sub-agent for this repository.
+- Each sub-agent must have a clear role, task, allowed scope, forbidden scope, verification expectation, and final report format.
+- Use `explorer` for read-only investigation and `worker` for bounded implementation.
+- Prefer disjoint write scopes for workers. Do not assign multiple agents to edit the same files unless the user accepts the conflict risk.
+- Use `.agents/docs/runbooks/multi-agent-workflow.md` for the delegation protocol.
+- Before assigning or closing employee-agent work, read and reconcile `.agents/docs/agent-status.md`.
 
 ## Use Existing Documentation First
 
@@ -32,6 +72,7 @@ Do not duplicate InlongSlicer or retained upstream documentation here. Before mo
 - Translation/i18n: `scripts/run_gettext.sh`, `scripts/run_gettext.bat`, `localization/i18n/`, `resources/i18n/`
 - Tests: `tests/CLAUDE.md`, `tests/`, `scripts/run_unit_tests.sh`
 - Agent skills and command prompts: `.agents/README.md`, `.agents/skills/`, `.claude/commands/`
+- Codex memory, runbooks, decisions, and handoff status: `.agents/docs/`
 - Orca-to-Inlong migration: `InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md`, `.agents/skills/inlong-branding-migration/SKILL.md`
 - Functional change history: `InlongSlicer_doc/functional_change_log.md`
 
@@ -82,6 +123,15 @@ For code changes, document at least one targeted verification step. Prefer the n
 - Packaging changes: inspect the matching CMake/CI/package script path and note the expected artifact impact.
 
 If verification cannot be run, state the blocker clearly.
+
+## Required Isolation Closeout
+
+At the end of every non-trivial Codex reply in this repository, include either these fields or the compact equivalent `Isolation: GM <used/not used> | GS <used/not used> | XR <none/paths> | XW <none/paths>`.
+
+- Global Memory: used or not used.
+- Global Skill: used or not used.
+- Project-external reads: none or exact authorized paths.
+- Project-external writes: none or exact authorized paths.
 
 ## Recommended First-Task Workflow
 
