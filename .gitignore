@@ -46,3 +46,6 @@ test.js
 internal_docs/
 *.flatpak
 /flatpak-repo/
+
+# Local logo design previews
+/InlongSlicer_doc/logo_design/

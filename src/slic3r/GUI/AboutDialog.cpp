@@ -148,7 +148,7 @@ wxString CopyrightsDialog::get_html_text()
          bgr_clr_str, text_clr_str, text_clr_str,
         _L("License"),
         wxString(SLIC3R_APP_FULL_NAME) + _L(" is licensed under "),
-        "https://www.gnu.org/licenses/agpl-3.0.html",_L("GNU Affero General Public License, version 3"),
+        "https://www.gnu.org/licenses/agpl-3.0.html",_L("GNU Affero General Public License v3.0 (AGPL-3.0)"),
         wxString(SLIC3R_APP_FULL_NAME) + _L(" is based on PrusaSlicer and BambuStudio"),
         _L("Libraries"),
         _L("This software uses open source components whose copyright and other proprietary rights belong to their respective owners"));
@@ -266,7 +266,7 @@ AboutDialog::AboutDialog()
     text_sizer_horiz->Add( 0, 0, 0, wxLEFT, FromDIP(20));
 
     std::vector<wxString> text_list;
-    text_list.push_back(_L("InlongSlicer is developed for research and development purposes based on OrcaSlicer. It respects the open-source licenses of upstream projects, and all derived results are shared publicly according to the applicable open-source terms. This software is provided for study, testing, and lawful use without any warranty; users are responsible for evaluating suitability, print results, and related risks."));
+    text_list.push_back(_L("InlongSlicer is free software licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). It is developed for research and development purposes based on OrcaSlicer, and the source code is shared publicly from the GitHub repository below. This software is provided for study, testing, and lawful use without any warranty; users are responsible for evaluating suitability, print results, and related risks."));
 
     text_sizer->Add( 0, 0, 0, wxTOP, FromDIP(33));
     const auto language = wxGetApp().app_config->get("language");
@@ -310,10 +310,16 @@ AboutDialog::AboutDialog()
 
     copyright_hor_sizer->Add(copyright_ver_sizer, 0, wxLEFT, FromDIP(20));
 
-    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, "Copyright(C) 2026 Inlong Slicer All Rights Reserved", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, "Copyright(C) 2026 Inlong Slicer", wxDefaultPosition, wxDefaultSize);
     html_text->SetForegroundColour(wxColour(107, 107, 107));
 
     copyright_ver_sizer->Add(html_text, 0, wxALL , 0);
+
+    wxStaticText *license_text = new wxStaticText(this, wxID_ANY, _L("Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0)."), wxDefaultPosition, wxDefaultSize);
+    license_text->SetForegroundColour(wxColour(107, 107, 107));
+    license_text->SetFont(Label::Body_12);
+
+    copyright_ver_sizer->Add(license_text, 0, wxTOP, FromDIP(3));
 
     m_html = new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_NEVER /*NEVER*/);
       {
@@ -327,7 +333,7 @@ AboutDialog::AboutDialog()
               (boost::format(
               "<html>"
               "<body>"
-              "<p style=\"text-align:left\"><a style=\"color:#D66C47\" href=\"https://github.com/JaredLin1217/InlongSlicer\">https://github.com/JaredLin1217/InlongSlicer</ a></p>"
+              "<p style=\"text-align:left\"><a style=\"color:#D66C47\" href=\"https://github.com/JaredLin1217/InlongSlicer\">https://github.com/JaredLin1217/InlongSlicer</a></p>"
               "</body>"
               "</html>")
             ).str());

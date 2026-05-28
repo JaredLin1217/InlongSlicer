@@ -44,9 +44,9 @@ If you come across any of these in search results, please <b>report them</b> as 
 
 # InlongSlicer Fork Note
 
-This repository carries InlongSlicer changes on top of InlongSlicer 2.4.x. The upstream InlongSlicer README is kept mostly intact for user-facing product context and links.
+This repository carries InlongSlicer changes on top of upstream OrcaSlicer 2.4.x. The upstream OrcaSlicer README is kept mostly intact for user-facing product context and retained upstream links.
 
-For repository-specific development guidance, start with [AGENTS.md](AGENTS.md); [CLAUDE.md](CLAUDE.md) currently forwards to the same instructions. Use `inlong/orca-2.4-base` as the clean upstream comparison branch when separating Inlong-specific changes from upstream InlongSlicer behavior.
+For repository-specific development guidance, start with [AGENTS.md](AGENTS.md); [CLAUDE.md](CLAUDE.md) currently forwards to the same instructions. Use `inlong/orca-2.4-base` as the clean upstream comparison branch when separating Inlong-specific changes from upstream OrcaSlicer behavior.
 
 # Main features
 
@@ -226,7 +226,8 @@ InlongSlicer began in that same spirit, drawing from BambuStudio, PrusaSlicer, a
 The InlongSlicer logo was designed by community member [Justin Levine](https://github.com/jal-co).
 
 # License
-- **InlongSlicer** is licensed under the GNU Affero General Public License, version 3.
-- The **GNU Affero General Public License**, version 3 ensures that if you use any part of this software in any way (even behind a web server), your software must be released under the same license.
+- **InlongSlicer** is free software licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. See [LICENSE.txt](LICENSE.txt).
+- This repository, including the InlongSlicer modifications, is published as source code at [JaredLin1217/InlongSlicer](https://github.com/JaredLin1217/InlongSlicer) under the same AGPL-3.0 terms.
+- If you distribute modified builds or provide network access to modified versions, keep the AGPL-3.0 license notice and provide the corresponding source code as required by the license.
 - InlongSlicer includes a **pressure advance calibration pattern test** adapted from Andrew Ellis' generator, which is licensed under GNU General Public License, version 3. Ellis' generator is itself adapted from a generator developed by Sineos for Marlin, which is licensed under GNU General Public License, version 3.
 - The **Bambu networking plugin** is based on non-free libraries from BambuLab. It is optional to the InlongSlicer and provides extended functionalities for Bambulab printer users.
