@@ -7,6 +7,8 @@ Use this runbook to make InlongSlicer's project isolation auditable without pret
 - `AGENTS.md` and `.agents/docs/` are behavior rules, not runtime enforcement.
 - Codex system instructions, tools, plugins, and global/system skills can still exist in the session.
 - The project rule is to avoid using global Memory and global/system skills for normal InlongSlicer work, keep durable knowledge inside this repo, and report any exception.
+- This runtime boundary is an accepted project limitation. Do not count it as a failed audit by itself.
+- Count an audit failure when an assistant claims this repo technically disables runtime capabilities, omits required isolation reporting, uses global Memory without explicit user approval, intentionally uses a global/system skill without an allowed exception, or reads/writes project-external filesystem paths without exact user authorization.
 
 ## Skill Source Classification
 
@@ -79,3 +81,4 @@ For isolation-related changes:
    - repeatable workflow: `.agents/docs/runbooks/` or `.agents/skills/`,
    - durable decision: `.agents/docs/decisions/`.
 5. Report whether global Memory, global/system skills, project-external reads, or project-external writes were used.
+6. Treat the repo-level/runtime boundary as a known limitation. Only report it as a remaining risk when the task depends on technical enforcement rather than documented behavior and closeout reporting.

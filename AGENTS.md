@@ -15,7 +15,8 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `.agents/docs/`: repository-local Codex memory, runbooks, decisions, and agent handoff status.
 - `.agents/docs/project-memory.md`: entry point for project-local memory.
 - `.agents/docs/memory/index.md`: searchable index for verified reusable project lessons.
-- `.agents/docs/agent-status.md`: current controller and employee-agent status board.
+- `.agents/docs/agent-status.template.md`: tracked template for local controller and employee-agent status.
+- `.agents/docs/agent-status.md`: local runtime status board; do not deploy it to other projects.
 - `.agents/docs/runbooks/`: repeatable Codex workflows that are too long for this file.
 - `.agents/docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
 - `.agents/skills/*/SKILL.md`: Codex skill entrypoints for migrated source commands.
@@ -30,6 +31,7 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - Do not place project-specific rules, memory, skills, runbooks, or decisions in `C:\Users\v_jar\.codex\` global locations.
 - Do not read, list, create, edit, delete, move, stage, commit, or configure project-external filesystem paths unless the user explicitly authorizes the exact path and action.
 - `AGENTS.md` and `.agents/docs/` define behavior rules, not a runtime sandbox. Codex system tools, plugins, built-in skills, and higher-priority instructions may still exist.
+- This repo-level/runtime boundary is an accepted limitation, not a defect. Make isolation auditable by avoiding global Memory and Global Skills for normal work, requiring exact authorization for project-external filesystem access, and reporting every exception.
 - Project-local skills under this repository's `.agents/skills/` are allowed for normal project work. A Global Skill is any `SKILL.md` outside this repository's `.agents/skills/`.
 - Do not intentionally use Global Skills for normal InlongSlicer work unless the user explicitly requests that capability or a higher-priority runtime instruction requires it.
 - If a global/system tool, Global Skill, global Memory path, or project-external path is used under an allowed exception, report what was used and why.
@@ -42,7 +44,8 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `.agents/docs/project-memory.md`: overview of project-local memory.
 - `.agents/docs/memory/index.md`: searchable memory index.
 - `.agents/docs/memory/entries/`: detailed verified memory entries.
-- `.agents/docs/agent-status.md`: current multi-session and employee-agent status.
+- `.agents/docs/agent-status.template.md`: tracked template for local multi-session and employee-agent status.
+- `.agents/docs/agent-status.md`: local runtime status board; do not deploy it to other projects.
 - `.agents/docs/decisions/`: durable decisions about Codex/project operations.
 - `.agents/docs/runbooks/`: repeatable procedures.
 - `.agents/skills/`: project-local skills and migrated command workflows.
@@ -56,8 +59,8 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - Use `explorer` for read-only investigation and `worker` for bounded implementation.
 - Prefer disjoint write scopes for workers. Do not assign multiple agents to edit the same files unless the user accepts the conflict risk.
 - Use `.agents/docs/runbooks/multi-agent-workflow.md` for the delegation protocol.
-- Before assigning or closing employee-agent work, read and reconcile `.agents/docs/agent-status.md`.
-- For multi-session or multi-agent work, keep `.agents/docs/agent-status.md` current at assignment, report, and final-closeout checkpoints.
+- Before assigning or closing employee-agent work, read and reconcile local `.agents/docs/agent-status.md`. If it is missing, create it from `.agents/docs/agent-status.template.md`.
+- For multi-session or multi-agent work, keep local `.agents/docs/agent-status.md` current at assignment, report, and final-closeout checkpoints.
 
 ## Use Existing Documentation First
 

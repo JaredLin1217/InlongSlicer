@@ -32,4 +32,5 @@ InlongSlicer is a forked, cross-platform slicer project with high-risk areas suc
 - Useful lessons should be written as `.agents/docs/memory/index.md` plus `.agents/docs/memory/entries/`, repo docs, decisions, or project-local skills.
 - The project can be moved or shared without depending on `C:\Users\v_jar\.codex\memories\`.
 - This decision cannot technically disable Codex runtime capabilities by itself; it defines the project boundary and reporting rule.
+- The repo-level boundary is an accepted limitation, not an unresolved defect. The required mitigation is auditable behavior: avoid global Memory and global/system skills for normal work, require exact authorization for project-external filesystem access, and report every exception.
 - Closeout reports may be slightly longer, but they make isolation auditable.

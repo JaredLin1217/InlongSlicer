@@ -11,7 +11,8 @@ This directory contains local Codex agent assets for this repository.
 
 ## Docs
 
-- `docs/agent-status.md`: controller and employee-agent status board.
+- `docs/agent-status.template.md`: tracked template for the local controller and employee-agent status board.
+- `docs/agent-status.md`: local runtime status board, intentionally gitignored and not part of Agents deployments.
 - `docs/project-memory.md`: overview of repo-local memory.
 - `docs/memory/index.md`: searchable index for verified project lessons.
 - `docs/memory/entries/`: detailed project-local memory entries.

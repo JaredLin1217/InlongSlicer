@@ -49,3 +49,6 @@ internal_docs/
 
 # Local logo design previews
 /InlongSlicer_doc/logo_design/
+
+# Local Codex runtime state
+.agents/docs/agent-status.md

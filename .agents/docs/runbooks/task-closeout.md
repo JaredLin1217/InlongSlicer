@@ -17,6 +17,8 @@ Use this runbook before ending any non-trivial InlongSlicer task, including file
 
 3. State remaining risk.
    - Call out unverified behavior, stale generated or runtime copies, unresolved conflicts, missing review, or assumptions.
+   - Do not treat the known repo-level/runtime boundary as a new defect when no global Memory, global/system skill, or project-external access exception occurred.
+   - For isolation work, mention the boundary only when it affects the current task's trust model or next decision.
    - If no known risk remains, say so.
 
 4. Decide whether durable project knowledge is needed.
@@ -30,7 +32,7 @@ Use this runbook before ending any non-trivial InlongSlicer task, including file
 5. Use the right handoff workflow.
    - For multi-agent tasks, also use `.agents/docs/runbooks/multi-agent-workflow.md`.
    - For work that may continue across sessions, windows, or sub-agents, also use `.agents/docs/runbooks/session-handoff.md`.
-   - If the task used another session or employee agent, update or explicitly reconcile `.agents/docs/agent-status.md` before the final reply.
+   - If the task used another session or employee agent, update or explicitly reconcile local `.agents/docs/agent-status.md` before the final reply. If it is missing, create it from `.agents/docs/agent-status.template.md`.
 
 ## Required Isolation Closeout
 

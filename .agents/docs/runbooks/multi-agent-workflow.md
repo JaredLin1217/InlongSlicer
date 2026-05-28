@@ -20,7 +20,7 @@ When the user says `招聘一個員工`, `hire employee`, or `spawn employee`, t
 
 Every employee assignment must include:
 
-- Status context: relevant current status from `.agents/docs/agent-status.md`.
+- Status context: relevant current status from local `.agents/docs/agent-status.md`.
 - Role: `explorer` or `worker`.
 - Goal: one concrete outcome.
 - Allowed scope: files or directories the agent may inspect or edit.
@@ -35,7 +35,7 @@ Every employee assignment must include:
 - Prefer `explorer` for questions and `worker` for implementation.
 - Keep immediate blocking work in the controller session when waiting would slow the task.
 - Review employee output before integrating it.
-- Update or explicitly reconcile `.agents/docs/agent-status.md` after every employee final report.
+- Update or explicitly reconcile local `.agents/docs/agent-status.md` after every employee final report.
 - If an employee edited files, inspect the diff before continuing.
 - Tell each employee to use repo-local context first and not to write project knowledge to global Codex Memory or global skill folders.
 - Employees must not use global/system tools or skills unless the controller assignment explicitly authorizes that use, the user explicitly requested it, or a higher-priority runtime instruction requires it.
@@ -57,13 +57,13 @@ Coordination:
 
 ## Status Synchronization
 
-- Before assigning an employee, read `.agents/docs/agent-status.md` and include relevant current status in the assignment.
-- After spawning an employee, add or update an `active` row in `.agents/docs/agent-status.md` as soon as practical. If waiting to update is more efficient, the controller must reconcile the row before closeout.
+- Before assigning an employee, read local `.agents/docs/agent-status.md` and include relevant current status in the assignment. If it is missing, create it from `.agents/docs/agent-status.template.md`.
+- After spawning an employee, add or update an `active` row in local `.agents/docs/agent-status.md` as soon as practical. If waiting to update is more efficient, the controller must reconcile the row before closeout.
 - After receiving an employee report, normalize it into the fields required by `.agents/docs/runbooks/session-handoff.md`.
 - Treat `.agents/docs/runbooks/session-handoff.md` as the employee final report schema. The closeout fields below are the controller's final report for the whole multi-agent task.
 - If the employee omitted a required field, fill it from available context or mark it `unknown`; ask the employee only when the missing field blocks integration.
-- The controller owns updates to `.agents/docs/agent-status.md`.
-- Do not close a multi-agent task until `.agents/docs/agent-status.md` is updated or the closeout states why no update was needed.
+- The controller owns updates to local `.agents/docs/agent-status.md`.
+- Do not close a multi-agent task until local `.agents/docs/agent-status.md` is updated or the closeout states why no update was needed.
 
 ## Controller Closeout
 
@@ -78,5 +78,5 @@ At the end of a multi-agent task, the controller reports the integrated result:
 - Global Skill: used / not used,
 - Project-external reads: none / authorized paths,
 - Project-external writes: none / authorized paths,
-- `.agents/docs/agent-status.md`: updated / not updated with reason,
+- local `.agents/docs/agent-status.md`: updated / not updated with reason,
 - whether a new `AGENTS.md` rule, project memory entry, runbook, skill, or decision should be added.

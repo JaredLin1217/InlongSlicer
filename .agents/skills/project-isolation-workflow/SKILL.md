@@ -23,7 +23,7 @@ Use this skill to keep InlongSlicer Codex work self-contained. Prefer repository
 10. Read `.agents/docs/runbooks/skill-authoring.md` before creating or updating project-local skills.
 11. Read `.agents/docs/runbooks/isolation-audit.md` when skill-source classification, project-external access, or closeout reporting is in scope.
 12. Read `.agents/docs/runbooks/session-handoff.md` when work may continue across multiple sessions, windows, or sub-agents.
-13. Read and update or explicitly reconcile `.agents/docs/agent-status.md` when assigning agents, receiving agent results, or handing off unfinished work.
+13. Read and update or explicitly reconcile local `.agents/docs/agent-status.md` when assigning agents, receiving agent results, or handing off unfinished work. If it is missing, create it from `.agents/docs/agent-status.template.md`.
 14. Read `.agents/docs/runbooks/task-closeout.md` for non-trivial single-session task closeout.
 15. Read `.agents/docs/runbooks/global-knowledge-migration.md` before importing any global Codex Memory or global skill content.
 16. Keep all new project knowledge inside this repo unless the user explicitly asks to re-enable global Memory.
@@ -40,7 +40,8 @@ Use this skill to keep InlongSlicer Codex work self-contained. Prefer repository
 - Put detailed memory entries in `.agents/docs/memory/entries/`.
 - Put durable operating decisions in `.agents/docs/decisions/`.
 - Put repeatable procedures in `.agents/docs/runbooks/`.
-- Put current multi-agent status in `.agents/docs/agent-status.md`.
+- Put the tracked status template in `.agents/docs/agent-status.template.md`.
+- Put live multi-agent runtime status in local `.agents/docs/agent-status.md`; do not deploy this live file to other projects.
 - Put non-trivial task closeout guidance in `.agents/docs/runbooks/task-closeout.md`.
 - Put project-local skills in `.agents/skills/<skill-name>/SKILL.md`.
 - Put Codex App project settings in `.codex/`.
@@ -52,10 +53,19 @@ Use this skill to keep InlongSlicer Codex work self-contained. Prefer repository
 
 - This skill defines repository behavior, not a runtime sandbox.
 - Codex system tools, plugins, built-in skills, and global instructions may still exist in the session.
+- The repo-level/runtime boundary is an accepted limitation, not a defect; audit behavior through repo-local rules, exact external-access authorization, and closeout reporting.
+- Do not intentionally use global/system skills for normal project work.
 - Project-local skills under this repository's `.agents/skills/` are allowed.
 - Do not use global Memory as project context or project storage unless the user explicitly asks.
 - Report any system/global Codex resource read or modified during isolation-related work.
 - Report global Memory usage, global Skill usage, project-external reads, and project-external writes at the end of every non-trivial Codex reply in this repository.
+
+## Skill Authoring Rules
+
+- Keep project skills in `.agents/skills/<skill-name>/`.
+- Follow `.agents/docs/runbooks/skill-authoring.md` for naming, frontmatter, body structure, metadata, and validation.
+- Do not add README, changelog, installation guide, or other auxiliary docs inside a skill folder.
+- Move long explanations to `.agents/docs/`; keep `SKILL.md` procedural.
 
 ## Multi-Agent Rules
 
