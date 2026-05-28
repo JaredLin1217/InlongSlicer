@@ -1,0 +1,9 @@
+# Template only. Let Codex App generate environment.toml per project/machine.
+version = 1
+name = "<project-name>"
+
+[setup]
+script = '''
+cd "$env:CODEX_WORKTREE_PATH"
+git status -sb
+'''

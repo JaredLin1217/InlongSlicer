@@ -49,7 +49,9 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `.agents/docs/decisions/`: durable decisions about Codex/project operations.
 - `.agents/docs/runbooks/`: repeatable procedures.
 - `.agents/skills/`: project-local skills and migrated command workflows.
-- `.codex/`: Codex App project settings. Treat environment files as project/machine-specific; do not blindly copy them between repositories.
+- `.codex/environments/environment.template.toml`: portable Codex App environment reference.
+- `.codex/environments/environment.toml`: local Codex App runtime environment; do not deploy it to other projects.
+- `.codex/`: Codex App project settings. Treat environment files as project/machine-specific; do not blindly copy runtime environment files between repositories.
 
 ## Multi-Agent Mode
 

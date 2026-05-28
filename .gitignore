@@ -52,3 +52,4 @@ internal_docs/
 
 # Local Codex runtime state
 .agents/docs/agent-status.md
+.codex/environments/environment.toml
