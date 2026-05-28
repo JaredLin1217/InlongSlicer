@@ -1,12 +1,16 @@
 {
     "name":  "INLONG",
-    "version":  "01.05.01.10",
+    "version":  "01.05.01.17",
     "force_update":  "1",
     "description":  "My configurations",
     "machine_model_list":  [
                                {
                                    "name":  "Vulcan600",
                                    "sub_path":  "machine/Vulcan600.json"
+                               },
+                               {
+                                   "name":  "Vulcan1200",
+                                   "sub_path":  "machine/Vulcan1200.json"
                                },
                                {
                                    "name":  "SC12060",
@@ -71,6 +75,26 @@
                          {
                              "name":  "Vulcan600 0.8mm nozzle",
                              "sub_path":  "machine/Vulcan600 0.8mm nozzle.json"
+                         },
+                         {
+                             "name":  "Vulcan1200_common",
+                             "sub_path":  "machine/Vulcan1200_common.json"
+                         },
+                         {
+                             "name":  "Vulcan1200 0.6mm nozzle",
+                             "sub_path":  "machine/Vulcan1200 0.6mm nozzle.json"
+                         },
+                         {
+                             "name":  "Vulcan1200 0.4mm nozzle",
+                             "sub_path":  "machine/Vulcan1200 0.4mm nozzle.json"
+                         },
+                         {
+                             "name":  "Vulcan1200 0.5mm nozzle",
+                             "sub_path":  "machine/Vulcan1200 0.5mm nozzle.json"
+                         },
+                         {
+                             "name":  "Vulcan1200 0.8mm nozzle",
+                             "sub_path":  "machine/Vulcan1200 0.8mm nozzle.json"
                          },
                          {
                              "name":  "SC12060_common",

@@ -52,7 +52,7 @@
     "activate_air_filtration":  "0",
     "during_print_exhaust_fan_speed":  "60",
     "complete_print_exhaust_fan_speed":  "80",
-    "filament_retraction_length":  "1.0",
+    "filament_retraction_length":  "0.6",
     "filament_z_hop":  "0.5",
     "filament_z_hop_types":  "Slope Lift",
     "filament_retract_lift_above":  "0",

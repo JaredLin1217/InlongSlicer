@@ -64,6 +64,77 @@ const char *PresetBundle::INLONG_DEFAULT_FILAMENT = "Generic PLA @System";
 const char *PresetBundle::INLONG_FILAMENT_LIBRARY = "InlongFilamentLibrary";
 const char *PresetBundle::INLONG_DEFAULT_FILAMENT_PLACEHOLDER = "Default Filament";
 
+static constexpr const char* INLONG_MAIN_EXTRUDER_COLOUR = "#D66C47";
+static constexpr const char* INLONG_SUB_EXTRUDER_COLOUR  = "#494949";
+
+static bool is_inlong_machine_colour_preset(const Preset& printer)
+{
+    if (printer.vendor) {
+        const std::string& vendor_id = printer.vendor->id;
+        const std::string& vendor_name = printer.vendor->name;
+        if (vendor_id == "INLONG" || vendor_id == "_Infinity3DP" ||
+            vendor_name == "INLONG" || vendor_name == "Infinity3DP")
+            return true;
+    }
+
+    const auto* printer_model = printer.config.option<ConfigOptionString>("printer_model");
+    const std::string model = printer_model ? printer_model->value : printer.name;
+    return model == "Vulcan600" || model == "Vulcan1200" || model == "SC12060" || boost::starts_with(model, "Infinity3DP");
+}
+
+static bool is_inlong_generated_filament_colour(const std::string& colour)
+{
+    return colour.empty() ||
+           boost::iequals(colour, "#D66C47") ||
+           boost::iequals(colour, "#494949") ||
+           boost::iequals(colour, "#26A69A") ||
+           boost::iequals(colour, "#E18263") ||
+           boost::iequals(colour, "#808080") ||
+           boost::iequals(colour, "#FF8000");
+}
+
+static std::vector<std::string> inlong_profile_filament_colours(const Preset& printer, size_t count)
+{
+    std::vector<std::string> colours;
+    if (const auto* extruder_colours = printer.config.option<ConfigOptionStrings>("extruder_colour"))
+        colours = extruder_colours->values;
+
+    if (colours.empty())
+        return colours;
+
+    const bool has_sub_extruder_colour = colours.size() > 1;
+    colours.resize(count);
+    for (size_t i = 0; i < colours.size(); ++i) {
+        if (colours[i].empty())
+            colours[i] = i == 1 && has_sub_extruder_colour ? INLONG_SUB_EXTRUDER_COLOUR : INLONG_MAIN_EXTRUDER_COLOUR;
+    }
+    return colours;
+}
+
+static void apply_inlong_profile_filament_colours(const Preset& printer, std::vector<std::string>& colours, size_t count)
+{
+    if (!is_inlong_machine_colour_preset(printer))
+        return;
+
+    std::vector<std::string> profile_colours = inlong_profile_filament_colours(printer, count);
+    if (profile_colours.empty())
+        return;
+
+    bool use_profile_colours = colours.empty() || colours.size() != count;
+    if (!use_profile_colours) {
+        use_profile_colours = true;
+        for (const std::string& colour : colours) {
+            if (!is_inlong_generated_filament_colour(colour)) {
+                use_profile_colours = false;
+                break;
+            }
+        }
+    }
+
+    if (use_profile_colours)
+        colours = std::move(profile_colours);
+}
+
 DynamicPrintConfig PresetBundle::construct_full_config(
     Preset& in_printer_preset,
     Preset& in_print_preset,
@@ -2666,6 +2737,7 @@ void PresetBundle::update_selections(AppConfig &config)
     for (std::string &color : filament_colors)
         if (color == "#26A69A")
             color = "#D66C47";
+    apply_inlong_profile_filament_colours(printers.get_selected_preset(), filament_colors, filament_presets.size());
     filament_colors.resize(filament_presets.size(), "#D66C47");
     project_config.option<ConfigOptionStrings>("filament_colour")->values = filament_colors;
 
@@ -2676,6 +2748,7 @@ void PresetBundle::update_selections(AppConfig &config)
     for (std::string &color : multi_filament_colors)
         if (color == "#26A69A")
             color = "#D66C47";
+    apply_inlong_profile_filament_colours(printers.get_selected_preset(), multi_filament_colors, filament_presets.size());
     if (multi_filament_colors.size() == 0) project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = filament_colors;
     else project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = multi_filament_colors;
 
@@ -2817,6 +2890,7 @@ void PresetBundle::load_selections(AppConfig &config, const PresetPreferences& p
     for (std::string &color : filament_colors)
         if (color == "#26A69A")
             color = "#D66C47";
+    apply_inlong_profile_filament_colours(printers.get_selected_preset(), filament_colors, filament_presets.size());
     filament_colors.resize(filament_presets.size(), "#D66C47");
     project_config.option<ConfigOptionStrings>("filament_colour")->values = filament_colors;
 
@@ -2827,6 +2901,7 @@ void PresetBundle::load_selections(AppConfig &config, const PresetPreferences& p
     for (std::string &color : multi_filament_colors)
         if (color == "#26A69A")
             color = "#D66C47";
+    apply_inlong_profile_filament_colours(printers.get_selected_preset(), multi_filament_colors, filament_presets.size());
     if (multi_filament_colors.size() == 0) project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = filament_colors;
     else project_config.option<ConfigOptionStrings>("filament_multi_colour")->values = multi_filament_colors;
 

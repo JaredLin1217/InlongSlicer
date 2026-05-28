@@ -40,7 +40,7 @@
     "extruder_clearance_radius":  "65",
     "extruder_colour":  [
                             "#D66C47",
-                            "#E18263"
+                            "#494949"
                         ],
     "extruder_offset":  [
                             "0x0",

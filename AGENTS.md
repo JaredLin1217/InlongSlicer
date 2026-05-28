@@ -10,6 +10,7 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `AGENTS.md`: repository-wide instructions for Codex and compatible coding agents.
 - `CLAUDE.md`: compatibility shim that points to `AGENTS.md`; keep it short unless a Claude-only exception is required.
 - `InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md`: source-of-truth checklist for preserving the OrcaSlicer-to-InlongSlicer migration across upstream updates, including naming, colors, assets, profiles, package identity, and allowlisted Orca references.
+- `InlongSlicer_doc/functional_change_log.md`: source-of-truth record for Inlong-specific bug fixes, functional changes, profile behavior changes, build workflow changes, packaging behavior changes, and verification notes outside the pure branding migration checklist.
 - `.agents/README.md`: local index for Codex agent assets.
 - `.agents/skills/*/SKILL.md`: Codex skill entrypoints for migrated source commands.
 - `.claude/commands/*.md`: legacy Claude command prompts. Keep matching command behavior aligned with the corresponding Codex skill when both exist.
@@ -32,6 +33,7 @@ Do not duplicate InlongSlicer or retained upstream documentation here. Before mo
 - Tests: `tests/CLAUDE.md`, `tests/`, `scripts/run_unit_tests.sh`
 - Agent skills and command prompts: `.agents/README.md`, `.agents/skills/`, `.claude/commands/`
 - Orca-to-Inlong migration: `InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md`, `.agents/skills/inlong-branding-migration/SKILL.md`
+- Functional change history: `InlongSlicer_doc/functional_change_log.md`
 
 ## Safe Working Rules For Codex
 
@@ -50,6 +52,7 @@ Do not duplicate InlongSlicer or retained upstream documentation here. Before mo
 - Update the most specific Markdown file that owns the workflow instead of copying the same guidance into several places.
 - Keep `CLAUDE.md` as a pointer to `AGENTS.md` unless a tool requires separate content.
 - When changing a migrated source command, update both `.agents/skills/<name>/SKILL.md` and the matching `.claude/commands/<name>.md` if both exist.
+- When fixing bugs, changing user-visible behavior, changing profile behavior, changing build/package workflow, or adding features, update `InlongSlicer_doc/functional_change_log.md` in the same change unless the edit is truly documentation-only.
 - Avoid editing generated, vendored, or build-output Markdown under `build/`, `deps/`, or `deps_src/` unless the task specifically requires it.
 - Prefer links to existing upstream documentation over pasted copies of long build, packaging, test, or release instructions.
 
@@ -89,4 +92,5 @@ If verification cannot be run, state the blocker clearly.
 5. Inspect nearby source and existing patterns before proposing edits.
 6. Make the smallest change that solves the request.
 7. Run targeted verification, or record why it was not run.
-8. Summarize the changed files, behavior impact, and verification result.
+8. Update `InlongSlicer_doc/functional_change_log.md` for functional or bug-fix work.
+9. Summarize the changed files, behavior impact, and verification result.

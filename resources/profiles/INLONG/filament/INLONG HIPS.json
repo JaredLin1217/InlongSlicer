@@ -93,6 +93,10 @@
                                 "Vulcan600 0.5mm nozzle",
                                 "Vulcan600 0.6mm nozzle",
                                 "Vulcan600 0.8mm nozzle",
+                                "Vulcan1200 0.4mm nozzle",
+                                "Vulcan1200 0.5mm nozzle",
+                                "Vulcan1200 0.6mm nozzle",
+                                "Vulcan1200 0.8mm nozzle",
                                 "SC12060 0.6mm nozzle",
                                 "SC12060 0.8mm nozzle"
                             ]

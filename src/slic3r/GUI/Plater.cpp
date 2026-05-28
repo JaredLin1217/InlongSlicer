@@ -1319,6 +1319,38 @@ bool Sidebar::priv::switch_diameter(bool single)
         }
     };
 
+    auto apply_printer_nozzle_diameters = [this](const std::vector<double>& values) {
+        auto* printer_tab = wxGetApp().get_tab(Preset::TYPE_PRINTER);
+        if (!printer_tab || values.empty())
+            return false;
+
+        Preset& printer_preset = wxGetApp().preset_bundle->printers.get_edited_preset();
+        auto* nozzle_diameter = dynamic_cast<const ConfigOptionFloats*>(printer_preset.config.option("nozzle_diameter"));
+        if (!nozzle_diameter || nozzle_diameter->values.empty())
+            return false;
+
+        std::vector<double> new_values = nozzle_diameter->values;
+        if (new_values.size() < values.size())
+            new_values.resize(values.size(), new_values.back());
+
+        bool changed = false;
+        for (size_t i = 0; i < values.size(); ++i) {
+            if (std::fabs(new_values[i] - values[i]) > EPSILON) {
+                new_values[i] = values[i];
+                changed = true;
+            }
+        }
+        if (!changed)
+            return true;
+
+        DynamicPrintConfig new_config = printer_preset.config;
+        new_config.set_key_value("nozzle_diameter", new ConfigOptionFloats(new_values));
+        printer_tab->load_config(new_config);
+        if (this->plater)
+            this->plater->on_config_change(new_config);
+        return true;
+    };
+
     wxString diameter;
     if (single) {
         diameter = single_extruder->combo_diameter->GetValue();
@@ -1326,23 +1358,17 @@ bool Sidebar::priv::switch_diameter(bool single)
         auto diameter_left = left_extruder->combo_diameter->GetValue();
         auto diameter_right = right_extruder->combo_diameter->GetValue();
         if (diameter_left != diameter_right) {
-            std::string printer_type = wxGetApp().preset_bundle->printers.get_edited_preset().get_printer_type(wxGetApp().preset_bundle);
-            auto left_name  = _L(DevPrinterConfigUtil::get_toolhead_display_name(printer_type, DEPUTY_EXTRUDER_ID, ToolHeadComponent::Nozzle, ToolHeadNameCase::SentenceCase));
-            auto right_name = _L(DevPrinterConfigUtil::get_toolhead_display_name(printer_type, MAIN_EXTRUDER_ID, ToolHeadComponent::Nozzle, ToolHeadNameCase::SentenceCase));
-            MessageDialog dlg(this->plater,
-                              _L("The software does not support using different diameter of nozzles for one print. "
-                                 "If the left and right nozzles are inconsistent, we can only proceed with single-head printing. "
-                                 "Please confirm which nozzle you would like to use for this project."),
-                              _L("Switch diameter"), wxYES_NO | wxNO_DEFAULT);
-            dlg.SetButtonLabel(wxID_YES, wxString::Format("%s: %smm", left_name, diameter_left));
-            dlg.SetButtonLabel(wxID_NO, wxString::Format("%s: %smm", right_name, diameter_right));
-            int result = dlg.ShowModal();
-            if (result == wxID_YES)
-                diameter = diameter_left;
-            else if (result == wxID_NO)
-                diameter = diameter_right;
-            else
+            double left_value = 0.;
+            double right_value = 0.;
+            if (!diameter_left.ToDouble(&left_value) || !diameter_right.ToDouble(&right_value))
                 return false;
+
+            // Mixed dual-nozzle hardware has no matching single-variant preset.
+            // Keep the current printer preset and update the per-extruder config so Printer Settings stays in sync.
+            if (!apply_printer_nozzle_diameters({left_value, right_value}))
+                return false;
+            refresh_side_preset_ui();
+            return true;
         }
         else {
             diameter = diameter_left;
@@ -1486,12 +1512,18 @@ bool Sidebar::priv::sync_extruder_list(bool &only_external_material)
     int main_index = obj->is_main_extruder_on_left() ? 0 : 1;
     int deputy_index = obj->is_main_extruder_on_left() ? 1 : 0;
 
+    auto select_extruder_diameter = [](ExtruderGroup* extruder, const wxString& diameter) {
+        int index = extruder->combo_diameter->FindString(diameter);
+        if (index == wxNOT_FOUND) {
+            index = extruder->combo_diameter->GetCount();
+            extruder->combo_diameter->Append(diameter, {});
+        }
+        extruder->combo_diameter->SetSelection(index);
+    };
+
     if (extruder_nums > 1) {
-        int left_index  = left_extruder->combo_diameter->FindString(get_diameter_string(nozzle_diameters[0]));
-        int right_index = left_extruder->combo_diameter->FindString(get_diameter_string(nozzle_diameters[1]));
-        assert(left_index != -1 && right_index != -1);
-        left_extruder->combo_diameter->SetSelection(left_index);
-        right_extruder->combo_diameter->SetSelection(right_index);
+        select_extruder_diameter(left_extruder, get_diameter_string(nozzle_diameters[0]));
+        select_extruder_diameter(right_extruder, get_diameter_string(nozzle_diameters[1]));
         is_switching_diameter = true;
         switch_diameter(false);
         is_switching_diameter = false;
@@ -1500,9 +1532,7 @@ bool Sidebar::priv::sync_extruder_list(bool &only_external_material)
         AMSCountPopupWindow::UpdateAMSCount(0, left_extruder);
         AMSCountPopupWindow::UpdateAMSCount(1, right_extruder);
     } else {
-        int index = single_extruder->combo_diameter->FindString(get_diameter_string(nozzle_diameters[0]));
-        assert(index != -1);
-        single_extruder->combo_diameter->SetSelection(index);
+        select_extruder_diameter(single_extruder, get_diameter_string(nozzle_diameters[0]));
         is_switching_diameter = true;
         switch_diameter(true);
         is_switching_diameter = false;
