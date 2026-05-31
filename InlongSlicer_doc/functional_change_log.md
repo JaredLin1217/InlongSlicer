@@ -22,6 +22,199 @@ branding migration checklist.
 - Use `inlong/orca-2.4-base` as the clean upstream base when classifying fork
   changes.
 
+## 2026-05-31 - INLONG And Infinity3DP Contact Pattern Defaults
+
+Status: `Uncommitted`
+
+Type: Profile resource change
+
+User-visible goal:
+
+- Set INLONG and Infinity3DP process defaults so top and bottom support contact
+  layers use the concentric pattern.
+
+Changed files:
+
+- `resources/profiles/INLONG/process/*_common.json`
+- `resources/profiles/_Infinity3DP/process/*_common.json`
+
+Behavior after change:
+
+- All INLONG and Infinity3DP common process profiles define
+  `support_top_contact_pattern: "concentric"` and
+  `support_bottom_contact_pattern: "concentric"`.
+- Layer-specific process profiles inherit these defaults from their matching
+  common process profile.
+
+Verification:
+
+```powershell
+Get-ChildItem resources\profiles\INLONG\process, resources\profiles\_Infinity3DP\process -Filter *.json | ForEach-Object { Get-Content -Raw $_.FullName | ConvertFrom-Json | Out-Null }
+python scripts\inlong_extra_profile_check.py --vendor INLONG --check-materials --check-obsolete-keys
+python scripts\inlong_extra_profile_check.py --vendor _Infinity3DP --check-materials --check-obsolete-keys
+git diff --check -- resources\profiles\INLONG\process resources\profiles\_Infinity3DP\process InlongSlicer_doc\functional_change_log.md
+```
+
+## 2026-05-31 - Tree Slim/Strong/Hybrid Top Contact Layer Order
+
+Status: `Uncommitted`
+
+Type: Slicing behavior bug fix
+
+User-visible goal:
+
+- Make Tree Slim, Tree Strong, and Tree Hybrid place the top contact layer
+  nearest to the model, matching normal supports and organic tree supports.
+
+Changed files:
+
+- `src/libslic3r/Support/TreeSupport.cpp`
+
+Behavior after change:
+
+- The first printable roof layer below the top Z gap is classified as
+  `Roof1stLayer` and uses `support_top_contact_*` settings.
+- Remaining top roof layers below the contact layer stay as top interface
+  layers before the tree support body.
+
+Verification:
+
+```powershell
+git diff --check -- src\libslic3r\Support\TreeSupport.cpp InlongSlicer_doc\functional_change_log.md
+```
+
+## 2026-05-30 - Support Contact Layer Chinese Localization
+
+Status: `Uncommitted`
+
+Type: UI localization change
+
+User-visible goal:
+
+- Add Traditional Chinese and Simplified Chinese labels for the Support contact
+  layer option group and its top/bottom contact pattern and spacing controls.
+
+Changed files:
+
+- `localization/i18n/zh_TW/InlongSlicer_zh_TW.po`
+- `localization/i18n/zh_CN/InlongSlicer_zh_CN.po`
+
+Behavior after change:
+
+- The Support page can show translated labels for `Support contact layer`,
+  `Top contact pattern`, `Top contact spacing`, `Bottom contact pattern`, and
+  `Bottom contact spacing` in `zh_TW` and `zh_CN`.
+
+Verification:
+
+```powershell
+.\tools\msgfmt.exe --check-format -o resources\i18n\zh_TW\InlongSlicer.mo localization\i18n\zh_TW\InlongSlicer_zh_TW.po
+.\tools\msgfmt.exe --check-format -o resources\i18n\zh_CN\InlongSlicer.mo localization\i18n\zh_CN\InlongSlicer_zh_CN.po
+git diff --check -- localization\i18n\zh_TW\InlongSlicer_zh_TW.po localization\i18n\zh_CN\InlongSlicer_zh_CN.po
+```
+
+## 2026-05-30 - INLONG And Infinity3DP Material/Support Profile Tuning
+
+Status: `Uncommitted`
+
+Type: Profile resource change
+
+User-visible goal:
+
+- Tune INLONG and Infinity3DP material defaults for TPU, PET-CFGF, PPA-CFGF,
+  PPS-CFGF, ABS, PLA, and PATH-CFGF/APTH-CFGF.
+- Set INLONG and Infinity3DP process top/bottom support Z distance from each
+  preset's layer height at 85%.
+- Set default process templates to 0.05 mm top/bottom contact spacing and
+  0.4 mm support interface spacing.
+- Keep INLONG and Infinity3DP process defaults on zigzag sparse infill,
+  40 degree support threshold angle, and Tree Strong support style.
+
+Changed files:
+
+- `resources/profiles/INLONG/filament/*.json`
+- `resources/profiles/_Infinity3DP/filament/*.json`
+- `resources/profiles/INLONG/process/*.json`
+- `resources/profiles/_Infinity3DP/process/*.json`
+- `resources/profiles/INLONG.json`
+- `resources/profiles/_Infinity3DP.json`
+
+Behavior after change:
+
+- Matching INLONG and Infinity3DP material profiles share the requested
+  temperature, flow, shrinkage, fan, retraction, bed temperature, and wipe
+  distance values.
+- INLONG and Infinity3DP process profiles use `support_top_z_distance` and
+  `support_bottom_z_distance` values equal to 85% of each preset's
+  `layer_height`, including layer profiles that override common process
+  defaults.
+- Common process profiles keep `sparse_infill_pattern: "zigzag"` and now use
+  `support_threshold_angle: "40"`, `support_type: "tree(auto)"`, and
+  `support_style: "tree_strong"`.
+- Common process profiles use `support_top_contact_spacing: "0.05"`,
+  `support_bottom_contact_spacing: "0.05"`, and
+  `support_interface_spacing: "0.4"`.
+- INLONG and Infinity3DP vendor profile versions were bumped so installed
+  profile resources can refresh.
+
+Verification:
+
+```powershell
+Get-ChildItem resources/profiles/INLONG/filament, resources/profiles/_Infinity3DP/filament -Filter *.json | ForEach-Object { Get-Content -Raw $_.FullName | ConvertFrom-Json | Out-Null }
+Get-ChildItem resources/profiles/INLONG/process, resources/profiles/_Infinity3DP/process -Filter *.json | ForEach-Object { Get-Content -Raw $_.FullName | ConvertFrom-Json | Out-Null }
+python scripts\inlong_extra_profile_check.py --vendor INLONG --check-materials --check-obsolete-keys
+python scripts\inlong_extra_profile_check.py --vendor _Infinity3DP --check-materials --check-obsolete-keys
+build\src\Release\InlongSlicer_profile_validator.exe -p resources\profiles -l 2
+```
+
+## 2026-05-30 - Split Support Contact Layer Settings
+
+Status: `Uncommitted`
+
+Type: Slicing behavior and GUI change
+
+User-visible goal:
+
+- Let the first support interface layer touching the model use settings that are
+  independent from the remaining support interface layers.
+- Expose separate top and bottom contact layer controls in the Support page.
+
+Changed files:
+
+- `src/libslic3r/PrintConfig.hpp`
+- `src/libslic3r/PrintConfig.cpp`
+- `src/libslic3r/Support/SupportParameters.hpp`
+- `src/libslic3r/Support/SupportCommon.cpp`
+- `src/libslic3r/Support/TreeSupport.cpp`
+- `src/slic3r/GUI/Tab.cpp`
+- `src/slic3r/GUI/ConfigManipulation.cpp`
+- `src/slic3r/GUI/Field.cpp`
+- `src/slic3r/GUI/GUI.cpp`
+- `src/slic3r/GUI/GUI_Factories.cpp`
+- `src/slic3r/GUI/UnsavedChangesDialog.cpp`
+
+Behavior after change:
+
+- New `support_top_contact_pattern`, `support_top_contact_spacing`,
+  `support_bottom_contact_pattern`, and `support_bottom_contact_spacing`
+  process settings control the first top and bottom contact layers.
+- A contact spacing value of `-1` inherits the matching interface spacing so old
+  profiles keep their previous behavior unless they set the new keys.
+- Normal support and tree support both use separate top contact, bottom contact,
+  and remaining interface density/pattern values.
+- INLONG and Infinity3DP process profiles intentionally do not write the new
+  contact keys yet. This keeps existing binaries able to load the vendor bundles
+  in ConfigWizard while the new source defaults preserve the same behavior by
+  inheriting from existing interface settings.
+
+Verification:
+
+```powershell
+Get-ChildItem resources/profiles/INLONG/process, resources/profiles/_Infinity3DP/process -Filter *.json | ForEach-Object { Get-Content -Raw $_.FullName | ConvertFrom-Json | Out-Null }
+python scripts\inlong_extra_profile_check.py --vendor INLONG --check-materials --check-obsolete-keys
+python scripts\inlong_extra_profile_check.py --vendor _Infinity3DP --check-materials --check-obsolete-keys
+```
+
 ## Baseline Inventory
 
 Snapshot date: 2026-05-28
@@ -82,6 +275,74 @@ Current uncommitted delta at this snapshot:
 | `932616e0b9` | Update Inlong logo assets and AGPL notices | Assets, About/README license notices |
 
 ## Functional Changes And Fixes
+
+### Support Contact Layer Page Icon Crash
+
+Status: `Uncommitted`
+
+Type: GUI bug fix
+
+User-visible goal:
+
+- Prevent a crash when opening the Support page after adding separate support
+  top/bottom contact layer controls.
+
+Changed files:
+
+- `src/slic3r/GUI/Tab.cpp`
+
+Behavior after change:
+
+- The Support contact layer option group reuses the existing support icon
+  resource instead of referencing missing `param_support_contact`.
+
+Verification:
+
+```powershell
+rg -n "param_support_contact" src resources
+cmake --build build --config Release --target InlongSlicer_app_gui -- /m /nr:false
+```
+
+### INLONG SC12060 Start G-code Temperature Waits
+
+Status: `Uncommitted`
+
+Type: Profile resource change
+
+User-visible goal:
+
+- Add explicit bed and nozzle temperature setup to the SC12060 machine start
+  G-code so the prime move is not emitted before the nozzle reaches first-layer
+  temperature.
+
+Changed files:
+
+- `resources/profiles/INLONG.json`
+- `resources/profiles/INLONG/machine/SC12060_common.json`
+
+Behavior after change:
+
+- SC12060 start G-code preheats the nozzle, waits for first-layer bed
+  temperature, homes, then waits for first-layer nozzle temperature before
+  priming the extruder.
+- INLONG vendor profile version was bumped so installed profile resources can
+  refresh.
+
+Verification:
+
+```powershell
+Get-Content -Raw resources\profiles\INLONG\machine\SC12060_common.json | ConvertFrom-Json | Select-Object -ExpandProperty machine_start_gcode
+Get-Content -Raw resources\profiles\INLONG.json | ConvertFrom-Json | Select-Object -ExpandProperty version
+Get-ChildItem resources\profiles\INLONG -Recurse -Filter *.json | ForEach-Object { Get-Content -Raw $_.FullName | ConvertFrom-Json | Out-Null }
+git diff --check -- resources/profiles/INLONG.json resources/profiles/INLONG/machine/SC12060_common.json InlongSlicer_doc/functional_change_log.md
+python scripts\inlong_extra_profile_check.py
+build\src\Release\InlongSlicer_profile_validator.exe -p resources\profiles -l 2
+```
+
+Notes:
+
+- `scripts\inlong_extra_profile_check.py` reported no errors and one existing
+  warning for missing `resources\profiles\user.json`.
 
 ### INLONG Vulcan1200 Profile
 

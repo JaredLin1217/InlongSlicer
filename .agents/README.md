@@ -14,10 +14,13 @@ This directory contains local Codex agent assets for this repository.
 - `docs/agent-status.template.md`: tracked template for the local controller and employee-agent status board.
 - `docs/agent-status.md`: local runtime status board, intentionally gitignored and not part of Agents deployments.
 - `docs/project-memory.md`: overview of repo-local memory.
+- `docs/global-knowledge-imports/`: read-only import inboxes for authorized scans of global Codex memory or skill content before anything is promoted into active project knowledge.
+- `docs/agents/`: canonical compact Agents policy pack imported from the local Agents project.
 - `docs/memory/index.md`: searchable index for verified project lessons.
 - `docs/memory/entries/`: detailed project-local memory entries.
 - `docs/decisions/`: durable Codex/project operating decisions.
 - `docs/runbooks/`: repeatable Codex workflows.
+- `docs/templates/agents/`: source-neutral deployment templates for authorized target repos.
 - `docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
 
 ## Maintenance

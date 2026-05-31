@@ -1560,11 +1560,13 @@ void generate_support_toolpaths(
         size_t idx_layer_interface        = size_t(-1);
         size_t idx_layer_base_interface   = size_t(-1);
         const auto fill_type_first_layer  = ipRectilinear;
-        auto filler_interface       = std::unique_ptr<Fill>(Fill::new_from_type(support_params.contact_fill_pattern));
+        auto filler_top_contact     = std::unique_ptr<Fill>(Fill::new_from_type(support_params.top_contact_fill_pattern));
+        auto filler_bottom_contact  = std::unique_ptr<Fill>(Fill::new_from_type(support_params.bottom_contact_fill_pattern));
+        auto filler_interface       = std::unique_ptr<Fill>(Fill::new_from_type(support_params.interface_fill_pattern));
         // Filler for the 1st layer interface, if different from filler_interface.
-        auto filler_first_layer_ptr = std::unique_ptr<Fill>(range.begin() == 0 && support_params.contact_fill_pattern != fill_type_first_layer ? Fill::new_from_type(fill_type_first_layer) : nullptr);
+        auto filler_first_layer_ptr = std::unique_ptr<Fill>(range.begin() == 0 && support_params.top_contact_fill_pattern != fill_type_first_layer ? Fill::new_from_type(fill_type_first_layer) : nullptr);
         // Pointer to the 1st layer interface filler.
-        auto filler_first_layer     = filler_first_layer_ptr ? filler_first_layer_ptr.get() : filler_interface.get();
+        auto filler_first_layer     = filler_first_layer_ptr ? filler_first_layer_ptr.get() : filler_top_contact.get();
         // Filler for the 1st layer interface, if different from filler_interface.
         auto filler_raft_contact_ptr = std::unique_ptr<Fill>(range.begin() == n_raft_layers && config.support_interface_top_layers.value == 0 ?
             Fill::new_from_type(support_params.raft_interface_fill_pattern) : nullptr);
@@ -1574,6 +1576,8 @@ void generate_support_toolpaths(
         auto filler_base_interface  = std::unique_ptr<Fill>(base_interface_layers.empty() ? nullptr :
             Fill::new_from_type(support_params.top_interface_density > 0.95 || support_params.with_sheath ? ipRectilinear : ipSupportBase));
         auto filler_support         = std::unique_ptr<Fill>(Fill::new_from_type(support_params.base_fill_pattern));
+        filler_top_contact->set_bounding_box(bbox_object);
+        filler_bottom_contact->set_bounding_box(bbox_object);
         filler_interface->set_bounding_box(bbox_object);
         if (filler_first_layer_ptr)
             filler_first_layer_ptr->set_bounding_box(bbox_object);
@@ -1586,10 +1590,14 @@ void generate_support_toolpaths(
         {
             SupportLayer &support_layer = *support_layers[support_layer_id];
             LayerCache   &layer_cache   = layer_caches[support_layer_id];
-            const float   support_interface_angle = (config.support_interface_pattern == smipRectilinearInterlaced) ?
-                support_params.raft_interface_angle(support_layer.interface_id()) :
-                ((support_params.support_style == smsGrid || config.support_interface_pattern == smipRectilinear) ?
-                support_params.interface_angle : support_params.raft_interface_angle(support_layer.interface_id()));
+            auto support_angle_for_pattern = [&support_params, &support_layer](SupportMaterialInterfacePattern pattern) -> float {
+                return pattern == smipRectilinearInterlaced ?
+                    support_params.raft_interface_angle(support_layer.interface_id()) :
+                    ((support_params.support_style == smsGrid || pattern == smipRectilinear) ?
+                    support_params.interface_angle : support_params.raft_interface_angle(support_layer.interface_id()));
+            };
+            const float support_interface_angle  = support_angle_for_pattern(support_params.interface_pattern);
+            const float support_top_contact_angle = support_angle_for_pattern(support_params.top_contact_pattern);
 
             // Find polygons with the same print_z.
             SupportGeneratorLayerExtruded &bottom_contact_layer = layer_cache.bottom_contact_layer;
@@ -1622,6 +1630,15 @@ void generate_support_toolpaths(
             bool raft_layer = slicing_params.interface_raft_layers && top_contact_layer.layer && is_approx(top_contact_layer.layer->print_z, slicing_params.raft_contact_top_z);
             // INLONG: Organic tree uses projected contacts to build the interface stack; avoid extra bottom-contact extrusion.
             const bool organic_tree = support_params.support_style == SupportMaterialStyle::smsTreeOrganic;
+            const bool top_contact_matches_interface =
+                support_params.top_contact_fill_pattern == support_params.interface_fill_pattern &&
+                std::abs(support_params.top_contact_density - support_params.top_interface_density) < EPSILON;
+            const bool bottom_contact_matches_interface =
+                support_params.bottom_contact_fill_pattern == support_params.interface_fill_pattern &&
+                std::abs(support_params.bottom_contact_density - support_params.bottom_interface_density) < EPSILON;
+            const bool top_bottom_contacts_match =
+                support_params.top_contact_fill_pattern == support_params.bottom_contact_fill_pattern &&
+                std::abs(support_params.top_contact_density - support_params.bottom_contact_density) < EPSILON;
             if (config.support_interface_top_layers == 0) {
                 // If no top interface layers were requested, we treat the contact layer exactly as a generic base layer.
                 // Don't merge the raft contact layer though.
@@ -1634,7 +1651,7 @@ void generate_support_toolpaths(
             } else {
                 if (support_params.ironing && !top_contact_layer.empty()) {
                     // Inlong: save the top surface to be ironed later
-                    layer_cache.ironing_angle = support_interface_angle; // TODO: should we rotate 90 degrees?
+                    layer_cache.ironing_angle = support_top_contact_angle; // TODO: should we rotate 90 degrees?
                     layer_cache.polys_to_iron = top_contact_layer.polygons_to_extrude();
                 }
 
@@ -1642,7 +1659,7 @@ void generate_support_toolpaths(
                 // If no loops are allowed, we treat the contact layer exactly as a generic interface layer.
                 // Merge interface_layer into top_contact_layer, as the top_contact_layer is not synchronized and therefore it will be used
                 // to trim other layers.
-                if (top_contact_layer.could_merge(interface_layer) && ! raft_layer)
+                if (top_contact_layer.could_merge(interface_layer) && ! raft_layer && top_contact_matches_interface)
                     top_contact_layer.merge(std::move(interface_layer));
             }
             if ((config.support_interface_top_layers == 0 || config.support_interface_bottom_layers == 0) && support_params.can_merge_support_regions) {
@@ -1650,9 +1667,9 @@ void generate_support_toolpaths(
                     base_layer.merge(std::move(bottom_contact_layer));
                 else if (base_layer.empty() && ! bottom_contact_layer.empty() && ! bottom_contact_layer.layer->bridging)
                     base_layer = std::move(bottom_contact_layer);
-            } else if (bottom_contact_layer.could_merge(top_contact_layer) && ! raft_layer) {
+            } else if (bottom_contact_layer.could_merge(top_contact_layer) && ! raft_layer && top_bottom_contacts_match) {
                 top_contact_layer.merge(std::move(bottom_contact_layer));
-            } else if (bottom_contact_layer.could_merge(interface_layer) && ! organic_tree) {
+            } else if (bottom_contact_layer.could_merge(interface_layer) && ! organic_tree && bottom_contact_matches_interface) {
                 bottom_contact_layer.merge(std::move(interface_layer));
             }
 
@@ -1702,22 +1719,31 @@ void generate_support_toolpaths(
                         (interface_layer_type == InterfaceLayerType::Interface && layer_ex.layer->layer_type == SupporLayerType::BottomInterface);
                     //FIXME Bottom interfaces are extruded with the briding flow. Some bridging layers have its height slightly reduced, therefore
                     // the bridging flow does not quite apply. Reduce the flow to area of an ellipse? (A = pi * a * b)
-                    auto *filler = raft_contact ? filler_raft_contact : filler_interface.get();
+                    auto *filler = raft_contact ? filler_raft_contact :
+                        interface_layer_type == InterfaceLayerType::TopContact ? filler_top_contact.get() :
+                        interface_layer_type == InterfaceLayerType::BottomContact ? filler_bottom_contact.get() :
+                        filler_interface.get();
                     auto interface_flow = layer_ex.layer->bridging ?
                         Flow::bridging_flow(layer_ex.layer->height, support_params.support_material_bottom_interface_flow.nozzle_diameter()) :
                         (raft_contact ? &support_params.raft_interface_flow :
                          interface_as_base ? &support_params.support_material_flow : &support_params.support_material_interface_flow)
                             ->with_height(float(layer_ex.layer->height));
+                    const SupportMaterialInterfacePattern pattern =
+                        interface_layer_type == InterfaceLayerType::TopContact ? support_params.top_contact_pattern :
+                        interface_layer_type == InterfaceLayerType::BottomContact ? support_params.bottom_contact_pattern :
+                        support_params.interface_pattern;
                     filler->angle = interface_as_base ?
                             // If zero interface layers are configured, use the same angle as for the base layers.
                             angles[support_layer_id % angles.size()] :
                             // Use interface angle for the interface layers.
                             raft_contact ?
                                 support_params.raft_interface_angle(support_layer.interface_id()) :
-                                support_interface_angle;
+                                support_angle_for_pattern(pattern);
                     // INLONG: pick density based on interface type.
                     double density = raft_contact ? support_params.raft_interface_density :
                         interface_as_base ? support_params.support_density :
+                        interface_layer_type == InterfaceLayerType::TopContact ? support_params.top_contact_density :
+                        interface_layer_type == InterfaceLayerType::BottomContact ? support_params.bottom_contact_density :
                         bottom_interface ? support_params.bottom_interface_density : support_params.top_interface_density;
                     filler->spacing = raft_contact ? support_params.raft_interface_flow.spacing() :
                         interface_as_base ? support_params.support_material_flow.spacing() : support_params.support_material_interface_flow.spacing();

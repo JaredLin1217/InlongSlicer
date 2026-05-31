@@ -1363,7 +1363,9 @@ static wxString get_string_value(std::string opt_key, const DynamicPrintConfig& 
             opt_key == "ironing_pattern" ||
             opt_key == "support_ironing_pattern" ||
             opt_key == "support_pattern" ||
-            opt_key == "support_interface_pattern")
+            opt_key == "support_interface_pattern" ||
+            opt_key == "support_top_contact_pattern" ||
+            opt_key == "support_bottom_contact_pattern")
             ;
     }
     case coEnums: {
@@ -1375,7 +1377,9 @@ static wxString get_string_value(std::string opt_key, const DynamicPrintConfig& 
             opt_key == "ironing_pattern" ||
             opt_key == "support_ironing_pattern" ||
             opt_key == "support_pattern" ||
-            opt_key == "support_interface_pattern"
+            opt_key == "support_interface_pattern" ||
+            opt_key == "support_top_contact_pattern" ||
+            opt_key == "support_bottom_contact_pattern"
             , opt_idx);
     }
     case coPoint: {

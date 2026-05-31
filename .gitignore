@@ -51,5 +51,10 @@ internal_docs/
 /InlongSlicer_doc/logo_design/
 
 # Local Codex runtime state
+.agents/runtime/
 .agents/docs/agent-status.md
+.agents/docs/agent-events/
+.agents/docs/tmp-approval-*/
+.agents/docs/hard-isolation-evidence/
+.agents/docs/runtime-multi-agent-validation/
 .codex/environments/environment.toml

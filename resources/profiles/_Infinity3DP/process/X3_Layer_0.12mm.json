@@ -12,6 +12,6 @@
     "brim_object_gap": "0.05",
     "min_skirt_length": "5",
     "skirt_distance": "0",
-    "support_top_z_distance": "0.1",
-    "support_bottom_z_distance": "0.1"
+    "support_top_z_distance": "0.102",
+    "support_bottom_z_distance": "0.102"
 }

@@ -6,6 +6,33 @@
 #include "../Flow.hpp"
 
 namespace Slic3r {
+
+inline double support_contact_spacing_or_interface(double contact_spacing, double interface_spacing)
+{
+    return contact_spacing < 0.0 ? interface_spacing : contact_spacing;
+}
+
+inline SupportMaterialInterfacePattern support_contact_pattern_or_interface(
+    SupportMaterialInterfacePattern contact_pattern,
+    SupportMaterialInterfacePattern interface_pattern)
+{
+    return contact_pattern == smipAuto ? interface_pattern : contact_pattern;
+}
+
+inline InfillPattern support_interface_fill_pattern(
+    SupportMaterialInterfacePattern pattern,
+    coordf_t density,
+    bool zero_gap_interface)
+{
+    if (pattern == smipGrid)
+        return ipGrid;
+    if (pattern == smipRectilinearInterlaced)
+        return ipRectilinear;
+    return (pattern == smipAuto && zero_gap_interface) || pattern == smipConcentric ?
+        ipConcentric :
+        (density > 0.95 ? ipRectilinear : ipSupportBase);
+}
+
 struct SupportParameters {
     SupportParameters() = delete;
     SupportParameters(const PrintObject& object)
@@ -102,12 +129,25 @@ struct SupportParameters {
 
         this->base_angle = Geometry::deg2rad(float(object_config.support_angle.value));
         this->interface_angle = Geometry::deg2rad(float(object_config.support_angle.value + 90.));
-        // INLONG: split top/bottom interface spacing and density, and force solid top when ironing.
+        this->interface_pattern = object_config.support_interface_pattern;
+        this->top_contact_pattern = support_contact_pattern_or_interface(object_config.support_top_contact_pattern, this->interface_pattern);
+        this->bottom_contact_pattern = support_contact_pattern_or_interface(object_config.support_bottom_contact_pattern, this->interface_pattern);
+
+        const double top_contact_config_spacing = support_contact_spacing_or_interface(
+            object_config.support_top_contact_spacing.value, object_config.support_interface_spacing.value);
+        const double bottom_contact_config_spacing = support_contact_spacing_or_interface(
+            object_config.support_bottom_contact_spacing.value, object_config.support_bottom_interface_spacing.value);
+
+        // INLONG: split top/bottom interface and contact spacing/density, and force solid top when ironing.
         this->top_interface_spacing = (this->ironing ? 0 : object_config.support_interface_spacing.value) + this->support_material_interface_flow.spacing();
         this->top_interface_density = std::min(1., this->support_material_interface_flow.spacing() / this->top_interface_spacing);
+        this->top_contact_spacing = (this->ironing ? 0 : top_contact_config_spacing) + this->support_material_interface_flow.spacing();
+        this->top_contact_density = std::min(1., this->support_material_interface_flow.spacing() / this->top_contact_spacing);
         // INLONG: bottom interface spacing/density separated from top settings.
         this->bottom_interface_spacing = object_config.support_bottom_interface_spacing.value + this->support_material_interface_flow.spacing();
         this->bottom_interface_density = std::min(1., this->support_material_interface_flow.spacing() / this->bottom_interface_spacing);
+        this->bottom_contact_spacing = bottom_contact_config_spacing + this->support_material_interface_flow.spacing();
+        this->bottom_contact_density = std::min(1., this->support_material_interface_flow.spacing() / this->bottom_contact_spacing);
         // INLONG: force solid raft interface when ironing (top spacing).
         double raft_interface_spacing = (this->ironing ? 0 : object_config.support_interface_spacing.value) + this->raft_interface_flow.spacing();
         this->raft_interface_density = std::min(1., this->raft_interface_flow.spacing() / raft_interface_spacing);
@@ -117,6 +157,8 @@ struct SupportParameters {
             // No interface layers allowed, print everything with the base support pattern.
             this->top_interface_spacing = this->support_spacing;
             this->top_interface_density = this->support_density;
+            this->top_contact_spacing = this->support_spacing;
+            this->top_contact_density = this->support_density;
         }
 
         SupportMaterialPattern  support_pattern = object_config.support_base_pattern;
@@ -124,18 +166,14 @@ struct SupportParameters {
         this->base_fill_pattern =
             support_pattern == smpHoneycomb ? ipHoneycomb :
             this->support_density > 0.95 || this->with_sheath ? ipRectilinear : ipSupportBase;
-        this->interface_fill_pattern = (this->top_interface_density > 0.95 ? ipRectilinear : ipSupportBase);
+        this->interface_fill_pattern = support_interface_fill_pattern(
+            this->interface_pattern, this->top_interface_density, this->zero_gap_interface_top);
         this->raft_interface_fill_pattern = this->raft_interface_density > 0.95 ? ipRectilinear : ipSupportBase;
-        if (object_config.support_interface_pattern == smipGrid)
-            this->contact_fill_pattern = ipGrid;
-        else if (object_config.support_interface_pattern == smipRectilinearInterlaced)
-            this->contact_fill_pattern = ipRectilinear;
-        else
-            this->contact_fill_pattern =
-            (object_config.support_interface_pattern == smipAuto && this->zero_gap_interface_top) ||
-            object_config.support_interface_pattern == smipConcentric ?
-            ipConcentric :
-            (this->top_interface_density > 0.95 ? ipRectilinear : ipSupportBase);
+        this->top_contact_fill_pattern = support_interface_fill_pattern(
+            this->top_contact_pattern, this->top_contact_density, this->zero_gap_interface_top);
+        this->bottom_contact_fill_pattern = support_interface_fill_pattern(
+            this->bottom_contact_pattern, this->bottom_contact_density, this->zero_gap_interface_bottom);
+        this->contact_fill_pattern = this->top_contact_fill_pattern;
 
         this->raft_angle_1st_layer  = 0.f;
         this->raft_angle_base       = 0.f;
@@ -243,26 +281,39 @@ struct SupportParameters {
     float    				base_angle;
     float    				interface_angle;
     coordf_t 				top_interface_spacing;
+    coordf_t 				top_contact_spacing;
     coordf_t 				bottom_interface_spacing;
+    coordf_t 				bottom_contact_spacing;
     coordf_t				support_expansion=0;
-    // Density of the top interface and contact layers.
+    // Density of the top interface layers.
     coordf_t 				top_interface_density;
-    // Density of the bottom interface and contact layers.
+    // Density of the first top contact layer.
+    coordf_t 				top_contact_density;
+    // Density of the bottom interface layers.
     coordf_t 				bottom_interface_density;
+    // Density of the first bottom contact layer.
+    coordf_t 				bottom_contact_density;
     // Density of the raft interface and contact layers.
     coordf_t 				raft_interface_density;
     coordf_t 				support_spacing;
     // Density of the base support layers.
     coordf_t 				support_density;
     SupportMaterialStyle    support_style = smsDefault;
+    SupportMaterialInterfacePattern interface_pattern = smipAuto;
+    SupportMaterialInterfacePattern top_contact_pattern = smipAuto;
+    SupportMaterialInterfacePattern bottom_contact_pattern = smipAuto;
 
     // Pattern of the sparse infill including sparse raft layers.
     InfillPattern           base_fill_pattern;
-    // Pattern of the top / bottom interface and contact layers.
+    // Pattern of the top / bottom interface layers.
     InfillPattern           interface_fill_pattern;
     // Pattern of the raft interface and contact layers.
     InfillPattern           raft_interface_fill_pattern;
-    // Pattern of the contact layers.
+    // Pattern of the top contact layer.
+    InfillPattern 			top_contact_fill_pattern;
+    // Pattern of the bottom contact layer.
+    InfillPattern 			bottom_contact_fill_pattern;
+    // Legacy alias for top contact pattern.
     InfillPattern 			contact_fill_pattern;
     // Shall the sparse (base) layers be printed with a single perimeter line (sheath) for robustness?
     bool                    with_sheath;

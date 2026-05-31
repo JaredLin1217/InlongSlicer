@@ -6111,6 +6111,17 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0.5));
 
+    def = this->add("support_top_contact_spacing", coFloat);
+    def->label = L("Top contact spacing");
+    def->category = L("Support");
+    def->tooltip = L("Spacing of the first support interface layer directly below the object. "
+                     "Set to -1 to use the top interface spacing. Zero means solid contact.\n"
+                     "Force using solid contact when support ironing is enabled.");
+    def->sidetext = L("mm");
+    def->min = -1;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(-1));
+
     //BBS
     def = this->add("support_bottom_interface_spacing", coFloat);
     def->label = L("Bottom interface spacing");
@@ -6120,6 +6131,16 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0.5));
+
+    def = this->add("support_bottom_contact_spacing", coFloat);
+    def->label = L("Bottom contact spacing");
+    def->category = L("Support");
+    def->tooltip = L("Spacing of the first support interface layer directly above the object. "
+                     "Set to -1 to use the bottom interface spacing. Zero means solid contact.");
+    def->sidetext = L("mm");
+    def->min = -1;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(-1));
 
     def = this->add("support_interface_speed", coFloat);
     def->label = L("Support interface");
@@ -6161,6 +6182,44 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Line pattern of support interface. "
                      "Default pattern for non-soluble support interface is Rectilinear, "
                      "while default pattern for soluble support interface is Concentric.");
+    def->enum_keys_map = &ConfigOptionEnum<SupportMaterialInterfacePattern>::get_enum_values();
+    def->enum_values.push_back("auto");
+    def->enum_values.push_back("rectilinear");
+    def->enum_values.push_back("concentric");
+    def->enum_values.push_back("rectilinear_interlaced");
+    def->enum_values.push_back("grid");
+    def->enum_labels.push_back(L("Default"));
+    def->enum_labels.push_back(L("Rectilinear"));
+    def->enum_labels.push_back(L("Concentric"));
+    def->enum_labels.push_back(L("Rectilinear Interlaced"));
+    def->enum_labels.push_back(L("Grid"));
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionEnum<SupportMaterialInterfacePattern>(smipAuto));
+
+    def = this->add("support_top_contact_pattern", coEnum);
+    def->label = L("Top contact pattern");
+    def->category = L("Support");
+    def->tooltip = L("Line pattern of the first support interface layer directly below the object. "
+                     "Default follows the interface pattern.");
+    def->enum_keys_map = &ConfigOptionEnum<SupportMaterialInterfacePattern>::get_enum_values();
+    def->enum_values.push_back("auto");
+    def->enum_values.push_back("rectilinear");
+    def->enum_values.push_back("concentric");
+    def->enum_values.push_back("rectilinear_interlaced");
+    def->enum_values.push_back("grid");
+    def->enum_labels.push_back(L("Default"));
+    def->enum_labels.push_back(L("Rectilinear"));
+    def->enum_labels.push_back(L("Concentric"));
+    def->enum_labels.push_back(L("Rectilinear Interlaced"));
+    def->enum_labels.push_back(L("Grid"));
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionEnum<SupportMaterialInterfacePattern>(smipAuto));
+
+    def = this->add("support_bottom_contact_pattern", coEnum);
+    def->label = L("Bottom contact pattern");
+    def->category = L("Support");
+    def->tooltip = L("Line pattern of the first support interface layer directly above the object. "
+                     "Default follows the interface pattern.");
     def->enum_keys_map = &ConfigOptionEnum<SupportMaterialInterfacePattern>::get_enum_values();
     def->enum_values.push_back("auto");
     def->enum_values.push_back("rectilinear");

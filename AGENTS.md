@@ -13,11 +13,13 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `InlongSlicer_doc/functional_change_log.md`: source-of-truth record for Inlong-specific bug fixes, functional changes, profile behavior changes, build workflow changes, packaging behavior changes, and verification notes outside the pure branding migration checklist.
 - `.agents/README.md`: local index for Codex agent assets.
 - `.agents/docs/`: repository-local Codex memory, runbooks, decisions, and agent handoff status.
+- `.agents/docs/agents/`: canonical compact Agents policy pack for this repository.
 - `.agents/docs/project-memory.md`: entry point for project-local memory.
 - `.agents/docs/memory/index.md`: searchable index for verified reusable project lessons.
 - `.agents/docs/agent-status.template.md`: tracked template for local controller and employee-agent status.
 - `.agents/docs/agent-status.md`: local runtime status board; do not deploy it to other projects.
 - `.agents/docs/runbooks/`: repeatable Codex workflows that are too long for this file.
+- `.agents/docs/templates/agents/`: source-neutral template bundle for redeploying the local Agents workflow into other explicitly authorized repos.
 - `.agents/docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
 - `.agents/skills/*/SKILL.md`: Codex skill entrypoints for migrated source commands.
 - `.claude/commands/*.md`: legacy Claude command prompts. Keep matching command behavior aligned with the corresponding Codex skill when both exist.
@@ -28,7 +30,7 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 
 - Keep InlongSlicer-specific Codex knowledge inside this repository.
 - Do not use global Codex Memory as project context or project storage unless the user explicitly authorizes that use.
-- Do not place project-specific rules, memory, skills, runbooks, or decisions in `C:\Users\v_jar\.codex\` global locations.
+- Do not place project-specific rules, memory, skills, runbooks, or decisions in `%USERPROFILE%\.codex\` global locations.
 - Do not read, list, create, edit, delete, move, stage, commit, or configure project-external filesystem paths unless the user explicitly authorizes the exact path and action.
 - `AGENTS.md` and `.agents/docs/` define behavior rules, not a runtime sandbox. Codex system tools, plugins, built-in skills, and higher-priority instructions may still exist.
 - This repo-level/runtime boundary is an accepted limitation, not a defect. Make isolation auditable by avoiding global Memory and Global Skills for normal work, requiring exact authorization for project-external filesystem access, and reporting every exception.
@@ -42,12 +44,14 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 - `AGENTS.md`: rules every session must know before working in this repo.
 - `.agents/README.md`: index of local agent assets.
 - `.agents/docs/project-memory.md`: overview of project-local memory.
+- `.agents/docs/agents/`: canonical local Agents policy, workflow, schema, deployment, and verification YAML.
 - `.agents/docs/memory/index.md`: searchable memory index.
 - `.agents/docs/memory/entries/`: detailed verified memory entries.
 - `.agents/docs/agent-status.template.md`: tracked template for local multi-session and employee-agent status.
 - `.agents/docs/agent-status.md`: local runtime status board; do not deploy it to other projects.
 - `.agents/docs/decisions/`: durable decisions about Codex/project operations.
 - `.agents/docs/runbooks/`: repeatable procedures.
+- `.agents/docs/templates/agents/`: deployable source-neutral Agents templates; do not store InlongSlicer runtime status, memory entries, commits, remotes, or employee history there.
 - `.agents/skills/`: project-local skills and migrated command workflows.
 - `.codex/environments/environment.template.toml`: portable Codex App environment reference.
 - `.codex/environments/environment.toml`: local Codex App runtime environment; do not deploy it to other projects.
@@ -56,7 +60,7 @@ This file is the repository-level agent entrypoint. Keep broad workflow policy h
 ## Multi-Agent Mode
 
 - The main session is the controller: it plans work, assigns sub-agents, reviews results, integrates changes, and reports outcome.
-- When the user says `招聘一個員工`, `hire employee`, or `spawn employee`, treat it as explicit permission to create a Codex sub-agent for this repository.
+- When the user says `hire employee`, `spawn employee`, or a clear English equivalent, treat it as explicit permission to create a Codex sub-agent for this repository.
 - Each sub-agent must have a clear role, task, allowed scope, forbidden scope, verification expectation, and final report format.
 - Use `explorer` for read-only investigation and `worker` for bounded implementation.
 - Prefer disjoint write scopes for workers. Do not assign multiple agents to edit the same files unless the user accepts the conflict risk.

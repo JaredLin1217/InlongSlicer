@@ -110,7 +110,7 @@
                                     "0"
                                 ],
     "machine_pause_gcode":  "PAUSE",
-    "machine_start_gcode":  "G28 ;Home\nM106 S255\nG1 Z15.0 F6000 ;Move the platform down 15mm\n;Prime the extruder\nG92 E0\nG1 F200 E3\nG92 E0",
+    "machine_start_gcode":  "M104 S{nozzle_temperature_initial_layer[initial_extruder]} ; set nozzle preheat\nM190 S{first_layer_bed_temperature[0]} ; wait for bed temp\nG28 ;Home\nM106 S255\nG1 Z15.0 F6000 ;Move the platform down 15mm\nM109 S{nozzle_temperature_initial_layer[initial_extruder]} ; wait for nozzle temp\n;Prime the extruder\nG92 E0\nG1 F200 E3\nG92 E0",
     "machine_tool_change_time":  "5",
     "machine_unload_filament_time":  "10",
     "manual_filament_change":  "0",

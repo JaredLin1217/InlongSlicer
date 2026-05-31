@@ -16666,7 +16666,16 @@ msgstr "底部界面层的数量"
 msgid "Same as top"
 msgstr "和顶部相同"
 
+msgid "Support contact layer"
+msgstr "支撑接触层"
+
+msgid "Top contact pattern"
+msgstr "顶部接触面图案"
+
 msgid "Top interface spacing"
+msgstr "顶部接触面线距"
+
+msgid "Top contact spacing"
 msgstr "顶部接触面线距"
 
 msgid ""
@@ -16676,7 +16685,13 @@ msgstr ""
 "顶部接触面走线的线距。0 表示实心接触面。\n"
 "若启用了支撑熨烫，则此选项将强制使用实心接触面设置。"
 
+msgid "Bottom contact pattern"
+msgstr "底部接触面图案"
+
 msgid "Bottom interface spacing"
+msgstr "底部接触面线距"
+
+msgid "Bottom contact spacing"
 msgstr "底部接触面线距"
 
 msgid "Spacing of bottom interface lines. Zero means solid interface."

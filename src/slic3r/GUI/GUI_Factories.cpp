@@ -91,8 +91,9 @@ std::map<std::string, std::vector<SimpleSettingData>>  SettingsFactory::OBJECT_C
                     {"tree_support_brim_width", "",15}, {"tree_support_branch_angle", "",16},{"tree_support_branch_angle_organic","",17}, {"tree_support_wall_count", "",18},{"tree_support_branch_diameter_angle", "",19},//tree support
                     {"support_bottom_z_distance", "",20},{"support_top_z_distance", "",21},{"support_base_pattern", "",22},{"support_base_pattern_spacing", "",23},
                     {"support_interface_top_layers", "",24},{"support_interface_bottom_layers", "",25},{"support_interface_spacing", "",26},{"support_bottom_interface_spacing", "",27},
-                    {"support_object_xy_distance", "",28}, {"bridge_no_support", "",29},{"max_bridge_length", "",30},{"support_critical_regions_only", "",31},{"support_remove_small_overhang","",32},
-                    {"support_object_first_layer_gap","",33}
+                    {"support_top_contact_pattern", "",28},{"support_top_contact_spacing", "",29},{"support_bottom_contact_pattern", "",30},{"support_bottom_contact_spacing", "",31},
+                    {"support_object_xy_distance", "",32}, {"bridge_no_support", "",33},{"max_bridge_length", "",34},{"support_critical_regions_only", "",35},{"support_remove_small_overhang","",36},
+                    {"support_object_first_layer_gap","",37}
                     }},
     { L("Speed"), {{"support_speed", "",12}, {"support_interface_speed", "",13}
                   }}
@@ -196,7 +197,8 @@ std::vector<SimpleSettingData> SettingsFactory::get_visible_options(const std::s
         //tree support
         "tree_support_wall_count",
         //support
-        "support_top_z_distance", "support_base_pattern", "support_base_pattern_spacing", "support_interface_top_layers", "support_interface_bottom_layers", "support_interface_spacing", "support_bottom_interface_spacing", "support_object_xy_distance",
+        "support_top_z_distance", "support_base_pattern", "support_base_pattern_spacing", "support_interface_top_layers", "support_interface_bottom_layers", "support_interface_spacing", "support_bottom_interface_spacing",
+        "support_top_contact_pattern", "support_top_contact_spacing", "support_bottom_contact_pattern", "support_bottom_contact_spacing", "support_object_xy_distance",
         "support_object_first_layer_gap",
         //adhesion
         "brim_type", "brim_width", "brim_object_gap", "raft_layers"

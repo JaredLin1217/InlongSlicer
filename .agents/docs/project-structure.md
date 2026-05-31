@@ -19,6 +19,7 @@ InlongSlicer keeps Codex operating knowledge inside the repository.
 |   |   |-- agent-status.template.md
 |   |   |-- agent-status.md    local runtime state, gitignored
 |   |   |-- codex-memory.md
+|   |   |-- global-knowledge-imports/    read-only import inboxes for authorized global Codex scans
 |   |   |-- project-memory.md
 |   |   |-- project-structure.md
 |   |   |-- memory/
@@ -52,6 +53,7 @@ InlongSlicer keeps Codex operating knowledge inside the repository.
 - `.agents/docs/agent-status.template.md`: tracked template for local controller and employee-agent status.
 - `.agents/docs/agent-status.md`: local runtime status board for controller and employee agents. It is intentionally gitignored and must not be copied to other projects during Agents deployment.
 - `.agents/docs/project-memory.md`: overview of the project-local memory system.
+- `.agents/docs/global-knowledge-imports/`: read-only import inboxes for authorized global Codex memory or skill scans. Content here is not authoritative project memory until verified and promoted.
 - `.agents/docs/memory/index.md`: searchable memory index with triggers, keywords, summaries, and links.
 - `.agents/docs/memory/entries/`: detailed memory entries.
 - `.agents/docs/decisions/`: durable Codex/project operating decisions.

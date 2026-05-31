@@ -1739,6 +1739,8 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
                 new_conf.set_key_value("support_top_z_distance", new ConfigOptionFloat(0));
                 new_conf.set_key_value("support_interface_spacing", new ConfigOptionFloat(0));
                 new_conf.set_key_value("support_interface_pattern", new ConfigOptionEnum<SupportMaterialInterfacePattern>(SupportMaterialInterfacePattern::smipRectilinearInterlaced));
+                new_conf.set_key_value("support_top_contact_spacing", new ConfigOptionFloat(-1));
+                new_conf.set_key_value("support_top_contact_pattern", new ConfigOptionEnum<SupportMaterialInterfacePattern>(SupportMaterialInterfacePattern::smipAuto));
                 new_conf.set_key_value("independent_support_layer_height", new ConfigOptionBool(false));
                 if ((filament_type == "PLA" && has_filaments({"TPU", "TPU-AMS"})) || (is_soluble_filament(interface_filament_id) && !is_soluble_filament(filament_id)))
                     new_conf.set_key_value("support_filament", new ConfigOptionInt(interface_filament_id + 1));
@@ -2578,6 +2580,12 @@ void TabPrint::build()
         optgroup->append_single_option_line("support_ironing_pattern", "support_settings_ironing#pattern");
         optgroup->append_single_option_line("support_ironing_flow", "support_settings_ironing#flow");
         optgroup->append_single_option_line("support_ironing_spacing", "support_settings_ironing#line-spacing");
+
+        optgroup = page->new_optgroup(L("Support contact layer"), L"param_support");
+        optgroup->append_single_option_line("support_top_contact_pattern", "support_settings_advanced#interface-pattern");
+        optgroup->append_single_option_line("support_top_contact_spacing", "support_settings_advanced#interface-spacing");
+        optgroup->append_single_option_line("support_bottom_contact_pattern", "support_settings_advanced#interface-pattern");
+        optgroup->append_single_option_line("support_bottom_contact_spacing", "support_settings_advanced#interface-spacing");
 
         //optgroup = page->new_optgroup(L("Options for support material and raft"));
 

@@ -767,7 +767,8 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     toggle_line("support_critical_regions_only", is_auto(support_type) && support_is_tree);
 
     for (auto el : { "support_interface_filament",
-        "support_interface_loop_pattern", "support_bottom_interface_spacing" })
+        "support_interface_loop_pattern", "support_bottom_interface_spacing",
+        "support_top_contact_pattern", "support_bottom_contact_pattern", "support_bottom_contact_spacing" })
         toggle_field(el, have_support_material && have_support_interface);
 
     bool can_ironing_support = have_raft || (have_support_material && config->opt_int("support_interface_top_layers") > 0);
@@ -777,6 +778,7 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
         toggle_line(el, has_support_ironing);
     // Inlong: Force solid support interface when using support ironing
     toggle_field("support_interface_spacing", have_support_material && have_support_interface && !has_support_ironing);
+    toggle_field("support_top_contact_spacing", have_support_material && have_support_interface && !has_support_ironing);
 
 //    see issue #10915
 //    bool have_skirt_height = have_skirt &&

@@ -1,0 +1,128 @@
+schema: agents-deploy/v2
+purpose: "Allowlist/blocklist for deploying this Agents workflow into an authorized target repo."
+owns: "Deployment modes, allowlists, blocklists, validation levels, and target/source ownership."
+
+boundary:
+  requires: "explicit user authorization for exact target path and write action"
+  method: "inspect target, then copy/adapt allowlisted files"
+  target_owns: ["Codex App policy", "local environment", "agent ledger", "agent status", "memory entries", "commits", "remotes", "deployment history"]
+  source_must_not_store: "target status, employee ledger/history, commits, remotes, or deployment results"
+
+deployment_modes:
+  core_bootstrap: "Install AGENTS.md, policy pack, project skill, gitignore fragment, deployment and closeout runbooks."
+  full_workflow: "Install core_bootstrap plus memory starters, runtime/evidence templates, and multi-agent/maintenance runbooks."
+  template_provider_mode: "Install full_workflow plus .agents/docs/templates/agents/** so the target can redeploy this workflow later."
+
+mode_composition:
+  core_bootstrap: ["core_bootstrap"]
+  full_workflow: ["core_bootstrap", "full_workflow_additions"]
+  template_provider_mode: ["core_bootstrap", "full_workflow_additions", "template_provider_additions"]
+
+deployable_by_mode:
+  core_bootstrap:
+    - from: ".agents/docs/templates/agents/AGENTS.md"
+      to: "AGENTS.md"
+    - from: ".agents/docs/templates/agents/gitignore.fragment"
+      to: ".gitignore append/adapt"
+    - from: ".agents/docs/templates/agents/agents/policy.yaml"
+      to: ".agents/docs/agents/policy.yaml"
+    - from: ".agents/docs/templates/agents/agents/workflows.yaml"
+      to: ".agents/docs/agents/workflows.yaml"
+    - from: ".agents/docs/templates/agents/agents/schemas.yaml"
+      to: ".agents/docs/agents/schemas.yaml"
+    - from: ".agents/docs/templates/agents/agents/deploy.yaml"
+      to: ".agents/docs/agents/deploy.yaml"
+    - from: ".agents/docs/templates/agents/agents/verify.yaml"
+      to: ".agents/docs/agents/verify.yaml"
+    - from: ".agents/docs/templates/agents/skills/project-isolation-workflow/SKILL.md"
+      to: ".agents/skills/project-isolation-workflow/SKILL.md"
+    - from: ".agents/docs/templates/agents/skills/project-isolation-workflow/agents/openai.yaml"
+      to: ".agents/skills/project-isolation-workflow/agents/openai.yaml"
+    - from: ".agents/docs/templates/agents/agents-deployment.md"
+      to: ".agents/docs/runbooks/agents-deployment.md"
+    - from: ".agents/docs/templates/agents/task-closeout.md"
+      to: ".agents/docs/runbooks/task-closeout.md"
+  full_workflow_additions:
+    - from: ".agents/docs/templates/agents/agent-assignment.template.md"
+      to: ".agents/docs/agent-assignment.template.md"
+    - from: ".agents/docs/templates/agents/agent-event.template.md"
+      to: ".agents/docs/agent-event.template.md"
+    - from: ".agents/docs/templates/agents/agent-status.template.md"
+      to: ".agents/docs/agent-status.template.md"
+    - from: ".agents/docs/templates/agents/controller-lease.template.md"
+      to: ".agents/docs/controller-lease.template.md"
+    - from: ".agents/docs/templates/agents/hard-isolation-evidence.template.md"
+      to: ".agents/docs/hard-isolation-evidence.template.md"
+    - from: ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md"
+      to: ".agents/docs/runtime-multi-agent-validation.template.md"
+    - from: ".agents/docs/templates/agents/project-memory.md"
+      to: ".agents/docs/project-memory.md"
+    - from: ".agents/docs/templates/agents/memory-index.md"
+      to: ".agents/docs/memory/index.md"
+    - from: ".agents/docs/templates/agents/memory-entry.template.md"
+      to: ".agents/docs/memory-entry.template.md"
+    - from: ".agents/docs/templates/agents/memory-entries-README.md"
+      to: ".agents/docs/memory/entries/README.md"
+    - from: ".agents/docs/templates/agents/isolation-audit.md"
+      to: ".agents/docs/runbooks/isolation-audit.md"
+    - from: ".agents/docs/templates/agents/multi-agent-workflow.md"
+      to: ".agents/docs/runbooks/multi-agent-workflow.md"
+    - from: ".agents/docs/templates/agents/repository-maintenance.md"
+      to: ".agents/docs/runbooks/repository-maintenance.md"
+    - from: ".agents/docs/templates/agents/session-handoff.md"
+      to: ".agents/docs/runbooks/session-handoff.md"
+    - from: ".agents/docs/templates/agents/skill-authoring.md"
+      to: ".agents/docs/runbooks/skill-authoring.md"
+    - from: ".agents/docs/templates/agents/project-structure.md"
+      to: ".agents/docs/project-structure.md"
+  template_provider_additions:
+    recursive_template_bundle: "Copy/adapt .agents/docs/templates/agents/** only when the target should redeploy this workflow later."
+
+do_not_deploy:
+  paths:
+    - ".agents/docs/agent-status.md"
+    - ".agents/docs/agent-events/"
+    - ".agents/runtime/"
+    - ".agents/docs/tmp-approval-*/"
+    - ".agents/docs/hard-isolation-evidence/"
+    - ".agents/docs/runtime-multi-agent-validation/"
+    - ".codex/config.toml"
+    - ".codex/environments/environment.toml"
+    - ".git/"
+    - "README.md from the template-provider repository"
+    - ".agents/docs/project-structure.md from the template-provider repository"
+    - ".agents/docs/project-memory.md from the template-provider repository"
+    - ".agents/docs/memory/index.md from the template-provider repository"
+    - ".agents/docs/templates/agents/ from the template-provider repository unless template_provider_mode is selected"
+  categories: ["source commits/remotes/tags/branches/push status", "source employee ledger/status/validation/deployment history", "source memory rows/entries", "source temp cache", "filled evidence records", "generated/cache/build/vendor/runtime output"]
+
+case_by_case:
+  - ".agents/docs/decisions/: copy only adopted decisions."
+  - ".agents/docs/memory/entries/: create target-specific entries after target verification."
+  - "README.md: target-owned."
+  - ".gitattributes: use only if target adopts same line-ending policy."
+  - ".codex/*: review one file at a time; never copy wholesale."
+  - ".codex/environments/environment.template.toml: reference only unless target adopts it."
+
+steps:
+  - "Confirm exact target path/write authorization."
+  - "Inspect target state first."
+  - "Choose core_bootstrap, full_workflow, or template_provider_mode; default to core_bootstrap unless the user asks for more."
+  - "Copy/adapt only deployable_by_mode groups listed in mode_composition for the chosen deployment mode."
+  - "Append/adapt gitignore.fragment; do not replace target .gitignore wholesale."
+  - "Remove source-specific state and adapt target assumptions to target evidence."
+  - "Validate target git state, source-neutral templates, and deployed skill metadata."
+  - "Report exact target paths read/written."
+
+hard_fail_gates:
+  - "No exact target authorization."
+  - "Deployable template contains provider project state."
+  - "Default deploy claims unverified target mode/scripts/stack."
+  - "Target state stored in provider repo."
+  - "Blocklisted file copied by default."
+  - "Target-specific claim without target inspection."
+
+validation_levels:
+  repo_local_dry_run: "source/template/blocklist checks only"
+  authorized_target_dry_run: "read target and report plan"
+  authorized_target_deployment_test: "write allowlisted/approved files and validate target"
