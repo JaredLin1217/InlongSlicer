@@ -6224,7 +6224,7 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
                     }
 
                     if (load_config && !config_loaded.empty() &&
-                        (en_3mf_file_type == En3mfType::From_BBS || en_3mf_file_type == En3mfType::From_Orca) &&
+                        (en_3mf_file_type == En3mfType::From_BBS || en_3mf_file_type == En3mfType::From_Inlong) &&
                         file_version < Semver("2.4.0-dev")) {
                         int converted_count = ConfigMigrations::migrate_legacy_feature_filament_defaults(config_loaded);
                         for (ModelObject *model_object : model.objects) {
