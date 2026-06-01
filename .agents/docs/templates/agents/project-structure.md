@@ -12,9 +12,10 @@ gates, deployment templates, and extension points.
 4. `.agents/docs/agents/policy.yaml` only when routed
 5. `.agents/docs/agents/verify.yaml` for the selected profile
 6. `.agents/docs/agents/schemas.yaml` for assignments, reports, status, or templates
-7. `.agents/docs/agents/mcp.yaml` when optional integrations matter
-8. `.agents/docs/agents/version.yaml` for compatibility
-9. `.agents/docs/agents/deploy.yaml` for authorized target deployment
+7. `.agents/docs/agents/org.yaml`, `.agents/docs/agents/model-policy.yaml`, and `.agents/docs/agents/dispatch.yaml` only for enterprise dispatch
+8. `.agents/docs/agents/mcp.yaml` when optional integrations matter
+9. `.agents/docs/agents/version.yaml` for compatibility
+10. `.agents/docs/agents/deploy.yaml` for authorized target deployment
 
 ## Role Matrix
 
@@ -26,7 +27,7 @@ gates, deployment templates, and extension points.
 | `.agents/docs/agents/*.yaml` | canonical governance rules | deploy |
 | `.agents/docs/runbooks/*.md` | procedure entry points | mode-based deploy |
 | `.agents/docs/templates/agents/` | source-neutral deploy bundle | `template_provider_mode` only |
-| `docs/memory/`, `docs/decisions/` | provider-local knowledge | target-owned / do not deploy rows |
+| `.agents/docs/memory/`, `.agents/docs/decisions/` | provider-local knowledge | target-owned / do not deploy rows |
 | `.agents/docs/decisions/` | workflow structure decisions | provider source only |
 | `schemas/`, `scripts/`, `tests/`, `mcp/` | contracts, checks, fixtures, capability registry | provider source only until explicitly deployed |
 | `artifacts/`, `.github/workflows/` | audits/evals and CI | provider source only |
@@ -36,7 +37,13 @@ Do not deploy source `.agents/runtime/`, `.codex/config.toml`,
 `.codex/environments/environment.toml`, source memory rows, decisions, status,
 or validation history by default.
 
-## Current Tree
+## V2 Structure Rule
+
+V2 structure changes must preserve mirror pairs and deployment rules until drift
+checks are updated. Large moves of runbooks, templates, decisions, or memory docs
+belong in dedicated changes, not mixed with validation, MCP, or CI work.
+
+## Current Agents Tree
 
 ```text
 AGENTS.md
@@ -51,6 +58,9 @@ AGENTS.md
       deploy.yaml
       mcp.yaml
       version.yaml
+      org.yaml
+      model-policy.yaml
+      dispatch.yaml
     runbooks/
       agents-deployment.md
       isolation-audit.md
@@ -85,11 +95,6 @@ AGENTS.md
 3. `workflows.yaml` owns task flow, progress updates, multi-agent lifecycle, scoring, handoff, deployment delegation, and maintenance routing.
 4. `policy.yaml` owns authority, boundaries, project-local knowledge layers, template cleanliness, and closeout.
 5. `verify.yaml` selects the smallest proof profile; commit and branch push use `commit_tag_checkpoint`.
-6. `deploy.yaml` builds the allowlisted `deployed_file_set`, preserves target-owned state, and rewrites paths only for the selected target layout.
-7. Template mirrors under `.agents/docs/templates/agents/` must match canonical sources unless marked template-specific.
-
-## V2 Structure Rule
-
-V2 structure changes must preserve mirror pairs and deployment rules until drift
-checks are updated. Large moves of runbooks, templates, decisions, or memory docs
-belong in dedicated changes, not mixed with validation, MCP, or CI work.
+6. `org.yaml`, `model-policy.yaml`, and `dispatch.yaml` add the optional enterprise dispatch overlay: controller to department leaders, leaders to internal workers, and department reports back to controller.
+7. `deploy.yaml` builds the allowlisted `deployed_file_set`, preserves target-owned state, and rewrites paths only for the selected target layout.
+8. Template mirrors under `.agents/docs/templates/agents/` must match canonical sources unless marked template-specific.

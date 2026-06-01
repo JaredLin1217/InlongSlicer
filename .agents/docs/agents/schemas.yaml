@@ -33,6 +33,35 @@ assignment:
     Status event rule: "not allowed | controller records | employee append-only event at exact path"
     Boundary note: ""
 
+enterprise_assignment:
+  use_when: "enterprise_dispatch route"
+  required_fields: ["assignment_id", "department", "leader_role", "objective", "authority", "owned_scope", "verification_profile", "model_tier", "report_back"]
+  target_rule: "Controller targets department leader only."
+
+department_internal_dispatch:
+  owner: "department leader"
+  required_fields: ["parent_assignment_id", "worker_role", "task", "scope", "authority", "model_tier", "expected_output"]
+  rule: "Worker role must be allowed by org.yaml."
+
+department_report:
+  required_fields: ["assignment_id", "department", "leader_role", "worker_count", "objective_result", "integrated_summary", "files_changed", "verification", "risks", "escalations", "isolation"]
+  field_types:
+    worker_count: "integer >= 0"
+    objective_result: "completed|partial|blocked|stopped"
+    files_changed: "array"
+    risks: "array"
+    escalations: "array"
+  target_rule: "Department leader reports one integrated result to controller."
+  alias_rule: "Use objective_result, not result."
+
+model_tier:
+  required_fields: ["tier", "capability", "risk_limit", "replaceable_model_mapping"]
+  rule: "Use tier references from model-policy.yaml; model ids are replaceable."
+
+escalation_record:
+  required_fields: ["escalation_id", "assignment_id", "department", "reporter_role", "reason", "requested_decision", "evidence", "risk_level", "model_tier_used", "minimum_required_tier"]
+  rule: "Direct worker-to-controller report requires escalation_record."
+
 explorer_brief_assignment:
   use_when: "session-managed read-only explorer with no edits and no recovery requirement"
   fields: ["Agent", "Mode", "Role=explorer", "Runtime enforcement=behavioral-only unless verified", "Goal", "Read scope", "Forbidden scope", "Required project-local skills", "Edit permission=none", "Allowed tool/resource use", "Verification", "Final report requirements", "Isolation requirements"]
@@ -57,8 +86,9 @@ report_validation:
   scoring_required: ["Agent", "Overall score", "Top issues", "Top fixes", "Validity", "Isolation line"]
   score_rule: "Overall score must be numeric 0-100."
   isolation_rule: "Isolation line must include GM, GS, XR, and XW values; XR/XW may be none or exact path list."
+  project_local_skill_rule: "Project-local .agents/skills/** is not GS; only global/system SKILL.md counts as GS used."
   validity_values: ["accepted", "needs-revision", "rejected", "excluded"]
-  invalid_when: ["missing score", "non-numeric score", "missing isolation line", "forbidden read/write", "unsupported runtime or hard-isolation claim"]
+  invalid_when: ["missing score", "non-numeric score", "missing isolation line", "forbidden read/write", "unsupported runtime or hard-isolation claim", "project-local skill reported as GS without global/system skill evidence"]
   report_hash_fields: ["Agent", "Runtime id", "Task", "Status", "Overall score", "Top issues", "Top fixes", "Validity", "Files changed"]
 
 ownership_matrix:
@@ -131,7 +161,7 @@ agent_ledger_event:
   status: "repo-local ignored runtime state; advisory, not Codex official runtime DB"
   names: ["initialized", "hired", "started", "report", "completed", "blocked", "stopped", "closed", "history_cleanup", "shutdown", "integrated", "reconciled"]
   canonical_fields: ["ts", "event", "agent_id", "mode", "role", "task"]
-  optional_fields: ["status", "nickname", "read_scope", "write_scope", "ledger_version", "report_hash", "final_report_summary", "controller_id", "source", "official_list_result", "history_cleanup_sources", "history_cleanup_db", "history_cleanup_target_ids", "history_cleanup_result", "history_cleanup_evidence", "desktop_ui_refresh_result", "deleted_rows", "notes", "isolation"]
+  optional_fields: ["status", "nickname", "read_scope", "write_scope", "ledger_version", "report_hash", "final_report_summary", "controller_id", "source", "official_list_result", "history_cleanup_sources", "history_cleanup_db", "history_cleanup_target_ids", "history_cleanup_result", "history_cleanup_evidence", "history_cleanup_no_backup", "desktop_ui_refresh_result", "pre_delete_counts", "post_delete_counts", "deleted_rows", "deleted_files", "notes", "isolation"]
   compatibility_aliases: ["time -> ts", "runtime_id -> agent_id", "agent -> agent_id", "controller -> controller_id", "scope -> read_scope"]
   canonical_write_rule: "New controller-written events should use canonical_fields; readers may normalize compatibility_aliases for older local runtime ledgers."
   write_rule: "Controller appends by default; employees append only when assigned exact ledger path and append permission."
@@ -267,9 +297,10 @@ runtime_multi_agent_validation:
   storage_rule: "Filled records are local scratch unless sanitized and promoted."
 
 history_cleanup_evidence:
-  required_when_claimed: ["authorization", "parent_thread_id", "repo_cwd", "target_filter", "backup_path", "target_counts(edges,threads,rollouts,unread)", "deleted_counts(edges,threads,rollouts,unread)", "parent_preserved", "zero_active_residue(edges,threads,rollouts,unread)", "backup_count_match", "desktop_reload_or_restart_result"]
+  required_when_claimed: ["authorization", "no_backup_authorization", "parent_thread_id", "repo_cwd", "target_filter", "target_ids", "target_counts(edges,threads,rollouts,unread)", "deleted_counts(edges,threads,rollouts,unread)", "parent_preserved", "zero_active_residue(edges,threads,rollouts,unread)", "desktop_reload_or_restart_result"]
   target_filter: "current parent thread, same normalized cwd, child thread_source=subagent, closed/inactive status, explicit target ids only"
-  forbidden_targets: ["parent/controller/user threads", "unrelated cwd", "unrelated parent subagents unless explicitly requested", "ledger-only ids", "non-subagent rollouts"]
+  no_backup_rule: "No cleanup backup is created or required; abort if exact target ids, inactive state, parent/cwd scope, or post-delete zero residue cannot be proven."
+  forbidden_targets: ["parent/controller/user threads", "unrelated cwd", "unrelated parent subagents unless explicitly requested", "ledger-only ids", "non-subagent rollouts", "backup/copy DB files"]
 
 memory_entry:
   draft_fields: ["Trigger", "Context", "Cause", "Fix / Rule", "Verification", "Reuse when"]

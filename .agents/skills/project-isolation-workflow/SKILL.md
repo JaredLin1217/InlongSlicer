@@ -21,7 +21,7 @@ Token-min router for isolation, memory, deployment, multi-agent, handoff, skills
 
 - Exact read/write scope; explorers read-only; workers need exclusive normalized write scope.
 - Use `.agents/runtime/agent-ledger.jsonl` only for recovery; temp roster only when authorized.
-- Runtime close, sidebar cleanup, hiring, scoring: expand `.agents/docs/agents/workflows.yaml`; sidebar cleanup follows `runtime.sidebar_cleanup_success_path`.
+- Runtime close, sidebar cleanup, hiring, scoring: expand `.agents/docs/agents/workflows.yaml`; sidebar cleanup follows `runtime.sidebar_cleanup_success_path` and is destructive/no-backup only after exact authorization.
 - Explicit employee dismissal/cleanup triggers authorized app sidebar/history cleanup verification.
 
 ## Guardrails

@@ -42,7 +42,7 @@ isolation:
     live_environment: ".codex/environments/environment.toml is ignored runtime state."
     template_environment: ".codex/environments/environment.template.toml is reference-only."
     official_thread_controls: "Prefer runtime close plus app-server thread/list, thread/loaded/list, thread/archive, and thread/unsubscribe when available; no official hard-delete thread API is assumed."
-    sidebar_history_db: "%USERPROFILE%/.codex/state_<n>.sqlite plus matching subagent rollout files under %USERPROFILE%/.codex/sessions and archived_sessions are external runtime UI/history state; clean only current-project subagent records/files, exclude user/controller threads and backup/copy DB files."
+    sidebar_history_db: "%USERPROFILE%/.codex/state_<n>.sqlite plus matching subagent rollout files under %USERPROFILE%/.codex/sessions and archived_sessions are external runtime UI/history state; hard-delete only current-project subagent records/files after exact no-backup authorization, exclude user/controller threads and backup/copy DB files."
     desktop_ui_cache: "Codex Desktop may keep sidebar entries in live memory after official lists, DB rows, and rollout files are clean; first reload/restart the UI and use post-restart absence as refresh evidence before any cache cleanup claim."
 
 runtime_enforcement:
@@ -92,7 +92,7 @@ closeout:
   caps:
     answer_only: "answer/result, optional caveat, required isolation line"
     read_only_explorer: "score/result, up to 3 issues, up to 3 fixes, required isolation line"
-    runtime_cleanup: "closed ids, cleanup counts, remaining-hit summary, UI reload/restart note when needed, required isolation line"
+    runtime_cleanup: "closed ids, no-backup cleanup authorization, cleanup counts, remaining-hit summary, UI reload/restart note when needed, required isolation line"
     scoped_edit: "changed files, verification, risk, required isolation line"
     audit_or_deploy: "claim scope, checks, failures/risks, required isolation line"
   expand_for:

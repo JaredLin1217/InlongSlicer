@@ -1,21 +1,20 @@
 schema: agents-ai-runtime/v1
-purpose: "LLM min route; expand f only."
-load: { default: ["AGENTS.md", ".agents/docs/agents/ai-runtime.yaml"], expand_only: true }
-codes: { gm: "global memory", gs: "global/system skill", xr: "external read", xw: "external write" }
+purpose: route
+load: {default: ["AGENTS.md",".agents/docs/agents/ai-runtime.yaml"], expand_only: true}
+codes: {gm: global memory, gs: global/system skill, xr: external read, xw: external write}
 route:
-  answer_only: { f: [], v: "none" }
-  current_state: { f: [], v: "named_state" }
-  scoped_edit: { f: ["target", ".agents/docs/agents/verify.yaml"], v: "fast_turn" }
-  policy_pack_edit: { f: ["target_pair", ".agents/docs/agents/verify.yaml"], v: "policy_pack_edit" }
-  git_checkpoint: { f: [".agents/docs/agents/verify.yaml"], v: "commit_tag_checkpoint" }
-  deploy_or_release: { f: [".agents/docs/agents/deploy.yaml", ".agents/docs/agents/verify.yaml"], v: "release_deploy_push_audit" }
-  multi_agent: { f: [".agents/docs/agents/workflows.yaml", ".agents/docs/agents/schemas.yaml", ".agents/docs/agents/verify.yaml"], v: "runtime_multi_agent" }
-  hard_isolation: { f: [".agents/docs/agents/policy.yaml", ".agents/docs/agents/verify.yaml"], v: "hard_isolation" }
+  answer_only: {f: [], v: none}
+  current_state: {f: [], v: named_state}
+  scoped_edit: {f: ["target",".agents/docs/agents/verify.yaml"], v: fast_turn}
+  policy_pack_edit: {f: ["target_pair",".agents/docs/agents/verify.yaml"], v: policy_pack_edit}
+  git_checkpoint: {f: [".agents/docs/agents/verify.yaml"], v: commit_tag_checkpoint}
+  deploy_or_release: {f: [".agents/docs/agents/deploy.yaml",".agents/docs/agents/verify.yaml"], v: release_deploy_push_audit}
+  multi_agent: {f: [".agents/docs/agents/workflows.yaml",".agents/docs/agents/schemas.yaml",".agents/docs/agents/verify.yaml"], v: runtime_multi_agent}
+  enterprise_dispatch: {f: [".agents/docs/agents/org.yaml",".agents/docs/agents/model-policy.yaml",".agents/docs/agents/dispatch.yaml",".agents/docs/agents/verify.yaml"], v: enterprise_dispatch}
+  hard_isolation: {f: [".agents/docs/agents/policy.yaml",".agents/docs/agents/verify.yaml"], v: hard_isolation}
 rules:
-  - "classify->route->read f only"
+  - "classify->route->read f"
   - "canonical YAML wins"
   - "Do not load .agents/docs/templates/agents/**"
-  - "runbooks only if unclear"
   - "Never stage, deploy, or copy runtime_local"
 closeout: "Isolation: GM <used/not used> | GS <used/not used> | XR <none/paths> | XW <none/paths>"
-expand: { w: ".agents/docs/agents/workflows.yaml", p: ".agents/docs/agents/policy.yaml", v: ".agents/docs/agents/verify.yaml", d: ".agents/docs/agents/deploy.yaml", s: ".agents/docs/agents/schemas.yaml", m: ".agents/docs/agents/mcp.yaml", ver: ".agents/docs/agents/version.yaml" }

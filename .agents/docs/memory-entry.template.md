@@ -33,4 +33,4 @@ Verified: no
 
 | ID | Date | Title | Trigger | Keywords | Summary | Entry | Verified |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| <memory-id> | <yyyy-mm-dd> | <short title> | <trigger> | <keywords> | <summary> | docs/memory/entries/<entry-file>.md | no |
+| <memory-id> | <yyyy-mm-dd> | <short title> | <trigger> | <keywords> | <summary> | .agents/docs/memory/entries/<entry-file>.md | no |

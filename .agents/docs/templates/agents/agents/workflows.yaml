@@ -16,12 +16,14 @@ startup:
     git_checkpoint: "Changed manifest, status_full, commit_tag_checkpoint, push result."
     deploy_or_release: "deploy.yaml plus release_deploy_push_audit."
     multi_agent_batch_check: "Structured ack, lifecycle evidence, runtime_multi_agent."
+    enterprise_dispatch: "Organization dispatch uses department leaders only; expand org/model-policy/dispatch."
   fast_classification:
     answer_only: "No repo/git/file/runtime/deploy/memory/hard-isolation claim."
     current_state: "Inspect named now/current/latest/clean/dirty/online/committed/pushed/tagged/deployed/active/completed."
     scoped_edit: "Status, target read, patch, scoped diff, focused verify."
     policy_pack_edit: "Use policy_pack_edit; changed mirror pairs only."
     multi_agent_runtime: "Explicit hire/delegate; fill slots; success needs ack + close proof."
+    enterprise_dispatch: "Use only for organization-style dispatch, department commands, staff delegation, or model tier binding."
     deploy_release_audit: "Use deploy.yaml + release_deploy_push_audit."
     hard_isolation: "Claim behavioral-only unless enforcement is verified."
     delegated_deployment: "Use deploy.yaml; one deployment_worker; exact target auth; deployed_file_set writes only."
@@ -38,7 +40,7 @@ progress_updates:
 
 memory:
   index: ".agents/docs/memory/index.md"
-  entry_template: "docs/memory-entry.template.md"
+  entry_template: ".agents/docs/memory-entry.template.md"
   rules: ["Use only when prior project experience matters", "Current repo evidence wins", "Propose only verified reusable lessons"]
 
 multi_agent_runtime:
@@ -91,21 +93,34 @@ multi_agent_runtime:
     official_status_checks: ["thread/list cwd+subAgent", "thread/loaded/list", "runtime close result"]
     official_delete_limit: "No official hard-delete thread API is assumed."
     refresh_limit: "If official state is clean but sidebar shows residue, reload/restart UI before more cleanup."
-    dismissal_cleanup_standard: "Back up state, match closed ids by parent/cwd, clean exact residue, verify zero active, record reload."
-    quiet_cleanup: "Close ids, derive parent/cwd/subagent/closed targets, delete exact residue, verify zero hits, summarize."
-    history_cleanup: "External cleanup after close; needs explicit cleanup wording or exact authorization."
-    history_cleanup_scope: "Delete active DB rows and matching rollout history only for closed subagent ids under current repo cwd + authorized parent."
-    sidebar_cleanup_success_path: ["authorize cleanup/restart", "close/prove inactive ids", "snapshot parent+cwd", "target closed subagent ids for parent/cwd", "backup DB/state", "delete child edges/threads; move child rollouts; keep parent/user", "clear project subagent unread", "verify parent kept + zero residue/counts; record reload/restart + XR/XW"]
+    dismissal_cleanup_standard: "Close ids, match closed ids by parent/cwd, hard-delete exact residue without backup, verify zero active/residue, record reload."
+    quiet_cleanup: "Close ids, derive parent/cwd/subagent/closed targets, hard-delete exact DB/unread/rollout residue without backup, verify zero hits, summarize."
+    history_cleanup: "External destructive cleanup after close; needs explicit cleanup wording or exact authorization with no-backup acknowledgement."
+    history_cleanup_scope: "Hard-delete active DB rows, unread state, and matching rollout history only for closed subagent ids under current repo cwd + authorized parent."
+    history_cleanup_no_backup: "Do not create, require, or rely on cleanup backups; if exact target scope cannot be proven, abort instead of broad deletion."
+    sidebar_cleanup_success_path: ["authorize destructive cleanup/restart/no-backup", "close/prove inactive ids", "record parent+cwd+target count snapshot", "target closed subagent ids for parent/cwd", "hard-delete child edges/threads/unread and child rollouts; keep parent/user", "verify parent kept + zero residue/counts", "reload/restart UI; record XR/XW"]
     sidebar_cleanup_keep: ["parent/controller/user threads", "parent/user rollouts", "unrelated cwd/parent subagents unless requested", "runtime ledger unless exact cleanup requested"]
     orphan_cleanup_scope: "Delete orphan thread_spawn_edges only when both endpoints are missing and cleanup requested."
     post_cleanup_ui_rule: "When restart clears residue, record UI refresh result and stop."
     offline_cache_cleanup: "Only after exact residue survives reload/restart plus explicit shutdown/cache-cleanup authorization."
-    history_cleanup_never: "Never delete parent/controller/user threads, unrelated cwd, non-subagent rollouts, use ledger-only ids, or claim live UI refresh."
+    history_cleanup_never: "Never delete parent/controller/user threads, unrelated cwd, non-subagent rollouts, backup/copy DB files, use ledger-only ids, create cleanup backups, or claim live UI refresh."
   report_dedupe:
     report_hash: "Hash normalized report identity and result."
     dedupe_key: "agent + runtime id + event + roster snapshot version + report hash"
     duplicate_rule: "Record matching final report once; do not reprocess duplicates."
     loop_guard: "Stop after 3 unchanged polls or 5 minutes; close retry max 2."
+
+enterprise_dispatch_runtime:
+  source_of_truth: ".agents/docs/agents/dispatch.yaml owns enterprise dispatch semantics; this section only flags multi-agent runtime handling."
+  trigger_when: "Organization-style dispatch, department command, employee delegation, or model tier binding."
+  do_not_trigger_for: ["answer-only", "ordinary scoped edit", "plain deploy without department command"]
+  controller_assignment: "Controller assigns only department leaders with department, leader_role, objective, authority, owned_scope, verification_profile, model_tier, and report_back."
+  department_leader_dispatch: "Leader may split internal work only to allowed worker roles and owns merge before controller report."
+  internal_workers: "Workers report to their department leader unless escalation_record is required."
+  department_report: "Leader returns one integrated department report with assignment_id, department, leader_role, worker_count, objective_result, verification, risks, escalations, and isolation."
+  model_policy: "Use tier names from model-policy; concrete model mapping is replaceable."
+  escalation: "Create escalation_record for worker bypass, scope violation, unverifiable result, missing tier, model mismatch, or blocked authority."
+  validation: "Verify department exists, leader matches org, tier exists, worker role is allowed, and direct worker-to-controller report has escalation_record."
 
 scoring_batches:
   use_when: "explicit employee/review scoring or many-agent eval"

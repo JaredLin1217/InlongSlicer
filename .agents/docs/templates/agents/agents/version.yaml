@@ -3,22 +3,22 @@ purpose: "Portable Agents workflow version metadata for provider and target depl
 owns: "Workflow version, deployment compatibility, and upgrade expectations."
 
 workflow:
-  version: "2.0.0"
+  version: "2.1.0"
   channel: "v2"
-  compatibility: "Targets may upgrade within v2 by replacing only the deployed file set."
+  compatibility: "Targets may upgrade within v2 by replacing only the deployed file set; enterprise dispatch is an optional compatible overlay."
   v1_preservation: "Preserve the original unified AI Agents intent: one repo-local operating standard, source-neutral deployment, project-owned knowledge, and repeatable task flow across growing projects."
 
 readiness_ladder:
   P0: "Validation entry point, canonical contracts, English-only durable rules, ignored runtime and local state, and no local permission repair."
   P1: "Deployment dry-run, target layout detection, provider self-write refusal, deployed file boundary, and upgrade gate."
   P2: "Source-neutral template bundle, exact-pair drift checks, template coverage, and V1 intent preservation."
-  P3: "Delegated deployment worker rules, ownership boundaries, roster and ledger recovery, and before/during/after lifecycle checks."
-  P4: "Release audit profile, runtime and hard-isolation claim boundaries, full verification, and size gates."
+  P3: "Delegated deployment worker rules, enterprise department leader dispatch, ownership boundaries, roster and ledger recovery, and before/during/after lifecycle checks."
+  P4: "Release audit profile, release package export, runtime and hard-isolation claim boundaries, full verification, and size gates."
   P5: "Long-term upgrade compatibility, target-owned state preservation, target rollback by version control, and compact workflow growth controls."
 
 upgrade_policy:
   default: "dry-run first"
-  compatibility_rule: "Minor v2 upgrades must preserve AGENTS.md routing, project-local skill invocation, deploy modes, ignored runtime boundaries, and target-owned state."
+  compatibility_rule: "Minor v2 upgrades must preserve AGENTS.md routing, project-local skill invocation, enterprise_dispatch route optionality, deploy modes, ignored runtime boundaries, and target-owned state."
   breaking_change_rule: "A breaking change requires a new workflow channel, migration notes, and explicit target opt-in."
   overwrite_scope: "Only allowlisted deployed files may be updated."
   preserve_target_owned: ["runtime state", "local Codex config", "memory entries", "status files", "events", "commits", "remotes", "deployment history"]
@@ -26,6 +26,7 @@ upgrade_policy:
 
 delegation:
   worker_role: "deployment_worker"
+  enterprise_dispatch_rule: "Controller sends enterprise assignments to department leaders; leaders split internal worker tasks and return department reports."
   large_batch_rule: "Requests for more employees than the runtime can keep active must run in waves with queued assignments, replacement rules, and final reconciliation."
   controller_rule: "Controller grants one exact target path, one selected mode, and explicit write or dry-run scope."
   worker_rule: "Worker deploys only the selected mode's deployed_file_set and reports exact read/write paths."

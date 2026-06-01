@@ -41,19 +41,21 @@ without close results or official runtime status.
 ## Close And Cleanup
 
 Runtime close comes first; DB deletion is never a substitute. Sidebar/history
-cleanup requires explicit cleanup wording for exact runtime ids or standalone
-exact cleanup authorization.
+cleanup is destructive and no-backup; it requires explicit cleanup wording for
+exact runtime ids or standalone exact cleanup authorization.
 
 Prefer official controls first: runtime close, `thread/list` by cwd/source kind,
 `thread/loaded/list`, archive, and unsubscribe when available. Do not assume an
 official hard-delete thread API or sidebar refresh API.
 
-If authorized cleanup is needed, match only current-project subagent rows/files
-after normalizing Windows paths. Treat `%USERPROFILE%/.codex/state_<n>.sqlite`
+If authorized cleanup is needed, match only current-project closed subagent
+rows/files after normalizing Windows paths. Do not create backup copies; record
+pre-delete counts, hard-delete matching DB rows, unread state, and rollout
+files, then verify zero residue. Treat `%USERPROFILE%/.codex/state_<n>.sqlite`
 and matching rollout files under `%USERPROFILE%/.codex/sessions` and
 `archived_sessions` as external runtime state; report reads/writes/deletes as
-XR/XW. Never delete parent/controller/user threads, unrelated rollout files, or
-unrelated project history.
+XR/XW. Never delete parent/controller/user threads, unrelated rollout files,
+backup/copy DB files, or unrelated project history.
 
 If sidebar residue remains after official lists, DB rows, and rollout files are
 clean, reload/restart Codex UI before any cache-cleanup claim. Shutdown/cache
