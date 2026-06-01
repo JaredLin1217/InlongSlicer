@@ -272,7 +272,9 @@ wxString GuideFrame::SetStartPage(GuidePage startpage, bool load)
     wxString strlang = wxGetApp().current_language_code_safe();
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__<< boost::format(", strlang=%1%") % into_u8(strlang);
     if (strlang != "")
-        TargetUrl = wxString::Format("%s&lang=%s", w2s(TargetUrl), strlang);
+        TargetUrl += "&lang=" + strlang;
+
+    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " target url=" << into_u8(TargetUrl);
 
     if (load)
         load_url(TargetUrl);

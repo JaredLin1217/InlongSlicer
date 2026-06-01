@@ -258,7 +258,7 @@ wxWebView* WebView::CreateWebView(wxWindow * parent, wxString const & url)
 #ifdef __WIN32__
     url2.Replace("\\", "/");
 #endif
-    if (!url2.empty()) { url2 = wxURI(url2).BuildURI(); }
+    if (!url2.empty() && !url2.StartsWith("file://")) { url2 = wxURI(url2).BuildURI(); }
     BOOST_LOG_TRIVIAL(trace) << __FUNCTION__ << ": " << url2.ToUTF8();
 
 #ifdef __WIN32__
@@ -352,7 +352,7 @@ void WebView::LoadUrl(wxWebView * webView, wxString const &url)
 #ifdef __WIN32__
     url2.Replace("\\", "/");
 #endif
-    if (!url2.empty()) { url2 = wxURI(url2).BuildURI(); }
+    if (!url2.empty() && !url2.StartsWith("file://")) { url2 = wxURI(url2).BuildURI(); }
     BOOST_LOG_TRIVIAL(trace) << __FUNCTION__ << url2.ToUTF8();
     webView->LoadURL(url2);
 }
