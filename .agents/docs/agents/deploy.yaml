@@ -1,6 +1,6 @@
 schema: agents-deploy/v2
 purpose: "Allowlist/blocklist for deploying this Agents workflow into an authorized target repo."
-owns: "Deployment modes, allowlists, blocklists, validation levels, and target/source ownership."
+owns: "Deployment modes, allowlists, blocklists, validation, and source/target ownership."
 
 boundary:
   requires: "explicit user authorization for exact target path and write action"
@@ -8,10 +8,71 @@ boundary:
   target_owns: ["Codex App policy", "local environment", "agent ledger", "agent status", "memory entries", "commits", "remotes", "deployment history"]
   source_must_not_store: "target status, employee ledger/history, commits, remotes, or deployment results"
 
+target_layout:
+  detect_first: ["AGENTS.md routes", "docs/agents", ".agents/docs/agents", ".agents/skills"]
+  root_docs: "Use docs/agents and docs/runbooks when the target routes there or has no Agents layout."
+  dot_agents_docs: "Use .agents/docs and .agents/skills when the target routes there."
+  rule: "Preserve one target layout; do not create a competing root docs layout and .agents/docs layout unless the user explicitly asks for migration."
+  target_path_rule: "`to` paths in deployable_by_mode are provider canonical paths before target-layout adjustment."
+  path_rewrite: "For .agents/docs deployment, rewrite internal references using the selected layout_destination_map."
+  layout_destination_map:
+    root_docs:
+      "AGENTS.md": "AGENTS.md"
+      ".gitignore append/adapt": ".gitignore append/adapt"
+      ".agents/docs/agents/": "docs/agents/"
+      ".agents/docs/runbooks/": "docs/runbooks/"
+      ".agents/docs/templates/agents/": "docs/templates/agents/"
+      ".agents/docs/*.template.md": "docs/<same basename>"
+      ".agents/docs/project-memory.md": "docs/project-memory.md"
+      ".agents/docs/memory/index.md": "docs/memory/index.md"
+      ".agents/docs/memory/entries/README.md": "docs/memory/entries/README.md"
+      ".agents/docs/project-structure.md": "docs/project-structure.md"
+      ".agents/skills/": ".agents/skills/"
+    dot_agents_docs:
+      "AGENTS.md": "AGENTS.md"
+      ".gitignore append/adapt": ".gitignore append/adapt"
+      ".agents/docs/agents/": ".agents/docs/agents/"
+      ".agents/docs/runbooks/": ".agents/docs/runbooks/"
+      ".agents/docs/templates/agents/": ".agents/docs/templates/agents/"
+      ".agents/docs/*.template.md": ".agents/docs/<same basename>"
+      ".agents/docs/project-memory.md": ".agents/docs/project-memory.md"
+      ".agents/docs/memory/index.md": ".agents/docs/memory/index.md"
+      ".agents/docs/memory/entries/README.md": ".agents/docs/memory/entries/README.md"
+      ".agents/docs/project-structure.md": ".agents/docs/project-structure.md"
+      ".agents/skills/": ".agents/skills/"
+  ambiguous: "If both layouts exist, follow the layout referenced by AGENTS.md and report the other as target-owned legacy state."
+
+dirty_target:
+  classify_before_write:
+    deploy_scope: "Files this deployment may update."
+    protected_dirty: "Unrelated app/source/config/secrets/runtime files; do not touch."
+    target_legacy_agents: "Target-owned memory, decisions, imports, status, or historical Agents docs outside deployed_file_set."
+  rule: "Do not fail or broaden cleanup because target_legacy_agents has local paths, old memory, or prior tool references; report them separately."
+  deployed_file_set: "Record exact files written or intentionally verified for this deployment."
+  validation_scope: "Validate deployed_file_set, not the whole dirty target, unless the user asks for full target audit."
+
 deployment_modes:
-  core_bootstrap: "Install AGENTS.md, policy pack, project skill, gitignore fragment, deployment and closeout runbooks."
-  full_workflow: "Install core_bootstrap plus memory starters, runtime/evidence templates, and multi-agent/maintenance runbooks."
-  template_provider_mode: "Install full_workflow plus .agents/docs/templates/agents/** so the target can redeploy this workflow later."
+  core_bootstrap: "Install AGENTS.md, governance rules, project skill, gitignore fragment, deployment and closeout runbooks."
+  full_workflow: "Install core_bootstrap plus memory starters, runtime/evidence/feedback templates, and maintenance runbooks; this mode does not copy the recursive template provider bundle."
+  template_provider_mode: "Install full_workflow plus .agents/docs/templates/agents/** so the target can redeploy this workflow."
+
+upgrade:
+  rule: "Upgrade uses the same allowlisted operation with dry-run first, target-owned state preserved, and only deployed_file_set updated."
+  overwrite_gate: "Changed deployed files require -Upgrade after dry-run; unchanged files may be skipped."
+  dry_run_plan: "Dry-run classifies allowlisted paths as create/update/current/requiring -Upgrade without writing."
+  version_source: ".agents/docs/agents/version.yaml"
+  target_marker: "The deployed version file records workflow compatibility, not target status or provider runtime state."
+  no_permission_repair: "Do not run OS permission, ownership, ACL, or .git metadata repair during deployment or upgrade."
+  same_repo_guard: "The deployment script must not write into the provider/source repo; source maintenance uses patches plus validation."
+  target_creation: "A missing target directory may be created only by explicit non-dry run with a target-creation switch after exact path authorization."
+
+delegated_deployment:
+  trigger: "Controller receives a request such as deploy this project to an exact target path."
+  worker_role: "deployment_worker"
+  assignment_scope: "One exact target path, one mode, dry-run/write flag, and the deployment script/runbook only."
+  controller_duties: ["verify exact target authorization", "choose mode", "review dry-run plan", "integrate worker report"]
+  worker_duties: ["inspect target layout", "run dry-run first unless explicitly waived", "write only deployed_file_set", "report exact XR/XW paths"]
+  forbidden: ["copy provider runtime state", "edit target app code outside deployed_file_set", "repair local OS or Git metadata", "store target deployment history in provider repo"]
 
 mode_composition:
   core_bootstrap: ["core_bootstrap"]
@@ -26,12 +87,18 @@ deployable_by_mode:
       to: ".gitignore append/adapt"
     - from: ".agents/docs/templates/agents/agents/policy.yaml"
       to: ".agents/docs/agents/policy.yaml"
+    - from: ".agents/docs/templates/agents/agents/ai-runtime.yaml"
+      to: ".agents/docs/agents/ai-runtime.yaml"
     - from: ".agents/docs/templates/agents/agents/workflows.yaml"
       to: ".agents/docs/agents/workflows.yaml"
     - from: ".agents/docs/templates/agents/agents/schemas.yaml"
       to: ".agents/docs/agents/schemas.yaml"
     - from: ".agents/docs/templates/agents/agents/deploy.yaml"
       to: ".agents/docs/agents/deploy.yaml"
+    - from: ".agents/docs/templates/agents/agents/mcp.yaml"
+      to: ".agents/docs/agents/mcp.yaml"
+    - from: ".agents/docs/templates/agents/agents/version.yaml"
+      to: ".agents/docs/agents/version.yaml"
     - from: ".agents/docs/templates/agents/agents/verify.yaml"
       to: ".agents/docs/agents/verify.yaml"
     - from: ".agents/docs/templates/agents/skills/project-isolation-workflow/SKILL.md"
@@ -55,6 +122,8 @@ deployable_by_mode:
       to: ".agents/docs/hard-isolation-evidence.template.md"
     - from: ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md"
       to: ".agents/docs/runtime-multi-agent-validation.template.md"
+    - from: ".agents/docs/templates/agents/deployment-feedback.template.md"
+      to: ".agents/docs/deployment-feedback.template.md"
     - from: ".agents/docs/templates/agents/project-memory.md"
       to: ".agents/docs/project-memory.md"
     - from: ".agents/docs/templates/agents/memory-index.md"
@@ -80,11 +149,16 @@ deployable_by_mode:
 
 do_not_deploy:
   paths:
+    - "docs/agent-status.md"
+    - "docs/agent-events/"
     - ".agents/docs/agent-status.md"
     - ".agents/docs/agent-events/"
     - ".agents/runtime/"
+    - "docs/tmp-approval-*/"
     - ".agents/docs/tmp-approval-*/"
+    - "docs/hard-isolation-evidence/"
     - ".agents/docs/hard-isolation-evidence/"
+    - "docs/runtime-multi-agent-validation/"
     - ".agents/docs/runtime-multi-agent-validation/"
     - ".codex/config.toml"
     - ".codex/environments/environment.toml"
@@ -106,23 +180,33 @@ case_by_case:
 
 steps:
   - "Confirm exact target path/write authorization."
-  - "Inspect target state first."
-  - "Choose core_bootstrap, full_workflow, or template_provider_mode; default to core_bootstrap unless the user asks for more."
-  - "Copy/adapt only deployable_by_mode groups listed in mode_composition for the chosen deployment mode."
-  - "Append/adapt gitignore.fragment; do not replace target .gitignore wholesale."
+  - "Inspect target state and detect layout before writing."
+  - "Choose core_bootstrap, full_workflow, or template_provider_mode; default to core_bootstrap."
+  - "For upgrades, dry-run first, preserve target-owned state, and update only deployed_file_set."
+  - "Build deployed_file_set from mode_composition, deployable_by_mode, and layout_destination_map."
+  - "Rewrite internal references for the selected target layout."
+  - "Append/adapt gitignore.fragment; do not replace .gitignore wholesale."
   - "Remove source-specific state and adapt target assumptions to target evidence."
-  - "Validate target git state, source-neutral templates, and deployed skill metadata."
+  - "Validate deployed_file_set; keep legacy target docs separate."
+  - "Report what changed, what was intentionally not touched, and target owner next actions."
+  - "Run the target handoff check for AGENTS routing, project skill availability, runbook links, feedback template presence when deployed, protected runtime state, and target git status summary."
   - "Report exact target paths read/written."
 
 hard_fail_gates:
   - "No exact target authorization."
-  - "Deployable template contains provider project state."
+  - "Template contains provider project state."
   - "Default deploy claims unverified target mode/scripts/stack."
   - "Target state stored in provider repo."
   - "Blocklisted file copied by default."
+  - "Deployment or upgrade attempts OS permission, ACL, ownership, or .git metadata repair."
+  - "Deployment script write into the provider/source repo."
   - "Target-specific claim without target inspection."
+  - "Competing target layout created without explicit migration request."
+  - "Cleanliness claim based on whole dirty target instead of deployed_file_set."
 
 validation_levels:
   repo_local_dry_run: "source/template/blocklist checks only"
+  disposable_selftest: "write root_docs, template-provider, dot_agents_docs, dry-run, protected-existing, git-backed foreign project, partial-gitignore, missing-target, target-owned-state, routed-legacy, and ambiguous-layout targets under per-process approved temp status space; verify blocked deployed path rejection, app-file preservation, gitignore duplicate avoidance, dry-run write-state classification, deployed report file set, explicit target creation gate, provider self-write refusal, target-owned state preserved, target handoff check markers, and target git rollback scope"
   authorized_target_dry_run: "read target and report plan"
-  authorized_target_deployment_test: "write allowlisted/approved files and validate target"
+  authorized_target_handoff_check: "read target AGENTS route, selected project skill path, deployment report, runbook links, deployed feedback template when mode includes it, protected runtime/local paths, and target git status summary without requiring whole-target cleanliness"
+  authorized_target_deployment_test: "write allowlisted/approved files, validate deployed_file_set, and complete the target handoff check"

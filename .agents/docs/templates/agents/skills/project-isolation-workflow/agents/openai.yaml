@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $project-isolation-workflow to audit this repo's isolated Codex rules and docs."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

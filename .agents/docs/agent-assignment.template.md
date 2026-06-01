@@ -22,13 +22,15 @@ Fast batch preset: reuse one brief per role, fill available runtime slots first,
 
 ## Compact Explorer Final
 
-- Score / result:
-- Confidence / validity:
+- Agent:
+- Overall score:
+- Confidence:
 - Top issues:
 - Top fixes:
-- Cap / risk:
+- Cap suggestion:
+- Validity:
 - Verification:
-- Isolation:
+- Isolation line:
 
 ## Full Assignment
 

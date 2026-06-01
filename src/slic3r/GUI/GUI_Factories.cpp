@@ -122,10 +122,14 @@ std::map<std::string, std::vector<SimpleSettingData>> SettingsFactory::PART_CATE
        {"bottom_shell_thickness", L("Bottom Minimum Shell Thickness"), 1},
        {"bottom_surface_density", L("Bottom Surface Density"), 1},
        {"sparse_infill_density", "", 1},
+       {"fill_multiline", "", 1},
        {"sparse_infill_pattern", "", 1},
        {"lateral_lattice_angle_1", "", 1},
        {"lateral_lattice_angle_2", "", 1},
        {"infill_overhang_angle", "", 1},
+       {"lightning_overhang_angle", "", 1},
+       {"lightning_prune_angle", "", 1},
+       {"lightning_straightening_angle", "", 1},
        {"infill_anchor", "", 1},
        {"infill_anchor_max", "", 1},
        {"top_surface_pattern", "", 1},
@@ -581,28 +585,37 @@ wxMenu* MenuFactory::append_submenu_add_handy_model(wxMenu* menu, ModelVolumeTyp
             [type, item](wxCommandEvent&) {
                 std::vector<boost::filesystem::path> input_files;
                 bool                                 is_stringhell = false;
-                std::string                          file_name     = item;
-                if (file_name == L("Inlong Cube"))
-                    file_name = "InlongCube_v2.3mf";
-                else if (file_name == L("Inlong Tolerance Test"))
-                    file_name = "InlongToleranceTest.drc";
-                else if (file_name == L("3DBenchy"))
-                    file_name = "3DBenchy.drc";
-                else if (file_name == L("Cali Cat"))
-                    file_name = "calicat.drc";
-                else if (file_name == L("Autodesk FDM Test"))
-                    file_name = "ksr_fdmtest_v4.drc";
-                else if (file_name == L("Voron Cube"))
-                    file_name = "Voron_Design_Cube_v7.drc";
-                else if (file_name == L("Stanford Bunny"))
-                    file_name = "Stanford_Bunny.drc";
-                else if (file_name == L("Inlong String Hell")) {
-                    file_name     = "Inlong_stringhell.drc";
+                std::vector<std::string>             file_names;
+                bool                                 arrange_after_import = false;
+                if (item == L("Inlong Cube"))
+                    file_names = { "InlongCube_v2.3mf" };
+                else if (item == L("Inlong Tolerance Test"))
+                    file_names = { "InlongToleranceTest.drc" };
+                else if (item == L("3DBenchy"))
+                    file_names = { "3DBenchy.drc" };
+                else if (item == L("Cali Cat"))
+                    file_names = { "calicat.drc" };
+                else if (item == L("Autodesk FDM Test"))
+                    file_names = { "ksr_fdmtest_v4.drc" };
+                else if (item == L("Voron Cube"))
+                    file_names = { "Voron_Design_Cube_v7.drc" };
+                else if (item == L("Stanford Bunny"))
+                    file_names = { "Stanford_Bunny.drc" };
+                else if (item == L("Inlong String Hell")) {
+                    file_names   = { "Inlong_stringhell.drc" };
                     is_stringhell = true;
                 } else
                     return;
-                input_files.push_back((boost::filesystem::path(Slic3r::resources_dir()) / "handy_models" / file_name));
+
+                input_files.reserve(file_names.size());
+                for (const auto& file_name : file_names)
+                    input_files.push_back((boost::filesystem::path(Slic3r::resources_dir()) / "handy_models" / file_name));
+
                 plater()->load_files(input_files, LoadStrategy::LoadModel);
+                if (arrange_after_import) {
+                    plater()->set_prepare_state(Job::PREPARE_STATE_MENU);
+                    plater()->arrange();
+                }
 
                 // Suggest to change settings for stringhell
                 // This serves as mini tutorial for new users

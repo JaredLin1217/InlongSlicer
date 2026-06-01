@@ -1,51 +1,79 @@
 # Multi-Agent Workflow
 
-Use only after explicit hire/spawn/delegate/parallel-agent request or clear equivalent.
+Use only after an explicit hire, spawn, delegate, parallel-agent, scoring, or
+equivalent request. Canonical details live in `.agents/docs/agents/workflows.yaml`.
 
 ## Fast Path
 
-1. Run one controller status check only when current repo state or edits matter.
-2. Create one reusable brief per role type from `explorer_brief_assignment` or the full worker assignment.
-3. Fill the runtime's current maximum active slots, keep the rest queued, and refill immediately when one employee completes.
-4. Do not re-read this runbook or every canonical YAML file for each employee.
-5. Append recovery-sensitive lifecycle events to `.agents/runtime/agent-ledger.jsonl`.
-6. Close completed employees after recording the final report; final report is the completion notification.
-7. If sidebar/history cleanup is authorized, run it as one quiet batch for the exact closed runtime ids, record one `history_cleanup` ledger summary, and report compact counts.
+1. Run one controller status check when repo state or edits matter.
+2. Create one reusable brief per role type.
+3. Fill current runtime slots, queue the rest, and refill as employees finish.
+4. Do not re-read every canonical file for each employee.
+5. Record recovery-sensitive lifecycle events in `.agents/runtime/agent-ledger.jsonl`.
+6. Capture final reports, close completed employees, then summarize compactly.
 
-## Close And Sidebar Cleanup
+## Dispatch
 
-- Runtime close comes first. Do not use DB deletion as a substitute for `close_agent`.
-- Default to quiet batch cleanup: close targets, verify exact current-project subagent matches, delete matching state/history rows/files, verify zero remaining hits, then report one compact result.
-- Prefer official controls before local cleanup: runtime close, `thread/list` by cwd/source kind, `thread/loaded/list`, and archive/unsubscribe when available.
-- Do not assume an official hard-delete thread API or a sidebar refresh API. Treat UI refresh as event-driven, switch/restart-driven, or unverified.
-- Cleanup is authorized by the user close request for the exact runtime ids closed in that request; standalone cleanup requires explicit authorization.
-- Treat the active `%USERPROFILE%/.codex/state_<n>.sqlite` DB as external runtime state; exclude backup/copy DB files and report reads/writes as XR/XW.
-- Match only rows for the current repo cwd after normalizing Windows `\\?\` prefixes and path separators.
-- Delete only matching subagent `thread_dynamic_tools`, `thread_spawn_edges`, and `threads` rows.
-- Delete matching current-project subagent rollout files under `%USERPROFILE%/.codex/sessions` and `archived_sessions`; these can backfill zombie sidebar rows.
-- Optional orphan edge cleanup is allowed only when both endpoints are missing and cleanup was requested.
-- If the sidebar persists after official lists and persisted state are clean, stop local deletion and reload/restart Codex UI first; record the Desktop UI refresh result.
-- If the exact residue survives reload/restart, require explicit shutdown/cache-cleanup authorization before closing Codex processes or cleaning Desktop UI cache/log/state files.
-- Expand progress messages only when cleanup is blocked, scope would expand beyond exact target ids, cache/process cleanup is needed, or the user asks for detail.
-- Never delete parent/controller/user threads, non-subagent rollout files, or unrelated project history.
+Before launch, assign role, task, read scope, write scope, allowed commands,
+report schema, and close condition. Normalize write scopes and block overlaps.
+Use read-only explorers for scoring/review/investigation; use workers only with
+exclusive normalized write scope.
+
+During work, poll only when controller progress depends on a result or an owned
+scope may be affected. Record each final report once, dedupe by report hash for
+scoring batches, and stop expansion at convergence or cap.
+
+After work, close runtimes after report capture. When the user explicitly asks
+to dismiss employees or clean up the roster, run authorized Codex App
+sidebar/history cleanup and zero-hit verification before claiming the roster is
+clean. Reconcile git status and owned scopes, and keep `.agents/runtime/**`,
+temp roster, status, and filled validation records unstaged and undeployed.
+
+## Batch Validation
+
+For smoke/load batches, precompute the expected id set and compact ack schema
+before launch. Capture requested, spawned, completed, and closed counts; then
+normalize received ids once and separate missing, duplicate, invalid-format,
+wrong-id, failed, running, and unclosed results. Report protocol success
+separately from deploy, edit, or test success, and do not claim closed employees
+without close results or official runtime status.
+
+## Close And Cleanup
+
+Runtime close comes first; DB deletion is never a substitute. Sidebar/history
+cleanup requires explicit cleanup wording for exact runtime ids or standalone
+exact cleanup authorization.
+
+Prefer official controls first: runtime close, `thread/list` by cwd/source kind,
+`thread/loaded/list`, archive, and unsubscribe when available. Do not assume an
+official hard-delete thread API or sidebar refresh API.
+
+If authorized cleanup is needed, match only current-project subagent rows/files
+after normalizing Windows paths. Treat `%USERPROFILE%/.codex/state_<n>.sqlite`
+and matching rollout files under `%USERPROFILE%/.codex/sessions` and
+`archived_sessions` as external runtime state; report reads/writes/deletes as
+XR/XW. Never delete parent/controller/user threads, unrelated rollout files, or
+unrelated project history.
+
+If sidebar residue remains after official lists, DB rows, and rollout files are
+clean, reload/restart Codex UI before any cache-cleanup claim. Shutdown/cache
+cleanup needs explicit authorization.
 
 ## Scoring Batches
 
-- Default to 3 read-only scorers; expand to 5 only if score spread exceeds 10 points or top issues conflict.
-- Hard cap at 7 for high-risk disagreement, or 10 with explicit user approval. Larger batches require explicit user request.
-- Before launching more than 5 scorers, state the unresolved disagreement or coverage gap; otherwise aggregate and stop.
-- Aggregate median-first, also report mean/range/confidence.
-- Dedupe findings by scope, root cause, and proposed fix. Count duplicates as confidence.
-- Ignore repeated identical final reports after the first recorded report hash.
-- After the hard cap, report disagreement instead of spawning more scorers.
+Default to 3 read-only scorers. Expand to 5 only if score spread exceeds 10
+points or top issues conflict; hard cap at 7, or 10 with explicit approval.
+Before launching more than 5, state the unresolved disagreement or coverage gap.
+Aggregate median-first with mean/range/confidence, dedupe findings by root
+cause, and report disagreement instead of spawning beyond cap.
 
-## Safety Rules
+## Deployment Workers
 
-- Use read-only explorers for scoring, review, or investigation.
-- Use workers only with exclusive normalized write scope.
-- Poll/close before controller edits overlap active worker scope.
-- Use the project-local ledger for detached, long-lived, concurrent, write-capable, or recovery-sensitive employees.
-- Use temp roster only as external fallback; report temp access as XR/XW.
-- Never stage volatile ledger, roster, event, lease, or filled validation files.
+Use one `deployment_worker` per exact target path. Assignment must name target
+path, mode, dry-run/write scope, and deployed file set boundary. Worker may
+inspect target layout and run the deployment script, but must not edit target app
+code, copy provider runtime state, repair OS permissions, or modify `.git`
+metadata. Controller reviews the dry-run/write report before claiming completion.
 
-References: `.agents/docs/agents/workflows.yaml`, `.agents/docs/agents/schemas.yaml`, `.agents/docs/agents/verify.yaml`.
+References: `.agents/docs/agents/workflows.yaml`, `.agents/docs/agents/schemas.yaml`,
+`.agents/docs/agents/verify.yaml`.

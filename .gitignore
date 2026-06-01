@@ -58,3 +58,16 @@ internal_docs/
 .agents/docs/hard-isolation-evidence/
 .agents/docs/runtime-multi-agent-validation/
 .codex/environments/environment.toml
+
+# Local generated Agents state
+.agents/docs/agents-workflow-deployment.md
+docs/agent-status.md
+docs/agent-events/
+docs/tmp-approval-*/
+docs/hard-isolation-evidence/
+docs/runtime-multi-agent-validation/
+.codex/config.toml
+# Optional local OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/

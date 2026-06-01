@@ -1,25 +1,17 @@
 schema: agents-verify/v2
 purpose: "Compact verification profiles and release gates."
-owns: "Profile selection, file-class gates, normal checkpoints, release appendices, and evidence requirements."
+owns: "Profile selection, file-class gates, checkpoints, release gates, and evidence requirements."
 
-principle: "Default to the smallest check set that proves the current claim."
-scope_rule: "Run commands only on existing repo paths unless the user authorizes an exact external path/action."
+principle: "Run the smallest check set that proves the current claim."
+scope_rule: "Use existing repo paths unless the user authorizes an exact external path/action."
 stale_literal_rule: "Do not keep resolved one-off literal searches as routine gates."
-batch_rule: "For checkpoint gates, batch related checks into one shell invocation when practical; do not split many tiny checks into separate slow steps."
+batch_rule: "For checkpoint gates, batch related checks into one shell invocation when practical."
 
 profile_selection:
-  order:
-    - "answer-only/no current-state claim -> fast_turn with no command."
-    - "assigned read-only explorer audit -> read_only_audit; obey assignment command limits."
-    - "now/current/latest/clean/dirty/online/completed/committed/pushed/tagged/deployed claim -> inspect only required current state."
-    - "ordinary scoped edit -> fast_turn."
-    - "Agents rule/template/runbook/skill/memory-doc edit -> policy_pack_edit."
-    - "commit/tag/ordinary branch push checkpoint -> commit_tag_checkpoint plus push result when applicable."
-    - "deploy/release/protected push/broad audit/no-deduction -> release_deploy_push_audit."
-    - "runtime multi-agent behavior claim -> runtime_multi_agent plus current runtime evidence."
-    - "hard isolation claim -> hard_isolation plus current enforcement evidence."
-  mixed_claim_rule: "Use the highest-risk matching profile for the claim being made; do not upgrade unrelated facts."
+  order: ["answer-only/no current-state claim -> fast_turn with no command", "assigned read-only explorer audit -> read_only_audit", "repo/deploy/git/runtime state claim -> inspect only required state source", "ordinary scoped edit -> fast_turn", "Agents rule/template/runbook/skill/memory-doc edit -> policy_pack_edit", "commit/tag/ordinary branch push checkpoint -> commit_tag_checkpoint", "deploy/release/protected push/broad audit/no-deduction -> release_deploy_push_audit", "runtime multi-agent behavior claim -> runtime_multi_agent plus current runtime evidence", "batch multi-agent claim -> runtime_multi_agent plus batch_employee_validation", "hard isolation claim -> hard_isolation plus current enforcement evidence"]
+  mixed_claim_rule: "Use the highest-risk matching profile for the claim; do not upgrade unrelated facts."
   if_unclear: "State the narrower claim instead of running a broad audit by default."
+  task_class_note: "Task classes come from policy/workflows; profile names may be shared."
 
 file_classes:
   root_rules: ["AGENTS.md"]
@@ -27,8 +19,8 @@ file_classes:
   canonical_yaml: [".agents/docs/agents/*.yaml"]
   runbooks: [".agents/docs/runbooks/*.md"]
   deploy_templates: [".agents/docs/templates/agents/**"]
-  memory_docs: [".agents/docs/project-memory.md", ".agents/docs/memory/**", ".agents/docs/memory-entry.template.md"]
-  runtime_local: [".agents/runtime/**", ".codex/environments/environment.toml", ".agents/docs/agent-status.md", ".agents/docs/agent-events/**", ".agents/docs/runtime-multi-agent-validation/**", ".agents/docs/hard-isolation-evidence/**"]
+  memory_docs: [".agents/docs/project-memory.md", "docs/memory/**", "docs/memory-entry.template.md"]
+  runtime_local: [".agents/runtime/**", ".codex/config.toml", ".codex/environments/environment.toml", "docs/agent-status.md", "docs/agent-events/**", "docs/tmp-approval-*/**", "docs/runtime-multi-agent-validation/**", "docs/hard-isolation-evidence/**", ".agents/docs/agent-status.md", ".agents/docs/agent-events/**", ".agents/docs/tmp-approval-*/**", ".agents/docs/runtime-multi-agent-validation/**", ".agents/docs/hard-isolation-evidence/**"]
   generated_or_cache: ["generated output", "cache", "build output", "vendor"]
 
 gate_matrix:
@@ -39,8 +31,8 @@ gate_matrix:
   schema_changed: ["schema field coverage only for release/deploy/broad audit or schema-coverage claim"]
   skill_metadata_changed: ["skill metadata check only for project skill metadata changes"]
   runtime_local_changed: ["must stay ignored/local unless explicitly targeted"]
-  code_or_behavior_changed: ["closest focused test/lint/build when repo provides one"]
-  claim_upgrade: ["runtime evidence only for runtime claim", "hard-isolation evidence only for hard-isolation claim", "release audit only for release/deploy/protected-push/no-deduction/full-audit claim"]
+  code_or_behavior_changed: ["closest focused test/lint/build when available"]
+  claim_upgrade: ["runtime evidence only for runtime claim", "batch reconciliation only for batch runtime claim", "hard-isolation evidence only for hard-isolation claim", "release audit only for release/deploy/protected-push/no-deduction/full-audit claim"]
 
 commands:
   status_full: "git status -sb --ignored --untracked-files=all"
@@ -48,82 +40,60 @@ commands:
   status_scoped: "git status -sb -- <paths>"
   diff_check: "git diff --check"
   changed_manifest: "git diff --name-only plus git diff --cached --name-only, de-duplicated"
-  checkpoint_bundle: "one shell invocation: status, diff_check, changed_manifest, changed-file English/placeholder when prose changed, changed-file line endings, changed exact pairs, optional size gates, no staged runtime/local files"
+  checkpoint_bundle: "status, diff_check, changed_manifest, changed-file prose/line-ending/pair gates, optional size gates, and no staged runtime/local files"
+  full_audit_bundle: ".\\scripts\\validate.ps1 -Full"
+  ai_runtime_compact: ".agents/docs/agents/ai-runtime.yaml and template mirror stay under 1536 bytes, declare expand_only, route core task classes, keep multi-agent verify routed, and are referenced by AGENTS.md and project skill."
   changed_english: 'rg -n "[\p{Han}]" <changed durable rule/template files>'
   changed_placeholders: 'rg -n "TO[D]O|\[TO[D]O\]|T[B]D|FI[X]ME" <changed durable rule/template files>'
   line_endings: "git ls-files --eol <changed files>"
-  ignored_runtime: "git check-ignore -v .agents/runtime/agent-ledger.jsonl .agents/docs/agent-status.md .agents/docs/agent-events/ .agents/docs/tmp-approval-example/report.md .agents/docs/hard-isolation-evidence/example.md .agents/docs/runtime-multi-agent-validation/example.md .codex/environments/environment.toml"
+  ignored_runtime: "git check-ignore -v --no-index .agents/runtime/agent-ledger.jsonl docs/agent-status.md docs/agent-events/ docs/tmp-approval-example/report.md docs/hard-isolation-evidence/example.md docs/runtime-multi-agent-validation/example.md .agents/docs/agent-status.md .agents/docs/agent-events/ .agents/docs/tmp-approval-example/report.md .agents/docs/hard-isolation-evidence/example.md .agents/docs/runtime-multi-agent-validation/example.md .codex/config.toml .codex/environments/environment.toml"
   deploy_steps_top_level: 'rg -n "^steps:" .agents/docs/agents/deploy.yaml .agents/docs/templates/agents/agents/deploy.yaml'
   deploy_steps_not_nested: 'rg -n "^  steps:" .agents/docs/agents/deploy.yaml .agents/docs/templates/agents/agents/deploy.yaml'
-  deploy_sources_exist: "Every deployable_by_mode from path exists; mode_composition names existing groups."
+  deploy_sources_exist: "Every deployable_by_mode from path exists; deployment_modes, mode_composition, deployable groups, and deployment script mode ValidateSet stay synchronized."
   deploy_manifest_unique: "deployable_by_mode from paths unique per group; non-append to paths unique."
   deploy_blocklist_required_paths: "do_not_deploy includes local runtime, scratch, Codex runtime, and .git paths."
+  deployment_script_safety: "scripts/deploy-agents-workflow.ps1 keeps path-containment gates, deploy.yaml blocklist sync, and no admin elevation, OS permission, ACL, ownership, .git repair, destructive Git fallback, or local repair flow."
+  deployment_script_selftest: ".\\scripts\\deploy-agents-workflow.ps1 -SelfTest writes disposable root_docs, template-provider, dot_agents_docs, dry-run, protected-existing, git-backed foreign project, partial-gitignore, missing-target, target-owned-state, routed-legacy, and ambiguous-layout targets under %TEMP%/codex-agent-status/<derived-project-id>/deploy-selftest-* and verifies quiet success, source-neutral temp namespace derivation, blocked deployed path rejection, app-file preservation, gitignore duplicate avoidance, target-owned state preservation, target git rollback scope, dry-run write-state classification, deployed report file set, validation summary, target handoff check markers, explicit target creation gate, and provider self-write refusal."
+  target_handoff_check: "After deployment, inspect target AGENTS route, selected project skill path, deployment report, runbook links, deployed feedback template when mode includes it, protected runtime/local paths, and target git status summary without requiring whole-target cleanliness."
+  multi_agent_workflow_integrity: "scripts/validate.ps1 checks lifecycle, ownership, roster/ledger recovery, report dedupe, scoring, batch ack, delegated deployment, ledger compatibility aliases, and runtime validation fields."
+  evidence_template_schema_coverage: "scripts/validate.ps1 checks that hard-isolation and runtime multi-agent evidence templates retain required schema fields."
+  ci_workflow_stability: "scripts/validate.ps1 checks that checkpoint workflow pins a Windows runner, uses the default fast gate, and does not duplicate full-audit or whitespace checks."
   template_pollution_rule: "Search deployable templates for concrete source/target literals relevant to the task."
+  deployed_file_set_status: "git status -sb -- <deployed_file_set>"
+  deployed_file_set_diff_check: "git diff --check -- <deployed_file_set>"
+  powershell_rg_glob_rule: "In PowerShell, place rg options before --, then pattern and paths."
+  deployed_file_set_literal_scan: "Search only deployed_file_set for source literals; separate target-owned legacy docs."
 
 profiles:
   read_only_audit:
     use: "assigned read-only explorer audit, scoring, or review with no edits"
-    do:
-      - "read assigned paths only; scoped file-read commands inside that scope are allowed"
-      - "do not run git status, verification, or unassigned state commands unless assignment allows them"
-      - "report files inspected, findings, and isolation"
-    skip:
-      - "repo status"
-      - "verification commands"
-      - "unassigned canonical files"
+    do: ["read assigned paths only", "run only assignment-allowed commands", "report inspected files, findings, and isolation"]
+    skip: ["repo status", "verification commands", "unassigned files"]
   fast_turn:
     use: "answer-only, scoped edits, ordinary closeout"
-    do:
-      - "answer-only/no current-state claim: no command"
-      - "edits: status before edit, read target, scoped diff, closest scoped verification if behavior changed"
-      - "current-state claim: inspect only the named state, such as git status, active runtime ids, or the exact target path"
+    do: ["answer-only/no current-state claim: no command", "edits: status, target read, scoped diff, focused verification if behavior changed", "current-state claim: inspect only the named state"]
   policy_pack_edit:
     use: "AGENTS.md, .agents, .agents/docs/agents, .agents/docs/runbooks, .agents/docs/templates/agents, memory templates, deploy rules changed"
-    do:
-      - "status before edit"
-      - "target files read"
-      - "scoped diff review"
-      - "changed exact-pair checks only"
-      - "changed durable prose English-only when prose was added"
-      - "size gates only when AGENTS.md, project SKILL.md, or tracked-size budget changed materially"
-      - "template pollution only when changed deployable templates and relevant literals exist"
-      - "classification examples only when task routing changed"
-    skip:
-      - "full repo scans"
-      - "full template coverage"
-      - "deploy manifest checks"
-      - "schema field coverage"
+    do: ["status before edit", "target files read", "scoped diff review", "changed exact-pair checks", "changed prose English/placeholder checks", "size gates when budget changed materially"]
+    skip: ["full repo scans", "full template coverage", "deploy manifest checks", "schema field coverage"]
   commit_tag_checkpoint:
     use: "ordinary commit/tag/version/branch-push checkpoint without deploy, release, no-deduction, broad audit, runtime, or hard-isolation claim"
-    target_time: "one batched short validation pass; avoid full repo scans unless the changed scope requires them"
-    do:
-      - "status_full"
-      - "diff_check"
-      - "compute changed_manifest once and reuse it"
-      - "changed exact-pair checks only"
-      - "changed durable prose English-only and placeholder checks only when prose/templates changed"
-      - "line-ending readiness for changed/staged files"
-      - "size gates only when AGENTS.md, project SKILL.md, or tracked-size budget changed materially"
-      - "confirm ignored runtime/local files are not staged"
-    skip:
-      - "full repo English-only and placeholder scans"
-      - "full template coverage"
-      - "deploy manifest checks"
-      - "schema field coverage"
-      - "skill metadata checks unless skill metadata changed"
-      - "template pollution unless deployable templates changed with relevant source/target literals"
+    target_time: "one batched short validation pass"
+    do: ["status_full", "diff_check", "changed_manifest once", "changed exact-pair checks", "changed durable prose gates", "changed-file line endings", "size gates when budget changed", "confirm ignored runtime/local files are not staged"]
+    skip: ["full repo English/placeholder scans", "full template coverage", "deploy manifest checks", "schema field coverage", "template pollution unless relevant deployable templates changed"]
   release_deploy_push_audit:
     use: "release, deploy, protected/main push, broad audit, no-deduction claim, or explicit full verification"
     do:
-      baseline: ["status_full", "diff_check", "English-only/placeholder gates on applicable paths", "line-ending readiness", "ignored_runtime"]
-      deployment_integrity: ["deploy steps/source/uniqueness/blocklist gates", "task-specific template pollution checks"]
+      baseline: ["status_full", "diff_check", "English/placeholder gates", "line-ending readiness", "ignored_runtime"]
+      deployment_integrity: ["deploy source/uniqueness/blocklist gates", "task-specific template pollution"]
+      deployment_script: ["path containment", "provider self-write refusal", "explicit target creation switch", "no local permission repair or admin elevation", "disposable deployment self-test"]
       template_integrity: ["exact-pair drift checks", "template bundle coverage"]
-      schema_skill_integrity: ["schema field coverage", "skill metadata checks"]
+      schema_skill_integrity: ["schema field coverage", "multi-agent workflow integrity", "evidence template schema coverage", "skill metadata checks"]
       size: ["size gates including prospective tracked size"]
       claim_specific: ["release_appendix provider checks when provider/deployable-template claim is made", "runtime_multi_agent only when claimed", "hard_isolation only when claimed"]
   runtime_multi_agent:
     use: "claiming runtime multi-agent behavior"
-    do: "current real employee evidence satisfies live_employee_validation; static docs alone can only claim behavioral readiness"
+    do: "current real employee evidence satisfies live_employee_validation; batch claims also satisfy batch_employee_validation; static docs alone can only claim behavioral readiness"
   hard_isolation:
     use: "claiming tool/external isolation"
     do: "current hard-isolation evidence proves enforcement; otherwise say behavioral-only"
@@ -131,100 +101,47 @@ profiles:
 size_gates:
   unit: "bytes; 1 KiB = 1024 bytes"
   targets:
-    AGENTS.md: 10240
-    project_skill: 10240
-    tracked_repo_kib: 256
+    AGENTS.md: 2048
+    project_skill: 1792
+    canonical_agents_yaml: 16384
+    script_ps1: 64512
+    tracked_repo_kib: 400
   tracked_rule: "Ignored/untracked files do not count; intended new files count before commit."
 
 claim_scopes:
-  static_policy_pack: "Only after relevant profile gates pass; does not prove runtime behavior or hard isolation."
-  runtime_multi_agent: "Only after live employee evidence passes."
+  static_policy_pack: "Relevant profile gates passed; no runtime or hard-isolation proof."
+  runtime_multi_agent: "Only after live employee evidence passes; batch claims also require batch reconciliation."
   hard_isolation: "Only after current tool/external enforcement evidence passes; otherwise behavioral-only."
-  deploy_clean: "Only after deploy.yaml source-neutral/template/blocklist checks for the affected mode."
-  no_repo_pollution: "Only after status and ignored/local-runtime checks cover the affected files."
+  deploy_clean: "Only after affected deploy.yaml source-neutral/template/blocklist checks."
+  no_repo_pollution: "Only after status and ignored/local-runtime checks cover affected files."
 
 minimum_evidence:
   static_policy_pack: ["changed files read", "scoped diff reviewed", "applicable profile gates passed"]
   branch_push: ["checkpoint gates", "current branch/remote", "push result"]
-  deploy_clean: ["target authorization", "target inspected", "deploy mode selected", "blocklist/source-neutral checks"]
-  runtime_multi_agent: ["real runtime id", "assignment/report match", "git status after employee work"]
+  deploy_clean: ["target authorization", "target inspected", "target layout selected", "deployed_file_set recorded", "blocklist/source-neutral checks on deployed_file_set", "target handoff check or explicit reason it was not run"]
+  runtime_multi_agent: ["real runtime id", "assignment/report match", "git status after employee work", "close/runtime status evidence", "expected/received/closed reconciliation for batch claims", "history_cleanup_evidence when cleanup is claimed"]
   hard_isolation: ["current tool/runtime/OS/account/cloud enforcement evidence"]
 
 no_deduction_audit:
   rule: "Claim no-deduction only with release_deploy_push_audit-level proof plus applicable runtime/hard-isolation evidence."
-  always:
-    - "Current repo state inspected."
-    - "Changed files/diffs reviewed."
-    - "External access none or exact-path authorized and reported."
-    - "Global Memory/Global Skill not used or justified and reported."
-    - "Templates source-neutral."
-    - "Runtime/local scratch artifacts not staged unless targeted."
-    - "Claim scope stated."
-  when_applicable:
-    - "Workers have non-overlapping normalized ownership."
-    - "Ledger/roster/event evidence exists for compact-risk or concurrent employees."
-    - "History cleanup is separate from runtime close and covered by a close request or exact authorization, with target runtime ids, state/history/cache paths touched, official list result when available, and Desktop UI refresh result when sidebar residue was observed."
-    - "Hard-isolation verification avoids forbidden reads unless exact-authorized."
+  always: ["current repo state inspected", "changed files/diffs reviewed", "external access reported", "GM/GS reported", "templates source-neutral", "deployment checks use deployed_file_set", "runtime/local scratch artifacts not staged", "claim scope stated"]
+  when_applicable: ["workers have non-overlapping ownership", "ledger/roster/event evidence exists for compact-risk or concurrent employees", "history cleanup has exact authorization plus history_cleanup_evidence when claimed", "hard-isolation verification avoids forbidden reads unless exact-authorized"]
 
 coverage_gates:
-  slim_policy_pack:
-    - "AGENTS.md and project SKILL support no-command answer-only fast path."
-    - "policy/workflows/verify define compact profiles and claim boundaries."
-    - "deploy rules keep source state out of target repos."
-    - "schemas/templates preserve assignment, report, ledger, status, lease, runtime validation, memory, and skill fields."
-    - "task closeout permits compact no-change answers."
+  slim_policy_pack: ["AGENTS.md and project SKILL support no-command answer-only fast path", "policy/workflows/verify define compact profiles and claim boundaries", "deploy rules keep source state out of targets", "schemas/templates preserve assignment, report, ledger, status, lease, runtime validation, memory, and skill fields", "workflow/schema gates preserve lifecycle, ownership, roster/ledger recovery, report dedupe, scoring, delegated deployment, and runtime validation together", "task closeout permits compact no-change answers"]
 
 live_employee_validation:
-  required:
-    - "explicit user hire/spawn/delegation/parallel-agent request"
-    - "runtime id/nickname/mode/role/task"
-    - "ledger or roster path/version/permissions when required"
-    - "assignment includes ledger/roster, status-event, final-report, and ownership fields"
-    - "final report matches runtime id and required fields"
-    - "ledger or poll/report/close/reconciled evidence has matching snapshot version"
-    - "git status proves no out-of-scope changes"
-    - "history cleanup authorization is recorded as none/not requested unless covered by a close request or exact authorization, with target ids, touched state/history/cache paths, official list result when available, cleanup result, and Desktop UI refresh result when sidebar residue was observed"
+  required: ["explicit user hire/spawn/delegation/parallel-agent request", "runtime id/nickname/mode/role/task", "ledger or roster path/version/permissions when required", "assignment includes ledger/roster, status-event, final-report, and ownership fields", "final report matches runtime id and required fields", "ledger or poll/report/close/reconciled evidence has matching snapshot version", "git status proves no out-of-scope changes", "history cleanup authorization is none/not requested unless exact-authorized; cleanup claims include history_cleanup_evidence"]
+
+batch_employee_validation:
+  required: ["expected id set created before dispatch", "assignment contract includes id and compact final-report schema", "received id set has missing/duplicate/invalid-format checks", "failed/running/unclosed runtimes are counted separately", "close results or official runtime status prove cleanup for claimed closed employees", "batch report distinguishes protocol smoke success from deployment/edit/test success"]
+  accepted_ack_formats: ["compact JSON object preferred", "exact natural-language ack only when parser and normalization are stated"]
+  invalid_outcomes: ["missing id", "duplicate id", "wrong id", "free-form extra fields that break parser", "completion without close evidence when closed claim is made"]
 
 drift_checks:
-  exact_pairs:
-    - [".agents/docs/agent-assignment.template.md", ".agents/docs/templates/agents/agent-assignment.template.md"]
-    - [".agents/docs/agent-status.template.md", ".agents/docs/templates/agents/agent-status.template.md"]
-    - [".agents/docs/agent-event.template.md", ".agents/docs/templates/agents/agent-event.template.md"]
-    - [".agents/docs/controller-lease.template.md", ".agents/docs/templates/agents/controller-lease.template.md"]
-    - [".agents/docs/hard-isolation-evidence.template.md", ".agents/docs/templates/agents/hard-isolation-evidence.template.md"]
-    - [".agents/docs/runtime-multi-agent-validation.template.md", ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md"]
-    - [".agents/docs/memory-entry.template.md", ".agents/docs/templates/agents/memory-entry.template.md"]
-    - [".agents/docs/memory/entries/README.md", ".agents/docs/templates/agents/memory-entries-README.md"]
-    - [".agents/skills/project-isolation-workflow/agents/openai.yaml", ".agents/docs/templates/agents/skills/project-isolation-workflow/agents/openai.yaml"]
-    - ["AGENTS.md", ".agents/docs/templates/agents/AGENTS.md"]
-    - [".agents/skills/project-isolation-workflow/SKILL.md", ".agents/docs/templates/agents/skills/project-isolation-workflow/SKILL.md"]
-    - [".agents/docs/agents/policy.yaml", ".agents/docs/templates/agents/agents/policy.yaml"]
-    - [".agents/docs/agents/workflows.yaml", ".agents/docs/templates/agents/agents/workflows.yaml"]
-    - [".agents/docs/agents/schemas.yaml", ".agents/docs/templates/agents/agents/schemas.yaml"]
-    - [".agents/docs/agents/deploy.yaml", ".agents/docs/templates/agents/agents/deploy.yaml"]
-    - [".agents/docs/agents/verify.yaml", ".agents/docs/templates/agents/agents/verify.yaml"]
-    - [".agents/docs/runbooks/agents-deployment.md", ".agents/docs/templates/agents/agents-deployment.md"]
-    - [".agents/docs/runbooks/isolation-audit.md", ".agents/docs/templates/agents/isolation-audit.md"]
-    - [".agents/docs/runbooks/multi-agent-workflow.md", ".agents/docs/templates/agents/multi-agent-workflow.md"]
-    - [".agents/docs/runbooks/repository-maintenance.md", ".agents/docs/templates/agents/repository-maintenance.md"]
-    - [".agents/docs/runbooks/session-handoff.md", ".agents/docs/templates/agents/session-handoff.md"]
-    - [".agents/docs/runbooks/skill-authoring.md", ".agents/docs/templates/agents/skill-authoring.md"]
-    - [".agents/docs/runbooks/task-closeout.md", ".agents/docs/templates/agents/task-closeout.md"]
-  template_specific_cleanliness_files:
-    - ".agents/docs/templates/agents/README.md"
-    - ".agents/docs/templates/agents/gitignore.fragment"
-    - ".agents/docs/templates/agents/project-memory.md"
-    - ".agents/docs/templates/agents/project-structure.md"
-    - ".agents/docs/templates/agents/memory-index.md"
+  exact_pairs: ["docs and docs/templates mirror: assignment/status/event/lease/evidence/memory/deployment feedback templates, AGENTS.md, project skill files, ai-runtime, agents yaml, runbooks"]
+  template_specific_cleanliness_files: [".agents/docs/templates/agents/README.md", ".agents/docs/templates/agents/gitignore.fragment", ".agents/docs/templates/agents/project-memory.md", ".agents/docs/templates/agents/project-structure.md", ".agents/docs/templates/agents/memory-index.md"]
+
 release_appendix:
-  provider_repo_checks:
-    - "Every tracked/intended .agents/docs/templates/agents file is in exact_pairs or template_specific_cleanliness_files."
-    - "Template memory starter has no data rows or provider project names."
-    - "Schema field coverage matches templates."
-    - "Project skill metadata has required fields and valid default_prompt."
-  source_neutral_scan_literals:
-    - "provider repo name or path"
-    - "concrete usernames"
-    - "remotes, branches, commits, tags, or push status"
-    - "filled status rows or validation results"
-    - "non-placeholder memory rows"
+  provider_repo_checks: ["tracked/intended .agents/docs/templates/agents files are paired or template-specific", "template memory starter has no data rows or provider project names", "schema field coverage matches templates", "project skill metadata is valid"]
+  source_neutral_scan_literals: ["provider repo name or path", "concrete usernames", "remotes, branches, commits, tags, or push status", "filled status rows or validation results", "non-placeholder memory rows"]

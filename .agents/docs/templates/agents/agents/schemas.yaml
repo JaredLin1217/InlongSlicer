@@ -129,9 +129,11 @@ agent_ledger_event:
   location: ".agents/runtime/agent-ledger.jsonl"
   format: "JSONL; one JSON object per event"
   status: "repo-local ignored runtime state; advisory, not Codex official runtime DB"
-  names: ["initialized", "hired", "started", "completed", "blocked", "stopped", "closed", "history_cleanup", "shutdown", "integrated", "reconciled"]
-  required_fields: ["time", "event", "agent_id", "mode", "role", "status", "task"]
-  optional_fields: ["nickname", "read_scope", "write_scope", "ledger_version", "report_hash", "final_report_summary", "controller_id", "source", "official_list_result", "history_cleanup_sources", "history_cleanup_db", "history_cleanup_target_ids", "history_cleanup_result", "desktop_ui_refresh_result", "deleted_rows", "notes", "isolation"]
+  names: ["initialized", "hired", "started", "report", "completed", "blocked", "stopped", "closed", "history_cleanup", "shutdown", "integrated", "reconciled"]
+  canonical_fields: ["ts", "event", "agent_id", "mode", "role", "task"]
+  optional_fields: ["status", "nickname", "read_scope", "write_scope", "ledger_version", "report_hash", "final_report_summary", "controller_id", "source", "official_list_result", "history_cleanup_sources", "history_cleanup_db", "history_cleanup_target_ids", "history_cleanup_result", "history_cleanup_evidence", "desktop_ui_refresh_result", "deleted_rows", "notes", "isolation"]
+  compatibility_aliases: ["time -> ts", "runtime_id -> agent_id", "agent -> agent_id", "controller -> controller_id", "scope -> read_scope"]
+  canonical_write_rule: "New controller-written events should use canonical_fields; readers may normalize compatibility_aliases for older local runtime ledgers."
   write_rule: "Controller appends by default; employees append only when assigned exact ledger path and append permission."
   storage_rule: "Never stage, commit, deploy, or copy .agents/runtime/**; ledger may be cleared and rebuilt from runtime evidence."
 
@@ -202,6 +204,8 @@ runtime_multi_agent_validation:
     - "Controller lease id"
     - "Controller lease status"
     - "Assignment path or prompt"
+    - "Ledger requirement included"
+    - "Ledger write permission included"
     - "Roster requirement included"
     - "Roster write permission included"
     - "Status-event rule included"
@@ -213,6 +217,23 @@ runtime_multi_agent_validation:
     - "Final report received"
     - "Final report matched runtime id"
     - "Required fields present"
+    - "Expected id set"
+    - "Requested count"
+    - "Spawned count"
+    - "Completed count"
+    - "Closed count"
+    - "Received ids"
+    - "Missing ids"
+    - "Duplicate ids"
+    - "Invalid-format ids"
+    - "Wrong ids"
+    - "Failed ids"
+    - "Running ids"
+    - "Unclosed ids"
+    - "Ack schema"
+    - "Parser normalization"
+    - "Protocol result"
+    - "Task result boundary"
     - "Project-local skills read"
     - "System/global resources"
     - "Global Memory"
@@ -222,6 +243,7 @@ runtime_multi_agent_validation:
     - "Files changed"
     - "Verification"
     - "Risks"
+    - "Ledger event"
     - "Poll event"
     - "Report event"
     - "Close event"
@@ -234,13 +256,20 @@ runtime_multi_agent_validation:
     - "Official list result"
     - "History cleanup requested"
     - "History cleanup authorization"
+    - "History cleanup target ids"
     - "History cleanup sources"
     - "History cleanup result"
+    - "History cleanup evidence"
     - "Desktop UI refresh result"
     - "Pass condition met"
     - "Remaining runtime risk"
     - "Controller conclusion"
   storage_rule: "Filled records are local scratch unless sanitized and promoted."
+
+history_cleanup_evidence:
+  required_when_claimed: ["authorization", "parent_thread_id", "repo_cwd", "target_filter", "backup_path", "target_counts(edges,threads,rollouts,unread)", "deleted_counts(edges,threads,rollouts,unread)", "parent_preserved", "zero_active_residue(edges,threads,rollouts,unread)", "backup_count_match", "desktop_reload_or_restart_result"]
+  target_filter: "current parent thread, same normalized cwd, child thread_source=subagent, closed/inactive status, explicit target ids only"
+  forbidden_targets: ["parent/controller/user threads", "unrelated cwd", "unrelated parent subagents unless explicitly requested", "ledger-only ids", "non-subagent rollouts"]
 
 memory_entry:
   draft_fields: ["Trigger", "Context", "Cause", "Fix / Rule", "Verification", "Reuse when"]

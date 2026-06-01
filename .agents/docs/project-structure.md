@@ -1,69 +1,95 @@
-# Codex Project File Structure
+# Source Repo Structure
 
-InlongSlicer keeps Codex operating knowledge inside the repository.
+This source repo owns the canonical AI Agents workflow: repo-local routing,
+deployable governance, project-local skills, runtime boundaries, validation
+gates, deployment templates, and extension points.
 
-## Current Structure
+## Read Order
+
+1. `AGENTS.md`
+2. `.agents/docs/agents/ai-runtime.yaml`
+3. `.agents/docs/agents/workflows.yaml` only when routed
+4. `.agents/docs/agents/policy.yaml` only when routed
+5. `.agents/docs/agents/verify.yaml` for the selected profile
+6. `.agents/docs/agents/schemas.yaml` for assignments, reports, status, or templates
+7. `.agents/docs/agents/mcp.yaml` when optional integrations matter
+8. `.agents/docs/agents/version.yaml` for compatibility
+9. `.agents/docs/agents/deploy.yaml` for authorized target deployment
+
+## Role Matrix
+
+| Area | Role | Deploy policy |
+|---|---|---|
+| `AGENTS.md` | session router | deploy |
+| `.agents/skills/project-isolation-workflow/` | project-local skill | deploy |
+| `.agents/runtime/` | ignored coordination/runtime state | never deploy |
+| `.agents/docs/agents/*.yaml` | canonical governance rules | deploy |
+| `.agents/docs/runbooks/*.md` | procedure entry points | mode-based deploy |
+| `.agents/docs/templates/agents/` | source-neutral deploy bundle | `template_provider_mode` only |
+| `docs/memory/`, `docs/decisions/` | provider-local knowledge | target-owned / do not deploy rows |
+| `.agents/docs/decisions/` | workflow structure decisions | provider source only |
+| `schemas/`, `scripts/`, `tests/`, `mcp/` | contracts, checks, fixtures, capability registry | provider source only until explicitly deployed |
+| `artifacts/`, `.github/workflows/` | audits/evals and CI | provider source only |
+| `.codex/`, status, validation records | local/runtime state | never deploy |
+
+Do not deploy source `.agents/runtime/`, `.codex/config.toml`,
+`.codex/environments/environment.toml`, source memory rows, decisions, status,
+or validation history by default.
+
+## Current Tree
 
 ```text
-.
-|-- AGENTS.md
-|-- CLAUDE.md
-|-- .codex/
-|   |-- config.toml
-|   `-- environments/
-|       |-- environment.template.toml
-|       `-- environment.toml    local runtime state, gitignored
-|-- .agents/
-|   |-- README.md
-|   |-- docs/
-|   |   |-- agent-status.template.md
-|   |   |-- agent-status.md    local runtime state, gitignored
-|   |   |-- codex-memory.md
-|   |   |-- global-knowledge-imports/    read-only import inboxes for authorized global Codex scans
-|   |   |-- project-memory.md
-|   |   |-- project-structure.md
-|   |   |-- memory/
-|   |   |   |-- index.md
-|   |   |   `-- entries/
-|   |   |       `-- README.md
-|   |   |-- decisions/
-|   |   |   `-- 0001-project-isolated-knowledge.md
-|   |   `-- runbooks/
-|   |       |-- global-knowledge-migration.md
-|   |       |-- isolation-audit.md
-|   |       |-- multi-agent-workflow.md
-|   |       |-- session-handoff.md
-|   |       |-- skill-authoring.md
-|   |       `-- task-closeout.md
-|   `-- skills/
-|       |-- inlong-branding-migration/
-|       |-- project-isolation-workflow/
-|       |-- source-command-dedupe/
-|       `-- source-command-oncall-triage/
-|-- .claude/
-|   `-- commands/
-`-- InlongSlicer_doc/
+AGENTS.md
+.agents/
+  docs/
+    agents/
+      ai-runtime.yaml
+      policy.yaml
+      workflows.yaml
+      verify.yaml
+      schemas.yaml
+      deploy.yaml
+      mcp.yaml
+      version.yaml
+    runbooks/
+      agents-deployment.md
+      isolation-audit.md
+      multi-agent-workflow.md
+      repository-maintenance.md
+      session-handoff.md
+      skill-authoring.md
+      task-closeout.md
+    templates/agents/
+      AGENTS.md
+      agents/*.yaml
+      runbook mirrors
+      template mirrors
+      skills/project-isolation-workflow/
+    memory/
+      index.md
+      entries/
+    decisions/
+    *.template.md
+    project-memory.md
+    project-structure.md
+  skills/
+    project-isolation-workflow/
+  runtime/
+    agent-ledger.jsonl  # ignored, advisory only
 ```
 
-## Directory Rules
+## Flow Summary
 
-- `AGENTS.md`: compact repository-wide rules loaded at the start of project work.
-- `.agents/README.md`: local index for Codex agent assets.
-- `.agents/docs/`: Codex memory, runbooks, decisions, and handoff status.
-- `.agents/docs/agent-status.template.md`: tracked template for local controller and employee-agent status.
-- `.agents/docs/agent-status.md`: local runtime status board for controller and employee agents. It is intentionally gitignored and must not be copied to other projects during Agents deployment.
-- `.agents/docs/project-memory.md`: overview of the project-local memory system.
-- `.agents/docs/global-knowledge-imports/`: read-only import inboxes for authorized global Codex memory or skill scans. Content here is not authoritative project memory until verified and promoted.
-- `.agents/docs/memory/index.md`: searchable memory index with triggers, keywords, summaries, and links.
-- `.agents/docs/memory/entries/`: detailed memory entries.
-- `.agents/docs/decisions/`: durable Codex/project operating decisions.
-- `.agents/docs/runbooks/`: repeatable procedures that are longer than `AGENTS.md` should be.
-- `.agents/docs/runbooks/task-closeout.md`: closeout checklist for non-trivial single-session tasks.
-- `.agents/skills/`: project-local skills. Do not place InlongSlicer-specific skills in global Codex skill folders.
-- `.codex/environments/environment.template.toml`: tracked portable reference for Codex App environment setup.
-- `.codex/environments/environment.toml`: local autogenerated Codex App runtime environment. It is intentionally gitignored and must not be copied to other projects during Agents deployment.
-- `.codex/`: Codex App project settings and local environment setup. Let Codex App generate environment files when possible.
-- `.claude/commands/`: legacy Claude command prompts. Keep matching behavior aligned with migrated Codex skills when both exist.
-- `InlongSlicer_doc/`: product documentation, migration records, and functional change log.
+1. `AGENTS.md` gives the compact always-on rules and points to `ai-runtime.yaml`.
+2. `ai-runtime.yaml` classifies the request and expands only named canonical YAML.
+3. `workflows.yaml` owns task flow, progress updates, multi-agent lifecycle, scoring, handoff, deployment delegation, and maintenance routing.
+4. `policy.yaml` owns authority, boundaries, project-local knowledge layers, template cleanliness, and closeout.
+5. `verify.yaml` selects the smallest proof profile; commit and branch push use `commit_tag_checkpoint`.
+6. `deploy.yaml` builds the allowlisted `deployed_file_set`, preserves target-owned state, and rewrites paths only for the selected target layout.
+7. Template mirrors under `.agents/docs/templates/agents/` must match canonical sources unless marked template-specific.
 
-System/global Codex locations are not part of this project structure. Use them only when the user explicitly authorizes exact global paths and actions.
+## V2 Structure Rule
+
+V2 structure changes must preserve mirror pairs and deployment rules until drift
+checks are updated. Large moves of runbooks, templates, decisions, or memory docs
+belong in dedicated changes, not mixed with validation, MCP, or CI work.

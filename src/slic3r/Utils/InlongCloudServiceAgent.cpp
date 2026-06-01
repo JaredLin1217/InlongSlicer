@@ -56,6 +56,7 @@ constexpr const char* INLONG_DEFAULT_PUB_KEY = "sb_publishable_lvVe_whOi80SU9BPS
 constexpr const char* INLONG_HEALTH_PATH = "/api/v1/health";
 constexpr const char* INLONG_SYNC_PULL_PATH = "/api/v1/sync/pull";
 constexpr const char* INLONG_SYNC_PUSH_PATH = "/api/v1/sync/push";
+constexpr const char* INLONG_SYNC_FORCE_PUSH_PATH = "/api/v1/sync/force-push";
 constexpr const char* INLONG_SYNC_DELETE_PATH = "/api/v1/sync/delete";
 constexpr const char* INLONG_PROFILES_PATH = "/api/v1/sync/profiles";
 constexpr const char* INLONG_SUBSCRIPTIONS_PATH = "/api/v1/subscriptions";
@@ -965,7 +966,7 @@ std::string InlongCloudServiceAgent::request_setting_id(std::string name, std::m
     return "";
 }
 
-int InlongCloudServiceAgent::put_setting(std::string setting_id, std::string name, std::map<std::string, std::string>* values_map, unsigned int* http_code)
+int InlongCloudServiceAgent::put_setting(std::string setting_id, std::string name, std::map<std::string, std::string>* values_map, unsigned int* http_code, bool force)
 {
     // Extract original_updated_time for Optimistic Concurrency Control
     // If present, server will verify version before update. If absent, treated as insert.
@@ -989,7 +990,7 @@ int InlongCloudServiceAgent::put_setting(std::string setting_id, std::string nam
         }
     }
 
-    auto result = sync_push(setting_id, name, content, original_updated_time);
+    auto result = sync_push(setting_id, name, content, original_updated_time, force);
     if (http_code) *http_code = result.http_code;
 
     if (result.success) {
@@ -1212,7 +1213,8 @@ SyncPushResult InlongCloudServiceAgent::sync_push(
     const std::string& profile_id,
     const std::string& name,
     const nlohmann::json& content,
-    const std::string& original_updated_time)
+    const std::string& original_updated_time,
+    bool force)
 {
     SyncPushResult result;
     result.success = false;
@@ -1243,7 +1245,7 @@ SyncPushResult InlongCloudServiceAgent::sync_push(
 
     std::string response;
     unsigned int http_code = 0;
-    int http_result = http_post(INLONG_SYNC_PUSH_PATH, body_str, &response, &http_code);
+    int http_result = http_post(force ? INLONG_SYNC_FORCE_PUSH_PATH : INLONG_SYNC_PUSH_PATH, body_str, &response, &http_code);
 
     result.http_code = http_code;
 
@@ -1888,7 +1890,7 @@ int InlongCloudServiceAgent::http_post(const std::string& path, const std::strin
                 .on_error([&](std::string resp_body, std::string error, unsigned resp_status) {
                     result.success = false;
                     result.status  = resp_status == 0 ? 404 : resp_status;
-                    result.body    = body;
+                    result.body    = resp_body;
                     BOOST_LOG_TRIVIAL(error) << "InlongCloudServiceAgent: HTTP error - " << error;
                 })
                 .timeout_max(30)

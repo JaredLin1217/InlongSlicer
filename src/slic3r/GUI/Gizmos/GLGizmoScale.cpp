@@ -34,7 +34,7 @@ GLGizmoScale3D::GLGizmoScale3D(GLCanvas3D& parent, const std::string& icon_filen
     m_grabber_connections[1].grabber_indices = { 2, 3 };
     m_grabber_connections[2].grabber_indices = { 4, 5 };
     m_grabber_connections[3].grabber_indices = { 6, 7 };
-    m_grabber_connections[4].grabber_indices = { 7, 8 }; 
+    m_grabber_connections[4].grabber_indices = { 7, 8 };
     m_grabber_connections[5].grabber_indices = { 8, 9 };
     m_grabber_connections[6].grabber_indices = { 9, 6 };
 }
@@ -69,7 +69,7 @@ std::string GLGizmoScale3D::get_tooltip() const
         return "Y: " + format(scale.y(), 4) + "%";
     else if (m_hover_id == 4 || m_hover_id == 5 || m_grabbers[4].dragging || m_grabbers[5].dragging)
         return "Z: " + format(scale.z(), 4) + "%";
-    else if (m_hover_id == 6 || m_hover_id == 7 || m_hover_id == 8 || m_hover_id == 9 || 
+    else if (m_hover_id == 6 || m_hover_id == 7 || m_hover_id == 8 || m_hover_id == 9 ||
         m_grabbers[6].dragging || m_grabbers[7].dragging || m_grabbers[8].dragging || m_grabbers[9].dragging)
     {
         std::string tooltip = "X: " + format(scale.x(), 2) + "%\n";
@@ -113,7 +113,7 @@ void GLGizmoScale3D::data_changed(bool is_serializing)
         m_grabbers[i].enabled = enable_scale_xyz;
 
     set_scale(Vec3d::Ones());
-	
+
     change_cs_by_selection();
 }
 
@@ -448,7 +448,29 @@ void GLGizmoScale3D::do_scale_uniform(const UpdateData& data)
     if (ratio > 0.0)
     {
         m_scale = m_starting.scale * ratio;
-        m_offset = Vec3d::Zero();
+        if (m_starting.ctrl_down && abs(ratio-1.0f)>0.001) {
+            m_scale.z() = m_starting.scale.z();
+            double local_offset_x = 0.5 * (m_scale.x() - m_starting.scale.x()) * m_starting.box.size().x();
+            double local_offset_y = 0.5 * (m_scale.y() - m_starting.scale.y()) * m_starting.box.size().y();
+
+            Vec3d local_offset_vec = Vec3d::Zero();
+            switch (m_hover_id)
+            {
+                case 6: { local_offset_vec = Vec3d(-local_offset_x, -local_offset_y, 0.0); break; }
+                case 7: { local_offset_vec = Vec3d( local_offset_x, -local_offset_y, 0.0); break; }
+                case 8: { local_offset_vec = Vec3d( local_offset_x,  local_offset_y, 0.0); break; }
+                case 9: { local_offset_vec = Vec3d(-local_offset_x,  local_offset_y, 0.0); break; }
+                default: break;
+            }
+
+            if (m_object_manipulation->is_world_coordinates()) {
+                m_offset = local_offset_vec;
+            } else {
+                m_offset = m_grabbers_tran.get_matrix_no_offset() * local_offset_vec;
+            }
+        } else {
+            m_offset = Vec3d::Zero();
+        }
     }
 }
 
