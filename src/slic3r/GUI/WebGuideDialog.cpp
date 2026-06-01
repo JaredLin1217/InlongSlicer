@@ -226,53 +226,53 @@ wxString GuideFrame::SetStartPage(GuidePage startpage, bool load)
     m_page = startpage;
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__<< boost::format(" enter, load=%1%, start_page=%2%")%load%int(startpage);
     //wxLogMessage("GUIDE: webpage_1  %s", (boost::filesystem::path(resources_dir()) / "web\\guide\\1\\index.html").make_preferred().string().c_str() );
-    auto guide_url = [](int target) {
-        wxString path = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html").make_preferred().string());
+    auto guide_url = [](const char *page) {
+        wxString path = from_u8((boost::filesystem::path(resources_dir()) / "web/guide" / page / "index.html").make_preferred().string());
 #ifdef __WIN32__
         path.Replace("\\", "/");
-        return wxString::Format("file:///%s?target=%d", path, target);
+        return wxString::Format("file:///%s", path);
 #else
-        return wxString::Format("file://%s?target=%d", path, target);
+        return wxString::Format("file://%s", path);
 #endif
     };
 
-    wxString TargetUrl = guide_url(1);
+    wxString TargetUrl = guide_url("1");
     //wxLogMessage("GUIDE: webpage_2  %s", TargetUrl.mb_str());
 
     if (startpage == BBL_WELCOME){
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = guide_url(1);
+        TargetUrl = guide_url("1");
     } else if (startpage == BBL_REGION) {
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = guide_url(11);
+        TargetUrl = guide_url("11");
     } else if (startpage == BBL_MODELS) {
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = guide_url(21);
+        TargetUrl = guide_url("21");
     } else if (startpage == BBL_FILAMENTS) {
         SetTitle(_L("Setup Wizard"));
 
         int nSize = m_ProfileJson["model"].size();
 
         if (nSize>0)
-            TargetUrl = guide_url(22);
+            TargetUrl = guide_url("22");
         else
-            TargetUrl = guide_url(21);
+            TargetUrl = guide_url("21");
     } else if (startpage == BBL_FILAMENT_ONLY) {
         SetTitle("");
-        TargetUrl = guide_url(23);
+        TargetUrl = guide_url("23");
     } else if (startpage == BBL_MODELS_ONLY) {
         SetTitle("");
-        TargetUrl = guide_url(24);
+        TargetUrl = guide_url("24");
     }
     else {
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = guide_url(21);
+        TargetUrl = guide_url("21");
     }
 
     wxString strlang = wxGetApp().current_language_code_safe();
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__<< boost::format(", strlang=%1%") % into_u8(strlang);
     if (strlang != "")
-        TargetUrl += "&lang=" + strlang;
+        TargetUrl += "?lang=" + strlang;
 
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " target url=" << into_u8(TargetUrl);
 
