@@ -1,0 +1,51 @@
+schema: agents-workflow-artifacts/v1
+purpose: "Local supervised workflow artifacts for optional executable evidence."
+owns: "Workflow instance files, packets, approvals, collection, simulation, and runtime storage boundaries."
+trigger_when:
+  - "User requests workflow artifacts, workflow packets, approval gates, collection, or dispatch simulation."
+  - "Enterprise dispatch explicitly asks for artifact-backed evidence."
+do_not_trigger_for: ["answer-only", "ordinary scoped edit", "plain deploy", "enterprise dispatch without artifact request"]
+storage:
+  live_root: ".agents/runtime/workflows/<workflow_id>/"
+  import_alias: ".workflow/<workflow_id>/"
+  git_rule: "Never stage, commit, deploy, release, or copy live workflow artifacts."
+  deploy_rule: "Only canonical docs, schemas, scripts, and source-neutral templates are deployable."
+  id_rule: "workflow_id is lowercase letters, numbers, dot, underscore, or dash; no path separators."
+layout:
+  required_files: ["state.json", "plan.md", "orchestration.md"]
+  optional_files: ["packets/*.json", "packets/*.md", "results/*.json", "results/*.md", "final-report.md"]
+  final_report: "Controller-owned summary built from normalized department reports, results, and escalation records."
+states:
+  allowed: ["drafted", "approved", "active", "waiting_approval", "collecting", "completed", "blocked", "stopped"]
+  start: "drafted"
+  terminal: ["completed", "blocked", "stopped"]
+workflow_instance:
+  required_fields: ["workflow_id", "version", "objective", "owner", "status", "created_at", "artifact_root", "approval_policy", "isolation"]
+  artifact_root_rule: "Must resolve under storage.live_root or storage.import_alias and remain runtime-local."
+packets:
+  types: ["department_leader_assignment", "worker_packet", "verification_packet", "escalation_packet"]
+  required_fields: ["packet_id", "workflow_id", "type", "owner", "target", "objective", "scope", "authority", "model_tier", "expected_output"]
+  routing_rule: "Controller-to-worker packets are invalid while enterprise_dispatch is active unless type is escalation_packet."
+  worker_rule: "Worker packets report to department leader; controller integrates only leader reports, verification packets, and escalation packets."
+approval_gates:
+  required_for: ["write", "deploy", "external_read", "external_write", "destructive_action", "model_tier_upgrade"]
+  record_fields: ["approval_id", "workflow_id", "requested_by", "authority", "scope", "decision", "decided_by", "evidence", "expires_at"]
+  missing_behavior: "Block or emit escalation_record; never silently continue."
+security:
+  path_guard: "Normalize repo-relative paths; reject traversal, .git, .codex, runtime_local, and deploy blocklist writes."
+  url_guard: "Network or URL use is policy-gated in v2.2.0 unless current tool/runtime evidence proves enforcement."
+  authority_guard: "A packet may not exceed its assignment authority; violations create escalation_record."
+collection:
+  inputs: ["department_report", "workflow_result", "verification_packet", "escalation_record"]
+  controller_rule: "Controller output integrates normalized reports only; raw worker chatter is excluded."
+  required_counts: ["packets", "results", "department_reports", "escalations", "missing", "invalid", "blocked"]
+  output_files: ["final-report.md", "collection-report.json"]
+simulation:
+  levels: ["level_1", "level_2", "level_3", "level_4", "level_5", "level_6"]
+  positive: "Level 1-3 require department_report output and no direct worker-to-controller integration."
+  guardrail: "Level 4 and level_6 pass only when invalid routing or authority/model-tier violations are blocked or escalated."
+  level_5: "Reserved; no runtime claim without explicit test definition."
+helper:
+  script: "scripts/agents-workflow.ps1"
+  actions: ["New", "Verify", "Collect", "SimulateDispatch", "NormalizeReport"]
+  validate_entry: "scripts/validate.ps1 remains the CI entry point."

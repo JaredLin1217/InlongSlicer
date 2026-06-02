@@ -1,7 +1,6 @@
 schema: agents-org/v2
 purpose: "Enterprise department map for optional two-layer dispatch."
 owns: "Departments, leader roles, worker role boundaries, reporting, and responsibility anchors."
-
 departments:
   executive_office:
     name: "Executive Office"
@@ -57,7 +56,6 @@ departments:
     allowed_worker_roles: "model_router, provider_reviewer, capability_tracker"
     report_target: controller
     default_responsibility: "Own model-tier mapping, provider fit, and future model replacement guidance."
-
 leader_registry:
   executive_lead:
     department: executive_office
@@ -86,13 +84,11 @@ leader_registry:
   provider_management_lead:
     department: provider_management
     default_model_tier: senior_review
-
 reporting:
   controller: "Repo controller/mainline"
   controller_rule: "Controller assigns work to department leaders only."
   leader_rule: "Department leaders may split internal worker tasks and must return one department report."
   worker_rule: "Workers report to their department leader unless escalation is required."
-
 validation:
   department_required_fields: "Each department requires leader_role, allowed_worker_roles, report_target, and default_responsibility."
   leader_reference_rule: "Every department leader_role must exist in leader_registry."

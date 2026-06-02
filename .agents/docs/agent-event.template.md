@@ -1,7 +1,5 @@
 # Agent Event
-
 ## Core
-
 - Event id:
 - Created at:
 - Created by:
@@ -17,9 +15,7 @@
 - Status:
 - Roster snapshot version:
 - Task:
-
 ## Scope / Ownership
-
 - Ownership:
 - Owned write scope:
 - Normalized owned write scope:
@@ -29,9 +25,7 @@
 - Shared read scope:
 - Allowed scope:
 - Forbidden scope:
-
 ## Work
-
 - Files inspected:
 - Files changed:
 - Project-local skills read:
@@ -43,9 +37,7 @@
 - Report hash:
 - Duplicate count:
 - No-progress count:
-
 ## Close / Boundary
-
 - Runtime enforcement:
 - Runtime enforcement evidence:
 - Boundary note:
@@ -70,9 +62,7 @@
 - Project-external reads:
 - Project-external writes:
 - Status event:
-
 ## Details
-
 - Summary:
 - Findings:
 - Verification:

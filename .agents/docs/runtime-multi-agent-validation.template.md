@@ -1,7 +1,5 @@
 # Runtime Multi-Agent Validation
-
 Use only after real employee runtime work is launched or authorized. Static policy checks are not runtime evidence.
-
 - Scope: Validation id | Date | Controller | User request | Claim scope
 - Runtime: Runtime id | Nickname | Mode | Role | Task | Runtime enforcement
 - Live evidence: Real employee runtime or authorized manual-detached evidence | Expected blocking behavior | Sidebar or user-control behavior

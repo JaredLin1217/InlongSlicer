@@ -11,10 +11,7 @@ route:
   deploy_or_release: {f: [".agents/docs/agents/deploy.yaml",".agents/docs/agents/verify.yaml"], v: release_deploy_push_audit}
   multi_agent: {f: [".agents/docs/agents/workflows.yaml",".agents/docs/agents/schemas.yaml",".agents/docs/agents/verify.yaml"], v: runtime_multi_agent}
   enterprise_dispatch: {f: [".agents/docs/agents/org.yaml",".agents/docs/agents/model-policy.yaml",".agents/docs/agents/dispatch.yaml",".agents/docs/agents/verify.yaml"], v: enterprise_dispatch}
+  workflow_artifact: {f: [".agents/docs/agents/workflow-artifacts.yaml",".agents/docs/agents/schemas.yaml",".agents/docs/agents/verify.yaml"], v: workflow_artifact}
   hard_isolation: {f: [".agents/docs/agents/policy.yaml",".agents/docs/agents/verify.yaml"], v: hard_isolation}
-rules:
-  - "classify->route->read f"
-  - "canonical YAML wins"
-  - "Do not load .agents/docs/templates/agents/**"
-  - "Never stage, deploy, or copy runtime_local"
+rules: ["classify->route->read f", "canonical YAML", "Do not load templates/**", "Never stage/deploy/copy runtime_local"]
 closeout: "Isolation: GM <used/not used> | GS <used/not used> | XR <none/paths> | XW <none/paths>"

@@ -1,9 +1,6 @@
 # Agent Assignment
-
 ## Explorer Brief
-
 Use for short read-only explorers.
-
 - Agent:
 - Mode:
 - Role: explorer
@@ -17,11 +14,8 @@ Use for short read-only explorers.
 - Verification:
 - Final report requirements:
 - Isolation requirements:
-
 Fast batch preset: reuse one brief per role, fill available runtime slots first, and use `scoring_explorer_report` for scoring/review explorers unless recovery or writes are involved.
-
 ## Compact Explorer Final
-
 - Agent:
 - Overall score:
 - Confidence:
@@ -31,9 +25,7 @@ Fast batch preset: reuse one brief per role, fill available runtime slots first,
 - Validity:
 - Verification:
 - Isolation line:
-
 ## Full Assignment
-
 - Status context:
 - Agent:
 - Runtime id:

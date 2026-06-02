@@ -1,7 +1,6 @@
 schema: agents-model-policy/v2
 purpose: "Tier-first model selection policy for enterprise dispatch."
 owns: "Model tiers, replaceable model mapping, department defaults, and review thresholds."
-
 tiers:
   low_fast:
     capability: "Simple ack, formatting, lightweight read-only review."
@@ -18,7 +17,6 @@ tiers:
   principal:
     capability: "Architecture, security-sensitive judgment, release approval, and high-risk escalation."
     risk_limit: "Still requires current evidence for hard-isolation or external enforcement claims."
-
 model_mapping:
   replaceable: "true"
   low_fast: "gpt-5.4-mini"
@@ -26,7 +24,6 @@ model_mapping:
   code_standard: "gpt-5.3-codex"
   senior_review: "gpt-5.4"
   principal: "gpt-5.5"
-
 department_bindings:
   executive_office: principal
   pmo: senior_review
@@ -37,7 +34,6 @@ department_bindings:
   security: principal
   documentation: low_fast
   provider_management: senior_review
-
 risk_rules:
   high_risk_min_tier: senior_review
   release_min_tier: principal
@@ -47,7 +43,6 @@ risk_rules:
   fallback_order: ["low_fast", "quick_code", "code_standard", "senior_review", "principal"]
   model_missing_behavior: "Use the next higher tier in fallback_order; never downgrade; if no higher mapped model is available, emit escalation_record and stop."
   provider_inventory_rule: "Unavailable or capability-mismatched mapped models are escalation_record conditions, not silent success."
-
 validation:
   tier_first_rule: "Departments bind to tiers first; concrete model ids are replaceable mapping values."
   binding_rule: "Every department in .agents/docs/agents/org.yaml must have one department_bindings entry."

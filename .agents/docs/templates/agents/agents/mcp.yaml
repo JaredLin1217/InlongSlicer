@@ -1,13 +1,11 @@
 schema: agents-mcp/v2
 purpose: "Canonical capability registry for optional MCP, plugin, browser, GitHub, and local-tool integrations."
 owns: "Capability discovery, permission boundaries, target portability, and evidence required before claiming tool-backed automation."
-
 principles:
   optional_by_default: "The workflow must remain usable without MCP servers, plugins, GitHub CLI, browser automation, or desktop-control tools."
   discover_before_use: "Use available tool discovery before relying on deferred MCP, plugin, automation, browser, thread, or GitHub capabilities."
   local_policy_boundary: "Tool availability is runtime state; do not store live tool output, tokens, accounts, thread ids, or target status in deployable templates."
   fallback_rule: "When a capability is unavailable, fall back to repo-local scripts and documented manual checkpoints instead of weakening policy gates."
-
 capability_classes:
   repo_local_scripts:
     required_for: ["validation", "deployment dry-run", "deployment write after authorization"]
@@ -32,12 +30,10 @@ capability_classes:
   mcp_servers:
     optional_for: ["domain-specific data sources", "thread control", "resource reads"]
     claim_rule: "Use project files as source of truth unless a server is explicitly the current-state source."
-
 deployment:
   deploy_policy: "Deploy this registry with core Agents rules so targets know capabilities are optional and runtime-specific."
   target_rule: "Do not copy provider MCP server configs, credentials, tool cache, plugin cache, browser state, GitHub auth, or automation records."
   target_adaptation: "A target may add its own MCP/server/plugin instructions after local verification, but those additions are target-owned."
-
 verification:
   required_paths:
     - "principles.optional_by_default"

@@ -1,5 +1,6 @@
 # Local generated Agents state
 .agents/runtime/
+.workflow/
 .agents/docs/agent-status.md
 .agents/docs/agent-events/
 .agents/docs/tmp-approval-*/

@@ -71,3 +71,6 @@ docs/runtime-multi-agent-validation/
 .DS_Store
 Thumbs.db
 .vscode/
+
+.agents/runtime/workflows/
+.workflow/
