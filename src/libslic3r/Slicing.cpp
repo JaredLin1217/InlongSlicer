@@ -101,7 +101,7 @@ SlicingParameters SlicingParameters::create_from_config(
         (support_bottom_z_gap == 0.0 || zero_topZ_contact);
 
     const bool zero_gap_interface_raft =
-        raft_z_gap == 0.0 || zero_topZ_contact;
+        raft_z_gap == 0.0;
 
     SlicingParameters params;
 

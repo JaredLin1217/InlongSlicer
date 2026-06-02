@@ -1030,7 +1030,29 @@ int generate_raft_contact(
         // Create the raft contact layer.
         const ExPolygons &lslices   = print_object.get_layer(0)->lslices;
         double            expansion = print_object.config().raft_expansion.value;
-        interface_placer.add_roof_unguarded(expansion > 0 ? expand(lslices, scaled<float>(expansion)) : to_polygons(lslices), raft_contact_layer_idx, 0);
+        if (print_object.config().raft_generate_bounding_box) {
+            BoundingBox bbox = get_extents(lslices);
+            if (bbox.defined) {
+                Polygons raft_contact_polygons { bbox.polygon() };
+                raft_contact_polygons.front().make_counter_clockwise();
+                if (expansion > 0)
+                    raft_contact_polygons = expand(raft_contact_polygons, scaled<float>(expansion));
+                interface_placer.add_roof_unguarded(std::move(raft_contact_polygons), raft_contact_layer_idx, 0);
+            }
+        } else if (print_object.config().raft_ignore_internal_contours) {
+            Polygons raft_contact_polygons;
+            raft_contact_polygons.reserve(lslices.size());
+            for (const ExPolygon &slice : lslices) {
+                Polygon contour = slice.contour;
+                contour.make_counter_clockwise();
+                raft_contact_polygons.emplace_back(std::move(contour));
+            }
+            if (expansion > 0)
+                raft_contact_polygons = expand(raft_contact_polygons, scaled<float>(expansion));
+            interface_placer.add_roof_unguarded(std::move(raft_contact_polygons), raft_contact_layer_idx, 0);
+        } else {
+            interface_placer.add_roof_unguarded(expansion > 0 ? expand(lslices, scaled<float>(expansion)) : to_polygons(lslices), raft_contact_layer_idx, 0);
+        }
     }
     return raft_contact_layer_idx;
 }

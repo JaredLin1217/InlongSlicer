@@ -5068,6 +5068,29 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(1.5));
 
+    def = this->add("raft_base_pattern", coEnum);
+    def->label = L("Raft support pattern");
+    def->category = L("Support");
+    def->tooltip = L("Line pattern for raft support layers.");
+    def->enum_keys_map = &ConfigOptionEnum<SupportMaterialPattern>::get_enum_values();
+    def->enum_values.push_back("rectilinear");
+    def->enum_values.push_back("rectilinear-grid");
+    def->enum_values.push_back("honeycomb");
+    def->enum_labels.push_back(L("Rectilinear"));
+    def->enum_labels.push_back(L("Rectilinear grid"));
+    def->enum_labels.push_back(L("Honeycomb"));
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionEnum<SupportMaterialPattern>(smpRectilinear));
+
+    def = this->add("raft_base_pattern_spacing", coFloat);
+    def->label = L("Raft line spacing");
+    def->category = L("Support");
+    def->tooltip = L("Spacing between raft support lines.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(2.0));
+
     def = this->add("raft_first_layer_density", coPercent);
     def->label = L("First layer density");
     def->category = L("Support");
@@ -5087,6 +5110,20 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     //BBS: change from 3.0 to 2.0
     def->set_default_value(new ConfigOptionFloat(2.0));
+
+    def = this->add("raft_ignore_internal_contours", coBool);
+    def->label = L("Ignore internal contours");
+    def->category = L("Support");
+    def->tooltip = L("Fill the raft area under the first object layer by ignoring holes and internal contours.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(true));
+
+    def = this->add("raft_generate_bounding_box", coBool);
+    def->label = L("Generate box raft");
+    def->category = L("Support");
+    def->tooltip = L("Generate the raft from the bounding box of the first object layer.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
 
     def = this->add("raft_layers", coInt);
     def->label = L("Raft layers");

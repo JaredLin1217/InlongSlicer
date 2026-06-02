@@ -33,6 +33,15 @@ inline InfillPattern support_interface_fill_pattern(
         (density > 0.95 ? ipRectilinear : ipSupportBase);
 }
 
+inline InfillPattern support_base_fill_pattern(
+    SupportMaterialPattern pattern,
+    coordf_t density,
+    bool with_sheath)
+{
+    return pattern == smpHoneycomb ? ipHoneycomb :
+        density > 0.95 || with_sheath ? ipRectilinear : ipSupportBase;
+}
+
 struct SupportParameters {
     SupportParameters() = delete;
     SupportParameters(const PrintObject& object)
@@ -149,10 +158,12 @@ struct SupportParameters {
         this->bottom_contact_spacing = bottom_contact_config_spacing + this->support_material_interface_flow.spacing();
         this->bottom_contact_density = std::min(1., this->support_material_interface_flow.spacing() / this->bottom_contact_spacing);
         // INLONG: force solid raft interface when ironing (top spacing).
-        double raft_interface_spacing = (this->ironing ? 0 : object_config.support_interface_spacing.value) + this->raft_interface_flow.spacing();
+        double raft_interface_spacing = (this->ironing ? 0 : object_config.raft_base_pattern_spacing.value) + this->raft_interface_flow.spacing();
         this->raft_interface_density = std::min(1., this->raft_interface_flow.spacing() / raft_interface_spacing);
         this->support_spacing = object_config.support_base_pattern_spacing.value + this->support_material_flow.spacing();
         this->support_density = std::min(1., this->support_material_flow.spacing() / this->support_spacing);
+        this->raft_base_spacing = object_config.raft_base_pattern_spacing.value + this->support_material_flow.spacing();
+        this->raft_base_density = std::min(1., this->support_material_flow.spacing() / this->raft_base_spacing);
         if (object_config.support_interface_top_layers.value == 0) {
             // No interface layers allowed, print everything with the base support pattern.
             this->top_interface_spacing = this->support_spacing;
@@ -163,12 +174,11 @@ struct SupportParameters {
 
         SupportMaterialPattern  support_pattern = object_config.support_base_pattern;
         this->with_sheath = object_config.tree_support_wall_count > 0;
-        this->base_fill_pattern =
-            support_pattern == smpHoneycomb ? ipHoneycomb :
-            this->support_density > 0.95 || this->with_sheath ? ipRectilinear : ipSupportBase;
+        this->base_fill_pattern = support_base_fill_pattern(support_pattern, this->support_density, this->with_sheath);
+        this->raft_base_fill_pattern = support_base_fill_pattern(object_config.raft_base_pattern, this->raft_base_density, false);
         this->interface_fill_pattern = support_interface_fill_pattern(
             this->interface_pattern, this->top_interface_density, this->zero_gap_interface_top);
-        this->raft_interface_fill_pattern = this->raft_interface_density > 0.95 ? ipRectilinear : ipSupportBase;
+        this->raft_interface_fill_pattern = this->raft_base_fill_pattern;
         this->top_contact_fill_pattern = support_interface_fill_pattern(
             this->top_contact_pattern, this->top_contact_density, this->zero_gap_interface_top);
         this->bottom_contact_fill_pattern = support_interface_fill_pattern(
@@ -298,6 +308,9 @@ struct SupportParameters {
     coordf_t 				support_spacing;
     // Density of the base support layers.
     coordf_t 				support_density;
+    coordf_t 				raft_base_spacing;
+    // Density of the base raft layers.
+    coordf_t 				raft_base_density;
     SupportMaterialStyle    support_style = smsDefault;
     SupportMaterialInterfacePattern interface_pattern = smipAuto;
     SupportMaterialInterfacePattern top_contact_pattern = smipAuto;
@@ -305,6 +318,8 @@ struct SupportParameters {
 
     // Pattern of the sparse infill including sparse raft layers.
     InfillPattern           base_fill_pattern;
+    // Pattern of sparse raft support layers.
+    InfillPattern           raft_base_fill_pattern;
     // Pattern of the top / bottom interface layers.
     InfillPattern           interface_fill_pattern;
     // Pattern of the raft interface and contact layers.

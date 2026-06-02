@@ -1429,6 +1429,9 @@ void generate_support_toolpaths(
     std::vector<float>      angles { support_params.base_angle };
     if (config.support_base_pattern == smpRectilinearGrid)
         angles.push_back(support_params.interface_angle);
+    std::vector<float>      raft_angles { support_params.raft_angle_base };
+    if (config.raft_base_pattern == smpRectilinearGrid)
+        raft_angles.push_back(support_params.raft_angle_interface);
 
     BoundingBox bbox_object(Point(-scale_(1.), -scale_(1.0)), Point(scale_(1.), scale_(1.)));
 
@@ -1440,7 +1443,7 @@ void generate_support_toolpaths(
 
     tbb::parallel_for(tbb::blocked_range<size_t>(0, n_raft_layers),
         [&support_layers, &raft_layers, &intermediate_layers, &config, &support_params, &slicing_params,
-            &bbox_object, link_max_length_factor]
+            &bbox_object, &raft_angles, link_max_length_factor]
             (const tbb::blocked_range<size_t>& range) {
         for (size_t support_layer_id = range.begin(); support_layer_id < range.end(); ++ support_layer_id)
         {
@@ -1450,7 +1453,7 @@ void generate_support_toolpaths(
             SupportGeneratorLayer      &raft_layer    = *raft_layers[support_layer_id];
 
             std::unique_ptr<Fill> filler_interface = std::unique_ptr<Fill>(Fill::new_from_type(support_params.raft_interface_fill_pattern));
-            std::unique_ptr<Fill> filler_support   = std::unique_ptr<Fill>(Fill::new_from_type(support_params.base_fill_pattern));
+            std::unique_ptr<Fill> filler_support   = std::unique_ptr<Fill>(Fill::new_from_type(support_params.raft_base_fill_pattern));
             filler_interface->set_bounding_box(bbox_object);
             filler_support->set_bounding_box(bbox_object);
 
@@ -1472,16 +1475,16 @@ void generate_support_toolpaths(
                 assert(!raft_layer.bridging);
                 if (! to_infill_polygons.empty()) {
                     Fill *filler = filler_support.get();
-                    filler->angle = support_params.raft_angle_base;
+                    filler->angle = raft_angles[support_layer_id % raft_angles.size()];
                     filler->spacing = support_params.support_material_flow.spacing();
-                    filler->link_max_length = coord_t(scale_(filler->spacing * link_max_length_factor / support_params.support_density));
+                    filler->link_max_length = coord_t(scale_(filler->spacing * link_max_length_factor / support_params.raft_base_density));
                     fill_expolygons_with_sheath_generate_paths(
                         // Destination
                         support_layer.support_fills.entities,
                         // Regions to fill
                         tree_polygons.empty() ? to_infill_polygons : diff(to_infill_polygons, tree_polygons),
                         // Filler and its parameters
-                        filler, float(support_params.support_density),
+                        filler, float(support_params.raft_base_density),
                         // Extrusion parameters
                         ExtrusionRole::erSupportMaterial, flow,
                         support_params, support_params.with_sheath, false);

@@ -792,7 +792,12 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     toggle_field("inner_wall_line_width", have_perimeters || have_skirt || have_brim);
     toggle_field("support_filament", have_support_material || have_skirt);
 
-    toggle_line("raft_contact_distance", have_raft && !have_support_soluble);
+    toggle_line("raft_ignore_internal_contours", have_raft);
+    toggle_line("raft_generate_bounding_box", have_raft);
+    toggle_line("raft_contact_distance", have_raft);
+    toggle_line("raft_expansion", have_raft);
+    toggle_line("raft_base_pattern", have_raft);
+    toggle_line("raft_base_pattern_spacing", have_raft);
 
     // Inlong: First-layer density is available for supports broadly.
     toggle_field("raft_first_layer_density", have_support_material);

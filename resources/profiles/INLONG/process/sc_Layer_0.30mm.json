@@ -13,5 +13,11 @@
     "min_skirt_length": "5",
     "skirt_distance": "0",
     "support_top_z_distance": "0.255",
-    "support_bottom_z_distance": "0.255"
+    "support_bottom_z_distance": "0.255",
+    "raft_contact_distance": "0.255",
+    "raft_expansion": "2",
+    "raft_base_pattern": "rectilinear",
+    "raft_base_pattern_spacing": "0.05",
+    "raft_generate_bounding_box": "1",
+    "raft_ignore_internal_contours": "1"
 }

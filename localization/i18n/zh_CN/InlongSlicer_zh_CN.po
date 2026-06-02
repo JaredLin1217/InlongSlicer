@@ -15740,6 +15740,18 @@ msgstr "筏层扩展"
 msgid "Expand all raft layers in XY plane."
 msgstr "在XY平面扩展所有筏层"
 
+msgid "Raft support pattern"
+msgstr "筏层支撑样式"
+
+msgid "Line pattern for raft support layers."
+msgstr "筏层支撑走线样式。"
+
+msgid "Raft line spacing"
+msgstr "筏层走线间距"
+
+msgid "Spacing between raft support lines."
+msgstr "筏层支撑走线之间的间距。"
+
 msgid "First layer density"
 msgstr "首层密度"
 
@@ -15751,6 +15763,18 @@ msgstr "首层扩展"
 
 msgid "Expand the first raft or support layer to improve bed plate adhesion."
 msgstr "扩展筏和支撑的首层可以改善和热床的粘接。"
+
+msgid "Ignore internal contours"
+msgstr "忽略内部轮廓"
+
+msgid "Fill the raft area under the first object layer by ignoring holes and internal contours."
+msgstr "忽略孔洞与内部轮廓，填满第一个物件层下方的筏层区域。"
+
+msgid "Generate box raft"
+msgstr "生成方框筏层"
+
+msgid "Generate the raft from the bounding box of the first object layer."
+msgstr "依照第一个物件层的最大外接方框生成筏层。"
 
 msgid "Raft layers"
 msgstr "筏层"
