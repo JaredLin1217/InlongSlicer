@@ -1,3 +1,8 @@
+---
+name: "inlong-branding-migration"
+description: "Preserve InlongSlicer branding during upstream OrcaSlicer updates"
+---
+
 # Inlong Branding Migration
 
 Use this skill whenever work may bring upstream OrcaSlicer naming, assets,
