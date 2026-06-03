@@ -11,5 +11,5 @@ Use only after real employee runtime work is launched or authorized. Static poli
 - Boundary: Project-local skills read | System/global resources | Global Memory | Global Skill | Project-external reads | Project-external writes
 - Work result: Files changed | Verification | Risks | Git status after employee work | Out-of-scope changes
 - Events: Ledger event | Poll event | Report event | Close event | Reconciled event | Matching snapshot version
-- Close/cleanup: Runtime close attempted | Runtime close result | Official list result | History cleanup requested | History cleanup authorization | History cleanup target ids | History cleanup sources | History cleanup result | History cleanup evidence | Desktop UI refresh result
+- Close/cleanup: Runtime close attempted | Runtime close result | Official list result | SQLite thread state result | Global unread state result | Rollout residue result | Delayed cleanup verification | History cleanup requested | History cleanup authorization | History cleanup target ids | History cleanup sources | History cleanup result | History cleanup evidence | Desktop UI refresh result
 - Result: Pass condition met | Remaining runtime risk | Controller conclusion

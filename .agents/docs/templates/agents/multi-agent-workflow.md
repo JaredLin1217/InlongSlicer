@@ -37,15 +37,20 @@ Prefer official controls first: runtime close, `thread/list` by cwd/source kind,
 official hard-delete thread API or sidebar refresh API.
 If authorized cleanup is needed, match only current-project closed subagent
 rows/files after normalizing Windows paths. Do not create backup copies; record
-pre-delete counts, hard-delete matching DB rows, unread state, and rollout
-files, then verify zero residue. Treat `%USERPROFILE%/.codex/state_<n>.sqlite`
-and matching rollout files under `%USERPROFILE%/.codex/sessions` and
-`archived_sessions` as external runtime state; report reads/writes/deletes as
-XR/XW. Never delete parent/controller/user threads, unrelated rollout files,
-backup/copy DB files, or unrelated project history.
-If sidebar residue remains after official lists, DB rows, and rollout files are
-clean, reload/restart Codex UI before any cache-cleanup claim. Shutdown/cache
-cleanup needs explicit authorization.
+pre-delete counts. In `%USERPROFILE%/.codex/state_<n>.sqlite`, delete matching
+child `thread_spawn_edges` before matching child `threads`; preserve the
+parent/controller/user thread. Clear matching unread ids from
+`%USERPROFILE%/.codex/.codex-global-state*.json` and matching child rollout
+files under `%USERPROFILE%/.codex/sessions` and `archived_sessions`. Because the
+app can rewrite unread state once, repeat unread cleanup if it reappears, then
+run delayed zero-hit verification. Treat these as external runtime state; report
+reads/writes/deletes as XR/XW. Never delete parent/controller/user threads,
+unrelated rollout files, backup/copy DB files, or unrelated project history.
+A clean roster claim requires runtime close/inactive proof, official-list zero,
+sqlite edge/thread zero, global unread zero, rollout zero, and delayed zero
+verification. If sidebar residue remains after those proofs, reload/restart
+Codex UI before any cache-cleanup claim. Shutdown/cache cleanup needs explicit
+authorization.
 ## Scoring Batches
 Default to 3 read-only scorers. Expand to 5 only if score spread exceeds 10
 points or top issues conflict; hard cap at 7, or 10 with explicit approval.

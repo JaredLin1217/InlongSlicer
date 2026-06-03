@@ -4,8 +4,8 @@ owns: "Deployment modes, allowlists, blocklists, validation, and source/target o
 boundary:
   requires: "explicit user authorization for exact target path and write action"
   method: "inspect target, then copy/adapt allowlisted files"
-  target_owns: ["Codex App policy", "local environment", "agent ledger", "agent status", "workflow artifacts", "memory entries", "commits", "remotes", "deployment history"]
-  source_must_not_store: "target status, employee ledger/history, workflow artifacts, .workflow imports, commits, remotes, or deployment results"
+  target_owns: ["Codex App policy", "local environment", "agent ledger", "agent status", "workflow artifacts", "compact events", "memory entries", "commits", "remotes", "deployment history"]
+  source_must_not_store: "target status, employee ledger/history, workflow artifacts, .workflow imports, compact events, commits, remotes, or deployment results"
 target_layout:
   detect_first: ["AGENTS.md routes", "docs/agents", ".agents/docs/agents", ".agents/skills"]
   root_docs: "Use docs/agents and docs/runbooks when the target routes there or has no Agents layout."
@@ -91,6 +91,8 @@ deployable_by_mode:
       to: ".agents/docs/agents/workflows.yaml"
     - from: ".agents/docs/templates/agents/agents/workflow-artifacts.yaml"
       to: ".agents/docs/agents/workflow-artifacts.yaml"
+    - from: ".agents/docs/templates/agents/agents/context-compact.yaml"
+      to: ".agents/docs/agents/context-compact.yaml"
     - from: ".agents/docs/templates/agents/agents/schemas.yaml"
       to: ".agents/docs/agents/schemas.yaml"
     - from: ".agents/docs/templates/agents/agents/deploy.yaml"
@@ -148,12 +150,15 @@ deployable_by_mode:
     recursive_template_bundle: "Copy/adapt .agents/docs/templates/agents/** only when the target should redeploy this workflow later."
 do_not_deploy:
   workflow_artifact_rule: "Block .agents/runtime/workflows/ and .workflow/ from deploy, release, and template copy operations."
+  context_compact_rule: "Block .agents/runtime/compact-events.jsonl from deploy, release, and template copy operations."
+  context_compact_hard_fail: "Context compact runtime events copied by default."
   paths:
     - "docs/agent-status.md"
     - "docs/agent-events/"
     - ".agents/docs/agent-status.md"
     - ".agents/docs/agent-events/"
     - ".agents/runtime/"
+    - ".agents/runtime/compact-events.jsonl"
     - ".agents/runtime/workflows/"
     - ".workflow/"
     - "docs/tmp-approval-*/"
@@ -170,7 +175,7 @@ do_not_deploy:
     - ".agents/docs/project-memory.md from the template-provider repository"
     - ".agents/docs/memory/index.md from the template-provider repository"
     - ".agents/docs/templates/agents/ from the template-provider repository unless template_provider_mode is selected"
-  categories: ["source commits/remotes/tags/branches/push status", "source employee ledger/status/validation/deployment history", "source workflow artifacts", "source memory rows/entries", "source temp cache", "filled evidence records", "generated/cache/build/vendor/runtime output"]
+  categories: ["source commits/remotes/tags/branches/push status", "source employee ledger/status/validation/deployment history", "source workflow artifacts", "source compact events", "source memory rows/entries", "source temp cache", "filled evidence records", "generated/cache/build/vendor/runtime output"]
 case_by_case:
   - "docs/decisions/: copy only adopted decisions."
   - "docs/memory/entries/: create target-specific entries after target verification."
@@ -198,6 +203,7 @@ hard_fail_gates:
   - "Target state stored in provider repo."
   - "Blocklisted file copied by default."
   - "Workflow artifact runtime or .workflow import copied by default."
+  - "Context compact runtime events copied by default."
   - "Deployment or upgrade attempts OS permission, ACL, ownership, or .git metadata repair."
   - "Deployment script write into the provider/source repo."
   - "Target-specific claim without target inspection."

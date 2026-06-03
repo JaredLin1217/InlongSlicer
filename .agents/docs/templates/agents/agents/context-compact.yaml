@@ -1,0 +1,30 @@
+schema: agents-context-compact/v1
+purpose: "Contract for Codex auto-compaction, handoff, and resume summaries."
+owns: "Compact context preservation, trigger guards, and runtime-only event boundaries."
+trigger_when:
+  include: ["manual compact request", "auto context compaction", "resume or handoff", "subagent closeout", "pre-commit or pre-deploy summary"]
+  route_signal: "Use context_compact only when user asks about compaction or a compact/resume/handoff artifact is created, verified, collected, or normalized."
+do_not_trigger_for: ["answer-only with no state claim", "ordinary scoped edit", "plain deploy", "enterprise dispatch without compact or handoff work"]
+summary_contract:
+  required_fields: ["active_goal", "latest_user_request", "current_route", "changed_files", "pending_actions", "verification_state", "open_risks", "external_access", "subagents_open", "next_step", "do_not_forget", "isolation"]
+  freshness_rule: "latest_user_request must be concrete and supersede older requests."
+  minimality_rule: "Keep only operational facts needed to continue; omit narrative, raw transcript, and raw worker chatter."
+  loss_rule: "If uncertain, mark unknown and list the exact file or state to recheck."
+thread_state:
+  source_order: ["latest user request", "active goal if present", "git/status evidence", "changed files", "verification output", "open employee/runtime evidence"]
+  preserve: ["route", "authorization scope", "external paths", "model tier decisions", "cleanup status", "blocked conditions"]
+  discard: ["older superseded instructions", "raw worker chatter", "long command output", "unverified speculation"]
+auto_compact:
+  before: ["long workflow handoff", "subagent integration", "pre-commit when many files changed", "pre-deploy when target auth matters"]
+  after: ["employee closeout", "verification pass or fail", "risk decision", "route switch after user redirect"]
+  reject_when: ["missing latest_user_request", "missing changed_files when files changed", "unclosed subagents without risk entry", "raw transcript included", "external access omitted"]
+runtime_events:
+  optional_path: ".agents/runtime/compact-events.jsonl"
+  git_rule: "Runtime compact events stay ignored; never stage, deploy, release, or copy."
+  event_fields: ["event_id", "trigger", "thread_source", "workflow_id", "summary_path", "created_at", "verification", "risks"]
+  trigger_values: ["manual", "auto", "handoff", "subagent_closeout", "pre_commit", "pre_deploy", "route_switch"]
+subagent_rule: "Closeout summaries must record requested, spawned, completed, and closed counts or state no employees were spawned."
+approval_rule: "Do not use compact summaries as approval; preserve the approval gate or escalation record reference."
+verification:
+  profile: "context_compact"
+  pass_when: ["required fields present", "no raw transcript", "current request preserved", "open risks explicit", "runtime events remain local"]

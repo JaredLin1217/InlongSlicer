@@ -1,11 +1,18 @@
 # Local generated Agents state
 .agents/runtime/
+.agents/runtime/workflows/
 .workflow/
+docs/agent-status.md
+docs/agent-events/
 .agents/docs/agent-status.md
 .agents/docs/agent-events/
+docs/tmp-approval-*/
 .agents/docs/tmp-approval-*/
+docs/hard-isolation-evidence/
 .agents/docs/hard-isolation-evidence/
+docs/runtime-multi-agent-validation/
 .agents/docs/runtime-multi-agent-validation/
+.codex/config.toml
 .codex/environments/environment.toml
 
 # Optional local OS/editor noise
