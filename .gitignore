@@ -74,3 +74,11 @@ Thumbs.db
 
 .agents/runtime/workflows/
 .workflow/
+
+.agents/runtime/collaborators.jsonl
+.agents/runtime/executions/
+.agents/runtime/knowledge/
+.agents/runtime/route-packs/
+.agents/runtime/tool-evidence/
+.agents/runtime/deployments/
+.codex/environments/*.toml

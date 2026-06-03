@@ -1,6 +1,12 @@
 # Local generated Agents state
 .agents/runtime/
+.agents/runtime/collaborators.jsonl
 .agents/runtime/workflows/
+.agents/runtime/executions/
+.agents/runtime/knowledge/
+.agents/runtime/route-packs/
+.agents/runtime/tool-evidence/
+.agents/runtime/deployments/
 .workflow/
 docs/agent-status.md
 docs/agent-events/
@@ -14,6 +20,7 @@ docs/runtime-multi-agent-validation/
 .agents/docs/runtime-multi-agent-validation/
 .codex/config.toml
 .codex/environments/environment.toml
+.codex/environments/*.toml
 
 # Optional local OS/editor noise
 .DS_Store

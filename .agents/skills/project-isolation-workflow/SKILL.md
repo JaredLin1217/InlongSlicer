@@ -1,21 +1,21 @@
----
+﻿---
 name: project-isolation-workflow
-description: Maintain repo-local Agents rules, templates, memory, deployment, and multi-agent workflows.
+description: Repo-local Agents rules, templates, memory, deploy.
 ---
 # Project Isolation Workflow
-Token-min router for isolation, memory, deployment, multi-agent, handoff, skills, maintenance. Start `.agents/docs/agents/ai-runtime.yaml`; canonical YAML wins.
+Token-min router for isolation, memory, deploy, agents, handoff, skills, maintenance. Start `ai-runtime.yaml`; canonical YAML wins.
 ## Route
 - `.agents/docs/agents/ai-runtime.yaml`: minimal files.
 - `.agents/docs/agents/workflows.yaml`: route, progress, employees.
 - `.agents/docs/agents/policy.yaml`: isolation, authority, closeout.
 - `.agents/docs/agents/verify.yaml`: proof profile.
 - `.agents/docs/agents/deploy.yaml`: authorized deployment.
-- Deploy: preserve target layout; write only `deployed_file_set`; validate/report legacy separately.
+- Deploy: preserve layout; write only `deployed_file_set`; report historical files.
 - Memory: read relevant `.agents/docs/memory/index.md` rows only.
 ## Employee Summary
 - Exact read/write scope; explorers read-only; workers need exclusive normalized write scope.
 - Use `.agents/runtime/agent-ledger.jsonl` only for recovery; temp roster only when authorized.
-- Runtime cleanup/hiring/scoring: expand `.agents/docs/agents/workflows.yaml`; dispatch closeout runs `runtime.quiet_cleanup` for current parent/cwd closed subagent ids; no backups.
+- Runtime cleanup/hiring/scoring: expand `workflows.yaml`; closeout runs `runtime.quiet_cleanup` for current parent/cwd closed subagent runtime ids, never sidebar nicknames; clear sqlite, session index, unread state, and rollouts; no backups.
 - Broader dismissal/cleanup follows `runtime.sidebar_cleanup_success_path` with exact authorization and evidence.
 ## Guardrails
 - Project skills stay under `.agents/skills/`.

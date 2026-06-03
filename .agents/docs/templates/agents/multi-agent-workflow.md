@@ -39,7 +39,8 @@ If authorized cleanup is needed, match only current-project closed subagent
 rows/files after normalizing Windows paths. Do not create backup copies; record
 pre-delete counts. In `%USERPROFILE%/.codex/state_<n>.sqlite`, delete matching
 child `thread_spawn_edges` before matching child `threads`; preserve the
-parent/controller/user thread. Clear matching unread ids from
+parent/controller/user thread. Remove matching rows from
+`%USERPROFILE%/.codex/session_index.jsonl`. Clear matching unread ids from
 `%USERPROFILE%/.codex/.codex-global-state*.json` and matching child rollout
 files under `%USERPROFILE%/.codex/sessions` and `archived_sessions`. Because the
 app can rewrite unread state once, repeat unread cleanup if it reappears, then
@@ -47,9 +48,10 @@ run delayed zero-hit verification. Treat these as external runtime state; report
 reads/writes/deletes as XR/XW. Never delete parent/controller/user threads,
 unrelated rollout files, backup/copy DB files, or unrelated project history.
 A clean roster claim requires runtime close/inactive proof, official-list zero,
-sqlite edge/thread zero, global unread zero, rollout zero, and delayed zero
-verification. If sidebar residue remains after those proofs, reload/restart
-Codex UI before any cache-cleanup claim. Shutdown/cache cleanup needs explicit
+sqlite edge/thread zero, session_index zero, global unread zero, rollout zero,
+and delayed zero verification. Cleanup targets exact runtime ids, never sidebar
+nicknames. If sidebar residue remains after those proofs, reload/restart Codex
+UI before any cache-cleanup claim. Shutdown/cache cleanup needs explicit
 authorization.
 ## Scoring Batches
 Default to 3 read-only scorers. Expand to 5 only if score spread exceeds 10

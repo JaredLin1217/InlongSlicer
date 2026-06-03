@@ -1,4 +1,4 @@
-# Hard Isolation Evidence
+﻿# Hard Isolation Evidence
 If any required field cannot be verified, classify the task as `behavioral-only`.
 ## Request
 - Task:

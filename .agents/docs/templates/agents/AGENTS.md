@@ -1,4 +1,4 @@
-# Project Operating Rules
+﻿# Project Operating Rules
 Repo-local rules for isolated deployable Agents workflow. Durable rules/docs/skills/templates are English-only. Read `.agents/docs/agents/ai-runtime.yaml` first; expand only named canonical YAML.
 ## Prefix
 - Start every visible assistant response with `$$`, unless higher-priority tool/system protocol conflicts.

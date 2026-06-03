@@ -1,4 +1,4 @@
-# Project Memory
+﻿# Project Memory
 Target-local substitute for global Codex Memory.
 - Policy: `.agents/docs/agents/workflows.yaml`
 - Index: `.agents/docs/memory/index.md`

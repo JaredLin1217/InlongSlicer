@@ -1,4 +1,4 @@
-# Project Memory Entry Template
+﻿# Project Memory Entry Template
 ID: <memory-id>
 Date: <yyyy-mm-dd>
 Title: <short title>

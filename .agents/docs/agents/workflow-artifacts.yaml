@@ -1,5 +1,5 @@
 schema: agents-workflow-artifacts/v1
-purpose: "Local supervised workflow artifacts for optional executable evidence."
+purpose: "Local supervised workflow artifacts as runtime execution evidence."
 owns: "Workflow instance files, packets, approvals, collection, simulation, and runtime storage boundaries."
 trigger_when:
   - "User requests workflow artifacts, workflow packets, approval gates, collection, or dispatch simulation."
@@ -20,7 +20,7 @@ states:
   start: "drafted"
   terminal: ["completed", "blocked", "stopped"]
 workflow_instance:
-  required_fields: ["workflow_id", "version", "objective", "owner", "status", "created_at", "artifact_root", "approval_policy", "isolation"]
+  required_fields: ["workflow_id", "version", "objective", "owner", "status", "created_at", "artifact_root", "approval_policy", "execution_run_ref", "isolation"]
   artifact_root_rule: "Must resolve under storage.live_root or storage.import_alias and remain runtime-local."
 packets:
   types: ["department_leader_assignment", "worker_packet", "verification_packet", "escalation_packet"]
@@ -33,8 +33,11 @@ approval_gates:
   missing_behavior: "Block or emit escalation_record; never silently continue."
 security:
   path_guard: "Normalize repo-relative paths; reject traversal, .git, .codex, runtime_local, and deploy blocklist writes."
-  url_guard: "Network or URL use is policy-gated in v2.2.0 unless current tool/runtime evidence proves enforcement."
+  url_guard: "Network or URL use is policy-gated unless current tool/runtime evidence proves enforcement."
   authority_guard: "A packet may not exceed its assignment authority; violations create escalation_record."
+runtime_execution:
+  source: ".agents/docs/agents/runtime-execution.yaml"
+  rule: "Workflow state, approval gates, packet results, collection, and cleanup may reference execution_run_ref evidence."
 collection:
   inputs: ["department_report", "workflow_result", "verification_packet", "escalation_record"]
   controller_rule: "Controller output integrates normalized reports only; raw worker chatter is excluded."

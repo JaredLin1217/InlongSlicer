@@ -1,4 +1,4 @@
-# Session Handoff
+﻿# Session Handoff
 Use when work may continue across sessions, windows, employees, or app restarts.
 Trigger on session/window/app restart, employee recovery, or uncertain continuation state.
 1. Inspect git state.

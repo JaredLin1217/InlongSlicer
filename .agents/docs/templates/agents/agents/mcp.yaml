@@ -1,5 +1,5 @@
 schema: agents-mcp/v2
-purpose: "Canonical capability registry for optional MCP, plugin, browser, GitHub, and local-tool integrations."
+purpose: "Canonical capability registry for optional MCP, plugin, browser, GitHub, thread, and local-tool integrations."
 owns: "Capability discovery, permission boundaries, target portability, and evidence required before claiming tool-backed automation."
 principles:
   optional_by_default: "The workflow must remain usable without MCP servers, plugins, GitHub CLI, browser automation, or desktop-control tools."
@@ -30,9 +30,13 @@ capability_classes:
   mcp_servers:
     optional_for: ["domain-specific data sources", "thread control", "resource reads"]
     claim_rule: "Use project files as source of truth unless a server is explicitly the current-state source."
+  thread_management:
+    optional_for: ["collaborator window create", "collaborator window rename", "collaborator window archive", "collaborator active-state inspection"]
+    source: "Runtime-discovered Codex thread tools only."
+    claim_rule: "Thread ids, titles, active lists, archive evidence, and close evidence are runtime-only; never write them into deployable templates, release packages, public docs, or durable rules."
 deployment:
   deploy_policy: "Deploy this registry with core Agents rules so targets know capabilities are optional and runtime-specific."
-  target_rule: "Do not copy provider MCP server configs, credentials, tool cache, plugin cache, browser state, GitHub auth, or automation records."
+  target_rule: "Do not copy provider MCP server configs, credentials, tool cache, plugin cache, browser state, GitHub auth, automation records, live thread ids, collaborator window state, or .agents/runtime/collaborators.jsonl."
   target_adaptation: "A target may add its own MCP/server/plugin instructions after local verification, but those additions are target-owned."
 verification:
   required_paths:
@@ -41,8 +45,11 @@ verification:
     - "deployment.target_rule"
     - "capability_classes.repo_local_scripts"
     - "capability_classes.openai_docs"
+    - "capability_classes.thread_management"
   failure_modes:
     - "A deployable rule assumes a tool is always available."
     - "A template contains provider runtime ids, tokens, credentials, or tool cache paths."
+    - "A template, deploy package, or release package contains live thread ids or collaborator window runtime state."
+    - "A close/archive claim is made without runtime thread evidence."
     - "A claim says automated when only a manual fallback was available."
     - "OpenAI-facing guidance changes without current official OpenAI documentation evidence."

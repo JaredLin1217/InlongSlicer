@@ -1,0 +1,42 @@
+schema: agents-knowledge-footprint/v1
+purpose: "Small recoverable evidence record for cross-window resume after context compaction."
+storage:
+  root: ".agents/runtime/knowledge/<footprint_id>.json"
+  tracked: false
+  deployable: false
+record:
+  required_fields:
+    - "footprint_id"
+    - "scope"
+    - "opened_files"
+    - "evidence_refs"
+    - "gaps"
+    - "conclusion"
+    - "resume_pointer"
+opened_files:
+  fields:
+    - "path"
+    - "reason"
+    - "hash"
+retention:
+  keep:
+    - "facts needed to resume"
+    - "decisions"
+    - "validated evidence refs"
+    - "known gaps"
+  drop:
+    - "full transcript"
+    - "raw worker chatter"
+    - "provider session"
+    - "live thread id"
+resume_pointer:
+  required_fields:
+    - "route_id"
+    - "next_action"
+    - "minimum_files_to_open"
+rules:
+  - "A footprint summarizes evidence; it is not memory or a transcript."
+  - "Every compaction must state retained facts, dropped details, risk, and resume pointer."
+  - "Footprints remain runtime-local unless converted into durable docs by explicit user request."
+validation:
+  profile: "knowledge_footprint"

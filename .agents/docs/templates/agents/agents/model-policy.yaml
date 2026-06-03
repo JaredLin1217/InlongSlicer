@@ -1,4 +1,4 @@
-schema: agents-model-policy/v2
+﻿schema: agents-model-policy/v2
 purpose: "Tier-first model selection policy for enterprise dispatch."
 owns: "Model tiers, replaceable model mapping, department defaults, and review thresholds."
 tiers:

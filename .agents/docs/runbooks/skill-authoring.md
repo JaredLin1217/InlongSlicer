@@ -1,4 +1,4 @@
-# Skill Authoring
+﻿# Skill Authoring
 Use before creating or updating project-local skills.
 1. Create only repeatable workflows that do not belong in `AGENTS.md`, memory, decisions, runbooks, or Agents governance rules.
 2. Store under `.agents/skills/<skill-name>/`.

@@ -3,11 +3,13 @@ purpose: "Enterprise two-layer dispatch protocol for controller, leaders, and wo
 owns: "Controller assignment, internal dispatch, worker reporting, department report, and escalation records."
 protocol:
   name: enterprise_dispatch
-  overlay: "optional"
+  layer: "core_runtime"
   controller_target_rule: "Controller assigns only to department leaders."
+  collaborator_target_rule: "Collaborator windows remain controller-to-department-leader only; worker windows need explicit override plus escalation_record."
   leader_internal_rule: "Department leaders choose internal workers and scopes."
-  simple_task_rule: "Do not trigger this overlay for answer-only, ordinary scoped edits, or plain deploy flow."
+  simple_task_rule: "Do not trigger enterprise dispatch for answer-only, ordinary scoped edits, or plain deploy flow."
   canonical_source_rule: "This file owns enterprise dispatch semantics; workflows.yaml may only summarize this route."
+  execution_evidence_rule: "Assignments, leader reports, escalations, and cleanup may reference runtime execution runs."
 runtime_test_matrix:
   level_1:
     kind: "pass"
@@ -41,6 +43,7 @@ runtime_test_matrix:
     pass_when: "blocked, upgraded to senior_review, or escalation_record present; silent acceptance fails"
 controller_assignment:
   target: "department leader"
+  collaborator_window_target: "department_leader_window"
   required_fields:
     assignment_id: ""
     department: ""
@@ -52,6 +55,7 @@ controller_assignment:
     model_tier: ""
     report_back: "department_report"
   forbidden: "Controller does not assign worker tasks directly when enterprise_dispatch is active."
+  collaborator_rule: "Controller may address a named collaborator only when it maps to the same department and leader_role."
 department_internal_dispatch:
   owner: "department leader"
   allowed_targets: "allowed_worker_roles from .agents/docs/agents/org.yaml"
@@ -75,6 +79,7 @@ department_report:
     assignment_id: ""
     department: ""
     leader_role: ""
+    execution_run_ref: ""
     worker_count: ""
     objective_result: "completed | partial | blocked | stopped"
     integrated_summary: ""
@@ -85,6 +90,7 @@ department_report:
     isolation: ""
   field_contract:
     worker_count: "integer >= 0"
+    execution_run_ref: "runtime execution run id or none"
     objective_result: "completed | partial | blocked | stopped"
     integrated_summary: "string or compact object"
     files_changed: "array of repo paths or none"
@@ -137,4 +143,6 @@ validation:
   isolation_normalization_rule: "Project-local .agents/skills/** is not GS in enterprise dispatch reports."
   department_report_field_rule: "Department reports must use objective_result, not result; worker_count must be integer; files_changed, risks, and escalations must be arrays."
   authority_enforcement_rule: "Write/deploy requests require compatible authority plus minimum tier; otherwise block, upgrade, or emit escalation_record."
+  collaborator_window_rule: "Named collaborator windows must preserve controller-to-leader-only dispatch and cannot integrate raw worker chatter."
+  execution_run_rule: "When execution_run_ref is present, it must resolve to runtime_execution evidence; missing proof is a risk, not a success claim."
   source_of_truth_rule: "Enterprise dispatch semantics are canonical in dispatch.yaml; workflow summaries must not introduce alternate field names or rules."

@@ -6,10 +6,11 @@ trigger_when:
   route_signal: "Use context_compact only when user asks about compaction or a compact/resume/handoff artifact is created, verified, collected, or normalized."
 do_not_trigger_for: ["answer-only with no state claim", "ordinary scoped edit", "plain deploy", "enterprise dispatch without compact or handoff work"]
 summary_contract:
-  required_fields: ["active_goal", "latest_user_request", "current_route", "changed_files", "pending_actions", "verification_state", "open_risks", "external_access", "subagents_open", "next_step", "do_not_forget", "isolation"]
+  required_fields: ["active_goal", "latest_user_request", "current_route", "changed_files", "pending_actions", "verification_state", "open_risks", "external_access", "subagents_open", "retained_facts", "dropped_details", "resume_pointer", "next_step", "do_not_forget", "isolation"]
   freshness_rule: "latest_user_request must be concrete and supersede older requests."
   minimality_rule: "Keep only operational facts needed to continue; omit narrative, raw transcript, and raw worker chatter."
   loss_rule: "If uncertain, mark unknown and list the exact file or state to recheck."
+  knowledge_footprint_rule: "Cross-window recovery records scope, opened files, evidence refs, gaps, conclusion, and resume pointer."
 thread_state:
   source_order: ["latest user request", "active goal if present", "git/status evidence", "changed files", "verification output", "open employee/runtime evidence"]
   preserve: ["route", "authorization scope", "external paths", "model tier decisions", "cleanup status", "blocked conditions"]
@@ -21,10 +22,10 @@ auto_compact:
 runtime_events:
   optional_path: ".agents/runtime/compact-events.jsonl"
   git_rule: "Runtime compact events stay ignored; never stage, deploy, release, or copy."
-  event_fields: ["event_id", "trigger", "thread_source", "workflow_id", "summary_path", "created_at", "verification", "risks"]
+  event_fields: ["event_id", "trigger", "thread_source", "workflow_id", "summary_path", "created_at", "retained_facts", "dropped_details", "resume_pointer", "verification", "risks"]
   trigger_values: ["manual", "auto", "handoff", "subagent_closeout", "pre_commit", "pre_deploy", "route_switch"]
 subagent_rule: "Closeout summaries must record requested, spawned, completed, and closed counts or state no employees were spawned."
 approval_rule: "Do not use compact summaries as approval; preserve the approval gate or escalation record reference."
 verification:
   profile: "context_compact"
-  pass_when: ["required fields present", "no raw transcript", "current request preserved", "open risks explicit", "runtime events remain local"]
+  pass_when: ["required fields present", "no raw transcript", "current request preserved", "retained_facts present", "dropped_details present", "resume_pointer present", "open risks explicit", "runtime events remain local"]

@@ -35,10 +35,10 @@ isolation:
     report: "Report intentional external reads as XR and writes as XW; temp roster and Codex App state/history/cache access must be listed exactly once in closeout. Project-local ledger access is repo-local and not XR/XW."
   codex_app:
     local_policy: ".codex/config.toml is ignored repo-local state."
-    live_environment: ".codex/environments/environment.toml is ignored runtime state."
-    template_environment: ".codex/environments/environment.template.toml is reference-only."
+    live_environment: ".codex/environments/*.toml is ignored target-local runtime state."
+    template_environment: ".codex/environments/environment.template.toml must not be deployed; create .codex/environments/<project>.toml only when target has no environment file."
     official_thread_controls: "Prefer runtime close plus app-server thread/list, thread/loaded/list, thread/archive, and thread/unsubscribe when available; no official hard-delete thread API is assumed."
-    sidebar_history_db: "%USERPROFILE%/.codex/state_<n>.sqlite plus matching subagent rollout files under %USERPROFILE%/.codex/sessions and archived_sessions are external runtime UI/history state; hard-delete only current-project subagent records/files after exact no-backup authorization, exclude user/controller threads and backup/copy DB files."
+    sidebar_history_db: "%USERPROFILE%/.codex/state_<n>.sqlite, %USERPROFILE%/.codex/session_index.jsonl, unread ids in .codex-global-state*.json, and matching subagent rollout files under %USERPROFILE%/.codex/sessions and archived_sessions are external runtime UI/history state; hard-delete only current-project subagent records/files after exact no-backup authorization, exclude user/controller threads and backup/copy DB files."
     desktop_ui_cache: "Codex Desktop may keep sidebar entries in live memory after official lists, DB rows, and rollout files are clean; first reload/restart the UI and use post-restart absence as refresh evidence before any cache cleanup claim."
 runtime_enforcement:
   default: "behavioral-only"
@@ -100,6 +100,7 @@ hard_fail_gates:
   - "No overlapping active worker write scopes."
   - "No compact-risk/concurrent/editing employee without project-local ledger or temp roster evidence."
   - "No Codex App sidebar/history/cache cleanup without runtime close first, exact current-project runtime ids, schema/source check, and explicit cleanup wording or standalone exact cleanup authorization."
+  - "No Codex App sidebar/history cleanup by sidebar nickname only."
   - "No Desktop UI-cache cleanup before reload/restart is tried or explicitly bypassed with shutdown/cache-cleanup authorization."
   - "No hard-isolation claim without verified evidence."
   - "Keep AGENTS.md and project SKILL.md compact."

@@ -1,4 +1,4 @@
-# Repository Maintenance
+﻿# Repository Maintenance
 Use when cleaning, slimming, validating, or restructuring this Agents repo.
 1. Inspect git state.
 2. Keep `AGENTS.md`, project skills, runbooks, and templates compact.

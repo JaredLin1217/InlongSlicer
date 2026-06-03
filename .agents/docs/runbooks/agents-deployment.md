@@ -4,11 +4,11 @@ Use when copying this workflow into an explicitly authorized target repo.
 1. Confirm exact target path and write action.
 2. Inspect target state before writing.
 3. Detect the target layout from `AGENTS.md` and existing Agents dirs; preserve either root `docs/agents` or `.agents/docs`, not both.
-4. Classify dirty target files as deploy scope, protected dirty, or target-owned legacy Agents docs.
+4. Classify dirty target files as deploy scope, protected dirty, or target-owned historical Agents docs.
 5. Choose `core_bootstrap`, `full_workflow`, or `template_provider_mode`; default to `core_bootstrap` unless the user asks for more.
 6. Build `deployed_file_set`, rewrite internal references for the selected layout, then copy/adapt only the `deployable_by_mode` groups listed by `mode_composition`.
 7. Append/adapt `gitignore.fragment`; do not replace target `.gitignore` wholesale.
-8. Validate only `deployed_file_set` for diff hygiene and source literals; report target legacy docs separately.
+8. Validate only `deployed_file_set` for diff hygiene and source literals; report target historical docs separately.
 9. Close out with what changed, what was intentionally not touched, target owner next actions, and a target handoff check.
 ## Safety Gates
 - The target path must already exist for dry-run inspection.
@@ -40,12 +40,12 @@ Mode bullets are summaries only; exact groups, file sets, and target-layout rewr
 ## Target Handoff
 Every write deployment report must make these items easy to review:
 - What changed: deployed file set and files created or updated by this run.
-- What was intentionally not touched: app/source files, runtime/local Codex config, agent status, ledger, evidence records, Git metadata, and target-owned legacy Agents files.
+- What was intentionally not touched: app/source files, runtime/local Codex config, agent status, ledger, evidence records, Git metadata, and target-owned historical Agents files.
 - Target owner next actions: review target git status, decide whether to commit or revert the deployed file set, run a target handoff check, and record follow-up feedback in the target repo or target-owned tracker.
 The target handoff check is read-only unless the user separately authorizes follow-up writes. Check `AGENTS.md` routing, selected project skill path, runbook links, deployed feedback template when the mode includes it, protected runtime/local paths, and target git status summary.
 ## Feedback Loop
 For `full_workflow` and `template_provider_mode`, the deployment includes `docs/deployment-feedback.template.md` or its layout-adjusted `.agents/docs` equivalent. Fill it only in the target repo, or use a target-owned issue tracker. The provider repo must not store target-specific deployment history, validation results, commits, remotes, or user feedback.
 Hard fail on missing exact authorization, blocklisted copy, uninspected target-specific claim, or provider state in deployable templates.
 Keep target state target-owned. Do not copy source status, employee history, memory entries, commits, remotes, tags, or runtime files.
-PowerShell note: with `rg`, put options before `--`, then pattern and paths, for example `rg -n --fixed-strings --glob '!legacy/**' -- <pattern> <paths>`.
+PowerShell note: with `rg`, put options before `--`, then pattern and paths, for example `rg -n --fixed-strings --glob '!historical/**' -- <pattern> <paths>`.
 Runbook references use provider canonical paths; deployed target paths are layout-adjusted by `.agents/docs/agents/deploy.yaml`.

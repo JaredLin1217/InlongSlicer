@@ -1,4 +1,4 @@
-# Agents Templates
+﻿# Agents Templates
 Source-neutral starter bundle for authorized target repos.
 ## What This Is
 Deployable, source-neutral Agents rules for target repos.

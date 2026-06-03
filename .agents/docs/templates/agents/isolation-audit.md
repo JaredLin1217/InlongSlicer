@@ -1,4 +1,4 @@
-# Isolation Audit
+﻿# Isolation Audit
 Use when isolation, Global Memory, Global Skill, project-external access, hard-isolation claims, or expanded isolation evidence is in scope. Routine required closeout lines alone do not trigger this runbook.
 1. Read `AGENTS.md`.
 2. Use `.agents/docs/agents/policy.yaml` for isolation/external access rules.

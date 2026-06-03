@@ -1,4 +1,4 @@
-# Agent Assignment
+﻿# Agent Assignment
 ## Explorer Brief
 Use for short read-only explorers.
 - Agent:

@@ -1,4 +1,4 @@
-# Agent Status Handoff
+﻿# Agent Status Handoff
 ## Snapshot
 - Status: `unknown`
 - Snapshot version: `0`

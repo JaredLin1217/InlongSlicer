@@ -89,6 +89,11 @@ reporting:
   controller_rule: "Controller assigns work to department leaders only."
   leader_rule: "Department leaders may split internal worker tasks and must return one department report."
   worker_rule: "Workers report to their department leader unless escalation is required."
+collaborator_windows:
+  allowed_type: department_leader_window
+  attachment_rule: "Only leader_registry roles may be exposed as collaborator windows by default."
+  worker_window_rule: "Worker windows require explicit override and escalation_record evidence."
+  runtime_rule: "Live Codex thread ids and window state are runtime-local, not deployable organization data."
 validation:
   department_required_fields: "Each department requires leader_role, allowed_worker_roles, report_target, and default_responsibility."
   leader_reference_rule: "Every department leader_role must exist in leader_registry."

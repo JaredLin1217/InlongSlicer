@@ -1,4 +1,4 @@
-# Task Closeout
+﻿# Task Closeout
 Use the smallest closeout that proves the claim.
 1. Choose the smallest `.agents/docs/agents/verify.yaml` profile.
 2. No-change/no-current-state answer: no command, compact closeout.

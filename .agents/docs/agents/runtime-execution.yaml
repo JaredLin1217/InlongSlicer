@@ -1,0 +1,79 @@
+schema: agents-runtime-execution/v1
+purpose: "Runtime execution evidence for plans, tools, approvals, results, and cleanup."
+storage:
+  root: ".agents/runtime/executions/<run_id>/"
+  tracked: false
+  deployable: false
+state:
+  allowed:
+    - "planned"
+    - "approved"
+    - "running"
+    - "waiting_approval"
+    - "completed"
+    - "failed"
+    - "blocked"
+    - "cleaned"
+  terminal:
+    - "completed"
+    - "failed"
+    - "blocked"
+    - "cleaned"
+run:
+  required_fields:
+    - "run_id"
+    - "objective"
+    - "scope"
+    - "authority"
+    - "owner"
+    - "model_tier"
+    - "status"
+step:
+  required_fields:
+    - "step_id"
+    - "owner"
+    - "target"
+    - "action"
+    - "authority"
+    - "status"
+approval_gate:
+  required_for:
+    - "write"
+    - "deploy"
+    - "external_access"
+    - "destructive_action"
+    - "model_tier_upgrade"
+  record_fields:
+    - "approval_id"
+    - "run_id"
+    - "action"
+    - "approver"
+    - "scope"
+    - "decision"
+tool_evidence:
+  required_fields:
+    - "tool"
+    - "action"
+    - "target"
+    - "result"
+    - "evidence_ref"
+result:
+  required_fields:
+    - "run_id"
+    - "status"
+    - "summary"
+    - "risks"
+    - "evidence_refs"
+cleanup_evidence:
+  required_fields:
+    - "run_id"
+    - "requested"
+    - "verified"
+    - "remaining_runtime"
+    - "claim_scope"
+rules:
+  - "High-risk steps require approval or escalation before execution."
+  - "Worker raw chatter is never a controller result."
+  - "Cleanup claims must match verified runtime capability."
+validation:
+  profile: "runtime_execution"
