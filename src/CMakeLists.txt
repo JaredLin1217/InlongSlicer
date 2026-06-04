@@ -111,6 +111,9 @@ if(INLONG_TOOLS)
     endif()
     target_link_libraries(InlongSlicer_profile_validator libslic3r boost_headeronly libcurl OpenSSL::SSL OpenSSL::Crypto)
     target_compile_definitions(InlongSlicer_profile_validator PRIVATE -DBOOST_ALL_NO_LIB -DBOOST_USE_WINAPI_VERSION=0x602 -DBOOST_SYSTEM_USE_UTF8)
+    if (MSVC)
+        target_link_options(InlongSlicer_profile_validator PRIVATE /NODEFAULTLIB:LIBCMT)
+    endif()
 endif()
 
 # Create a slic3r executable
@@ -147,6 +150,9 @@ if (APPLE)
 elseif (MSVC)
     # Manifest is provided through InlongSlicer.rc, don't generate your own.
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
+    # The project and bundled dependencies use the DLL runtime; avoid pulling the static CRT through transitive libs.
+    target_compile_options(InlongSlicer PRIVATE /wd4005)
+    target_link_options(InlongSlicer PRIVATE /NODEFAULTLIB:LIBCMT)
 else ()
     # Boost on Raspberry-Pi does not link to pthreads explicitly.
     target_link_libraries(InlongSlicer ${CMAKE_DL_LIBS} -lstdc++ Threads::Threads pangoft2-1.0)

@@ -756,6 +756,7 @@ target_link_libraries(libslic3r_gui libslic3r cereal::cereal imgui imguizmo mini
 
 
 if (MSVC)
+    target_compile_options(libslic3r_gui PRIVATE /wd4005 /wd4101 /wd4723 /wd4996)
     target_link_libraries(libslic3r_gui Setupapi.lib)
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     FIND_LIBRARY(WAYLAND_SERVER_LIBRARIES NAMES wayland-server)

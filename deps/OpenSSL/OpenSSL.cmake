@@ -17,6 +17,11 @@ if(WIN32)
     set(_cross_comp_prefix_line "")
     set(_make_cmd nmake)
     set(_install_cmd nmake install_sw )
+    if (MSVC)
+        set(_openssl_env_cmd ${CMAKE_COMMAND} -E env "CL=${DEP_MSVC_WARNING_FLAGS}")
+    else()
+        set(_openssl_env_cmd "")
+    endif()
 else()
     if(APPLE)
         set(_conf_cmd export MACOSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET} && ./Configure -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET})
@@ -45,7 +50,8 @@ ExternalProject_Add(dep_OpenSSL
     # URL "https://github.com/openssl/openssl/archive/refs/tags/openssl-3.1.2.tar.gz"
     # URL_HASH SHA256=8c776993154652d0bb393f506d850b811517c8bd8d24b1008aef57fbe55d3f31
     DOWNLOAD_DIR ${DEP_DOWNLOAD_DIR}/OpenSSL
-	CONFIGURE_COMMAND ${_conf_cmd} ${_cross_arch}
+    BUILD_IN_SOURCE ON
+    CONFIGURE_COMMAND ${_openssl_env_cmd} ${_conf_cmd} ${_cross_arch}
         "--openssldir=${DESTDIR}"
         "--prefix=${DESTDIR}"
         ${_cross_comp_prefix_line}
@@ -53,9 +59,8 @@ ExternalProject_Add(dep_OpenSSL
         no-asm
         no-ssl3-method
         no-dynamic-engine
-    BUILD_IN_SOURCE ON
-    BUILD_COMMAND ${_make_cmd}
-    INSTALL_COMMAND ${_install_cmd}
+    BUILD_COMMAND ${_openssl_env_cmd} ${_make_cmd}
+    INSTALL_COMMAND ${_openssl_env_cmd} ${_install_cmd}
 )
 
 ExternalProject_Add_Step(dep_OpenSSL install_cmake_files

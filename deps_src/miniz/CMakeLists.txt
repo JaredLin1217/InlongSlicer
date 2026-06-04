@@ -13,6 +13,10 @@ if(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
     target_compile_definitions(miniz_static PRIVATE _GNU_SOURCE)
 endif()
 
+if(MSVC)
+    target_compile_options(miniz_static PRIVATE /wd4133)
+endif()
+
 target_link_libraries(miniz INTERFACE miniz_static)
 target_include_directories(miniz SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -1,6 +1,6 @@
 set(_eigen_extra_flags "")
 if (MSVC)
-    set(_eigen_extra_flags "-DCMAKE_CXX_FLAGS:STRING=/bigobj")
+    set(_eigen_extra_flags "-DCMAKE_CXX_FLAGS:STRING=${DEP_MSVC_CXX_FLAGS} /bigobj")
 endif ()
 
 inlongslicer_add_cmake_project(Eigen

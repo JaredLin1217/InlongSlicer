@@ -130,6 +130,16 @@ message(STATUS "InlongSlicer deps DESTDIR: ${DESTDIR} ${DESTDIR_MSG}")
 message(STATUS "InlongSlicer download dir for source packages: ${DEP_DOWNLOAD_DIR}")
 message(STATUS "InlongSlicer deps debug build: ${DEP_DEBUG}")
 
+if (MSVC)
+    set(DEP_MSVC_WARNING_FLAGS "/utf-8 /wd4005 /wd4100 /wd4101 /wd4133 /wd4146 /wd4210 /wd4244 /wd4267 /wd4305 /wd4334 /wd4459 /wd4701 /wd4723 /wd4819 /wd4828 /wd4996")
+    set(DEP_MSVC_C_FLAGS "${CMAKE_C_FLAGS} ${DEP_MSVC_WARNING_FLAGS}")
+    set(DEP_MSVC_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEP_MSVC_WARNING_FLAGS}")
+    set(DEP_COMMON_CMAKE_FLAGS
+        -DCMAKE_C_FLAGS:STRING=${DEP_MSVC_C_FLAGS}
+        -DCMAKE_CXX_FLAGS:STRING=${DEP_MSVC_CXX_FLAGS}
+    )
+endif ()
+
 find_package(Git REQUIRED)
 
 # The default command line for patching. Only works for newer
@@ -182,6 +192,7 @@ if (NOT IS_CROSS_COMPILE OR NOT APPLE)
             -DCMAKE_DEBUG_POSTFIX:STRING=d
             -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
             -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+            ${DEP_COMMON_CMAKE_FLAGS}
             -DCMAKE_TOOLCHAIN_FILE:STRING=${CMAKE_TOOLCHAIN_FILE}
             -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
             -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
@@ -227,6 +238,7 @@ else()
             -DCMAKE_INSTALL_PREFIX:STRING=${DESTDIR}
             -DCMAKE_PREFIX_PATH:STRING=${DESTDIR}
             -DCMAKE_IGNORE_PREFIX_PATH:STRING=${CMAKE_IGNORE_PREFIX_PATH}
+            ${DEP_COMMON_CMAKE_FLAGS}
             -DBUILD_SHARED_LIBS:BOOL=OFF
             ${_cmake_osx_arch}
             "${_configs_line}"
