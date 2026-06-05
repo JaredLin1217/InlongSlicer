@@ -1,4 +1,4 @@
-schema: agents-schemas/v2
+﻿schema: agents-schemas/v2
 purpose: "Compact field contracts for assignments, reports, runtime evidence, recovery."
 owns: "Schemas for reports, ledgers, isolation, workflow artifacts, collaborators, core runtime."
 assignment:
@@ -270,8 +270,10 @@ runtime_multi_agent_validation:
     - "Controller conclusion"
   storage_rule: "Filled records are local scratch unless promoted."
 history_cleanup_evidence:
-  required_when_claimed: "[authorization, no_backup_authorization, official_close_result, parent_thread_id, repo_cwd, target_ids, target_counts, deleted_counts, sqlite_thread_state_result, session_index_result, global_unread_state_result, rollout_residue_result, parent_preserved, delayed_zero_residue, desktop_reload_or_restart_result]"
+  required_when_claimed: "[authorization, no_backup_authorization, cleanup_helper, official_close_result, parent_thread_id, repo_cwd, target_ids, target_counts, deleted_counts, sqlite_thread_state_result, session_index_result, global_unread_state_result, rollout_residue_result, parent_preserved, delayed_zero_residue, desktop_reload_or_restart_result]"
   target_filter: "parent/cwd closed child subagent runtime ids, never sidebar nicknames; delete thread_spawn_edges first"
+  runtime_ids_resolved_from: "official runtime close/list evidence, not sidebar labels"
+  script_result: "scripts/agents-cleanup.ps1 JSON evidence for Verify or Cleanup"
 memory_entry:
   index_columns: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Verified]"
 skill:

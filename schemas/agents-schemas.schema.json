@@ -35,6 +35,7 @@
     "controller_lease",
     "hard_isolation_evidence",
     "runtime_multi_agent_validation",
+    "history_cleanup_evidence",
     "memory_entry",
     "skill",
     "collaborator_record",
@@ -111,6 +112,10 @@
     "hard_isolation_evidence.rule",
     "runtime_multi_agent_validation.storage_rule",
     "runtime_multi_agent_validation.required_fields",
+    "history_cleanup_evidence.required_when_claimed",
+    "history_cleanup_evidence.target_filter",
+    "history_cleanup_evidence.runtime_ids_resolved_from",
+    "history_cleanup_evidence.script_result",
     "memory_entry.index_columns",
     "skill.openai_yaml",
     "skill.openai_yaml.policy",
@@ -144,48 +149,297 @@
     "knowledge_footprint.resume_rule"
   ],
   "x-required-values": [
-    {"path": "assignment.required_fields.Mode", "value": "session-managed | manual-detached | cloud-or-automation"},
-    {"path": "assignment.required_fields.Runtime enforcement", "value": "behavioral-only | tool-enforced | externally-enforced"},
-    {"path": "assignment.required_fields.Role", "value": "explorer | worker"},
-    {"path": "assignment.required_fields.Ownership", "value": "read-only | exclusive-writer | controller-only-integration"},
-    {"path": "assignment.required_fields.Ledger path", "value": ".agents/runtime/agent-ledger.jsonl"},
-    {"path": "agent_ledger_event.location", "value": ".agents/runtime/agent-ledger.jsonl"},
-    {"path": "hard_isolation_evidence.rule", "value": "Missing required evidence means behavioral-only."}
+    {
+      "path": "assignment.required_fields.Mode",
+      "value": "session-managed | manual-detached | cloud-or-automation"
+    },
+    {
+      "path": "assignment.required_fields.Runtime enforcement",
+      "value": "behavioral-only | tool-enforced | externally-enforced"
+    },
+    {
+      "path": "assignment.required_fields.Role",
+      "value": "explorer | worker"
+    },
+    {
+      "path": "assignment.required_fields.Ownership",
+      "value": "read-only | exclusive-writer | controller-only-integration"
+    },
+    {
+      "path": "assignment.required_fields.Ledger path",
+      "value": ".agents/runtime/agent-ledger.jsonl"
+    },
+    {
+      "path": "agent_ledger_event.location",
+      "value": ".agents/runtime/agent-ledger.jsonl"
+    },
+    {
+      "path": "hard_isolation_evidence.rule",
+      "value": "Missing required evidence means behavioral-only."
+    }
   ],
   "x-required-contains": [
-    {"path": "explorer_brief_assignment.preset_rule", "contains": ["read-only/scoring explorers", "Do not include ownership matrix"]},
-    {"path": "report_validation.score_rule", "contains": ["numeric 0-100"]},
-    {"path": "report_validation.isolation_rule", "contains": ["GM, GS, XR, and XW"]},
-    {"path": "report_validation.project_local_skill_rule", "contains": [".agents/skills/**", "not GS", "global/system SKILL.md"]},
-    {"path": "enterprise_assignment.target_rule", "contains": ["department leader"]},
-    {"path": "department_report.alias_rule", "contains": ["result", "objective_result"]},
-    {"path": "escalation_record.rule", "contains": ["escalation_record"]},
-    {"path": "workflow_instance.storage_rule", "contains": [".agents/runtime/workflows", ".workflow"]},
-    {"path": "workflow_packet.routing_rule", "contains": ["department leaders", "escalation_packet"]},
-    {"path": "workflow_result.forbidden_fields", "contains": ["raw_worker_chatter"]},
-    {"path": "workflow_collection_report.rule", "contains": ["Collect normalizes", "raw worker chatter"]},
-    {"path": "workflow_security_check.path_rule", "contains": [".git", ".codex", ".agents/runtime/workflows", ".workflow"]},
-    {"path": "context_compact_summary.reject_when", "contains": ["missing latest_user_request", "raw transcript", "external access omitted"]},
-    {"path": "context_compact_summary.raw_transcript_rule", "contains": ["raw transcript", "raw worker chatter"]},
-    {"path": "context_compact_event.location", "contains": [".agents/runtime/compact-events.jsonl"]},
-    {"path": "context_compact_event.storage_rule", "contains": ["never stage", "deploy", "release"]},
-    {"path": "agent_ledger_event.status", "contains": ["repo-local ignored runtime state", "not Codex official runtime DB"]},
-    {"path": "agent_ledger_event.storage_rule", "contains": ["Never stage, commit, deploy, or copy .agents/runtime/**"]},
-    {"path": "runtime_multi_agent_validation.storage_rule", "contains": ["local scratch"]},
-    {"path": "collaborator_record.location", "contains": [".agents/runtime/collaborators.jsonl"]},
-    {"path": "collaborator_record.storage_rule", "contains": ["never stage", "commit", "deploy", "release"]},
-    {"path": "collaborator_assignment.target_rule", "contains": ["department_leader_window", "leader_registry"]},
-    {"path": "collaborator_assignment.worker_window_rule", "contains": ["explicit override", "escalation_record"]},
-    {"path": "collaborator_report.integration_rule", "contains": ["collaborator_report", "department_report", "escalation_record", "raw worker chatter"]},
-    {"path": "thread_operation_record.operations", "contains": ["create", "rename", "archive", "close", "verify_inactive"]},
-    {"path": "thread_operation_record.storage_rule", "contains": ["Thread ids", "runtime capability evidence", "never deployable"]},
-    {"path": "core_system.runtime_blocklist", "contains": [".agents/runtime/**", ".workflow/**", ".codex/**"]},
-    {"path": "core_system.release_contract", "contains": ["version", "commit", "hash", "blocklist result"]},
-    {"path": "runtime_execution.cleanup_evidence", "contains": ["verified", "cleanup claims"]},
-    {"path": "provider_adapter.tier_rule", "contains": ["tier", "single model ID"]},
-    {"path": "provider_adapter.session_rule", "contains": ["runtime-local", "not deployable"]},
-    {"path": "route_pack.determinism_rule", "contains": ["deterministic", "same hash"]},
-    {"path": "knowledge_footprint.raw_transcript_rule", "contains": ["No full transcript"]},
-    {"path": "knowledge_footprint.resume_rule", "contains": ["resume pointer"]}
+    {
+      "path": "explorer_brief_assignment.preset_rule",
+      "contains": [
+        "read-only/scoring explorers",
+        "Do not include ownership matrix"
+      ]
+    },
+    {
+      "path": "report_validation.score_rule",
+      "contains": [
+        "numeric 0-100"
+      ]
+    },
+    {
+      "path": "report_validation.isolation_rule",
+      "contains": [
+        "GM, GS, XR, and XW"
+      ]
+    },
+    {
+      "path": "report_validation.project_local_skill_rule",
+      "contains": [
+        ".agents/skills/**",
+        "not GS",
+        "global/system SKILL.md"
+      ]
+    },
+    {
+      "path": "enterprise_assignment.target_rule",
+      "contains": [
+        "department leader"
+      ]
+    },
+    {
+      "path": "department_report.alias_rule",
+      "contains": [
+        "result",
+        "objective_result"
+      ]
+    },
+    {
+      "path": "escalation_record.rule",
+      "contains": [
+        "escalation_record"
+      ]
+    },
+    {
+      "path": "workflow_instance.storage_rule",
+      "contains": [
+        ".agents/runtime/workflows",
+        ".workflow"
+      ]
+    },
+    {
+      "path": "workflow_packet.routing_rule",
+      "contains": [
+        "department leaders",
+        "escalation_packet"
+      ]
+    },
+    {
+      "path": "workflow_result.forbidden_fields",
+      "contains": [
+        "raw_worker_chatter"
+      ]
+    },
+    {
+      "path": "workflow_collection_report.rule",
+      "contains": [
+        "Collect normalizes",
+        "raw worker chatter"
+      ]
+    },
+    {
+      "path": "workflow_security_check.path_rule",
+      "contains": [
+        ".git",
+        ".codex",
+        ".agents/runtime/workflows",
+        ".workflow"
+      ]
+    },
+    {
+      "path": "context_compact_summary.reject_when",
+      "contains": [
+        "missing latest_user_request",
+        "raw transcript",
+        "external access omitted"
+      ]
+    },
+    {
+      "path": "context_compact_summary.raw_transcript_rule",
+      "contains": [
+        "raw transcript",
+        "raw worker chatter"
+      ]
+    },
+    {
+      "path": "context_compact_event.location",
+      "contains": [
+        ".agents/runtime/compact-events.jsonl"
+      ]
+    },
+    {
+      "path": "context_compact_event.storage_rule",
+      "contains": [
+        "never stage",
+        "deploy",
+        "release"
+      ]
+    },
+    {
+      "path": "agent_ledger_event.status",
+      "contains": [
+        "repo-local ignored runtime state",
+        "not Codex official runtime DB"
+      ]
+    },
+    {
+      "path": "agent_ledger_event.storage_rule",
+      "contains": [
+        "Never stage, commit, deploy, or copy .agents/runtime/**"
+      ]
+    },
+    {
+      "path": "runtime_multi_agent_validation.storage_rule",
+      "contains": [
+        "local scratch"
+      ]
+    },
+    {
+      "path": "collaborator_record.location",
+      "contains": [
+        ".agents/runtime/collaborators.jsonl"
+      ]
+    },
+    {
+      "path": "collaborator_record.storage_rule",
+      "contains": [
+        "never stage",
+        "commit",
+        "deploy",
+        "release"
+      ]
+    },
+    {
+      "path": "collaborator_assignment.target_rule",
+      "contains": [
+        "department_leader_window",
+        "leader_registry"
+      ]
+    },
+    {
+      "path": "collaborator_assignment.worker_window_rule",
+      "contains": [
+        "explicit override",
+        "escalation_record"
+      ]
+    },
+    {
+      "path": "collaborator_report.integration_rule",
+      "contains": [
+        "collaborator_report",
+        "department_report",
+        "escalation_record",
+        "raw worker chatter"
+      ]
+    },
+    {
+      "path": "thread_operation_record.operations",
+      "contains": [
+        "create",
+        "rename",
+        "archive",
+        "close",
+        "verify_inactive"
+      ]
+    },
+    {
+      "path": "thread_operation_record.storage_rule",
+      "contains": [
+        "Thread ids",
+        "runtime capability evidence",
+        "never deployable"
+      ]
+    },
+    {
+      "path": "core_system.runtime_blocklist",
+      "contains": [
+        ".agents/runtime/**",
+        ".workflow/**",
+        ".codex/**"
+      ]
+    },
+    {
+      "path": "core_system.release_contract",
+      "contains": [
+        "version",
+        "commit",
+        "hash",
+        "blocklist result"
+      ]
+    },
+    {
+      "path": "runtime_execution.cleanup_evidence",
+      "contains": [
+        "verified",
+        "cleanup claims"
+      ]
+    },
+    {
+      "path": "provider_adapter.tier_rule",
+      "contains": [
+        "tier",
+        "single model ID"
+      ]
+    },
+    {
+      "path": "provider_adapter.session_rule",
+      "contains": [
+        "runtime-local",
+        "not deployable"
+      ]
+    },
+    {
+      "path": "route_pack.determinism_rule",
+      "contains": [
+        "deterministic",
+        "same hash"
+      ]
+    },
+    {
+      "path": "knowledge_footprint.raw_transcript_rule",
+      "contains": [
+        "No full transcript"
+      ]
+    },
+    {
+      "path": "knowledge_footprint.resume_rule",
+      "contains": [
+        "resume pointer"
+      ]
+    },
+    {
+      "path": "history_cleanup_evidence.required_when_claimed",
+      "contains": [
+        "cleanup_helper"
+      ]
+    },
+    {
+      "path": "history_cleanup_evidence.target_filter",
+      "contains": [
+        "never sidebar nicknames",
+        "thread_spawn_edges"
+      ]
+    },
+    {
+      "path": "history_cleanup_evidence.script_result",
+      "contains": [
+        "scripts/agents-cleanup.ps1"
+      ]
+    }
   ]
 }

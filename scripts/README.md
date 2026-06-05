@@ -22,22 +22,27 @@ Runtime execution evidence command:
 .\scripts\agents-runtime.ps1 -Action Verify -RunId "example"
 .\scripts\agents-runtime.ps1 -Action Cleanup -RunId "example"
 ```
+Runtime subagent cleanup evidence command:
+```powershell
+.\scripts\agents-cleanup.ps1 -Action Verify -RuntimeIds "<runtime-id>" -ParentThreadId "<parent-runtime-id>"
+.\scripts\agents-cleanup.ps1 -Action Cleanup -RuntimeIds "<runtime-id>" -ParentThreadId "<parent-runtime-id>" -Force
+```
 Route-pack export command:
 ```powershell
 .\scripts\export-route-pack.ps1 -RouteId core_system
 ```
 Deployment dry-run command:
 ```powershell
-.\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap -DryRun
+.\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap -LayoutProfile auto -DryRun
 ```
 Upgrade an existing target with the same allowlisted file set:
 ```powershell
-.\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap -Upgrade -DryRun
+.\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap -LayoutProfile auto -Upgrade -DryRun
 ```
 Remove `-DryRun` only for an explicitly authorized external target write. The script refuses to write into the provider/source repo, and it does not repair Windows permissions, ACLs, ownership, or `.git` metadata.
 Deployment write command:
 ```powershell
-.\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap
+.\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap -LayoutProfile auto
 ```
 The validation entry point stays small and composable. It uses no external
 package dependencies and runs focused checks for lightweight YAML syntax,
@@ -64,12 +69,20 @@ The runtime execution helper writes run evidence under local runtime storage or
 an approved temp status root. It records steps, approvals, results,
 escalations, collection, verification, and cleanup evidence without committing
 live state.
+The subagent cleanup helper verifies or removes exact current-project closed
+subagent residue from Codex runtime state. It requires exact runtime ids, never
+sidebar nicknames, and performs destructive cleanup without backups only with
+explicit `-Force`.
 The route-pack exporter writes deterministic route manifests for the named
-runtime route. It does not call a model and does not write live thread state.
+runtime route. It uses an isolated per-project/per-run temp output by default,
+does not call a model, and does not write live thread state.
 Schema files define compact repo-local contracts. The validator enforces the
 required top-level keys, nested paths, required values, and fixture cases needed
 by the core runtime policy pack without external package dependencies.
-The deployment entry point reads `.agents/docs/agents/deploy.yaml`, detects the target
-layout, builds a deployed file set, rewrites target paths when the target uses
-`.agents/docs`, appends the gitignore fragment, and keeps runtime/local source
-state out of the target. Use `-DryRun` before writing to an authorized target.
+The deployment entry point reads `.agents/docs/agents/deploy.yaml`, detects or accepts
+`root-layout` and `dot-agents-layout`, builds a deployed file set, rewrites
+target paths when the target uses `.agents/docs`, appends the gitignore
+fragment, and keeps runtime/local source state out of the target. It records
+pre/post target dirty snapshots, rejects unexpected non-Agents changes, and
+requires cleanup script, workflow rule, and verify gate capability in deployed
+targets. Use `-DryRun` before writing to an authorized target.

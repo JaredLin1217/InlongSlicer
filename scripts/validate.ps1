@@ -1,7 +1,8 @@
 ﻿param(
 [switch] $Quiet,
 [switch] $Full,
-[switch] $Score
+[switch] $Score,
+[string] $TempRoot
 )
 $ErrorActionPreference = "Stop"
 $ScriptPath = $MyInvocation.MyCommand.Path
@@ -55,6 +56,53 @@ return [pscustomobject]$normalized
 function Get-RepoPath {
 param([string] $Path)
 return Join-Path $RepoRoot $Path
+}
+function Get-AgentsDocsPath {
+$dotAgentsDocs = Get-RepoPath ".agents/docs/agents"
+if (Test-Path -LiteralPath $dotAgentsDocs -PathType Container) {
+return $dotAgentsDocs
+}
+$rootDocs = Get-RepoPath "docs/agents"
+if (Test-Path -LiteralPath $rootDocs -PathType Container) {
+return $rootDocs
+}
+throw "Agents docs root is missing. Expected .agents/docs/agents or docs/agents."
+}
+function Get-RepoPathHash {
+param([string] $Path)
+$normalized = [System.IO.Path]::GetFullPath($Path).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar).ToLowerInvariant()
+$bytes = [System.Text.Encoding]::UTF8.GetBytes($normalized)
+$sha = [System.Security.Cryptography.SHA256]::Create()
+try {
+$hash = $sha.ComputeHash($bytes)
+return -join ($hash[0..5] | ForEach-Object { $_.ToString("x2") })
+}
+finally {
+$sha.Dispose()
+}
+}
+function Get-ValidationProjectKey {
+$leaf = Split-Path -Leaf $RepoRoot.Path
+$safe = ($leaf.ToLowerInvariant() -replace "[^a-z0-9._-]+", "-").Trim("-._")
+if ([string]::IsNullOrWhiteSpace($safe)) {
+$safe = "agents"
+}
+return ("{0}-{1}" -f $safe, (Get-RepoPathHash -Path $RepoRoot.Path))
+}
+$ValidationRunId = ("validate-{0}-{1}" -f ((Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")), ([guid]::NewGuid().ToString("N").Substring(0, 8)))
+function Get-ValidationTempRoot {
+param([string] $Purpose)
+$base = if ([string]::IsNullOrWhiteSpace($TempRoot)) {
+[System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "codex-agent-status", (Get-ValidationProjectKey))
+}
+else {
+[System.IO.Path]::GetFullPath($TempRoot)
+}
+return [System.IO.Path]::Combine($base, $ValidationRunId, $Purpose)
+}
+function Get-CanonicalWorkflowVersion {
+$values = Get-LightweightYamlPathValues -File (Get-Item -LiteralPath (Get-RepoPath ".agents/docs/agents/version.yaml"))
+return [string] $values["workflow.version"]
 }
 function Get-SourceSpecificLiterals {
 $literals = New-Object 'System.Collections.Generic.HashSet[string]'
@@ -177,6 +225,7 @@ $required = @(
 "scripts/export-release-package.ps1",
 "scripts/agents-workflow.ps1",
 "scripts/agents-runtime.ps1",
+"scripts/agents-cleanup.ps1",
 "scripts/export-route-pack.ps1"
 )
 foreach ($path in $required) {
@@ -380,7 +429,7 @@ Add-Failure "Canonical version file is missing: .agents/docs/agents/version.yaml
 return
 }
 if (-not (Test-Path -LiteralPath $readmePath -PathType Leaf)) {
-Add-Warning "Public README is missing; skipping workflow version alignment."
+Add-Pass "Public README is absent; workflow version display is not applicable."
 return
 }
 $values = Get-LightweightYamlPathValues -File (Get-Item -LiteralPath $versionPath)
@@ -393,13 +442,15 @@ return
 $expected = "Current Agents workflow version: ``{0}`` (``{1}``)." -f $values["workflow.version"], $values["workflow.channel"]
 $readmeLines = Get-Content -LiteralPath $readmePath
 if ($readmeLines -notcontains $expected) {
-Add-Warning ("README.md workflow version line not present; skipped target-owned README check. Expected line: {0}" -f $expected)
+Add-Pass "Public README does not opt into Agents workflow version display."
+return
 }
+Add-Pass "Public README workflow version matches canonical version metadata."
 }
 function Test-ValidationFixtures {
 $casePath = Get-RepoPath "tests/agents-governance-fixtures/schema-contracts/cases.json"
 if (-not (Test-Path -LiteralPath $casePath -PathType Leaf)) {
-Add-Warning "Validation fixture cases are missing; skipping optional fixture check."
+Add-Pass "Validation fixture cases are not present; optional fixture checks are not applicable."
 return
 }
 try {
@@ -581,18 +632,14 @@ function Test-LineEndings {
 $startFailureCount = $Failures.Count
 $textFiles = @(Get-TextFiles -Roots @(
 "AGENTS.md",
-".agents/docs",
-".agents/skills/project-isolation-workflow",
+".agents/skills",
+"docs",
 "schemas",
-"scripts/README.md",
-"scripts/agents-runtime.ps1",
-"scripts/agents-workflow.ps1",
-"scripts/commit-github-updates.ps1",
-"scripts/deploy-agents-workflow.ps1",
-"scripts/export-release-package.ps1",
-"scripts/export-route-pack.ps1",
-"scripts/update-github-updates.ps1",
-"scripts/validate.ps1"
+"scripts",
+"tests",
+"mcp",
+"artifacts",
+".github/workflows"
 ))
 foreach ($file in $textFiles) {
 $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
@@ -619,13 +666,8 @@ param([string[]] $Paths)
 $total = 0
 foreach ($path in $Paths) {
 $fullPath = Get-RepoPath $path
-try {
 if (Test-Path -LiteralPath $fullPath -PathType Leaf) {
 $total += (Get-Item -LiteralPath $fullPath).Length
-}
-}
-catch [System.ArgumentException] {
-Add-Warning ("Skipping unresolvable path during size calculation: {0}" -f $path)
 }
 }
 return $total
@@ -796,13 +838,14 @@ Write-Host "Evaluation: below target; inspect failed or low-scoring gates before
 function Test-ExactPairs {
 $startFailureCount = $Failures.Count
 $pairs = @(
-@(".agents/docs/agent-assignment.template.md", ".agents/docs/templates/agents/agent-assignment.template.md"),
-@(".agents/docs/agent-status.template.md", ".agents/docs/templates/agents/agent-status.template.md"),
-@(".agents/docs/agent-event.template.md", ".agents/docs/templates/agents/agent-event.template.md"),
-@(".agents/docs/controller-lease.template.md", ".agents/docs/templates/agents/controller-lease.template.md"),
-@(".agents/docs/hard-isolation-evidence.template.md", ".agents/docs/templates/agents/hard-isolation-evidence.template.md"),
-@(".agents/docs/deployment-feedback.template.md", ".agents/docs/templates/agents/deployment-feedback.template.md"),
-@(".agents/docs/memory-entry.template.md", ".agents/docs/templates/agents/memory-entry.template.md"),
+@("docs/agent-assignment.template.md", ".agents/docs/templates/agents/agent-assignment.template.md"),
+@("docs/agent-status.template.md", ".agents/docs/templates/agents/agent-status.template.md"),
+@("docs/agent-event.template.md", ".agents/docs/templates/agents/agent-event.template.md"),
+@("docs/controller-lease.template.md", ".agents/docs/templates/agents/controller-lease.template.md"),
+@("docs/hard-isolation-evidence.template.md", ".agents/docs/templates/agents/hard-isolation-evidence.template.md"),
+@("docs/runtime-multi-agent-validation.template.md", ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md"),
+@("docs/deployment-feedback.template.md", ".agents/docs/templates/agents/deployment-feedback.template.md"),
+@("docs/memory-entry.template.md", ".agents/docs/templates/agents/memory-entry.template.md"),
 @(".agents/docs/memory/entries/README.md", ".agents/docs/templates/agents/memory-entries-README.md"),
 @(".agents/skills/project-isolation-workflow/agents/openai.yaml", ".agents/docs/templates/agents/skills/project-isolation-workflow/agents/openai.yaml"),
 @("AGENTS.md", ".agents/docs/templates/agents/AGENTS.md"),
@@ -920,7 +963,7 @@ Add-Pass "Template bundle coverage checks passed."
 function Test-TemplateSourceNeutrality {
 $startFailureCount = $Failures.Count
 $literals = Get-SourceSpecificLiterals
-$templateFiles = @(Get-TextFiles -Roots @("docs/templates/agents"))
+$templateFiles = @(Get-TextFiles -Roots @(".agents/docs/templates/agents"))
 foreach ($literal in $literals) {
 foreach ($file in $templateFiles) {
 $match = Select-String -LiteralPath $file.FullName -Pattern $literal -SimpleMatch -Quiet -ErrorAction SilentlyContinue
@@ -1903,12 +1946,14 @@ $selfTestScriptMarkers = @(
 "root-docs",
 "template-provider",
 "dot-agents-docs",
+"forced-dot-layout",
 "dry-run",
 "protected-existing",
 "git-backed-foreign-project",
 "partial-gitignore",
 "missing-target",
 "target-owned-state",
+"mixed-route",
 "routed-historical",
 "ambiguous-layout"
 )
@@ -1990,15 +2035,15 @@ finally {
 $ErrorActionPreference = $previousErrorActionPreference
 }
 if ($exitCode -ne 0) {
-Add-Warning "Deployment self-test failed; verify deploy script separately for target writes."
+Add-Failure "Deployment self-test failed."
 foreach ($line in $output) {
-Add-Warning ("Deployment self-test detail: {0}" -f $line)
+Add-Failure ("Deployment self-test detail: {0}" -f $line)
 }
 }
 elseif (@($output).Count -gt 0) {
-Add-Warning "Deployment self-test quiet mode produced output."
+Add-Failure "Deployment self-test quiet mode produced output."
 foreach ($line in $output) {
-Add-Warning ("Deployment self-test quiet output: {0}" -f $line)
+Add-Failure ("Deployment self-test quiet output: {0}" -f $line)
 }
 }
 if ($Failures.Count -eq $startFailureCount) {
@@ -2031,6 +2076,8 @@ $workflowMarkers = @(
 "state_*.sqlite",
 "session_index.jsonl",
 "thread_spawn_edges",
+"cleanup_helper:",
+"scripts/agents-cleanup.ps1",
 "session-index zero",
 "unread-state zero",
 "not sidebar nicknames",
@@ -2068,7 +2115,11 @@ $schemaMarkers = @(
 "Rollout residue result",
 "never sidebar nicknames",
 "Delayed cleanup verification",
-"history_cleanup_evidence:"
+"history_cleanup_evidence:",
+"cleanup_helper",
+"runtime_ids_resolved_from",
+"script_result",
+"scripts/agents-cleanup.ps1"
 )
 foreach ($path in $schemaPaths) {
 $content = Get-Content -LiteralPath (Get-RepoPath $path) -Raw
@@ -2085,6 +2136,7 @@ $runbookMarkers = @(
 ".codex-global-state",
 "delayed zero",
 "runtime ids, never sidebar",
+"scripts/agents-cleanup.ps1",
 "clean roster"
 )
 foreach ($path in $runbookPaths) {
@@ -2097,6 +2149,52 @@ Add-Failure ("Multi-agent runbook marker is missing in {0}: {1}" -f $path, $mark
 }
 if ($Failures.Count -eq $startFailureCount) {
 Add-Pass "Multi-agent workflow integrity checks passed."
+}
+}
+function Test-AgentCleanupHelperIntegrity {
+$startFailureCount = $Failures.Count
+$path = Get-RepoPath "scripts/agents-cleanup.ps1"
+if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+Add-Failure "Agent cleanup helper is missing: scripts/agents-cleanup.ps1"
+return
+}
+$content = Get-Content -LiteralPath $path -Raw
+$markers = @(
+"RuntimeIds",
+"ParentThreadId",
+"RepoCwd",
+"CodexHome",
+"session_index.jsonl",
+".codex-global-state",
+"archived_sessions",
+"thread_spawn_edges",
+"thread_dynamic_tools",
+"never sidebar nicknames",
+"no-backup",
+"DelaySeconds",
+"subagent",
+"-Force",
+"Cleanup is destructive"
+)
+foreach ($marker in $markers) {
+if (-not $content.Contains($marker)) {
+Add-Failure ("Agent cleanup helper marker is missing: {0}" -f $marker)
+}
+}
+try {
+$output = & $path -Action Verify -Quiet 2>&1
+if (@($output).Count -gt 0) {
+Add-Failure "Agent cleanup helper quiet Verify produced output."
+foreach ($line in @($output)) {
+Add-Failure ("Agent cleanup helper quiet output: {0}" -f $line)
+}
+}
+}
+catch {
+Add-Failure ("Agent cleanup helper Verify failed: {0}" -f $_.Exception.Message)
+}
+if ($Failures.Count -eq $startFailureCount) {
+Add-Pass "Agent cleanup helper integrity checks passed."
 }
 }
 function Test-AgentLedgerCompatibility {
@@ -2190,12 +2288,12 @@ return @($fields)
 $checks = @(
 @{
 Name = "hard-isolation evidence"
-Paths = @(".agents/docs/hard-isolation-evidence.template.md", ".agents/docs/templates/agents/hard-isolation-evidence.template.md")
+Paths = @("docs/hard-isolation-evidence.template.md", ".agents/docs/templates/agents/hard-isolation-evidence.template.md")
 Markers = Get-RequiredFields "hard_isolation_evidence" "runtime_multi_agent_validation"
 },
 @{
 Name = "runtime multi-agent validation"
-Paths = @(".agents/docs/runtime-multi-agent-validation.template.md", ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md")
+Paths = @("docs/runtime-multi-agent-validation.template.md", ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md")
 Markers = Get-RequiredFields "runtime_multi_agent_validation" "memory_entry"
 }
 )
@@ -2221,10 +2319,6 @@ Add-Pass "Evidence template schema coverage checks passed."
 function Test-CIWorkflowStability {
 $startFailureCount = $Failures.Count
 $path = ".github/workflows/checkpoint.yml"
-if (-not (Test-Path -LiteralPath (Get-RepoPath $path) -PathType Leaf)) {
-Add-Warning "Checkpoint workflow is absent; skipping CI workflow stability check."
-return
-}
 $content = Get-Content -LiteralPath (Get-RepoPath $path) -Raw
 if ($content -match "runs-on:\s*windows-latest") {
 Add-Failure "Checkpoint workflow must pin a Windows runner instead of using windows-latest."
@@ -2304,6 +2398,7 @@ Evidence = @(
 @("scripts/validate.ps1", "Test-ContextCompactIntegrity"),
 @("scripts/validate.ps1", "Test-CollaboratorWindowIntegrity"),
 @("scripts/validate.ps1", "Test-MultiAgentWorkflowIntegrity"),
+@("scripts/validate.ps1", "Test-AgentCleanupHelperIntegrity"),
 @("scripts/validate.ps1", "Test-AgentLedgerCompatibility")
 )
 },
@@ -2432,11 +2527,7 @@ if ($skillSize -gt $skillLimit) {
 Add-Failure ("Project skill exceeds {0} bytes: {1}" -f $skillLimit, $skillSize)
 }
 $maxYamlSize = 0
-$agentsYamlRoot = Get-RepoPath ".agents/docs/agents"
-if (-not (Test-Path -LiteralPath $agentsYamlRoot -PathType Container)) {
-$agentsYamlRoot = Get-RepoPath "docs/agents"
-}
-foreach ($file in Get-ChildItem -LiteralPath $agentsYamlRoot -Filter "*.yaml") {
+foreach ($file in Get-ChildItem -LiteralPath (Get-AgentsDocsPath) -Filter "*.yaml") {
 if ($file.Length -gt $maxYamlSize) {
 $maxYamlSize = $file.Length
 }
@@ -2457,10 +2548,10 @@ $trackedTotal = Get-RepoFilesSize -Paths @(& git -C $RepoRoot ls-files)
 $intendedTotal = Get-RepoFilesSize -Paths (Get-IntendedRepoFiles)
 $limit = $repoLimitKiB * 1024
 if ($trackedTotal -gt $limit) {
-Add-Warning ("Tracked repo size exceeds Agents template limit; app repo size check skipped: {0} bytes" -f $trackedTotal)
+Add-Warning ("Tracked repo size exceeds {0} KiB: {1} bytes" -f $repoLimitKiB, $trackedTotal)
 }
 if ($intendedTotal -gt $limit) {
-Add-Warning ("Intended repo size exceeds Agents template limit; app repo size check skipped: {0} bytes" -f $intendedTotal)
+Add-Warning ("Intended repo size exceeds {0} KiB: {1} bytes" -f $repoLimitKiB, $intendedTotal)
 }
 if ($Failures.Count -eq $startFailureCount) {
 Add-Pass ("Size gates passed: AGENTS.md {0} bytes; project skill {1} bytes; max yaml {2} bytes; max ps1 {3} bytes; tracked repo {4} bytes; intended repo {5} bytes." -f $agentsSize, $skillSize, $maxYamlSize, $maxScriptSize, $trackedTotal, $intendedTotal)
@@ -2468,6 +2559,7 @@ Add-Pass ("Size gates passed: AGENTS.md {0} bytes; project skill {1} bytes; max 
 }
 function Test-CoreRuntimeSystemIntegrity {
 $startFailureCount = $Failures.Count
+$expectedWorkflowVersion = Get-CanonicalWorkflowVersion
 $mirrorPairs = @(
 @(".agents/docs/agents/core-system.yaml", ".agents/docs/templates/agents/agents/core-system.yaml"),
 @(".agents/docs/agents/runtime-execution.yaml", ".agents/docs/templates/agents/agents/runtime-execution.yaml"),
@@ -2494,7 +2586,7 @@ $markerChecks = @(
 @(".agents/docs/agents/deploy.yaml", @(".agents/docs/agents/core-system.yaml", ".agents/docs/agents/runtime-execution.yaml", ".agents/docs/agents/provider-adapters.yaml", ".agents/docs/agents/route-packs.yaml", ".agents/docs/agents/knowledge-footprint.yaml", ".agents/runtime/executions/", ".agents/runtime/tool-evidence/", ".agents/runtime/deployments/", ".agents/runtime/route-packs/", ".agents/runtime/knowledge/")),
 @(".agents/docs/agents/verify.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint", "core_system_integrity", "runtime_execution_integrity", "provider_adapter_integrity", "route_pack_integrity", "knowledge_footprint_integrity", "route_pack_export", "runtime_helper")),
 @(".agents/docs/agents/route-packs.yaml", @("answer_only", "no_read_default", "no_file_read", "manifest_hash")),
-@(".agents/docs/agents/version.yaml", @("2.5.0", "core-runtime", "core_contract_rule", "runtime_execution_rule", "knowledge_footprint_rule")),
+@(".agents/docs/agents/version.yaml", @($expectedWorkflowVersion, "core-runtime", "core_contract_rule", "runtime_execution_rule", "knowledge_footprint_rule")),
 @(".agents/docs/agents/schemas.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint")),
 @(".agents/docs/agents/collaborators.yaml", @("thread_operation_record", "execution_run_ref")),
 @(".agents/docs/agents/context-compact.yaml", @("retained_facts", "dropped_details", "resume_pointer")),
@@ -2515,13 +2607,7 @@ Add-Failure ("Core runtime marker missing from {0}: {1}" -f $path, $marker)
 }
 }
 }
-$leaf = Split-Path -Leaf $RepoRoot.Path
-$projectId = ($leaf.ToLowerInvariant() -replace "[^a-z0-9]+", "-").Trim("-")
-if ([string]::IsNullOrWhiteSpace($projectId)) {
-$projectId = "agents"
-}
-$tempRoot = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "codex-agent-status", $projectId)
-$routePackRoot = Join-Path $tempRoot "route-pack-validation"
+$routePackRoot = Get-ValidationTempRoot -Purpose "route-pack-validation"
 $routePackA = Join-Path $routePackRoot "core-system-a.json"
 $routePackB = Join-Path $routePackRoot "core-system-b.json"
 $routePackAnswerA = Join-Path $routePackRoot "answer-only-a.json"
@@ -2552,8 +2638,8 @@ $manifest = Get-Content -LiteralPath $routePackA -Raw | ConvertFrom-Json
 if ([string] $manifest.route_id -ne "core_system") {
 Add-Failure "Route pack manifest route_id mismatch."
 }
-if ([string] $manifest.version -ne "2.5.0") {
-Add-Failure "Route pack manifest version must be 2.5.0."
+if ([string] $manifest.version -ne $expectedWorkflowVersion) {
+Add-Failure ("Route pack manifest version must be {0}." -f $expectedWorkflowVersion)
 }
 if ($manifest.PSObject.Properties["files"]) {
 Add-Failure "Route pack manifest must use required_files, not files."
@@ -2587,13 +2673,14 @@ Add-Failure "Answer-only route pack manifest must include manifest_hash."
 catch {
 Add-Failure ("Route pack deterministic check failed: {0}" -f $_.Exception.Message)
 }
-$runtimeRoot = Join-Path $tempRoot "runtime-execution-validation"
+$runtimeRoot = Get-ValidationTempRoot -Purpose "runtime-execution-validation"
 $runId = "readonly-smoke"
 try {
 $runtimeScript = Get-RepoPath "scripts/agents-runtime.ps1"
 & $runtimeScript -Action NewRun -RunId $runId -RuntimeRoot $runtimeRoot -Objective "readonly validation smoke" -Authority "read_only" -Quiet 2>&1 | Out-Null
 & $runtimeScript -Action AddStep -RunId $runId -RuntimeRoot $runtimeRoot -Step "read_only" -Authority "read_only" -Quiet 2>&1 | Out-Null
-& $runtimeScript -Action AddResult -RunId $runId -RuntimeRoot $runtimeRoot -Result "completed" -Summary "readonly smoke completed" -Quiet 2>&1 | Out-Null
+& $runtimeScript -Action AddDeploymentEvidence -RunId $runId -RuntimeRoot $runtimeRoot -EvidenceType "verify" -Summary "readonly verification evidence" -EvidenceRef "run.json" -VerificationRef "scripts/agents-runtime.ps1" -Quiet 2>&1 | Out-Null
+& $runtimeScript -Action AddResult -RunId $runId -RuntimeRoot $runtimeRoot -Result "completed" -Summary "readonly smoke completed" -EvidenceRef "summary.json" -VerificationRef "scripts/validate.ps1" -Quiet 2>&1 | Out-Null
 & $runtimeScript -Action Collect -RunId $runId -RuntimeRoot $runtimeRoot -Quiet 2>&1 | Out-Null
 & $runtimeScript -Action Verify -RunId $runId -RuntimeRoot $runtimeRoot -Quiet 2>&1 | Out-Null
 & $runtimeScript -Action Cleanup -RunId $runId -RuntimeRoot $runtimeRoot -Quiet 2>&1 | Out-Null
@@ -2604,14 +2691,25 @@ Add-Failure "Runtime execution smoke did not produce run.json."
 }
 else {
 $run = Get-Content -LiteralPath $runPath -Raw | ConvertFrom-Json
-if ([string] $run.version -ne "2.5.0") {
-Add-Failure "Runtime execution run version must be 2.5.0."
+if ([string] $run.version -ne $expectedWorkflowVersion) {
+Add-Failure ("Runtime execution run version must be {0}." -f $expectedWorkflowVersion)
 }
 if ([string] $run.status -ne "cleaned") {
 Add-Failure "Runtime execution smoke must end with cleaned status."
 }
 if (@($run.cleanup_evidence).Count -lt 1) {
 Add-Failure "Runtime execution smoke must include cleanup evidence."
+}
+foreach ($requiredArray in @("event_summary", "verification_refs", "risks", "deployment_evidence")) {
+if ($null -eq $run.PSObject.Properties[$requiredArray]) {
+Add-Failure ("Runtime execution run is missing required array: {0}" -f $requiredArray)
+}
+}
+if ([string]::IsNullOrWhiteSpace([string] $run.resume_pointer)) {
+Add-Failure "Runtime execution run must include resume_pointer."
+}
+if (@($run.deployment_evidence).Count -lt 1) {
+Add-Failure "Runtime execution smoke must include deployment evidence."
 }
 }
 }
@@ -2622,13 +2720,60 @@ if ($Failures.Count -eq $startFailureCount) {
 Add-Pass "Core runtime system integrity checks passed."
 }
 }
+function Test-CrossProjectRuntimeResilienceIntegrity {
+$startFailureCount = $Failures.Count
+$mirrorPairs = @(
+@(".agents/docs/agents/deploy.yaml", ".agents/docs/templates/agents/agents/deploy.yaml"),
+@(".agents/docs/agents/runtime-execution.yaml", ".agents/docs/templates/agents/agents/runtime-execution.yaml")
+)
+foreach ($pair in $mirrorPairs) {
+$source = Get-RepoPath $pair[0]
+$mirror = Get-RepoPath $pair[1]
+if (-not (Test-Path -LiteralPath $source -PathType Leaf) -or -not (Test-Path -LiteralPath $mirror -PathType Leaf)) {
+Add-Failure ("Cross-project mirror missing: {0} <-> {1}" -f $pair[0], $pair[1])
+continue
+}
+$sourceHash = (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash
+$mirrorHash = (Get-FileHash -LiteralPath $mirror -Algorithm SHA256).Hash
+if ($sourceHash -ne $mirrorHash) {
+Add-Failure ("Cross-project mirror drift: {0} <-> {1}" -f $pair[0], $pair[1])
+}
+}
+$markerChecks = @(
+@(".agents/docs/agents/deploy.yaml", @("root-layout", "dot-agents-layout", "pre_dirty_snapshot", "post_dirty_snapshot", "changed_by_deploy", "unexpected_changed_files", "cleanup_capability", "dirty_snapshot_guard", "scripts/agents-cleanup.ps1", "%TEMP%/codex-agent-status/<project-id>-<repo-path-hash>/<run-id>/")),
+@("scripts/deploy-agents-workflow.ps1", @("LayoutProfile", "Get-TargetDirtySnapshot", "Test-AgentsRoutePathConsistency", "Assert-NoUnexpectedTargetChanges", "cleanup_capability", "run_id", "Get-StatusProjectKey")),
+@("scripts/validate.ps1", @("TempRoot", "Get-ValidationTempRoot", "Get-RepoPathHash", "ValidationRunId")),
+@("scripts/agents-runtime.ps1", @("resume_pointer", "event_summary", "verification_refs", "deployment_evidence", "AddDeploymentEvidence")),
+@("scripts/export-route-pack.ps1", @("Get-ProjectKey", "Get-RunId", "codex-agent-status", "manifest_hash")),
+@(".agents/docs/agents/runtime-execution.yaml", @("cross_window_recovery", "deployment_evidence", "resume_pointer", "verification_refs")),
+@(".agents/docs/agents/workflows.yaml", @("runtime.quiet_cleanup", "scripts/agents-cleanup.ps1")),
+@(".agents/docs/agents/verify.yaml", @("scripts/agents-cleanup.ps1", "cleanup"))
+)
+foreach ($check in $markerChecks) {
+$path = [string] $check[0]
+$contentPath = Get-RepoPath $path
+if (-not (Test-Path -LiteralPath $contentPath -PathType Leaf)) {
+Add-Failure ("Cross-project marker file missing: {0}" -f $path)
+continue
+}
+$content = Get-Content -LiteralPath $contentPath -Raw
+foreach ($marker in @($check[1])) {
+if (-not $content.Contains([string] $marker)) {
+Add-Failure ("Cross-project marker missing from {0}: {1}" -f $path, $marker)
+}
+}
+}
+if ($Failures.Count -eq $startFailureCount) {
+    Add-Pass "Cross-project ok."
+}
+}
 function Test-LegacyResidue {
 $startFailureCount = $Failures.Count
 $roots = @(
 "README.md",
 "docs/agents",
 ".agents/docs/project-structure.md",
-"docs/templates/agents",
+".agents/docs/templates/agents",
 "docs/runbooks",
 "schemas",
 "scripts",
@@ -2693,12 +2838,7 @@ Add-Pass "Legacy residue scan passed."
 }
 function Test-ReleasePackageExport {
 $startFailureCount = $Failures.Count
-$leaf = Split-Path -Leaf $RepoRoot.Path
-$projectId = ($leaf.ToLowerInvariant() -replace "[^a-z0-9]+", "-").Trim("-")
-if ([string]::IsNullOrWhiteSpace($projectId)) {
-$projectId = "agents"
-}
-$validationRoot = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "codex-agent-status", $projectId, "release-export-validation")
+$validationRoot = Get-ValidationTempRoot -Purpose "release-export-validation"
 $previousErrorActionPreference = $ErrorActionPreference
 $ErrorActionPreference = "Continue"
 try {
@@ -2849,26 +2989,26 @@ Test-TemplateCoverage
 Test-TemplateSourceNeutrality
 Test-SkillMetadata
 Test-DeploymentScriptSafety
+Test-DeploymentSelfTest
 Test-MultiAgentWorkflowIntegrity
+Test-AgentCleanupHelperIntegrity
 Test-WorkflowArtifactIntegrity
 Test-ContextCompactIntegrity
 Test-CollaboratorWindowIntegrity
 Test-CoreRuntimeSystemIntegrity
+Test-CrossProjectRuntimeResilienceIntegrity
 Test-LegacyResidue
 Test-AgentLedgerCompatibility
 Test-EvidenceTemplateSchemaCoverage
 Test-CIWorkflowStability
 Test-ReadinessLadderEvidence
 Test-SizeGates
+Test-ReleasePackageExport
 }
 Push-Location $RepoRoot
 try {
 Write-Check "INFO" ("Repo root: {0}" -f $RepoRoot)
-$agentsYamlRoot = Get-RepoPath ".agents/docs/agents"
-if (-not (Test-Path -LiteralPath $agentsYamlRoot -PathType Container)) {
-    $agentsYamlRoot = Get-RepoPath "docs/agents"
-}
-$yamlFiles = Get-ChildItem -LiteralPath $agentsYamlRoot -Filter "*.yaml" -File
+$yamlFiles = Get-ChildItem -LiteralPath (Get-AgentsDocsPath) -Filter "*.yaml" -File
 foreach ($file in $yamlFiles) {
 Test-LightweightYaml -File $file
 }
@@ -2892,30 +3032,17 @@ Test-WorkflowArtifactIntegrity
 Test-ContextCompactIntegrity
 Test-CollaboratorWindowIntegrity
 Test-CoreRuntimeSystemIntegrity
+Test-AgentCleanupHelperIntegrity
+Test-CrossProjectRuntimeResilienceIntegrity
 Test-LegacyResidue
 Test-ValidationFixtures
-if ($Failures.Count -eq 0) {
-Add-Pass "Validation fixtures passed."
-}
-$startVersionFailureCount = $Failures.Count
 Test-PublicReadmeVersionAlignment
-if ($Failures.Count -eq $startVersionFailureCount) {
-Add-Pass "Public README workflow version matches canonical version metadata."
-}
 $scanRoots = @(
 "AGENTS.md",
 ".agents/docs",
 ".agents/skills/project-isolation-workflow",
 "schemas",
-"scripts/README.md",
-"scripts/agents-runtime.ps1",
-"scripts/agents-workflow.ps1",
-"scripts/commit-github-updates.ps1",
-"scripts/deploy-agents-workflow.ps1",
-"scripts/export-release-package.ps1",
-"scripts/export-route-pack.ps1",
-"scripts/update-github-updates.ps1",
-"scripts/validate.ps1"
+"scripts"
 )
 $textFiles = @(Get-TextFiles -Roots $scanRoots)
 Test-PatternScan -Name "Placeholder" -Pattern "TO[D]O|\[TO[D]O\]|T[B]D|FI[X]ME|turn[0-9]+|filecite" -Files $textFiles

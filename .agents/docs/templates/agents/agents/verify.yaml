@@ -81,7 +81,7 @@ commands:
 profiles:
   read_only_audit: "Read assigned paths only; run allowed commands; report findings/isolation; skip unassigned state."
   fast_turn: "answer-only no command; edits read target, status, scoped diff, focused verify; current-state inspect named source."
-  policy_pack_edit: "AGENTS/.agents/.agents/docs/agents/runbooks/templates/memory/deploy rules changed: status, targets, diff, pair/prose/size gates."
+  policy_pack_edit: "AGENTS/.agents/docs/agents/runbooks/templates/memory/deploy rules changed: status, targets, diff, pair/prose/size gates."
   commit_tag_checkpoint: "Ordinary commit/tag/version/branch-push: status_full, diff_check, changed_manifest, pair/prose/EOL/size, ignored runtime not staged."
   release_deploy_push_audit:
     use: "release, deploy, protected/main push, broad/no-deduction/full verification"

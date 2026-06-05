@@ -57,6 +57,8 @@ commands:
   legacy_residue_scan: "Reject retired compatibility positioning and stale helper version literals."
   release_package_export: ".\\scripts\\export-release-package.ps1 -Quiet"
   runtime_helper: ".\\scripts\\agents-runtime.ps1"
+  runtime_cleanup_helper: ".\\scripts\\agents-cleanup.ps1 -Action Verify"
+  cleanup_mandatory_script: "scripts/agents-cleanup.ps1"
   route_pack_export: ".\\scripts\\export-route-pack.ps1"
   changed_english: 'rg -n "[\p{Han}]" <changed durable rule/template files>'
   changed_placeholders: 'rg -n "TO[D]O|\[TO[D]O\]|T[B]D|FI[X]ME" <changed durable rule/template files>'

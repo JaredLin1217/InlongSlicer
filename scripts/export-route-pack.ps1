@@ -6,13 +6,29 @@
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-function Get-ProjectId {
-$leaf = Split-Path -Leaf $RepoRoot
-$id = ($leaf.ToLowerInvariant() -replace "[^a-z0-9]+", "-").Trim("-")
-if ([string]::IsNullOrWhiteSpace($id)) {
-return "agents"
+function Get-RepoPathHash {
+param([string] $Path)
+$normalized = [System.IO.Path]::GetFullPath($Path).TrimEnd("\", "/").ToLowerInvariant()
+$sha = [System.Security.Cryptography.SHA256]::Create()
+try {
+$bytes = [System.Text.Encoding]::UTF8.GetBytes($normalized)
+$hash = $sha.ComputeHash($bytes)
+return -join ($hash[0..5] | ForEach-Object { $_.ToString("x2") })
 }
-return $id
+finally {
+$sha.Dispose()
+}
+}
+function Get-ProjectKey {
+$leaf = Split-Path -Leaf $RepoRoot
+$id = ($leaf.ToLowerInvariant() -replace "[^a-z0-9._-]+", "-").Trim("-._")
+if ([string]::IsNullOrWhiteSpace($id)) {
+$id = "agents"
+}
+return ("{0}-{1}" -f $id, (Get-RepoPathHash -Path $RepoRoot))
+}
+function Get-RunId {
+return ("routepack-{0}-{1}" -f ([DateTimeOffset]::UtcNow.ToString("yyyyMMddHHmmssfff")), ([Guid]::NewGuid().ToString("N").Substring(0, 8)))
 }
 function Get-WorkflowVersion {
 $versionPath = Join-Path $RepoRoot ".agents/docs/agents/version.yaml"
@@ -105,7 +121,7 @@ required_files = $entries
 manifest_hash = Get-StringSha256 $manifestSeed
 }
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-$OutputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "codex-agent-status", (Get-ProjectId), "route-packs", ("{0}.json" -f $RouteId))
+$OutputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), "codex-agent-status", (Get-ProjectKey), (Get-RunId), "route-packs", ("{0}.json" -f $RouteId))
 }
 $outputFull = [System.IO.Path]::GetFullPath($OutputPath)
 $outputParent = Split-Path -Parent $outputFull

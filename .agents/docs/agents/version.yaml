@@ -1,8 +1,8 @@
-schema: agents-version/v2
+﻿schema: agents-version/v2
 purpose: "Core runtime system version metadata for provider and target deployments."
 owns: "Core runtime version, deployment contract, and upgrade expectations."
 workflow:
-  version: "2.5.0"
+  version: "2.5.1"
   channel: "core-runtime"
   positioning: "Core Runtime System unifies routing, dispatch, collaborator windows, compaction, workflow artifacts, runtime evidence, deploy, verify, and release packaging."
   root_principle: "One repo-local operating standard, source-neutral deployment, runtime-local evidence, project-owned knowledge, and repeatable task flow across growing projects."
