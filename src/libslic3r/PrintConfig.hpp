@@ -1630,6 +1630,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionString,             thumbnails))
     // BBS: move from PrintObjectConfig
     ((ConfigOptionBool, independent_support_layer_height))
+    ((ConfigOptionBool, independent_support_top_contact_layer_height))
     ((ConfigOptionBool,               combine_brims))
     // Inlong
     ((ConfigOptionPercents,            filament_shrink))

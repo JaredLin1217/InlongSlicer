@@ -221,8 +221,6 @@ struct SupportParameters {
         support_extrusion_width        = object_config.support_line_width.get_abs_value(nozzle_diameter);
         support_extrusion_width        = support_extrusion_width > 0 ? support_extrusion_width : extrusion_width;
 
-        independent_layer_height = print_config.independent_support_layer_height;
-
         // force double walls everywhere if wall count is larger than 1        
         tree_branch_diameter_double_wall_area_scaled = object_config.tree_support_wall_count.value > 1  ? 0.1 :
                                                        object_config.tree_support_wall_count.value == 0 ? 0.25 * sqr(scaled<double>(5.0)) * M_PI :
@@ -243,6 +241,11 @@ struct SupportParameters {
                 support_style = smsGrid;
             }
         }
+
+        independent_layer_height = print_config.independent_support_layer_height;
+        independent_top_contact_layer_height =
+            support_style != smsTreeOrganic &&
+            (print_config.independent_support_layer_height || print_config.independent_support_top_contact_layer_height);
     }
     // Zero-gap interface flags for top / bottom contact.
     bool                    zero_gap_interface_top;
@@ -344,6 +347,7 @@ struct SupportParameters {
     	{ return this->raft_angle_interface + ((interface_id & 1) ? float(- M_PI / 4.) : float(+ M_PI / 4.)); }
 		
     bool independent_layer_height = false;
+    bool independent_top_contact_layer_height = false;
     const double thresh_big_overhang = Slic3r::sqr(scale_(10));
 
 	bool          ironing;

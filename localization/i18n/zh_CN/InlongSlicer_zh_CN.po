@@ -16824,6 +16824,17 @@ msgstr ""
 "支撑层使用与对象层独立的层高。这是为了支持自定义z-gap并且节省打印时间。当擦料"
 "塔被启用时，这个选项将无效。"
 
+msgid "Independent top contact layer height"
+msgstr "独立顶部接触层高"
+
+msgid ""
+"Only the support top contact layer uses an independent layer height, allowing "
+"Top Z distance to be applied without rounding to the object layer height. "
+"This option can be enabled together with Independent support layer height."
+msgstr ""
+"只有支撑顶部接触层使用独立层高，使顶部 Z 间距不用取整到模型层高。"
+"此选项可以与独立支撑层高同时开启。"
+
 msgid "Threshold angle"
 msgstr "阈值角度"
 

@@ -6396,6 +6396,14 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(true));
 
+    def = this->add("independent_support_top_contact_layer_height", coBool);
+    def->label = L("Independent top contact layer height");
+    def->category = L("Support");
+    def->tooltip = L("Only the support top contact layer uses an independent layer height, allowing Top Z distance to be applied without rounding to the object layer height. "
+                     "This option can be enabled together with Independent support layer height.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
     def = this->add("support_threshold_angle", coInt);
     def->label = L("Threshold angle");
     def->category = L("Support");
@@ -8539,6 +8547,7 @@ void DynamicPrintConfig::normalize_fdm(int used_filaments)
     ConfigOptionBool* ept_opt = this->option<ConfigOptionBool>("enable_prime_tower");
     if (used_filaments > 0 && ept_opt != nullptr) {
         ConfigOptionBool* islh_opt = this->option<ConfigOptionBool>("independent_support_layer_height", true);
+        ConfigOptionBool* istclh_opt = this->option<ConfigOptionBool>("independent_support_top_contact_layer_height", true);
         //ConfigOptionBool* alh_opt = this->option<ConfigOptionBool>("adaptive_layer_height");
         ConfigOptionEnum<PrintSequence>* ps_opt = this->option<ConfigOptionEnum<PrintSequence>>("print_sequence");
 
@@ -8551,6 +8560,8 @@ void DynamicPrintConfig::normalize_fdm(int used_filaments)
         if (ept_opt->value) {
             if (islh_opt)
                 islh_opt->value = false;
+            if (istclh_opt)
+                istclh_opt->value = false;
             //if (alh_opt)
             //    alh_opt->value = false;
         }
@@ -8620,6 +8631,7 @@ t_config_option_keys DynamicPrintConfig::normalize_fdm_2(int num_objects, int us
     ConfigOptionBool* ept_opt = this->option<ConfigOptionBool>("enable_prime_tower");
     if (used_filaments > 0 && ept_opt != nullptr) {
         ConfigOptionBool* islh_opt = this->option<ConfigOptionBool>("independent_support_layer_height", true);
+        ConfigOptionBool* istclh_opt = this->option<ConfigOptionBool>("independent_support_top_contact_layer_height", true);
         //ConfigOptionBool* alh_opt = this->option<ConfigOptionBool>("adaptive_layer_height");
         ConfigOptionEnum<PrintSequence>* ps_opt = this->option<ConfigOptionEnum<PrintSequence>>("print_sequence");
 
@@ -8644,6 +8656,12 @@ t_config_option_keys DynamicPrintConfig::normalize_fdm_2(int num_objects, int us
                     changed_keys.push_back("independent_support_layer_height");
                 }
                 //islh_opt->value = false;
+            }
+            if (istclh_opt) {
+                if (istclh_opt->value) {
+                    istclh_opt->value = false;
+                    changed_keys.push_back("independent_support_top_contact_layer_height");
+                }
             }
             //if (alh_opt) {
             //    if (alh_opt->value) {

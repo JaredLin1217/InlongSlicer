@@ -149,6 +149,14 @@ SlicingParameters SlicingParameters::create_from_config(
     /*                INLONG: Gap assignment                */
     /* -------------------------------------------------- */
 
+    const bool organic_tree_support =
+        is_tree(object_config.support_type) &&
+        (object_config.support_style == smsTreeOrganic || object_config.support_style == smsDefault);
+    const bool independent_top_contact_layer_height =
+        !organic_tree_support &&
+        (print_config.independent_support_layer_height ||
+         print_config.independent_support_top_contact_layer_height);
+
     // INLONG: Raft contact (raft -> object)
     if (zero_gap_interface_raft) {
         params.gap_raft_object = 0.0;
@@ -180,7 +188,7 @@ SlicingParameters SlicingParameters::create_from_config(
     } else {
         params.gap_support_object = support_top_z_gap;
 
-        if (!print_config.independent_support_layer_height) {
+        if (!independent_top_contact_layer_height) {
             params.gap_support_object =
                 std::round(params.gap_support_object / object_config.layer_height + EPSILON)
                 * object_config.layer_height;

@@ -1053,6 +1053,7 @@ static std::vector<std::string> s_Preset_print_options{
     "print_extruder_id",
     "print_extruder_variant",
     "independent_support_layer_height",
+    "independent_support_top_contact_layer_height",
     "support_angle",
     "support_interface_top_layers",
     "support_interface_bottom_layers",

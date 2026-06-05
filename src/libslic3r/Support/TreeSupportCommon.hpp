@@ -728,9 +728,21 @@ public:
             dtt_roof == 0 ? this->top_contacts :
             dtt_roof <= interface_threshold ? this->top_interfaces : this->top_base_interfaces;
         SupportGeneratorLayer*& l = layers[insert_layer_idx];
-        if (l == nullptr)
+        if (l == nullptr) {
             l = &layer_allocate_unguarded(layer_storage, dtt_roof == 0 ? SupporLayerType::TopContact : SupporLayerType::TopInterface, 
                     slicing_parameters, config, insert_layer_idx);
+            if (dtt_roof == 0 && support_parameters.independent_top_contact_layer_height && !support_parameters.independent_layer_height) {
+                const coordf_t support_top_distance = slicing_parameters.gap_support_object;
+                const coordf_t layer_height         = config.layer_height;
+                const coordf_t rounded_distance     = coordf_t(config.z_distance_top_layers) * layer_height;
+                const coordf_t z_adjust             = rounded_distance - support_top_distance;
+                if (z_adjust > EPSILON && z_adjust < layer_height - EPSILON) {
+                    l->print_z  += z_adjust;
+                    l->height    = z_adjust;
+                    l->bottom_z  = l->print_z - l->height;
+                }
+            }
+        }
         // will be unioned in finalize_interface_and_support_areas()
         append(l->polygons, std::move(new_roofs));
     }

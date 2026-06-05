@@ -2488,6 +2488,41 @@ void TreeSupport::draw_circles()
 
             }
         });
+
+        if (m_support_params.independent_top_contact_layer_height && !m_support_params.independent_layer_height) {
+            SupportLayerPtrs &ts_layers = m_object->support_layers();
+            const size_t original_layer_count = ts_layers.size();
+            for (size_t layer_idx = m_raft_layers; layer_idx < original_layer_count; ++layer_idx) {
+                SupportLayer *src_layer = ts_layers[layer_idx];
+                if (src_layer == nullptr || src_layer->roof_1st_layer.empty())
+                    continue;
+
+                // The independent top contact layer must be continuous with the
+                // existing roof path. The model starts at the next object layer,
+                // so split the current layer by the requested top Z gap.
+                const coordf_t contact_height = src_layer->height - m_slicing_params.gap_support_object;
+                if (contact_height <= EPSILON || contact_height >= m_slicing_params.max_suport_layer_height + EPSILON)
+                    continue;
+                const coordf_t contact_print_z = src_layer->print_z + contact_height;
+
+                SupportLayer *contact_layer = m_object->add_tree_support_layer(int(ts_layers.size()), contact_height, contact_print_z, contact_print_z);
+                contact_layer->roof_1st_layer = src_layer->roof_1st_layer;
+                contact_layer->support_type = src_layer->support_type;
+
+                for (auto &expoly : contact_layer->roof_1st_layer)
+                    contact_layer->area_groups.emplace_back(&expoly, SupportLayer::Roof1stLayer, m_slicing_params.gap_support_object);
+            }
+
+            std::sort(ts_layers.begin(), ts_layers.end(), [](const SupportLayer *lhs, const SupportLayer *rhs) {
+                return lhs->print_z < rhs->print_z || (lhs->print_z == rhs->print_z && lhs->height < rhs->height);
+            });
+            for (int layer_idx = 0; layer_idx < int(ts_layers.size()); ++layer_idx) {
+                ts_layers[layer_idx]->set_id(layer_idx);
+                ts_layers[layer_idx]->lower_layer = layer_idx > 0 ? ts_layers[layer_idx - 1] : nullptr;
+                ts_layers[layer_idx]->upper_layer = layer_idx + 1 < int(ts_layers.size()) ? ts_layers[layer_idx + 1] : nullptr;
+            }
+        }
+
         // INLONG: normalize interface_id sequencing to follow printed interface layers only.
         const int top_base_layers = int(m_support_params.num_top_base_interface_layers);
         int roof_interface_id = 0;
@@ -3522,8 +3557,11 @@ void TreeSupport::generate_contact_points()
   //      z_distance_top += m_object->layers()[0]->regions()[0]->region().bridging_height_avg(m_object->print()->config()) - layer_height;
 		//}
   //  }
-    const int z_distance_top_layers = round_up_divide(scale_(z_distance_top), scale_(layer_height)) + 1; //Support must always be 1 layer below overhang.
-    int gap_layers = z_distance_top == 0 ? 0 : 1;
+    const bool independent_top_contact_gap =
+        m_support_params.independent_top_contact_layer_height && !m_support_params.independent_layer_height;
+    const int z_distance_top_layers = independent_top_contact_gap ?
+        1 : round_up_divide(scale_(z_distance_top), scale_(layer_height)) + 1; //Support must always be 1 layer below overhang.
+    int gap_layers = z_distance_top == 0 || independent_top_contact_gap ? 0 : 1;
 
     size_t support_roof_layers = config.support_interface_top_layers.value;
     coordf_t  thresh_angle = std::min(89.f, config.support_threshold_angle.value < EPSILON ? 30.f : config.support_threshold_angle.value);

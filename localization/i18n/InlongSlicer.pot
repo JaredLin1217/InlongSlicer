@@ -15757,6 +15757,15 @@ msgid ""
 "when the prime tower is enabled."
 msgstr ""
 
+msgid "Independent top contact layer height"
+msgstr ""
+
+msgid ""
+"Only the support top contact layer uses an independent layer height, allowing "
+"Top Z distance to be applied without rounding to the object layer height. "
+"This option can be enabled together with Independent support layer height."
+msgstr ""
+
 msgid "Threshold angle"
 msgstr ""
 

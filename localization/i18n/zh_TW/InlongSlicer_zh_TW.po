@@ -16957,6 +16957,17 @@ msgstr ""
 "支撐層的層厚設定可獨立於物件層高度，允許自定義 Z 間隙並縮短列印時間。此選項在"
 "啟用換料塔時將失效。"
 
+msgid "Independent top contact layer height"
+msgstr "獨立頂部接觸層高"
+
+msgid ""
+"Only the support top contact layer uses an independent layer height, allowing "
+"Top Z distance to be applied without rounding to the object layer height. "
+"This option can be enabled together with Independent support layer height."
+msgstr ""
+"只有支撐頂部接觸層使用獨立層高，使頂部 Z 間距不用取整到模型層高。"
+"此選項可以與獨立支撐層高同時開啟。"
+
 msgid "Threshold angle"
 msgstr "臨界值角度"
 
