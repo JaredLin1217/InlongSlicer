@@ -1,4 +1,4 @@
-schema: agents-collaborators/v1
+﻿schema: agents-collaborators/v1
 purpose: "Runtime overlay for named, recoverable, archivable Codex collaborator windows."
 owns: "Collaborator lifecycle, department leader mapping, thread operations, assignment envelope, reports, and runtime boundaries."
 trigger_when:
@@ -15,12 +15,14 @@ capability:
   discover_before_use: "Discover thread tools before create, rename, send, read, archive, close, or active-list claims."
   unavailable_behavior: "Return escalation_record or manual checkpoint when thread tools are unavailable; do not claim a window was created."
   delete_claim_rule: "Claim archive or close only with runtime evidence; claim deletion only if the runtime tool explicitly proves deletion."
+  stale_ui_rule: "Visible sidebar/history residue is an open risk until exact runtime id evidence proves inactive or deleted."
 types:
   default: department_leader_window
   allowed: ["department_leader_window"]
   blocked_without_override: ["worker_window", "independent_worker_window"]
 lifecycle:
   states: ["created", "active", "renamed", "reporting", "archived", "closed", "orphaned"]
+  claim_levels: ["close_requested", "archived", "verified_inactive", "deleted_proven"]
   close_rule: "Archive or close the exact collaborator thread id and verify it is no longer active before a clean close claim."
   thread_operation_rule: "Every create, rename, send, archive, close, or failed close attempt records thread_operation_record evidence."
   cleanup_boundary: "Collaborator windows use thread archive or close; subagent sidebar/history cleanup remains separate multi_agent runtime cleanup."
@@ -72,3 +74,4 @@ validation:
   model_tier_rule: "Mapped default_model_tier must exist in .agents/docs/agents/model-policy.yaml."
   runtime_boundary_rule: "Runtime registry and thread ids stay local and are excluded from templates, deploy, and release."
   close_claim_rule: "Close or archive claims need verified thread_operation_record evidence; unverified cleanup remains an open risk."
+  stale_sidebar_rule: "Sidebar nickname/history rows are not proof of activity or deletion; reconcile exact runtime ids only."

@@ -6,6 +6,7 @@ boundary:
   method: "inspect target, then copy/adapt allowlisted files"
   target_owns: ["Codex policy","env","runtime","workflow artifacts","compact events","memory","git","history"]
   source_must_not_store: "no target status/workflow artifacts/compact events/commits/remotes/deployment results/live ids"
+  claim_boundary: "Clean claim needs target dry-run/verify/handoff."
 target_layout:
   detect_first: ["AGENTS.md","docs/agents",".agents/docs/agents",".agents/skills"]
   public_profiles:
@@ -219,13 +220,13 @@ case_by_case:
   - ".codex/*: one file at a time; never wholesale."
   - ".codex/environments/*.toml: preserve existing; if none, create .codex/environments/<target-project>.toml outside deployed_file_set."
 cross_project_runtime_resilience:
-  run_id: "Every deploy, verify, and cleanup run records a unique run_id."
-  resume_pointer: "Resume from ledger, summary, refs, and report; not full chat."
+  run_id: "Deploy/verify/cleanup records unique run_id."
+  resume_pointer: "Resume from ledger, summary, refs, report; not full chat."
   temp_root: "%TEMP%/codex-agent-status/<project-id>-<repo-path-hash>/<run-id>/"
-  cleanup_mandatory: "Require scripts/agents-cleanup.ps1, workflow rule, verify gate."
-  cleanup_claim_rule: "Use exact runtime id; no fully deleted claim without proof."
-  batch_isolation: "Use isolated run ids; share no lock/manifest/hash/temp output."
-  route_pack_determinism: "Route pack hash ignores temp root and run_id."
+  cleanup_mandatory: "Require cleanup script/rule/gate."
+  cleanup_claim_rule: "Exact id; no full-delete claim without proof."
+  batch_isolation: "Isolated run ids; no shared lock/manifest/hash/temp."
+  route_pack_determinism: "Route pack hash ignores temp/run_id."
 steps:
   - "Confirm exact target path/write authorization."
   - "Inspect target state and layout before writing."
@@ -256,7 +257,7 @@ hard_fail_gates:
   - "Collaborator thread ids/window runtime copied by default."
   - "OS permission, ACL, ownership, or .git repair attempted."
   - "Deployment script writes provider/source repo."
-  - "Target-specific claim without inspection."
+  - "Target claim without inspection/verify/handoff evidence."
   - "Competing layout without explicit migration."
   - "AGENTS.md routes to both docs/agents and .agents/docs/agents."
   - "Cleanliness claim uses whole dirty target, not deployed_file_set."
