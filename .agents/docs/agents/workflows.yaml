@@ -80,6 +80,7 @@ multi_agent_runtime:
     completion: "Final report is completion notice."
     close: "Close exact runtime id before history cleanup."
     official_controls_first: "Use runtime close/status/archive/unsubscribe first; no hard-delete API assumed."
+    claim_boundary: "Use close_requested/archived/verified_inactive unless exact runtime tools prove deletion; stale UI remains risk until delayed zero proof."
     close_success: "Clean roster = inactive + official zero + sqlite edge/thread zero + session-index zero + unread-state zero + rollout zero + delayed zero verification."
     residue_sources: "state_*.sqlite threads/thread_spawn_edges; session_index.jsonl child rows; global unread ids; sessions|archived_sessions rollouts."
     cleanup_order: "close/prove inactive -> resolve runtime ids, not sidebar nicknames -> match parent/cwd/subagent -> delete edges/threads, session_index rows, unread ids/rollouts -> delay verify zero."

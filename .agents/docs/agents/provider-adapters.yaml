@@ -1,10 +1,17 @@
-schema: agents-provider-adapters/v1
+﻿schema: agents-provider-adapters/v1
 purpose: "Provider capability and model tier mapping without binding workflows to one model id."
 tier_source: ".agents/docs/agents/model-policy.yaml"
 adapter_policy:
   bind_to_tier: true
   bind_to_single_model_id: false
   missing_provider: "escalate"
+runtime_boundary:
+  not_a_gateway: true
+  no_api_proxy: true
+  no_session_db: true
+  no_dashboard: true
+  execution_rule: "Tier/capability policy only; real provider calls need an approved runtime adapter outside tracked policy files."
+  upgrade_rule: "Full provider gateway, billing, sessions, or dashboard belongs to a larger runtime-adapter release."
 capability_fields:
   required:
     - "provider"

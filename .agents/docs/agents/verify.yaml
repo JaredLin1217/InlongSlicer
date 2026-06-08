@@ -6,7 +6,7 @@ scope_rule: "Use repo paths unless exact external path/action is authorized."
 stale_literal_rule: "Do not keep resolved one-off literal searches as routine gates."
 batch_rule: "Batch related checkpoint checks when practical."
 profile_selection:
-  order: ["answer/no-state -> fast_turn","read-only -> read_only_audit","state/edit/git/deploy -> inspect","policy pack -> policy_pack_edit","core system -> core_system","runtime execution -> runtime_execution","provider -> provider_adapter","route pack -> route_pack","knowledge footprint -> knowledge_footprint","enterprise -> enterprise_dispatch","artifact -> workflow_artifact","compact -> context_compact","collaborator -> collaborator_window","commit/tag/push -> commit_tag_checkpoint","deploy/release/protected/broad/no-deduction -> release_deploy_push_audit","runtime/batch -> runtime_multi_agent + batch_employee_validation","hard isolation -> hard_isolation"]
+  order: ["answer/no-state -> fast_turn","read-only -> read_only_audit","state/edit/git/deploy -> inspect","policy pack -> policy_pack_edit","core system -> core_system","runtime execution -> runtime_execution","provider_adapter -> provider_adapter","route pack -> route_pack","knowledge footprint -> knowledge_footprint","enterprise -> enterprise_dispatch","artifact -> workflow_artifact","compact -> context_compact","collaborator -> collaborator_window","commit/tag/push -> commit_tag_checkpoint","deploy/release/protected/broad/no-deduction -> release_deploy_push_audit","runtime/batch -> runtime_multi_agent + batch_employee_validation","hard isolation -> hard_isolation"]
   mixed_claim_rule: "Use highest-risk matching profile; do not upgrade unrelated facts."
   if_unclear: "State narrower claim."
 file_classes:
@@ -112,7 +112,7 @@ size_gates:
     AGENTS.md: 2048
     project_skill: 1792
     canonical_agents_yaml: 16384
-    script_ps1: 131072
+    script_ps1: 132000
     tracked_repo_kib: 896
   tracked_rule: "Ignored/untracked files excluded; intended new files count."
 claim_scopes:
