@@ -191,6 +191,14 @@ static t_config_enum_values s_keys_map_PowerLossRecoveryMode {
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(PowerLossRecoveryMode)
 
+// Inlong
+static t_config_enum_values s_keys_map_HeatbreakFanControlMode {
+    { "global_m710",  int(HeatbreakFanControlMode::GlobalM710) },
+    { "per_tool_m710", int(HeatbreakFanControlMode::PerToolM710) },
+    { "custom_gcode", int(HeatbreakFanControlMode::CustomGCode) }
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(HeatbreakFanControlMode)
+
 static t_config_enum_values s_keys_map_FuzzySkinType {
     { "none",           int(FuzzySkinType::None) },
     { "external",       int(FuzzySkinType::External) },
@@ -3459,6 +3467,16 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionInts{ -1 });
 
+    def = this->add("filament_heatbreak_fan_speed", coInts);
+    def->label = L("Material heatbreak fan speed");
+    def->tooltip = L("Heatbreak fan speed percentage requested by this filament. The printer profile decides how this value is emitted in G-code before waiting for the nozzle temperature.");
+    def->sidetext = "%";
+    def->min = 0;
+    def->max = 100;
+    def->mode = comAdvanced;
+    def->aliases = { "filament_m710_heatbreak_fan_speed" };
+    def->set_default_value(new ConfigOptionInts{ 38 });
+
     // INLONG: Add support for separate internal bridge fan speed control
     def = this->add("internal_bridge_fan_speed", coInts);
     def->label = L("Internal bridges fan speed");
@@ -3888,6 +3906,26 @@ void PrintConfigDef::init_fff_params()
     def->mode=comAdvanced;
     def->set_default_value(new ConfigOptionBool(true));
     def->readonly=false;
+
+    def = this->add("heatbreak_fan_control_mode", coEnum);
+    def->label = L("Heatbreak fan control mode");
+    def->tooltip = L("Select how material heatbreak fan speed is emitted before waiting for nozzle temperature.");
+    def->enum_keys_map = &ConfigOptionEnum<HeatbreakFanControlMode>::get_enum_values();
+    def->enum_values.push_back("global_m710");
+    def->enum_values.push_back("per_tool_m710");
+    def->enum_values.push_back("custom_gcode");
+    def->enum_labels.push_back(L("Global M710"));
+    def->enum_labels.push_back(L("Per-tool M710"));
+    def->enum_labels.push_back(L("Custom G-code"));
+    def->mode = comDevelop;
+    def->set_default_value(new ConfigOptionEnum<HeatbreakFanControlMode>(HeatbreakFanControlMode::GlobalM710));
+
+    def = this->add("heatbreak_fan_gcode_template", coString);
+    def->label = L("Heatbreak fan G-code template");
+    def->tooltip = L("Custom G-code emitted before waiting for nozzle temperature when heatbreak fan control mode is set to custom G-code. Available placeholders: {tool_id}, {filament_id}, {heatbreak_fan_speed}, {heatbreak_fan_pwm}.");
+    def->mode = comDevelop;
+    def->multiline = true;
+    def->set_default_value(new ConfigOptionString(""));
 
     def =this->add("support_air_filtration",coBool);
     def->label=L("Support air filtration");
@@ -8129,6 +8167,8 @@ void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &va
         opt_key = "change_filament_gcode";
     } else if (opt_key == "bridge_fan_speed") {
         opt_key = "overhang_fan_speed";
+    } else if (opt_key == "filament_m710_heatbreak_fan_speed") {
+        opt_key = "filament_heatbreak_fan_speed";
     } else if (opt_key == "infill_extruder" || opt_key == "sparse_infill_filament") {
         // ORCA: legacy feature-filament selector. Pre-2.4.0-dev these keys were 1-based and the
         // default value "1" meant "the first/active filament". The current scheme uses a dedicated
@@ -8489,6 +8529,7 @@ std::set<std::string> filament_options_with_variant = {
     "filament_ironing_spacing",
     "filament_ironing_inset",
     "filament_ironing_speed",
+    "filament_heatbreak_fan_speed",
     "activate_air_filtration",
     "activate_air_filtration_during_print",
     "activate_air_filtration_on_completion",

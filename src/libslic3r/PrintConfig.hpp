@@ -128,6 +128,13 @@ enum class PowerLossRecoveryMode {
     Disable,
 };
 
+// Inlong
+enum class HeatbreakFanControlMode {
+    GlobalM710,
+    PerToolM710,
+    CustomGCode,
+};
+
 // BBS
 enum class WallSequence {
     InnerOuter,
@@ -551,6 +558,7 @@ CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(AuthorizationType)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(WipeTowerWallType)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PerimeterGeneratorType)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PowerLossRecoveryMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(HeatbreakFanControlMode)
 
 #undef CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS
 
@@ -1421,6 +1429,8 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBool,                support_air_filtration))
     ((ConfigOptionEnum<PrinterStructure>,printer_structure))
     ((ConfigOptionBool,                support_chamber_temp_control))
+    ((ConfigOptionEnum<HeatbreakFanControlMode>, heatbreak_fan_control_mode))
+    ((ConfigOptionString,              heatbreak_fan_gcode_template))
     ((ConfigOptionEnumsGeneric,        extruder_type))
     ((ConfigOptionEnumsGeneric,        nozzle_volume_type))
     ((ConfigOptionStrings,             extruder_ams_count))
@@ -1646,6 +1656,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionBool,                gcode_comments))
     ((ConfigOptionInt,                 slow_down_layers))
     ((ConfigOptionInts,                support_material_interface_fan_speed))
+    ((ConfigOptionInts,                filament_heatbreak_fan_speed))
     ((ConfigOptionInts,                internal_bridge_fan_speed)) // INLONG: Add support for separate internal bridge fan speed control
     ((ConfigOptionInts,                ironing_fan_speed))
     // Inlong: notes for profiles from PrusaSlicer

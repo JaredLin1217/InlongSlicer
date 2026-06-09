@@ -462,7 +462,8 @@ void Tab::create_preset_tab()
     // BBS: bold selection
     m_tabctrl->Bind(wxEVT_TAB_SEL_CHANGING, [this](wxCommandEvent& event) {
         const auto sel_item = m_tabctrl->GetSelection();
-        m_tabctrl->SetItemBold(sel_item, false);
+        if (sel_item >= 0 && sel_item < static_cast<int>(m_tabctrl->GetCount()))
+            m_tabctrl->SetItemBold(sel_item, false);
         });
     m_tabctrl->Bind(wxEVT_TAB_SEL_CHANGED, [this](wxCommandEvent& event) {
 #ifdef __linux__
@@ -4097,6 +4098,9 @@ void TabFilament::build()
         optgroup->append_single_option_line("support_material_interface_fan_speed", "material_cooling#support-interface-fan-speed");
         optgroup->append_single_option_line("ironing_fan_speed", "material_cooling#ironing-fan-speed"); // INLONG: Add support for ironing fan speed control
 
+        optgroup = page->new_optgroup(L("Heatbreak fan"), L"param_cooling_fan");
+        optgroup->append_single_option_line("filament_heatbreak_fan_speed", "material_cooling#material-heatbreak-fan-speed");
+
         optgroup = page->new_optgroup(L("Auxiliary part cooling fan"), L"param_cooling_aux_fan");
         optgroup->append_single_option_line("additional_cooling_fan_speed", "material_cooling#auxiliary-part-cooling-fan");
 
@@ -6377,7 +6381,8 @@ void Tab::unselect_tree_item()
     // BBS: bold selection
     const auto sel_item = m_tabctrl->GetSelection();
     m_last_select_item = sel_item;
-    m_tabctrl->SetItemBold(sel_item, false);
+    if (sel_item >= 0 && sel_item < static_cast<int>(m_tabctrl->GetCount()))
+        m_tabctrl->SetItemBold(sel_item, false);
     m_tabctrl->Unselect();
     m_active_page = nullptr;
 }
@@ -6496,11 +6501,16 @@ bool Tab::tree_sel_change_delayed(wxCommandEvent& event)
     //BBS: GUI refactor
     Page* page = nullptr;
     const auto sel_item = m_tabctrl->GetSelection();
+    if (sel_item < 0 || sel_item >= static_cast<int>(m_tabctrl->GetCount()))
+        return false;
+
     // BBS: bold selection
     //OutputDebugStringA("tree_sel_change_delayed ");
     //OutputDebugStringA(m_title.c_str());
     m_tabctrl->SetItemBold(sel_item, true);
-    const auto selection = sel_item >= 0 ? m_tabctrl->GetItemText(sel_item) : "";
+    const auto selection = m_tabctrl->GetItemText(sel_item);
+    if (selection.empty())
+        return false;
     //OutputDebugString(selection);
     //OutputDebugStringA("\n");
     for (auto p : m_pages)

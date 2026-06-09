@@ -2760,6 +2760,7 @@ msgstr ""
 msgid "Custom G-code:"
 msgstr ""
 
+#: src/libslic3r/PrintConfig.cpp
 msgid "Custom G-code"
 msgstr ""
 
@@ -19707,4 +19708,40 @@ msgstr ""
 
 #: resources/data/hints.ini: [hint:Avoid warping]
 msgid "Avoid warping\nDid you know that when printing materials that are prone to warping such as ABS, appropriately increasing the heatbed temperature can reduce the probability of warping?"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Material heatbreak fan speed"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan speed percentage requested by this filament. The printer profile decides how this value is emitted in G-code before waiting for the nozzle temperature."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan control mode"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Select how material heatbreak fan speed is emitted before waiting for nozzle temperature."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Global M710"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Per-tool M710"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan G-code template"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Custom G-code emitted before waiting for nozzle temperature when heatbreak fan control mode is set to custom G-code. Available placeholders: {tool_id}, {filament_id}, {heatbreak_fan_speed}, {heatbreak_fan_pwm}."
 msgstr ""

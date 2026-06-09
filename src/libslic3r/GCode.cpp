@@ -292,9 +292,12 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
 
     std::string OozePrevention::post_toolchange(GCode& gcodegen)
     {
-        return (gcodegen.config().standby_temperature_delta.value != 0) ?
-            gcodegen.writer().set_temperature(this->_get_temp(gcodegen), true, gcodegen.writer().filament()->id()) :
-            std::string();
+        if (gcodegen.config().standby_temperature_delta.value == 0)
+            return std::string();
+
+        const unsigned int filament_id = gcodegen.writer().filament()->id();
+        return gcodegen.set_heatbreak_fan(filament_id, filament_id) +
+            gcodegen.writer().set_temperature(this->_get_temp(gcodegen), true, filament_id);
     }
 
     int OozePrevention::_get_temp(const GCode &gcodegen) const
@@ -305,6 +308,37 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
              || gcodegen.config().nozzle_temperature.get_at(gcodegen.writer().filament()->id()) == 0)
             ? gcodegen.config().nozzle_temperature_initial_layer.get_at(gcodegen.writer().filament()->id())
             : gcodegen.config().nozzle_temperature.get_at(gcodegen.writer().filament()->id());
+    }
+
+    std::string GCode::set_heatbreak_fan(unsigned int filament_id, unsigned int tool_id)
+    {
+        const auto &speeds = m_config.filament_heatbreak_fan_speed.values;
+        int percent = speeds.empty() ? 38 : m_config.filament_heatbreak_fan_speed.get_at(filament_id);
+        percent = std::max(0, std::min(100, percent));
+        const int pwm = (percent * 255 + 50) / 100;
+
+        switch (m_config.heatbreak_fan_control_mode.value) {
+        case HeatbreakFanControlMode::PerToolM710:
+            return "M710 T" + std::to_string(tool_id) + " S" + std::to_string(pwm) + " ; set material heatbreak fan\n";
+        case HeatbreakFanControlMode::CustomGCode: {
+            const std::string &templ = m_config.heatbreak_fan_gcode_template.value;
+            if (templ.empty())
+                return {};
+
+            DynamicConfig config;
+            config.set_key_value("tool_id", new ConfigOptionInt(int(tool_id)));
+            config.set_key_value("filament_id", new ConfigOptionInt(int(filament_id)));
+            config.set_key_value("heatbreak_fan_speed", new ConfigOptionInt(percent));
+            config.set_key_value("heatbreak_fan_pwm", new ConfigOptionInt(pwm));
+
+            std::string gcode = this->placeholder_parser_process("heatbreak_fan_gcode_template", templ, filament_id, &config);
+            check_add_eol(gcode);
+            return gcode;
+        }
+        case HeatbreakFanControlMode::GlobalM710:
+        default:
+            return "M710 S" + std::to_string(pwm) + " ; set material heatbreak fan\n";
+        }
     }
 
     // Inlong:
@@ -4061,8 +4095,11 @@ void GCode::_print_first_layer_extruder_temperatures(GCodeOutputStream &file, Pr
         if (print.config().single_extruder_multi_material.value) {
             // Set temperature of the first printing extruder only.
             int temp = print.config().nozzle_temperature_initial_layer.get_at(first_printing_extruder_id);
-            if (temp > 0)
+            if (temp > 0) {
+                if (wait)
+                    file.write(this->set_heatbreak_fan(first_printing_extruder_id, first_printing_extruder_id));
                 file.write(m_writer.set_temperature(temp, wait, first_printing_extruder_id));
+            }
         } else {
             // Set temperatures of all the printing extruders.
             for (unsigned int tool_id : print.extruders()) {
@@ -4073,8 +4110,11 @@ void GCode::_print_first_layer_extruder_temperatures(GCodeOutputStream &file, Pr
                     else
                         temp = print.config().idle_temperature.get_at(tool_id);
                 }
-                if (temp > 0)
+                if (temp > 0) {
+                    if (wait)
+                        file.write(this->set_heatbreak_fan(tool_id, tool_id));
                     file.write(m_writer.set_temperature(temp, wait, tool_id));
+                }
             }
         }
     }

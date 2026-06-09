@@ -123,6 +123,9 @@
     "fan_max_speed":  [
                           "100"
                       ],
+    "filament_heatbreak_fan_speed":  [
+                                         "38"
+                                     ],
     "fan_min_speed":  [
                           "35"
                       ],

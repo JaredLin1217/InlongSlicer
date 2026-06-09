@@ -2815,6 +2815,7 @@ msgstr "自訂範本："
 msgid "Custom G-code:"
 msgstr "自訂 G-code："
 
+#: src/libslic3r/PrintConfig.cpp
 msgid "Custom G-code"
 msgstr "自訂 G-code"
 
@@ -21511,6 +21512,18 @@ msgstr ""
 "您知道嗎？當列印容易翹曲的材料（如 ABS）時，適當提高熱床溫度\n"
 "可以降低翹曲的機率。"
 
+#: src/libslic3r/PrintConfig.cpp
+msgid "Material heatbreak fan speed"
+msgstr "材料喉管風扇"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan speed percentage requested by this filament. The printer profile decides how this value is emitted in G-code before waiting for the nozzle temperature."
+msgstr "此材料需要的喉管風扇百分比。印表機設定會決定在等待噴嘴溫度前如何將此數值輸出到 G-code。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan"
+msgstr "喉管風扇"
+
 #~ msgid "Erase all painting"
 #~ msgstr "擦除所有自訂支撐"
 
@@ -21895,3 +21908,27 @@ msgstr ""
 #, c-format, boost-format
 #~ msgid "The selected preset: %s is not found."
 #~ msgstr "找不到所選的預設：%s"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan control mode"
+msgstr "喉管風扇控制模式"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Select how material heatbreak fan speed is emitted before waiting for nozzle temperature."
+msgstr "選擇在等待噴嘴溫度前如何輸出材料喉管風扇速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Global M710"
+msgstr "全域 M710"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Per-tool M710"
+msgstr "依工具 M710"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Heatbreak fan G-code template"
+msgstr "喉管風扇 G-code 模板"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Custom G-code emitted before waiting for nozzle temperature when heatbreak fan control mode is set to custom G-code. Available placeholders: {tool_id}, {filament_id}, {heatbreak_fan_speed}, {heatbreak_fan_pwm}."
+msgstr "當喉管風扇控制模式設為自訂 G-code 時，在等待噴嘴溫度前輸出的自訂 G-code。可用佔位符：{tool_id}、{filament_id}、{heatbreak_fan_speed}、{heatbreak_fan_pwm}。"
