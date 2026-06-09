@@ -983,75 +983,8 @@ void PresetUpdater::priv::sync_plugins(std::string http_url, std::string plugin_
 
 void PresetUpdater::priv::sync_printer_config(std::string http_url)
 {
-    std::string curr_version  = SLIC3R_VERSION;
-    std::string using_version = curr_version.substr(0, 6) + "00.00";
-
-    std::string cached_version;
-    std::string data_dir_str = data_dir();
-    boost::filesystem::path data_dir_path(data_dir_str);
-    auto                    config_folder = data_dir_path / "printers";
-    auto                    cache_folder = data_dir_path / "ota" / "printers";
-
-    try {
-        auto version_file = config_folder / "version.txt";
-        if (fs::exists(version_file)) {
-            Slic3r::load_string_file(version_file, curr_version);
-            boost::algorithm::trim(curr_version);
-        }
-    } catch (...) {}
-    try {
-        auto version_file = cache_folder / "version.txt";
-        if (fs::exists(version_file)) {
-            Slic3r::load_string_file(version_file, cached_version);
-            boost::algorithm::trim(cached_version);
-        }
-    } catch (...) {}
-    if (!cached_version.empty()) {
-        bool   need_delete_cache = false;
-        Semver current_semver    = curr_version;
-        Semver cached_semver     = cached_version;
-
-        if ((cached_semver.maj() != current_semver.maj()) || (cached_semver.min() != current_semver.min())) {
-            need_delete_cache = true;
-            BOOST_LOG_TRIVIAL(info) << boost::format("cached printer config version %1% not match with current %2%") % cached_version % curr_version;
-        } else if (cached_semver.patch() <= current_semver.patch()) {
-            need_delete_cache = true;
-            BOOST_LOG_TRIVIAL(info) << boost::format("cached printer config version %1% not newer than current %2%") % cached_version % curr_version;
-        } else {
-            using_version = cached_version;
-        }
-
-        if (need_delete_cache) {
-            boost::system::error_code ec;
-            boost::filesystem::remove_all(cache_folder, ec);
-            cached_version           = curr_version;
-        }
-    }
-
-    try {
-        std::map<std::string, Resource> resources{{"slicer/printer/bbl", {using_version, "", "", false, cache_folder.string()}}};
-        sync_resources(http_url, resources, false, cached_version, "printer.json");
-    } catch (std::exception &e) {
-        BOOST_LOG_TRIVIAL(warning) << format("[Inlong Updater] sync_printer_config: %1%", e.what());
-    }
-
-    bool result = false;
-    try {
-        auto version_file = cache_folder / "version.txt";
-        if (fs::exists(version_file)) {
-            Slic3r::load_string_file(version_file, cached_version);
-            boost::algorithm::trim(cached_version);
-            result = true;
-        }
-    } catch (...) {}
-    if (result) {
-        BOOST_LOG_TRIVIAL(info) << format("[Inlong Updater] found new printer config: %1%, prompt to update", cached_version);
-        waiting_printer_updates = get_printer_config_updates(true);
-        if (waiting_printer_updates.updates.size() > 0) {
-            has_waiting_printer_updates = true;
-            GUI::wxGetApp().plater()->get_notification_manager()->push_notification(GUI::NotificationType::BBLPrinterConfigUpdateAvailable);
-        }
-    }
+    (void)http_url;
+    BOOST_LOG_TRIVIAL(info) << "[Inlong Updater] skip legacy printer config OTA; bundled printer configs are in use";
 }
 
 bool PresetUpdater::priv::install_bundles_rsrc(const std::vector<std::string>& bundles, bool snapshot) const
@@ -1379,8 +1312,8 @@ void PresetUpdater::sync(std::string http_url, std::string language, std::string
                 this->p->checked_vendors.insert(active_vendor);
             }
         }
-		if (p->cancel)
-			return;
+        if (p->cancel)
+            return;
         this->p->sync_plugins(http_url, plugin_version);
         this->p->sync_printer_config(http_url);
 		//if (p->cancel)

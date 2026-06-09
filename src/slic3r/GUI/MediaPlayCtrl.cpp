@@ -646,10 +646,11 @@ void MediaPlayCtrl::SetStatus(wxString const &msg2, bool hyperlink)
                                                        m_last_state + MEDIASTATE_BUFFERING - MEDIASTATE_IDLE;
         msg += wxString::Format(" [%d:%d]", state2, m_failed_code);
     }
-    BOOST_LOG_TRIVIAL(info) << "MediaPlayCtrl::SetStatus: " << msg.ToUTF8().data() << " tutk_state: " << m_tutk_state;
+    const std::string status_msg = msg.utf8_string();
+    BOOST_LOG_TRIVIAL(info) << "MediaPlayCtrl::SetStatus: " << status_msg << " tutk_state: " << m_tutk_state;
 #ifdef __WXMSW__
     OutputDebugStringA("MediaPlayCtrl::SetStatus: ");
-    OutputDebugStringA(msg.ToUTF8().data());
+    OutputDebugStringA(status_msg.c_str());
     OutputDebugStringA("\n");
 #endif // __WXMSW__
     m_label_status->SetLabel(msg);

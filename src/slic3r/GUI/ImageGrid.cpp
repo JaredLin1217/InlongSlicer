@@ -83,7 +83,8 @@ void ImageGrid::SetStatus(ScalableBitmap const & icon, wxString const &msg)
     int code     = m_file_sys ? m_file_sys->GetLastError() : 1;
     m_status_icon = icon;
     m_status_msg = wxString::Format(msg, code);
-    BOOST_LOG_TRIVIAL(info) << "ImageGrid::SetStatus: " << m_status_msg.ToUTF8().data();
+    const std::string status_msg = m_status_msg.utf8_string();
+    BOOST_LOG_TRIVIAL(info) << "ImageGrid::SetStatus: " << status_msg;
     Refresh();
 }
 
@@ -388,8 +389,9 @@ void ImageGrid::mouseWheelMoved(wxMouseEvent &event)
 void Slic3r::GUI::ImageGrid::changedEvent(wxCommandEvent& evt)
 {
     evt.Skip();
+    const std::string event_name = evt.GetString().utf8_string();
     BOOST_LOG_TRIVIAL(debug) << "ImageGrid::changedEvent: " << evt.GetEventType() << " index: " << evt.GetInt() 
-            << " name: " << evt.GetString().ToUTF8().data() << " extra: " << evt.GetExtraLong();
+            << " name: " << event_name << " extra: " << evt.GetExtraLong();
     if (evt.GetEventType() == EVT_FILE_CHANGED) {
         if (evt.GetInt() == -1)
             m_file_sys->DownloadCheckFiles(wxGetApp().app_config->get("download_path"));

@@ -1829,7 +1829,7 @@ StaticBambuLib &StaticBambuLib::get(BambuLib *copy)
     }
 
     if (!module) {
-        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ", can not Load Library";
+        BOOST_LOG_TRIVIAL(trace) << __FUNCTION__ << ", optional BambuSource library unavailable; using fallback";
     }
 
     GET_FUNC(Bambu_Create);
