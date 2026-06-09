@@ -513,15 +513,18 @@ void PresetUpdater::priv::sync_resources(std::string http_url, std::map<std::str
         })
         .on_complete([this, &resource_list, resources](std::string body, unsigned) {
             try {
-                BOOST_LOG_TRIVIAL(info) << "[Inlong Updater]: request_resources, body=" << body;
-
                 json        j       = json::parse(body);
                 std::string message = j["message"].get<std::string>();
+                const json* resource = j.contains("resources") ? &j.at("resources") : nullptr;
+                const bool  has_software_update_block = j.contains("software") && !j["software"].is_null() && !j["software"].empty();
+
+                BOOST_LOG_TRIVIAL(info) << "[Inlong Updater]: request_resources, message=" << message
+                                        << ", resources=" << (resource != nullptr && resource->is_array() ? resource->size() : 0)
+                                        << (has_software_update_block ? ", ignored software update block" : "");
 
                 if (message == "success") {
-                    json resource = j.at("resources");
-                    if (resource.is_array()) {
-                        for (auto iter = resource.begin(); iter != resource.end(); iter++) {
+                    if (resource != nullptr && resource->is_array()) {
+                        for (auto iter = resource->begin(); iter != resource->end(); iter++) {
                             std::string version;
                             std::string url;
                             std::string resource;
@@ -548,16 +551,16 @@ void PresetUpdater::priv::sync_resources(std::string http_url, std::map<std::str
                         }
                     }
                 } else {
-                    BOOST_LOG_TRIVIAL(error) << "[Inlong Updater]: get version of settings failed, body=" << body;
+                    BOOST_LOG_TRIVIAL(error) << "[Inlong Updater]: get version of settings failed, message=" << message << ", body_size=" << body.size();
                 }
             } catch (std::exception &e) {
-                BOOST_LOG_TRIVIAL(error) << (boost::format("[Inlong Updater]: get version of settings failed, exception=%1% body=%2%") % e.what() % body).str();
+                BOOST_LOG_TRIVIAL(error) << (boost::format("[Inlong Updater]: get version of settings failed, exception=%1% body_size=%2%") % e.what() % body.size()).str();
             } catch (...) {
-                BOOST_LOG_TRIVIAL(error) << "[Inlong Updater]: get version of settings failed, body=" << body;
+                BOOST_LOG_TRIVIAL(error) << "[Inlong Updater]: get version of settings failed, body_size=" << body.size();
             }
         })
         .on_error([&](std::string body, std::string error, unsigned status) {
-            BOOST_LOG_TRIVIAL(error) << boost::format("[Inlong Updater]: status=%1%, error=%2%, body=%3%") % status % error % body;
+            BOOST_LOG_TRIVIAL(error) << boost::format("[Inlong Updater]: status=%1%, error=%2%, body_size=%3%") % status % error % body.size();
         })
         .perform_sync();
 
