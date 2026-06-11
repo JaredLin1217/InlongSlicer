@@ -4,6 +4,7 @@
     "from": "system",
     "instantiation": "false",
     "compatible_printers": [
+        "SC12060 0.4mm nozzle",
         "SC12060 0.6mm nozzle",
         "SC12060 0.8mm nozzle"
     ],
@@ -26,7 +27,7 @@
     "brim_type": "outer_only",
     "brim_width": "3",
     "counterbore_hole_bridging": "none",
-    "default_acceleration": "5000",
+    "default_acceleration": "2000",
     "default_jerk": "0",
     "detect_narrow_internal_solid_infill": "1",
     "detect_overhang_wall": "1",
@@ -40,7 +41,7 @@
     "enable_support": "1",
     "enforce_support_layers": "0",
     "ensure_vertical_shell_thickness": "ensure_all",
-    "exclude_object": "1",
+    "exclude_object": "0",
     "extra_perimeters_on_overhangs": "0",
     "filename_format": "{input_filename_base}_{printer_model}_{zdigits(round(nozzle_diameter[initial_tool]*10),2)}_{filament_type[initial_tool]}_{round(total_weight)}g_{zdigits(month,2)}{zdigits(day,2)}{zdigits(hour,2)}{zdigits(minute,2)}_{print_time}.gcode",
     "filter_out_gap_fill": "1",
