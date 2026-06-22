@@ -10,18 +10,18 @@ const float EPSILON = 0.0001;
 
 // normalized values for (-0.6/1.31, 0.6/1.31, 1./1.31)
 const vec3 LIGHT_TOP_DIR = vec3(-0.4574957, 0.4574957, 0.7624929);
-#define LIGHT_TOP_DIFFUSE    (0.8 * INTENSITY_CORRECTION)
-#define LIGHT_TOP_SPECULAR   (0.8 * INTENSITY_CORRECTION)
-#define LIGHT_TOP_SHININESS  128.0
+#define LIGHT_TOP_DIFFUSE    (0.85 * INTENSITY_CORRECTION)
+#define LIGHT_TOP_SPECULAR   (0.35 * INTENSITY_CORRECTION)
+#define LIGHT_TOP_SHININESS  32.0
 
 // normalized values for (1./1.43, 0.2/1.43, 1./1.43)
 const vec3 LIGHT_FRONT_DIR = vec3(0.6985074, 0.1397015, 0.6985074);
-#define LIGHT_FRONT_DIFFUSE  (0.3 * INTENSITY_CORRECTION)
-#define LIGHT_FRONT_SPECULAR (0.28 * INTENSITY_CORRECTION)
-#define LIGHT_FRONT_SHININESS 64.0
+#define LIGHT_FRONT_DIFFUSE  (0.35 * INTENSITY_CORRECTION)
+#define LIGHT_FRONT_SPECULAR (0.12 * INTENSITY_CORRECTION)
+#define LIGHT_FRONT_SHININESS 16.0
 
-#define INTENSITY_AMBIENT    0.22
-#define WINDOW_REFLECTION_INTENSITY 0.55
+#define INTENSITY_AMBIENT    0.25
+#define WINDOW_REFLECTION_INTENSITY 0.30
 
 struct PrintVolumeDetection
 {
@@ -144,33 +144,34 @@ float soft_circle(vec2 p, vec2 center, float radius, float blur)
 vec3 compute_window_reflection(vec3 normal, vec3 view_dir)
 {
     const vec3 LIGHT_TOP_DIR = vec3(-0.4574957, 0.4574957, 0.7624929);
-    
+
     vec3 light_dir = normalize(LIGHT_TOP_DIR);
     vec3 reflect_light = normalize(reflect(-light_dir, normal));
-    
+
     // UV coordinates for the reflection
     vec2 uv = (reflect_light.xy / (1.0 + max(reflect_light.z, 0.3))) * 2.2;
-    
+
     vec2 grad = fwidth(uv) * 0.8;
     float blur = 0.12 + grad.x * 1.5;
-    
+
     // === CIRCULAR WINDOW (porthole style) ===
     // Single round window, no bars
     vec2 window_center = vec2(0.0, 0.0);
     float window_radius = 0.5;  // Radius of the circular window
-    
+
     float window_light = soft_circle(uv, window_center, window_radius, blur);
-    
+
     // No bars - just pure circular glass
     float bars = 1.0;
-    
-    // Fresnel effect for edge glow
-    float fresnel = pow(1.0 - max(dot(normal, view_dir), 0.0), 1.0);
+
+
+    float fresnel = pow(1.0 - max(dot(normal, view_dir), 0.0), 1.2);
     float facing = smoothstep(-0.4, 0.6, reflect_light.z);
-    
-    float intensity = window_light * bars * (0.25 + 0.25 * fresnel) * facing;
-    intensity = clamp(intensity, 0.0, 0.45);
-    
+
+
+    float intensity = window_light * bars * (0.15 + 0.15 * fresnel) * facing;
+    intensity = clamp(intensity, 0.0, 0.25);
+
     return vec3(intensity);
 }
 
