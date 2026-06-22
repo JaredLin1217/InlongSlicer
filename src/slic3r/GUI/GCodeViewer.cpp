@@ -9,6 +9,7 @@
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/LocalesUtils.hpp"
 #include "libslic3r/PresetBundle.hpp"
+#include "libslic3r/WarpPrevention.hpp"
 //BBS: add convex hull logic for toolpath check
 #include "libslic3r/Geometry/ConvexHull.hpp"
 
@@ -23,6 +24,7 @@
 #include "FilamentGroupPopup.hpp"
 #include "GLToolbar.hpp"
 #include "GUI_Preview.hpp"
+#include "Tab.hpp"
 #include "libslic3r/Print.hpp"
 #include "libslic3r/Layer.hpp"
 #include "Widgets/ProgressDialog.hpp"
@@ -45,6 +47,7 @@
 #include <algorithm>
 #include <cmath>
 #include <chrono>
+#include <unordered_map>
 
 
 namespace Slic3r {
@@ -85,6 +88,8 @@ static std::string get_view_type_string(libvgcode::EViewType view_type)
         return _u8L("Fan Speed");
     else if (view_type == libvgcode::EViewType::Temperature)
         return _u8L("Temperature");
+    else if (view_type == libvgcode::EViewType::ObjectSimulation)
+        return _u8L("Object Simulation Analysis");
     else if (view_type == libvgcode::EViewType::VolumetricFlowRate)
         return _u8L("Flow");
     else if (view_type == libvgcode::EViewType::ActualVolumetricFlowRate)
@@ -101,6 +106,19 @@ static std::string get_view_type_string(libvgcode::EViewType view_type)
     else if (view_type == libvgcode::EViewType::PressureAdvance)
         return _u8L("Pressure Advance");
     return "";
+}
+
+static std::string join_display_parts(const std::vector<std::string>& parts)
+{
+    std::string out;
+    for (const std::string& part : parts) {
+        if (part.empty())
+            continue;
+        if (!out.empty())
+            out += ", ";
+        out += part;
+    }
+    return out;
 }
 
 // Find an index of a value in a sorted vector, which is in <z-eps, z+eps>.
@@ -391,6 +409,14 @@ void GCodeViewer::SequentialView::Marker::render_position_window(const libvgcode
             case libvgcode::EViewType::Temperature:
                 sprintf(detail_buf, "%s%.0f", _u8L("Temperature: ").c_str(), vertex.temperature);
                 break;
+            case libvgcode::EViewType::ObjectSimulation:
+                if (is_extrusion) {
+                    sprintf(detail_buf, "%s%.0f%% - %s", _u8L("Object simulation: ").c_str(), vertex.object_simulation * 100.0f,
+                        object_simulation_reasons_to_string(vertex.object_simulation_reasons).c_str());
+                }
+                else
+                    sprintf(detail_buf, "%s%s", _u8L("Object simulation: ").c_str(), NA_CSTR);
+                break;
             case libvgcode::EViewType::LayerTimeLinear:
             case libvgcode::EViewType::LayerTimeLogarithmic:
                 sprintf(detail_buf, "%s%.1f", _u8L("Layer Time: ").c_str(), vertex.layer_duration);
@@ -420,7 +446,7 @@ void GCodeViewer::SequentialView::Marker::render_position_window(const libvgcode
         if (properties_shown) {
             float label_w = 0.0f;
             float value_w = 0.0f;
-            properties_rows.reserve(13);
+            properties_rows.reserve(20);
             auto add_row = [&properties_rows, &label_w, &value_w](std::string label, std::string value) {
                  label_w = std::max(label_w, ImGui::CalcTextSize(label.c_str()).x);
                  value_w = std::max(value_w, ImGui::CalcTextSize(value.c_str()).x);
@@ -447,6 +473,19 @@ void GCodeViewer::SequentialView::Marker::render_position_window(const libvgcode
             add_row(_u8L("Fan speed"), buff);
             sprintf(buff, ("%.0f " + _u8L("°C")).c_str(), vertex.temperature);
             add_row(_u8L("Temperature"), buff);
+            sprintf(buff, "%.0f C", vertex.bed_temperature);
+            add_row(_u8L("Bed"), buff);
+            sprintf(buff, "%.0f C", vertex.chamber_temperature);
+            add_row(_u8L("Chamber"), buff);
+            if (viewer->get_view_type() == libvgcode::EViewType::ObjectSimulation) {
+            if (is_extrusion) sprintf(buff, "%.0f %%", vertex.object_simulation * 100.0f); else strcpy(buff, NA_CSTR);
+            add_row(_u8L("Display risk"), buff);
+            if (is_extrusion) sprintf(buff, "%.0f %%", vertex.object_simulation_confidence * 100.0f); else strcpy(buff, NA_CSTR);
+            add_row(_u8L("Confidence"), buff);
+            if (is_extrusion) sprintf(buff, "%.0f %% / %.0f %%", vertex.object_simulation_material_confidence * 100.0f, vertex.object_simulation_model_confidence * 100.0f); else strcpy(buff, NA_CSTR);
+            add_row(_u8L("Material / simulation confidence"), buff);
+            add_row(_u8L("Simulation factors"), is_extrusion ? object_simulation_reasons_to_string(vertex.object_simulation_reasons) : NA_TXT);
+            }
             sprintf(buff, "%.4f", vertex.pressure_advance);
             add_row(_u8L("Pressure Advance"), buff);
             const float estimated_time = viewer->get_estimated_time_at(vertex_id);
@@ -1089,6 +1128,8 @@ void GCodeViewer::update_by_mode(ConfigOptionMode mode)
     view_type_items.push_back(libvgcode::EViewType::LayerTimeLogarithmic);
     view_type_items.push_back(libvgcode::EViewType::FanSpeed);
     view_type_items.push_back(libvgcode::EViewType::Temperature);
+    // INLONG: Add object simulation analysis visualization support
+    view_type_items.push_back(libvgcode::EViewType::ObjectSimulation);
 // INLONG: Add Pressure Advance visualization support
     view_type_items.push_back(libvgcode::EViewType::PressureAdvance);
     //if (mode == ConfigOptionMode::comDevelop) {
@@ -1097,6 +1138,12 @@ void GCodeViewer::update_by_mode(ConfigOptionMode mode)
 
     for (int i = 0; i < view_type_items.size(); i++) {
         view_type_items_str.push_back(get_view_type_string(view_type_items[i]));
+    }
+
+    if (m_view_type_sel >= view_type_items_str.size()) {
+        auto object_simulation_it = std::find(view_type_items.begin(), view_type_items.end(), libvgcode::EViewType::ObjectSimulation);
+        m_view_type_sel = (object_simulation_it != view_type_items.end()) ? std::distance(view_type_items.begin(), object_simulation_it) : 0;
+        set_view_type(view_type_items[m_view_type_sel]);
     }
 
     // BBS for first layer inspection
@@ -1174,6 +1221,8 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
 
     // convert data from PrusaSlicer format to libvgcode format
     libvgcode::GCodeInputData data = libvgcode::convert(gcode_result, str_tool_colors, str_color_print_colors, m_viewer);
+    m_object_simulation_advisor_config = make_object_simulation_advisor_config(print);
+    assign_object_simulation(data, print);
 
 //#define ENABLE_DATA_EXPORT 1
 //#if ENABLE_DATA_EXPORT
@@ -1491,6 +1540,8 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
 void GCodeViewer::load_as_preview(libvgcode::GCodeInputData&& data)
 {
     m_loaded_as_preview = true;
+    m_object_simulation_advisor_config = ObjectSimulationAdvisorConfig{};
+    clear_object_simulation(data);
 
     m_move_type_counts.fill(0);
     for (auto& move_type_times : m_move_type_times)
@@ -1554,6 +1605,7 @@ void GCodeViewer::reset()
     m_only_gcode_in_preview = false;
 
     m_viewer.reset();
+    m_object_simulation_advisor_config = ObjectSimulationAdvisorConfig{};
 
     m_paths_bounding_box = BoundingBoxf3();
     m_max_bounding_box = BoundingBoxf3();
@@ -2387,6 +2439,7 @@ void GCodeViewer::render_toolpaths()
             add_range_property_row("jerk range", m_viewer.get_color_range(libvgcode::EViewType::Jerk).get_range());
             add_range_property_row("fan speed range", m_viewer.get_color_range(libvgcode::EViewType::FanSpeed).get_range());
             add_range_property_row("temperature range", m_viewer.get_color_range(libvgcode::EViewType::Temperature).get_range());
+            add_range_property_row("object simulation range", m_viewer.get_color_range(libvgcode::EViewType::ObjectSimulation).get_range());
 // INLONG: Add Pressure Advance visualization support
             add_range_property_row("pressure advance range", m_viewer.get_color_range(libvgcode::EViewType::PressureAdvance).get_range());
             add_range_property_row("volumetric rate range", m_viewer.get_color_range(libvgcode::EViewType::VolumetricFlowRate).get_range());
@@ -3136,8 +3189,19 @@ void GCodeViewer::render_legend(float &legend_height, int canvas_width, int canv
     ImGui::SetNextWindowBgAlpha(0.8f);
     const float max_height = 0.75f * static_cast<float>(cnv_size.get_height());
     const float child_height = 0.3333f * max_height;
-    ImGui::SetNextWindowSizeConstraints({ 0.0f, 0.0f }, { -1.0f, max_height });
-    imgui.begin(std::string("Legend"), ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
+    const libvgcode::EViewType active_view_type = m_viewer.get_view_type();
+    ImGuiWindowFlags legend_window_flags =
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+    if (active_view_type == libvgcode::EViewType::ObjectSimulation) {
+        const float object_simulation_width = 380.0f * m_scale;
+        ImGui::SetNextWindowSize(ImVec2(object_simulation_width, max_height), ImGuiCond_Always);
+        ImGui::SetNextWindowSizeConstraints({ object_simulation_width, max_height }, { object_simulation_width, max_height });
+        legend_window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    } else {
+        ImGui::SetNextWindowSizeConstraints({ 0.0f, 0.0f }, { -1.0f, max_height });
+        legend_window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
+    }
+    imgui.begin(std::string("Legend"), legend_window_flags);
 
     enum class EItemType : unsigned char
     {
@@ -3149,7 +3213,7 @@ void GCodeViewer::render_legend(float &legend_height, int canvas_width, int canv
     };
 
     const PrintEstimatedStatistics::Mode& time_mode = m_print_statistics.modes[static_cast<size_t>(m_viewer.get_time_mode())];
-    const libvgcode::EViewType curr_view_type = m_viewer.get_view_type();
+    const libvgcode::EViewType curr_view_type = active_view_type;
     const int curr_view_type_i = static_cast<int>(curr_view_type);
     const size_t current_time_mode = static_cast<size_t>(m_viewer.get_time_mode());
     const float total_estimated_time = time_mode.time > 0.0f ? time_mode.time : m_viewer.get_estimated_time();
@@ -3330,6 +3394,109 @@ void GCodeViewer::render_legend(float &legend_height, int canvas_width, int canv
         ImGui::SameLine();
         ImGui::Dummy({window_padding, 1});
         ImGui::Separator();
+    };
+
+    auto append_object_simulation_summary = [&imgui, window_padding, this]() {
+        const ObjectSimulationPreviewSummary preview_summary = make_object_simulation_preview_summary(m_viewer);
+        if (m_viewer.get_vertices_count() == 0) {
+            ImGui::Spacing();
+            ImGui::Separator();
+            ImGui::Dummy({ window_padding, window_padding });
+            ImGui::SameLine(window_padding * 3.0f);
+            imgui.text(_u8L("No visible extrusion paths"));
+            return;
+        }
+
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Dummy({ window_padding, window_padding });
+        ImGui::SameLine(window_padding * 3.0f);
+        imgui.bold_text(_u8L("Object simulation summary"));
+
+        const float object_simulation_value_x = window_padding * 5.0f;
+        const float object_simulation_wrap_x = 350.0f * m_scale;
+        auto append_summary_row = [&imgui, window_padding, object_simulation_value_x, object_simulation_wrap_x](const std::string& label, const std::string& value) {
+            ImGui::Dummy({ 0.0f, window_padding * 0.15f });
+            ImGui::SameLine(window_padding * 3.0f);
+            imgui.text(label + ":");
+            ImGui::Dummy({ 0.0f, 0.0f });
+            ImGui::SameLine(object_simulation_value_x);
+            ImGui::PushTextWrapPos(object_simulation_wrap_x);
+            ImGui::TextWrapped("%s", value.c_str());
+            ImGui::PopTextWrapPos();
+        };
+        if (!preview_summary.found) {
+            append_summary_row(_u8L("Status"), _u8L("No visible extrusion paths"));
+            return;
+        }
+
+        const libvgcode::PathVertex& max_vertex = m_viewer.get_vertex_at(preview_summary.max_vertex_index);
+
+        const DynamicPrintConfig* current_print_config = nullptr;
+        if (Tab* print_tab = wxGetApp().get_tab(Preset::TYPE_PRINT); print_tab != nullptr)
+            current_print_config = print_tab->get_config();
+        const DynamicPrintConfig* current_filament_config = nullptr;
+        if (Tab* filament_tab = wxGetApp().get_tab(Preset::TYPE_FILAMENT); filament_tab != nullptr)
+            current_filament_config = filament_tab->get_config();
+
+        const ObjectSimulationRuntimeConfigState runtime_config =
+            make_object_simulation_runtime_config_state(m_object_simulation_advisor_config, current_print_config);
+        const ObjectSimulationAdvisorConfig& advisor_config = runtime_config.config;
+
+        const ObjectSimulationPanelText panel_text = make_object_simulation_panel_text(max_vertex, preview_summary, runtime_config);
+        append_summary_row(_u8L("Current simulation risk"), panel_text.current_risk);
+        append_summary_row(_u8L("Next step"), panel_text.next_step);
+        append_summary_row(_u8L("Processing"), panel_text.processing_status);
+        append_summary_row(_u8L("Added time"), panel_text.added_time);
+        append_summary_row(_u8L("Remaining risk"), panel_text.remaining_risk);
+
+        ImGui::Dummy({ 0.0f, window_padding * 0.3f });
+        ImGui::SameLine(window_padding * 3.0f);
+        if (ImGui::TreeNodeEx(_u8L("Details").c_str(), 0)) {
+            for (const ObjectSimulationTextRow& row : make_object_simulation_detail_rows(max_vertex, preview_summary, runtime_config, panel_text))
+                append_summary_row(row.label, row.value);
+            ImGui::TreePop();
+        }
+
+        const ObjectSimulationOptimizationSummary optimization = make_object_simulation_optimization_summary(m_viewer, advisor_config);
+        ImGui::Dummy({ window_padding, window_padding });
+        ImGui::SameLine(window_padding * 3.0f);
+        imgui.bold_text(_u8L("Optimization advice"));
+
+        const std::vector<ObjectSimulationAdviceView> visible_advice =
+            make_object_simulation_advice_view(optimization, current_print_config, current_filament_config);
+
+        if (visible_advice.empty()) {
+            append_summary_row(_u8L("Status"), _u8L("No actionable recommendations"));
+            if (max_vertex.object_simulation >= 0.45f)
+                append_summary_row(_u8L("Residual risk"), _u8L("Conservative protections are already applied. Remaining risk mainly comes from material, large bottom area, or long paths; it usually needs higher chamber/bed temperature, model splitting, added fillets, or accepting medium risk."));
+            return;
+        }
+
+        for (size_t i = 0; i < visible_advice.size(); ++i) {
+            const ObjectSimulationAdvice& advice = visible_advice[i].advice;
+            const bool would_change = visible_advice[i].would_change;
+            ImGui::Dummy({ 0.0f, window_padding * 0.3f });
+            ImGui::SameLine(window_padding * 3.0f);
+            imgui.bold_text(object_simulation_advice_severity_label(advice.severity) + " - " + advice.message);
+            append_summary_row(_u8L("Change"), advice.current_value + " -> " + advice.recommended_value);
+            append_summary_row(_u8L("Target"), object_simulation_config_keys_label(advice.target_config_keys));
+            append_summary_row(_u8L("Reslice"), advice.requires_reslice ? _u8L("Yes") : _u8L("No"));
+            if (!would_change)
+                append_summary_row(_u8L("Status"), advice.can_apply ? _u8L("Already satisfied") : _u8L("Manual review"));
+            ImGui::Dummy({ 0.0f, 0.0f });
+            ImGui::SameLine(window_padding * 3.0f);
+            ImGui::PushTextWrapPos(object_simulation_wrap_x);
+            ImGui::TextWrapped("%s", advice.detail.c_str());
+            ImGui::PopTextWrapPos();
+            if (would_change) {
+                ImGui::Dummy({ 0.0f, window_padding * 0.2f });
+                ImGui::SameLine(window_padding * 3.0f);
+                const std::string button = _u8L("Apply") + "##object_simulation_apply_" + std::to_string(i);
+                if (ImGui::Button(button.c_str()))
+                    apply_object_simulation_advice_to_current_plater(advice);
+            }
+        }
     };
 
     auto max_width = [](const std::vector<std::string>& items, const std::string& title, float extra_size = 0.0f) {
@@ -3709,6 +3876,8 @@ void GCodeViewer::render_legend(float &legend_height, int canvas_width, int canv
     }
     case libvgcode::EViewType::FanSpeed:       { imgui.title(_u8L("Fan Speed (%)")); break; }
     case libvgcode::EViewType::Temperature:    { imgui.title(_u8L("Temperature (°C)")); break; }
+    // INLONG: Object Simulation Analysis preview uses the existing ObjectSimulation view enum internally.
+    case libvgcode::EViewType::ObjectSimulation:       { imgui.title(_u8L("Object Simulation Analysis")); break; }
 // INLONG: Add Pressure Advance visualization support
     case libvgcode::EViewType::PressureAdvance:{ imgui.title(_u8L("Pressure Advance")); break; }
     case libvgcode::EViewType::VolumetricFlowRate:
@@ -3982,6 +4151,13 @@ void GCodeViewer::render_legend(float &legend_height, int canvas_width, int canv
     }
     case libvgcode::EViewType::FanSpeed:                 { append_range(m_viewer.get_color_range(libvgcode::EViewType::FanSpeed), 0); break; }
     case libvgcode::EViewType::Temperature:              { append_range(m_viewer.get_color_range(libvgcode::EViewType::Temperature), 0); break; }
+    // INLONG: Add object simulation analysis visualization support
+    case libvgcode::EViewType::ObjectSimulation:
+    {
+        append_range(m_viewer.get_color_range(libvgcode::EViewType::ObjectSimulation), 2);
+        append_object_simulation_summary();
+        break;
+    }
 // INLONG: Add Pressure Advance visualization support
     case libvgcode::EViewType::PressureAdvance:          { append_range(m_viewer.get_color_range(libvgcode::EViewType::PressureAdvance), 3); break; }
     case libvgcode::EViewType::LayerTimeLinear:          { append_range(m_viewer.get_color_range(libvgcode::EViewType::LayerTimeLinear), true); break; }

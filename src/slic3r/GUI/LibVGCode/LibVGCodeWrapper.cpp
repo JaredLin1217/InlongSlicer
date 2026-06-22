@@ -221,7 +221,7 @@ GCodeInputData convert(const Slic3r::GCodeProcessorResult& result, const std::ve
                 // equal to the current one with the exception of the position, which should match the previous move position,
                 // and the times, which are set to zero
 #if VGCODE_ENABLE_COG_AND_TOOL_MARKERS
-                const libvgcode::PathVertex vertex = { convert(prev.position), curr.height, curr.width, curr.feedrate, prev.actual_feedrate,
+                libvgcode::PathVertex vertex = { convert(prev.position), curr.height, curr.width, curr.feedrate, prev.actual_feedrate,
                     curr.mm3_per_mm, curr.fan_speed, curr.temperature, 0.0f, convert(curr.extrusion_role), curr_type,
                     static_cast<uint32_t>(curr.gcode_id), static_cast<uint32_t>(curr.layer_id),
                     static_cast<uint8_t>(curr.extruder_id), static_cast<uint8_t>(curr.cp_color_id), { 0.0f, 0.0f },
@@ -229,7 +229,7 @@ GCodeInputData convert(const Slic3r::GCodeProcessorResult& result, const std::ve
                     /* INLONG: Add Acceleration visualization support */ curr.acceleration,
                     /* INLONG: Add Jerk visualization support */ curr.jerk };
 #else
-              const libvgcode::PathVertex vertex = { convert(prev.position), curr.height, curr.width, curr.feedrate, prev.actual_feedrate,
+              libvgcode::PathVertex vertex = { convert(prev.position), curr.height, curr.width, curr.feedrate, prev.actual_feedrate,
                     curr.mm3_per_mm, curr.fan_speed, curr.temperature, convert(curr.extrusion_role), curr_type,
                     static_cast<uint32_t>(curr.gcode_id), static_cast<uint32_t>(curr.layer_id),
                     static_cast<uint8_t>(curr.extruder_id), static_cast<uint8_t>(curr.cp_color_id), { 0.0f, 0.0f },
@@ -237,12 +237,14 @@ GCodeInputData convert(const Slic3r::GCodeProcessorResult& result, const std::ve
                     /* INLONG: Add Acceleration visualization support */ curr.acceleration,
                     /* INLONG: Add Jerk visualization support */ curr.jerk };
 #endif // VGCODE_ENABLE_COG_AND_TOOL_MARKERS
+                vertex.bed_temperature = curr.bed_temperature;
+                vertex.chamber_temperature = curr.chamber_temperature;
                 ret.vertices.emplace_back(vertex);
             }
         }
 
 #if VGCODE_ENABLE_COG_AND_TOOL_MARKERS
-        const libvgcode::PathVertex vertex = { convert(curr.position), curr.height, curr.width, curr.feedrate, curr.actual_feedrate,
+        libvgcode::PathVertex vertex = { convert(curr.position), curr.height, curr.width, curr.feedrate, curr.actual_feedrate,
             curr.mm3_per_mm, curr.fan_speed, curr.temperature,
             result.filament_densities[curr.extruder_id] * curr.mm3_per_mm * (curr.position - prev.position).norm(),
             convert(curr.extrusion_role), curr_type, static_cast<uint32_t>(curr.gcode_id), static_cast<uint32_t>(curr.layer_id),
@@ -251,7 +253,7 @@ GCodeInputData convert(const Slic3r::GCodeProcessorResult& result, const std::ve
             /* INLONG: Add Acceleration visualization support */ curr.acceleration,
             /* INLONG: Add Jerk visualization support */ curr.jerk };
 #else
-        const libvgcode::PathVertex vertex = { convert(curr.position), curr.height, curr.width, curr.feedrate, curr.actual_feedrate,
+        libvgcode::PathVertex vertex = { convert(curr.position), curr.height, curr.width, curr.feedrate, curr.actual_feedrate,
             curr.mm3_per_mm, curr.fan_speed, curr.temperature, convert(curr.extrusion_role), curr_type,
             static_cast<uint32_t>(curr.gcode_id), static_cast<uint32_t>(curr.layer_id),
             static_cast<uint8_t>(curr.extruder_id), static_cast<uint8_t>(curr.cp_color_id), curr.time,
@@ -259,6 +261,8 @@ GCodeInputData convert(const Slic3r::GCodeProcessorResult& result, const std::ve
             /* INLONG: Add Acceleration visualization support */ curr.acceleration,
             /* INLONG: Add Jerk visualization support */ curr.jerk };
 #endif // VGCODE_ENABLE_COG_AND_TOOL_MARKERS
+        vertex.bed_temperature = curr.bed_temperature;
+        vertex.chamber_temperature = curr.chamber_temperature;
         ret.vertices.emplace_back(vertex);
     }
     ret.vertices.shrink_to_fit();

@@ -219,7 +219,7 @@
     "single_extruder_multi_material":  "0",
     "extruders_count":  "2",
     "support_air_filtration":  "0",
-    "support_chamber_temp_control":  "0",
+    "support_chamber_temp_control":  "1",
     "support_multi_bed_types":  "0",
     "template_custom_gcode":  "",
     "thumbnails":  "300x300/PNG",

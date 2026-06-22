@@ -289,6 +289,8 @@ private:
     ColorRange m_actual_speed_range;
     ColorRange m_fan_speed_range;
     ColorRange m_temperature_range;
+    // INLONG: Add object simulation analysis visualization support
+    ColorRange m_object_simulation_range;
     // INLONG: Add Pressure Advance visualization support
     ColorRange m_pressure_advance_range;
     // INLONG: Add Acceleration visualization support
@@ -321,6 +323,7 @@ private:
     int m_uni_segments_height_width_angle_tex_id{ -1 };
     int m_uni_segments_colors_tex_id{ -1 };
     int m_uni_segments_segment_index_tex_id{ -1 };
+    int m_uni_segments_flat_segment_color_id{ -1 };
     //
     // Caches for OpenGL uniforms id for options shader 
     //

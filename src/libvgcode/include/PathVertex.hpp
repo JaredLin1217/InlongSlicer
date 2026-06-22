@@ -101,6 +101,22 @@ struct PathVertex
     // Jerk value
     //
     float jerk{ 0.0f };
+    //
+    // INLONG: Object simulation display risk in the [0, 1] range.
+    //
+    float object_simulation{ 0.0f };
+    //
+    // INLONG: Bitmask of EObjectSimulationReason values.
+    //
+    uint32_t object_simulation_reasons{ ObjectSimulationNone };
+    //
+    // INLONG: Floating thermal environment for object simulation analysis.
+    //
+    float bed_temperature{ 0.0f };
+    float chamber_temperature{ 0.0f };
+    float object_simulation_confidence{ 0.0f };
+    float object_simulation_material_confidence{ 0.0f };
+    float object_simulation_model_confidence{ 0.0f };
 
     //
     // Return true if the segment is an extrusion move

@@ -711,6 +711,13 @@ endif ()
 # l10n
 set(L10N_DIR "${SLIC3R_RESOURCES_DIR}/i18n")
 set(BBL_L18N_DIR "${CMAKE_CURRENT_SOURCE_DIR}/localization/i18n")
+find_program(MSGFMT_EXECUTABLE
+    NAMES msgfmt msgfmt.exe
+    HINTS "${CMAKE_CURRENT_SOURCE_DIR}/tools"
+)
+if(NOT MSGFMT_EXECUTABLE)
+    message(WARNING "msgfmt was not found; localization .mo files will not be regenerated")
+endif()
 add_custom_target(gettext_make_pot
     COMMAND xgettext --keyword=L --keyword=_L --keyword=_u8L --keyword=L_CONTEXT:1,2c --keyword=_L_PLURAL:1,2 --add-comments=TRN --from-code=UTF-8 --no-location --debug --boost
         -f "${BBL_L18N_DIR}/list.txt"
@@ -742,12 +749,15 @@ foreach(po_file ${BBL_L10N_PO_FILES})
     GET_FILENAME_COMPONENT(SECOND_FOLDER_ABSOLUTE ${po_file} DIRECTORY)
     string(REGEX REPLACE ".*/(.*)" "\\1" po_dir "${SECOND_FOLDER_ABSOLUTE}" )
     SET(mo_file "${L10N_DIR}/${po_dir}/${SLIC3R_APP_KEY}.mo")
-    add_custom_command(
-        TARGET gettext_po_to_mo PRE_BUILD
-        COMMAND msgfmt ARGS --check-format -o ${mo_file} ${po_file}
-        #COMMAND msgfmt ARGS --check-compatibility -o ${mo_file} ${po_file}
-        DEPENDS ${po_file}
-    )
+    if(MSGFMT_EXECUTABLE)
+        add_custom_command(
+            TARGET gettext_po_to_mo PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${L10N_DIR}/${po_dir}"
+            COMMAND ${MSGFMT_EXECUTABLE} ARGS --check-format -o ${mo_file} ${po_file}
+            #COMMAND ${MSGFMT_EXECUTABLE} ARGS --check-compatibility -o ${mo_file} ${po_file}
+            DEPENDS ${po_file}
+        )
+    endif()
 endforeach()
 
 find_package(NLopt 1.4 REQUIRED)
@@ -887,6 +897,9 @@ add_subdirectory(src)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT InlongSlicer_app_gui)
 
 add_dependencies(gettext_make_pot hintsToPot)
+if(TARGET InlongSlicer)
+    add_dependencies(InlongSlicer gettext_po_to_mo)
+endif()
 
 if(SLIC3R_BUILD_SANDBOXES)
     add_subdirectory(sandboxes)

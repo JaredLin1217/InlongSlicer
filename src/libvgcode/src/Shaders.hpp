@@ -30,6 +30,7 @@ static const char* Segments_Vertex_Shader =
 "uniform samplerBuffer height_width_angle_tex;\n"
 "uniform samplerBuffer color_tex;\n"
 "uniform usamplerBuffer segment_index_tex;\n"
+"uniform bool flat_segment_color;\n"
 "in int vertex_id;\n"
 "out vec3 color;\n"
 "vec3 decode_color(float color) {\n"
@@ -137,7 +138,8 @@ static const char* Segments_Vertex_Shader =
 "  // INLONG: Apply bias to z-position to avoid z-fighting\n"
 "  eye_position.z += bias;\n"
 "  vec3 eye_normal = (view_matrix * vec4(normalize(pos - endpoint_pos), 0.0)).xyz;\n"
-"  vec3 color_base = decode_color(texelFetch(color_tex, id).r);\n"
+"  int color_id = flat_segment_color ? id_b : id;\n"
+"  vec3 color_base = decode_color(texelFetch(color_tex, color_id).r);\n"
 "  color = color_base * lighting(eye_position, eye_normal);\n"
 "  gl_Position = projection_matrix * vec4(eye_position, 1.0);\n"
 "}\n";

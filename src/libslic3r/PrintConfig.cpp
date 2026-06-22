@@ -3,6 +3,7 @@
 #include "ClipperUtils.hpp"
 #include "Config.hpp"
 #include "MaterialType.hpp"
+#include "WarpPrevention.hpp"
 #include "I18N.hpp"
 #include "format.hpp"
 
@@ -298,6 +299,20 @@ static t_config_enum_values s_keys_map_WallDirection{
     { "cw",   int(WallDirection::Clockwise)},
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(WallDirection)
+
+static t_config_enum_values s_keys_map_WarpPreventionLevel {
+    { "conservative", int(WarpPreventionLevel::Conservative) },
+    { "balanced",     int(WarpPreventionLevel::Balanced) },
+    { "aggressive",   int(WarpPreventionLevel::Aggressive) }
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(WarpPreventionLevel)
+
+static t_config_enum_values s_keys_map_WarpPreventionThermalResolution {
+    { "fast", int(WarpPreventionThermalResolution::Fast) },
+    { "auto", int(WarpPreventionThermalResolution::Auto) },
+    { "high", int(WarpPreventionThermalResolution::High) }
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(WarpPreventionThermalResolution)
 
 //BBS
 static t_config_enum_values s_keys_map_PrintSequence {
@@ -1741,6 +1756,119 @@ void PrintConfigDef::init_fff_params()
                     "If your current setup already works well, enabling it may be unnecessary and can cause the brim to fuse with upper layers." );
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
+
+    const WarpPreventionPreset default_warp_prevention = warp_prevention_preset(WarpPreventionPresetLevel::Conservative);
+
+    def = this->add("enable_warp_prevention", coBool);
+    def->label = L("Warp prevention");
+    def->category = L("Speed");
+    def->tooltip = L("Enable warp prevention. When enabled, high-risk early-layer walls and bottom paths are slowed locally in generated G-code.");
+    def->mode = comSimple;
+    def->set_default_value(new ConfigOptionBool(false));
+
+    def = this->add("warp_prevention_level", coEnum);
+    def->label = L("Warp prevention level");
+    def->category = L("Speed");
+    def->tooltip = L("Preset template for warp prevention. Changing this fills default values; the detailed parameters remain editable.");
+    def->enum_keys_map = &ConfigOptionEnum<WarpPreventionLevel>::get_enum_values();
+    def->enum_values.emplace_back("conservative");
+    def->enum_values.emplace_back("balanced");
+    def->enum_values.emplace_back("aggressive");
+    def->enum_labels.emplace_back(L("Conservative"));
+    def->enum_labels.emplace_back(L("Balanced"));
+    def->enum_labels.emplace_back(L("Aggressive"));
+    def->mode = comSimple;
+    def->set_default_value(new ConfigOptionEnum<WarpPreventionLevel>(WarpPreventionLevel::Conservative));
+
+    def = this->add("warp_prevention_thermal_resolution", coEnum);
+    def->label = L("Thermal model resolution");
+    def->category = L("Speed");
+    def->tooltip = L("Controls the local thermal-history model resolution used by warp prevention. Auto is suitable for daily slicing; High uses a finer real-coordinate grid for high-temperature materials and may take much longer.");
+    def->enum_keys_map = &ConfigOptionEnum<WarpPreventionThermalResolution>::get_enum_values();
+    def->enum_values.emplace_back("fast");
+    def->enum_values.emplace_back("auto");
+    def->enum_values.emplace_back("high");
+    def->enum_labels.emplace_back(L("Fast"));
+    def->enum_labels.emplace_back(L("Auto"));
+    def->enum_labels.emplace_back(L("High"));
+    def->mode = comSimple;
+    def->set_default_value(new ConfigOptionEnum<WarpPreventionThermalResolution>(WarpPreventionThermalResolution::Auto));
+
+    def = this->add("warp_prevention_max_slowdown", coFloat);
+    def->label = L("Warp prevention max slowdown");
+    def->category = L("Speed");
+    def->tooltip = L("Maximum local slowdown applied by warp prevention.");
+    def->sidetext = L("%");
+    def->min = 0;
+    def->max = 60;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(default_warp_prevention.max_slowdown_percent));
+
+    def = this->add("warp_prevention_min_wall_speed", coFloat);
+    def->label = L("Warp prevention minimum wall speed");
+    def->category = L("Speed");
+    def->tooltip = L("Minimum inner/outer wall speed preserved when warp prevention slows risky walls. This is a lower bound, not a target speed.");
+    def->sidetext = L("mm/s");
+    def->min = 1;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(default_warp_prevention.min_wall_speed));
+
+    def = this->add("warp_prevention_min_bottom_speed", coFloat);
+    def->label = L("Warp prevention minimum bottom speed");
+    def->category = L("Speed");
+    def->tooltip = L("Minimum bottom solid infill speed preserved when warp prevention slows risky bottom paths. This is a lower bound, not a target speed.");
+    def->sidetext = L("mm/s");
+    def->min = 8;
+    def->max = 40;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(default_warp_prevention.min_bottom_speed));
+
+    def = this->add("warp_prevention_early_layers", coInt);
+    def->label = L("Warp prevention max active layers");
+    def->category = L("Speed");
+    def->tooltip = L("Maximum number of layers where warp prevention may reduce speed, fan, or acceleration. The actual active layer range is calculated from object simulation analysis. Set to 0 to keep object simulation analysis enabled but disable warp-prevention speed, fan, and acceleration changes.");
+    def->sidetext = L("layers");
+    def->min = 0;
+    def->max = 999;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(default_warp_prevention.max_active_layers));
+
+    def = this->add("warp_prevention_adjust_acceleration", coBool);
+    def->label = L("Warp prevention adjusts acceleration");
+    def->category = L("Speed");
+    def->tooltip = L("Allow warp prevention to reduce local acceleration on high-risk early-layer paths. This is applied locally and recovers with the protection envelope.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(default_warp_prevention.adjust_acceleration));
+
+    def = this->add("warp_prevention_max_accel_reduction", coFloat);
+    def->label = L("Warp prevention max acceleration reduction");
+    def->category = L("Speed");
+    def->tooltip = L("Maximum local acceleration reduction applied by warp prevention.");
+    def->sidetext = L("%");
+    def->min = 0;
+    def->max = 80;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(default_warp_prevention.max_accel_reduction_percent));
+
+    def = this->add("warp_prevention_min_wall_acceleration", coFloat);
+    def->label = L("Warp prevention minimum wall acceleration");
+    def->category = L("Speed");
+    def->tooltip = L("Minimum inner/outer wall acceleration preserved when warp prevention reduces risky wall acceleration. This is a lower bound, not a target acceleration.");
+    def->sidetext = L("mm/s²");
+    def->min = 0;
+    def->max = 10000;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(default_warp_prevention.min_wall_acceleration));
+
+    def = this->add("warp_prevention_min_bottom_acceleration", coFloat);
+    def->label = L("Warp prevention minimum bottom acceleration");
+    def->category = L("Speed");
+    def->tooltip = L("Minimum bottom solid infill acceleration preserved when warp prevention reduces risky bottom acceleration. This is a lower bound, not a target acceleration.");
+    def->sidetext = L("mm/s²");
+    def->min = 0;
+    def->max = 10000;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(default_warp_prevention.min_bottom_acceleration));
 
     def = this->add("combine_brims", coBool);
     def->label = L("Combine brims");
@@ -3394,7 +3522,7 @@ void PrintConfigDef::init_fff_params()
     //def->label = L("Adaptive layer height");
     //def->category = L("Quality");
     //def->tooltip = L("Enabling this option means the height of every layer except the first will be automatically calculated "
-    //    "during slicing according to the slope of the model’s surface.\n"
+    //    "during slicing according to the slope of the model? surface.\n"
     //    "Note that this option only takes effect if no prime tower is generated in current plate.");
     //def->set_default_value(new ConfigOptionBool(0));
 
@@ -3600,14 +3728,14 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Fuzzy skin generator mode");
     def->category = L("Others");
     def->tooltip = L("Fuzzy skin generation mode. Works only with Arachne!\n"
-                     "Displacement: Сlassic mode when the pattern is formed by shifting the nozzle sideways from the original path.\n"
+                     "Displacement: 苤lassic mode when the pattern is formed by shifting the nozzle sideways from the original path.\n"
                      "Extrusion: The mode when the pattern formed by the amount of extruded plastic. "
                      "This is the fast and straight algorithm without unnecessary nozzle shake that gives a smooth pattern. "
                      "But it is more useful for forming loose walls in the entire they array.\n"
                      "Combined: Joint mode [Displacement] + [Extrusion]. The appearance of the walls is similar to [Displacement] Mode, but it leaves no pores between the perimeters.\n\n"
                      "Attention! The [Extrusion] and [Combined] modes works only the fuzzy_skin_thickness parameter not more than the thickness of printed loop. "
                      "At the same time, the width of the extrusion for a particular layer should also not be below a certain level. "
-                     "It is usually equal 15-25%% of a layer height. Therefore, the maximum fuzzy skin thickness with a perimeter width of 0.4 mm and a layer height of 0.2 mm will be 0.4-(0.2*0.25)=±0.35mm! "
+                     "It is usually equal 15-25%% of a layer height. Therefore, the maximum fuzzy skin thickness with a perimeter width of 0.4 mm and a layer height of 0.2 mm will be 0.4-(0.2*0.25)=簣0.35mm! "
                      "If you enter a higher parameter than this, the error Flow::spacing() will displayed, and the model will not be sliced. You can choose this number until this error is repeated." );
     def->enum_keys_map = &ConfigOptionEnum<FuzzySkinMode>::get_enum_values();
     def->enum_values.push_back("displacement");
@@ -8857,7 +8985,7 @@ t_config_option_keys DynamicPrintConfig::normalize_fdm_2(int num_objects, int us
             //    //alh_opt->value = false;
             //}
         }
-        /* BBS：MusangKing - use "global->support->Independent support layer height" widget to replace previous assignment
+        /* BBS：usangKing - use "global->support->Independent support layer height" widget to replace previous assignment
         else {
             if (islh_opt) {
                 if (!islh_opt->value) {

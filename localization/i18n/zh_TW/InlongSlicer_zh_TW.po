@@ -20,6 +20,98 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.8\n"
 
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "bottom layer"
+msgstr "底層"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "outer wall"
+msgstr "外牆"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "sharp corner"
+msgstr "尖角"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "long path"
+msgstr "長路徑"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "large bottom area"
+msgstr "大底面區域"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "high cooling"
+msgstr "冷卻過高"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "low chamber temp"
+msgstr "腔溫偏低"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "high thermal delta"
+msgstr "溫差過高"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "high shrinkage"
+msgstr "收縮率偏高"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "high thermal stress"
+msgstr "高熱應力"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "low bed temp"
+msgstr "熱床溫度偏低"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "low confidence"
+msgstr "可信度偏低"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Thermal Stress"
+msgstr "熱應力"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Confidence"
+msgstr "可信度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Fast thermal-stress estimate"
+msgstr "快速熱-應力估算"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "No visible extrusion"
+msgstr "目前沒有可見擠出路徑"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Highest risk"
+msgstr "最高風險"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Low/Medium/High"
+msgstr "低/中/高"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Thermal environment"
+msgstr "熱環境"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Stress sources"
+msgstr "應力來源"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Reason"
+msgstr "主要原因"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Not full FEM displacement simulation"
+msgstr "不是完整 FEM 位移模擬"
+
+msgid "brim/raft protection"
+msgstr "裙邊/筏層保護"
+
 msgid "right"
 msgstr "右"
 
@@ -3537,7 +3629,7 @@ msgid "℃"
 msgstr "℃"
 
 msgid "Bed temperature"
-msgstr "床溫"
+msgstr "熱床溫度"
 
 msgid "mm³"
 msgstr "mm³"
@@ -8430,7 +8522,7 @@ msgid ""
 msgstr ""
 
 msgid "Disabled"
-msgstr "停用"
+msgstr "已關閉"
 
 msgid "FXAA post-processing"
 msgstr ""
@@ -15904,7 +15996,7 @@ msgid "Generate the raft from the bounding box of the first object layer."
 msgstr "依照第一個物件層的最大外接方框產生筏層。"
 
 msgid "Raft layers"
-msgstr "筏層"
+msgstr "Raft 層數"
 
 msgid ""
 "Object will be raised by this number of support layers. Use this function to "
@@ -17147,7 +17239,7 @@ msgstr ""
 "令支援 M191 和 M141 指令，通常用於配備主動機箱加熱器的列印設備。"
 
 msgid "Chamber temperature"
-msgstr "列印設備內部溫度"
+msgstr "腔溫"
 
 msgid ""
 "For high-temperature materials like ABS, ASA, PC, and PA, a higher chamber "
@@ -21932,3 +22024,1073 @@ msgstr "喉管風扇 G-code 模板"
 #: src/libslic3r/PrintConfig.cpp
 msgid "Custom G-code emitted before waiting for nozzle temperature when heatbreak fan control mode is set to custom G-code. Available placeholders: {tool_id}, {filament_id}, {heatbreak_fan_speed}, {heatbreak_fan_pwm}."
 msgstr "當喉管風扇控制模式設為自訂 G-code 時，在等待噴嘴溫度前輸出的自訂 G-code。可用佔位符：{tool_id}、{filament_id}、{heatbreak_fan_speed}、{heatbreak_fan_pwm}。"
+
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Optimization advice"
+msgstr "優化建議"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "No parameter changes suggested"
+msgstr "目前沒有建議調整的參數"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Expected risk drop"
+msgstr "預期風險下降"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Requires reslice"
+msgstr "需要重新切片"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "No compatible settings were changed by this advice."
+msgstr "此建議沒有變更任何相容的設定。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "High-temperature polymer"
+msgstr "高溫工程材料"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Engineering composite"
+msgstr "工程複合材料"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "raise chamber/bed first; lower nozzle only within material range"
+msgstr "優先提高腔溫/熱床；噴嘴只在材料允許範圍內微降"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "partial material data"
+msgstr "材料資料不完整"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "unknown material family"
+msgstr "未知材料族群"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "optional external FEM backend"
+msgstr "可選外部 FEM 後端"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Reduce cooling fan"
+msgstr "降低冷卻風扇"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "High cooling increases thermal gradient on warp-prone paths; bridge and support cooling should stay controlled by their own settings."
+msgstr "高冷卻會增加易翹曲路徑的熱梯度；橋接與支撐冷卻仍應由各自設定控制。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Raise chamber temperature"
+msgstr "提高腔體溫度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Higher chamber temperature lowers the cooling gradient before the material locks in shrink stress."
+msgstr "較高腔溫可在材料鎖定收縮應力前降低冷卻梯度。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Raise bed temperature"
+msgstr "提高熱床溫度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "A warmer bed reduces the early-layer thermal drop and improves adhesion while the bottom layers shrink."
+msgstr "較高熱床可降低早期層的溫降，並在底層收縮時改善附著。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Add brim adhesion"
+msgstr "增加 brim 附著"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Large bottom areas and first-layer edges need more bed contact; this changes the slice path, not the existing G-code."
+msgstr "大底面與首層邊緣需要更多熱床接觸；這會改變切片路徑，不會修改既有 G-code。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Add mouse ears"
+msgstr "增加鼠耳 brim"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Mouse ears add local anchor area at sharp corners without forcing a full-width brim everywhere."
+msgstr "鼠耳會在尖角加入局部錨定面積，不需要整圈都使用寬 brim。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Use raft for severe bottom warp"
+msgstr "嚴重底部翹曲時使用 raft"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Raft is reserved for severe high-temperature material cases because it changes the bottom surface and print time."
+msgstr "raft 會改變底面與列印時間，因此只建議用在嚴重的高溫材料案例。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Slow risky walls"
+msgstr "降低高風險牆速度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Slower long walls reduce locked-in stress by giving hot paths more time to equalize before the next segment."
+msgstr "降低長牆速度可讓熱路徑在下一段之前有更多時間均溫，減少鎖定應力。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Reduce thermal delta"
+msgstr "降低熱梯度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "The fastest safe change is usually chamber or bed heat; nozzle temperature changes need material-specific validation."
+msgstr "最快且較安全的調整通常是腔溫或熱床；噴嘴溫度變更需要依材料驗證。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Complete material properties"
+msgstr "補完整材料物性"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Material shrink, vitrification temperature, and material family improve the thermal-stress estimate and advice confidence."
+msgstr "材料收縮、玻璃轉移/軟化溫度與材料族群可提升熱應力估算與建議可信度。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "High precision FEM backend is planned"
+msgstr "已規劃高精度 FEM 後端"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Use Gmsh plus CalculiX as an optional external executable backend first; do not link a large GPL solver into the slicer core."
+msgstr "優先以 Gmsh 加 CalculiX 作為可選外部執行檔後端；不要把大型 GPL 求解器直接連結進切片器核心。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Change"
+msgstr "變更"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Target"
+msgstr "目標"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Initial layer fan speed"
+msgstr "首層風扇速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Minimum fan speed"
+msgstr "最低風扇速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Maximum fan speed"
+msgstr "最高風扇速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Auxiliary fan speed"
+msgstr "輔助風扇速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Initial layer bed temperature"
+msgstr "首層熱床溫度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Mouse-ear max angle"
+msgstr "鼠耳最大角度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Mouse-ear detection length"
+msgstr "鼠耳偵測長度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Inner wall speed"
+msgstr "內牆速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Initial layer speed"
+msgstr "首層速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Filament shrink"
+msgstr "線材收縮率"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Vitrification temperature"
+msgstr "玻璃轉移/軟化溫度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "fan"
+msgstr "風扇"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "first layer"
+msgstr "首層"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "bed"
+msgstr "熱床"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "brim width"
+msgstr "brim 寬度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "auto brim"
+msgstr "自動 brim"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "brim ears"
+msgstr "鼠耳 brim"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "raft layers"
+msgstr "raft 層數"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "thermal delta"
+msgstr "熱梯度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "fast thermal-stress estimate"
+msgstr "快速熱應力估算"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention"
+msgstr "防翹曲"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention level"
+msgstr "防翹曲等級"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Conservative"
+msgstr "保守"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Balanced"
+msgstr "均衡"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Aggressive"
+msgstr "強力"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention thermal model resolution"
+msgstr "防翹曲熱模型解析度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Controls the local thermal-history model resolution used by warp prevention. Auto is suitable for daily slicing; High uses a finer real-coordinate grid for high-temperature materials and may take much longer."
+msgstr "控制防翹曲使用的本地熱歷史模型解析度。自動適合日常切片；高解析會對高溫材料使用更細的真實座標網格，可能需要更長時間。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention max slowdown"
+msgstr "最大降速"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum wall speed"
+msgstr "最低牆速度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum bottom speed"
+msgstr "最低底面速度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention max active layers"
+msgstr "最大作用層數"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention medium risk threshold"
+msgstr "中風險門檻"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention high risk threshold"
+msgstr "高風險門檻"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention long path length"
+msgstr "長路徑長度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Apply warp prevention to outer walls"
+msgstr "作用於外牆"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Apply warp prevention to inner walls"
+msgstr "作用於內牆"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Apply warp prevention to bottom solid infill"
+msgstr "作用於底面實心填充"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Apply warp prevention to long paths"
+msgstr "作用於長路徑"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Apply warp prevention near corners"
+msgstr "作用於尖角附近"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable warp prevention. When enabled, high-risk early-layer walls and bottom paths are slowed locally in generated G-code."
+msgstr "啟用防翹曲。啟用後，會在產生的 G-code 中對高風險早期層牆路徑和底面路徑進行局部降速。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Preset template for warp prevention. Changing this fills default values; the detailed parameters remain editable."
+msgstr "防翹曲的預設範本。切換等級只會填入預設值，詳細參數仍可手動編輯。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum local slowdown applied by warp prevention."
+msgstr "防翹曲允許施加的最大局部降速。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum wall speed preserved when warp prevention slows risky walls."
+msgstr "防翹曲降低高風險牆路徑速度時保留的最低牆速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum bottom solid infill speed preserved when warp prevention slows risky bottom paths."
+msgstr "防翹曲降低高風險底面路徑速度時保留的最低底面實心填充速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum wall speed preserved when warp prevention slows risky walls. This is a lower bound, not a target speed."
+msgstr "防翹曲降低高風險牆速度時保留的最低牆速度。這是速度下限，不是目標速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum bottom solid infill speed preserved when warp prevention slows risky bottom paths. This is a lower bound, not a target speed."
+msgstr "防翹曲降低高風險底面路徑速度時保留的最低底面實心填充速度。這是速度下限，不是目標速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Number of early layers affected by warp prevention."
+msgstr "防翹曲作用的早期層數。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum number of layers where warp prevention may reduce speed or fan. The actual active layer range is calculated from model and thermal risk. Set to 0 to keep object simulation analysis enabled but disable warp-prevention speed and fan changes."
+msgstr "防翹曲作用的早期層數。設為 0 時保留物件仿真分析，但不輸出防翹曲降速。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Risk level where warp prevention starts to slow eligible paths."
+msgstr "達到此風險值後，防翹曲開始降低符合條件的路徑速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Risk level where warp prevention may use the full configured maximum slowdown."
+msgstr "達到此風險值後，防翹曲可使用完整的最大降速設定。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Extrusion path length considered long for warp prevention risk and slowdown."
+msgstr "超過此擠出路徑長度時，會被視為防翹曲長路徑。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow warp prevention to slow high-risk early-layer outer wall paths."
+msgstr "允許防翹曲降低高風險早期層外牆路徑速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow warp prevention to slow high-risk early-layer inner wall paths."
+msgstr "允許防翹曲降低高風險早期層內牆路徑速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow warp prevention to slow high-risk early-layer bottom solid infill paths."
+msgstr "允許防翹曲降低高風險早期層底面實心填充路徑速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow warp prevention to slow high-risk early-layer long extrusion paths."
+msgstr "允許防翹曲降低高風險早期層長擠出路徑速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow warp prevention to slow high-risk early-layer corner paths."
+msgstr "允許防翹曲降低高風險早期層尖角路徑速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention adjusts acceleration"
+msgstr "防翹曲調整加速度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow warp prevention to reduce local acceleration on high-risk early-layer paths. This is applied locally and recovers with the protection envelope."
+msgstr "允許防翹曲在高風險早期層路徑上降低局部加速度，並隨保護包絡逐步恢復。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention max acceleration reduction"
+msgstr "防翹曲最大加速度降低"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum local acceleration reduction applied by warp prevention."
+msgstr "防翹曲允許的最大局部加速度降低比例。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum wall acceleration"
+msgstr "防翹曲最低牆加速度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum inner/outer wall acceleration preserved when warp prevention reduces risky wall acceleration. This is a lower bound, not a target acceleration."
+msgstr "防翹曲降低高風險牆路徑加速度時保留的內牆/外牆最低加速度。這是下限，不是目標加速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum bottom acceleration"
+msgstr "防翹曲最低底面加速度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum bottom solid infill acceleration preserved when warp prevention reduces risky bottom acceleration. This is a lower bound, not a target acceleration."
+msgstr "防翹曲降低高風險底面路徑加速度時保留的底面實心填充最低加速度。這是下限，不是目標加速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum effective acceleration change"
+msgstr "防翹曲最小有效加速度變化"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Local acceleration changes smaller than this value, or smaller than 5%, are ignored to avoid noisy G-code and inconsistent layer texture."
+msgstr "小於此數值或小於 5% 的局部加速度變化會被忽略，以避免 G-code 過碎和層紋不一致。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum number of layers where warp prevention may reduce speed, fan, or acceleration. The actual active layer range is calculated from model and thermal risk. Set to 0 to keep object simulation analysis enabled but disable warp-prevention speed, fan, and acceleration changes."
+msgstr "防翹曲可降低速度、風扇或加速度的最大層數。實際作用層範圍會根據模型與熱風險自動計算。設為 0 時保留物件仿真分析，但不輸出防翹曲速度、風扇和加速度變化。"
+
+#: src/libslic3r/PrintConfig.cpp src/slic3r/GUI/GCodeViewer.cpp
+msgid "Thermal model resolution"
+msgstr "熱模型解析度"
+
+msgid "Fast"
+msgstr "快速"
+
+msgid "Use high thermal model resolution"
+msgstr "使用高熱模型解析度"
+
+msgid "High resolution uses a finer local thermal-history grid for high-temperature materials. It improves advice quality but may increase slicing time."
+msgstr "高解析度會為高溫材料使用更細的本地熱歷史網格，可提升建議品質，但可能增加切片時間。"
+
+msgid "%.0f %% (%s), expected %.0f %% after reslicing"
+msgstr "%.0f %%（%s），重新切片後預計 %.0f %%"
+
+msgid "%.0f %% (%s), reduced from %.0f %% by %.0f %%"
+msgstr "%.0f %%（%s），已由 %.0f %% 降低 %.0f %%"
+
+msgid "%.0f %% (%s)"
+msgstr "%.0f %%（%s）"
+
+msgid "%.0f %% paths, avg / max slowdown %.0f %% / %.0f %%"
+msgstr "%.0f %% 路徑，平均/最大降速 %.0f %% / %.0f %%"
+
+msgid "%d / %d layers, processed through layer %u"
+msgstr "%d / %d 層，已處理到第 %u 層"
+
+msgid "%d / %d layers"
+msgstr "%d / %d 層"
+
+#: src/slic3r/GUI/GCodeViewer.cpp src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Not slowed reason"
+msgstr "未降速原因"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention speed"
+msgstr "防翹曲速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention envelope"
+msgstr "防翹曲保護包絡"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention fan"
+msgstr "防翹曲風扇"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention acceleration"
+msgstr "防翹曲加速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "No visible extrusion paths"
+msgstr "沒有可見擠出路徑"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Current risk"
+msgstr "目前風險"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Settings changed. Use the slice button above to regenerate G-code."
+msgstr "設定已變更，請使用上方切片按鈕重新產生 G-code。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Max active layers is 0, so warp-prevention speed and fan changes are disabled. Increase it and reslice to emit warp-prevention G-code."
+msgstr "最大作用層數為 0，因此不會輸出防翹曲速度、風扇或加速度調整。請提高層數並重新切片。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Enable warp prevention to emit local slowdown on high-risk early layers."
+msgstr "啟用防翹曲後，高風險早期層會輸出局部降速。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Current risk is low. Keep the current settings."
+msgstr "目前風險較低，維持現有設定即可。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention is enabled, but too few paths were actually slowed. Reslice, then increase maximum slowdown or lower thresholds if needed."
+msgstr "防翹曲已啟用，但實際降速路徑太少。請重新切片，必要時提高最大降速或降低門檻。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp-prevention speed has been applied. Remaining risk comes from material, thermal control, or geometry."
+msgstr "防翹曲速度已處理；剩餘風險來自材料、溫控或幾何。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Next step"
+msgstr "下一步"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Processed by warp prevention"
+msgstr "已由防翹曲處理"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Added time"
+msgstr "增加時間"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Actual / max active layers"
+msgstr "實際 / 最大作用層"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Average protection weight"
+msgstr "平均保護倍率"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Fan reduction avg / max"
+msgstr "風扇降低 平均 / 最大"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Acceleration reduction avg / max"
+msgstr "加速度降低 平均 / 最大"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention coverage"
+msgstr "防翹曲覆蓋率"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Layer bonding"
+msgstr "層間結合"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Residual stress"
+msgstr "殘餘應力"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Additional risks"
+msgstr "輔助風險"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Material"
+msgstr "材料"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Local model"
+msgstr "本地模型"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Insufficient processing"
+msgstr "實際介入不足"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Only a few paths were slowed, so warp prevention may not have a visible effect."
+msgstr "目前只有少數路徑被降速，防翹曲效果可能不明顯。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Early solid infill processing"
+msgstr "早期實心填充處理"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Why risk remains high"
+msgstr "為什麼仍然偏高"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Increase maximum slowdown"
+msgstr "提高最大降速"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Lower minimum bottom speed"
+msgstr "降低最低底面速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Lower minimum wall speed"
+msgstr "降低最低牆速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Increase max active layers"
+msgstr "增加最大作用層數"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Raise chamber/bed temperature or add fillets"
+msgstr "提高腔溫/熱床溫度或增加圓角"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Useful adjustments"
+msgstr "可調整項目"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "%.0f %% paths processed"
+msgstr "已處理 %.0f %% 路徑"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Processing"
+msgstr "處理狀態"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "0 s"
+msgstr "0 秒"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Analysis only; max active layers is 0."
+msgstr "僅分析；最大作用層數為 0。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Settings changed; reslice is required."
+msgstr "設定已變更，需要重新切片。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Enabled, but too few paths were actually slowed."
+msgstr "已啟用，但實際降速路徑太少。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Enabled, no eligible paths were slowed."
+msgstr "已啟用，但沒有符合條件的路徑被降速。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Remaining risk"
+msgstr "剩餘風險"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Low enough for the current settings."
+msgstr "以目前設定來看風險已經足夠低。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Processing warning"
+msgstr "處理提醒"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Solid infill warning"
+msgstr "實心填充提醒"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention is enabled, but the current G-code contains too little actual processing."
+msgstr "防翹曲已啟用，但目前 G-code 中實際處理太少。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Early solid infill is not sufficiently protected by the current settings."
+msgstr "目前設定對早期實心填充的保護不足。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Role"
+msgstr "線型"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Reasons"
+msgstr "原因"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Enabled in current settings"
+msgstr "目前設定已啟用"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention parameters"
+msgstr "防翹曲參數"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "G-code status"
+msgstr "G-code 狀態"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Not resliced yet"
+msgstr "尚未重新切片"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Slowed paths"
+msgstr "降速路徑"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Processing rate by role"
+msgstr "各線型處理率"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Risk details"
+msgstr "風險詳情"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Material / simulation confidence"
+msgstr "材料 / 仿真可信度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Average / max slowdown"
+msgstr "平均 / 最大降速"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Warp prevention added time"
+msgstr "防翹曲增加時間"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Settings are enabled but this G-code has not been resliced with warp prevention."
+msgstr "設定已啟用，但目前 G-code 尚未使用防翹曲重新切片。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "No paths match the current warp-prevention slowdown settings."
+msgstr "目前沒有符合目前防翹曲降速設定的路徑。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "The highest-risk path is outside the active warp-prevention layer range."
+msgstr "最高風險路徑不在防翹曲實際作用層範圍內。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "The highest risk is below the medium-risk threshold, so it is not slowed."
+msgstr "最高風險低於中風險門檻，因此不會降速。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "The path type may be disabled, already at its minimum speed, or excluded as support, bridge, wipe tower, skirt, or brim."
+msgstr "路徑類型可能未啟用，速度已到下限，或屬於支撐、橋接、擦拭塔、裙邊或 brim 等排除路徑。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "First-layer fan"
+msgstr "首層風扇"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Minimum fan"
+msgstr "最低風扇"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Maximum fan"
+msgstr "最高風扇"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Auxiliary fan"
+msgstr "輔助風扇"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "First-layer bed temperature"
+msgstr "首層熱床溫度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Mouse-ear angle"
+msgstr "鼠耳角度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Maximum slowdown"
+msgstr "最大降速"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Minimum wall speed"
+msgstr "最低牆速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Minimum bottom speed"
+msgstr "最低底面速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Max active layers"
+msgstr "最大作用層數"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Adjust acceleration"
+msgstr "調整加速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Maximum acceleration reduction"
+msgstr "最大加速度降低"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Minimum wall acceleration"
+msgstr "最低牆加速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Minimum bottom acceleration"
+msgstr "最低底面加速度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Minimum effective acceleration change"
+msgstr "最小有效加速度變化"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Medium risk threshold"
+msgstr "中風險門檻"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "High risk threshold"
+msgstr "高風險門檻"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Long path length"
+msgstr "長路徑長度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Apply to outer walls"
+msgstr "作用於外牆"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Apply to inner walls"
+msgstr "作用於內牆"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Apply to bottom solid infill"
+msgstr "作用於底面實心填充"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Apply to long paths"
+msgstr "作用於長路徑"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Apply near corners"
+msgstr "作用於尖角附近"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Material shrinkage"
+msgstr "材料收縮"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Glass transition temperature"
+msgstr "玻璃轉化溫度"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Material type"
+msgstr "材料類型"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Reslice"
+msgstr "重新切片"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "This recommendation is already in the current settings. Reslice to update the preview and G-code."
+msgstr "這項建議已在目前設定中。請重新切片以更新預覽與 G-code。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "This recommendation is already in the current settings. Re-slicing has started to update the preview and G-code."
+msgstr "此建議已在目前設定中；已開始重新切片以更新預覽和 G-code。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "This recommendation is already in the current settings."
+msgstr "此建議已在目前設定中。"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "No actionable recommendations"
+msgstr "目前沒有可套用建議"
+
+msgid "Already satisfied"
+msgstr "已滿足"
+
+msgid "Manual review"
+msgstr "需手動確認"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Residual risk"
+msgstr "殘餘風險"
+
+#: src/slic3r/GUI/GCodeViewer.cpp
+msgid "Conservative protections are already applied. Remaining risk mainly comes from material, large bottom area, or long paths; it usually needs higher chamber/bed temperature, model splitting, added fillets, or accepting medium risk."
+msgstr "目前保護已經套用；剩餘風險主要來自材料、大底面或長路徑，通常需要提高腔溫/熱床、拆分模型、增加圓角，或接受中等風險。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "High-shrinkage material"
+msgstr "高收縮材料"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Bottom layer"
+msgstr "底層"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Sharp corner"
+msgstr "尖角"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Long path"
+msgstr "長路徑"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Large bottom area"
+msgstr "大底面"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Excessive cooling"
+msgstr "冷卻過強"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Low chamber temperature"
+msgstr "腔溫偏低"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "High thermal delta"
+msgstr "溫差過高"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "High shrinkage"
+msgstr "收縮偏高"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Brim/raft protected"
+msgstr "已有裙邊/底筏保護"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "High thermal stress"
+msgstr "熱應力高"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Low bed temperature"
+msgstr "熱床偏低"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Low data confidence"
+msgstr "資料可信度不足"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Warp prevention is disabled"
+msgstr "防翹曲未啟用"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Excluded path: support, bridge, wipe tower, skirt, or brim"
+msgstr "排除路徑：支撐、橋接、擦拭塔、裙邊或 brim"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Outside the active warp-prevention layers"
+msgstr "不在防翹曲實際作用層內"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Risk is below the medium-risk threshold"
+msgstr "風險低於中風險門檻"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "This path type is disabled in current settings"
+msgstr "目前設定未啟用此路徑類型"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Speed is already at the minimum limit"
+msgstr "速度已達到最低限制"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Low-impact change, no slowdown is emitted"
+msgstr "低影響變化，不輸出降速"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Processed or no slowdown needed"
+msgstr "已處理或不需降速"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Remaining risk mainly comes from chamber, bed, or thermal delta"
+msgstr "剩餘風險主要來自腔溫、熱床或溫差"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Remaining risk mainly comes from material shrinkage"
+msgstr "剩餘風險主要來自材料收縮"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Remaining risk mainly comes from a large bottom area"
+msgstr "剩餘風險主要來自大底面"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Remaining risk mainly comes from sharp-corner geometry"
+msgstr "剩餘風險主要來自尖角幾何"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Remaining risk mainly comes from long paths"
+msgstr "剩餘風險主要來自長路徑"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Remaining risk mainly comes from material, thermal control, or geometry"
+msgstr "剩餘風險主要來自材料、溫控或幾何"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Enable Balanced warp prevention"
+msgstr "啟用均衡防翹曲"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Enable Aggressive warp prevention"
+msgstr "啟用強力防翹曲"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Enable warp prevention"
+msgstr "啟用防翹曲"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "This does not change the original speed presets. After reslicing, local G-code slowdown is emitted only on high-risk early-layer paths."
+msgstr "不改變原始速度預設；重新切片後，只在高風險早期層路徑輸出局部降速 G-code。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Inner and outer brim"
+msgstr "內側和外側裙邊"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Increase brim adhesion"
+msgstr "增加裙邊附著"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Large bottom areas and first-layer edges need inner and outer bed contact. This changes the toolpath after reslicing."
+msgstr "大底面和首層邊緣需要內側與外側都有熱床接觸；這會改變重新切片後的路徑。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Sharp corners"
+msgstr "尖角"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Mouse-ear brim"
+msgstr "鼠耳裙邊"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Add mouse-ear adhesion"
+msgstr "增加鼠耳附著"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Mouse ears add local anchoring area near sharp corners without forcing a wide brim around the entire model."
+msgstr "鼠耳會在尖角附近增加局部固定面積，不會強制整圈都使用寬裙邊。"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Initial layer"
+msgstr "首層"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Reduce high-risk wall speed"
+msgstr "降低高風險牆速度"
+
+#: src/slic3r/GUI/ObjectSimulationAdvisor.cpp
+msgid "Only speed items that would actually change are shown. Slower long wall paths add more thermal equalization time and lower locked-in stress."
+msgstr "只顯示實際會改變的速度項目；較慢的長牆路徑可增加均溫時間，降低鎖定應力。"
+
+msgid "Off; this G-code has no warp-prevention process changes."
+msgstr "關閉；這份 G-code 沒有防翹曲工藝調整。"
+
+msgid "Warp prevention was off for this slice, so speed, fan, and acceleration were not changed."
+msgstr "本次切片未啟用防翹曲，因此速度、風扇和加速度沒有被調整。"
+
+msgid "%.0f/%.0f%%, speed %.0f/%.0f%%, accel %.0f/%.0f%%"
+msgstr "%.0f/%.0f%%，速度 %.0f/%.0f%%，加速度 %.0f/%.0f%%"
+
+msgid "Warp-prevention process changes have been applied. Remaining risk comes from material, thermal control, or geometry."
+msgstr "防翹曲工藝變更已套用。剩餘風險來自材料、溫控或幾何。"
+
+msgid "Processed paths"
+msgstr "已處理路徑"
+
+msgid "Object Simulation Analysis"
+msgstr "物件仿真分析"
+
+msgid "Object simulation: "
+msgstr "物件仿真："
+
+msgid "Display risk"
+msgstr "顯示風險"
+
+msgid "Simulation factors"
+msgstr "仿真因素"
+
+msgid "Object simulation summary"
+msgstr "物件仿真摘要"
+
+msgid "Current simulation risk"
+msgstr "目前仿真風險"
+
+msgid "Current simulation risk is low. Keep the current settings."
+msgstr "目前仿真風險較低，保持目前設定。"
+
+msgid "Highest display risk"
+msgstr "最高顯示風險"
+
+msgid "Simulation details"
+msgstr "仿真詳細資訊"
+
+msgid "Object simulation analysis"
+msgstr "物件仿真分析"
+
+msgid "Object simulation recommendation applied. Re-slicing has started to update the preview and G-code."
+msgstr "已套用物件仿真建議；已開始重新切片以更新預覽和 G-code。"
+
+msgid "Object simulation recommendation applied."
+msgstr "已套用物件仿真建議。"
+
+msgid "Processing effect"
+msgstr "處理效果"
+
+msgid "Warp prevention processing"
+msgstr "防翹曲處理"
+
+msgid "Warp prevention processing: "
+msgstr "防翹曲處理："
+
+msgid "Warp prevention is enabled. Remaining risk comes from material, thermal control, or geometry."
+msgstr "防翹曲已啟用；剩餘風險主要來自材料、溫控或幾何。"
+
+msgid "Review material, chamber, bed, and geometry settings."
+msgstr "請檢查材料、腔溫、熱床與模型幾何設定。"
+
+msgid "Enabled; exported G-code stays clean and uses standard speed, fan, and acceleration commands."
+msgstr "已啟用；匯出的 G-code 保持乾淨，並使用標準速度、風扇和加速度命令。"
+
+msgid "Included in the G-code estimate"
+msgstr "已包含在 G-code 時間估算中"

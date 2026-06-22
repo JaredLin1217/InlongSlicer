@@ -169,6 +169,8 @@ public:
     // EViewType::ActualSpeed
     // EViewType::FanSpeed
     // EViewType::Temperature
+    // INLONG: Add object simulation analysis visualization support
+    // EViewType::ObjectSimulation
     // INLONG: Add Pressure Advance visualization support
     // EViewType::PressureAdvance
     // INLONG: Add Acceleration visualization support
@@ -191,6 +193,8 @@ public:
     // EViewType::ActualSpeed
     // EViewType::FanSpeed
     // EViewType::Temperature
+    // INLONG: Add object simulation analysis visualization support
+    // EViewType::ObjectSimulation
     // INLONG: Add Pressure Advance visualization support
     // EViewType::PressureAdvance
     // INLONG: Add Acceleration visualization support

@@ -198,6 +198,8 @@ class Print;
             float travel_dist{ 0.0f }; // mm
             float fan_speed{ 0.0f }; // percentage
             float temperature{ 0.0f }; // Celsius degrees
+            float bed_temperature{ 0.0f }; // Celsius degrees
+            float chamber_temperature{ 0.0f }; // Celsius degrees
 // INLONG: Add Pressure Advance visualization support
             float pressure_advance{ 0.0f };
             // INLONG: Add Acceleration visualization support
@@ -802,6 +804,8 @@ class Print;
         float m_mm3_per_mm;
         float m_travel_dist; // mm
         float m_fan_speed; // percentage
+        float m_bed_temperature; // Celsius degrees
+        float m_chamber_temperature; // Celsius degrees
         float m_z_offset; // mm
 // INLONG: Add Pressure Advance visualization support
         float m_pressure_advance;
@@ -1029,6 +1033,9 @@ class Print;
 
         //BBS: Set bed temperature
         void process_M140(const GCodeReader::GCodeLine& line);
+
+        //BBS: Set chamber temperature
+        void process_M141(const GCodeReader::GCodeLine& line);
 
         //BBS: wait bed temperature
         void process_M190(const GCodeReader::GCodeLine& line);

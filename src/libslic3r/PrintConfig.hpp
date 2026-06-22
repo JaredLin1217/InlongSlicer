@@ -151,6 +151,22 @@ enum class WallDirection
     Count,
 };
 
+enum class WarpPreventionLevel
+{
+    Conservative,
+    Balanced,
+    Aggressive,
+    Count,
+};
+
+enum class WarpPreventionThermalResolution
+{
+    Fast,
+    Auto,
+    High,
+    Count,
+};
+
 //BBS
 enum class PrintSequence {
     ByLayer,
@@ -559,6 +575,7 @@ CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(WipeTowerWallType)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PerimeterGeneratorType)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PowerLossRecoveryMode)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(HeatbreakFanControlMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(WarpPreventionThermalResolution)
 
 #undef CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS
 
@@ -1556,6 +1573,17 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionFloatOrPercent,     initial_layer_line_width))
     ((ConfigOptionFloat,              initial_layer_print_height))
     ((ConfigOptionFloat,              initial_layer_speed))
+    ((ConfigOptionBool,               enable_warp_prevention))
+    ((ConfigOptionEnum<WarpPreventionLevel>, warp_prevention_level))
+    ((ConfigOptionEnum<WarpPreventionThermalResolution>, warp_prevention_thermal_resolution))
+    ((ConfigOptionFloat,              warp_prevention_max_slowdown))
+    ((ConfigOptionFloat,              warp_prevention_min_wall_speed))
+    ((ConfigOptionFloat,              warp_prevention_min_bottom_speed))
+    ((ConfigOptionInt,                warp_prevention_early_layers))
+    ((ConfigOptionBool,               warp_prevention_adjust_acceleration))
+    ((ConfigOptionFloat,              warp_prevention_max_accel_reduction))
+    ((ConfigOptionFloat,              warp_prevention_min_wall_acceleration))
+    ((ConfigOptionFloat,              warp_prevention_min_bottom_acceleration))
 
     //BBS
     ((ConfigOptionFloat,              initial_layer_infill_speed))

@@ -21,6 +21,7 @@
 #include "GCode/ThumbnailData.hpp"
 #include "libslic3r/ObjectID.hpp"
 #include "GCode/ExtrusionProcessor.hpp"
+#include "WarpPreventionGCodeAdapter.hpp"
 
 #include "GCode/PressureEqualizer.hpp"
 #include "GCode/SmallAreaInfillFlowCompensator.hpp"
@@ -633,6 +634,7 @@ private:
 
     // Processor
     GCodeProcessor m_processor;
+    std::unique_ptr<WarpPreventionGCodeAdapter> m_warp_prevention_adapter;
 
     //some post-processing on the file, with their data class
     std::unique_ptr<FanMover> m_fan_mover;
@@ -652,6 +654,7 @@ private:
     int get_highest_bed_temperature(const bool is_first_layer,const Print &print) const;
 
     double      calc_max_volumetric_speed(const double layer_height, const double line_width, const std::string co_str);
+    WarpPreventionGCodeAdapter& warp_prevention_adapter();
     std::string _extrude(const ExtrusionPath &path, std::string description = "", double speed = -1);
     bool _needSAFC(const ExtrusionPath &path);
     void print_machine_envelope(GCodeOutputStream& file, Print& print);

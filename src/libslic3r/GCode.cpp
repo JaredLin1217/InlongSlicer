@@ -16,6 +16,7 @@
 #include "ShortestPath.hpp"
 #include "Print.hpp"
 #include "Utils.hpp"
+#include "WarpPreventionGCodeAdapter.hpp"
 #include "ClipperUtils.hpp"
 #include "libslic3r.h"
 #include "LocalesUtils.hpp"
@@ -93,6 +94,13 @@ static const float g_min_purge_volume = 100.f;
 static const float g_purge_volume_one_time = 135.f;
 static const int g_max_flush_count = 4;
 static const size_t g_max_label_object = 64;
+
+WarpPreventionGCodeAdapter& GCode::warp_prevention_adapter()
+{
+    if (!m_warp_prevention_adapter)
+        m_warp_prevention_adapter = std::make_unique<WarpPreventionGCodeAdapter>();
+    return *m_warp_prevention_adapter;
+}
 
 static bool is_bambu_x2d_printer(const FullPrintConfig &config)
 {
@@ -2066,6 +2074,7 @@ void GCode::do_export(Print* print, const char* path, GCodeProcessorResult* resu
 
     // BBS
     m_curr_print = print;
+    warp_prevention_adapter().reset_print();
 
     GCodeWriter::full_gcode_comment = print->config().gcode_comments;
     CNumericLocalesSetter locales_setter;
@@ -4442,7 +4451,7 @@ std::string GCode::generate_skirt(const Print &print,
         Flow layer_skirt_flow = print.skirt_flow().with_height(float(m_skirt_done.back() - (m_skirt_done.size() == 1 ? 0. : m_skirt_done[m_skirt_done.size() - 2])));
         double mm3_per_mm = layer_skirt_flow.mm3_per_mm();
         // Decide where to start looping:
-        // - If it? the first layer or if we do NOT want a single-wall skirt/draft shield,
+        // - If it is the first layer or if we do NOT want a single-wall skirt/draft shield,
         //   start from loops.first (all loops).
         // - Otherwise, if single_loop_draft_shield == true (and not the first layer),
         //   start from loops.second - 1 (just one loop).
@@ -5673,6 +5682,8 @@ void GCode::append_full_config(const Print &print, std::string &str)
         "printhost_port"sv
     });
     auto is_banned = [](const std::string &key) {
+        if (key == "enable_warp_prevention" || key.rfind("warp_prevention_", 0) == 0)
+            return true;
         return banned_keys.find(key) != banned_keys.end();
     };
     std::ostringstream ss;
@@ -6662,18 +6673,18 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
         // cap speed with max_volumetric_speed anyway (even if user is not using autospeed)
         speed = std::min(speed, FILAMENT_CONFIG(filament_max_volumetric_speed) / _mm3_per_mm);
     }
-    // INLONG: resonance?voidance on short external perimeters
+    // INLONG: resonance avoidance on short external perimeters
 {
-    double ref_speed = speed;  // stash the pre?ap speed
+    double ref_speed = speed;  // stash the pre-cap speed
     if (path.role() == erExternalPerimeter
         && m_config.resonance_avoidance.value) {
 
-        // if our original speed was above ?ax?? disable RA for this loop
+        // if our original speed was above max, disable RA for this loop
         if (ref_speed > m_config.max_resonance_avoidance_speed.value) {
             m_resonance_avoidance = false;
         }
 
-        // re?pply volumetric cap
+        // re-apply volumetric cap
         if (FILAMENT_CONFIG(filament_max_volumetric_speed) > 0) {
             speed = std::min(
                 speed,
@@ -6761,6 +6772,72 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
             variable_speed = std::any_of(new_points.begin(), new_points.end(),
                                          [speed](const ProcessedPoint &p) { return fabs(double(p.speed) - speed) > 1; }); // Ignore small speed variations (under 1mm/sec)
     }
+
+    WarpPreventionPathContext warp_context;
+    warp_context.config = &m_config;
+    warp_context.filament_type = FILAMENT_CONFIG(filament_type);
+    warp_context.layer_id = static_cast<uint32_t>(_layer);
+    warp_context.layer_height = static_cast<float>(path.height);
+    warp_context.line_width = static_cast<float>(path.width);
+    warp_context.flow_mm3_per_mm = static_cast<float>(path.mm3_per_mm);
+    warp_context.z = static_cast<float>(m_nominal_z);
+    warp_context.path_length_mm = static_cast<float>(unscale_(path.length()));
+    warp_context.speed_mm_s = static_cast<float>(std::max(0.0, speed));
+    warp_context.acceleration_mm_s2 = static_cast<float>(acceleration_i);
+    const Point warp_first_point = path.first_point();
+    const Point warp_last_point = path.last_point();
+    warp_context.path_x = static_cast<float>(unscale_(0.5 * static_cast<double>(warp_first_point.x() + warp_last_point.x())));
+    warp_context.path_y = static_cast<float>(unscale_(0.5 * static_cast<double>(warp_first_point.y() + warp_last_point.y())));
+    warp_context.nozzle_temperature = static_cast<float>(
+        this->on_first_layer() ? FILAMENT_CONFIG(nozzle_temperature_initial_layer) : FILAMENT_CONFIG(nozzle_temperature));
+    warp_context.chamber_temperature = static_cast<float>(FILAMENT_CONFIG(chamber_temperature));
+    warp_context.bed_temperature = static_cast<float>(std::max(FILAMENT_CONFIG(hot_plate_temp), FILAMENT_CONFIG(hot_plate_temp_initial_layer)));
+    warp_context.fan_speed = static_cast<float>(this->on_first_layer() ? FILAMENT_CONFIG(first_x_layer_fan_speed) : FILAMENT_CONFIG(fan_max_speed));
+    warp_context.filament_shrink_percent = static_cast<float>(FILAMENT_CONFIG(filament_shrink));
+    warp_context.role = path.role();
+    warp_context.has_brim = m_print != nullptr && m_print->has_brim();
+    warp_context.has_raft = m_config.raft_layers.value > 0;
+    warp_context.has_inner_outer_brim = m_config.brim_type.value == btOuterAndInner;
+    warp_context.brim_width = static_cast<float>(m_config.brim_width.value);
+    if (m_layer != nullptr) {
+        BoundingBox warp_layer_bbox;
+        for (const BoundingBox& bbox : m_layer->lslices_bboxes)
+            warp_layer_bbox.merge(bbox);
+        if (warp_layer_bbox.defined) {
+            warp_context.layer_bounds_valid = true;
+            warp_context.layer_min_x = static_cast<float>(unscale_(warp_layer_bbox.min.x()));
+            warp_context.layer_min_y = static_cast<float>(unscale_(warp_layer_bbox.min.y()));
+            warp_context.layer_max_x = static_cast<float>(unscale_(warp_layer_bbox.max.x()));
+            warp_context.layer_max_y = static_cast<float>(unscale_(warp_layer_bbox.max.y()));
+        }
+    }
+
+    WarpPreventionGCodeAdapter& warp_adapter = warp_prevention_adapter();
+    warp_adapter.begin_path(warp_context, acceleration_i);
+
+    auto point_to_warp_xy = [](const Point& point) {
+        return Vec2d(unscale_(point.x()), unscale_(point.y()));
+    };
+    auto point3_to_warp_xy = [](const Point3& point) {
+        return Vec2d(unscale_(point.x()), unscale_(point.y()));
+    };
+    auto segment_corner_influence = [&](const Vec2d& prev, const Vec2d& current, const Vec2d& next) {
+        return warp_adapter.segment_corner_influence(prev.x(), prev.y(), current.x(), current.y(), next.x(), next.y());
+    };
+    // Keep anti-warp as process-only post-processing.  It may adjust speed,
+    // acceleration, and fan for existing extrusion moves, but it must not split
+    // moves or change the slicer's original path geometry.
+    const bool warp_split_wall_corners = false;
+    const bool warp_split_process_field = false;
+    auto process_warp_subsegment = [&](double original_speed, unsigned int original_accel,
+                                       const Vec2d& a, const Vec2d& b, double length_mm,
+                                       float corner_influence, float corner_proximity) {
+        return warp_adapter.process_subsegment(
+            original_speed, original_accel,
+            a.x(), a.y(), b.x(), b.y(), length_mm,
+            corner_influence, corner_proximity,
+            m_writer, jerk);
+    };
 
     double F = speed * 60;  // convert mm/sec to mm/min
 
@@ -7019,6 +7096,35 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
         }
 
         gcode += m_writer.set_speed(F, "", comment);
+        double last_set_speed = F;
+        auto emit_warp_linear_submove = [&](const Vec2d& gcode_a, const Vec2d& gcode_b, double t1,
+                                            double segment_length, double original_segment_speed,
+                                            const WarpPreventionSegmentDecision& decision,
+                                            std::string segment_description) {
+            const double final_speed = decision.final_speed_mm_s;
+            const double final_F = final_speed * 60.0;
+            if (std::abs(last_set_speed - final_F) > 60.0 || final_speed < original_segment_speed - 0.01) {
+                gcode += m_writer.set_speed(final_F, "", comment);
+                last_set_speed = final_F;
+            }
+            gcode += decision.acceleration_gcode;
+            gcode += decision.fan_gcode;
+
+            auto dE = e_per_mm * segment_length;
+            if (_needSAFC(path)) {
+                auto oldE = dE;
+                dE = m_small_area_infill_flow_compensator->modify_flow(segment_length, dE, path.role());
+
+                if (m_config.gcode_comments && oldE > 0 && oldE != dE)
+                    segment_description += Slic3r::format(" | Old Flow Value: %0.5f Length: %0.5f", oldE, segment_length);
+            }
+
+            const Vec2d sub_dest = gcode_a + (gcode_b - gcode_a) * t1;
+            gcode += m_writer.extrude_to_xy(
+                sub_dest,
+                dE,
+                GCodeWriter::full_gcode_comment ? segment_description : "", path.is_force_no_extrusion());
+        };
         {
             if (m_enable_cooling_markers) {
                 if (enable_overhang_bridge_fan) {
@@ -7041,12 +7147,76 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
                 double total_length = sloped == nullptr ? 0. : path.polyline.length() * SCALING_FACTOR;
                 double saved_z      = m_writer.get_position().z();
 
-                for (const Line3& line : path.polyline.lines()) {
+                const auto lines = path.polyline.lines();
+                for (size_t line_idx = 0; line_idx < lines.size(); ++line_idx) {
+                    const Line3& line = lines[line_idx];
                     std::string tempDescription = description;
                     const double line_length = line.length() * SCALING_FACTOR;
                     if (line_length < EPSILON)
                         continue;
                     path_length += line_length;
+                    const Vec2d line_a = point3_to_warp_xy(line.a);
+                    const Vec2d line_b = point3_to_warp_xy(line.b);
+                    const float line_start_corner = line_idx > 0 ?
+                        segment_corner_influence(point3_to_warp_xy(lines[line_idx - 1].a), line_a, line_b) : 0.0f;
+                    const float line_end_corner = line_idx + 1 < lines.size() ?
+                        segment_corner_influence(line_a, line_b, point3_to_warp_xy(lines[line_idx + 1].b)) : 0.0f;
+                    const float line_corner = std::max(line_start_corner, line_end_corner);
+                    if (sloped == nullptr && !path.z_contoured && warp_split_wall_corners && line_corner > 0.0f) {
+                        const std::vector<double> split_params = warp_adapter.corner_split_params(
+                            line_length, line_start_corner, line_end_corner, warp_split_wall_corners, path.width);
+                        const Vec2d gcode_a = this->point_to_gcode(line.a.to_point());
+                        const Vec2d gcode_b = this->point_to_gcode(line.b.to_point());
+                        for (size_t split_idx = 1; split_idx < split_params.size(); ++split_idx) {
+                            const double t0 = split_params[split_idx - 1];
+                            const double t1 = split_params[split_idx];
+                            const double sub_length = line_length * (t1 - t0);
+                            if (sub_length < EPSILON)
+                                continue;
+                            std::string subDescription = description;
+                            const Vec2d sub_a = line_a + (line_b - line_a) * t0;
+                            const Vec2d sub_b = line_a + (line_b - line_a) * t1;
+                            const double mid_distance = line_length * (0.5 * (t0 + t1));
+                            const float corner_proximity = warp_adapter.corner_influence_at(
+                                mid_distance, line_length, line_start_corner, line_end_corner, path.width);
+                            WarpPreventionSegmentDecision sub_warp_decision =
+                                process_warp_subsegment(speed, acceleration_i, sub_a, sub_b, sub_length, corner_proximity, corner_proximity);
+                            emit_warp_linear_submove(gcode_a, gcode_b, t1, sub_length, speed, sub_warp_decision, subDescription);
+                        }
+                        continue;
+                    }
+                    if (sloped == nullptr && !path.z_contoured && warp_split_process_field) {
+                        const std::vector<double> split_params = warp_adapter.process_field_split_params(
+                            line_length, warp_split_process_field, path.width);
+                        if (split_params.size() > 2) {
+                            const Vec2d gcode_a = this->point_to_gcode(line.a.to_point());
+                            const Vec2d gcode_b = this->point_to_gcode(line.b.to_point());
+                            for (size_t split_idx = 1; split_idx < split_params.size(); ++split_idx) {
+                                const double t0 = split_params[split_idx - 1];
+                                const double t1 = split_params[split_idx];
+                                const double sub_length = line_length * (t1 - t0);
+                                if (sub_length < EPSILON)
+                                    continue;
+                                std::string subDescription = description;
+                                const Vec2d sub_a = line_a + (line_b - line_a) * t0;
+                                const Vec2d sub_b = line_a + (line_b - line_a) * t1;
+                                WarpPreventionSegmentDecision sub_warp_decision =
+                                    process_warp_subsegment(speed, acceleration_i, sub_a, sub_b, sub_length, line_corner, line_corner);
+                                emit_warp_linear_submove(gcode_a, gcode_b, t1, sub_length, speed, sub_warp_decision, subDescription);
+                            }
+                            continue;
+                        }
+                    }
+                    WarpPreventionSegmentDecision line_warp_decision =
+                        process_warp_subsegment(speed, acceleration_i, line_a, line_b, line_length, line_corner, line_corner);
+                    const double line_speed = line_warp_decision.final_speed_mm_s;
+                    const double line_F = line_speed * 60.0;
+                    if (std::abs(last_set_speed - line_F) > 60.0 || line_speed < speed - 0.01) {
+                        gcode += m_writer.set_speed(line_F, "", comment);
+                        last_set_speed = line_F;
+                    }
+                    gcode += line_warp_decision.acceleration_gcode;
+                    gcode += line_warp_decision.fan_gcode;
                     auto dE = e_per_mm * line_length;
                     if (_needSAFC(path)) {
                         auto oldE = dE;
@@ -7107,6 +7277,68 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
                             const double line_length = line.length() * SCALING_FACTOR;
                             if (line_length < EPSILON)
                                 continue;
+                            const Vec2d line_a = point_to_warp_xy(line.a);
+                            const Vec2d line_b = point_to_warp_xy(line.b);
+                            const float line_start_corner = point_index >= 2 ?
+                                segment_corner_influence(point_to_warp_xy(path.polyline.points[point_index - 2].to_point()), line_a, line_b) : 0.0f;
+                            const float line_end_corner = point_index + 1 < path.polyline.points.size() ?
+                                segment_corner_influence(line_a, line_b, point_to_warp_xy(path.polyline.points[point_index + 1].to_point())) : 0.0f;
+                            const float line_corner = std::max(line_start_corner, line_end_corner);
+                            if (warp_split_wall_corners && line_corner > 0.0f) {
+                                const std::vector<double> split_params = warp_adapter.corner_split_params(
+                                    line_length, line_start_corner, line_end_corner, warp_split_wall_corners, path.width);
+                                const Vec2d gcode_a = this->point_to_gcode(line.a);
+                                const Vec2d gcode_b = this->point_to_gcode(line.b);
+                                for (size_t split_idx = 1; split_idx < split_params.size(); ++split_idx) {
+                                    const double t0 = split_params[split_idx - 1];
+                                    const double t1 = split_params[split_idx];
+                                    const double sub_length = line_length * (t1 - t0);
+                                    if (sub_length < EPSILON)
+                                        continue;
+                                    std::string subDescription = description;
+                                    const Vec2d sub_a = line_a + (line_b - line_a) * t0;
+                                    const Vec2d sub_b = line_a + (line_b - line_a) * t1;
+                                    const double mid_distance = line_length * (0.5 * (t0 + t1));
+                                    const float corner_proximity = warp_adapter.corner_influence_at(
+                                        mid_distance, line_length, line_start_corner, line_end_corner, path.width);
+                                    WarpPreventionSegmentDecision sub_warp_decision =
+                                        process_warp_subsegment(speed, acceleration_i, sub_a, sub_b, sub_length, corner_proximity, corner_proximity);
+                                    emit_warp_linear_submove(gcode_a, gcode_b, t1, sub_length, speed, sub_warp_decision, subDescription);
+                                }
+                                continue;
+                            }
+                            if (warp_split_process_field) {
+                                const std::vector<double> split_params = warp_adapter.process_field_split_params(
+                                    line_length, warp_split_process_field, path.width);
+                                if (split_params.size() > 2) {
+                                    const Vec2d gcode_a = this->point_to_gcode(line.a);
+                                    const Vec2d gcode_b = this->point_to_gcode(line.b);
+                                    for (size_t split_idx = 1; split_idx < split_params.size(); ++split_idx) {
+                                        const double t0 = split_params[split_idx - 1];
+                                        const double t1 = split_params[split_idx];
+                                        const double sub_length = line_length * (t1 - t0);
+                                        if (sub_length < EPSILON)
+                                            continue;
+                                        std::string subDescription = description;
+                                        const Vec2d sub_a = line_a + (line_b - line_a) * t0;
+                                        const Vec2d sub_b = line_a + (line_b - line_a) * t1;
+                                        WarpPreventionSegmentDecision sub_warp_decision =
+                                            process_warp_subsegment(speed, acceleration_i, sub_a, sub_b, sub_length, line_corner, line_corner);
+                                        emit_warp_linear_submove(gcode_a, gcode_b, t1, sub_length, speed, sub_warp_decision, subDescription);
+                                    }
+                                    continue;
+                                }
+                            }
+                            WarpPreventionSegmentDecision line_warp_decision =
+                                process_warp_subsegment(speed, acceleration_i, line_a, line_b, line_length, line_corner, line_corner);
+                            const double line_speed = line_warp_decision.final_speed_mm_s;
+                            const double line_F = line_speed * 60.0;
+                            if (std::abs(last_set_speed - line_F) > 60.0 || line_speed < speed - 0.01) {
+                                gcode += m_writer.set_speed(line_F, "", comment);
+                                last_set_speed = line_F;
+                            }
+                            gcode += line_warp_decision.acceleration_gcode;
+                            gcode += line_warp_decision.fan_gcode;
                             auto dE = e_per_mm * line_length;
                             if (_needSAFC(path)) {
                                 auto oldE = dE;
@@ -7130,6 +7362,18 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
                         if (arc_length < EPSILON)
                             continue;
                         const Vec2d center_offset = this->point_to_gcode(arc.center) - this->point_to_gcode(arc.start_point);
+                        const Vec2d arc_warp_start = point_to_warp_xy(arc.start_point);
+                        const Vec2d arc_warp_end = point_to_warp_xy(arc.end_point);
+                        WarpPreventionSegmentDecision arc_warp_decision =
+                            process_warp_subsegment(speed, acceleration_i, arc_warp_start, arc_warp_end, arc_length, 0.0f, 0.0f);
+                        const double arc_speed = arc_warp_decision.final_speed_mm_s;
+                        const double arc_F = arc_speed * 60.0;
+                        if (std::abs(last_set_speed - arc_F) > 60.0 || arc_speed < speed - 0.01) {
+                            gcode += m_writer.set_speed(arc_F, "", comment);
+                            last_set_speed = arc_F;
+                        }
+                        gcode += arc_warp_decision.acceleration_gcode;
+                        gcode += arc_warp_decision.fan_gcode;
                         auto dE = e_per_mm * arc_length;
                         if (_needSAFC(path)) {
                             auto oldE = dE;
@@ -7200,7 +7444,18 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
             if(line_length < EPSILON)
                 continue;
             path_length += line_length;
-            double new_speed = pre_processed_point.speed * 60.0;
+            const Vec2d line_a(prev(0), prev(1));
+            const Vec2d line_b(p(0), p(1));
+            float line_corner = 0.0f;
+            if (i + 1 < new_points.size()) {
+                const Vec3d next_p = this->point_to_gcode_quantized(new_points[i + 1].p);
+                line_corner = segment_corner_influence(line_a, line_b, Vec2d(next_p(0), next_p(1)));
+            }
+            const double original_point_speed = pre_processed_point.speed;
+            WarpPreventionSegmentDecision point_warp_decision =
+                process_warp_subsegment(original_point_speed, acceleration_i, line_a, line_b, line_length, line_corner, line_corner);
+            const double capped_point_speed = point_warp_decision.final_speed_mm_s;
+            double new_speed = capped_point_speed * 60.0;
 
             if ((std::abs(last_set_speed - new_speed) > EPSILON) || (std::abs(_mm3_per_mm - m_last_mm3_mm) > EPSILON)) {
                 // INLONG: Adaptive PA code segment when adjusting PA within the same feature
@@ -7248,7 +7503,10 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
 
             // Ignore small speed variations - emit speed change if the delta between current and new is greater than 60mm/min / 1mm/sec
             // Reset speed to F if delta to F is less than 1mm/sec
-            if ((std::abs(last_set_speed - new_speed) > 60)) {
+            gcode += point_warp_decision.fan_gcode;
+            gcode += point_warp_decision.acceleration_gcode;
+            const bool warp_speed_changed = capped_point_speed < original_point_speed - 0.01;
+            if ((std::abs(last_set_speed - new_speed) > 60) || warp_speed_changed) {
                 gcode += m_writer.set_speed(new_speed, "", comment);
                 last_set_speed = new_speed;
             } else if ((std::abs(F - new_speed) <= 60)) {

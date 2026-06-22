@@ -316,6 +316,12 @@ static const std::array<Color, size_t(EOptionType::COUNT)> DEFAULT_OPTIONS_COLOR
     { 226, 210,  67 }  // CustomGCodes
 } };
 
+static const Palette OBJECT_SIMULATION_COLORS{ {
+    {  35, 178,  79 }, // Low
+    { 245, 205,  47 }, // Medium
+    { 210,  64,  48 }  // High
+} };
+
 #ifdef ENABLE_OPENGL_ES
 static std::pair<size_t, size_t> width_height(size_t count)
 {
@@ -730,6 +736,7 @@ ViewerImpl::ViewerImpl()
 {
     reset_default_extrusion_roles_colors();
     reset_default_options_colors();
+    m_object_simulation_range.set_palette(OBJECT_SIMULATION_COLORS);
 }
 
 void ViewerImpl::init(const std::string& opengl_context_version)
@@ -763,6 +770,7 @@ void ViewerImpl::init(const std::string& opengl_context_version)
     m_uni_segments_height_width_angle_tex_id = glGetUniformLocation(m_segments_shader_id, "height_width_angle_tex");
     m_uni_segments_colors_tex_id             = glGetUniformLocation(m_segments_shader_id, "color_tex");
     m_uni_segments_segment_index_tex_id      = glGetUniformLocation(m_segments_shader_id, "segment_index_tex");
+    m_uni_segments_flat_segment_color_id     = glGetUniformLocation(m_segments_shader_id, "flat_segment_color");
     glcheck();
     assert(m_uni_segments_view_matrix_id != -1 &&
            m_uni_segments_projection_matrix_id != -1 &&
@@ -770,7 +778,8 @@ void ViewerImpl::init(const std::string& opengl_context_version)
            m_uni_segments_positions_tex_id != -1 &&
            m_uni_segments_height_width_angle_tex_id != -1 &&
            m_uni_segments_colors_tex_id != -1 &&
-           m_uni_segments_segment_index_tex_id != -1);
+           m_uni_segments_segment_index_tex_id != -1 &&
+           m_uni_segments_flat_segment_color_id != -1);
 
     m_segment_template.init();
 
@@ -1502,6 +1511,11 @@ Color ViewerImpl::get_vertex_color(const PathVertex& v) const
     {
         return v.is_travel() ? get_option_color(move_type_to_option(v.type)) : m_temperature_range.get_color_at(v.temperature);
     }
+    // INLONG: Add object simulation analysis visualization support
+    case EViewType::ObjectSimulation:
+    {
+        return v.is_travel() ? get_option_color(move_type_to_option(v.type)) : m_object_simulation_range.get_color_at(v.object_simulation);
+    }
 // INLONG: Add Pressure Advance visualization support
     case EViewType::PressureAdvance:
     {
@@ -1606,6 +1620,8 @@ const ColorRange& ViewerImpl::get_color_range(EViewType type) const
     case EViewType::ActualSpeed:              { return m_actual_speed_range; }
     case EViewType::FanSpeed:                 { return m_fan_speed_range; }
     case EViewType::Temperature:              { return m_temperature_range; }
+    // INLONG: Add object simulation analysis visualization support
+    case EViewType::ObjectSimulation:                 { return m_object_simulation_range; }
 // INLONG: Add Pressure Advance visualization support
     case EViewType::PressureAdvance:          { return m_pressure_advance_range; }
     // INLONG: Add Acceleration visualization support
@@ -1630,6 +1646,8 @@ void ViewerImpl::set_color_range_palette(EViewType type, const Palette& palette)
     case EViewType::ActualSpeed:              { m_actual_speed_range.set_palette(palette);    break; }
     case EViewType::FanSpeed:                 { m_fan_speed_range.set_palette(palette);       break; }
     case EViewType::Temperature:              { m_temperature_range.set_palette(palette);     break; }
+    // INLONG: Add object simulation analysis visualization support
+    case EViewType::ObjectSimulation:                 { m_object_simulation_range.set_palette(palette);       break; }
 // INLONG: Add Pressure Advance visualization support
     case EViewType::PressureAdvance:          { m_pressure_advance_range.set_palette(palette); break; }
     // INLONG: Add Acceleration visualization support
@@ -1673,6 +1691,8 @@ size_t ViewerImpl::get_used_cpu_memory() const
     ret += m_actual_speed_range.size_in_bytes_cpu();
     ret += m_fan_speed_range.size_in_bytes_cpu();
     ret += m_temperature_range.size_in_bytes_cpu();
+    // INLONG: Add object simulation analysis visualization support
+    ret += m_object_simulation_range.size_in_bytes_cpu();
     // INLONG: Add Pressure Advance visualization support
     ret += m_pressure_advance_range.size_in_bytes_cpu();
     // INLONG: Add Acceleration visualization support
@@ -1829,6 +1849,8 @@ void ViewerImpl::update_color_ranges()
     m_actual_speed_range.reset();
     m_fan_speed_range.reset();
     m_temperature_range.reset();
+    // INLONG: Add object simulation analysis visualization support
+    m_object_simulation_range.reset();
     // INLONG: Add Pressure Advance visualization support
     m_pressure_advance_range.reset();
     // INLONG: Add Acceleration visualization support
@@ -1851,6 +1873,8 @@ void ViewerImpl::update_color_ranges()
             }
             m_fan_speed_range.update(round_to_bin(v.fan_speed));
             m_temperature_range.update(round_to_bin(v.temperature));
+            // INLONG: Add object simulation analysis visualization support
+            m_object_simulation_range.update(std::clamp(v.object_simulation, 0.0f, 1.0f));
             // INLONG: Add Pressure Advance visualization support
             if (v.pressure_advance >= 0.0f)
                 m_pressure_advance_range.update(v.pressure_advance);
@@ -1867,6 +1891,26 @@ void ViewerImpl::update_color_ranges()
         }
     }
 
+    if (m_object_simulation_range.m_count == 0) {
+        m_object_simulation_range.update(0.0f);
+        m_object_simulation_range.update(1.0f);
+    } else {
+        const std::array<float, 2>& simulation_range = m_object_simulation_range.get_range();
+        const float min_risk = simulation_range[0];
+        const float max_risk = simulation_range[1];
+        if (std::isfinite(min_risk) && std::isfinite(max_risk)) {
+            const float span = max_risk - min_risk;
+            if (span < 0.08f) {
+                const float center = 0.5f * (min_risk + max_risk);
+                const float padding = std::max(0.03f, 0.5f * (0.08f - span));
+                m_object_simulation_range.update(std::clamp(center - padding, 0.0f, 1.0f));
+                m_object_simulation_range.update(std::clamp(center + padding, 0.0f, 1.0f));
+            }
+        } else {
+            m_object_simulation_range.update(0.0f);
+            m_object_simulation_range.update(1.0f);
+        }
+    }
     const std::vector<float> times = m_layers.get_times(m_settings.time_mode);
     for (size_t i = 0; i < m_layer_time_range.size(); ++i) {
         for (float t : times) {
@@ -1935,6 +1979,7 @@ void ViewerImpl::render_segments(const Mat4x4& view_matrix, const Mat4x4& projec
     glsafe(glUniform1i(m_uni_segments_height_width_angle_tex_id, 1));
     glsafe(glUniform1i(m_uni_segments_colors_tex_id, 2));
     glsafe(glUniform1i(m_uni_segments_segment_index_tex_id, 3));
+    glsafe(glUniform1i(m_uni_segments_flat_segment_color_id, m_settings.view_type == EViewType::ObjectSimulation ? 1 : 0));
     glsafe(glUniformMatrix4fv(m_uni_segments_view_matrix_id, 1, GL_FALSE, view_matrix.data()));
     glsafe(glUniformMatrix4fv(m_uni_segments_projection_matrix_id, 1, GL_FALSE, projection_matrix.data()));
     glsafe(glUniform3fv(m_uni_segments_camera_position_id, 1, camera_position.data()));

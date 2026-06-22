@@ -124,6 +124,10 @@ set(SLIC3R_GUI_SOURCES
     GUI/format.hpp
     GUI/GCodeViewer.cpp
     GUI/GCodeViewer.hpp
+    GUI/ObjectSimulationAnalysis.cpp
+    GUI/ObjectSimulationAnalysis.hpp
+    GUI/ObjectSimulationAdvisor.cpp
+    GUI/ObjectSimulationAdvisor.hpp
     GUI/Gizmos/GizmoObjectManipulation.cpp
     GUI/Gizmos/GizmoObjectManipulation.hpp
     GUI/Gizmos/GLGizmoAssembly.cpp

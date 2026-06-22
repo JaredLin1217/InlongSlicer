@@ -7,6 +7,7 @@
 #include "IMSlider.hpp"
 #include "GLModel.hpp"
 #include "I18N.hpp"
+#include "ObjectSimulationAdvisor.hpp"
 
 #include <boost/iostreams/device/mapped_file.hpp>
 
@@ -244,6 +245,7 @@ mutable bool m_no_render_path { false };
 
     libvgcode::Viewer m_viewer;
     bool m_loaded_as_preview{ false };
+    ObjectSimulationAdvisorConfig m_object_simulation_advisor_config;
 
 public:
     GCodeViewer();

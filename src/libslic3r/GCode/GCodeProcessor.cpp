@@ -20,6 +20,8 @@
 
 #include <float.h>
 #include <assert.h>
+#include <algorithm>
+#include <cmath>
 #include <regex>
 #include <charconv>
 #include <string>
@@ -1742,6 +1744,7 @@ void GCodeProcessor::register_commands()
         {"M135", [this](const GCodeReader::GCodeLine& line) { process_M135(line); }}, // Set tool (MakerWare)
 
         {"M140", [this](const GCodeReader::GCodeLine& line) { process_M140(line); }}, // Set bed temperature
+        {"M141", [this](const GCodeReader::GCodeLine& line) { process_M141(line); }}, // Set chamber temperature
         {"M190", [this](const GCodeReader::GCodeLine& line) { process_M190(line); }}, // Wait bed temperature
         {"M191", [this](const GCodeReader::GCodeLine& line) { process_M191(line); }}, // Wait chamber temperature
 
@@ -2450,6 +2453,8 @@ void GCodeProcessor::reset()
     m_mm3_per_mm = 0.0f;
     m_travel_dist = 0.0f;
     m_fan_speed = 0.0f;
+    m_bed_temperature = 0.0f;
+    m_chamber_temperature = 0.0f;
     m_z_offset = 0.0f;
 
     m_extrusion_role = erNone;
@@ -5064,15 +5069,26 @@ void GCodeProcessor::process_M135(const GCodeReader::GCodeLine& line)
 void GCodeProcessor::process_M140(const GCodeReader::GCodeLine& line)
 {
     float new_temp;
-    if (line.has_value('S', new_temp))
+    if (line.has_value('S', new_temp)) {
+        m_bed_temperature = new_temp;
         m_highest_bed_temp = m_highest_bed_temp < (int)new_temp ? (int)new_temp : m_highest_bed_temp;
+    }
+}
+
+void GCodeProcessor::process_M141(const GCodeReader::GCodeLine& line)
+{
+    float chamber_temp = 0;
+    if (line.has_value('S', chamber_temp))
+        m_chamber_temperature = chamber_temp;
 }
 
 void GCodeProcessor::process_M190(const GCodeReader::GCodeLine& line)
 {
     float new_temp;
-    if (line.has_value('S', new_temp))
+    if (line.has_value('S', new_temp)) {
+        m_bed_temperature = new_temp;
         m_highest_bed_temp = m_highest_bed_temp < (int)new_temp ? (int)new_temp : m_highest_bed_temp;
+    }
 }
 
 void GCodeProcessor::process_M191(const GCodeReader::GCodeLine& line)
@@ -5080,8 +5096,11 @@ void GCodeProcessor::process_M191(const GCodeReader::GCodeLine& line)
     float chamber_temp = 0;
     const float wait_chamber_temp_time = 720.0;
     // BBS: when chamber_temp>40,caculate time required for heating
-    if (line.has_value('S', chamber_temp) && chamber_temp > 40)
-        simulate_st_synchronize(wait_chamber_temp_time);
+    if (line.has_value('S', chamber_temp)) {
+        m_chamber_temperature = chamber_temp;
+        if (chamber_temp > 40)
+            simulate_st_synchronize(wait_chamber_temp_time);
+    }
 }
 
 
@@ -5589,6 +5608,8 @@ void GCodeProcessor::store_move_vertex(EMoveType type, EMovePathType path_type, 
         m_travel_dist,
         m_fan_speed,
         m_extruder_temps[filament_id],
+        m_bed_temperature,
+        m_chamber_temperature,
 // INLONG: Add Pressure Advance visualization support
         m_pressure_advance,
         // INLONG: Add Acceleration visualization support

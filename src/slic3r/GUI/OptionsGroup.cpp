@@ -923,6 +923,13 @@ boost::any ConfigOptionsGroup::config_value(const std::string& opt_key, int opt_
     if (opt_key == "bed_type")
         return boost::any((int)BedType::btPC);
 
+    if (m_config != nullptr && m_config->def() != nullptr) {
+        const ConfigOptionDef* def = m_config->def()->get(opt_key);
+        const ConfigOption*    opt = m_config->option(opt_key);
+        if (def != nullptr && def->default_value && (opt == nullptr || opt->type() != def->type))
+            const_cast<DynamicPrintConfig*>(m_config)->set_key_value(opt_key, def->create_default_option());
+    }
+
 	if (deserialize) {
 		// Want to edit a vector value(currently only multi - strings) in a single edit box.
 		// Aggregate the strings the old way.

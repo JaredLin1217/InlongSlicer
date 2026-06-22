@@ -92,6 +92,8 @@ enum class EViewType : uint8_t
     LayerTimeLogarithmic,
     FanSpeed,
     Temperature,
+    // INLONG: Add object simulation analysis visualization support
+    ObjectSimulation,
 // INLONG: Add Pressure Advance visualization support
     PressureAdvance,
     // INLONG: Add Acceleration visualization support
@@ -103,6 +105,28 @@ enum class EViewType : uint8_t
 };
 
 static constexpr std::size_t VIEW_TYPES_COUNT = static_cast<std::size_t>(EViewType::COUNT);
+
+//
+// Object simulation reason flags.
+//
+enum EObjectSimulationReason : uint32_t
+{
+    ObjectSimulationNone              = 0,
+    ObjectSimulationHighShrinkMaterial = 1u << 0,
+    ObjectSimulationBottomLayer       = 1u << 1,
+    ObjectSimulationOuterWall         = 1u << 2,
+    ObjectSimulationSharpCorner       = 1u << 3,
+    ObjectSimulationLongPath          = 1u << 4,
+    ObjectSimulationLargeBottomArea   = 1u << 5,
+    ObjectSimulationHighCooling       = 1u << 6,
+    ObjectSimulationLowChamber        = 1u << 7,
+    ObjectSimulationHighThermalDelta  = 1u << 8,
+    ObjectSimulationHighShrinkage     = 1u << 9,
+    ObjectSimulationBrimRaftProtected = 1u << 10,
+    ObjectSimulationHighThermalStress = 1u << 11,
+    ObjectSimulationLowBed            = 1u << 12,
+    ObjectSimulationLowConfidence     = 1u << 13
+};
 
 //
 // Move types

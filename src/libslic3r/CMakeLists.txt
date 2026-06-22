@@ -464,6 +464,12 @@ set(lisbslic3r_sources
     Utils.hpp
     VariableWidth.cpp
     VariableWidth.hpp
+    ObjectSimulationField.cpp
+    ObjectSimulationField.hpp
+    WarpPrevention.cpp
+    WarpPrevention.hpp
+    WarpPreventionGCodeAdapter.cpp
+    WarpPreventionGCodeAdapter.hpp
     Zipper.cpp
     Zipper.hpp
     FilamentGroup.hpp

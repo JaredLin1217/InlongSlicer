@@ -102,6 +102,7 @@ public:
     void        refresh();
 	Field*		get_field(const t_config_option_key& opt_key, int opt_index = -1) const;
     Line *      get_line(const t_config_option_key &opt_key, int opt_index = -1);
+    void        show_field(const t_config_option_key& opt_key, bool show = true);
 	bool		set_value(const t_config_option_key& opt_key, const boost::any& value);
 	// BBS. Add is_extruder_og parameter.
 	ConfigOptionsGroupShp	new_optgroup(const wxString& title, const wxString& icon = wxEmptyString, int noncommon_label_width = -1, bool is_extruder_og = false);

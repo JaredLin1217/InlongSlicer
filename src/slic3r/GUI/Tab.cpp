@@ -4,6 +4,7 @@
 #include "PresetHints.hpp"
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/PrintConfig.hpp"
+#include "libslic3r/WarpPrevention.hpp"
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/GCode/GCodeProcessor.hpp"
@@ -1260,8 +1261,13 @@ void Tab::load_config(const DynamicPrintConfig& config)
 }
 
 // Reload current $self->{config} (aka $self->{presets}->edited_preset->config) into the UI fields.
+static void ensure_warp_prevention_print_defaults(DynamicPrintConfig* config);
+
 void Tab::reload_config()
 {
+    if (m_type == Preset::TYPE_PRINT)
+        ensure_warp_prevention_print_defaults(m_config);
+
     if (m_active_page)
         m_active_page->reload_config();
     if (m_type == Preset::TYPE_PRINT && m_config != nullptr)
@@ -1493,10 +1499,95 @@ static wxString pad_combo_value_for_config(const DynamicPrintConfig &config)
     return config.opt_bool("pad_enable") ? (config.opt_bool("pad_around_object") ? _("Around object") : _("Below object")) : _("None");
 }
 
+static const std::vector<std::string>& warp_prevention_print_keys()
+{
+    static const std::vector<std::string> keys = {
+        "enable_warp_prevention",
+        "warp_prevention_level",
+        "warp_prevention_thermal_resolution",
+        "warp_prevention_max_slowdown",
+        "warp_prevention_min_wall_speed",
+        "warp_prevention_min_bottom_speed",
+        "warp_prevention_early_layers",
+        "warp_prevention_adjust_acceleration",
+        "warp_prevention_max_accel_reduction",
+        "warp_prevention_min_wall_acceleration",
+        "warp_prevention_min_bottom_acceleration",
+    };
+    return keys;
+}
+
+static void ensure_warp_prevention_print_defaults(DynamicPrintConfig* config)
+{
+    if (config == nullptr || config->def() == nullptr)
+        return;
+
+    for (const std::string& key : warp_prevention_print_keys()) {
+        const ConfigOptionDef* def = config->def()->get(key);
+        if (def == nullptr || !def->default_value)
+            continue;
+
+        const ConfigOption* current = config->option(key);
+        if (current == nullptr || current->type() != def->type)
+            config->set_key_value(key, def->create_default_option());
+    }
+}
+
+static bool is_warp_prevention_print_key(const std::string& key)
+{
+    const std::vector<std::string>& keys = warp_prevention_print_keys();
+    return std::find(keys.begin(), keys.end(), key) != keys.end();
+}
+
+static WarpPreventionPresetLevel to_warp_prevention_preset_level(WarpPreventionLevel level)
+{
+    switch (level) {
+    case WarpPreventionLevel::Conservative:
+        return WarpPreventionPresetLevel::Conservative;
+    case WarpPreventionLevel::Aggressive:
+        return WarpPreventionPresetLevel::Aggressive;
+    case WarpPreventionLevel::Balanced:
+    default:
+        return WarpPreventionPresetLevel::Balanced;
+    }
+}
+
 void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
 {
     if (wxGetApp().plater() == nullptr) {
         return;
+    }
+
+    if (opt_key == "warp_prevention_level" && m_type == Preset::TYPE_PRINT) {
+        const WarpPreventionLevel level = m_config->opt_enum<WarpPreventionLevel>("warp_prevention_level");
+        const WarpPreventionPreset preset = warp_prevention_preset(to_warp_prevention_preset_level(level));
+
+        DynamicPrintConfig new_conf = *m_config;
+        new_conf.set_key_value("warp_prevention_max_slowdown", new ConfigOptionFloat(preset.max_slowdown_percent));
+        new_conf.set_key_value("warp_prevention_min_wall_speed", new ConfigOptionFloat(preset.min_wall_speed));
+        new_conf.set_key_value("warp_prevention_min_bottom_speed", new ConfigOptionFloat(preset.min_bottom_speed));
+        new_conf.set_key_value("warp_prevention_early_layers", new ConfigOptionInt(preset.max_active_layers));
+        new_conf.set_key_value("warp_prevention_adjust_acceleration", new ConfigOptionBool(preset.adjust_acceleration));
+        new_conf.set_key_value("warp_prevention_max_accel_reduction", new ConfigOptionFloat(preset.max_accel_reduction_percent));
+        new_conf.set_key_value("warp_prevention_min_wall_acceleration", new ConfigOptionFloat(preset.min_wall_acceleration));
+        new_conf.set_key_value("warp_prevention_min_bottom_acceleration", new ConfigOptionFloat(preset.min_bottom_acceleration));
+        m_config_manipulation.apply(m_config, &new_conf);
+        reload_config();
+    }
+
+    if (opt_key == "enable_warp_prevention" && m_type == Preset::TYPE_PRINT) {
+        const bool enabled = m_config->opt_bool("enable_warp_prevention");
+        toggle_line("warp_prevention_level", enabled);
+        if (m_active_page) {
+            m_active_page->update_visibility(m_mode, true);
+            m_active_page->show_field("warp_prevention_level", enabled);
+            m_parent->Layout();
+        }
+    }
+
+    if (m_type == Preset::TYPE_PRINT && is_warp_prevention_print_key(opt_key)) {
+        wxGetApp().plater()->schedule_background_process();
+        wxGetApp().plater()->update();
     }
 
     if (opt_key == "gcode_flavor" && m_type == Preset::TYPE_PRINTER) {
@@ -2516,6 +2607,12 @@ void TabPrint::build()
         optgroup->append_single_option_line("initial_layer_infill_speed", "speed_settings_initial_layer_speed#initial-layer-infill");
         optgroup->append_single_option_line("initial_layer_travel_speed", "speed_settings_initial_layer_speed#initial-layer-travel-speed");
         optgroup->append_single_option_line("slow_down_layers", "speed_settings_initial_layer_speed#number-of-slow-layers");
+
+        optgroup = page->new_optgroup(L("Warp prevention"), L"param_speed", 15);
+        optgroup->append_single_option_line("enable_warp_prevention", "speed_settings_warp_prevention#enable");
+        optgroup->append_single_option_line("warp_prevention_level", "speed_settings_warp_prevention#level");
+        optgroup->append_single_option_line("warp_prevention_thermal_resolution", "speed_settings_warp_prevention#thermal-resolution");
+
         optgroup = page->new_optgroup(L("Other layers speed"), L"param_speed", 15);
         optgroup->append_single_option_line("outer_wall_speed", "speed_settings_other_layers_speed#outer-wall");
         optgroup->append_single_option_line("inner_wall_speed", "speed_settings_other_layers_speed#inner-wall");
@@ -2849,6 +2946,8 @@ void TabPrint::toggle_options()
     }
 
     m_config_manipulation.toggle_print_fff_options(m_config, m_type < Preset::TYPE_COUNT);
+
+    toggle_line("warp_prevention_level", m_config->opt_bool("enable_warp_prevention"));
 
     Field *field = m_active_page->get_field("support_style");
     auto   support_type = m_config->opt_enum<SupportType>("support_type");
@@ -7698,6 +7797,16 @@ Line *Page::get_line(const t_config_option_key &opt_key, int opt_index)
         if (line != nullptr) return line;
     }
     return line;
+}
+
+void Page::show_field(const t_config_option_key &opt_key, bool show)
+{
+    for (auto optgroup : m_optgroups) {
+        if (optgroup->get_field(opt_key)) {
+            optgroup->show_field(opt_key, show);
+            return;
+        }
+    }
 }
 
 bool Page::set_value(const t_config_option_key &opt_key, const boost::any &value)
