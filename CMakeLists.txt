@@ -942,6 +942,36 @@ endif ()
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt DESTINATION ".")
 configure_file(${LIBDIR}/dev-utils/platform/unix/fhs.hpp.in ${LIBDIR_BIN}/dev-utils/platform/unix/fhs.hpp)
 
+if (WIN32)
+    set(INLONG_ONLY_INSTALL_DIR "${CMAKE_BINARY_DIR}/${SLIC3R_APP_KEY}_InlongOnly")
+    string(REPLACE ";" "|" INLONG_ONLY_SYSTEM_RUNTIME_LIBS "${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}")
+
+    set(INLONG_ONLY_INSTALL_DEPS InlongSlicer gettext_po_to_mo)
+    if(TARGET InlongSlicer_app_gui)
+        list(APPEND INLONG_ONLY_INSTALL_DEPS InlongSlicer_app_gui)
+    endif()
+    if(TARGET InlongSlicer_profile_validator)
+        list(APPEND INLONG_ONLY_INSTALL_DEPS InlongSlicer_profile_validator)
+    endif()
+    if(TARGET COPY_DLLS)
+        list(APPEND INLONG_ONLY_INSTALL_DEPS COPY_DLLS)
+    endif()
+
+    add_custom_target(install_only_inlong
+        COMMAND ${CMAKE_COMMAND}
+            "-DSOURCE_ROOT=${CMAKE_SOURCE_DIR}"
+            "-DBUILD_ROOT=${CMAKE_BINARY_DIR}"
+            "-DCONFIG=$<CONFIG>"
+            "-DSLIC3R_APP_KEY=${SLIC3R_APP_KEY}"
+            "-DOUTPUT_DIR=${INLONG_ONLY_INSTALL_DIR}"
+            "-DSYSTEM_RUNTIME_LIBS=${INLONG_ONLY_SYSTEM_RUNTIME_LIBS}"
+            -P "${CMAKE_SOURCE_DIR}/cmake/InstallOnlyInlong.cmake"
+        DEPENDS ${INLONG_ONLY_INSTALL_DEPS}
+        COMMENT "Installing Inlong-only runtime to ${INLONG_ONLY_INSTALL_DIR}"
+        VERBATIM
+    )
+endif ()
+
 set (CPACK_PACKAGE_NAME "InlongSlicer")
 set (CPACK_PACKAGE_VENDOR "Inlong Slicer")
 set (CPACK_PACKAGE_VERSION_MAJOR "${INLONGSLICER_VERSION_MAJOR}")

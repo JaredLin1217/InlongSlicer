@@ -19745,3 +19745,691 @@ msgstr ""
 #: src/libslic3r/PrintConfig.cpp
 msgid "Custom G-code emitted before waiting for nozzle temperature when heatbreak fan control mode is set to custom G-code. Available placeholders: {tool_id}, {filament_id}, {heatbreak_fan_speed}, {heatbreak_fan_pwm}."
 msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Map the logical extruder to physical extruder"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Map the logical extruder to physical extruder."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament mapping mode"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament mapping mode used as plate param."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Retraction Length (Toolchange)"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "This setting is only used for initial value of manual calibration of pressure advance. Bowden extruder usually has larger PA value. This setting doesn't influence normal slicing."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Nozzle Volume Type"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Nozzle volume type for extruders."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default Nozzle Volume Type"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default Nozzle volume type for extruders in this printer."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Extruder variant list"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Extruder variant list."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Extruder AMS count"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "AMS counts per extruder."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer extruder id"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer extruder id."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer's extruder variant"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer's extruder variant."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Master extruder id"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default extruder id to place filament."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print extruder id"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print extruder id."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print's extruder variant"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print's extruder variant."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament's extruder variant"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament's extruder variant."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament self index"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament self index."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Head wrap detect zone"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow filaments with high/low temperature to be printed together"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow filaments with high/low temperature to be printed together."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "0 (soluble)"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "0.1 (semi-detachable)"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "0.2 (detachable)"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Adaptive layer height"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Aggressive"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Align XY"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Align the model to the given point."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow warp prevention to reduce local acceleration on high-risk early-layer paths. This is applied locally and recovers with the protection envelope."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Automatically export current configuration to the specified file."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Autosave"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Bail out on unknown configuration values"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Balanced"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Bottom contact pattern"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Bottom contact spacing"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Bridge line width must not exceed nozzle diameter: "
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Center the print around the given center."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Choose the input shaper algorithm."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Comma-separated list of all filament types used during the print."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Conservative"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Controls the local thermal-history model resolution used by warp prevention. Auto is suitable for daily slicing; High uses a finer real-coordinate grid for high-temperature materials and may take much longer."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model at the given X."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model at the given Y."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model at the given Z."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model in the XY plane into tiles of the specified max size."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Damping ratio for the Y axis input shaper.\nZero will use the firmware damping ratio.\nTo disable input shaping, use the Disable type.\nRRF: X and Y values are equal."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default uses the firmware default settings."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Detect unconnected parts in the given model(s) and split them into separate objects."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Disable turns off input shaping in the firmware."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Do not fail if a file supplied to --load does not exist."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Duplicate by grid"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Duplicate copies of model."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable printer settings for machines that can use multiple printheads in parallel."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable reading unknown configuration values by silently substituting them with defaults."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable reading unknown configuration values by verbosely substituting them with defaults."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable spaghetti detector"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable the camera on printer to check spaghetti."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable warp prevention. When enabled, high-risk early-layer walls and bottom paths are slowed locally in generated G-code."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enforce support for the first"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enforce support for the first n layers"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export AMF"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export OBJ"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export SLA"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export SVG"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export the model(s) as AMF."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export the model(s) as OBJ."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Fast"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print bottom surface.\n\"Default\" uses the active object/part filament."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print inner walls.\n\"Default\" uses the active object/part filament."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print internal solid infill.\n\"Default\" uses the active object/part filament."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print internal sparse infill.\n\"Default\" uses the active object/part filament."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print outer walls.\n\"Default\" uses the active object/part filament."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print support base and raft.\n\"Default\" means no specific filament for support and current filament is used."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print support interface.\n\"Default\" means no specific filament for support interface and current filament is used."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print top surface.\n\"Default\" uses the active object/part filament."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Fill the raft area under the first object layer by ignoring holes and internal contours."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Flashforge local API requires the printer serial number."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Forward-compatibility rule when loading configurations from config files and project files (3MF, AMF)."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "G-code viewer"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Generate box raft"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Generate the raft from the bounding box of the first object layer."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Help (FFF options)"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Help (SLA options)"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Ignore internal contours"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Ignore non-existent config files"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Initial filament type"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Inner walls"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Lightning overhang angle"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Line pattern for raft support layers."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Load config file"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Load configuration from the specified file. It can be used more than once to load options from multiple files."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Log file"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum local acceleration reduction applied by warp prevention."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum local slowdown applied by warp prevention."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum number of layers where warp prevention may reduce speed, fan, or acceleration. The actual active layer range is calculated from object simulation analysis. Set to 0 to keep object simulation analysis enabled but disable warp-prevention speed, fan, and acceleration changes."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum overhang angle for Lightning infill support propagation."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum straightening angle used to simplify Lightning branches."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum Z height"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum bottom solid infill acceleration preserved when warp prevention reduces risky bottom acceleration. This is a lower bound, not a target acceleration."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum bottom solid infill speed preserved when warp prevention slows risky bottom paths. This is a lower bound, not a target speed."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum inner/outer wall acceleration preserved when warp prevention reduces risky wall acceleration. This is a lower bound, not a target acceleration."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum inner/outer wall speed preserved when warp prevention slows risky walls. This is a lower bound, not a target speed."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Multiply copies by creating a grid."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Name of the printer variant. For example, the printer variants may be differentiated by a nozzle diameter."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "No extrusion"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Number of extruders used during the print."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Number of printing extruders"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Ordered list of bed exclude areas by parallel printhead count. Item 1 applies to one printhead, item 2 to two printheads, and so on. Leave an item empty for no excluded area."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Outer walls"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Output File"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Parallel printheads bed exclude areas"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Parallel printheads count"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Position X"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Position Y"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Preset template for warp prevention. Changing this fills default values; the detailed parameters remain editable."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer technology."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Prune angle"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Raft line spacing"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Raft support pattern"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Redirects debug logging to file.\n"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Relative bridge angle"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Render with a software renderer"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Render with a software renderer. The bundled MESA software renderer is loaded instead of the default OpenGL driver."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Repair"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Repair the model's meshes if it is non-manifold mesh."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Resonant frequency for the Y axis input shaper.\nZero will use the firmware frequency.\nTo disable input shaping, use the Disable type.\nRRF: X and Y values are equal."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Scale to Fit"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Scale to fit the given volume."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Serial Number"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Set the number of parallel printheads for machines like OrangeStorm Giga printer."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Show the full list of SLA print configuration options."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Show the full list of print/G-code configuration options."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Single instance mode"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Slice the model and export SLA printing layers as PNG."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Slice the model and export solid slices as SVG."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Slice the model and export toolpaths as G-code."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Spacing between raft support lines."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Straightening angle"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "String containing filament type of the first used extruder."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Support parallel printheads"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "The file where the output will be written (if not specified, it will be based on the input file)."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Thermal model resolution"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Top contact pattern"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Top contact spacing"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Use 3MF instead of G-code"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Used filament types"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Visualize an already sliced and saved G-code."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention adjusts acceleration"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention level"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention max acceleration reduction"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention max active layers"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention max slowdown"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum bottom acceleration"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum bottom speed"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum wall acceleration"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Warp prevention minimum wall speed"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "When enabled, the bridge angle values are added to the automatically calculated bridge direction instead of overriding it."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "X coordinate of the left front corner of a wipe tower."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Y coordinate of the left front corner of a wipe tower."
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Z travel"
+msgstr ""
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "mm/s?"
+msgstr ""

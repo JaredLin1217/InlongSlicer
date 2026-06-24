@@ -2629,16 +2629,14 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionInts{1});
 
     def = this->add("physical_extruder_map",coInts);
-    // internal use only, don't need translation
-    def->label = "Map the logical extruder to physical extruder";
-    def->tooltip = "Map the logical extruder to physical extruder.";
+    def->label = L("Map the logical extruder to physical extruder");
+    def->tooltip = L("Map the logical extruder to physical extruder.");
     def->mode = comDevelop;
     def->set_default_value(new ConfigOptionInts{0});
 
     def = this->add("filament_map_mode", coEnum);
-    // internal use only, don't need translation
-    def->label = "filament mapping mode";
-    def->tooltip = "Filament mapping mode used as plate param.";
+    def->label = L("Filament mapping mode");
+    def->tooltip = L("Filament mapping mode used as plate param.");
     def->enum_keys_map = &ConfigOptionEnum<FilamentMapMode>::get_enum_values();
     def->enum_values.push_back("Auto For Flush");
     def->enum_values.push_back("Auto For Match");
@@ -5446,8 +5444,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("retract_length_toolchange", coFloats);
     def->label = L("Length");
-    //def->full_label = L("Retraction Length (Toolchange)");
-    def->full_label = "Retraction Length (Toolchange)";
+    def->full_label = L("Retraction Length (Toolchange)");
     //def->tooltip = L("When retraction is triggered before changing tool, filament is pulled back "
     //               "by the specified amount (the length is measured on raw filament, before it enters "
     //               "the extruder).");
@@ -5536,9 +5533,8 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionEnumsGeneric{RetractLiftEnforceType ::rletAllSurfaces});
 
     def = this->add("extruder_type", coEnums);
-    // internal use only, don't need translation
-    def->label = "Type";
-    def->tooltip = "This setting is only used for initial value of manual calibration of pressure advance. Bowden extruder usually has larger PA value. This setting doesn't influence normal slicing.";
+    def->label = L("Type");
+    def->tooltip = L("This setting is only used for initial value of manual calibration of pressure advance. Bowden extruder usually has larger PA value. This setting doesn't influence normal slicing.");
     def->enum_keys_map = &ConfigOptionEnum<ExtruderType>::get_enum_values();
     def->enum_values.push_back("Direct Drive");
     def->enum_values.push_back("Bowden");
@@ -5549,9 +5545,8 @@ void PrintConfigDef::init_fff_params()
 
     //BBS
     def = this->add("nozzle_volume_type", coEnums);
-    // internal use only, don't need translation
-    def->label = "Nozzle Volume Type";
-    def->tooltip = "Nozzle volume type for extruders.";
+    def->label = L("Nozzle Volume Type");
+    def->tooltip = L("Nozzle volume type for extruders.");
     def->enum_keys_map = &ConfigOptionEnum<NozzleVolumeType>::get_enum_values();
     def->enum_values.push_back(L("Standard"));
     def->enum_values.push_back(L("High Flow"));
@@ -5561,9 +5556,8 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionEnumsGeneric{ NozzleVolumeType::nvtStandard });
 
     def = this->add("default_nozzle_volume_type", coEnums);
-    // internal use only, don't need translation
-    def->label = "Default Nozzle Volume Type.";
-    def->tooltip = "Default Nozzle volume type for extruders in this printer.";
+    def->label = L("Default Nozzle Volume Type");
+    def->tooltip = L("Default Nozzle volume type for extruders in this printer.");
     def->enum_keys_map = &ConfigOptionEnum<NozzleVolumeType>::get_enum_values();
     def->enum_values.push_back(L("Standard"));
     def->enum_values.push_back(L("High Flow"));
@@ -5573,49 +5567,42 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionEnumsGeneric{ NozzleVolumeType::nvtStandard });
 
     def = this->add("extruder_variant_list", coStrings);
-    // internal use only, don't need translation
-    def->label = "Extruder variant list";
-    def->tooltip = "Extruder variant list.";
+    def->label = L("Extruder variant list");
+    def->tooltip = L("Extruder variant list.");
     def->set_default_value(new ConfigOptionStrings { "Direct Drive Standard" });
     def->cli = ConfigOptionDef::nocli;
 
     def = this->add("extruder_ams_count", coStrings);
-    // internal use only, don't need translation
-    def->label = "Extruder AMS count";
-    def->tooltip = "AMS counts per extruder.";
+    def->label = L("Extruder AMS count");
+    def->tooltip = L("AMS counts per extruder.");
     def->set_default_value(new ConfigOptionStrings { });
 
     def = this->add("printer_extruder_id", coInts);
-    // internal use only, don't need translation
-    def->label = "Printer extruder id";
-    def->tooltip = "Printer extruder id.";
+    def->label = L("Printer extruder id");
+    def->tooltip = L("Printer extruder id.");
     def->set_default_value(new ConfigOptionInts { 1 });
     def->cli = ConfigOptionDef::nocli;
 
     def = this->add("printer_extruder_variant", coStrings);
-    // internal use only, don't need translation
-    def->label = "Printer's extruder variant";
-    def->tooltip = "Printer's extruder variant.";
+    def->label = L("Printer's extruder variant");
+    def->tooltip = L("Printer's extruder variant.");
     def->set_default_value(new ConfigOptionStrings { "Direct Drive Standard" });
     def->cli = ConfigOptionDef::nocli;
 
     def = this->add("master_extruder_id", coInt);
-    // internal use only, don't need translation
-    def->label = "Master extruder id";
-    def->tooltip = "Default extruder id to place filament.";
+    def->label = L("Master extruder id");
+    def->tooltip = L("Default extruder id to place filament.");
     def->set_default_value(new ConfigOptionInt{ 1 });
 
     def = this->add("print_extruder_id", coInts);
-    // internal use only, don't need translation
-    def->label = "Print extruder id";
-    def->tooltip = "Print extruder id.";
+    def->label = L("Print extruder id");
+    def->tooltip = L("Print extruder id.");
     def->set_default_value(new ConfigOptionInts { 1 });
     def->cli = ConfigOptionDef::nocli;
 
     def = this->add("print_extruder_variant", coStrings);
-    // internal use only, don't need translation
-    def->label = "Print's extruder variant";
-    def->tooltip = "Print's extruder variant.";
+    def->label = L("Print's extruder variant");
+    def->tooltip = L("Print's extruder variant.");
     def->set_default_value(new ConfigOptionStrings { "Direct Drive Standard" });
     def->cli = ConfigOptionDef::nocli;
 
@@ -5626,16 +5613,14 @@ void PrintConfigDef::init_fff_params()
     def->cli = ConfigOptionDef::nocli;*/
 
     def = this->add("filament_extruder_variant", coStrings);
-    // internal use only, don't need translation
-    def->label = "Filament's extruder variant";
-    def->tooltip = "Filament's extruder variant.";
+    def->label = L("Filament's extruder variant");
+    def->tooltip = L("Filament's extruder variant.");
     def->set_default_value(new ConfigOptionStrings { "Direct Drive Standard" });
     def->cli = ConfigOptionDef::nocli;
 
     def = this->add("filament_self_index", coInts);
-    // internal use only, don't need translation
-    def->label = "Filament self index";
-    def->tooltip = "Filament self index.";
+    def->label = L("Filament self index");
+    def->tooltip = L("Filament self index.");
     def->set_default_value(new ConfigOptionInts { 1 });
     def->cli = ConfigOptionDef::nocli;
 
@@ -6922,7 +6907,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionInts { 240 });
 
     def = this->add("head_wrap_detect_zone", coPoints);
-    def->label = "Head wrap detect zone"; //do not need translation
+    def->label = L("Head wrap detect zone");
     def->mode = comDevelop;
     def->set_default_value(new ConfigOptionPoints{});
 
@@ -11324,9 +11309,8 @@ CLIMiscConfigDef::CLIMiscConfigDef()
     def->set_default_value(new  ConfigOptionBool(false));
 
     def = this->add("allow_mix_temp", coBool);
-    // internal use only, don't need translation
-    def->label = "Allow filaments with high/low temperature to be printed together";
-    def->tooltip = "Allow filaments with high/low temperature to be printed together.";
+    def->label = L("Allow filaments with high/low temperature to be printed together");
+    def->tooltip = L("Allow filaments with high/low temperature to be printed together.");
     def->cli_params = "option";
     def->set_default_value(new  ConfigOptionBool(false));
 }

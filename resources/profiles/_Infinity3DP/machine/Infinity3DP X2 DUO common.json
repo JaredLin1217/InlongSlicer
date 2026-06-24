@@ -96,7 +96,7 @@
                                "4"
                            ],
     "machine_max_speed_e":  [
-                                "50"
+                                "55"
                             ],
     "machine_max_speed_x":  [
                                 "500"
@@ -182,7 +182,7 @@
                                       "2"
                                   ],
     "retraction_speed":  [
-                             "60"
+                             "55"
                          ],
     "scan_first_layer":  "0",
     "silent_mode":  "0",
@@ -197,7 +197,7 @@
     "time_cost":  "20",
     "time_lapse_gcode":  "",
     "travel_slope":  [
-                         "2"
+                         "45"
                      ],
     "upward_compatible_machine":  [
 
@@ -205,7 +205,7 @@
     "use_firmware_retraction":  "0",
     "use_relative_e_distances":  "1",
     "wipe":  [
-                 "1"
+                 "0"
              ],
     "wipe_distance":  [
                           "1"

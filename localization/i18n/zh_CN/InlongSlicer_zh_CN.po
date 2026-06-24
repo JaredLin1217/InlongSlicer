@@ -2817,7 +2817,7 @@ msgid "Infill density(%)"
 msgstr "填充密度(%)"
 
 msgid "Auto Brim"
-msgstr "自动Brim"
+msgstr "自动边缘"
 
 msgid "Mouse ear"
 msgstr "圆盘"
@@ -2826,16 +2826,16 @@ msgid "Painted"
 msgstr "绘制"
 
 msgid "Outer brim only"
-msgstr "仅外侧"
+msgstr "仅外侧边缘"
 
 msgid "Inner brim only"
-msgstr "仅内侧"
+msgstr "仅内侧边缘"
 
 msgid "Outer and inner brim"
-msgstr "内侧和外侧"
+msgstr "外侧和内侧边缘"
 
 msgid "No-brim"
-msgstr "无brim"
+msgstr "无边缘"
 
 msgid "Outer wall speed"
 msgstr "外墙速度"
@@ -4940,7 +4940,7 @@ msgid "PA: "
 msgstr "PA："
 
 msgid "mm/s"
-msgstr "毫米/秒"
+msgstr "mm/s"
 
 msgid "mm/s²"
 msgstr "mm/s²"
@@ -11803,7 +11803,7 @@ msgstr ""
 "缩小，直到该值指示的层。"
 
 msgid "Elephant foot layers density"
-msgstr ""
+msgstr "象脚层密度"
 
 msgid ""
 "Density of internal solid infill for Elephant foot layers compensation.\n"
@@ -12615,30 +12615,29 @@ msgstr ""
 "内部桥接的速度。如果该值以百分比表示，将基于桥接速度计算。默认值为150%。"
 
 msgid "Brim width"
-msgstr "Brim 宽度"
+msgstr "边缘宽度"
 
 msgid "Distance from model to the outermost brim line."
-msgstr "从模型到最外圈brim走线的距离"
+msgstr "从模型到最外圈边缘线的距离。"
 
 msgid "Brim type"
-msgstr "Brim 类型"
+msgstr "边缘类型"
 
 msgid ""
 "This controls the generation of the brim at outer and/or inner side of "
 "models. Auto means the brim width is analyzed and calculated automatically."
-msgstr ""
-"该参数控制在模型的外侧和/或内侧生成brim。自动是指自动分析和计算边框的宽度。"
+msgstr "该参数控制在模型外侧和/或内侧生成边缘。自动表示边缘宽度会自动分析并计算。"
 
 msgid "Brim-object gap"
-msgstr "Brim与模型的间隙"
+msgstr "边缘与模型间隙"
 
 msgid ""
 "A gap between innermost brim line and object can make brim be removed more "
 "easily."
-msgstr "在brim和模型之间设置间隙，能够让brim更容易剥离"
+msgstr "在最内圈边缘线与模型之间设置间隙，可让边缘更容易移除。"
 
 msgid "Brim flow ratio"
-msgstr ""
+msgstr "边缘流量比例"
 
 msgid ""
 "This factor affects the amount of material for brims.\n"
@@ -12668,33 +12667,30 @@ msgstr ""
 "融合。"
 
 msgid "Combine brims"
-msgstr ""
+msgstr "合并边缘"
 
 msgid ""
 "Combine multiple brims into one when they are close to each other. This can "
 "improve brim adhesion."
-msgstr ""
+msgstr "当多个边缘彼此接近时将其合并为一个，可提升边缘附着效果。"
 
 msgid "Brim ears"
-msgstr "圆盘"
+msgstr "鼠耳边缘"
 
 msgid "Only draw brim over the sharp edges of the model."
-msgstr "仅在模型尖锐边缘启用brim。"
+msgstr "仅在模型尖锐边缘生成边缘。"
 
 msgid "Brim ear max angle"
-msgstr "圆盘最大角度"
+msgstr "鼠耳边缘最大角度"
 
 msgid ""
 "Maximum angle to let a brim ear appear.\n"
 "If set to 0, no brim will be created.\n"
 "If set to ~180, brim will be created on everything but straight sections."
-msgstr ""
-"让圆盘出现的最大角度。\n"
-"如果设置为0，则不会创建圆盘。\n"
-"如果设置为约180，除直线部分外，其他部分都会创建圆盘。"
+msgstr "允许鼠耳边缘出现的最大角度。\n设为 0 时不会生成边缘。\n设为接近 180 时，除直线区段外几乎都会生成边缘。"
 
 msgid "Brim ear detection radius"
-msgstr "圆盘检测半径"
+msgstr "鼠耳边缘检测半径"
 
 msgid ""
 "The geometry will be decimated before detecting sharp angles. This parameter "
@@ -12791,15 +12787,15 @@ msgstr "启用空气过滤/排气风扇。G-code命令：M106 P3 S(0-255)"
 
 msgid ""
 "Enable this to override the fan speed set in custom G-code during print."
-msgstr ""
+msgstr "启用后会覆盖打印过程中自定义 G-code 设置的风扇速度。"
 
 msgid "On completion"
-msgstr ""
+msgstr "完成时"
 
 msgid ""
 "Enable this to override the fan speed set in custom G-code after print "
 "completion."
-msgstr ""
+msgstr "启用后会覆盖打印完成后自定义 G-code 设置的风扇速度。"
 
 msgid ""
 "Speed of exhaust fan during printing. This speed will override the speed in "
@@ -13165,7 +13161,7 @@ msgid ""
 "direction, also partially forming the contour of a hole.\n"
 "\n"
 "This option will be disabled if spiral vase mode is enabled."
-msgstr ""
+msgstr "从顶部俯视时外轮廓墙环的挤出方向。\n孔洞会以与外轮廓相反的方向打印，以便在轮廓多边形不完整并改变方向的层中保持对齐，同时也会部分形成孔洞轮廓。\n\n启用螺旋花瓶模式时，此选项会被禁用。"
 
 msgid "Counter clockwise"
 msgstr "逆时针"
@@ -13463,7 +13459,7 @@ msgstr ""
 "间在最大和最小风扇转速之间插值获得"
 
 msgid "s"
-msgstr "s"
+msgstr "秒"
 
 msgid "Default color"
 msgstr "默认颜色"
@@ -13502,16 +13498,16 @@ msgid "Auto For Match"
 msgstr "自动匹配"
 
 msgid "Enable filament dynamic map"
-msgstr ""
+msgstr "启用线材动态映射"
 
 msgid "Enable dynamic filament mapping during print."
-msgstr ""
+msgstr "打印过程中启用动态线材映射。"
 
 msgid "Has filament switcher"
-msgstr ""
+msgstr "有换料系统"
 
 msgid "Printer has a filament switcher hardware (e.g., AMS)."
-msgstr ""
+msgstr "打印机具有换料硬件（例如 AMS）。"
 
 msgid "Flush temperature"
 msgstr "冲洗温度"
@@ -13753,10 +13749,10 @@ msgstr ""
 "以产生连续的填充或稳定的挤出废料。"
 
 msgid "Wipe tower cooling"
-msgstr ""
+msgstr "擦拭塔冷却"
 
 msgid "Temperature drop before entering filament tower"
-msgstr ""
+msgstr "进入线材塔前的降温量"
 
 msgid "Interface layer pre-extrusion distance"
 msgstr "接触层预挤出距离"
@@ -13902,7 +13898,7 @@ msgid "Filament price. For statistics only."
 msgstr "耗材丝的价格。只用于统计信息。"
 
 msgid "money/kg"
-msgstr "money/kg"
+msgstr "元/公斤"
 
 msgid "Vendor"
 msgstr "供应商"
@@ -13972,7 +13968,7 @@ msgid ""
 msgstr "如果填充图案支持，使用多线进行填充。"
 
 msgid "Z-buckling bias optimization (experimental)"
-msgstr ""
+msgstr "Z 轴屈曲偏差优化（实验）"
 
 msgid ""
 "Tightens the gyroid wave along the Z (vertical) axis at low infill density "
@@ -14162,12 +14158,12 @@ msgid ""
 msgstr "首层加速度。使用较低值可以改善和打印板的粘接。"
 
 msgid "First layer travel"
-msgstr ""
+msgstr "首层空驶"
 
 msgid ""
 "Travel acceleration of first layer.\n"
 "The percentage value is relative to Travel Acceleration."
-msgstr ""
+msgstr "首层空驶加速度。\n百分比数值相对于空驶加速度。"
 
 msgid "Enable accel_to_decel"
 msgstr "启用制动速度"
@@ -14215,7 +14211,7 @@ msgstr "空驶抖动值"
 msgid ""
 "Travel jerk of first layer.\n"
 "The percentage value is relative to Travel Jerk."
-msgstr ""
+msgstr "首层空驶抖动限制。\n百分比数值相对于空驶抖动限制。"
 
 msgid ""
 "Line width of the first layer. If expressed as a %, it will be computed over "
@@ -14486,7 +14482,7 @@ msgid "Voronoi"
 msgstr "维诺图"
 
 msgid "Ripple"
-msgstr ""
+msgstr "波纹"
 
 msgid "Fuzzy skin feature size"
 msgstr "绒毛表面特征尺寸"
@@ -14513,13 +14509,13 @@ msgid ""
 msgstr "相干噪波高倍频的衰减速率。较低的数值会产生更平滑的噪声。"
 
 msgid "Number of ripples per layer"
-msgstr ""
+msgstr "每层波纹数量"
 
 msgid "Controls how many full cycles of ripples will be added per layer."
-msgstr ""
+msgstr "控制每层要加入多少完整波纹周期。"
 
 msgid "Ripple offset"
-msgstr ""
+msgstr "波纹偏移"
 
 msgid ""
 "Shifts the ripple phase forward along the print path by the specified "
@@ -14535,7 +14531,7 @@ msgid ""
 msgstr ""
 
 msgid "Layers between ripple offset"
-msgstr ""
+msgstr "波纹偏移间隔层数"
 
 msgid ""
 "Specifies how many consecutive layers share the same ripple phase before the "
@@ -14729,7 +14725,7 @@ msgstr ""
 "设为 0 以禁用。"
 
 msgid "Minimum non-zero part cooling fan speed"
-msgstr ""
+msgstr "最低非零部件冷却风扇速度"
 
 msgid ""
 "Some part-cooling fans cannot start spinning when commanded below a certain "
@@ -14750,7 +14746,7 @@ msgid ""
 msgstr ""
 
 msgid "%"
-msgstr ""
+msgstr "%"
 
 msgid "Time cost"
 msgstr "耗时"
@@ -14787,7 +14783,7 @@ msgid "What kind of G-code the printer is compatible with."
 msgstr "打印机兼容的G-code风格'"
 
 msgid "Klipper"
-msgstr "Klipper固件"
+msgstr "Klipper"
 
 msgid "Pellet Modded Printer"
 msgstr "颗粒改装打印机"
@@ -15164,19 +15160,19 @@ msgid "Use a fixed absolute angle for ironing."
 msgstr "使用一个固定的、绝对的角度进行熨烫。"
 
 msgid "Ironing expansion"
-msgstr ""
+msgstr "熨烫扩展"
 
 msgid "Expand or contract the ironing area."
-msgstr ""
+msgstr "扩展或收缩熨烫区域。"
 
 msgid "Z contouring enabled"
-msgstr ""
+msgstr "启用 Z 轴轮廓"
 
 msgid "Enable Z-layer contouring (aka Z-layer anti-aliasing)."
-msgstr ""
+msgstr "启用 Z 层轮廓处理（也称 Z 层抗锯齿）。"
 
 msgid "Minimize wall height angle"
-msgstr ""
+msgstr "最小化墙高角度"
 
 msgid ""
 "Reduce the height of top-surface perimeters to match the model edge height.\n"
@@ -15188,10 +15184,10 @@ msgid "°"
 msgstr ""
 
 msgid "Don't alternate fill direction"
-msgstr ""
+msgstr "不要交替填充方向"
 
 msgid "Disable alternating fill direction when using Z contouring."
-msgstr ""
+msgstr "使用 Z 轴轮廓时停用交替填充方向。"
 
 msgid "Minimum z height"
 msgstr ""
@@ -15391,12 +15387,12 @@ msgid "Maximum speed of resonance avoidance."
 msgstr "共振规避的最大速度。"
 
 msgid "Emit input shaping"
-msgstr ""
+msgstr "输出输入整形"
 
 msgid ""
 "Override firmware input shaping settings.\n"
 "If disabled, firmware settings are used."
-msgstr ""
+msgstr "覆盖固件输入整形设置。\n若禁用，则使用固件设置。"
 
 msgid "Input shaper type"
 msgstr "输入整形器类型"
@@ -15405,72 +15401,72 @@ msgid ""
 "Choose the input shaper algorithm.\n"
 "Default uses the firmware default settings.\n"
 "Disable turns off input shaping in the firmware."
-msgstr ""
+msgstr "选择输入整形算法。\n默认使用固件默认设置。\n禁用会关闭固件中的输入整形。"
 
 msgid "MZV"
-msgstr ""
+msgstr "MZV"
 
 msgid "ZV"
-msgstr ""
+msgstr "ZV"
 
 msgid "ZVD"
-msgstr ""
+msgstr "ZVD"
 
 msgid "ZVDD"
-msgstr ""
+msgstr "ZVDD"
 
 msgid "ZVDDD"
-msgstr ""
+msgstr "ZVDDD"
 
 msgid "EI"
-msgstr ""
+msgstr "EI"
 
 msgid "EI2"
-msgstr ""
+msgstr "EI2"
 
 msgid "2HUMP_EI"
-msgstr ""
+msgstr "2HUMP_EI"
 
 msgid "EI3"
-msgstr ""
+msgstr "EI3"
 
 msgid "3HUMP_EI"
-msgstr ""
+msgstr "3HUMP_EI"
 
 msgid "DAA"
-msgstr ""
+msgstr "DAA"
 
 msgid "X"
-msgstr ""
+msgstr "X"
 
 msgid ""
 "Resonant frequency for the X axis input shaper.\n"
 "Zero will use the firmware frequency.\n"
 "To disable input shaping, use the Disable type.\n"
 "RRF: X and Y values are equal."
-msgstr ""
+msgstr "X 轴输入整形共振频率。\n设为 0 将使用固件频率。\n若要关闭输入整形，请使用“禁用”类型。\nRRF：X 和 Y 值相同。"
 
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 msgid ""
 "Resonant frequency for the Y axis input shaper.\n"
 "Zero will use the firmware frequency.\n"
 "To disable input shaping, use the Disable type."
-msgstr ""
+msgstr "Y 轴输入整形共振频率。\n设为 0 将使用固件频率。\n若要关闭输入整形，请使用“禁用”类型。"
 
 msgid ""
 "Damping ratio for the X axis input shaper.\n"
 "Zero will use the firmware damping ratio.\n"
 "To disable input shaping, use the Disable type.\n"
 "RRF: X and Y values are equal."
-msgstr ""
+msgstr "X 轴输入整形阻尼比。\n设为 0 将使用固件阻尼比。\n若要关闭输入整形，请使用“禁用”类型。\nRRF：X 和 Y 值相同。"
 
 msgid ""
 "Damping ratio for the Y axis input shaper.\n"
 "Zero will use the firmware damping ratio.\n"
 "To disable input shaping, use the Disable type."
-msgstr ""
+msgstr "Y 轴输入整形阻尼比。\n设为 0 将使用固件阻尼比。\n若要关闭输入整形，请使用“禁用”类型。"
 
 msgid ""
 "Part cooling fan speed may be increased when auto cooling is enabled. This "
@@ -15580,10 +15576,10 @@ msgstr ""
 "请在打印机设置中启用辅助风扇以使用此功能。G-code指令：M106 P2 S(0-255)"
 
 msgid "For the first"
-msgstr ""
+msgstr "前几层"
 
 msgid "Set special auxiliary cooling fan for the first certain layers."
-msgstr ""
+msgstr "为前若干层设置特殊辅助冷却风扇。"
 
 msgid ""
 "Auxiliary fan speed will be ramped up linearly from layer \"For the first\" "
@@ -15595,7 +15591,7 @@ msgstr ""
 
 msgid ""
 "Special auxiliary cooling fan speed, effective only for the first x layers."
-msgstr ""
+msgstr "特殊辅助冷却风扇速度，仅对前 X 层生效。"
 
 msgid ""
 "The lowest printable layer height for the extruder. Used to limit the "
@@ -15795,12 +15791,12 @@ msgstr ""
 "对路径，并支持脚本通过全局变量来读取 Inlong Slicer 的设置。"
 
 msgid "Change extrusion role G-code (process)"
-msgstr ""
+msgstr "挤出角色变更 G-code（工艺）"
 
 msgid ""
 "This G-code is inserted when the extrusion role is changed. It runs after "
 "the machine and filament extrusion role G-code."
-msgstr ""
+msgstr "当挤出角色改变时插入此 G-code。它会在机器与线材的挤出角色 G-code 之后执行。"
 
 msgid "Printer type"
 msgstr "打印机类型"
@@ -15837,13 +15833,13 @@ msgid "Raft support pattern"
 msgstr "筏层支撑样式"
 
 msgid "Line pattern for raft support layers."
-msgstr "筏层支撑走线样式。"
+msgstr "筏层支撑层的走线图案。"
 
 msgid "Raft line spacing"
 msgstr "筏层走线间距"
 
 msgid "Spacing between raft support lines."
-msgstr "筏层支撑走线之间的间距。"
+msgstr "筏层支撑线之间的间距。"
 
 msgid "First layer density"
 msgstr "首层密度"
@@ -15861,13 +15857,13 @@ msgid "Ignore internal contours"
 msgstr "忽略内部轮廓"
 
 msgid "Fill the raft area under the first object layer by ignoring holes and internal contours."
-msgstr "忽略孔洞与内部轮廓，填满第一个物件层下方的筏层区域。"
+msgstr "忽略孔洞和内部轮廓，填满第一层模型下方的筏层区域。"
 
 msgid "Generate box raft"
 msgstr "生成方框筏层"
 
 msgid "Generate the raft from the bounding box of the first object layer."
-msgstr "依照第一个物件层的最大外接方框生成筏层。"
+msgstr "根据第一层模型的边界框生成筏层。"
 
 msgid "Raft layers"
 msgstr "Raft 层数"
@@ -16280,7 +16276,7 @@ msgid "Skirt distance"
 msgstr "Skirt距离"
 
 msgid "The distance from the skirt to the brim or the object."
-msgstr "从skirt到模型或者brim的距离"
+msgstr "从裙边到边缘或模型的距离。"
 
 msgid "Skirt start point"
 msgstr "Skirt起始点"
@@ -16577,7 +16573,7 @@ msgid "Enable filament ramming"
 msgstr "启用耗材尖端成型"
 
 msgid "Tool change on wipe tower"
-msgstr ""
+msgstr "在擦拭塔换工具"
 
 msgid ""
 "Force the toolhead to travel to the wipe tower before issuing the tool "
@@ -16793,7 +16789,7 @@ msgid "Top interface spacing"
 msgstr "顶部接触面线距"
 
 msgid "Top contact spacing"
-msgstr "顶部接触面线距"
+msgstr "顶部接触面间距"
 
 msgid ""
 "Spacing of interface lines. Zero means solid interface.\n"
@@ -16809,7 +16805,7 @@ msgid "Bottom interface spacing"
 msgstr "底部接触面线距"
 
 msgid "Bottom contact spacing"
-msgstr "底部接触面线距"
+msgstr "底部接触面间距"
 
 msgid "Spacing of bottom interface lines. Zero means solid interface."
 msgstr "底部接触面走线的线距。0 表示实心接触面。"
@@ -16998,18 +16994,18 @@ msgstr ""
 "如果需要密集的接触面，建议启用顶部接触面相关参数，而不是较高的分支密度。"
 
 msgid "Auto brim width"
-msgstr "自动裙边宽度"
+msgstr "自动边缘宽度"
 
 msgid ""
 "Enabling this option means the width of the brim for tree support will be "
 "automatically calculated."
-msgstr "启用此选项意味着树状支撑的裙边宽度将自动计算自动计算"
+msgstr "启用此选项后，树状支撑的边缘宽度会自动计算。"
 
 msgid "Tree support brim width"
-msgstr "树状支撑裙边宽度"
+msgstr "树状支撑边缘宽度"
 
 msgid "Distance from tree branch to the outermost brim line."
-msgstr "从树状支撑分支到最外层裙边线的距离"
+msgstr "从树状支撑分支到最外圈边缘线的距离。"
 
 msgid "Tip Diameter"
 msgstr "尖端直径"
@@ -17157,12 +17153,12 @@ msgid "This G-code is inserted when the extrusion role is changed."
 msgstr "当挤出类型改变时会插入此G-code"
 
 msgid "Change extrusion role G-code (filament)"
-msgstr ""
+msgstr "挤出角色变更 G-code（线材）"
 
 msgid ""
 "This G-code is inserted when the extrusion role is changed for the active "
 "filament."
-msgstr ""
+msgstr "当当前线材的挤出角色改变时插入此 G-code。"
 
 msgid ""
 "Line width for top surfaces. If expressed as a %, it will be computed over "
@@ -17693,7 +17689,7 @@ msgstr ""
 "0.5、或启用了单层顶面时，“单层墙阈值”才会显示。"
 
 msgid "Maximum wall resolution"
-msgstr ""
+msgstr "最大墙体解析度"
 
 msgid ""
 "This value determines the smallest wall line segment length in mm. The "
@@ -17701,7 +17697,7 @@ msgid ""
 msgstr ""
 
 msgid "Maximum wall deviation"
-msgstr ""
+msgstr "最大墙体偏差"
 
 msgid ""
 "The maximum deviation allowed when reducing the resolution for the 'Maximum "
@@ -18415,7 +18411,7 @@ msgid "Generating infill toolpath"
 msgstr "正在生成填充路径"
 
 msgid "Z contouring"
-msgstr ""
+msgstr "Z 轴轮廓"
 
 msgid "Detect overhangs for auto-lift"
 msgstr "为自动抬升检测悬垂区域"
@@ -22097,11 +22093,11 @@ msgstr "保守"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Balanced"
-msgstr "均衡"
+msgstr "平衡"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Aggressive"
-msgstr "强力"
+msgstr "激进"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention thermal model resolution"
@@ -22109,23 +22105,23 @@ msgstr "防翘曲热模型解析度"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Controls the local thermal-history model resolution used by warp prevention. Auto is suitable for daily slicing; High uses a finer real-coordinate grid for high-temperature materials and may take much longer."
-msgstr "控制防翘曲使用的本地热历史模型解析度。自动适合日常切片；高解析会对高温材料使用更细的真实坐标网格，可能需要更长时间。"
+msgstr "控制防翘曲使用的局部热历史模型解析度。自动适合日常切片；高解析度会针对高温材料使用更细的真实坐标网格，耗时可能明显增加。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention max slowdown"
-msgstr "最大降速"
+msgstr "防翘曲最大降速比例"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention minimum wall speed"
-msgstr "最低墙速度"
+msgstr "防翘曲最低墙体速度"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention minimum bottom speed"
-msgstr "最低底面速度"
+msgstr "防翘曲最低底部速度"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention max active layers"
-msgstr "最大作用层数"
+msgstr "防翘曲最大作用层数"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention medium risk threshold"
@@ -22161,15 +22157,15 @@ msgstr "作用于尖角附近"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Enable warp prevention. When enabled, high-risk early-layer walls and bottom paths are slowed locally in generated G-code."
-msgstr "启用防翘曲。启用后，会在生成的 G-code 中对高风险早期层墙路径和底面路径进行局部降速。"
+msgstr "启用防翘曲。启用后，会在生成的 G-code 中对高风险早期层墙体与底部路径进行局部降速。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Preset template for warp prevention. Changing this fills default values; the detailed parameters remain editable."
-msgstr "防翘曲的预设模板。切换等级只会填入默认值，详细参数仍可手动编辑。"
+msgstr "防翘曲预设模板。修改此项会填入默认值；详细参数仍可编辑。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Maximum local slowdown applied by warp prevention."
-msgstr "防翘曲允许施加的最大局部降速。"
+msgstr "防翘曲可套用的最大局部降速比例。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Minimum wall speed preserved when warp prevention slows risky walls."
@@ -22185,7 +22181,7 @@ msgstr "防翘曲降低高风险墙速度时保留的最低墙速度。这是速
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Minimum bottom solid infill speed preserved when warp prevention slows risky bottom paths. This is a lower bound, not a target speed."
-msgstr "防翘曲降低高风险底面路径速度时保留的最低底面实心填充速度。这是速度下限，不是目标速度。"
+msgstr "防翘曲降低高风险底部路径速度时保留的最低底部实心填充速度。这是下限，不是目标速度。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Number of early layers affected by warp prevention."
@@ -22233,31 +22229,31 @@ msgstr "防翘曲调整加速度"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Allow warp prevention to reduce local acceleration on high-risk early-layer paths. This is applied locally and recovers with the protection envelope."
-msgstr "允许防翘曲在高风险早期层路径上降低局部加速度，并随保护包络逐步恢复。"
+msgstr "允许防翘曲在高风险早期层路径上降低局部加速度。此调整只在局部生效，并会随保护范围恢复。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention max acceleration reduction"
-msgstr "防翘曲最大加速度降低"
+msgstr "防翘曲最大加速度降低比例"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Maximum local acceleration reduction applied by warp prevention."
-msgstr "防翘曲允许的最大局部加速度降低比例。"
+msgstr "防翘曲可套用的最大局部加速度降低比例。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention minimum wall acceleration"
-msgstr "防翘曲最低墙加速度"
+msgstr "防翘曲最低墙体加速度"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Minimum inner/outer wall acceleration preserved when warp prevention reduces risky wall acceleration. This is a lower bound, not a target acceleration."
-msgstr "防翘曲降低高风险墙路径加速度时保留的内墙/外墙最低加速度。这是下限，不是目标加速度。"
+msgstr "防翘曲降低高风险墙体加速度时保留的最低内/外墙加速度。这是下限，不是目标加速度。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention minimum bottom acceleration"
-msgstr "防翘曲最低底面加速度"
+msgstr "防翘曲最低底部加速度"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Minimum bottom solid infill acceleration preserved when warp prevention reduces risky bottom acceleration. This is a lower bound, not a target acceleration."
-msgstr "防翘曲降低高风险底面路径加速度时保留的底面实心填充最低加速度。这是下限，不是目标加速度。"
+msgstr "防翘曲降低高风险底部加速度时保留的最低底部实心填充加速度。这是下限，不是目标加速度。"
 
 #: src/libslic3r/PrintConfig.cpp
 msgid "Warp prevention minimum effective acceleration change"
@@ -22939,3 +22935,547 @@ msgstr "已启用；导出的 G-code 保持干净，并使用标准速度、风�
 
 msgid "Included in the G-code estimate"
 msgstr "已包含在 G-code 时间估算中"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Map the logical extruder to physical extruder"
+msgstr "将逻辑挤出机映射到物理挤出机"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Map the logical extruder to physical extruder."
+msgstr "将逻辑挤出机映射到物理挤出机。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament mapping mode"
+msgstr "线材映射模式"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament mapping mode used as plate param."
+msgstr "作为打印板参数使用的线材映射模式。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Retraction Length (Toolchange)"
+msgstr "回抽长度（换工具）"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "This setting is only used for initial value of manual calibration of pressure advance. Bowden extruder usually has larger PA value. This setting doesn't influence normal slicing."
+msgstr "此设置仅用于压力提前手动校准的初始值。鲍登挤出机通常需要较大的 PA 值。此设置不会影响正常切片。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Nozzle Volume Type"
+msgstr "喷嘴流量类型"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Nozzle volume type for extruders."
+msgstr "挤出机的喷嘴流量类型。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default Nozzle Volume Type"
+msgstr "默认喷嘴流量类型"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default Nozzle volume type for extruders in this printer."
+msgstr "此打印机挤出机的默认喷嘴流量类型。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Extruder variant list"
+msgstr "挤出机变体列表"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Extruder variant list."
+msgstr "挤出机变体列表。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Extruder AMS count"
+msgstr "挤出机 AMS 数量"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "AMS counts per extruder."
+msgstr "每个挤出机的 AMS 数量。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer extruder id"
+msgstr "打印机挤出机 ID"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer extruder id."
+msgstr "打印机挤出机 ID。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer's extruder variant"
+msgstr "打印机挤出机变体"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer's extruder variant."
+msgstr "打印机挤出机变体。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Master extruder id"
+msgstr "主挤出机 ID"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default extruder id to place filament."
+msgstr "放置线材时使用的默认挤出机 ID。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print extruder id"
+msgstr "打印挤出机 ID"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print extruder id."
+msgstr "打印挤出机 ID。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print's extruder variant"
+msgstr "打印挤出机变体"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Print's extruder variant."
+msgstr "打印挤出机变体。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament's extruder variant"
+msgstr "线材挤出机变体"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament's extruder variant."
+msgstr "线材挤出机变体。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament self index"
+msgstr "线材自身索引"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament self index."
+msgstr "线材自身索引。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Head wrap detect zone"
+msgstr "喷头包覆检测区域"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow filaments with high/low temperature to be printed together"
+msgstr "允许高/低温线材一起打印"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Allow filaments with high/low temperature to be printed together."
+msgstr "允许高/低温线材一起打印。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "0 (soluble)"
+msgstr "0（可溶）"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "0.1 (semi-detachable)"
+msgstr "0.1（半可拆）"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "0.2 (detachable)"
+msgstr "0.2（可拆）"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Adaptive layer height"
+msgstr "自适应层高"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Align XY"
+msgstr "对齐 XY"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Align the model to the given point."
+msgstr "将模型对齐到指定点。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Automatically export current configuration to the specified file."
+msgstr "自动将当前配置导出到指定文件。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Autosave"
+msgstr "自动保存"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Bail out on unknown configuration values"
+msgstr "遇到未知配置值时停止"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Bridge line width must not exceed nozzle diameter: "
+msgstr "桥接线宽不得超过喷嘴直径："
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Center the print around the given center."
+msgstr "以指定中心点居中打印。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Choose the input shaper algorithm."
+msgstr "选择输入整形算法。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Comma-separated list of all filament types used during the print."
+msgstr "打印过程中使用的所有线材类型，以逗号分隔。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model at the given X."
+msgstr "在指定 X 位置切割模型。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model at the given Y."
+msgstr "在指定 Y 位置切割模型。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model at the given Z."
+msgstr "在指定 Z 位置切割模型。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Cut model in the XY plane into tiles of the specified max size."
+msgstr "在 XY 平面将模型切分为指定最大尺寸的分块。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Damping ratio for the Y axis input shaper.\nZero will use the firmware damping ratio.\nTo disable input shaping, use the Disable type.\nRRF: X and Y values are equal."
+msgstr "Y 轴输入整形阻尼比。\n设为 0 将使用固件阻尼比。\n若要关闭输入整形，请使用“禁用”类型。\nRRF：X 和 Y 值相同。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Default uses the firmware default settings."
+msgstr "默认使用固件默认设置。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Detect unconnected parts in the given model(s) and split them into separate objects."
+msgstr "检测指定模型中未连接的部件，并拆分为独立对象。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Disable turns off input shaping in the firmware."
+msgstr "禁用会关闭固件中的输入整形。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Do not fail if a file supplied to --load does not exist."
+msgstr "当 --load 指定的文件不存在时不要报错退出。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Duplicate by grid"
+msgstr "按网格复制"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Duplicate copies of model."
+msgstr "复制模型副本。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable printer settings for machines that can use multiple printheads in parallel."
+msgstr "为可并行使用多个打印头的机器启用打印机设置。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable reading unknown configuration values by silently substituting them with defaults."
+msgstr "允许读取未知配置值，并静默替换为默认值。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable reading unknown configuration values by verbosely substituting them with defaults."
+msgstr "允许读取未知配置值，并提示后替换为默认值。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable spaghetti detector"
+msgstr "启用缠料检测"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable the camera on printer to check spaghetti."
+msgstr "启用打印机相机进行缠料检测。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enforce support for the first"
+msgstr "强制支撑前"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enforce support for the first n layers"
+msgstr "对前 N 层强制生成支撑"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export AMF"
+msgstr "导出 AMF"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export OBJ"
+msgstr "导出 OBJ"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export SLA"
+msgstr "导出 SLA"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export SVG"
+msgstr "导出 SVG"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export the model(s) as AMF."
+msgstr "将模型导出为 AMF。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Export the model(s) as OBJ."
+msgstr "将模型导出为 OBJ。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print bottom surface.\n\"Default\" uses the active object/part filament."
+msgstr "用于打印底面的线材。\n“默认”使用当前对象/部件的线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print inner walls.\n\"Default\" uses the active object/part filament."
+msgstr "用于打印内墙的线材。\n“默认”使用当前对象/部件的线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print internal solid infill.\n\"Default\" uses the active object/part filament."
+msgstr "用于打印内部实心填充的线材。\n“默认”使用当前对象/部件的线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print internal sparse infill.\n\"Default\" uses the active object/part filament."
+msgstr "用于打印内部稀疏填充的线材。\n“默认”使用当前对象/部件的线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print outer walls.\n\"Default\" uses the active object/part filament."
+msgstr "用于打印外墙的线材。\n“默认”使用当前对象/部件的线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print support base and raft.\n\"Default\" means no specific filament for support and current filament is used."
+msgstr "用于打印支撑主体与筏层的线材。\n“默认”表示支撑不指定线材，使用当前线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print support interface.\n\"Default\" means no specific filament for support interface and current filament is used."
+msgstr "用于打印支撑接触面的线材。\n“默认”表示支撑接触面不指定线材，使用当前线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Filament to print top surface.\n\"Default\" uses the active object/part filament."
+msgstr "用于打印顶面的线材。\n“默认”使用当前对象/部件的线材。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Flashforge local API requires the printer serial number."
+msgstr "Flashforge 本地 API 需要打印机序列号。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Forward-compatibility rule when loading configurations from config files and project files (3MF, AMF)."
+msgstr "从配置文件或项目文件（3MF、AMF）加载配置时的向前兼容规则。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "G-code viewer"
+msgstr "G-code 查看器"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Help (FFF options)"
+msgstr "帮助（FFF 选项）"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Help (SLA options)"
+msgstr "帮助（SLA 选项）"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Ignore non-existent config files"
+msgstr "忽略不存在的配置文件"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Initial filament type"
+msgstr "初始线材类型"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Inner walls"
+msgstr "内墙"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Lightning overhang angle"
+msgstr "闪电填充悬垂角度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Load config file"
+msgstr "加载配置文件"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Load configuration from the specified file. It can be used more than once to load options from multiple files."
+msgstr "从指定文件加载配置。可多次使用以从多个文件加载选项。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Log file"
+msgstr "日志文件"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum number of layers where warp prevention may reduce speed, fan, or acceleration. The actual active layer range is calculated from object simulation analysis. Set to 0 to keep object simulation analysis enabled but disable warp-prevention speed, fan, and acceleration changes."
+msgstr "防翘曲可降低速度、风扇或加速度的最大层数。实际作用层范围会由模型模拟分析计算。设为 0 会保留模型模拟分析，但禁用防翘曲的速度、风扇和加速度调整。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum overhang angle for Lightning infill support propagation."
+msgstr "闪电填充支撑传播的最大悬垂角度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Maximum straightening angle used to simplify Lightning branches."
+msgstr "用于简化闪电填充分支的最大拉直角度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum Z height"
+msgstr "最小 Z 高度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Minimum inner/outer wall speed preserved when warp prevention slows risky walls. This is a lower bound, not a target speed."
+msgstr "防翘曲降低高风险墙体速度时保留的最低内/外墙速度。这是下限，不是目标速度。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Multiply copies by creating a grid."
+msgstr "通过创建网格来复制多个副本。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Name of the printer variant. For example, the printer variants may be differentiated by a nozzle diameter."
+msgstr "打印机变体名称。例如可用喷嘴直径区分不同打印机变体。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "No extrusion"
+msgstr "不挤出"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Number of extruders used during the print."
+msgstr "打印过程中使用的挤出机数量。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Number of printing extruders"
+msgstr "打印挤出机数量"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Ordered list of bed exclude areas by parallel printhead count. Item 1 applies to one printhead, item 2 to two printheads, and so on. Leave an item empty for no excluded area."
+msgstr "按并行打印头数量排列的热床排除区域列表。第 1 项用于一个打印头，第 2 项用于两个打印头，依此类推。项目留空表示没有排除区域。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Outer walls"
+msgstr "外墙"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Output File"
+msgstr "输出文件"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Parallel printheads bed exclude areas"
+msgstr "并行打印头热床排除区域"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Parallel printheads count"
+msgstr "并行打印头数量"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Position X"
+msgstr "位置 X"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Position Y"
+msgstr "位置 Y"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Printer technology."
+msgstr "打印机技术。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Prune angle"
+msgstr "修剪角度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Redirects debug logging to file.\n"
+msgstr "将调试日志重定向到文件。\n"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Relative bridge angle"
+msgstr "相对桥接角度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Render with a software renderer"
+msgstr "使用软件渲染器"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Render with a software renderer. The bundled MESA software renderer is loaded instead of the default OpenGL driver."
+msgstr "使用软件渲染器。将加载内置的 MESA 软件渲染器，而不是默认 OpenGL 驱动。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Repair"
+msgstr "修复"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Repair the model's meshes if it is non-manifold mesh."
+msgstr "如果模型网格为非流形，则修复模型网格。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Resonant frequency for the Y axis input shaper.\nZero will use the firmware frequency.\nTo disable input shaping, use the Disable type.\nRRF: X and Y values are equal."
+msgstr "Y 轴输入整形共振频率。\n设为 0 将使用固件频率。\n若要关闭输入整形，请使用“禁用”类型。\nRRF：X 和 Y 值相同。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Scale to Fit"
+msgstr "缩放以适配"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Scale to fit the given volume."
+msgstr "缩放以适配指定体积。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Serial Number"
+msgstr "序列号"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Set the number of parallel printheads for machines like OrangeStorm Giga printer."
+msgstr "设置类似 OrangeStorm Giga 这类机器的并行打印头数量。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Show the full list of SLA print configuration options."
+msgstr "显示完整的 SLA 打印配置选项列表。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Show the full list of print/G-code configuration options."
+msgstr "显示完整的打印/G-code 配置选项列表。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Single instance mode"
+msgstr "单实例模式"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Slice the model and export SLA printing layers as PNG."
+msgstr "切片模型并将 SLA 打印层导出为 PNG。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Slice the model and export solid slices as SVG."
+msgstr "切片模型并将实体切片导出为 SVG。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Slice the model and export toolpaths as G-code."
+msgstr "切片模型并将工具路径导出为 G-code。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Straightening angle"
+msgstr "拉直角度"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "String containing filament type of the first used extruder."
+msgstr "包含第一个使用挤出机线材类型的字符串。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Support parallel printheads"
+msgstr "支持并行打印头"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "The file where the output will be written (if not specified, it will be based on the input file)."
+msgstr "输出要写入的文件（若未指定，将根据输入文件生成）。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Use 3MF instead of G-code"
+msgstr "使用 3MF 而不是 G-code"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Used filament types"
+msgstr "使用的线材类型"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Visualize an already sliced and saved G-code."
+msgstr "可视化已切片并保存的 G-code。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "When enabled, the bridge angle values are added to the automatically calculated bridge direction instead of overriding it."
+msgstr "启用后，桥接角度值会加到自动计算的桥接方向上，而不是覆盖它。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "X coordinate of the left front corner of a wipe tower."
+msgstr "擦拭塔左前角的 X 坐标。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Y coordinate of the left front corner of a wipe tower."
+msgstr "擦拭塔左前角的 Y 坐标。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Z travel"
+msgstr "Z 轴空驶"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "mm/s?"
+msgstr "mm/s?"
