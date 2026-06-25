@@ -1585,6 +1585,18 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         }
     }
 
+    if (opt_key == "surface_feature_enhance_mode") {
+        const bool enabled = m_config->opt_bool("surface_feature_enhance_mode");
+        for (const char *key : { "top_feature_embed_layers", "bottom_feature_extend_layers" })
+            toggle_line(key, enabled);
+        if (m_active_page) {
+            m_active_page->update_visibility(m_mode, true);
+            for (const char *key : { "top_feature_embed_layers", "bottom_feature_extend_layers" })
+                m_active_page->show_field(key, enabled);
+            m_parent->Layout();
+        }
+    }
+
     if (m_type == Preset::TYPE_PRINT && is_warp_prevention_print_key(opt_key)) {
         wxGetApp().plater()->schedule_background_process();
         wxGetApp().plater()->update();
@@ -2558,6 +2570,9 @@ void TabPrint::build()
         optgroup->append_single_option_line("bottom_surface_density", "strength_settings_top_bottom_shells#surface-density");
         optgroup->append_single_option_line("bottom_surface_pattern", "strength_settings_top_bottom_shells#surface-pattern");
         optgroup->append_single_option_line("top_bottom_infill_wall_overlap", "strength_settings_top_bottom_shells#infillwall-overlap");
+        optgroup->append_single_option_line("surface_feature_enhance_mode", "strength_settings_top_bottom_shells#surface-feature-enhancement");
+        optgroup->append_single_option_line("top_feature_embed_layers", "strength_settings_top_bottom_shells#surface-feature-enhancement");
+        optgroup->append_single_option_line("bottom_feature_extend_layers", "strength_settings_top_bottom_shells#surface-feature-enhancement");
 
         optgroup = page->new_optgroup(L("Infill"), L"param_infill");
         optgroup->append_single_option_line("sparse_infill_density", "strength_settings_infill#sparse-infill-density");
@@ -2948,6 +2963,11 @@ void TabPrint::toggle_options()
     m_config_manipulation.toggle_print_fff_options(m_config, m_type < Preset::TYPE_COUNT);
 
     toggle_line("warp_prevention_level", m_config->opt_bool("enable_warp_prevention"));
+    const bool surface_feature_enabled = m_config->opt_bool("surface_feature_enhance_mode");
+    for (const char *key : { "top_feature_embed_layers", "bottom_feature_extend_layers" }) {
+        toggle_line(key, surface_feature_enabled);
+        m_active_page->show_field(key, surface_feature_enabled);
+    }
 
     Field *field = m_active_page->get_field("support_style");
     auto   support_type = m_config->opt_enum<SupportType>("support_type");

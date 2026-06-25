@@ -26,6 +26,7 @@
 #include "AABBTreeLines.hpp"
 
 #include <cstddef>
+#include <algorithm>
 #include <float.h>
 #include <iterator>
 #include <mutex>
@@ -3965,6 +3966,141 @@ void PrintObject::discover_horizontal_shells()
     BOOST_LOG_TRIVIAL(trace) << "discover_horizontal_shells()";
 
     for (size_t region_id = 0; region_id < this->num_printing_regions(); ++ region_id) {
+        {
+            const PrintRegionConfig &region_config = this->printing_region(region_id).config();
+            if (region_config.surface_feature_enhance_mode.value) {
+                const int top_layers = std::max(0, region_config.top_feature_embed_layers.value);
+                const int bottom_layers = std::max(0, region_config.bottom_feature_extend_layers.value);
+
+                auto layer_region_slices = [](const LayerRegion *layerm) -> ExPolygons {
+                    ExPolygons slices;
+                    slices.reserve(layerm->slices.surfaces.size());
+                    for (const Surface &surface : layerm->slices.surfaces)
+                        slices.emplace_back(surface.expolygon);
+                    return slices.empty() ? ExPolygons{} : union_ex(slices);
+                };
+
+                auto feature_area = [](const LayerRegion *layerm, bool top_feature) -> ExPolygons {
+                    ExPolygons feature;
+                    auto append_matching = [&](const Surfaces &surfaces) {
+                        for (const Surface &surface : surfaces)
+                            if ((top_feature && surface.surface_type == stTop) ||
+                                (!top_feature && (surface.surface_type == stBottom || surface.surface_type == stBottomBridge)))
+                                feature.emplace_back(surface.expolygon);
+                    };
+                    append_matching(layerm->slices.surfaces);
+                    append_matching(layerm->fill_surfaces.surfaces);
+                    return feature.empty() ? ExPolygons{} : union_ex(feature);
+                };
+
+                auto copy_new_paths = [](const LayerRegion *source_layerm, LayerRegion *target_layerm, const ExPolygons &allowed_area) {
+                    if (allowed_area.empty())
+                        return;
+
+                    const Polygons allowed_polygons = to_polygons(allowed_area);
+                    Polygons occupied;
+                    target_layerm->perimeters.polygons_covered_by_width(occupied, float(SCALED_EPSILON));
+                    target_layerm->thin_fills.polygons_covered_by_width(occupied, float(SCALED_EPSILON));
+                    occupied = union_(occupied);
+                    Polygons copied_covered;
+
+                    auto copy_path_fragments = [&](const ExtrusionPath &source_path, ExtrusionEntityCollection &target, bool target_requires_collections) {
+                        Polylines fragments = intersection_pl(Polylines{ source_path.polyline.to_polyline() }, allowed_polygons);
+                        if (!occupied.empty())
+                            fragments = diff_pl(fragments, occupied);
+                        if (fragments.empty())
+                            return;
+
+                        ExtrusionEntityCollection copied_paths;
+                        for (const Polyline &fragment : fragments) {
+                            if (!fragment.is_valid())
+                                continue;
+
+                            ExtrusionPath copied_path(Polyline3(fragment), source_path);
+                            Polygons covered = copied_path.polygons_covered_by_width(float(SCALED_EPSILON));
+                            if (covered.empty())
+                                continue;
+
+                            if (target_requires_collections)
+                                copied_paths.append(copied_path);
+                            else
+                                target.append(copied_path);
+
+                            polygons_append(copied_covered, covered);
+                            polygons_append(occupied, std::move(covered));
+                        }
+
+                        if (target_requires_collections && !copied_paths.empty())
+                            target.append(copied_paths);
+                        if (!occupied.empty())
+                            occupied = union_(occupied);
+                    };
+
+                    auto copy_collection = [&](const ExtrusionEntityCollection &source, ExtrusionEntityCollection &target, bool target_requires_collections) {
+                        ExtrusionEntityCollection flat = source.flatten(false);
+                        for (const ExtrusionEntity *entity : flat.entities) {
+                            if (!(is_perimeter(entity->role()) || entity->role() == erGapFill))
+                                continue;
+
+                            if (const auto *path = dynamic_cast<const ExtrusionPath*>(entity)) {
+                                copy_path_fragments(*path, target, target_requires_collections);
+                            } else if (const auto *multi_path = dynamic_cast<const ExtrusionMultiPath*>(entity)) {
+                                for (const ExtrusionPath &path : multi_path->paths)
+                                    copy_path_fragments(path, target, target_requires_collections);
+                            } else if (const auto *loop = dynamic_cast<const ExtrusionLoop*>(entity)) {
+                                for (const ExtrusionPath &path : loop->paths)
+                                    copy_path_fragments(path, target, target_requires_collections);
+                            }
+                        }
+                    };
+
+                    copy_collection(source_layerm->perimeters, target_layerm->perimeters, true);
+                    copy_collection(source_layerm->thin_fills, target_layerm->thin_fills, false);
+
+                    if (!copied_covered.empty()) {
+                        copied_covered = union_(copied_covered);
+                        SurfaceCollection old_fill_surfaces = std::move(target_layerm->fill_surfaces);
+                        target_layerm->fill_surfaces.clear();
+                        for (const Surface &surface : old_fill_surfaces.surfaces)
+                            target_layerm->fill_surfaces.append(
+                                diff_ex(ExPolygons{ surface.expolygon }, copied_covered, ApplySafetyOffset::Yes),
+                                surface);
+                    }
+                };
+
+                if (top_layers > 0 || bottom_layers > 0) {
+                    for (size_t trigger_layer_idx = 0; trigger_layer_idx < m_layers.size(); ++trigger_layer_idx) {
+                        m_print->throw_if_canceled();
+                        const LayerRegion *trigger_layerm = m_layers[trigger_layer_idx]->regions()[region_id];
+
+                        if (top_layers > 0 && trigger_layer_idx + 1 < m_layers.size()) {
+                            ExPolygons trigger_area = feature_area(trigger_layerm, true);
+                            const LayerRegion *source_layerm = m_layers[trigger_layer_idx + 1]->regions()[region_id];
+                            for (int step = 0; !trigger_area.empty() && step < top_layers; ++step) {
+                                const int target_layer_idx = int(trigger_layer_idx) - step;
+                                if (target_layer_idx < 0)
+                                    break;
+                                LayerRegion *target_layerm = m_layers[size_t(target_layer_idx)]->regions()[region_id];
+                                copy_new_paths(source_layerm, target_layerm, layer_region_slices(target_layerm));
+                            }
+                        }
+
+                        if (bottom_layers > 0 && trigger_layer_idx > 0) {
+                            ExPolygons trigger_area = feature_area(trigger_layerm, false);
+                            const LayerRegion *source_layerm = m_layers[trigger_layer_idx - 1]->regions()[region_id];
+                            for (int step = 0; !trigger_area.empty() && step < bottom_layers; ++step) {
+                                const int target_layer_idx = int(trigger_layer_idx) + step;
+                                if (target_layer_idx >= int(m_layers.size()))
+                                    break;
+                                LayerRegion *target_layerm = m_layers[size_t(target_layer_idx)]->regions()[region_id];
+                                copy_new_paths(source_layerm, target_layerm, layer_region_slices(target_layerm));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         for (size_t i = 0; i < m_layers.size(); ++ i) {
             m_print->throw_if_canceled();
             Layer 					*layer  = m_layers[i];
@@ -3985,6 +4121,26 @@ void PrintObject::discover_horizontal_shells()
 
             coordf_t print_z  = layer->print_z;
             coordf_t bottom_z = layer->bottom_z();
+            auto add_internal_solid = [](LayerRegion *target_layerm, Polygons new_internal_solid) {
+                if (new_internal_solid.empty())
+                    return;
+
+                SurfaceCollection backup = std::move(target_layerm->fill_surfaces);
+                polygons_append(new_internal_solid, to_polygons(backup.filter_by_type(stInternalSolid)));
+                ExPolygons internal_solid = union_ex(new_internal_solid);
+                target_layerm->fill_surfaces.set(internal_solid, stInternalSolid);
+
+                Polygons polygons_internal = to_polygons(internal_solid);
+                ExPolygons internal = diff_ex(backup.filter_by_type(stInternal), polygons_internal, ApplySafetyOffset::Yes);
+                target_layerm->fill_surfaces.append(internal, stInternal);
+                polygons_append(polygons_internal, to_polygons(std::move(internal)));
+
+                backup.keep_types({ stTop, stBottom, stBottomBridge });
+                std::vector<SurfacesPtr> top_bottom_groups;
+                backup.group(&top_bottom_groups);
+                for (SurfacesPtr &group : top_bottom_groups)
+                    target_layerm->fill_surfaces.append(diff_ex(group, polygons_internal), *group.front());
+            };
             for (size_t idx_surface_type = 0; idx_surface_type < 3; ++ idx_surface_type) {
                 m_print->throw_if_canceled();
                 SurfaceType type = (idx_surface_type == 0) ? stTop : (idx_surface_type == 1) ? stBottom : stBottomBridge;
@@ -4129,28 +4285,8 @@ void PrintObject::discover_horizontal_shells()
                         }
                     }
 
-                    // internal-solid are the union of the existing internal-solid surfaces
-                    // and new ones
-                    SurfaceCollection backup = std::move(neighbor_layerm->fill_surfaces);
-                    polygons_append(new_internal_solid, to_polygons(backup.filter_by_type(stInternalSolid)));
-                    ExPolygons internal_solid = union_ex(new_internal_solid);
-                    // assign new internal-solid surfaces to layer
-                    neighbor_layerm->fill_surfaces.set(internal_solid, stInternalSolid);
-                    // subtract intersections from layer surfaces to get resulting internal surfaces
-                    Polygons polygons_internal = to_polygons(std::move(internal_solid));
-                    ExPolygons internal = diff_ex(backup.filter_by_type(stInternal), polygons_internal, ApplySafetyOffset::Yes);
-                    // assign resulting internal surfaces to layer
-                    neighbor_layerm->fill_surfaces.append(internal, stInternal);
-                    polygons_append(polygons_internal, to_polygons(std::move(internal)));
-                    // assign top and bottom surfaces to layer
-                    backup.keep_types({ stTop, stBottom, stBottomBridge });
-                    std::vector<SurfacesPtr> top_bottom_groups;
-                    backup.group(&top_bottom_groups);
-                    for (SurfacesPtr &group : top_bottom_groups)
-                        neighbor_layerm->fill_surfaces.append(
-                            diff_ex(group, polygons_internal),
-                            // Use an existing surface as a template, it carries the bridge angle etc.
-                            *group.front());
+                    // internal-solid are the union of the existing internal-solid surfaces and new ones.
+                    add_internal_solid(neighbor_layerm, std::move(new_internal_solid));
                 }
 		EXTERNAL:;
             } // foreach type (stTop, stBottom, stBottomBridge)

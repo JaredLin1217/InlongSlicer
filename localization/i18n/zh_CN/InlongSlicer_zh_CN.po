@@ -23479,3 +23479,27 @@ msgstr "Z 轴空驶"
 #: src/libslic3r/PrintConfig.cpp
 msgid "mm/s?"
 msgstr "mm/s?"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Surface feature enhancement"
+msgstr "表面特征增强"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Enable surface feature enhancement. When enabled, detected top and bottom feature paths are copied into adjacent layers while staying inside the original sliced shape."
+msgstr "启用表面特征增强。启用后，会将检测到的顶面与底面特征路径复制到相邻层，并保持在原始切片形体内。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Top feature embed layers"
+msgstr "顶面特征预埋层数"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Adds extra enhanced layers below detected top surfaces. This keeps the real top surface role unchanged and strengthens the transition below it."
+msgstr "在检测到的顶面下方增加额外增强层。实际顶面路径类型保持不变，并强化其下方的过渡区域。"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Bottom feature extend layers"
+msgstr "底面特征延展层数"
+
+#: src/libslic3r/PrintConfig.cpp
+msgid "Adds extra enhanced layers above detected bottom and bridge-bottom surfaces. This keeps the real bottom surface role unchanged and strengthens the transition above it."
+msgstr "在检测到的底面与桥接底面上方增加额外增强层。实际底面路径类型保持不变，并强化其上方的过渡区域。"

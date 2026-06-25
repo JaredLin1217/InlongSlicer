@@ -2207,6 +2207,33 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<EnsureVerticalShellThickness>(EnsureVerticalShellThickness::evstAll));
 
+    def = this->add("surface_feature_enhance_mode", coBool);
+    def->label = L("Surface feature enhancement");
+    def->category = L("Strength");
+    def->tooltip = L("Enable surface feature enhancement. When enabled, detected top and bottom feature paths are copied into adjacent layers while staying inside the original sliced shape.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
+    def = this->add("top_feature_embed_layers", coInt);
+    def->label = L("Top feature embed layers");
+    def->category = L("Strength");
+    def->tooltip = L("Adds extra enhanced layers below detected top surfaces. This keeps the real top surface role unchanged and strengthens the transition below it.");
+    def->sidetext = L("layers");
+    def->min = 0;
+    def->max = 10;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(1));
+
+    def = this->add("bottom_feature_extend_layers", coInt);
+    def->label = L("Bottom feature extend layers");
+    def->category = L("Strength");
+    def->tooltip = L("Adds extra enhanced layers above detected bottom and bridge-bottom surfaces. This keeps the real bottom surface role unchanged and strengthens the transition above it.");
+    def->sidetext = L("layers");
+    def->min = 0;
+    def->max = 10;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(1));
+
     auto def_top_fill_pattern = def = this->add("top_surface_pattern", coEnum);
     def->label = L("Top surface pattern");
     def->category = L("Strength");
@@ -10629,7 +10656,12 @@ std::map<std::string, std::string> validate(const FullPrintConfig &cfg, bool und
     if (cfg.bottom_shell_layers < 0) {
         error_message.emplace("bottom_shell_layers", L("invalid value ") + std::to_string(cfg.bottom_shell_layers));
     }
-
+    if (cfg.top_feature_embed_layers < 0 || cfg.top_feature_embed_layers > 10) {
+        error_message.emplace("top_feature_embed_layers", L("invalid value ") + std::to_string(cfg.top_feature_embed_layers));
+    }
+    if (cfg.bottom_feature_extend_layers < 0 || cfg.bottom_feature_extend_layers > 10) {
+        error_message.emplace("bottom_feature_extend_layers", L("invalid value ") + std::to_string(cfg.bottom_feature_extend_layers));
+    }
     if (cfg.use_firmware_retraction.value &&
         cfg.gcode_flavor.value != gcfKlipper &&
         cfg.gcode_flavor.value != gcfSmoothie &&
