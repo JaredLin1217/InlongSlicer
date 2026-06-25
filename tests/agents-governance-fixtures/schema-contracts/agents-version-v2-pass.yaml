@@ -1,5 +1,5 @@
-﻿schema: agents-version/v2
-purpose: "Foundation creation version metadata for provider and target deployments."
+schema: agents-version/v2
+purpose: "Fixture for Agents workflow version schema validation."
 owns: "Foundation creation version, deployment contract, and upgrade expectations."
 workflow:
   version: "2.7.0"
@@ -8,7 +8,7 @@ workflow:
   root_principle: "One repo-local operating standard, official-docs-first capability creation, source-neutral deployment, runtime-local evidence, project-owned knowledge, and repeatable task flow across growing projects."
 readiness_ladder:
   P0: "Validation entry point, canonical contracts, English-only durable rules, ignored runtime and local state, and no local permission repair."
-  P1: "Deployment dry-run, target layout detection, provider self-write refusal, deployed file boundary, and upgrade gate."
+  P1: "Deployment dry-run, target layout detection, provider self-write refusal, and upgrade gate."
   P2: "Source-neutral template bundle, exact-pair drift checks, route packs, schema mirrors, and template coverage."
   P3: "Delegated deployment worker rules, enterprise department leader dispatch, collaborator leader windows, artifact-backed workflow packets, runtime execution evidence, and lifecycle checks."
   P4: "Release audit profile, release package export, v2 runtime release evidence, workflow artifact verification, runtime blocklists, hard-isolation claim boundaries, full verification, and size gates."

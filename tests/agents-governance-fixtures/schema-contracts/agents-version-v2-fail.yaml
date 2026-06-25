@@ -1,0 +1,6 @@
+schema: agents-version/v1
+purpose: "Fixture expected to fail Agents workflow version schema validation."
+owns: "Incomplete fixture."
+workflow:
+  version: "2.7.0"
+  channel: "legacy"

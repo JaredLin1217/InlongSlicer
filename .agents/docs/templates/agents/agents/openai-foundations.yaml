@@ -1,0 +1,111 @@
+﻿schema: agents-openai-foundations/v1
+purpose: "Foundation Creation Layer for OpenAI-backed AI Agents features."
+owns: "Official guidance checkpoints, schema-first outputs, state boundaries, latency controls, evaluation planning, and feature creation patterns."
+principles:
+  official_docs_first: "Use official OpenAI developer documentation before durable OpenAI-facing API, model, tool, agent, or prompt guidance."
+  structured_outputs_first: "Prefer Structured Outputs for machine-consumed objects; plain JSON mode is not a schema guarantee."
+  stateless_by_default: "Treat generation requests as stateless unless Responses state, conversation state, or explicit local memory is selected."
+  cache_static_prefix: "Place stable instructions and tools before volatile user content so prompt caching can help."
+  predicted_output_fit: "Use predicted outputs only when most generated text is known in advance and unsupported parameters or tool needs are absent."
+creation_primitives:
+  structured_outputs:
+    use_for: ["reports","plans","validation results","route manifests","workflow packets"]
+    gate: "Attach a schema, reject nonconforming output, and record repair or escalation."
+  conversation_state:
+    use_for: ["multi-turn product creation","iterative edits","long-running workflows"]
+    gate: "Name the state owner and resume pointer; do not confuse local runtime evidence with model-side state."
+  agents_sdk:
+    use_for: ["handoffs","guardrails","tracing","evaluation-backed agent loops"]
+    gate: "Use when handoffs, guardrails, tracing, or framework ownership improve the task; use direct Responses loops when the repo owns dispatch and tool control."
+  codex_skills:
+    use_for: ["repeatable repo-local workflows","specialized instructions","scripts and references"]
+    gate: "Keep skills scoped and route-selected so baseline context stays compact."
+  subagents:
+    use_for: ["parallel read-heavy audits","independent exploration","summarized findings"]
+    gate: "Avoid unsynchronized parallel writes; integrate through controller-owned changes."
+latency_and_cost:
+  prompt_caching: "Keep stable prompt and tool prefixes first; move volatile request data later."
+  predicted_outputs: "Use for small edits against known text; monitor rejected prediction tokens."
+evaluation:
+  dataset_first: "Use focused datasets and task outputs for new evaluations; do not depend on retiring platform-only flows."
+  score_rule: "Every foundation feature needs pass/fail evidence, risk, and rollback notes before release."
+source_matrix:
+  checked: "2026-06-23"
+  structured_outputs:
+    capability: "Structured Outputs"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://developers.openai.com/api/docs/guides/structured-outputs"
+    boundary: "schema-bound machine output"
+    drift_risk: "model or API schema support can change"
+  conversation_state:
+    capability: "conversation state"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://developers.openai.com/api/docs/guides/conversation-state"
+    boundary: "model-side continuity and resume scope"
+    drift_risk: "state APIs and retention rules can change"
+  agents_sdk:
+    capability: "Agents SDK"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://openai.github.io/openai-agents-python/"
+    boundary: "handoffs, guardrails, tracing, agent loops"
+    drift_risk: "SDK interfaces and defaults can change"
+  codex_skills:
+    capability: "Codex skills"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://developers.openai.com/codex/skills"
+    boundary: "scoped repeatable instructions"
+    drift_risk: "Codex skill packaging rules can change"
+  subagents:
+    capability: "subagents"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://developers.openai.com/codex/subagents"
+    boundary: "parallel delegated work with controller integration"
+    drift_risk: "runtime delegation behavior can change"
+  prompt_caching:
+    capability: "prompt caching"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://developers.openai.com/api/docs/guides/prompt-caching"
+    boundary: "stable prompt prefix optimization"
+    drift_risk: "cache eligibility and pricing can change"
+  predicted_outputs:
+    capability: "predicted outputs"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://developers.openai.com/api/docs/guides/predicted-outputs"
+    boundary: "known-output edit acceleration"
+    drift_risk: "parameter compatibility can change"
+  evaluations:
+    capability: "evaluations"
+    checked: "2026-06-23"
+    refresh_interval_days: 90
+    next_review_due: "2026-09-21"
+    url: "https://developers.openai.com/api/docs/guides/evals"
+    boundary: "dataset-backed pass/fail release evidence"
+    drift_risk: "evaluation tooling and flows can change"
+creation_patterns:
+  assistant_feature:
+    route: "foundation_creation"
+    minimum_contract: ["objective","input schema","state owner","tool boundary","verification","fallback"]
+  coding_agent_feature:
+    route: "foundation_creation"
+    minimum_contract: ["files owned","structured report","cleanup rule","latency control","trace or evidence ref"]
+  product_workflow:
+    route: "foundation_creation"
+    minimum_contract: ["user journey","agent role","handoff boundary","guardrail","eval sample","release gate"]
+verification:
+  profile: "foundation_creation"
+  required_markers: ["structured_outputs","conversation_state","agents_sdk","codex_skills","subagents","prompt_caching","predicted_outputs","evaluations"]
+  failure_modes: ["schema-free machine output","implicit state owner","unbounded tool authority","parallel write conflict","cost or latency control absent","retiring eval flow dependency"]

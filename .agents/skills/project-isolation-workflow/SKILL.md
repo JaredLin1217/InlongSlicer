@@ -1,27 +1,31 @@
 ﻿---
 name: project-isolation-workflow
-description: Repo-local Agents rules, templates, memory, deploy, multi-agent.
+description: Use for repo Agents workflow: routing, memory, deploy, multi-agent, skill, or maintenance.
 ---
-# Project Isolation Workflow
-Token-min router for isolation, memory, deploy, agents, handoff, skills, maintenance. Start `.agents/docs/agents/ai-runtime.yaml`.
-## Route
-- `.agents/docs/agents/ai-runtime.yaml`: minimal files.
-- `.agents/docs/agents/workflows.yaml`: route, progress, employees.
-- `.agents/docs/agents/policy.yaml`: isolation, authority, closeout.
-- `.agents/docs/agents/verify.yaml`: proof profile.
-- `.agents/docs/agents/deploy.yaml`: authorized deployment.
-- Deploy: preserve target layout; write only `deployed_file_set`; report historical files separately.
-- Memory: read relevant `.agents/docs/memory/index.md` rows only.
-## Employee Summary
-- Exact read/write scope; explorers read-only; workers need exclusive normalized write scope.
-- Use `.agents/runtime/agent-ledger.jsonl` only for recovery; temp roster only when authorized.
-- Runtime close/sidebar cleanup/hiring/scoring: expand `.agents/docs/agents/workflows.yaml`; closeout runs `runtime.quiet_cleanup` and `scripts/agents-cleanup.ps1` for current parent/cwd closed subagent runtime ids, never sidebar nicknames; clear sqlite, session index, unread state, rollouts; no backups.
-- Broader dismissal/cleanup follows `runtime.sidebar_cleanup_success_path` with exact authorization and evidence.
+
+# Project Workflow
+Read `.agents/docs/agents/ai-runtime.yaml`; expand only named canonical YAML. Durable rules/docs/skills/templates: English-only.
+
+## Routes
+- `ai-runtime`: classify task, pick scope, stop unless another file is named.
+- `quick_memory`: read/update `.agents/docs/agents/memory.yaml`.
+- `workflows`: multi-agent modes, ownership, ledger, roster fallback, scoring, recovery.
+- `skills`: repo-local skill rules and hard/behavioral isolation evidence.
+- `deploy`: template provider, dry-run/copy, target state, rollback.
+- `verify`: smallest matching profile first; fast gates before commit/tag/branch-push.
+- `maintenance`: compaction, residue, old-layer cleanup, version alignment.
+- OpenAI/API/model/tool guidance: official docs first.
+
 ## Guardrails
-- Project skills stay under `.agents/skills/`.
-- No global Memory or global/system skills by default; project-local `.agents/skills/**` is not GS.
-- No external filesystem access without exact authorization, except approved temp cache.
-- Do not claim hard isolation without current verified evidence.
-- Keep deployable templates source-neutral.
+- Treat `.agents/skills/**/SKILL.md` as project-local, not GS.
+- GM off unless explicitly requested.
+- External FS is XR/XW unless exact path/action is authorized; `%TEMP%/codex-agent-status/<project-id>/` is status scratch.
+- `.agents/runtime/agent-ledger.jsonl` is ignored advisory state, not official DB, deployable, or XR/XW.
+- Claim hard isolation only with verified tool/OS/account/cloud evidence.
+- Do not edit `.git/`, generated/cache/build/vendor output, runtime copies, or live Codex state unless targeted.
+
 ## Closeout
-Use policy closeout. Compact answers: answer plus isolation line unless evidence is needed.
+Always report:
+```text
+Isolation: GM <used/not used> | GS <used/not used> | XR <none/paths> | XW <none/paths>
+```

@@ -22,6 +22,7 @@
     "readiness_ladder.P5",
     "upgrade_policy.default",
     "upgrade_policy.core_contract_rule",
+    "upgrade_policy.foundation_creation_rule",
     "upgrade_policy.breaking_change_rule",
     "upgrade_policy.overwrite_scope",
     "upgrade_policy.preserve_target_owned",
@@ -31,6 +32,7 @@
     "delegation.workflow_artifact_rule",
     "delegation.context_compact_rule",
     "delegation.collaborator_window_rule",
+    "delegation.foundation_creation_rule",
     "delegation.runtime_execution_rule",
     "delegation.knowledge_footprint_rule",
     "delegation.large_batch_rule",
@@ -38,24 +40,83 @@
     "delegation.worker_rule"
   ],
   "x-required-values": [
-    {"path": "workflow.channel", "value": "core-runtime"},
-    {"path": "upgrade_policy.default", "value": "dry-run first"},
-    {"path": "delegation.worker_role", "value": "deployment_worker"}
+    {
+      "path": "workflow.channel",
+      "value": "foundation-creation"
+    },
+    {
+      "path": "upgrade_policy.default",
+      "value": "dry-run first"
+    },
+    {
+      "path": "delegation.worker_role",
+      "value": "deployment_worker"
+    }
   ],
   "x-required-contains": [
-    {"path": "readiness_ladder.P0", "contains": ["Validation", "canonical contracts", "no local permission repair"]},
-    {"path": "readiness_ladder.P1", "contains": ["Deployment dry-run", "provider self-write refusal", "upgrade gate"]},
-    {"path": "readiness_ladder.P2", "contains": ["route packs", "schema mirrors", "template coverage"]},
-    {"path": "readiness_ladder.P3", "contains": ["collaborator leader windows", "runtime execution evidence", "lifecycle checks"]},
-    {"path": "readiness_ladder.P4", "contains": ["release package export", "runtime blocklists", "hard-isolation claim boundaries", "size gates"]},
-    {"path": "readiness_ladder.P5", "contains": ["context compaction contracts", "knowledge footprints", "compact workflow growth controls"]},
-    {"path": "upgrade_policy.core_contract_rule", "contains": ["runtime_execution", "context_compact", "collaborator_window"]},
-    {"path": "upgrade_policy.preserve_target_owned", "contains": ["runtime state", "workflow artifacts", "local Codex config", "memory entries", "status files", "events", "commits", "remotes", "deployment history"]},
-    {"path": "delegation.enterprise_dispatch_rule", "contains": ["department leaders", "department reports"]},
-    {"path": "delegation.workflow_artifact_rule", "contains": [".agents/runtime/workflows", ".workflow alias", "normalized reports"]},
-    {"path": "delegation.context_compact_rule", "contains": ["latest request", "runtime compact events stay local"]},
-    {"path": "delegation.collaborator_window_rule", "contains": ["department leaders", "runtime-local"]},
-    {"path": "delegation.runtime_execution_rule", "contains": ["Plans", "cleanup claims"]},
-    {"path": "delegation.knowledge_footprint_rule", "contains": ["resume pointer", "without full transcript"]}
+    {
+      "path": "readiness_ladder.P0",
+      "contains": ["Validation", "canonical contracts", "no local permission repair"]
+    },
+    {
+      "path": "readiness_ladder.P1",
+      "contains": ["Deployment dry-run", "provider self-write refusal", "upgrade gate"]
+    },
+    {
+      "path": "readiness_ladder.P2",
+      "contains": ["route packs", "schema mirrors", "template coverage"]
+    },
+    {
+      "path": "readiness_ladder.P3",
+      "contains": ["collaborator leader windows", "runtime execution evidence", "lifecycle checks"]
+    },
+    {
+      "path": "readiness_ladder.P4",
+      "contains": ["release package export", "runtime blocklists", "hard-isolation claim boundaries", "size gates"]
+    },
+    {
+      "path": "readiness_ladder.P5",
+      "contains": ["context compaction contracts", "knowledge footprints", "foundation creation contracts", "compact workflow growth controls"]
+    },
+    {
+      "path": "upgrade_policy.core_contract_rule",
+      "contains": ["foundation_creation", "runtime_execution", "context_compact", "collaborator_window"]
+    },
+    {
+      "path": "upgrade_policy.foundation_creation_rule",
+      "contains": ["openai_foundations", "official-docs-first", "schema-first outputs", "state ownership", "latency controls", "evaluation gates"]
+    },
+    {
+      "path": "upgrade_policy.preserve_target_owned",
+      "contains": ["runtime state", "workflow artifacts", "local Codex config", "memory entries", "status files", "events", "commits", "remotes", "deployment history"]
+    },
+    {
+      "path": "delegation.enterprise_dispatch_rule",
+      "contains": ["department leaders", "department reports"]
+    },
+    {
+      "path": "delegation.workflow_artifact_rule",
+      "contains": [".agents/runtime/workflows", ".workflow alias", "normalized reports"]
+    },
+    {
+      "path": "delegation.context_compact_rule",
+      "contains": ["latest request", "runtime compact events stay local"]
+    },
+    {
+      "path": "delegation.collaborator_window_rule",
+      "contains": ["department leaders", "runtime-local"]
+    },
+    {
+      "path": "delegation.foundation_creation_rule",
+      "contains": ["official OpenAI guidance", "schema-backed", "verifiable repo-local capabilities"]
+    },
+    {
+      "path": "delegation.runtime_execution_rule",
+      "contains": ["Plans", "cleanup claims"]
+    },
+    {
+      "path": "delegation.knowledge_footprint_rule",
+      "contains": ["resume pointer", "without full transcript"]
+    }
   ]
 }

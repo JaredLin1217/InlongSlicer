@@ -1,4 +1,4 @@
-schema: agents-workflows/v2
+﻿schema: agents-workflows/v2
 purpose: "Core route, employee, deploy, runtime evidence, scoring, handoff."
 owns: "Workflow behavior and closeout."
 read_first: ["ai-runtime","policy","verify","schemas","deploy when target writes"]
@@ -72,7 +72,7 @@ multi_agent_runtime:
     project_local_ledger: ".agents/runtime/agent-ledger.jsonl"
     ledger_purpose: "Ignored advisory JSONL; not DB, deployable, XR, or XW."
     ledger_missing_or_cleared: "Recover from notices, status, reports, temp cache; missing ledger does not void evidence."
-    temp_cache: "%TEMP%/codex-agent-status/<project-id>/"
+    temp_cache: "%TEMP%/codex-agent-status/<project-id>-<repo-path-hash>/<run-id>/"
     temp_cache_purpose: "External fallback for restarts, multiple controllers, weak ledger."
     required_when: ["2+ active employees","batch/many smoke","may outlive controller","manual-detached/cloud","worker writes","ownership changes","resume likely"]
     git_rule: "Never stage/commit volatile roster, events, leases, or filled validation records."
@@ -80,9 +80,11 @@ multi_agent_runtime:
     completion: "Final report is completion notice."
     close: "Close exact runtime id before history cleanup."
     official_controls_first: "Use runtime close/status/archive/unsubscribe first; no hard-delete API assumed."
+    claim_boundary: "Use close_requested/archived/verified_inactive unless exact runtime tools prove deletion; stale UI remains risk until delayed zero proof."
     close_success: "Clean roster = inactive + official zero + sqlite edge/thread zero + session-index zero + unread-state zero + rollout zero + delayed zero verification."
     residue_sources: "state_*.sqlite threads/thread_spawn_edges; session_index.jsonl child rows; global unread ids; sessions|archived_sessions rollouts."
     cleanup_order: "close/prove inactive -> resolve runtime ids, not sidebar nicknames -> match parent/cwd/subagent -> delete edges/threads, session_index rows, unread ids/rollouts -> delay verify zero."
+    cleanup_helper: "Use scripts/agents-cleanup.ps1 for exact runtime id Verify/Cleanup evidence; cleanup is destructive no-backup and must never use sidebar nicknames."
     quiet_cleanup: "Standing closeout cleanup: exact runtime ids; delete sqlite/session-index/unread/rollout residue without backup; delayed zero verification; summarize XR/XW."
     history_cleanup: "Dispatch closeout uses quiet_cleanup after close; other cleanup needs exact no-backup auth."
     sidebar_cleanup_success_path: "close proof -> official zero -> sqlite/session-index/unread/rollout zero -> delayed zero -> UI reload if stale"

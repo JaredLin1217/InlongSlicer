@@ -17,6 +17,7 @@
     "commands",
     "profiles",
     "size_gates",
+    "evidence_tiers",
     "claim_scopes",
     "minimum_evidence",
     "no_deduction_audit",
@@ -38,11 +39,20 @@
     "file_classes.workflow_artifact_canonical",
     "file_classes.context_compact_canonical",
     "file_classes.runtime_local",
+    "file_classes.foundation_creation_canonical",
     "commands.full_audit_bundle",
     "commands.enterprise_dispatch_integrity",
     "commands.workflow_artifact_integrity",
     "commands.context_compact_integrity",
+    "commands.foundation_creation_integrity",
     "commands.release_package_export",
+    "commands.runtime_release_evidence",
+    "commands.size_gate_helper",
+    "commands.release_evidence_helper",
+    "commands.route_pack_validation_helper",
+    "commands.runtime_execution_validation_helper",
+    "commands.readiness_validation_helper",
+    "commands.cross_project_runtime_validation_helper",
     "commands.deployment_script_safety",
     "commands.deployment_script_selftest",
     "commands.multi_agent_workflow_integrity",
@@ -54,9 +64,12 @@
     "profiles.enterprise_dispatch",
     "profiles.workflow_artifact",
     "profiles.context_compact",
+    "profiles.foundation_creation",
     "profiles.runtime_multi_agent",
     "profiles.hard_isolation",
     "size_gates.targets.tracked_repo_kib",
+    "size_gates.targets.validate_script_ps1_after_split",
+    "evidence_tiers.current_release_max",
     "claim_scopes.deploy_clean",
     "claim_scopes.hard_isolation",
     "no_deduction_audit.rule",
@@ -65,6 +78,8 @@
     "minimum_evidence.deploy_clean",
     "minimum_evidence.workflow_artifact",
     "minimum_evidence.context_compact",
+    "minimum_evidence.foundation_creation",
+    "minimum_evidence.runtime_release_evidence",
     "live_employee_validation.required",
     "batch_employee_validation.required",
     "drift_checks.exact_pairs",
@@ -118,6 +133,26 @@
         "context-compact route",
         "raw transcript",
         "runtime event boundary"
+      ]
+    },
+    {
+      "path": "commands.foundation_creation_integrity",
+      "contains": [
+        "official docs first",
+        "structured outputs",
+        "state owner",
+        "latency controls",
+        "evaluation gate"
+      ]
+    },
+    {
+      "path": "profiles.foundation_creation",
+      "contains": [
+        "schema-first outputs",
+        "state owner",
+        "tool boundary",
+        "latency control",
+        "evaluation gate"
       ]
     },
     {
@@ -180,6 +215,16 @@
       ]
     },
     {
+      "path": "minimum_evidence.foundation_creation",
+      "contains": [
+        "official docs source checked",
+        "schema contract present",
+        "state owner named",
+        "latency control chosen",
+        "evaluation evidence planned"
+      ]
+    },
+    {
       "path": "coverage_gates.slim_policy_pack",
       "contains": [
         "context compact"
@@ -190,6 +235,49 @@
       "contains": [
         "agents-cleanup.ps1",
         "-Action Verify"
+      ]
+    },
+    {
+      "path": "commands.runtime_release_evidence",
+      "contains": [
+        "capture-runtime-evidence.ps1",
+        "-Full",
+        "-Practice",
+        "-Quiet"
+      ]
+    },
+    {
+      "path": "commands.size_gate_helper",
+      "contains": [
+        "validate-size-gates.ps1"
+      ]
+    },
+    {
+      "path": "commands.release_evidence_helper",
+      "contains": [
+        "validate-release-evidence.ps1"
+      ]
+    },
+    {
+      "path": "size_gates.targets.validate_script_ps1_after_split",
+      "contains": [
+        "110000"
+      ]
+    },
+    {
+      "path": "minimum_evidence.runtime_release_evidence",
+      "contains": [
+        "v2 schema",
+        "validated_content_digest",
+        "command durations",
+        "token usage unavailable reason",
+        "T2 current-repo practice boundary"
+      ]
+    },
+    {
+      "path": "evidence_tiers.current_release_max",
+      "contains": [
+        "T2 current-repo practice"
       ]
     }
   ]

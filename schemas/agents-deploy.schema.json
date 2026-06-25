@@ -3,7 +3,7 @@
   "$id": "agents-deploy.schema.json",
   "title": "Agents deployment policy",
   "type": "object",
-  "required": ["schema", "purpose", "owns", "boundary", "target_layout", "dirty_target", "deployment_modes", "upgrade", "delegated_deployment", "mode_composition", "deployable_by_mode", "do_not_deploy", "case_by_case", "steps", "hard_fail_gates", "validation_levels"],
+  "required": ["schema", "purpose", "owns", "boundary", "target_layout", "dirty_target", "deployment_modes", "deployment_manifest_markers", "upgrade", "delegated_deployment", "mode_composition", "deployable_by_mode", "do_not_deploy", "case_by_case", "steps", "hard_fail_gates", "validation_levels"],
   "properties": {
     "schema": {
       "const": "agents-deploy/v2"
@@ -51,7 +51,8 @@
     "do_not_deploy.runtime_execution_rule",
     "do_not_deploy.context_compact_hard_fail",
     "validation_levels.disposable_selftest",
-    "validation_levels.authorized_target_deployment_test"
+    "validation_levels.authorized_target_deployment_test",
+    "deployment_manifest_markers.core_bootstrap_foundation"
   ],
   "x-required-values": [
     {"path": "upgrade.version_source", "value": ".agents/docs/agents/version.yaml"},
@@ -65,6 +66,7 @@
     {"path": "do_not_deploy.runtime_execution_rule", "contains": ["execution/tool/deploy/route-pack/knowledge runtime"]},
     {"path": "do_not_deploy.context_compact_hard_fail", "contains": ["Compact runtime copied by default"]},
     {"path": "validation_levels.disposable_selftest", "contains": ["verifies blocklist"]},
+    {"path": "deployment_manifest_markers.core_bootstrap_foundation", "contains": [".agents/docs/templates/agents/agents/openai-foundations.yaml", ".agents/docs/agents/openai-foundations.yaml"]},
     {"path": "target_layout.rule", "contains": ["Preserve one layout"]},
     {"path": "target_layout.path_rewrite", "contains": ["rewrite refs", "layout_destination_map"]},
     {"path": "target_layout.ambiguous", "contains": ["follow AGENTS.md", "target-owned historical state"]},

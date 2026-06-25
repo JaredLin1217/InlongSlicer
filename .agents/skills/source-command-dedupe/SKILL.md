@@ -23,7 +23,7 @@ Notes (be sure to tell this to your agents, too):
 
 - Use `gh` to interact with GitHub, rather than web fetch.
 - Do not use other tools beyond `gh` (for example, do not use other MCP servers or file edit tools).
-- Make a todo list first.
+- Make a task checklist first.
 - For your comment, follow the following format precisely (assuming for this example that you found 3 suspected duplicates):
 
 ---

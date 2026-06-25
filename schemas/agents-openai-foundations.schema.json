@@ -1,0 +1,247 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agents-openai-foundations.schema.json",
+  "title": "Agents OpenAI foundation creation policy",
+  "type": "object",
+  "required": ["schema", "purpose", "owns", "principles", "creation_primitives", "latency_and_cost", "evaluation", "source_matrix", "creation_patterns", "verification"],
+  "properties": {
+    "schema": {
+      "const": "agents-openai-foundations/v1"
+    }
+  },
+  "x-required-paths": [
+    "principles.official_docs_first",
+    "principles.structured_outputs_first",
+    "principles.stateless_by_default",
+    "principles.cache_static_prefix",
+    "principles.predicted_output_fit",
+    "creation_primitives.structured_outputs.gate",
+    "creation_primitives.conversation_state.gate",
+    "creation_primitives.agents_sdk.gate",
+    "creation_primitives.codex_skills.gate",
+    "creation_primitives.subagents.gate",
+    "latency_and_cost.prompt_caching",
+    "latency_and_cost.predicted_outputs",
+    "evaluation.dataset_first",
+    "evaluation.score_rule",
+    "source_matrix.checked",
+    "source_matrix.structured_outputs.capability",
+    "source_matrix.structured_outputs.checked",
+    "source_matrix.structured_outputs.refresh_interval_days",
+    "source_matrix.structured_outputs.next_review_due",
+    "source_matrix.structured_outputs.url",
+    "source_matrix.structured_outputs.boundary",
+    "source_matrix.structured_outputs.drift_risk",
+    "source_matrix.conversation_state.capability",
+    "source_matrix.conversation_state.checked",
+    "source_matrix.conversation_state.refresh_interval_days",
+    "source_matrix.conversation_state.next_review_due",
+    "source_matrix.conversation_state.url",
+    "source_matrix.conversation_state.boundary",
+    "source_matrix.conversation_state.drift_risk",
+    "source_matrix.agents_sdk.capability",
+    "source_matrix.agents_sdk.checked",
+    "source_matrix.agents_sdk.refresh_interval_days",
+    "source_matrix.agents_sdk.next_review_due",
+    "source_matrix.agents_sdk.url",
+    "source_matrix.agents_sdk.boundary",
+    "source_matrix.agents_sdk.drift_risk",
+    "source_matrix.codex_skills.capability",
+    "source_matrix.codex_skills.checked",
+    "source_matrix.codex_skills.refresh_interval_days",
+    "source_matrix.codex_skills.next_review_due",
+    "source_matrix.codex_skills.url",
+    "source_matrix.codex_skills.boundary",
+    "source_matrix.codex_skills.drift_risk",
+    "source_matrix.subagents.capability",
+    "source_matrix.subagents.checked",
+    "source_matrix.subagents.refresh_interval_days",
+    "source_matrix.subagents.next_review_due",
+    "source_matrix.subagents.url",
+    "source_matrix.subagents.boundary",
+    "source_matrix.subagents.drift_risk",
+    "source_matrix.prompt_caching.capability",
+    "source_matrix.prompt_caching.checked",
+    "source_matrix.prompt_caching.refresh_interval_days",
+    "source_matrix.prompt_caching.next_review_due",
+    "source_matrix.prompt_caching.url",
+    "source_matrix.prompt_caching.boundary",
+    "source_matrix.prompt_caching.drift_risk",
+    "source_matrix.predicted_outputs.capability",
+    "source_matrix.predicted_outputs.checked",
+    "source_matrix.predicted_outputs.refresh_interval_days",
+    "source_matrix.predicted_outputs.next_review_due",
+    "source_matrix.predicted_outputs.url",
+    "source_matrix.predicted_outputs.boundary",
+    "source_matrix.predicted_outputs.drift_risk",
+    "source_matrix.evaluations.capability",
+    "source_matrix.evaluations.checked",
+    "source_matrix.evaluations.refresh_interval_days",
+    "source_matrix.evaluations.next_review_due",
+    "source_matrix.evaluations.url",
+    "source_matrix.evaluations.boundary",
+    "source_matrix.evaluations.drift_risk",
+    "creation_patterns.assistant_feature.minimum_contract",
+    "creation_patterns.coding_agent_feature.minimum_contract",
+    "creation_patterns.product_workflow.minimum_contract",
+    "verification.profile",
+    "verification.required_markers",
+    "verification.failure_modes"
+  ],
+  "x-required-values": [
+    {
+      "path": "verification.profile",
+      "value": "foundation_creation"
+    },
+    {
+      "path": "source_matrix.structured_outputs.refresh_interval_days",
+      "value": 90
+    },
+    {
+      "path": "source_matrix.conversation_state.refresh_interval_days",
+      "value": 90
+    },
+    {
+      "path": "source_matrix.agents_sdk.refresh_interval_days",
+      "value": 90
+    },
+    {
+      "path": "source_matrix.codex_skills.refresh_interval_days",
+      "value": 90
+    },
+    {
+      "path": "source_matrix.subagents.refresh_interval_days",
+      "value": 90
+    },
+    {
+      "path": "source_matrix.prompt_caching.refresh_interval_days",
+      "value": 90
+    },
+    {
+      "path": "source_matrix.predicted_outputs.refresh_interval_days",
+      "value": 90
+    },
+    {
+      "path": "source_matrix.evaluations.refresh_interval_days",
+      "value": 90
+    }
+  ],
+  "x-required-contains": [
+    {
+      "path": "principles.official_docs_first",
+      "contains": ["official OpenAI developer documentation"]
+    },
+    {
+      "path": "principles.structured_outputs_first",
+      "contains": ["Structured Outputs", "schema guarantee"]
+    },
+    {
+      "path": "principles.stateless_by_default",
+      "contains": ["stateless", "conversation state"]
+    },
+    {
+      "path": "creation_primitives.structured_outputs.gate",
+      "contains": ["schema", "reject"]
+    },
+    {
+      "path": "creation_primitives.conversation_state.gate",
+      "contains": ["state owner", "resume pointer"]
+    },
+    {
+      "path": "creation_primitives.agents_sdk.gate",
+      "contains": ["handoffs", "guardrails", "tracing"]
+    },
+    {
+      "path": "creation_primitives.codex_skills.gate",
+      "contains": ["skills scoped", "compact"]
+    },
+    {
+      "path": "creation_primitives.subagents.gate",
+      "contains": ["parallel", "writes"]
+    },
+    {
+      "path": "latency_and_cost.prompt_caching",
+      "contains": ["stable prompt", "volatile"]
+    },
+    {
+      "path": "latency_and_cost.predicted_outputs",
+      "contains": ["known text", "rejected prediction tokens"]
+    },
+    {
+      "path": "evaluation.score_rule",
+      "contains": ["pass/fail evidence", "rollback"]
+    },
+    {
+      "path": "source_matrix.checked",
+      "contains": ["2026-06-23"]
+    },
+    {
+      "path": "source_matrix.structured_outputs.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.structured_outputs.url",
+      "contains": ["structured-outputs"]
+    },
+    {
+      "path": "source_matrix.conversation_state.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.conversation_state.url",
+      "contains": ["conversation-state"]
+    },
+    {
+      "path": "source_matrix.agents_sdk.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.agents_sdk.url",
+      "contains": ["openai-agents-python"]
+    },
+    {
+      "path": "source_matrix.codex_skills.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.codex_skills.url",
+      "contains": ["codex/skills"]
+    },
+    {
+      "path": "source_matrix.subagents.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.subagents.url",
+      "contains": ["codex/subagents"]
+    },
+    {
+      "path": "source_matrix.prompt_caching.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.prompt_caching.url",
+      "contains": ["prompt-caching"]
+    },
+    {
+      "path": "source_matrix.predicted_outputs.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.predicted_outputs.url",
+      "contains": ["predicted-outputs"]
+    },
+    {
+      "path": "source_matrix.evaluations.next_review_due",
+      "contains": ["2026-09-21"]
+    },
+    {
+      "path": "source_matrix.evaluations.url",
+      "contains": ["evals"]
+    },
+    {
+      "path": "verification.required_markers",
+      "contains": ["structured_outputs", "conversation_state", "agents_sdk", "codex_skills", "subagents", "prompt_caching", "predicted_outputs", "evaluations"]
+    }
+  ]
+}

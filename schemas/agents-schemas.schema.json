@@ -35,6 +35,7 @@
     "controller_lease",
     "hard_isolation_evidence",
     "runtime_multi_agent_validation",
+    "runtime_release_evidence",
     "history_cleanup_evidence",
     "memory_entry",
     "skill",
@@ -43,6 +44,7 @@
     "collaborator_report",
     "thread_operation_record",
     "core_system",
+    "foundation_creation",
     "runtime_execution",
     "provider_adapter",
     "route_pack",
@@ -112,6 +114,11 @@
     "hard_isolation_evidence.rule",
     "runtime_multi_agent_validation.storage_rule",
     "runtime_multi_agent_validation.required_fields",
+    "runtime_release_evidence.required_fields",
+    "runtime_release_evidence.command_fields",
+    "runtime_release_evidence.performance_rule",
+    "runtime_release_evidence.storage_rule",
+    "runtime_release_evidence.boundary_rule",
     "history_cleanup_evidence.required_when_claimed",
     "history_cleanup_evidence.target_filter",
     "history_cleanup_evidence.runtime_ids_resolved_from",
@@ -135,6 +142,13 @@
     "core_system.required_fields",
     "core_system.runtime_blocklist",
     "core_system.release_contract",
+    "foundation_creation.required_fields",
+    "foundation_creation.schema_rule",
+    "foundation_creation.state_rule",
+    "foundation_creation.creation_rule",
+    "foundation_creation.tool_boundary_rule",
+    "foundation_creation.latency_rule",
+    "foundation_creation.evaluation_rule",
     "runtime_execution.required_fields",
     "runtime_execution.status_values",
     "runtime_execution.cleanup_evidence",
@@ -310,6 +324,44 @@
       ]
     },
     {
+      "path": "runtime_release_evidence.required_fields",
+      "contains": [
+        "schema_version",
+        "workflow_version",
+        "commands",
+        "xr_xw"
+      ]
+    },
+    {
+      "path": "runtime_release_evidence.command_fields",
+      "contains": [
+        "duration_ms",
+        "exit_code",
+        "retry_count"
+      ]
+    },
+    {
+      "path": "runtime_release_evidence.performance_rule",
+      "contains": [
+        "unavailable",
+        "reason",
+        "estimating"
+      ]
+    },
+    {
+      "path": "runtime_release_evidence.storage_rule",
+      "contains": [
+        "%TEMP%/codex-agent-status",
+        "not tracked"
+      ]
+    },
+    {
+      "path": "runtime_release_evidence.boundary_rule",
+      "contains": [
+        "not live external deployment proof"
+      ]
+    },
+    {
       "path": "collaborator_record.location",
       "contains": [
         ".agents/runtime/collaborators.jsonl"
@@ -380,6 +432,59 @@
         "commit",
         "hash",
         "blocklist result"
+      ]
+    },
+    {
+      "path": "foundation_creation.required_fields",
+      "contains": [
+        "official_docs_refs",
+        "output_schema",
+        "state_owner",
+        "latency_control",
+        "evaluation_gate"
+      ]
+    },
+    {
+      "path": "foundation_creation.schema_rule",
+      "contains": [
+        "Structured Outputs",
+        "reject"
+      ]
+    },
+    {
+      "path": "foundation_creation.state_rule",
+      "contains": [
+        "state owner",
+        "multi-turn"
+      ]
+    },
+    {
+      "path": "foundation_creation.creation_rule",
+      "contains": [
+        "official OpenAI developer documentation",
+        "scoped repo-local features"
+      ]
+    },
+    {
+      "path": "foundation_creation.tool_boundary_rule",
+      "contains": [
+        "allowed tools",
+        "handoff boundary",
+        "subagent write ownership"
+      ]
+    },
+    {
+      "path": "foundation_creation.latency_rule",
+      "contains": [
+        "prompt_caching",
+        "predicted_outputs"
+      ]
+    },
+    {
+      "path": "foundation_creation.evaluation_rule",
+      "contains": [
+        "pass/fail evidence",
+        "rollback"
       ]
     },
     {

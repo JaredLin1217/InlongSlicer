@@ -46,6 +46,7 @@ $exact = @(
 ".codex/environments/environment.toml",
 ".codex/environments/environment.template.toml",
 ".agents/runtime/collaborators.jsonl",
+".agents/runtime/agent-ledger.jsonl",
 "docs/agent-status.md",
 ".agents/docs/agent-status.md"
 )
@@ -129,6 +130,7 @@ $blocklistPolicy = @(
 ".codex/environments/environment.toml",
 ".codex/environments/environment.template.toml",
 ".git/**",
+".agents/runtime/agent-ledger.jsonl",
 "live thread ids",
 "API keys",
 "provider sessions"

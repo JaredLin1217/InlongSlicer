@@ -1,14 +1,14 @@
 ﻿schema: agents-verify/v2
 purpose: "Compact verification profiles and release gates."
 owns: "Profile selection, file classes, checkpoints, evidence."
-principle: "Run the smallest check set that proves the claim."
-scope_rule: "Use repo paths unless exact external path/action is authorized."
-stale_literal_rule: "Do not keep resolved one-off literal searches as routine gates."
-batch_rule: "Batch related checkpoint checks when practical."
+principle: "Smallest check set proves claim."
+scope_rule: "Use repo paths unless external path/action authorized."
+stale_literal_rule: "Do not keep one-off literal searches as routine gates."
+batch_rule: "Batch checkpoint checks when practical."
 profile_selection:
-  order: ["answer/no-state -> fast_turn","read-only -> read_only_audit","state/edit/git/deploy -> inspect","policy pack -> policy_pack_edit","core system -> core_system","runtime execution -> runtime_execution","provider -> provider_adapter","route pack -> route_pack","knowledge footprint -> knowledge_footprint","enterprise -> enterprise_dispatch","artifact -> workflow_artifact","compact -> context_compact","collaborator -> collaborator_window","commit/tag/push -> commit_tag_checkpoint","deploy/release/protected/broad/no-deduction -> release_deploy_push_audit","runtime/batch -> runtime_multi_agent + batch_employee_validation","hard isolation -> hard_isolation"]
-  mixed_claim_rule: "Use highest-risk matching profile; do not upgrade unrelated facts."
-  if_unclear: "State narrower claim."
+  order: ["answer","read-only","state/edit/git/deploy","policy pack","core system","foundation creation","runtime execution","provider_adapter","route pack","knowledge footprint","enterprise","artifact","compact","collaborator","commit/tag/push","deploy/release/protected","runtime/batch","hard isolation"]
+  mixed_claim_rule: "Use highest-risk profile; do not upgrade unrelated facts."
+  if_unclear: "State narrow claim."
 file_classes:
   root_rules: ["AGENTS.md"]
   project_skill: [".agents/skills/**/SKILL.md",".agents/skills/**/agents/openai.yaml"]
@@ -18,6 +18,7 @@ file_classes:
   context_compact_canonical: [".agents/docs/agents/context-compact.yaml"]
   collaborator_window_canonical: [".agents/docs/agents/collaborators.yaml"]
   core_system_canonical: [".agents/docs/agents/core-system.yaml"]
+  foundation_creation_canonical: [".agents/docs/agents/openai-foundations.yaml"]
   runtime_execution_canonical: [".agents/docs/agents/runtime-execution.yaml"]
   provider_adapter_canonical: [".agents/docs/agents/provider-adapters.yaml"]
   route_pack_canonical: [".agents/docs/agents/route-packs.yaml"]
@@ -25,7 +26,7 @@ file_classes:
   runbooks: [".agents/docs/runbooks/*.md"]
   deploy_templates: [".agents/docs/templates/agents/**"]
   memory_docs: [".agents/docs/project-memory.md","docs/memory/**","docs/memory-entry.template.md"]
-  runtime_local: [".agents/runtime/**",".agents/runtime/workflows/**",".workflow/**",".codex/config.toml",".codex/environments/*.toml","docs/{agent-status.md,agent-events/**,tmp-approval-*/**,runtime-multi-agent-validation/**,hard-isolation-evidence/**}",".agents/docs/{agent-status.md,agent-events/**,tmp-approval-*/**,runtime-multi-agent-validation/**,hard-isolation-evidence/**}"]
+  runtime_local: [".agents/runtime/**",".agents/runtime/workflows/**",".workflow/**",".codex/**","docs/.agents runtime evidence dirs"]
   generated_or_cache: ["generated","cache","build","vendor"]
 gate_matrix:
   durable_prose_changed: ["English-only","placeholder"]
@@ -45,18 +46,28 @@ commands:
   checkpoint_bundle: "status, diff_check, manifest, pair/prose/EOL/size, no staged runtime"
   full_audit_bundle: ".\\scripts\\validate.ps1 -Full"
   ai_runtime_compact: "ai-runtime/mirror <=4096; expand_only routes."
-  enterprise_dispatch_integrity: "scripts/validate.ps1: org/model/dispatch, department leader references, model tier references, escalation, L1-6."
-  workflow_artifact_integrity: "scripts/validate.ps1: workflow-artifacts route, mirror, helper, blocklists, approval gates, packets, L1-6 simulations."
-  context_compact_integrity: "scripts/validate.ps1: context-compact route, raw transcript exclusion, runtime event boundary."
-  collaborator_window_integrity: "scripts/validate.ps1: collaborator route/schema/mirror, leader/tier map, runtime-local thread ids, close/archive evidence."
-  core_system_integrity: "scripts/validate.ps1: core-system route/schema/mirror, deploy/release contract, runtime blocklist, version alignment."
-  runtime_execution_integrity: "scripts/validate.ps1: runtime-execution route/schema/helper, approval gates, tool evidence, results, cleanup evidence."
-  provider_adapter_integrity: "scripts/validate.ps1: provider-adapters route/schema, tier mapping, capability rules, no hard-bound workflow model id."
-  route_pack_integrity: "scripts/validate.ps1: route-pack route/schema, deterministic manifest hash, compact file set, cache key fields."
-  knowledge_footprint_integrity: "scripts/validate.ps1: knowledge-footprint route/schema, resume pointer, evidence refs, gaps, no full transcript."
-  legacy_residue_scan: "Reject retired compatibility positioning and stale helper version literals."
+  enterprise_dispatch_integrity: "validate.ps1: department leader references, model tier references, escalation."
+  workflow_artifact_integrity: "validate.ps1: workflow-artifacts route, approval gates, L1-6 simulations."
+  context_compact_integrity: "validate.ps1: context-compact route, raw transcript, runtime event boundary."
+  collaborator_window_integrity: "validate.ps1: collaborator route/schema/mirror, leader/tier map, runtime ids, close/archive evidence."
+  core_system_integrity: "validate.ps1: core contract, blocklist, version."
+  foundation_creation_integrity: "validate-foundation.ps1: official docs first, structured outputs, state owner, latency controls, evaluation gate."
+  runtime_execution_integrity: "validate-runtime-execution.ps1: lifecycle smoke, approvals, tool evidence, results, cleanup."
+  provider_adapter_integrity: "validate.ps1: tiers, capabilities, no hard-bound workflow model id."
+  route_pack_integrity: "validate-route-pack.ps1: deterministic manifest hash, compact set, cache keys."
+  knowledge_footprint_integrity: "validate.ps1: resume pointer, evidence refs, gaps, no full transcript."
+  legacy_residue_scan: "Reject retired compatibility positioning, removed external connector files, and stale helper version literals."
   release_package_export: ".\\scripts\\export-release-package.ps1 -Quiet"
+  runtime_release_evidence: ".\\scripts\\capture-runtime-evidence.ps1 -OutputPath docs/evidence/releases/v2.7.0-runtime-evidence.json -Full -Practice -Quiet"
+  size_gate_helper: "scripts/validate-size-gates.ps1"
+  release_evidence_helper: "scripts/validate-release-evidence.ps1"
+  route_pack_validation_helper: "scripts/validate-route-pack.ps1"
+  runtime_execution_validation_helper: "scripts/validate-runtime-execution.ps1"
+  readiness_validation_helper: "scripts/validate-readiness.ps1"
+  cross_project_runtime_validation_helper: "scripts/validate-cross-project-runtime.ps1"
   runtime_helper: ".\\scripts\\agents-runtime.ps1"
+  runtime_cleanup_helper: ".\\scripts\\agents-cleanup.ps1 -Action Verify"
+  cleanup_mandatory_script: "scripts/agents-cleanup.ps1"
   route_pack_export: ".\\scripts\\export-route-pack.ps1"
   changed_english: 'rg -n "[\p{Han}]" <changed durable rule/template files>'
   changed_placeholders: 'rg -n "TO[D]O|\[TO[D]O\]|T[B]D|FI[X]ME" <changed durable rule/template files>'
@@ -68,10 +79,10 @@ commands:
   deploy_manifest_unique: "deployable_by_mode paths unique; non-append paths unique."
   deploy_blocklist_required_paths: "do_not_deploy includes runtime, scratch, Codex runtime, .git paths."
   deployment_script_safety: "scripts/deploy-agents-workflow.ps1 keeps path-containment gates, no admin elevation, OS permission, .git repair."
-  deployment_script_selftest: "root_docstemplate-providerdot_agents_docsdry-runprotected-existinggit-backed foreign projectmissing-targettarget-owned-statetarget-owned state preservationrouted-historicalambiguous-layoutapp-file preservationpartial-gitignoregitignore duplicate avoidancetarget handoff checktarget git rollback scopetarget-local environment bootstrap"
-  target_handoff_check: "Inspect AGENTS route, skill, report, runbooks, protected runtime/local paths, target git status."
-  multi_agent_workflow_integrity: "scripts/validate.ps1: lifecycle, ownership, roster/ledger recovery, dedupe, scoring, batch ack, delegated deployment, cleanup, runtime fields."
-  evidence_template_schema_coverage: "scripts/validate.ps1 checks hard-isolation/runtime multi-agent evidence fields."
+  deployment_script_selftest: "root_docstemplate-providerdot_agents_docsdry-runprotected-existinggit-backed foreign projectmissing-targettarget-owned state preservationtarget-owned-staterouted-historicalambiguous-layoutapp-file preservationpartial-gitignoregitignore duplicate avoidancetarget handoff checktarget git rollback scopetarget-local environment bootstrap"
+  target_handoff_check: "Inspect AGENTS route, skill, report, runbooks, protected local paths, target git status."
+  multi_agent_workflow_integrity: "validate.ps1: lifecycle, ownership, roster/ledger recovery, scoring, batch ack, delegated deployment, cleanup."
+  evidence_template_schema_coverage: "validate-evidence-templates.ps1: hard-isolation, runtime multi-agent, dry-run fields."
   ci_workflow_stability: "scripts/validate.ps1 checks pinned Windows runner, fast gate, no duplicate full-audit/whitespace checks."
   template_pollution_rule: "Search deployable templates for concrete source/target literals."
   deployed_file_set_status: "git status -sb -- <deployed_file_set>"
@@ -79,10 +90,10 @@ commands:
   powershell_rg_glob_rule: "PowerShell rg: options before --, then pattern and paths."
   deployed_file_set_literal_scan: "Search only deployed_file_set for source literals."
 profiles:
-  read_only_audit: "Read assigned paths only; run allowed commands; report findings/isolation; skip unassigned state."
-  fast_turn: "answer-only no command; edits read target, status, scoped diff, focused verify; current-state inspect named source."
-  policy_pack_edit: "AGENTS/.agents/docs/agents/runbooks/templates/memory/deploy rules changed: status, targets, diff, pair/prose/size gates."
-  commit_tag_checkpoint: "Ordinary commit/tag/version/branch-push: status_full, diff_check, changed_manifest, pair/prose/EOL/size, ignored runtime not staged."
+  read_only_audit: "Read assigned paths; run allowed commands; report findings/isolation."
+  fast_turn: "answer-only no command; edits read target, status, scoped diff, focused verify."
+  policy_pack_edit: "Policy/docs/templates changed: status, targets, diff, pair/prose/size gates."
+  commit_tag_checkpoint: "commit/tag/version/branch-push: status_full, diff_check, manifest, pair/prose/EOL/size, no staged runtime."
   release_deploy_push_audit:
     use: "release, deploy, protected/main push, broad/no-deduction/full verification"
     do:
@@ -92,27 +103,33 @@ profiles:
       template_integrity: ["exact-pair drift","template bundle coverage"]
       schema_skill_integrity: ["schema coverage","multi-agent integrity","evidence template coverage","skill metadata"]
       size: ["size gates"]
-      claim_specific: ["release appendix","runtime_multi_agent if claimed","hard_isolation if claimed"]
-  enterprise_dispatch: "Inspect org/model-policy/dispatch; verify leaders/workers/tiers/controller-to-leader/escalation; use L1-6; leader-only integration."
-  workflow_artifact: "Inspect workflow-artifacts/schemas/verify; use scripts/agents-workflow.ps1; runtime local; verify gates/packets/guardrails/collection."
-  context_compact: "Inspect context-compact/schemas/verify; preserve latest request/next step; record changes/verify/risks/external/closeout; exclude raw transcript/chatter."
-  collaborator_window: "Inspect collaborators/verify; discover thread tools; map objective to leader; runtime evidence only; verify archive/close before inactive claim."
-  core_system: "Inspect core-system/verify/version/deploy; verify canonical set, route pack, runtime blocklist, version alignment, old residue removal."
-  runtime_execution: "Inspect runtime-execution/verify; use scripts/agents-runtime.ps1; record gated approvals; verify cleanup evidence before cleanup claims."
+      claim_specific: ["release appendix","runtime release evidence","runtime_multi_agent if claimed","hard_isolation if claimed"]
+  enterprise_dispatch: "Inspect org/model-policy/dispatch; verify leaders/workers/tiers/escalation; use L1-6; leader-only integration."
+  workflow_artifact: "Inspect workflow-artifacts/schemas/verify; verify gates, packets, guardrails, collection."
+  context_compact: "Inspect context-compact/schemas/verify; preserve latest request, changes, verify, risks; exclude transcript."
+  collaborator_window: "Inspect collaborators/verify; map objective to leader; runtime evidence only; verify archive/close."
+  core_system: "Inspect core-system/verify/version/deploy; verify canonical set, route pack, foundation, blocklist, version, residue."
+  foundation_creation: "Inspect openai-foundations/schemas/verify; schema-first outputs, state owner, tool boundary, latency control, evaluation gate."
+  runtime_execution: "Inspect runtime-execution/verify; use agents-runtime.ps1; record gates; verify cleanup evidence before claims."
   provider_adapter: "Inspect provider-adapters/model-policy/verify; bind tiers first; model ids replaceable."
   route_pack: "Inspect route-packs/ai-runtime/verify; export deterministic manifest; verify hashes and compact files."
   knowledge_footprint: "Inspect knowledge-footprint/context-compact/verify; store scope, refs, gaps, conclusion, resume pointer."
-  runtime_multi_agent: "Claiming runtime multi-agent behavior requires live_employee_validation; batch claims also batch_employee_validation."
+  runtime_multi_agent: "Runtime multi-agent claims require live_employee_validation; batch claims need batch_employee_validation."
   hard_isolation: "Claiming tool/external isolation requires current hard-isolation evidence; otherwise behavioral-only."
 size_gates:
   unit: "bytes; 1 KiB = 1024 bytes"
   targets:
-    AGENTS.md: 2048
-    project_skill: 1792
-    canonical_agents_yaml: 16384
-    script_ps1: 131072
+    AGENTS.md: 1848
+    project_skill: 1592
+    canonical_agents_yaml: 15684
+    script_ps1: 129000
+    validate_script_ps1_after_split: 110000
     tracked_repo_kib: 896
   tracked_rule: "Ignored/untracked files excluded; intended new files count."
+evidence_tiers:
+  current_release_max: "T2 current-repo practice"
+  rule: "Do not claim above captured evidence tier."
+  levels: ["T0 static","T1 dry-run","T2 current-repo practice","T3 external pilot","T4 enforced isolation"]
 claim_scopes:
   static_policy_pack: "Relevant gates passed; no runtime/hard-isolation proof."
   runtime_multi_agent: "Only after live employee evidence; batch also needs reconciliation."
@@ -122,32 +139,34 @@ claim_scopes:
 minimum_evidence:
   static_policy_pack: ["changed files read","scoped diff reviewed","applicable gates passed"]
   branch_push: ["checkpoint gates","current branch/remote","push result"]
-  deploy_clean: ["target authorization","target inspected","layout selected","deployed_file_set recorded","blocklist/source-neutral checks","handoff or reason skipped"]
+  deploy_clean: ["target authorization","target inspected","layout selected","deployed_file_set recorded","blocklist checks","handoff/skipped reason"]
   runtime_multi_agent: ["real runtime id","assignment/report match","git status after employee work","close evidence","expected/received/closed reconciliation","history_cleanup_evidence"]
-  workflow_artifact: ["workflow state verified","packet/result collection normalized","approval gate or escalation evidence for gated action"]
-  context_compact: ["latest_user_request preserved","changed_files known/unknown","verification_state stated","open_risks explicit","subagents_open or closed counts"]
-  collaborator_window: ["thread capability discovered","leader mapping verified","runtime-local operation evidence","archive/close verified before inactive claim"]
-  core_system: ["version aligned","canonical set verified","deploy/release contract checked","runtime blocklist checked","old residue scan passed"]
-  runtime_execution: ["run state verified","gated action approval/escalation checked","tool/result evidence collected","cleanup evidence verified"]
+  runtime_release_evidence: ["sanitized release evidence JSON","v2 schema","source_commit","validated_content_digest","working_tree_status_at_capture","practice suite","command durations","exit codes","retry counts","token usage unavailable reason","T2 current-repo practice boundary"]
+  workflow_artifact: ["workflow state verified","packet/result collection normalized","approval gate or escalation evidence"]
+  context_compact: ["latest_user_request preserved","changed_files known/unknown","verification_state","open_risks","subagents_open or closed counts"]
+  collaborator_window: ["thread capability discovered","leader mapping verified","runtime-local evidence","archive/close verified"]
+  core_system: ["version aligned","canonical set verified","deploy/release checked","runtime blocklist checked","foundation route verified","residue scan passed"]
+  foundation_creation: ["official docs source checked","schema contract present","state owner named","tool boundary checked","latency control chosen","evaluation evidence planned"]
+  runtime_execution: ["run state verified","gated action checked","tool/result evidence collected","cleanup evidence verified"]
   provider_adapter: ["tier mapping exists","capability boundary checked","no hard-bound workflow model id"]
   route_pack: ["route id checked","file hashes recorded","deterministic manifest verified","cache key fields present"]
   knowledge_footprint: ["scope recorded","evidence refs recorded","gaps explicit","resume pointer present","full transcript excluded"]
   hard_isolation: ["current tool/runtime/OS/account/cloud enforcement evidence"]
 no_deduction_audit:
   rule: "Claim no-deduction only with release_deploy_push_audit-level proof plus runtime/hard-isolation evidence when applicable."
-  always: ["repo state inspected","diffs reviewed","external access reported","GM/GS reported","templates source-neutral","deployed_file_set checks","runtime scratch not staged","claim scope stated"]
-  when_applicable: ["non-overlap worker ownership","ledger/roster/event evidence","cleanup has history_cleanup_evidence","hard-isolation avoids forbidden reads unless authorized"]
+  always: ["repo state inspected","diffs reviewed","external access reported","GM/GS reported","templates source-neutral","deployed_file_set checks","scratch not staged","claim scope"]
+  when_applicable: ["non-overlap ownership","ledger/roster/event evidence","cleanup has history_cleanup_evidence","hard-isolation no forbidden reads"]
 coverage_gates:
-  slim_policy_pack: ["no-command answer-only","compact profiles/claim bounds","enterprise dispatch, workflow artifact, context compact, collaborator window route-limited","source state excluded from targets","assignment/report/ledger/status/lease/runtime fields","lifecycle, ownership, recovery, dedupe, scoring, delegated deployment, artifacts, runtime validation"]
+  slim_policy_pack: ["no-command answer-only","compact profiles/claim bounds","enterprise/artifact/context compact/collaborator routes","source state excluded","assignment/report/runtime fields","lifecycle, recovery, scoring, deploy, verify"]
 live_employee_validation:
-  required: ["explicit hire/spawn/delegation/parallel-agent request","real runtime id/nickname/mode/role/task","ledger/roster path/version/permissions when needed","assignment fields","final report matches runtime id/fields","ledger/poll/report/close matches snapshot version","git status proves scope","cleanup attempted or exact-aborted with history_cleanup_evidence"]
+  required: ["explicit hire/spawn request","real runtime id/nickname/mode/role/task","roster/ledger","assignment fields","report matches runtime id","ledger/poll/report/close snapshot","git status proves scope","cleanup with history_cleanup_evidence"]
 batch_employee_validation:
-  required: ["expected id set created before dispatch","assignment has id + compact schema","missing/duplicate/invalid-format checks","failed/running/unclosed counted","close/official status proves cleanup","history cleanup evidence proves zero residue or safe abort","batch report separates protocol smoke success from work success","project-local skill -> GS not used unless global/system SKILL.md used"]
+  required: ["expected id set created before dispatch","assignment id + compact schema","missing/duplicate/invalid-format checks","failed/running/unclosed counted","close/list cleanup","history_cleanup_evidence zero residue/safe abort","protocol smoke success vs work success","project-local skill not GS"]
   accepted_ack_formats: ["compact JSON object preferred","exact natural-language ack only when parser and normalization are stated"]
   invalid_outcomes: ["missing id","duplicate id","wrong id","parser-breaking fields","closed claim without close evidence"]
 drift_checks:
   exact_pairs: ["docs and docs/templates mirror: templates, AGENTS.md, project skill files, ai-runtime, agents yaml, runbooks"]
-  template_specific_cleanliness_files: [".agents/docs/templates/agents/README.md",".agents/docs/templates/agents/gitignore.fragment",".agents/docs/templates/agents/project-memory.md",".agents/docs/templates/agents/project-structure.md",".agents/docs/templates/agents/memory-index.md"]
+  template_specific_cleanliness_files: ["README","gitignore.fragment","project-memory","project-structure","memory-index"]
 release_appendix:
-  provider_repo_checks: ["tracked/intended docs/templates/agents files are paired or template-specific","template memory starter has no data rows/project names","schema field coverage matches templates","project skill metadata is valid"]
-  source_neutral_scan_literals: ["provider repo name/path","usernames","remotes/branches/commits/tags/push status","filled status/validation rows","non-placeholder memory rows"]
+  provider_repo_checks: ["template files paired or template-specific","memory starter has no rows/project names","schema coverage matches templates","project skill metadata valid"]
+  source_neutral_scan_literals: ["provider repo/path","usernames","repo refs/status rows","non-placeholder memory rows"]

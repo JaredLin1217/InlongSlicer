@@ -20,9 +20,9 @@ Task overview:
    gh issue list --repo JaredLin1217/InlongSlicer --state open --label bug --limit 1000 --json number,title,updatedAt,comments,reactions | jq -r '.[] | select((.updatedAt >= (now - 259200 | strftime("%Y-%m-%dT%H:%M:%SZ"))) and ((.comments | length) + ([.reactions[].content] | length) >= 50)) | "\(.number)"'
    ```
 
-2. Save the list of issue numbers and create a TODO list with ALL of them. This ensures you process every single one.
+2. Save the list of issue numbers and create a task checklist with ALL of them. This ensures you process every single one.
 
-3. For each issue in your TODO list:
+3. For each issue in your task checklist:
    - Use `gh issue view <number> --repo JaredLin1217/InlongSlicer --json title,body,labels,comments` to get full details
    - Read and understand the full issue content and comments to determine actual user impact
    - Evaluate: Is this truly blocking users from using the slicer?
@@ -32,7 +32,7 @@ Task overview:
 
 4. For issues that are truly blocking and don't already have the "oncall" label:
    - Use `gh issue edit <number> --repo JaredLin1217/InlongSlicer --add-label "oncall"`
-   - Mark the issue as complete in your TODO list
+   - Mark the issue as complete in your task checklist
 
 5. After processing all issues, provide a summary:
    - List each issue number that received the "oncall" label
@@ -40,7 +40,7 @@ Task overview:
    - If no issues qualified, state that clearly
 
 Important:
-- Process ALL issues in your TODO list systematically
+- Process ALL issues in your task checklist systematically
 - Don't post any comments to issues
 - Only add the "oncall" label, never remove it
 - Use individual `gh issue view` commands instead of bash for loops to avoid approval prompts

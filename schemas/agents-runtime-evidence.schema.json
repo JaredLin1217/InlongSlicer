@@ -1,0 +1,234 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agents-runtime-evidence.schema.json",
+  "title": "Agents runtime release evidence",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workflow_version",
+    "repo_commit",
+    "source_commit",
+    "validated_content_digest",
+    "content_digest_excluded_paths",
+    "working_tree_status_at_capture",
+    "run_started_utc",
+    "run_finished_utc",
+    "duration_ms",
+    "commands",
+    "claims",
+    "scope",
+    "xr_xw",
+    "evidence_tier",
+    "performance",
+    "result",
+    "release"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agents-runtime-evidence/v2"
+    },
+    "workflow_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "repo_commit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_commit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "validated_content_digest": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "value",
+        "tracked_file_count"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "tracked_file_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "content_digest_excluded_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "working_tree_status_at_capture": {
+      "type": "object",
+      "required": [
+        "state",
+        "porcelain",
+        "entry_count"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "clean",
+            "dirty"
+          ]
+        },
+        "porcelain": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "entry_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "run_started_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "run_finished_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "command",
+          "result",
+          "exit_code",
+          "duration_ms",
+          "retry_count",
+          "raw_output_ref"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "enum": [
+              "passed",
+              "failed"
+            ]
+          },
+          "exit_code": {
+            "type": "integer"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retry_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "raw_output_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "overall_score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "claims": {
+      "type": "object",
+      "required": [
+        "static_validation",
+        "runtime_evidence",
+        "practice_evidence",
+        "evidence_tier",
+        "hard_isolation"
+      ],
+      "additionalProperties": true
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "target",
+        "external_target_deployment",
+        "raw_output_storage",
+        "practice",
+        "disposable_target"
+      ],
+      "additionalProperties": true
+    },
+    "xr_xw": {
+      "type": "object",
+      "required": [
+        "external_reads",
+        "external_writes"
+      ],
+      "properties": {
+        "external_reads": {
+          "type": "array"
+        },
+        "external_writes": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidence_tier": {
+      "type": "object",
+      "required": [
+        "current",
+        "maximum_claimed",
+        "scale"
+      ],
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "required": [
+        "command_count",
+        "total_duration_ms",
+        "token_usage",
+        "token_usage_reason"
+      ],
+      "additionalProperties": true
+    },
+    "result": {
+      "enum": [
+        "passed",
+        "failed"
+      ]
+    },
+    "release": {
+      "type": "string",
+      "pattern": "^v\\d+\\.\\d+\\.\\d+$"
+    }
+  },
+  "additionalProperties": false
+}

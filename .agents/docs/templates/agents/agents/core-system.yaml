@@ -1,10 +1,10 @@
-schema: agents-core-system/v1
-purpose: "Core runtime system boundary for repo-local AI workflow governance."
+﻿schema: agents-core-system/v1
+purpose: "Foundation Creation Layer boundary for repo-local AI workflow governance."
 identity:
-  name: "Repo-local AI Workflow Core"
+  name: "Repo-local AI Workflow Foundation"
   version_source: ".agents/docs/agents/version.yaml"
-  release_name: "Core Runtime System"
-  system_type: "repo-local AI workflow core"
+  release_name: "Foundation Creation Layer"
+  system_type: "repo-local AI workflow foundation"
   non_goals:
     - "SaaS platform"
     - "dashboard"
@@ -14,8 +14,10 @@ identity:
 canonical:
   route_first: ".agents/docs/agents/ai-runtime.yaml"
   version: ".agents/docs/agents/version.yaml"
+  foundation_creation: ".agents/docs/agents/openai-foundations.yaml"
   governance:
     - ".agents/docs/agents/core-system.yaml"
+    - ".agents/docs/agents/openai-foundations.yaml"
     - ".agents/docs/agents/runtime-execution.yaml"
     - ".agents/docs/agents/route-packs.yaml"
     - ".agents/docs/agents/knowledge-footprint.yaml"
@@ -73,4 +75,5 @@ validation:
     - "version is aligned"
     - "runtime-local blocklist is active"
     - "deploy and release contracts exclude runtime state"
-    - "old compatibility positioning is absent"
+    - "foundation creation contract is present"
+    - "old external connector residue is absent"
