@@ -3993,7 +3993,22 @@ void PrintObject::discover_horizontal_shells()
                     return feature.empty() ? ExPolygons{} : union_ex(feature);
                 };
 
-                auto copy_new_paths = [](const LayerRegion *source_layerm, LayerRegion *target_layerm, const ExPolygons &allowed_area) {
+                auto feature_path_area = [&region_config](const LayerRegion *trigger_layerm, const ExPolygons &area) -> ExPolygons {
+                    if (area.empty())
+                        return {};
+
+                    const coord_t perimeter_width = std::max(
+                        trigger_layerm->flow(frPerimeter).scaled_width(),
+                        trigger_layerm->flow(frExternalPerimeter).scaled_width());
+                    const int wall_loops = std::max(1, region_config.wall_loops.value);
+                    const float margin = float(perimeter_width * (wall_loops + 1));
+                    return offset_ex(area, margin);
+                };
+
+                auto copy_new_paths = [](const ExtrusionEntityCollection &source_perimeters,
+                                         const ExtrusionEntityCollection &source_thin_fills,
+                                         LayerRegion *target_layerm,
+                                         const ExPolygons &allowed_area) {
                     if (allowed_area.empty())
                         return;
 
@@ -4003,6 +4018,7 @@ void PrintObject::discover_horizontal_shells()
                     target_layerm->thin_fills.polygons_covered_by_width(occupied, float(SCALED_EPSILON));
                     occupied = union_(occupied);
                     Polygons copied_covered;
+                    size_t occupied_since_union = 0;
 
                     auto copy_path_fragments = [&](const ExtrusionPath &source_path, ExtrusionEntityCollection &target, bool target_requires_collections) {
                         Polylines fragments = intersection_pl(Polylines{ source_path.polyline.to_polyline() }, allowed_polygons);
@@ -4028,12 +4044,14 @@ void PrintObject::discover_horizontal_shells()
 
                             polygons_append(copied_covered, covered);
                             polygons_append(occupied, std::move(covered));
+                            if (++occupied_since_union >= 64 && !occupied.empty()) {
+                                occupied = union_(occupied);
+                                occupied_since_union = 0;
+                            }
                         }
 
                         if (target_requires_collections && !copied_paths.empty())
                             target.append(copied_paths);
-                        if (!occupied.empty())
-                            occupied = union_(occupied);
                     };
 
                     auto copy_collection = [&](const ExtrusionEntityCollection &source, ExtrusionEntityCollection &target, bool target_requires_collections) {
@@ -4054,8 +4072,8 @@ void PrintObject::discover_horizontal_shells()
                         }
                     };
 
-                    copy_collection(source_layerm->perimeters, target_layerm->perimeters, true);
-                    copy_collection(source_layerm->thin_fills, target_layerm->thin_fills, false);
+                    copy_collection(source_perimeters, target_layerm->perimeters, true);
+                    copy_collection(source_thin_fills, target_layerm->thin_fills, false);
 
                     if (!copied_covered.empty()) {
                         copied_covered = union_(copied_covered);
@@ -4069,31 +4087,45 @@ void PrintObject::discover_horizontal_shells()
                 };
 
                 if (top_layers > 0 || bottom_layers > 0) {
+                    std::vector<ExtrusionEntityCollection> original_perimeters;
+                    std::vector<ExtrusionEntityCollection> original_thin_fills;
+                    original_perimeters.reserve(m_layers.size());
+                    original_thin_fills.reserve(m_layers.size());
+                    for (const Layer *layer : m_layers) {
+                        const LayerRegion *layerm = layer->regions()[region_id];
+                        original_perimeters.emplace_back(layerm->perimeters);
+                        original_thin_fills.emplace_back(layerm->thin_fills);
+                    }
+
                     for (size_t trigger_layer_idx = 0; trigger_layer_idx < m_layers.size(); ++trigger_layer_idx) {
                         m_print->throw_if_canceled();
                         const LayerRegion *trigger_layerm = m_layers[trigger_layer_idx]->regions()[region_id];
 
                         if (top_layers > 0 && trigger_layer_idx + 1 < m_layers.size()) {
                             ExPolygons trigger_area = feature_area(trigger_layerm, true);
-                            const LayerRegion *source_layerm = m_layers[trigger_layer_idx + 1]->regions()[region_id];
-                            for (int step = 0; !trigger_area.empty() && step < top_layers; ++step) {
+                            ExPolygons path_area = feature_path_area(trigger_layerm, trigger_area);
+                            const size_t source_layer_idx = trigger_layer_idx + 1;
+                            for (int step = 0; !path_area.empty() && step < top_layers; ++step) {
                                 const int target_layer_idx = int(trigger_layer_idx) - step;
                                 if (target_layer_idx < 0)
                                     break;
                                 LayerRegion *target_layerm = m_layers[size_t(target_layer_idx)]->regions()[region_id];
-                                copy_new_paths(source_layerm, target_layerm, layer_region_slices(target_layerm));
+                                ExPolygons allowed_area = intersection_ex(path_area, layer_region_slices(target_layerm), ApplySafetyOffset::Yes);
+                                copy_new_paths(original_perimeters[source_layer_idx], original_thin_fills[source_layer_idx], target_layerm, allowed_area);
                             }
                         }
 
                         if (bottom_layers > 0 && trigger_layer_idx > 0) {
                             ExPolygons trigger_area = feature_area(trigger_layerm, false);
-                            const LayerRegion *source_layerm = m_layers[trigger_layer_idx - 1]->regions()[region_id];
-                            for (int step = 0; !trigger_area.empty() && step < bottom_layers; ++step) {
+                            ExPolygons path_area = feature_path_area(trigger_layerm, trigger_area);
+                            const size_t source_layer_idx = trigger_layer_idx - 1;
+                            for (int step = 0; !path_area.empty() && step < bottom_layers; ++step) {
                                 const int target_layer_idx = int(trigger_layer_idx) + step;
                                 if (target_layer_idx >= int(m_layers.size()))
                                     break;
                                 LayerRegion *target_layerm = m_layers[size_t(target_layer_idx)]->regions()[region_id];
-                                copy_new_paths(source_layerm, target_layerm, layer_region_slices(target_layerm));
+                                ExPolygons allowed_area = intersection_ex(path_area, layer_region_slices(target_layerm), ApplySafetyOffset::Yes);
+                                copy_new_paths(original_perimeters[source_layer_idx], original_thin_fills[source_layer_idx], target_layerm, allowed_area);
                             }
                         }
                     }
