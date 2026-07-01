@@ -119,10 +119,12 @@
     "machine_unload_filament_time":  "10",
     "manual_filament_change":  "0",
     "max_layer_height":  [
-                             "0.24"
+                             "1.0",
+                             "1.0"
                          ],
     "min_layer_height":  [
-                             "0.12"
+                             "0.05",
+                             "0.05"
                          ],
     "nozzle_diameter":  [
                             "0.4",

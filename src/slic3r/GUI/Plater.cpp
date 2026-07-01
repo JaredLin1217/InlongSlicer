@@ -1338,13 +1338,18 @@ bool Sidebar::priv::switch_diameter(bool single)
         }
     }
 
-    // INLONG: Check if the selected diameter matches the current nozzle diameter in the config
+    // INLONG: Check if the selected diameter matches every nozzle in the config.
+    // Multi-nozzle UI may temporarily keep a mixed config, for example 0.6/0.4.
+    // When both UI selectors are switched back to 0.6, checking only T0 would
+    // skip the preset reload and leave T1 at 0.4.
     Preset& printer_preset = wxGetApp().preset_bundle->printers.get_edited_preset();
     auto* nozzle_diameter = dynamic_cast<const ConfigOptionFloats*>(printer_preset.config.option("nozzle_diameter"));
     if (nozzle_diameter && nozzle_diameter->size() > 0) {
-        auto current_nozzle_dia = get_diameter_string(nozzle_diameter->values[0]);
-        // If the selected diameter is the same as current nozzle, don't switch profiles
-        if (current_nozzle_dia == diameter.ToStdString()) {
+        const std::string selected_nozzle_dia = diameter.ToStdString();
+        const bool all_nozzles_match = std::all_of(nozzle_diameter->values.begin(), nozzle_diameter->values.end(),
+            [&selected_nozzle_dia](double value) { return get_diameter_string(value) == selected_nozzle_dia; });
+        // If all nozzle diameters already match the selected diameter, don't switch profiles.
+        if (all_nozzles_match) {
             return true;
         }
     }

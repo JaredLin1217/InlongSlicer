@@ -101,6 +101,10 @@
                              "sub_path":  "machine/SC12060_common.json"
                          },
                          {
+                             "name":  "SC12060 0.4mm nozzle",
+                             "sub_path":  "machine/SC12060 0.4mm nozzle.json"
+                         },
+                         {
                              "name":  "SC12060 0.6mm nozzle",
                              "sub_path":  "machine/SC12060 0.6mm nozzle.json"
                          },
