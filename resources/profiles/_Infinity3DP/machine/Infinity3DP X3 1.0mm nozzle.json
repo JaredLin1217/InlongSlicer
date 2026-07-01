@@ -2,7 +2,7 @@
     "type":  "machine",
     "from":  "system",
     "instantiation":  "true",
-    "setting_id":  "X3_NOZZLE_10",
+    "setting_id":  "NRknVqsxY3Tku3hU",
     "default_print_profile":  "X3_Layer: 0.20mm",
     "printer_model":  "Infinity3DP X3",
     "inherits":  "Infinity3DP X3 common",

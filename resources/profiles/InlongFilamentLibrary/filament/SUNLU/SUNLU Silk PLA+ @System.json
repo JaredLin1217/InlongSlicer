@@ -3,7 +3,7 @@
 	"name": "SUNLU Silk PLA+ @System",
 	"inherits": "SUNLU Silk PLA+ @base",
 	"from": "system",
-	"setting_id": "OSNLS05",
+	"setting_id": "lO8VYCpyDxM6xCSa",
 	"instantiation": "true",
 	"compatible_printers": []
 }

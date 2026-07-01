@@ -44,7 +44,13 @@
         <color type="primary" scheme_preference="dark">#00695C</color>
     </branding>
     <releases>
-        <release version="2.4.0" date="2026-06-08">
+        <release version="2.4.1" date="2026-06-26">
+            <url type="details">https://github.com/JaredLin1217/InlongSlicer/releases/tag/2.4.1</url>
+            <description>
+                <p>See the release page for detailed changelog.</p>
+            </description>
+        </release>
+        <release version="2.4.0" date="2026-06-20">
             <url type="details">https://github.com/JaredLin1217/InlongSlicer/releases/tag/2.4.0</url>
             <description>
                 <p>See the release page for detailed changelog.</p>

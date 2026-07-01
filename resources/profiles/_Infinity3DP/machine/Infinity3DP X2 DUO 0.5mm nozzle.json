@@ -2,7 +2,7 @@
     "type":  "machine",
     "from":  "system",
     "instantiation":  "true",
-    "setting_id":  "X2_NOZZLE_DUO_05",
+    "setting_id":  "sspSuM0eVAbhLEAd",
     "default_print_profile":  "X2_DUO_Layer: 0.20mm",
     "printer_model":  "Infinity3DP X2 DUO",
     "inherits":  "Infinity3DP X2 DUO common",

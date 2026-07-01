@@ -3,7 +3,7 @@
 	"name": "Panchroma PLA Matte @System",
 	"inherits": "Panchroma PLA Matte @base",
 	"from": "system",
-	"setting_id": "GFSPM002",
+	"setting_id": "3S2TS9n53Rc59bJP",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"16"

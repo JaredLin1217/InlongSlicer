@@ -3,6 +3,7 @@
     "name": "FilAr PLA Gris Plata",
     "inherits": "FilAr PLA @base",
     "from": "system",
+    "setting_id": "XZOfBeKQYOng2zV6",
     "filament_id": "FILAR0002",
     "instantiation": "true",
     "filament_vendor": [

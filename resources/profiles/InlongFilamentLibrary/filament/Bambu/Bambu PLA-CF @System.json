@@ -3,7 +3,7 @@
 	"name": "Bambu PLA-CF @System",
 	"inherits": "Bambu PLA-CF @base",
 	"from": "system",
-	"setting_id": "OGFSA50_01",
+	"setting_id": "KCKRrhQWkzkPLXA4",
 	"instantiation": "true",
 	"filament_long_retractions_when_cut": [
 		"1"

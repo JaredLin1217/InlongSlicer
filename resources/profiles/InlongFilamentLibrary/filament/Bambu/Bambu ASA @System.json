@@ -3,7 +3,7 @@
 	"name": "Bambu ASA @System",
 	"inherits": "Bambu ASA @base",
 	"from": "system",
-	"setting_id": "OGFSB01_00",
+	"setting_id": "YYPB7F0wMvZ3d2FY",
 	"instantiation": "true",
 	"fan_min_speed": [
 		"25"

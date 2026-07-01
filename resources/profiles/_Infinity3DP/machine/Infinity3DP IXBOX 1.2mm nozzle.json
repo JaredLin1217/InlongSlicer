@@ -2,7 +2,7 @@
     "type":  "machine",
     "from":  "system",
     "instantiation":  "true",
-    "setting_id":  "IXBOX_NOZZLE_12",
+    "setting_id":  "y171CUufg2K6VnSZ",
     "default_print_profile":  "IXBOX_Layer: 0.20mm",
     "printer_model":  "Infinity3DP IXBOX",
     "inherits":  "Infinity3DP IXBOX common",

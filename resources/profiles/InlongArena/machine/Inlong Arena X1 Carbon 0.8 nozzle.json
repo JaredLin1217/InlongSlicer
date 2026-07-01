@@ -3,7 +3,7 @@
 	"name": "Inlong Arena X1 Carbon 0.8 nozzle",
 	"inherits": "Inlong Arena X1 Carbon 0.4 nozzle",
 	"from": "system",
-	"setting_id": "GM004",
+	"setting_id": "5zohvpnxM4kWDuvg",
 	"instantiation": "true",
 	"nozzle_diameter": [
 		"0.8"

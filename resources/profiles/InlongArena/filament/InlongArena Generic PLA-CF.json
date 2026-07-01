@@ -3,7 +3,7 @@
 	"name": "InlongArena Generic PLA-CF",
 	"inherits": "InlongArena Generic PLA-CF @base",
 	"from": "system",
-	"setting_id": "GFSL98",
+	"setting_id": "ujrrmPdVwFEpjDkj",
 	"instantiation": "true",
 	"compatible_printers": [
 		"Inlong Arena X1 Carbon 0.4 nozzle",

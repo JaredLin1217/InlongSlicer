@@ -3,7 +3,7 @@
 	"name": "Arena PETG Basic @Arena X1C",
 	"inherits": "Arena PETG Basic @base",
 	"from": "system",
-	"setting_id": "GFSG00_01",
+	"setting_id": "qaNx5XEu5a1hY1e5",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"14"

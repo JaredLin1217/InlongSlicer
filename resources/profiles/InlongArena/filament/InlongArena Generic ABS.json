@@ -3,7 +3,7 @@
 	"name": "InlongArena Generic ABS",
 	"inherits": "InlongArena Generic ABS @base",
 	"from": "system",
-	"setting_id": "GFSB99",
+	"setting_id": "IffUGXHzRK3wZGVD",
 	"instantiation": "true",
 	"compatible_printers": [
 		"Inlong Arena X1 Carbon 0.4 nozzle",

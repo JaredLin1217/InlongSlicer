@@ -3,7 +3,7 @@
 	"name": "AliZ PLA @System",
 	"inherits": "AliZ PLA @base",
 	"from": "system",
-	"setting_id": "AliZGFSA04",
+	"setting_id": "J91CBw58lcUjrbIG",
 	"instantiation": "true",
 	"compatible_printers": []
 }

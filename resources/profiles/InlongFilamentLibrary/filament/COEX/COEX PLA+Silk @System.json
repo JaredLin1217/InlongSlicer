@@ -3,7 +3,7 @@
 	"name": "COEX PLA+Silk @System",
 	"inherits": "COEX PLA+Silk @base",
 	"from": "system",
-	"setting_id": "C0XPLS03",
+	"setting_id": "MWK6NnyJK75IHB5g",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"15"

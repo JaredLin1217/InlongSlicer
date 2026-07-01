@@ -3,6 +3,7 @@
     "name": "FilAr PETG Azul Imperial",
     "inherits": "FilAr PETG @base",
     "from": "system",
+    "setting_id": "G23sNCl6l2JZPkcb",
     "filament_id": "FILAR0051",
     "instantiation": "true",
     "filament_vendor": [

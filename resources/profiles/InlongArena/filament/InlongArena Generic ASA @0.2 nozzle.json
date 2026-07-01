@@ -3,7 +3,7 @@
 	"name": "InlongArena Generic ASA @0.2 nozzle",
 	"inherits": "InlongArena Generic ASA @base",
 	"from": "system",
-	"setting_id": "GFSB98_00",
+	"setting_id": "PPluVWPyKc3mwXQD",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"2"

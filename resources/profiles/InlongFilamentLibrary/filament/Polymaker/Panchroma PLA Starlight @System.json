@@ -3,7 +3,7 @@
 	"name": "Panchroma PLA Starlight @System",
 	"inherits": "Panchroma PLA Starlight @base",
 	"from": "system",
-	"setting_id": "OGFSPM009",
+	"setting_id": "EIqZ2sYfSbGZVnBF",
 	"instantiation": "true",
 	"filament_flow_ratio": [
 		"0.98"

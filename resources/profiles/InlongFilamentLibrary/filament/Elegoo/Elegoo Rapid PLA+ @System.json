@@ -3,7 +3,7 @@
 	"name": "Elegoo Rapid PLA+ @System",
 	"inherits": "Elegoo PLA @base",
 	"from": "system",
-	"setting_id": "OERPLAPLUSS00",
+	"setting_id": "V3VceCmVibtxQOlP",
 	"instantiation": "true",
 	"fan_cooling_layer_time": [
 		"80"

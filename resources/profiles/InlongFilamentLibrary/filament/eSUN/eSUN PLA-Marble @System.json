@@ -3,7 +3,7 @@
 	"name": "eSUN PLA-Marble @System",
 	"inherits": "eSUN PLA-Marble @base",
 	"from": "system",
-	"setting_id": "OGFSL06_00",
+	"setting_id": "cUOH9vPlGXMXAVEv",
 	"instantiation": "true",
 	"compatible_printers": []
 }

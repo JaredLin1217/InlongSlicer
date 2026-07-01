@@ -3,7 +3,7 @@
 	"name": "SUNLU PLA Matte @System",
 	"inherits": "SUNLU PLA Matte @base",
 	"from": "system",
-	"setting_id": "OSNLS02",
+	"setting_id": "gY7bVNO6kZLHMi9J",
 	"instantiation": "true",
 	"compatible_printers": []
 }

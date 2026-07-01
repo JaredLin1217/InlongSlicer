@@ -2,7 +2,7 @@
 	"type": "filament",
 	"name": "FILL3D PLA Basic @System",
 	"from": "system",
-	"setting_id": "FILL3D002SYS",
+	"setting_id": "fJHkn8rB8E7d8yc6",
 	"instantiation": "true",
 	"inherits": "FILL3D PLA Basic @base",
 	"compatible_printers": []

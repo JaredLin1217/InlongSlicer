@@ -3,7 +3,7 @@
 	"name": "FDplast HIPS @System",
 	"inherits": "FDplast HIPS @base",
 	"from": "system",
-	"setting_id": "HIPS01_00",
+	"setting_id": "HBv4HZ215Tk8R9Me",
 	"instantiation": "true",
 	"compatible_printers": []
 }

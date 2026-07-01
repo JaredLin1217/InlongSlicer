@@ -3,6 +3,17 @@
 set WP=%CD%
 set _START_TIME=%TIME%
 
+@REM Default target architecture to the host CPU arch; override by passing
+@REM "x64" or "arm64" as an argument. PROCESSOR_ARCHITEW6432 covers a 32-bit
+@REM shell running on a 64-bit OS, where PROCESSOR_ARCHITECTURE reads "x86".
+set arch=x64
+if /I "%PROCESSOR_ARCHITECTURE%"=="ARM64" set arch=ARM64
+if /I "%PROCESSOR_ARCHITEW6432%"=="ARM64" set arch=ARM64
+if /I "%1"=="arm64" set arch=ARM64
+if /I "%2"=="arm64" set arch=ARM64
+if /I "%1"=="x64" set arch=x64
+if /I "%2"=="x64" set arch=x64
+
 @REM Check for Ninja Multi-Config option (-x)
 set USE_NINJA=0
 set FAST_BUILD=0
@@ -75,13 +86,14 @@ echo Using CMake generator: %CMAKE_GENERATOR%
 
 @REM Pack deps
 if "%1"=="pack" (
-    setlocal ENABLEDELAYEDEXPANSION 
+    setlocal ENABLEDELAYEDEXPANSION
     cd %WP%/deps/build
+    if "%arch%"=="ARM64" cd %WP%/deps/build-arm64
     for /f "tokens=2-4 delims=/ " %%a in ('date /t') do set build_date=%%c%%b%%a
     set DEPS_FOLDER=InlongSlicer_dep
-    echo packing deps: InlongSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip
+    echo packing deps: InlongSlicer_dep_win-!arch!_!build_date!_vs!VS_VERSION!.zip
 
-    %WP%/tools/7z.exe a InlongSlicer_dep_win64_!build_date!_vs!VS_VERSION!.zip !DEPS_FOLDER!
+    %WP%/tools/7z.exe a InlongSlicer_dep_win-!arch!_!build_date!_vs!VS_VERSION!.zip !DEPS_FOLDER!
     goto :done
 )
 
@@ -103,12 +115,14 @@ if "%debug%"=="ON" (
         set build_dir=build
     )
 )
+if "%arch%"=="ARM64" set build_dir=%build_dir%-arm64
 echo build type set to %build_type%
 set BUILD_TARGET=ALL_BUILD
 if "%FAST_BUILD%"=="1" set BUILD_TARGET=InlongSlicer_app_gui
 if "%FULL_FAST_BUILD%"=="1" set BUILD_TARGET=ALL_BUILD
+echo target arch set to %arch%
 
-setlocal DISABLEDELAYEDEXPANSION 
+setlocal DISABLEDELAYEDEXPANSION
 cd deps
 if not exist %build_dir% mkdir %build_dir%
 cd %build_dir%
@@ -130,7 +144,7 @@ if "%USE_NINJA%"=="1" (
     cmake ../ -G %CMAKE_GENERATOR% -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target deps
 ) else (
-    cmake ../ -G %CMAKE_GENERATOR% -A x64 -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
+    cmake ../ -G %CMAKE_GENERATOR% -A %arch% -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target deps -- /m /nr:false
 )
 @echo off
@@ -150,7 +164,7 @@ if "%USE_NINJA%"=="1" (
     cmake .. -G %CMAKE_GENERATOR% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET%
 ) else (
-    cmake .. -G %CMAKE_GENERATOR% -A x64 -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake .. -G %CMAKE_GENERATOR% -A %arch% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET% -- /m /nr:false
 )
 @echo off

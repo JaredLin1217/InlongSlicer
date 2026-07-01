@@ -3,7 +3,7 @@
 	"name": "Panchroma PLA Luminous @System",
 	"inherits": "Panchroma PLA Luminous @base",
 	"from": "system",
-	"setting_id": "OGFSPM011",
+	"setting_id": "BX9Wr9R7FPBkL7HX",
 	"instantiation": "true",
 	"filament_flow_ratio": [
 		"0.98"

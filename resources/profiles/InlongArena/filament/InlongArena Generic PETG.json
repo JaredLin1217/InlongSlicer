@@ -3,7 +3,7 @@
 	"name": "InlongArena Generic PETG",
 	"inherits": "InlongArena Generic PETG @base",
 	"from": "system",
-	"setting_id": "GFSG99",
+	"setting_id": "7ClYbJOR0zulVTUD",
 	"instantiation": "true",
 	"compatible_printers": [
 		"Inlong Arena X1 Carbon 0.4 nozzle",

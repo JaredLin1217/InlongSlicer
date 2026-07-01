@@ -3,7 +3,7 @@
 	"name": "Overture Matte PLA @System",
 	"inherits": "Overture Matte PLA @base",
 	"from": "system",
-	"setting_id": "OGFSL05_00",
+	"setting_id": "8Ot9pmMYR7ctSI2t",
 	"instantiation": "true",
 	"compatible_printers": []
 }

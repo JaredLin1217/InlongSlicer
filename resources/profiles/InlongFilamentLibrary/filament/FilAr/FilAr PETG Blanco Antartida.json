@@ -3,6 +3,7 @@
     "name": "FilAr PETG Blanco Antartida",
     "inherits": "FilAr PETG @base",
     "from": "system",
+    "setting_id": "7uNgTzu0zFgGFK4r",
     "filament_id": "FILAR0052",
     "instantiation": "true",
     "filament_vendor": [

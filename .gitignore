@@ -47,6 +47,10 @@ internal_docs/
 *.flatpak
 /flatpak-repo/
 
+# Python bytecode
+__pycache__/
+*.pyc
+
 # Local logo design previews
 /InlongSlicer_doc/logo_design/
 

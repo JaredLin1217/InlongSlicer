@@ -3,7 +3,7 @@
 	"name": "InlongArena Generic PC",
 	"inherits": "InlongArena Generic PC @base",
 	"from": "system",
-	"setting_id": "GFSC99",
+	"setting_id": "rYoLIru2k1Wrbvx8",
 	"instantiation": "true",
 	"compatible_printers": [
 		"Inlong Arena X1 Carbon 0.4 nozzle",

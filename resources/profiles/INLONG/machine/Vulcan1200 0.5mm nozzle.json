@@ -2,7 +2,7 @@
     "type":  "machine",
     "from":  "system",
     "instantiation":  "true",
-    "setting_id":  "Vulcan1200_NOZZLE",
+    "setting_id":  "2hnfPPazbPE9geil",
     "default_print_profile":  "Layer: 0.25mm",
     "printer_model":  "Vulcan1200",
     "inherits":  "Vulcan1200_common",

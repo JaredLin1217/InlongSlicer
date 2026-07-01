@@ -3,7 +3,7 @@
 	"name": "FDplast SBS @System",
 	"inherits": "FDplast SBS @base",
 	"from": "system",
-	"setting_id": "SBS01_00",
+	"setting_id": "1tFGRWnuNUeK1hkq",
 	"instantiation": "true",
 	"compatible_printers": []
 }

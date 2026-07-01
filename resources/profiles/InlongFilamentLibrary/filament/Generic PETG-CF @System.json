@@ -3,7 +3,7 @@
 	"name": "Generic PETG-CF @System",
 	"inherits": "fdm_filament_pet",
 	"from": "system",
-	"setting_id": "OGFSG50",
+	"setting_id": "DeKP5ZFNmGrbXtpC",
 	"instantiation": "true",
 	"fan_cooling_layer_time": [
 		"30"

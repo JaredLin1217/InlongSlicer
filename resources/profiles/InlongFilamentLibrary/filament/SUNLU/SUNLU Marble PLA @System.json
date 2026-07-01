@@ -3,7 +3,7 @@
 	"name": "SUNLU PLA Marble @System",
 	"inherits": "SUNLU PLA Marble @base",
 	"from": "system",
-	"setting_id": "OSNLS06",
+	"setting_id": "G0Y6hxVQkRJyTbmt",
 	"instantiation": "true",
 	"filament_long_retractions_when_cut": [
 		"1"

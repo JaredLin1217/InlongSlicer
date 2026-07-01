@@ -3,7 +3,7 @@
 	"name": "COEX PLA @System",
 	"inherits": "COEX PLA @base",
 	"from": "system",
-	"setting_id": "C0XPLA02",
+	"setting_id": "wq8pX4sV2mqtrJBf",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"18"

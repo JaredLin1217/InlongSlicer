@@ -2,7 +2,7 @@
     "type":  "machine",
     "from":  "system",
     "instantiation":  "true",
-    "setting_id":  "IXBOX_DUO_NOZZLE_06",
+    "setting_id":  "bcBOZicfyZYGmiqQ",
     "default_print_profile":  "IXBOX_DUO_Layer: 0.20mm",
     "printer_model":  "Infinity3DP IXBOX DUO",
     "inherits":  "Infinity3DP IXBOX DUO common",

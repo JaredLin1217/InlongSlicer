@@ -2,7 +2,7 @@
     "type":  "machine",
     "from":  "system",
     "instantiation":  "true",
-    "setting_id":  "SC12060_NOZZLE",
+    "setting_id":  "XUMu9Wi8tij2aCWg",
     "default_print_profile":  "SC Layer: 0.25mm",
     "printer_model":  "SC12060",
     "inherits":  "SC12060_common",

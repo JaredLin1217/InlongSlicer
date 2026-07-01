@@ -3,7 +3,7 @@
 	"name": "InlongArena Generic PLA @0.2 nozzle",
 	"inherits": "InlongArena Generic PLA @base",
 	"from": "system",
-	"setting_id": "GFSL99_00",
+	"setting_id": "gwiGXWB46CYvRL1n",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"2"

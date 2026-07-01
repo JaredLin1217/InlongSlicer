@@ -3,7 +3,7 @@
 	"name": "Bambu ABS @System",
 	"inherits": "Bambu ABS @base",
 	"from": "system",
-	"setting_id": "OGFSB00",
+	"setting_id": "Fc6Xpw25I82FesEQ",
 	"instantiation": "true",
 	"fan_max_speed": [
 		"60"

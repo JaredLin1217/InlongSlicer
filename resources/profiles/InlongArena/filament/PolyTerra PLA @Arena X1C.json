@@ -3,7 +3,7 @@
 	"name": "PolyTerra PLA @Arena X1C",
 	"inherits": "PolyTerra PLA @base",
 	"from": "system",
-	"setting_id": "GFSL18",
+	"setting_id": "lRoV5JK447vMk3T1",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"22"

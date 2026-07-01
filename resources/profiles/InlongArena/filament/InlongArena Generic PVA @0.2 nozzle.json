@@ -3,7 +3,7 @@
 	"name": "InlongArena Generic PVA @0.2 nozzle",
 	"inherits": "InlongArena Generic PVA @base",
 	"from": "system",
-	"setting_id": "GFSS99_00",
+	"setting_id": "Qgwx1QXNw4iuXo48",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"0.5"

@@ -3,7 +3,7 @@
 	"name": "Overture Rock PLA @System",
 	"inherits": "Overture Rock PLA @base",
 	"from": "system",
-	"setting_id": "OGFOT004",
+	"setting_id": "UvGBVN7jbIrb9Mrf",
 	"instantiation": "true",
 	"filament_flow_ratio": [
 		"0.95"

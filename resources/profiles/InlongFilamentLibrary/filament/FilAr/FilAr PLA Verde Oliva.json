@@ -3,6 +3,7 @@
     "name": "FilAr PLA Verde Oliva",
     "inherits": "FilAr PLA @base",
     "from": "system",
+    "setting_id": "kCLLTT9gxbdKBt7k",
     "filament_id": "FILAR0016",
     "instantiation": "true",
     "filament_vendor": [
