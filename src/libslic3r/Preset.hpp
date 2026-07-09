@@ -95,7 +95,7 @@ class PresetBundle;
 // scripts/assign_vendor_setting_ids.py and recomputed here when a profile ships
 // without it. MUST stay byte-identical to scripts/assign_vendor_setting_ids.py.
 // This is NOT the per-user cloud-sync setting_id
-// (OrcaCloudServiceAgent::generate_uuid_for_setting_id) - do not conflate them.
+// (InlongCloudServiceAgent::generate_uuid_for_setting_id) - do not conflate them.
 std::string generate_preset_setting_id(const std::string& vendor,
                                        const std::string& type,
                                        const std::string& name);
