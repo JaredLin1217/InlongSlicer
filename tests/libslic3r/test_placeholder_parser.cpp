@@ -248,21 +248,24 @@ SCENARIO("Placeholder parser coFloatsOrPercents vector access", "[PlaceholderPar
     // outer_wall_speed is the ratio_over target for small_perimeter_speed.
     // Different values per extruder to verify parent resolves at the same element index.
     config.set_deserialize_strict({
-        { "outer_wall_speed", "60,70,80,90" },
         { "nozzle_diameter", "0.4,0.4,0.4,0.4" },
         { "pressure_advance", "1.5,2.0,3.0,4.0" }  // coFloats non-nullable
     });
+    // Object-level overrides can replace scalar definitions with vectors.
+    // Inject those vectors directly so this test exercises the vector path
+    // without changing the production option definitions.
+    config.set_key_value("outer_wall_speed", new ConfigOptionFloats({ 60., 70., 80., 90. }));
     // small_perimeter_speed:
     //   [0] = 50% of outer_wall_speed[0] (= 60) → 30
     //   [1] = 80% of outer_wall_speed[1] (= 70) → 56
     //   [2] = 0 absolute
     //   [3] = 50% of outer_wall_speed[3] (= 90) → 45
-    config.option<ConfigOptionFloatsOrPercentsNullable>("small_perimeter_speed")->values = {
+    config.set_key_value("small_perimeter_speed", new ConfigOptionFloatsOrPercentsNullable({
         FloatOrPercent{50.0, true},    // 50% of outer_wall_speed[0] (60) = 30
         FloatOrPercent{80.0, true},    // 80% of outer_wall_speed[1] (70) = 56
         FloatOrPercent{0.0, false},    // absolute: 0
         FloatOrPercent{50.0, true},    // 50% of outer_wall_speed[3] (90) = 45
-    };
+    }));
 
     parser.apply_config(config);
     parser.set("foo", 0);

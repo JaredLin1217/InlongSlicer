@@ -3171,8 +3171,8 @@ void PrintConfigDef::init_fff_params()
     def->category   = L("Strength");
     def->tooltip    = L("Tightens the gyroid wave along the Z (vertical) axis at low infill density "
                         "to shorten the effective vertical column length and improve Z-axis compression "
-                        "buckling resistance. Filament use is preserved. No effect at ~30% sparse infill "
-                        "density and above. Only applies when Sparse infill pattern is set to Gyroid.");
+                        "buckling resistance. Filament use is preserved. No effect at approximately 30 percent sparse infill density "
+                        "and above. Only applies when Sparse infill pattern is set to Gyroid.");
     def->set_default_value(new ConfigOptionBool(false));
 
     def = this->add("sparse_infill_pattern", coEnum);
@@ -3760,14 +3760,14 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Fuzzy skin generator mode");
     def->category = L("Others");
     def->tooltip = L("Fuzzy skin generation mode. Works only with Arachne!\n"
-                     "Displacement: 苤lassic mode when the pattern is formed by shifting the nozzle sideways from the original path.\n"
+                     "Displacement: Classic mode when the pattern is formed by shifting the nozzle sideways from the original path.\n"
                      "Extrusion: The mode when the pattern formed by the amount of extruded plastic. "
                      "This is the fast and straight algorithm without unnecessary nozzle shake that gives a smooth pattern. "
                      "But it is more useful for forming loose walls in the entire they array.\n"
                      "Combined: Joint mode [Displacement] + [Extrusion]. The appearance of the walls is similar to [Displacement] Mode, but it leaves no pores between the perimeters.\n\n"
                      "Attention! The [Extrusion] and [Combined] modes works only the fuzzy_skin_thickness parameter not more than the thickness of printed loop. "
                      "At the same time, the width of the extrusion for a particular layer should also not be below a certain level. "
-                     "It is usually equal 15-25%% of a layer height. Therefore, the maximum fuzzy skin thickness with a perimeter width of 0.4 mm and a layer height of 0.2 mm will be 0.4-(0.2*0.25)=簣0.35mm! "
+                     "It is usually equal 15-25%% of a layer height. Therefore, the maximum fuzzy skin thickness with a perimeter width of 0.4 mm and a layer height of 0.2 mm will be 0.4-(0.2*0.25)=±0.35mm! "
                      "If you enter a higher parameter than this, the error Flow::spacing() will displayed, and the model will not be sliced. You can choose this number until this error is repeated." );
     def->enum_keys_map = &ConfigOptionEnum<FuzzySkinMode>::get_enum_values();
     def->enum_values.push_back("displacement");

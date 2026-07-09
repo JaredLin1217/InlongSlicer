@@ -35,6 +35,8 @@ namespace pt = boost::property_tree;
 
 namespace {
 
+constexpr const char *CLIENT_SOFTWARE_NAME = SLIC3R_APP_NAME;
+
 class UploadOptionsDialog : public Slic3r::GUI::DPIDialog
 {
 public:
@@ -442,7 +444,7 @@ bool C3DPrinterOS::upload(
     }
     http.form_add("session", m_apikey)
         .form_add("upload_type_id", "7")
-        .form_add("upload_soft_name", "OrcaSlicer")
+        .form_add("upload_soft_name", CLIENT_SOFTWARE_NAME)
         .form_add("zip", "false")
         .form_add_file("file", upload_data.source_path.string(), upload_filename.string());
 
@@ -488,7 +490,7 @@ bool C3DPrinterOS::upload(
     // set printer type for uploaded gcode
     if (res) {
         pt::ptree update_file_response;
-        update_file(update_file_response, file_id, printer_type_id, "OrcaSlicer");
+        update_file(update_file_response, file_id, printer_type_id, CLIENT_SOFTWARE_NAME);
         try {
             if (!update_file_response.get<bool>("result")) {
                 const std::string msg = update_file_response.get<std::string>("message", "Unknown update error");
@@ -533,7 +535,7 @@ std::string C3DPrinterOS::get_api_auth_token(wxString &err) const
 {
     std::string result;
     pt::ptree resp;
-    std::string postBody = "app_type=plugin&app_name=" + Http::url_encode("OrcaSlicer");
+    std::string postBody = "app_type=plugin&app_name=" + Http::url_encode(CLIENT_SOFTWARE_NAME);
     send_form("apiglobal/generate_login_token", postBody, resp);
     try {
         if (resp.get<bool>("result")) {
@@ -649,7 +651,7 @@ void C3DPrinterOS::get_cloud_printer_types(boost::property_tree::ptree &response
 {
     std::string postBody = std::string("session=" + m_apikey);
     if (!query.empty()) {
-        postBody += "&description=" + Http::url_encode(query) + "&software_version=" + Http::url_encode("OrcaSlicer");
+        postBody += "&description=" + Http::url_encode(query) + "&software_version=" + Http::url_encode(CLIENT_SOFTWARE_NAME);
     }
     send_form("apiglobal/get_printer_types", postBody, response);
 }
