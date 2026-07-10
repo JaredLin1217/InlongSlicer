@@ -3872,9 +3872,24 @@ Preset *PresetBundle::get_similar_printer_preset(std::string printer_model, std:
     if (printer_model.empty()) // INLONG ensure a compatible model exist. fixes switches to blank preset if preset has no inherited value
         return nullptr;
     auto printer_variant_old = printers.get_selected_preset().config.opt_string("printer_variant");
+    const bool use_model_default_variant = printer_variant.empty();
+    if (use_model_default_variant) {
+        // ConfigWizard treats the first declared variant as the model default.
+        for (const auto &vendor_entry : vendors) {
+            const VendorProfile &vendor = vendor_entry.second;
+            auto model = std::find_if(vendor.models.begin(), vendor.models.end(), [&printer_model](const VendorProfile::PrinterModel &candidate) {
+                return candidate.name == printer_model;
+            });
+            if (model != vendor.models.end() && !model->variants.empty()) {
+                printer_variant = model->variants.front().name;
+                break;
+            }
+        }
+    }
+
     std::map<std::string, Preset*> printer_presets;
     for (auto &preset : printers.m_presets) {
-        if (printer_variant.empty() && !preset.is_system)
+        if (use_model_default_variant && !preset.is_system)
             continue;
         if (preset.config.opt_string("printer_model") == printer_model)
             printer_presets.insert({preset.name, &preset});

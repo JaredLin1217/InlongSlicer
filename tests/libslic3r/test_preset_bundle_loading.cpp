@@ -57,6 +57,18 @@ Preset &add_inmemory_preset(PresetCollection &coll, const std::string &name, con
     return coll.load_preset(std::string(), name, config, /*select=*/false);
 }
 
+Preset &add_system_printer_preset(PresetBundle &bundle, const std::string &name, const std::string &model,
+                                  const std::string &variant, const VendorProfile *vendor)
+{
+    Preset &preset = add_inmemory_preset(bundle.printers, name);
+    preset.config.option<ConfigOptionString>("printer_model", true)->value   = model;
+    preset.config.option<ConfigOptionString>("printer_variant", true)->value = variant;
+    preset.alias     = name;
+    preset.is_system = true;
+    preset.vendor    = vendor;
+    return preset;
+}
+
 // Mark an already-loaded preset as renamed from one or more former names.
 void set_renamed_from(PresetCollection &coll, const std::string &preset_name, std::vector<std::string> old_names)
 {
@@ -170,6 +182,39 @@ TEST_CASE("Printer extruder count tolerates missing nozzle diameter", "[Preset][
 
     config.set_key_value("nozzle_diameter", new ConfigOptionFloats({ 0.4, 0.6 }));
     CHECK(bundle.get_printer_extruder_count() == 2);
+}
+
+TEST_CASE("Switching printer models selects the target model default nozzle", "[Preset][Bundle]")
+{
+    PresetBundle bundle;
+
+    VendorProfile vendor("TestVendor");
+    VendorProfile::PrinterModel source_model;
+    source_model.name = "Source Printer";
+    source_model.variants.emplace_back("0.6");
+    vendor.models.emplace_back(std::move(source_model));
+
+    VendorProfile::PrinterModel target_model;
+    target_model.name = "Target Printer";
+    target_model.variants.emplace_back("0.4");
+    target_model.variants.emplace_back("0.6");
+    vendor.models.emplace_back(std::move(target_model));
+
+    auto vendor_it = bundle.vendors.emplace("TestVendor", std::move(vendor)).first;
+    const VendorProfile *vendor_ptr = &vendor_it->second;
+
+    add_system_printer_preset(bundle, "Source Printer 0.6mm nozzle", "Source Printer", "0.6", vendor_ptr);
+    add_system_printer_preset(bundle, "Target Printer 0.4mm nozzle", "Target Printer", "0.4", vendor_ptr);
+    add_system_printer_preset(bundle, "Target Printer 0.6mm nozzle", "Target Printer", "0.6", vendor_ptr);
+    REQUIRE(bundle.printers.select_preset_by_name("Source Printer 0.6mm nozzle", true));
+
+    Preset *model_default = bundle.get_similar_printer_preset("Target Printer", {});
+    REQUIRE(model_default != nullptr);
+    CHECK(model_default->config.opt_string("printer_variant") == "0.4");
+
+    Preset *explicit_variant = bundle.get_similar_printer_preset("Target Printer", "0.6");
+    REQUIRE(explicit_variant != nullptr);
+    CHECK(explicit_variant->config.opt_string("printer_variant") == "0.6");
 }
 
 TEST_CASE("find_preset resolves a system preset's renamed_from", "[Preset][Rename]")

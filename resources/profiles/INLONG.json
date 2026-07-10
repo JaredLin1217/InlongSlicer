@@ -23,6 +23,10 @@
                              "sub_path":  "process/sc_process_common.json"
                          },
                          {
+                             "name":  "SC Layer: 0.20mm",
+                             "sub_path":  "process/sc_Layer_0.20mm.json"
+                         },
+                         {
                              "name":  "SC Layer: 0.25mm",
                              "sub_path":  "process/sc_Layer_0.25mm.json"
                          },

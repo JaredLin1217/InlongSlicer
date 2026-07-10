@@ -10,6 +10,9 @@
     "nozzle_diameter":  [
                             "0.5"
                         ],
+    "max_layer_height":  [
+                             "0.333333"
+                         ],
     "printer_variant":  "0.5",
     "default_filament_profile":  [
                                      "Infinity3DP PLA"
