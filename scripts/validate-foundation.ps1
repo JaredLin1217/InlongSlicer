@@ -27,13 +27,19 @@ $verifyText = Get-Content -LiteralPath (Get-RepoPath ".agents/docs/agents/verify
 $deployText = Get-Content -LiteralPath (Get-RepoPath ".agents/docs/agents/deploy.yaml") -Raw
 foreach ($marker in @(
 "official_docs_first",
+"progressive_disclosure",
+"one_state_owner",
 "structured_outputs",
 "conversation_state",
 "agents_sdk",
+"codex_instructions",
 "codex_skills",
+"codex_memories",
 "subagents",
 "prompt_caching",
 "predicted_outputs",
+"compaction",
+"token_counting",
 "evaluations",
 "evaluation"
 )) {
@@ -42,7 +48,7 @@ Add-Failure ("Foundation creation canonical is missing marker: {0}" -f $marker)
 }
 }
 $foundationValues = Get-LightweightYamlPathValues -File $canonicalFile
-foreach ($marker in @("source_matrix:", "checked:", "capability:", "url:", "boundary:", "drift_risk:", "refresh_interval_days:", "next_review_due:", "2026-06-23", "2026-09-21")) {
+foreach ($marker in @("source_matrix:", "checked:", "capability:", "url:", "boundary:", "drift_risk:", "refresh_interval_days:", "next_review_due:")) {
 if (-not $foundationText.Contains($marker)) {
 Add-Failure ("Foundation source matrix is missing field or value: {0}" -f $marker)
 }
@@ -54,11 +60,15 @@ $sourceMatrix = @(
 @{ Id = "structured_outputs"; Capability = "Structured Outputs"; Url = "https://developers.openai.com/api/docs/guides/structured-outputs" },
 @{ Id = "conversation_state"; Capability = "conversation state"; Url = "https://developers.openai.com/api/docs/guides/conversation-state" },
 @{ Id = "agents_sdk"; Capability = "Agents SDK"; Url = "https://openai.github.io/openai-agents-python/" },
-@{ Id = "codex_skills"; Capability = "Codex skills"; Url = "https://developers.openai.com/codex/skills" },
-@{ Id = "subagents"; Capability = "subagents"; Url = "https://developers.openai.com/codex/subagents" },
+@{ Id = "codex_instructions"; Capability = "Codex AGENTS.md"; Url = "https://learn.chatgpt.com/docs/agent-configuration/agents-md" },
+@{ Id = "codex_skills"; Capability = "Codex skills"; Url = "https://learn.chatgpt.com/docs/build-skills" },
+@{ Id = "codex_memories"; Capability = "Codex memories"; Url = "https://learn.chatgpt.com/docs/customization/memories" },
+@{ Id = "subagents"; Capability = "Codex subagents"; Url = "https://learn.chatgpt.com/docs/agent-configuration/subagents" },
 @{ Id = "prompt_caching"; Capability = "prompt caching"; Url = "https://developers.openai.com/api/docs/guides/prompt-caching" },
 @{ Id = "predicted_outputs"; Capability = "predicted outputs"; Url = "https://developers.openai.com/api/docs/guides/predicted-outputs" },
-@{ Id = "evaluations"; Capability = "evaluations"; Url = "https://developers.openai.com/api/docs/guides/evals" }
+@{ Id = "compaction"; Capability = "conversation compaction"; Url = "https://developers.openai.com/api/docs/guides/compaction" },
+@{ Id = "token_counting"; Capability = "token counting"; Url = "https://developers.openai.com/api/docs/guides/token-counting" },
+@{ Id = "evaluations"; Capability = "agent evaluations"; Url = "https://developers.openai.com/api/docs/guides/agent-evals" }
 )
 $culture = [System.Globalization.CultureInfo]::InvariantCulture
 $todayUtc = (Get-Date).ToUniversalTime().Date

@@ -1,6 +1,7 @@
 ﻿# Project Memory
-Target-local substitute for global Codex Memory.
+Checked-in target recall for verified lessons that must survive task boundaries.
 - Policy: `.agents/docs/agents/workflows.yaml`
+- Contract: `.agents/docs/agents/knowledge-footprint.yaml`
 - Index: `.agents/docs/memory/index.md`
 - Details: `docs/memory/entries/`
-Use target-local memory only unless the user explicitly approves global Memory. Memory is a hint; add only verified, reusable, target-specific lessons and verify them against current repo evidence before acting.
+Read the index first and open at most the relevant detail entries. Memory complements Codex memory but never replaces `AGENTS.md`, canonical policy, approval, or current evidence. Add only verified, reusable, target-specific lessons; mark overdue lessons stale until reverified.

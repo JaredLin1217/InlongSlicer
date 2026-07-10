@@ -1,4 +1,4 @@
-# Agents Deployment
+﻿# Agents Deployment
 Use when copying this workflow into an explicitly authorized target repo.
 ## Fast Path
 1. Confirm exact target path and write action.
@@ -44,7 +44,7 @@ Every write deployment report must make these items easy to review:
 - Target owner next actions: review target git status, decide whether to commit or revert the deployed file set, run a target handoff check, and record follow-up feedback in the target repo or target-owned tracker.
 The target handoff check is read-only unless the user separately authorizes follow-up writes. Check `AGENTS.md` routing, selected project skill path, runbook links, deployed feedback template when the mode includes it, protected runtime/local paths, and target git status summary.
 ## Feedback Loop
-For `full_workflow` and `template_provider_mode`, the deployment includes `docs/deployment-feedback.template.md` or its layout-adjusted `.agents/docs` equivalent. Fill it only in the target repo, or use a target-owned issue tracker. The provider repo must not store target-specific deployment history, validation results, commits, remotes, or user feedback.
+For `full_workflow` and `template_provider_mode`, the deployment includes `.agents/docs/deployment-feedback.template.md` or its layout-adjusted `.agents/docs` equivalent. Fill it only in the target repo, or use a target-owned issue tracker. The provider repo must not store target-specific deployment history, validation results, commits, remotes, or user feedback.
 Hard fail on missing exact authorization, blocklisted copy, uninspected target-specific claim, or provider state in deployable templates.
 Keep target state target-owned. Do not copy source status, employee history, memory entries, commits, remotes, tags, or runtime files.
 PowerShell note: with `rg`, put options before `--`, then pattern and paths, for example `rg -n --fixed-strings --glob '!historical/**' -- <pattern> <paths>`.

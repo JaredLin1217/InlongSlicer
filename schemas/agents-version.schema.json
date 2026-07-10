@@ -42,7 +42,7 @@
   "x-required-values": [
     {
       "path": "workflow.channel",
-      "value": "foundation-creation"
+      "value": "precision-efficiency"
     },
     {
       "path": "upgrade_policy.default",
@@ -76,7 +76,7 @@
     },
     {
       "path": "readiness_ladder.P5",
-      "contains": ["context compaction contracts", "knowledge footprints", "foundation creation contracts", "compact workflow growth controls"]
+      "contains": ["context budgets", "freshness-bound memory", "official source review", "change-aware verification"]
     },
     {
       "path": "upgrade_policy.core_contract_rule",
@@ -84,7 +84,11 @@
     },
     {
       "path": "upgrade_policy.foundation_creation_rule",
-      "contains": ["openai_foundations", "official-docs-first", "schema-first outputs", "state ownership", "latency controls", "evaluation gates"]
+      "contains": ["openai_foundations", "current official sources", "progressive disclosure", "schema-first outputs", "one state owner", "context budgets", "evaluation gates"]
+    },
+    {
+      "path": "upgrade_policy.breaking_change_rule",
+      "contains": ["one current canonical implementation", "remove superseded", "compatibility branches"]
     },
     {
       "path": "upgrade_policy.preserve_target_owned",
@@ -100,7 +104,7 @@
     },
     {
       "path": "delegation.context_compact_rule",
-      "contains": ["latest request", "runtime compact events stay local"]
+      "contains": ["latest request", "stable instructions", "runtime events stay local"]
     },
     {
       "path": "delegation.collaborator_window_rule",
@@ -108,7 +112,7 @@
     },
     {
       "path": "delegation.foundation_creation_rule",
-      "contains": ["official OpenAI guidance", "schema-backed", "verifiable repo-local capabilities"]
+      "contains": ["current official OpenAI guidance", "progressively disclosed", "schema-backed", "verifiable repo-local capabilities"]
     },
     {
       "path": "delegation.runtime_execution_rule",
@@ -116,7 +120,7 @@
     },
     {
       "path": "delegation.knowledge_footprint_rule",
-      "contains": ["resume pointer", "without full transcript"]
+      "contains": ["index-first recall", "source refs", "review dates", "current-evidence override", "full transcript"]
     }
   ]
 }

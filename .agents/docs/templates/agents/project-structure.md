@@ -1,4 +1,4 @@
-# Source Repo Structure
+﻿# Source Repo Structure
 This source repo owns the canonical AI Agents workflow: repo-local routing,
 deployable governance, project-local skills, runtime boundaries, validation
 gates, deployment templates, and extension points.
@@ -19,7 +19,7 @@ gates, deployment templates, and extension points.
 13. `.agents/docs/agents/policy.yaml` for isolation or boundary claims
 14. `.agents/docs/agents/verify.yaml` before claims, commits, deployments, or releases
 15. `.agents/docs/agents/schemas.yaml` for assignments, reports, status, or templates
-16. `.agents/docs/agents/mcp.yaml` when optional integrations matter
+16. `.agents/docs/agents/openai-foundations.yaml` when foundation creation matters
 17. `.agents/docs/agents/version.yaml` for core runtime version metadata
 18. `.agents/docs/agents/deploy.yaml` for authorized target deployment
 ## Role Matrix
@@ -40,11 +40,12 @@ gates, deployment templates, and extension points.
 | `.agents/docs/agents/provider-adapters.yaml` | provider capability and tier map route | deploy |
 | `.agents/docs/agents/route-packs.yaml` | deterministic minimal route pack route | deploy |
 | `.agents/docs/agents/knowledge-footprint.yaml` | cross-window resume evidence route | deploy |
+| `.agents/docs/agents/openai-foundations.yaml` | foundation creation route | deploy |
 | `.agents/docs/runbooks/*.md` | procedure entry points | mode-based deploy |
 | `.agents/docs/templates/agents/` | source-neutral deploy bundle | `template_provider_mode` only |
-| `docs/memory/`, `docs/decisions/` | provider-local knowledge | target-owned / do not deploy rows |
+| `docs/memory/`, `docs/decisions/` | evidence-linked knowledge | deploy starters; preserve target-owned populated rows |
 | `.agents/docs/agents/decisions/` | workflow structure decisions | provider source only |
-| `schemas/`, `scripts/`, `tests/`, `mcp/` | contracts, checks, fixtures, capability registry | provider source only until explicitly deployed |
+| `schemas/`, `scripts/`, `tests/` | contracts, checks, and fixtures | provider source only until explicitly deployed |
 | `artifacts/`, `.github/workflows/` | audits/evals and CI | provider source only |
 | `.codex/`, status, validation records | local/runtime state | never deploy |
 Do not deploy source `.agents/runtime/`, `.agents/runtime/workflows/`,
@@ -58,9 +59,10 @@ live thread ids, collaborator window state, or validation history by default.
 Core runtime structure changes must preserve mirror pairs, deployment rules,
 schema contracts, runtime blocklists, and route-pack compactness until drift
 checks are updated. Large moves of runbooks, templates, decisions, or memory docs
-belong in dedicated changes, not mixed with validation, MCP, or CI work.
+belong in dedicated changes, not mixed with validation, foundation, or CI work.
 Simple answer, scoped edit, plain deploy, and release tasks still use the
 minimal route from `.agents/docs/agents/ai-runtime.yaml` and should not load
 organization, workflow artifact, context compact, collaborator, core-system,
-runtime-execution, provider-adapter, route-pack, or knowledge-footprint files
+runtime-execution, provider-adapter, route-pack, knowledge-footprint, or
+foundation-creation route files
 unless the task is about those named routes.

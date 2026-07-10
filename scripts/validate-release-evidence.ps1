@@ -166,7 +166,8 @@ return
 }
 $startFailureCount = $Failures.Count
 $schemaPath = Get-RepoPath "schemas/agents-runtime-evidence.schema.json"
-$evidencePath = Get-RepoPath "docs/evidence/releases/v2.7.0-runtime-evidence.json"
+$expectedVersion = Get-CanonicalWorkflowVersion
+$evidencePath = Get-RepoPath ("docs/evidence/releases/v{0}-runtime-evidence.json" -f $expectedVersion)
 foreach ($path in @($schemaPath, $evidencePath)) {
 if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
 Add-Failure ("Runtime release evidence file is missing: {0}" -f $path)
@@ -210,10 +211,9 @@ Add-Failure ("Runtime evidence schema is missing required field contract: {0}" -
 }
 [void] (Test-ObjectField -Object $evidence -Field $field -Context "Runtime evidence")
 }
-if ([string] $evidence.schema_version -ne "agents-runtime-evidence/v2") {
+if ([string] $evidence.schema_version -ne "agents-runtime-evidence/v3") {
 Add-Failure "Runtime evidence schema_version mismatch."
 }
-$expectedVersion = Get-CanonicalWorkflowVersion
 if ([string] $evidence.workflow_version -ne $expectedVersion) {
 Add-Failure ("Runtime evidence workflow_version must be {0}." -f $expectedVersion)
 }
@@ -240,7 +240,7 @@ if ([int64] $evidence.duration_ms -lt 0) {
 Add-Failure "Runtime evidence duration_ms must be non-negative."
 }
 $digest = $evidence.validated_content_digest
-foreach ($field in @("algorithm", "value", "tracked_file_count")) {
+foreach ($field in @("algorithm", "value", "intended_file_count")) {
 [void] (Test-ObjectField -Object $digest -Field $field -Context "Runtime evidence validated_content_digest")
 }
 if ([string] $digest.algorithm -ne "sha256") {
@@ -249,8 +249,8 @@ Add-Failure "Runtime evidence content digest algorithm must be sha256."
 if ([string] $digest.value -notmatch "^[a-f0-9]{64}$") {
 Add-Failure "Runtime evidence content digest must be a 64-character lowercase sha256 value."
 }
-if ([int] $digest.tracked_file_count -le 0) {
-Add-Failure "Runtime evidence content digest tracked_file_count must be positive."
+if ([int] $digest.intended_file_count -le 0) {
+Add-Failure "Runtime evidence content digest intended_file_count must be positive."
 }
 $excludedPaths = @($evidence.content_digest_excluded_paths | ForEach-Object { [string] $_ })
 foreach ($requiredExcludedPath in @(".git/**", ".agents/runtime/**", ".workflow/**", ".codex/**", "docs/evidence/releases/*.json", "docs/evidence/raw/**")) {

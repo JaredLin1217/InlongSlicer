@@ -32,7 +32,7 @@ For repository-specific development workflow, start with:
 - [AGENTS.md](AGENTS.md)
 - [CLAUDE.md](CLAUDE.md)
 
-Current Agents workflow version: `2.7.0` (`foundation-creation`).
+Current Agents workflow version: `2.8.0` (`precision-efficiency`).
 
 When separating Inlong-specific changes from upstream behavior, use the clean
 upstream comparison branch documented in the project workflow.

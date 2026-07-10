@@ -28,7 +28,7 @@ if ($skillSize -gt $skillLimit) {
 Add-Failure ("Project skill exceeds {0} bytes: {1}" -f $skillLimit, $skillSize)
 }
 $maxYamlSize = 0
-foreach ($file in Get-ChildItem -LiteralPath (Get-RepoPath "docs/agents") -Filter "*.yaml") {
+foreach ($file in Get-ChildItem -LiteralPath (Get-RepoPath ".agents/docs/agents/") -Filter "*.yaml") {
 if ($file.Length -gt $maxYamlSize) {
 $maxYamlSize = $file.Length
 }
@@ -49,7 +49,7 @@ $validateScriptSize = (Get-Item -LiteralPath (Get-RepoPath "scripts/validate.ps1
 if ($validateScriptSize -gt $validateScriptAfterSplitLimit) {
 Add-Failure ("scripts/validate.ps1 exceeds split target {0} bytes: {1}" -f $validateScriptAfterSplitLimit, $validateScriptSize)
 }
-$trackedTotal = Get-RepoFilesSize -Paths @(& git -C $RepoRoot ls-files)
+$trackedTotal = Get-RepoFilesSize -Paths @(& git -c core.quotepath=false -C $RepoRoot ls-files)
 $intendedTotal = Get-RepoFilesSize -Paths (Get-IntendedRepoFiles)
 $limit = $repoLimitKiB * 1024
 if ($trackedTotal -gt $limit) {

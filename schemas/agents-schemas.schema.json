@@ -5,8 +5,6 @@
   "type": "object",
   "required": [
     "schema",
-    "purpose",
-    "owns",
     "assignment",
     "enterprise_assignment",
     "department_internal_dispatch",
@@ -147,6 +145,8 @@
     "foundation_creation.state_rule",
     "foundation_creation.creation_rule",
     "foundation_creation.tool_boundary_rule",
+    "foundation_creation.context_rule",
+    "foundation_creation.memory_rule",
     "foundation_creation.latency_rule",
     "foundation_creation.evaluation_rule",
     "runtime_execution.required_fields",
@@ -160,7 +160,14 @@
     "route_pack.cache_key_fields",
     "knowledge_footprint.required_fields",
     "knowledge_footprint.raw_transcript_rule",
-    "knowledge_footprint.resume_rule"
+    "knowledge_footprint.resume_rule",
+    "knowledge_footprint.durable_memory_rule",
+    "knowledge_footprint.retrieval_rule",
+    "memory_entry.required_fields",
+    "memory_entry.status_values",
+    "memory_entry.confidence_values",
+    "memory_entry.freshness_rule",
+    "memory_entry.authority_rule"
   ],
   "x-required-values": [
     {
@@ -440,6 +447,7 @@
         "official_docs_refs",
         "output_schema",
         "state_owner",
+        "context_budget",
         "latency_control",
         "evaluation_gate"
       ]
@@ -461,8 +469,24 @@
     {
       "path": "foundation_creation.creation_rule",
       "contains": [
-        "official OpenAI developer documentation",
-        "scoped repo-local features"
+        "official OpenAI documentation",
+        "scoped repo-local features",
+        "progressive disclosure"
+      ]
+    },
+    {
+      "path": "foundation_creation.context_rule",
+      "contains": [
+        "route index first",
+        "stable instructions",
+        "compact long histories"
+      ]
+    },
+    {
+      "path": "foundation_creation.memory_rule",
+      "contains": [
+        "Memory is recall",
+        "official evidence override"
       ]
     },
     {
@@ -525,6 +549,45 @@
       "path": "knowledge_footprint.resume_rule",
       "contains": [
         "resume pointer"
+      ]
+    },
+    {
+      "path": "knowledge_footprint.durable_memory_rule",
+      "contains": [
+        "reusable verified lessons",
+        "never become durable memory"
+      ]
+    },
+    {
+      "path": "knowledge_footprint.retrieval_rule",
+      "contains": [
+        "index first",
+        "three matching entries",
+        "current evidence"
+      ]
+    },
+    {
+      "path": "memory_entry.required_fields",
+      "contains": [
+        "Status",
+        "Confidence",
+        "Next Review Due",
+        "Source Refs"
+      ]
+    },
+    {
+      "path": "memory_entry.freshness_rule",
+      "contains": [
+        "Active entries",
+        "Next Review Due"
+      ]
+    },
+    {
+      "path": "memory_entry.authority_rule",
+      "contains": [
+        "recall only",
+        "current repository state",
+        "current official sources"
       ]
     },
     {

@@ -37,6 +37,8 @@
     "startup.fast_classification.workflow_artifact",
     "startup.fast_classification.context_compact",
     "progress_updates.cap",
+    "memory",
+    "multi_agent_runtime.delegation_gate",
     "multi_agent_runtime.batch_ack",
     "multi_agent_runtime.batch_ack.assignment_contract",
     "multi_agent_runtime.batch_ack.compact_ack_schema",
@@ -81,6 +83,7 @@
     "context_compact_runtime.subagent_rule",
     "context_compact_runtime.risk_rule",
     "context_compact_runtime.runtime_rule",
+    "context_compact_runtime.footprint_rule",
     "scoring_batches",
     "scoring_batches.validity_outcomes",
     "scoring_batches.aggregation.cap_rule",
@@ -88,6 +91,7 @@
     "deployment.delegated_worker",
     "deployment.upgrade",
     "maintenance.local_permission_boundary",
+    "maintenance.verification_profiles.change_aware",
     "maintenance.verification_profiles.release_deploy_push_audit",
     "maintenance.local_only",
     "closeout.compact_handoff"
@@ -103,6 +107,30 @@
     }
   ],
   "x-required-contains": [
+    {
+      "path": "startup.controller",
+      "contains": [
+        "compact route index",
+        "expand named route only"
+      ]
+    },
+    {
+      "path": "memory",
+      "contains": [
+        ".agents/docs/memory/index.md first",
+        "three matching active entries",
+        "current evidence win"
+      ]
+    },
+    {
+      "path": "multi_agent_runtime.delegation_gate",
+      "contains": [
+        "independent parallel work",
+        "context",
+        "integration cost",
+        "one controller"
+      ]
+    },
     {
       "path": "deployment.upgrade",
       "contains": [
@@ -243,6 +271,23 @@
       "contains": [
         ".agents/runtime/compact-events.jsonl",
         "never stage"
+      ]
+    },
+    {
+      "path": "context_compact_runtime.footprint_rule",
+      "contains": [
+        "reusable verified lessons",
+        "stale memory",
+        "current evidence wins"
+      ]
+    },
+    {
+      "path": "maintenance.verification_profiles.change_aware",
+      "contains": [
+        "validate-changes.ps1",
+        "Fast",
+        "Policy",
+        "Full"
       ]
     },
     {

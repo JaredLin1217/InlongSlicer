@@ -111,11 +111,11 @@ $commitOutput = & git -C $RepoRoot rev-parse --short=12 HEAD 2>$null
 if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($commitOutput)) {
 $commit = ($commitOutput | Select-Object -First 1).Trim()
 }
-$tracked = & git -C $RepoRoot ls-files
+$tracked = & git -c core.quotepath=false -C $RepoRoot ls-files
 if ($LASTEXITCODE -ne 0) {
 throw "git ls-files failed."
 }
-$untracked = & git -C $RepoRoot ls-files --others --exclude-standard
+$untracked = & git -c core.quotepath=false -C $RepoRoot ls-files --others --exclude-standard
 if ($LASTEXITCODE -ne 0) {
 throw "git ls-files --others failed."
 }

@@ -1,10 +1,4 @@
 ﻿schema: agents-verify/v2
-purpose: "Compact verification profiles and release gates."
-owns: "Profile selection, file classes, checkpoints, evidence."
-principle: "Smallest check set proves claim."
-scope_rule: "Use repo paths unless external path/action authorized."
-stale_literal_rule: "Do not keep one-off literal searches as routine gates."
-batch_rule: "Batch checkpoint checks when practical."
 profile_selection:
   order: ["answer","read-only","state/edit/git/deploy","policy pack","core system","foundation creation","runtime execution","provider_adapter","route pack","knowledge footprint","enterprise","artifact","compact","collaborator","commit/tag/push","deploy/release/protected","runtime/batch","hard isolation"]
   mixed_claim_rule: "Use highest-risk profile; do not upgrade unrelated facts."
@@ -25,10 +19,11 @@ file_classes:
   knowledge_footprint_canonical: [".agents/docs/agents/knowledge-footprint.yaml"]
   runbooks: [".agents/docs/runbooks/*.md"]
   deploy_templates: [".agents/docs/templates/agents/**"]
-  memory_docs: [".agents/docs/project-memory.md","docs/memory/**","docs/memory-entry.template.md"]
+  memory_docs: [".agents/docs/project-memory.md","docs/memory/**",".agents/docs/memory-entry.template.md"]
   runtime_local: [".agents/runtime/**",".agents/runtime/workflows/**",".workflow/**",".codex/**","docs/.agents runtime evidence dirs"]
   generated_or_cache: ["generated","cache","build","vendor"]
 gate_matrix:
+  changed_path_set: ["Auto selects Fast, Policy, or Full by highest-risk changed file","-Profile overrides when the claim needs stronger proof"]
   durable_prose_changed: ["English-only","placeholder"]
   exact_pair_member_changed: ["exact-pair"]
   deploy_template_changed: ["source-pollution"]
@@ -45,6 +40,7 @@ commands:
   changed_manifest: "unstaged + staged changed paths"
   checkpoint_bundle: "status, diff_check, manifest, pair/prose/EOL/size, no staged runtime"
   full_audit_bundle: ".\\scripts\\validate.ps1 -Full"
+  changed_validation: ".\\scripts\\validate-changes.ps1 -Profile Auto -Explain"
   ai_runtime_compact: "ai-runtime/mirror <=4096; expand_only routes."
   enterprise_dispatch_integrity: "validate.ps1: department leader references, model tier references, escalation."
   workflow_artifact_integrity: "validate.ps1: workflow-artifacts route, approval gates, L1-6 simulations."
@@ -55,16 +51,19 @@ commands:
   runtime_execution_integrity: "validate-runtime-execution.ps1: lifecycle smoke, approvals, tool evidence, results, cleanup."
   provider_adapter_integrity: "validate.ps1: tiers, capabilities, no hard-bound workflow model id."
   route_pack_integrity: "validate-route-pack.ps1: deterministic manifest hash, compact set, cache keys."
-  knowledge_footprint_integrity: "validate.ps1: resume pointer, evidence refs, gaps, no full transcript."
+  knowledge_footprint_integrity: "validate-knowledge.ps1: index schema, detail metadata, freshness, evidence refs, and no full transcript."
   legacy_residue_scan: "Reject retired compatibility positioning, removed external connector files, and stale helper version literals."
   release_package_export: ".\\scripts\\export-release-package.ps1 -Quiet"
-  runtime_release_evidence: ".\\scripts\\capture-runtime-evidence.ps1 -OutputPath docs/evidence/releases/v2.7.0-runtime-evidence.json -Full -Practice -Quiet"
+  runtime_release_evidence: ".\\scripts\\capture-runtime-evidence.ps1 -OutputPath docs/evidence/releases/v2.8.0-runtime-evidence.json -Full -Practice -Quiet"
   size_gate_helper: "scripts/validate-size-gates.ps1"
   release_evidence_helper: "scripts/validate-release-evidence.ps1"
   route_pack_validation_helper: "scripts/validate-route-pack.ps1"
   runtime_execution_validation_helper: "scripts/validate-runtime-execution.ps1"
   readiness_validation_helper: "scripts/validate-readiness.ps1"
   cross_project_runtime_validation_helper: "scripts/validate-cross-project-runtime.ps1"
+  change_aware_validation_helper: "scripts/validate-changes.ps1"
+  knowledge_validation_helper: "scripts/validate-knowledge.ps1"
+  score_validation_helper: "scripts/validate-score.ps1"
   runtime_helper: ".\\scripts\\agents-runtime.ps1"
   runtime_cleanup_helper: ".\\scripts\\agents-cleanup.ps1 -Action Verify"
   cleanup_mandatory_script: "scripts/agents-cleanup.ps1"
@@ -79,7 +78,7 @@ commands:
   deploy_manifest_unique: "deployable_by_mode paths unique; non-append paths unique."
   deploy_blocklist_required_paths: "do_not_deploy includes runtime, scratch, Codex runtime, .git paths."
   deployment_script_safety: "scripts/deploy-agents-workflow.ps1 keeps path-containment gates, no admin elevation, OS permission, .git repair."
-  deployment_script_selftest: "root_docstemplate-providerdot_agents_docsdry-runprotected-existinggit-backed foreign projectmissing-targettarget-owned state preservationtarget-owned-staterouted-historicalambiguous-layoutapp-file preservationpartial-gitignoregitignore duplicate avoidancetarget handoff checktarget git rollback scopetarget-local environment bootstrap"
+  deployment_script_selftest: ".\\scripts\\deploy-agents-workflow.ps1 -SelfTest -Quiet"
   target_handoff_check: "Inspect AGENTS route, skill, report, runbooks, protected local paths, target git status."
   multi_agent_workflow_integrity: "validate.ps1: lifecycle, ownership, roster/ledger recovery, scoring, batch ack, delegated deployment, cleanup."
   evidence_template_schema_coverage: "validate-evidence-templates.ps1: hard-isolation, runtime multi-agent, dry-run fields."
@@ -90,6 +89,7 @@ commands:
   powershell_rg_glob_rule: "PowerShell rg: options before --, then pattern and paths."
   deployed_file_set_literal_scan: "Search only deployed_file_set for source literals."
 profiles:
+  change_aware: "Auto: Fast for low-risk code/docs, Policy for rules/templates/memory, Full for schemas/version/release/validation infrastructure."
   read_only_audit: "Read assigned paths; run allowed commands; report findings/isolation."
   fast_turn: "answer-only no command; edits read target, status, scoped diff, focused verify."
   policy_pack_edit: "Policy/docs/templates changed: status, targets, diff, pair/prose/size gates."
@@ -113,18 +113,18 @@ profiles:
   runtime_execution: "Inspect runtime-execution/verify; use agents-runtime.ps1; record gates; verify cleanup evidence before claims."
   provider_adapter: "Inspect provider-adapters/model-policy/verify; bind tiers first; model ids replaceable."
   route_pack: "Inspect route-packs/ai-runtime/verify; export deterministic manifest; verify hashes and compact files."
-  knowledge_footprint: "Inspect knowledge-footprint/context-compact/verify; store scope, refs, gaps, conclusion, resume pointer."
+  knowledge_footprint: "Inspect knowledge-footprint/context-compact/verify; retrieve index-first, enforce freshness, store refs, gaps, conclusion, resume pointer."
   runtime_multi_agent: "Runtime multi-agent claims require live_employee_validation; batch claims need batch_employee_validation."
   hard_isolation: "Claiming tool/external isolation requires current hard-isolation evidence; otherwise behavioral-only."
 size_gates:
   unit: "bytes; 1 KiB = 1024 bytes"
   targets:
-    AGENTS.md: 1848
+    AGENTS.md: 1900
     project_skill: 1592
-    canonical_agents_yaml: 15684
+    canonical_agents_yaml: 16400
     script_ps1: 129000
     validate_script_ps1_after_split: 110000
-    tracked_repo_kib: 896
+    tracked_repo_kib: 330000
   tracked_rule: "Ignored/untracked files excluded; intended new files count."
 evidence_tiers:
   current_release_max: "T2 current-repo practice"
@@ -141,7 +141,7 @@ minimum_evidence:
   branch_push: ["checkpoint gates","current branch/remote","push result"]
   deploy_clean: ["target authorization","target inspected","layout selected","deployed_file_set recorded","blocklist checks","handoff/skipped reason"]
   runtime_multi_agent: ["real runtime id","assignment/report match","git status after employee work","close evidence","expected/received/closed reconciliation","history_cleanup_evidence"]
-  runtime_release_evidence: ["sanitized release evidence JSON","v2 schema","source_commit","validated_content_digest","working_tree_status_at_capture","practice suite","command durations","exit codes","retry counts","token usage unavailable reason","T2 current-repo practice boundary"]
+  runtime_release_evidence: ["sanitized release evidence JSON","v3 schema","source_commit","validated_content_digest","working_tree_status_at_capture","practice suite","command durations","exit codes","retry counts","token usage unavailable reason","T2 current-repo practice boundary"]
   workflow_artifact: ["workflow state verified","packet/result collection normalized","approval gate or escalation evidence"]
   context_compact: ["latest_user_request preserved","changed_files known/unknown","verification_state","open_risks","subagents_open or closed counts"]
   collaborator_window: ["thread capability discovered","leader mapping verified","runtime-local evidence","archive/close verified"]
@@ -150,7 +150,7 @@ minimum_evidence:
   runtime_execution: ["run state verified","gated action checked","tool/result evidence collected","cleanup evidence verified"]
   provider_adapter: ["tier mapping exists","capability boundary checked","no hard-bound workflow model id"]
   route_pack: ["route id checked","file hashes recorded","deterministic manifest verified","cache key fields present"]
-  knowledge_footprint: ["scope recorded","evidence refs recorded","gaps explicit","resume pointer present","full transcript excluded"]
+  knowledge_footprint: ["index schema valid","active entry not overdue","detail metadata matches index","source refs recorded","current evidence rechecked","full transcript excluded"]
   hard_isolation: ["current tool/runtime/OS/account/cloud enforcement evidence"]
 no_deduction_audit:
   rule: "Claim no-deduction only with release_deploy_push_audit-level proof plus runtime/hard-isolation evidence when applicable."

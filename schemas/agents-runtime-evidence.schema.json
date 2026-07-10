@@ -25,7 +25,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "agents-runtime-evidence/v2"
+      "const": "agents-runtime-evidence/v3"
     },
     "workflow_version": {
       "type": "string",
@@ -44,7 +44,7 @@
       "required": [
         "algorithm",
         "value",
-        "tracked_file_count"
+        "intended_file_count"
       ],
       "properties": {
         "algorithm": {
@@ -54,7 +54,7 @@
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
         },
-        "tracked_file_count": {
+        "intended_file_count": {
           "type": "integer",
           "minimum": 1
         }

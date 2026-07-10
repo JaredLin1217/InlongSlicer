@@ -59,7 +59,7 @@ return $match.Groups[1].Value
 
 function Invoke-GitLines {
 param([string[]] $Arguments)
-$output = & git -C $RepoRoot @Arguments 2>$null
+$output = & git -c core.quotepath=false -C $RepoRoot @Arguments 2>$null
 if ($LASTEXITCODE -ne 0 -or $null -eq $output) {
 return @()
 }
@@ -121,7 +121,7 @@ $payload = ($entries.ToArray() -join "`n")
 return [ordered]@{
 algorithm = "sha256"
 value = Get-StringSha256 -Value $payload
-tracked_file_count = $entries.Count
+intended_file_count = $entries.Count
 }
 }
 
@@ -263,7 +263,7 @@ $duration = [int64] ($runFinished - $runStarted).TotalMilliseconds
 $commandArray = @($commands.ToArray())
 $failedCommands = @($commandArray | Where-Object { [string] $_.result -ne "passed" })
 $evidence = [ordered]@{
-schema_version = "agents-runtime-evidence/v2"
+schema_version = "agents-runtime-evidence/v3"
 workflow_version = $workflowVersion
 repo_commit = $repoCommit
 source_commit = $sourceCommit

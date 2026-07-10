@@ -5,12 +5,6 @@
   "type": "object",
   "required": [
     "schema",
-    "purpose",
-    "owns",
-    "principle",
-    "scope_rule",
-    "stale_literal_rule",
-    "batch_rule",
     "profile_selection",
     "file_classes",
     "gate_matrix",
@@ -41,6 +35,7 @@
     "file_classes.runtime_local",
     "file_classes.foundation_creation_canonical",
     "commands.full_audit_bundle",
+    "commands.changed_validation",
     "commands.enterprise_dispatch_integrity",
     "commands.workflow_artifact_integrity",
     "commands.context_compact_integrity",
@@ -53,6 +48,8 @@
     "commands.runtime_execution_validation_helper",
     "commands.readiness_validation_helper",
     "commands.cross_project_runtime_validation_helper",
+    "commands.change_aware_validation_helper",
+    "commands.knowledge_validation_helper",
     "commands.deployment_script_safety",
     "commands.deployment_script_selftest",
     "commands.multi_agent_workflow_integrity",
@@ -60,6 +57,7 @@
     "commands.ci_workflow_stability",
     "commands.deployed_file_set_status",
     "profiles.commit_tag_checkpoint",
+    "profiles.change_aware",
     "profiles.release_deploy_push_audit",
     "profiles.enterprise_dispatch",
     "profiles.workflow_artifact",
@@ -80,6 +78,7 @@
     "minimum_evidence.context_compact",
     "minimum_evidence.foundation_creation",
     "minimum_evidence.runtime_release_evidence",
+    "minimum_evidence.knowledge_footprint",
     "live_employee_validation.required",
     "batch_employee_validation.required",
     "drift_checks.exact_pairs",
@@ -93,6 +92,38 @@
     }
   ],
   "x-required-contains": [
+    {
+      "path": "commands.changed_validation",
+      "contains": [
+        "validate-changes.ps1",
+        "-Profile Auto",
+        "-Explain"
+      ]
+    },
+    {
+      "path": "commands.knowledge_footprint_integrity",
+      "contains": [
+        "validate-knowledge.ps1",
+        "freshness",
+        "evidence refs"
+      ]
+    },
+    {
+      "path": "profiles.change_aware",
+      "contains": [
+        "Fast",
+        "Policy",
+        "Full"
+      ]
+    },
+    {
+      "path": "minimum_evidence.knowledge_footprint",
+      "contains": [
+        "index schema valid",
+        "not overdue",
+        "current evidence rechecked"
+      ]
+    },
     {
       "path": "commands.deployment_script_safety",
       "contains": [
@@ -267,7 +298,7 @@
     {
       "path": "minimum_evidence.runtime_release_evidence",
       "contains": [
-        "v2 schema",
+        "v3 schema",
         "validated_content_digest",
         "command durations",
         "token usage unavailable reason",

@@ -2,7 +2,11 @@
 ID: <memory-id>
 Date: <yyyy-mm-dd>
 Title: <short title>
-Verified: no
+Status: active
+Confidence: <high-medium-low>
+Last Verified: <yyyy-mm-dd>
+Next Review Due: <yyyy-mm-dd>
+Source Refs: <repo paths or official URLs>
 ## Trigger
 <When this lesson should be considered.>
 ## Context
@@ -13,9 +17,11 @@ Verified: no
 <The reusable fix, rule, or operating constraint.>
 ## Verification
 <Command, file evidence, test result, or observed behavior that verifies this lesson.>
+## Evidence
+<Current evidence references that support this lesson.>
 ## Reuse when
 <Future situations where this lesson applies.>
 ## Index Row
-| ID | Date | Title | Trigger | Keywords | Summary | Entry | Verified |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| <memory-id> | <yyyy-mm-dd> | <short title> | <trigger> | <keywords> | <summary> | docs/memory/entries/<entry-file>.md | no |
+| ID | Date | Title | Trigger | Keywords | Summary | Entry | Status | Confidence | Last Verified | Next Review Due | Source Refs |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| <memory-id> | <yyyy-mm-dd> | <short title> | <trigger> | <keywords> | <summary> | `entries/<entry-file>.md` | active | <confidence> | <yyyy-mm-dd> | <yyyy-mm-dd> | <repo paths or official URLs> |

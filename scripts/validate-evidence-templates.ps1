@@ -282,17 +282,17 @@ $startFailureCount = $Failures.Count
 $checks = @(
 @{
 Name = "hard-isolation evidence"
-Paths = @("docs/hard-isolation-evidence.template.md", ".agents/docs/templates/agents/hard-isolation-evidence.template.md")
+Paths = @(".agents/docs/hard-isolation-evidence.template.md", ".agents/docs/templates/agents/hard-isolation-evidence.template.md")
 Markers = Get-RequiredEvidenceFields "hard_isolation_evidence" "runtime_multi_agent_validation"
 },
 @{
 Name = "runtime multi-agent validation"
-Paths = @("docs/runtime-multi-agent-validation.template.md", ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md")
+Paths = @(".agents/docs/runtime-multi-agent-validation.template.md", ".agents/docs/templates/agents/runtime-multi-agent-validation.template.md")
 Markers = Get-RequiredEvidenceFields "runtime_multi_agent_validation" "runtime_dry_run_evidence"
 },
 @{
 Name = "runtime dry-run evidence"
-Paths = @("docs/runtime-dry-run-evidence.template.md", ".agents/docs/templates/agents/runtime-dry-run-evidence.template.md")
+Paths = @(".agents/docs/runtime-dry-run-evidence.template.md", ".agents/docs/templates/agents/runtime-dry-run-evidence.template.md")
 Markers = Get-RequiredEvidenceFields "runtime_dry_run_evidence" "memory_entry"
 }
 )

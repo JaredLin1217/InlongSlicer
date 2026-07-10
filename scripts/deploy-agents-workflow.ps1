@@ -396,8 +396,8 @@ $cleanupScript = Join-TargetPath -Root $Root -RelativePath "scripts/agents-clean
 if (-not (Test-Path -LiteralPath $cleanupScript -PathType Leaf)) {
 $missing.Add("scripts/agents-cleanup.ps1") | Out-Null
 }
-$workflowRelative = if ($Layout -eq "dot_agents_docs") { ".agents/.agents/docs/agents/workflows.yaml" } else { ".agents/docs/agents/workflows.yaml" }
-$verifyRelative = if ($Layout -eq "dot_agents_docs") { ".agents/.agents/docs/agents/verify.yaml" } else { ".agents/docs/agents/verify.yaml" }
+$workflowRelative = if ($Layout -eq "dot_agents_docs") { ".agents/docs/agents/workflows.yaml" } else { ".agents/docs/agents/workflows.yaml" }
+$verifyRelative = if ($Layout -eq "dot_agents_docs") { ".agents/docs/agents/verify.yaml" } else { ".agents/docs/agents/verify.yaml" }
 foreach ($check in @(
 @{ Path = $workflowRelative; Marker = "runtime.quiet_cleanup"; Label = "workflow cleanup rule" },
 @{ Path = $verifyRelative; Marker = "cleanup"; Label = "verify cleanup gate" }
@@ -523,9 +523,9 @@ $historicalCandidates = @(
 "docs/decisions",
 ".agents/docs/decisions",
 ".agents/docs/project-memory.md",
-".agents/.agents/docs/project-memory.md",
+".agents/docs/project-memory.md",
 ".agents/docs/project-structure.md",
-".agents/.agents/docs/project-structure.md",
+".agents/docs/project-structure.md",
 "docs/agent-status.md",
 ".agents/docs/agent-status.md",
 "docs/agent-events",
@@ -624,25 +624,25 @@ if ($path -like ".agents/skills/*") {
 return $path
 }
 if ($path -like ".agents/docs/agents/*") {
-return $path -replace "^.agents/docs/agents/", ".agents/.agents/docs/agents/"
+return $path -replace "^.agents/docs/agents/", ".agents/docs/agents/"
 }
 if ($path -like ".agents/docs/runbooks/*") {
-return $path -replace "^.agents/docs/runbooks/", ".agents/.agents/docs/runbooks/"
+return $path -replace "^.agents/docs/runbooks/", ".agents/docs/runbooks/"
 }
 if ($path -like ".agents/docs/templates/agents/*") {
-return $path -replace "^.agents/docs/templates/agents/", ".agents/.agents/docs/templates/agents/"
+return $path -replace "^.agents/docs/templates/agents/", ".agents/docs/templates/agents/"
 }
 if ($path -eq ".agents/docs/project-memory.md") {
-return ".agents/.agents/docs/project-memory.md"
+return ".agents/docs/project-memory.md"
 }
 if ($path -eq ".agents/docs/memory/index.md") {
-return ".agents/.agents/docs/memory/index.md"
+return ".agents/docs/memory/index.md"
 }
 if ($path -eq ".agents/docs/memory/entries/README.md") {
-return ".agents/.agents/docs/memory/entries/README.md"
+return ".agents/docs/memory/entries/README.md"
 }
 if ($path -eq ".agents/docs/project-structure.md") {
-return ".agents/.agents/docs/project-structure.md"
+return ".agents/docs/project-structure.md"
 }
 if ($path -like "docs/*.md") {
 return $path -replace "^docs/", ".agents/docs/"
@@ -658,15 +658,33 @@ param(
 if ($Layout -ne "dot_agents_docs") {
 return $Content
 }
-$rewritten = $Content
-$rewritten = $rewritten.Replace(".agents/docs/agents/", ".agents/.agents/docs/agents/")
-$rewritten = $rewritten.Replace(".agents/docs/runbooks/", ".agents/.agents/docs/runbooks/")
-$rewritten = $rewritten.Replace(".agents/docs/templates/agents/", ".agents/.agents/docs/templates/agents/")
-$rewritten = $rewritten.Replace(".agents/docs/project-memory.md", ".agents/.agents/docs/project-memory.md")
-$rewritten = $rewritten.Replace(".agents/docs/memory/index.md", ".agents/.agents/docs/memory/index.md")
-$rewritten = $rewritten.Replace(".agents/docs/memory/entries/README.md", ".agents/.agents/docs/memory/entries/README.md")
-$rewritten = $rewritten.Replace(".agents/docs/project-structure.md", ".agents/.agents/docs/project-structure.md")
-return $rewritten
+$dotDocsPrefix = ".agents" + "/docs/"
+$dotDocsSentinel = "__CODEX_" + "DOT_AGENTS_DOCS__/"
+if ($Content.Contains($dotDocsSentinel)) {
+throw "Content contains the reserved dot-layout rewrite sentinel."
+}
+$rewritten = $Content.Replace($dotDocsPrefix, $dotDocsSentinel)
+$rewritten = $rewritten.Replace(".agents/docs/agents/", ".agents/docs/agents/")
+$rewritten = $rewritten.Replace(".agents/docs/runbooks/", ".agents/docs/runbooks/")
+$rewritten = $rewritten.Replace(".agents/docs/templates/agents/", ".agents/docs/templates/agents/")
+$rewritten = $rewritten.Replace(".agents/docs/project-memory.md", ".agents/docs/project-memory.md")
+$rewritten = $rewritten.Replace(".agents/docs/memory/index.md", ".agents/docs/memory/index.md")
+$rewritten = $rewritten.Replace(".agents/docs/memory/entries/README.md", ".agents/docs/memory/entries/README.md")
+$rewritten = $rewritten.Replace(".agents/docs/project-structure.md", ".agents/docs/project-structure.md")
+foreach ($relativePath in @(
+"agent-assignment.template.md",
+"agent-event.template.md",
+"agent-status.template.md",
+"controller-lease.template.md",
+"hard-isolation-evidence.template.md",
+"runtime-multi-agent-validation.template.md",
+"runtime-dry-run-evidence.template.md",
+"deployment-feedback.template.md",
+"memory-entry.template.md"
+)) {
+$rewritten = $rewritten.Replace(("docs/{0}" -f $relativePath), (".agents/docs/{0}" -f $relativePath))
+}
+return $rewritten.Replace($dotDocsSentinel, $dotDocsPrefix)
 }
 function Get-TargetLayout {
 param([string] $Root)
@@ -786,7 +804,14 @@ $currentFrom = $null
 }
 }
 if ($Groups -contains "template_provider_additions") {
-$templateFiles = Get-ChildItem -LiteralPath (Join-Path $RepoRoot "docs/templates/agents") -Recurse -File
+$templateRoot = Join-Path $RepoRoot ".agents/docs/templates/agents"
+if (-not (Test-Path -LiteralPath $templateRoot -PathType Container)) {
+$templateRoot = Join-Path $RepoRoot "docs/templates/agents"
+}
+if (-not (Test-Path -LiteralPath $templateRoot -PathType Container)) {
+throw "Template provider source is missing. Expected .agents/docs/templates/agents or docs/templates/agents."
+}
+$templateFiles = Get-ChildItem -LiteralPath $templateRoot -Recurse -File
 foreach ($file in $templateFiles) {
 $relative = Normalize-RepoPath ($file.FullName.Substring($RepoRoot.Path.Length).TrimStart("\", "/"))
 $entries.Add([pscustomobject]@{
@@ -924,7 +949,7 @@ else {
 "docs/agents-workflow-deployment.md"
 }
 $deployedVersionRelative = if ($Layout -eq "dot_agents_docs") {
-".agents/.agents/docs/agents/version.yaml"
+".agents/docs/agents/version.yaml"
 }
 else {
 ".agents/docs/agents/version.yaml"
@@ -965,7 +990,7 @@ $feedbackRelative = if ($Layout -eq "dot_agents_docs") {
 ".agents/docs/deployment-feedback.template.md"
 }
 else {
-"docs/deployment-feedback.template.md"
+".agents/docs/deployment-feedback.template.md"
 }
 $feedbackAction = if ($Mode -eq "core_bootstrap") {
 "Use a target-owned tracker for deployment feedback, or upgrade to full_workflow before filling the feedback template."
@@ -1171,7 +1196,7 @@ $feedbackRelative = if ($Layout -eq "dot_agents_docs") {
 ".agents/docs/deployment-feedback.template.md"
 }
 else {
-"docs/deployment-feedback.template.md"
+".agents/docs/deployment-feedback.template.md"
 }
 $feedbackAction = if ($Mode -eq "core_bootstrap") {
 "Use a target-owned tracker for feedback, or deploy full_workflow before filling the feedback template."
@@ -1277,6 +1302,16 @@ param(
 $content = Get-Content -LiteralPath $Path -Raw
 if (-not $content.Contains($Expected)) {
 throw "Deployment self-test expected content is missing from: $Path"
+}
+}
+function Assert-SelfTestNotContains {
+param(
+[string] $Path,
+[string] $Unexpected
+)
+$content = Get-Content -LiteralPath $Path -Raw
+if ($content.Contains($Unexpected)) {
+throw "Deployment self-test found unexpected content in: $Path"
 }
 }
 function Assert-SelfTestLineCount {
@@ -1408,7 +1443,7 @@ Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/agents/workflo
 Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/agents/workflow-artifacts.yaml"
 Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/agents/context-compact.yaml"
 Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/agents/collaborators.yaml"
-Assert-SelfTestFile -Root $rootTarget -RelativePath "docs/deployment-feedback.template.md"
+Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/deployment-feedback.template.md"
 Assert-SelfTestFile -Root $rootTarget -RelativePath "docs/agents-workflow-deployment.md"
 Assert-SelfTestFile -Root $rootTarget -RelativePath ".codex/environments/root-docs.toml"
 Assert-SelfTestContains -Path (Join-Path $rootTarget "docs/agents-workflow-deployment.md") -Expected "- .agents/docs/agents/workflows.yaml"
@@ -1459,28 +1494,36 @@ New-Item -ItemType Directory -Path (Join-Path $dotTarget ".agents/skills") -Forc
 Set-Content -LiteralPath (Join-Path $dotTarget "AGENTS.md") -Value "Route to .agents/docs/agents." -Encoding utf8
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $dotTarget; Mode = "core_bootstrap"; Upgrade = $true; Quiet = $true }
 Assert-SelfTestFile -Root $dotTarget -RelativePath "AGENTS.md"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/agents/ai-runtime.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/agents/workflows.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/agents/workflow-artifacts.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/agents/context-compact.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/agents/collaborators.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/ai-runtime.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/workflows.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/workflow-artifacts.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/context-compact.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/collaborators.yaml"
 Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents-workflow-deployment.md"
 Assert-SelfTestFile -Root $dotTarget -RelativePath "scripts/agents-cleanup.ps1"
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $dotTarget; Mode = "full_workflow"; Upgrade = $true; Quiet = $true }
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/project-memory.md"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/memory/index.md"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/project-structure.md"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/runbooks/session-handoff.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/project-memory.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/memory/index.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/project-structure.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/runbooks/session-handoff.md"
 Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agent-status.template.md"
 Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/deployment-feedback.template.md"
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $dotTarget; Mode = "template_provider_mode"; Upgrade = $true; Quiet = $true }
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/templates/agents/AGENTS.md"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/templates/agents/agents/deploy.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/templates/agents/agents/workflow-artifacts.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/templates/agents/agents/context-compact.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/.agents/docs/templates/agents/agents/collaborators.yaml"
-Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- .agents/.agents/docs/templates/agents/agents/deploy.yaml"
-Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- Deployed version file: .agents/.agents/docs/agents/version.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/AGENTS.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/deploy.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/workflow-artifacts.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/context-compact.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/collaborators.yaml"
+Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate.ps1") -Expected 'Get-RepoPath ".agents/docs/agents/"'
+Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate-size-gates.ps1") -Expected 'Get-RepoPath ".agents/docs/agents/"'
+Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate-residue.ps1") -Expected '".agents/docs/agents/"'
+Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate.ps1") -Expected '".agents/docs/agent-assignment.template.md"'
+Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate.ps1") -Expected '".agents/docs/memory-entry.template.md"'
+$doubleDotDocsPrefix = ".agents/" + ".agents/docs/"
+Assert-SelfTestNotContains -Path (Join-Path $dotTarget "scripts/deploy-agents-workflow.ps1") -Unexpected $doubleDotDocsPrefix
+Assert-SelfTestNotContains -Path (Join-Path $dotTarget "scripts/validate-changes.ps1") -Unexpected $doubleDotDocsPrefix
+Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- .agents/docs/templates/agents/agents/deploy.yaml"
+Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- Deployed version file: .agents/docs/agents/version.yaml"
 Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "Layout profile: dot-agents-layout"
 Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "layout_profile: dot-agents-layout"
 Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "cleanup_capability: available: cleanup script, workflow cleanup rule, verify gate"
@@ -1488,9 +1531,9 @@ Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflo
 Assert-NoSourceLiteral -Root $dotTarget
 $forcedDotTarget = Join-Path $selfTestRoot "forced-dot-layout"
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $forcedDotTarget; Mode = "core_bootstrap"; LayoutProfile = "dot-agents-layout"; CreateTarget = $true; Quiet = $true }
-Assert-SelfTestFile -Root $forcedDotTarget -RelativePath ".agents/.agents/docs/agents/ai-runtime.yaml"
+Assert-SelfTestFile -Root $forcedDotTarget -RelativePath ".agents/docs/agents/ai-runtime.yaml"
 Assert-SelfTestFile -Root $forcedDotTarget -RelativePath ".agents/docs/agents-workflow-deployment.md"
-Assert-SelfTestMissing -Root $forcedDotTarget -RelativePath ".agents/docs/agents/ai-runtime.yaml"
+Assert-SelfTestMissing -Root $forcedDotTarget -RelativePath "docs/agents/ai-runtime.yaml"
 Assert-SelfTestContains -Path (Join-Path $forcedDotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "Layout profile: dot-agents-layout"
 $protectedTarget = Join-Path $selfTestRoot "protected-existing"
 New-Item -ItemType Directory -Path $protectedTarget | Out-Null
@@ -1556,7 +1599,7 @@ throw "Deployment self-test expected local dirty app file to remain dirty after 
 }
 Assert-SelfTestContains -Path (Join-Path $foreignTarget "docs/agents-workflow-deployment.md") -Expected "unexpected_changed_files:"
 Assert-SelfTestContains -Path (Join-Path $foreignTarget "docs/agents-workflow-deployment.md") -Expected "- none observed"
-Invoke-SelfTestGit -Root $foreignTarget -Arguments @("add", "--", "AGENTS.md", "docs/agents", "docs/runbooks", ".agents/skills", "docs/agents-workflow-deployment.md", ".gitignore") | Out-Null
+Invoke-SelfTestGit -Root $foreignTarget -Arguments @("add", "--", "AGENTS.md", ".agents/docs/agents", ".agents/docs/runbooks", ".agents/skills", "docs/agents-workflow-deployment.md", ".gitignore") | Out-Null
 Invoke-SelfTestGit -Root $foreignTarget -Arguments @("-c", "user.name=Agents Self Test", "-c", "user.email=agents-selftest@example.invalid", "commit", "-m", "Deploy agents workflow") | Out-Null
 $rollbackScope = Invoke-SelfTestGit -Root $foreignTarget -Arguments @("diff", "--name-only", "HEAD~1..HEAD", "--")
 $rollbackScopeText = ($rollbackScope -join [Environment]::NewLine)
@@ -1657,7 +1700,7 @@ Assert-SelfTestTextContains -Text $ownedPlan -Expected "[PROTECTED] .workflow/ex
 Assert-SelfTestTextContains -Text $ownedPlan -Expected "[PROTECTED] .git/HEAD"
 $mixedRouteTarget = Join-Path $selfTestRoot "mixed-route"
 New-Item -ItemType Directory -Path $mixedRouteTarget | Out-Null
-Set-Content -LiteralPath (Join-Path $mixedRouteTarget "AGENTS.md") -Value "Read .agents/docs/agents/ai-runtime.yaml and .agents/.agents/docs/agents/ai-runtime.yaml." -Encoding utf8
+Set-Content -LiteralPath (Join-Path $mixedRouteTarget "AGENTS.md") -Value "Read docs/agents/ai-runtime.yaml and .agents/docs/agents/ai-runtime.yaml." -Encoding utf8
 $mixedBlocked = $false
 try {
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $mixedRouteTarget; Mode = "core_bootstrap"; DryRun = $true; Quiet = $true }
@@ -1674,7 +1717,7 @@ New-Item -ItemType Directory -Path (Join-Path $routedHistoricalTarget ".agents/d
 Set-Content -LiteralPath (Join-Path $routedHistoricalTarget "AGENTS.md") -Value "Route to .agents/docs/agents." -Encoding utf8
 Set-Content -LiteralPath (Join-Path $routedHistoricalTarget ".agents/docs/agents/historical.md") -Value "historical root docs" -Encoding utf8
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $routedHistoricalTarget; Mode = "core_bootstrap"; Upgrade = $true; Quiet = $true }
-Assert-SelfTestFile -Root $routedHistoricalTarget -RelativePath ".agents/.agents/docs/agents/workflows.yaml"
+Assert-SelfTestFile -Root $routedHistoricalTarget -RelativePath ".agents/docs/agents/workflows.yaml"
 Assert-SelfTestContent -Path (Join-Path $routedHistoricalTarget ".agents/docs/agents/historical.md") -Expected "historical root docs"
 Assert-SelfTestContains -Path (Join-Path $routedHistoricalTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- .agents/docs/agents/historical.md"
 $historicalPlan = Invoke-ChildDeploymentOutput -CommandArgs @{ TargetPath = $routedHistoricalTarget; Mode = "core_bootstrap"; DryRun = $true; Upgrade = $true }

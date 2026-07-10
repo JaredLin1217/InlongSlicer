@@ -2,7 +2,7 @@
 $startFailureCount = $Failures.Count
 $roots = @(
 "README.md",
-"docs/agents",
+".agents/docs/agents/",
 ".agents/docs/project-structure.md",
 "docs/templates/agents",
 "docs/runbooks",

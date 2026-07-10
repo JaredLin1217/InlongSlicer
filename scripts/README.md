@@ -4,6 +4,10 @@ Current command:
 ```powershell
 .\scripts\validate.ps1
 ```
+Change-aware default command:
+```powershell
+.\scripts\validate-changes.ps1 -Profile Auto -Explain
+```
 Public update document command:
 ```powershell
 .\scripts\update-github-updates.ps1
@@ -11,6 +15,10 @@ Public update document command:
 Release-audit command:
 ```powershell
 .\scripts\validate.ps1 -Full
+```
+Runtime release-evidence command:
+```powershell
+.\scripts\capture-runtime-evidence.ps1 -OutputPath .\docs\evidence\releases\v2.8.0-runtime-evidence.json -Full -Practice -Quiet
 ```
 Release-package export command:
 ```powershell
@@ -44,11 +52,16 @@ Deployment write command:
 ```powershell
 .\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap -LayoutProfile auto
 ```
-The validation entry point stays small and composable. It uses no external
+The change-aware entry point maps the changed path set to the smallest safe
+`Fast`, `Policy`, or `Full` profile. Use the full validator for releases,
+deployment contracts, schemas, evidence, or explicit full-audit requests.
+The validation orchestrator stays small and composable. It uses no external
 package dependencies and runs focused checks for lightweight YAML syntax,
 workflow YAML syntax, required file references, schema contracts, validation
 fixtures, placeholder scans, durable English-only rules, and
-runtime/source-state boundaries.
+runtime/source-state boundaries. Specialized helpers own knowledge freshness,
+quality scoring, size gates, release evidence, route-pack determinism, and
+runtime smoke checks.
 The public update entry point writes `docs/github-updates.md` from recent git
 history. It is used by `.github/workflows/public-updates.yml` after branch
 pushes and escapes non-ASCII commit text as ASCII codepoint markers so durable

@@ -1,6 +1,4 @@
 ﻿schema: agents-schemas/v2
-purpose: "Compact field contracts for assignments, reports, runtime evidence, recovery."
-owns: "Schemas for reports, ledgers, isolation, workflow artifacts, collaborators, foundation creation, core runtime."
 assignment:
   required_fields:
     Agent: ""
@@ -93,11 +91,13 @@ core_system:
   runtime_blocklist: "[.agents/runtime/**, .workflow/**, .codex/**, live thread ids, API keys, provider sessions]"
   release_contract: "Release manifest records version, commit, hash, file list, and blocklist result."
 foundation_creation:
-  required_fields: "[feature_id, objective, official_docs_refs, output_schema, state_owner, tool_boundary, latency_control, evaluation_gate, fallback, cleanup_rule]"
+  required_fields: "[feature_id, objective, official_docs_refs, output_schema, state_owner, tool_boundary, context_budget, latency_control, evaluation_gate, fallback, cleanup_rule]"
   schema_rule: "Use Structured Outputs for machine-consumed objects; reject schema-free durable automation output."
-  state_rule: "Name model-side, repo-local, or external state owner before multi-turn behavior is claimed."
-  creation_rule: "Translate official OpenAI developer documentation into scoped repo-local features, not broad context growth."
+  state_rule: "Name exactly one model-side, repo-local, or external state owner before multi-turn behavior is claimed."
+  creation_rule: "Translate current official OpenAI documentation into scoped repo-local features through progressive disclosure, not broad context growth."
   tool_boundary_rule: "Declare allowed tools, handoff boundary, and subagent write ownership before delegation."
+  context_rule: "Read the route index first, open only named canonical files, keep stable instructions before dynamic state, and compact long histories."
+  memory_rule: "Memory is recall, not policy; current repository and official evidence override stale or conflicting memory."
   latency_rule: "Choose prompt_caching, predicted_outputs, or neither based on stable prefix and known-output fit."
   evaluation_rule: "Each foundation feature includes pass/fail evidence, risk, and rollback note before release."
 runtime_execution:
@@ -116,6 +116,8 @@ knowledge_footprint:
   required_fields: "[footprint_id, scope, opened_files, evidence_refs, retained_facts, dropped_details, gaps, conclusion, resume_pointer]"
   raw_transcript_rule: "No full transcript, raw worker chatter, live thread ids, or secrets."
   resume_rule: "Each footprint includes a resume pointer."
+  durable_memory_rule: "Promote only reusable verified lessons; policy, secrets, volatile status, and raw output never become durable memory."
+  retrieval_rule: "Read the index first, open at most three matching entries by default, and recheck current evidence before acting."
 explorer_brief_assignment:
   preset_rule: "Default read-only/scoring explorers. Do not include ownership matrix."
 explorer_final_report:
@@ -135,13 +137,13 @@ ownership_matrix:
   required_fields: "[Agent, Runtime id, Role, Status, Ownership, Normalized owned write scope, Scope type, Conflict status, Checked against, Last checked by, Last checked at]"
   conflict_checks: "[same, containment, alias, controller-active-worker]"
 employee_final_report:
-  required_fields: "[assignment identity, ownership/scope, inspected/changed files, skills read, findings, verification, risks, review, next action, roster/ledger refs, GM/GS, XR/XW, completion]"
+  required_fields: "[assignment,scope,files,skills,findings,verification,risks,next,roster/ledger,isolation,completion]"
 agent_status_snapshot:
   location: "%TEMP%/codex-agent-status/<project-id>/agent-status.md"
-  required_fields: "[snapshot, agent/runtime, mode/role/status/task, ownership/scope, matrix status, last event, close/cleanup result, external status path]"
+  required_fields: "[snapshot,agent/runtime,state/task,scope,matrix,last event,cleanup,status path]"
 agent_event:
   names: "[prepare, hired, started, poll, report, completed, blocked, stopped, close, history_cleanup, integrated, reconciled]"
-  rule: "Events may mark unavailable fields not applicable."
+  rule: "Fields may be not applicable."
 agent_ledger_event:
   location: ".agents/runtime/agent-ledger.jsonl"
   status: "repo-local ignored runtime state; not Codex official runtime DB"
@@ -150,14 +152,13 @@ agent_ledger_event:
   storage_rule: "Never stage, commit, deploy, or copy .agents/runtime/**; rebuild from evidence."
 controller_lease:
   location: "%TEMP%/codex-agent-status/<project-id>/controller-lease.md"
-  required_fields: "[Controller id, Lease id, Lease status, Snapshot version reviewed]"
+  required_fields: "[Controller id,Lease id,Status,Reviewed snapshot]"
 hard_isolation_evidence:
   required_fields: ["Task","Agent/controller","Requested guarantee","Forbidden resources","Authorized external paths/actions","Evidence location","Date","Classification","Control owner/config/bypass","Allowed/forbidden read/write roots","Credential/account scope","Network/cloud scope","Verifier/method/log/result","Blocked-access behavior","No forbidden-content read or authorization","Expiry/cleanup/rollback","GM/GS/XR/XW","Remaining risk"]
   rule: "Missing required evidence means behavioral-only."
 runtime_multi_agent_validation:
   required_fields: ["Validation id","Date","Controller","User request","Claim scope","Runtime enforcement","Runtime id/nickname/mode/role/task","Roster/ledger paths and snapshots","Assignment/prompt requirements","Owned/shared scope and matrix status","Report receipt and id match","Expected/spawned/completed/closed counts","Missing/duplicate/invalid/wrong/failed/running/unclosed ids","Ack/parser/protocol/task boundaries","Skills and external access","Files changed","Verification","Risks","Ledger/poll/report/close/reconciled evidence","Git status and out-of-scope changes","Runtime close/list/state cleanup evidence","History cleanup authorization/targets/result/evidence","UI refresh","Pass condition","Remaining runtime risk","Controller conclusion"]
-  marker_anchors: "[Expected id set, Protocol result, Roster snapshot version, Final report matched runtime id, Git status after employee work, SQLite thread state result, session_index_result, Global unread state result, Rollout residue result, Delayed cleanup verification]"
-  storage_rule: "Filled records are local scratch unless promoted."
+  storage_rule: "local scratch unless promoted."
 runtime_release_evidence:
   required_fields: "[schema_version, workflow_version, repo_commit, source_commit, validated_content_digest, content_digest_excluded_paths, working_tree_status_at_capture, run_started_utc, run_finished_utc, duration_ms, commands, claims, scope, xr_xw, evidence_tier]"
   command_fields: "[name, command, result, exit_code, duration_ms, retry_count, raw_output_ref, overall_score]"
@@ -169,12 +170,17 @@ runtime_dry_run_evidence:
   required_fields: ["Evidence id","Date","Operator","Request","Claim scope","Static validation result","Target path","Dry-run command","Write mode","Expected no-write result","Output reference","Changed files","Cleanup","Result","Boundary statement","Isolation"]
   boundary_rule: "Static 100/100 validation is not runtime deployment proof."
 history_cleanup_evidence:
-  required_when_claimed: "[authorization, cleanup_helper, close result, parent/repo/target ids, deleted counts, state/unread/residue checks, parent preserved, reload/restart result]"
+  required_when_claimed: "[authorization, cleanup_helper, close, target ids, deleted counts, residue checks, parent preserved, reload result]"
   target_filter: "parent/cwd closed child subagent runtime ids, never sidebar nicknames; delete thread_spawn_edges first"
   runtime_ids_resolved_from: "official runtime close/list evidence, not sidebar labels"
   script_result: "scripts/agents-cleanup.ps1 JSON evidence for Verify or Cleanup"
 memory_entry:
-  index_columns: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Verified]"
+  required_fields: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Status, Confidence, Last Verified, Next Review Due, Source Refs]"
+  index_columns: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Status, Confidence, Last Verified, Next Review Due, Source Refs]"
+  status_values: "[active, stale, retired]"
+  confidence_values: "[high, medium, low]"
+  freshness_rule: "Active entries require a parseable review date and become unusable for current claims after Next Review Due."
+  authority_rule: "Memory supports recall only; checked-in policy, current repository state, and current official sources win conflicts."
 skill:
   openai_yaml:
     policy: "[allow_implicit_invocation]"

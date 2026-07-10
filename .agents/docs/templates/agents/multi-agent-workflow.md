@@ -1,4 +1,4 @@
-# Multi-Agent Workflow
+﻿# Multi-Agent Workflow
 Use only after an explicit hire, spawn, delegate, parallel-agent, scoring, or
 equivalent request. Canonical details live in `.agents/docs/agents/workflows.yaml`.
 ## Fast Path
@@ -37,7 +37,9 @@ Prefer official controls first: runtime close, `thread/list` by cwd/source kind,
 official hard-delete thread API or sidebar refresh API.
 If authorized cleanup is needed, match only current-project closed subagent
 rows/files after normalizing Windows paths. Do not create backup copies; record
-pre-delete counts. In `%USERPROFILE%/.codex/state_<n>.sqlite`, delete matching
+pre-delete counts. Use `scripts/agents-cleanup.ps1 -Action Verify` to capture
+current residue and `-Action Cleanup -Force` only after exact authorization. In
+`%USERPROFILE%/.codex/state_<n>.sqlite`, delete matching
 child `thread_spawn_edges` before matching child `threads`; preserve the
 parent/controller/user thread. Remove matching rows from
 `%USERPROFILE%/.codex/session_index.jsonl`. Clear matching unread ids from

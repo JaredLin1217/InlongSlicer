@@ -3,7 +3,7 @@ purpose: "Core route, employee, deploy, runtime evidence, scoring, handoff."
 owns: "Workflow behavior and closeout."
 read_first: ["ai-runtime","policy","verify","schemas","deploy when target writes"]
 startup:
-  controller: "Classify; answer-only no command; inspect before edit/git/deploy/runtime claim; expand named route only."
+  controller: "Classify from the compact route index; answer-only no command; inspect before edit/git/deploy/runtime claim; expand named route only."
   common_task_matrix:
     answer_only: "Rules only; no command/current claim."
     scoped_edit: "Target read, scoped diff, focused verify."
@@ -38,10 +38,11 @@ startup:
   employee: "Read assignment/assigned paths/skill; run allowed verify; report completed/blocked/stopped."
 progress_updates:
   cap: "No interim for answer-only; otherwise concise per phase/30-60s and before risky edit/block/verify/final."
-memory: ".agents/docs/memory/index.md for reusable lessons; current evidence wins."
+memory: "When relevant, read .agents/docs/memory/index.md first, open at most three matching active entries, reject overdue claims, and let current evidence win."
 multi_agent_runtime:
   trigger_when: "explicit hire/spawn/delegate/parallel-agent request"
   do_not_trigger_for: ["goal continuation","static audit without delegation","self-scoring unless requested"]
+  delegation_gate: "Delegate only when independent parallel work or specialist review outweighs added context, coordination, and integration cost; keep tightly coupled work with one controller."
   modes: "sidecar; manual-detached default; cloud/automation by setup."
   roles: "explorer read-only; worker exclusive scoped edits."
   controller: "Assign, review, integrate, reconcile, report."
@@ -123,13 +124,13 @@ context_compact_runtime:
   subagent_rule: "Closeout records requested, spawned, completed, closed, missing, duplicate, invalid_format, failed, risk."
   risk_rule: "Unclosed employees, missing verification, unknown changes, or omitted external access must be open_risks."
   runtime_rule: "Compact events stay local under .agents/runtime/compact-events.jsonl; never stage, deploy, release, or copy."
-  footprint_rule: "Each compact event can emit knowledge_footprint with retained facts, dropped details, risks, and resume pointer."
+  footprint_rule: "A compact event may promote only reusable verified lessons; stale memory cannot drive current action and current evidence wins."
 collaborator_window_runtime: ".agents/docs/agents/collaborators.yaml; leader windows only; close_rule: archive/close; runtime_rule: live ids/evidence runtime-local."
 core_system_runtime: ".agents/docs/agents/core-system.yaml; boundary, canonical set, blocklist, deploy/release contract; runtime/API/provider state local."
 runtime_execution_runtime: ".agents/docs/agents/runtime-execution.yaml; run, approval, tool/result, escalation, cleanup evidence; no fully deleted claim without proof."
 provider_adapter_runtime: ".agents/docs/agents/provider-adapters.yaml; providers expose capabilities; departments request tiers; adapters map tiers to models."
 route_pack_runtime: ".agents/docs/agents/route-packs.yaml; deterministic route id, file hashes, cache key, compact manifest."
-knowledge_footprint_runtime: ".agents/docs/agents/knowledge-footprint.yaml; scope, opened files, evidence refs, gaps, conclusion, resume pointer."
+knowledge_footprint_runtime: ".agents/docs/agents/knowledge-footprint.yaml; index-first retrieval, reusable verified promotion, freshness dates, evidence refs, gaps, and resume pointer."
 scoring_batches:
   use_when: "explicit scoring or many-agent eval"
   default_size: 3
@@ -151,6 +152,7 @@ skill_authoring: "Create .agents/skills/<name>/SKILL.md only for repeatable repo
 maintenance:
   local_permission_boundary: "No OS permission/ownership/ACL/.git repair; report Git metadata blockers; resume after writable repo or clean clone."
   verification_profiles:
+    change_aware: "validate-changes.ps1 Auto selects Fast, Policy, or Full from changed-file risk"
     fast_turn: "answer-only/scoped work"
     policy_pack_edit: "changed files and mirror pairs"
     commit_tag_checkpoint: "ordinary commit/tag/version/branch-push checkpoint"
