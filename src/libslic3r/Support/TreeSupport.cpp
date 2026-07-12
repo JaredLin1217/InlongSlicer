@@ -26,6 +26,7 @@
 
 #include <boost/log/trivial.hpp>
 #include <algorithm>
+#include <memory>
 
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795
@@ -1167,19 +1168,21 @@ void TreeSupport::create_tree_support_layers()
             raft_slice_z = raft_print_z - height / 2;
             m_object->add_tree_support_layer(layer_id++, height, raft_print_z, raft_slice_z);
         }
-        // Insert the base layers.
-        for (size_t i = 1; i < m_slicing_params.base_raft_layers; i++) {
-            coordf_t height = m_slicing_params.base_raft_layer_height;
-            raft_print_z += height;
-            raft_slice_z = raft_print_z - height / 2;
-            m_object->add_tree_support_layer(layer_id++, height, raft_print_z, raft_slice_z);
-        }
-        // Insert the interface layers.
-        for (size_t i = 0; i < m_slicing_params.interface_raft_layers; i++) {
-            coordf_t height = m_slicing_params.interface_raft_layer_height;
-            raft_print_z += height;
-            raft_slice_z = raft_print_z - height / 2;
-            m_object->add_tree_support_layer(layer_id++, height, raft_print_z, raft_slice_z);
+        if (m_slicing_params.raft_layers() > 1) {
+            // Insert the base layers after the first raft layer.
+            for (size_t i = 1; i < m_slicing_params.base_raft_layers; i++) {
+                coordf_t height = m_slicing_params.base_raft_layer_height;
+                raft_print_z += height;
+                raft_slice_z = raft_print_z - height / 2;
+                m_object->add_tree_support_layer(layer_id++, height, raft_print_z, raft_slice_z);
+            }
+            // Insert the interface layers, including the contact layer.
+            for (size_t i = 0; i < m_slicing_params.interface_raft_layers; i++) {
+                coordf_t height = m_slicing_params.interface_raft_layer_height;
+                raft_print_z += height;
+                raft_slice_z = raft_print_z - height / 2;
+                m_object->add_tree_support_layer(layer_id++, height, raft_print_z, raft_slice_z);
+            }
         }
 
         // Layers between the raft contacts and bottom of the object.
@@ -1285,15 +1288,18 @@ static void make_perimeter_and_inner_brim(ExtrusionEntitiesPtr &dst, const ExPol
     _make_loops(dst, support_area_new, role, wall_count, flow);
 }
 
-static void make_perimeter_and_infill(ExtrusionEntitiesPtr& dst, const ExPolygon& support_area, size_t wall_count, const Flow& flow, ExtrusionRole role, Fill* filler_support, double support_density, bool infill_first=true)
+static void make_perimeter_and_infill(ExtrusionEntitiesPtr& dst, const ExPolygon& support_area, size_t wall_count, const Flow& flow, ExtrusionRole role, Fill* filler_support, double support_density, bool infill_first=true, bool fill_concentric_gaps=false)
 {
     Polygons   loops;
     ExPolygons support_area_new = offset_ex(support_area, -0.5f * float(flow.scaled_spacing()), jtSquare);
 
     // draw infill
     FillParams fill_params;
-    fill_params.density = support_density;
-    fill_params.dont_adjust = true;
+    fill_params.density              = support_density;
+    fill_params.dont_adjust          = true;
+    fill_params.fill_concentric_gaps = fill_concentric_gaps;
+    if (fill_concentric_gaps)
+        fill_params.flow = flow;
     ExPolygons to_infill = offset_ex(support_area, -float(wall_count) * float(flow.scaled_spacing()), jtSquare);
     std::vector<BoundingBox> fill_boxes = fill_expolygons_generate_paths(dst, to_infill, filler_support, fill_params, role, flow);
 
@@ -1391,77 +1397,45 @@ void TreeSupport::generate_toolpaths()
         return;
 
     // calculate fill areas for raft layers
-    ExPolygons raft_areas;
-    if (object_config.raft_generate_bounding_box) {
-        BoundingBox raft_bbox;
-        if (m_object->layer_count() > 0) {
-            const Layer *layer = m_object->layers().front();
-            BoundingBox bbox = get_extents(layer->lslices);
-            if (bbox.defined)
-                raft_bbox.merge(bbox);
-        }
-        if (m_object->support_layer_count() > m_raft_layers) {
-            ExPolygons support_areas;
-            const SupportLayer *ts_layer = m_object->get_support_layer(m_raft_layers);
-            for (const ExPolygon& expoly : ts_layer->floor_areas)
-                support_areas.push_back(expoly);
-            for (const ExPolygon& expoly : ts_layer->roof_areas)
-                support_areas.push_back(expoly);
-            for (const ExPolygon& expoly : ts_layer->base_areas)
-                support_areas.push_back(expoly);
-            if (!support_areas.empty()) {
-                BoundingBox bbox = get_extents(support_areas);
-                if (bbox.defined)
-                    raft_bbox.merge(bbox);
-            }
-        }
-        if (raft_bbox.defined) {
-            ExPolygon box_slice;
-            box_slice.contour = raft_bbox.polygon();
-            box_slice.contour.make_counter_clockwise();
-            raft_areas.emplace_back(std::move(box_slice));
-        }
-    } else {
-        if (m_object->layer_count() > 0) {
-            const Layer *layer = m_object->layers().front();
-            for (const ExPolygon &expoly : layer->lslices) {
-                if (object_config.raft_ignore_internal_contours) {
-                    ExPolygon outer_slice;
-                    outer_slice.contour = expoly.contour;
-                    outer_slice.contour.make_counter_clockwise();
-                    raft_areas.emplace_back(std::move(outer_slice));
-                } else {
-                    raft_areas.push_back(expoly);
-                }
-            }
-        }
-        if (m_object->support_layer_count() > m_raft_layers) {
-            const SupportLayer *ts_layer = m_object->get_support_layer(m_raft_layers);
-            for (const ExPolygon& expoly : ts_layer->floor_areas)
-                raft_areas.push_back(expoly);
-            for (const ExPolygon& expoly : ts_layer->roof_areas)
-                raft_areas.push_back(expoly);
-            for (const ExPolygon& expoly : ts_layer->base_areas)
-                raft_areas.push_back(expoly);
-        }
+    ExPolygons object_areas;
+    if (m_object->layer_count() > 0)
+        object_areas = m_object->layers().front()->lslices;
+
+    ExPolygons support_areas;
+    if (m_object->support_layer_count() > m_raft_layers) {
+        const SupportLayer *ts_layer = m_object->get_support_layer(m_raft_layers);
+        support_areas.insert(support_areas.end(), ts_layer->floor_areas.begin(), ts_layer->floor_areas.end());
+        support_areas.insert(support_areas.end(), ts_layer->roof_areas.begin(), ts_layer->roof_areas.end());
+        support_areas.insert(support_areas.end(), ts_layer->base_areas.begin(), ts_layer->base_areas.end());
     }
+
+    ExPolygons raft_areas = build_raft_first_layer_footprint(
+        object_areas, support_areas, object_config.raft_generate_bounding_box,
+        object_config.raft_ignore_internal_contours);
 
     raft_areas = std::move(offset_ex(raft_areas, scale_(object_config.raft_expansion)));
 
     size_t layer_nr = 0;
     for (; layer_nr < m_slicing_params.base_raft_layers; layer_nr++) {
         SupportLayer *ts_layer = m_object->get_support_layer(layer_nr);
-        coordf_t expand_offset = (layer_nr == 0 ? m_object_config->raft_first_layer_expansion.value : 0.);
+        coordf_t expand_offset = raft_layer_expansion_offset(
+            object_config, m_slicing_params.raft_layers(), layer_nr);
+        if (layer_nr == 0)
+            expand_offset += m_object_config->raft_first_layer_expansion.value;
         auto raft_areas1 = offset_ex(raft_areas, scale_(expand_offset));
+        const ExPolygons raft_layer_regions = raft_areas1;
 
         Flow support_flow = Flow(support_extrusion_width, ts_layer->height, nozzle_diameter);
-        Fill* filler_raft = Fill::new_from_type(raft_base_fill_pattern);
+        std::unique_ptr<Fill> filler_raft(Fill::new_from_type(raft_base_fill_pattern));
         filler_raft->angle = layer_nr == 0 ? PI/2 : 0;
         filler_raft->spacing = support_flow.spacing();
 
         FillParams fill_params;
-        fill_params.density = layer_nr == 0 ? object_config.raft_first_layer_density * 0.01 : raft_base_density;
-        fill_params.dont_adjust = true;
+        fill_params.density              = layer_nr == 0 ? object_config.raft_first_layer_density * 0.01 : raft_base_density;
+        fill_params.dont_adjust          = true;
+        fill_params.fill_concentric_gaps = raft_base_fill_pattern == ipConcentric;
+        if (fill_params.fill_concentric_gaps)
+            fill_params.flow = support_flow;
 
         // wall of first layer raft
         if (layer_nr == 0) {
@@ -1471,7 +1445,9 @@ void TreeSupport::generate_toolpaths()
             raft_areas1 = offset_ex(raft_areas1, -flow.scaled_spacing() / 2.);
         }
         fill_expolygons_generate_paths(ts_layer->support_fills.entities, raft_areas1,
-            filler_raft, fill_params, erSupportMaterial, support_flow);
+            filler_raft.get(), fill_params, erSupportMaterial, support_flow);
+        ts_layer->raft_support_islands = raft_layer_regions;
+        ts_layer->support_islands = raft_layer_regions;
     }
 
     // subtract the non-raft support bases, otherwise we'll get support base on top of raft interfaces which is not stable
@@ -1484,9 +1460,6 @@ void TreeSupport::generate_toolpaths()
         }
     }
     first_non_raft_base = offset_ex(first_non_raft_base, support_extrusion_width);
-    ExPolygons raft_base_areas = intersection_ex(raft_areas, first_non_raft_base);
-    ExPolygons raft_interface_areas = diff_ex(raft_areas, raft_base_areas);
-
 
     // raft interfaces
     for (layer_nr = m_slicing_params.base_raft_layers;
@@ -1494,33 +1467,50 @@ void TreeSupport::generate_toolpaths()
          layer_nr++)
     {
         SupportLayer *ts_layer = m_object->get_support_layer(layer_nr);
+        const coordf_t layer_expansion = raft_layer_expansion_offset(
+            object_config, m_slicing_params.raft_layers(), layer_nr);
+        const ExPolygons raft_layer_areas = layer_expansion > EPSILON ?
+            offset_ex(raft_areas, scale_(layer_expansion)) : raft_areas;
+        const ExPolygons raft_base_regions = intersection_ex(raft_layer_areas, first_non_raft_base);
+        const ExPolygons raft_interface_regions = diff_ex(raft_layer_areas, raft_base_regions);
 
         Flow support_flow(support_extrusion_width, ts_layer->height, nozzle_diameter);
-        Fill* filler_interface = Fill::new_from_type(raft_base_fill_pattern);
+        std::unique_ptr<Fill> filler_interface(Fill::new_from_type(raft_base_fill_pattern));
         filler_interface->angle = M_PI_2;  // interface should be perpendicular to base
         filler_interface->spacing = support_flow.spacing();
 
         FillParams fill_params;
-        fill_params.density = raft_interface_density;
-        fill_params.dont_adjust = true;
+        fill_params.density              = raft_interface_density;
+        fill_params.dont_adjust          = true;
+        fill_params.fill_concentric_gaps = raft_base_fill_pattern == ipConcentric;
+        if (fill_params.fill_concentric_gaps)
+            fill_params.flow = support_flow;
 
-        fill_expolygons_generate_paths(ts_layer->support_fills.entities, raft_interface_areas,
-            filler_interface, fill_params, erSupportMaterialInterface, support_flow);
+        ExPolygons interface_fill_areas = raft_interface_regions;
+        fill_expolygons_generate_paths(ts_layer->support_fills.entities, interface_fill_areas,
+            filler_interface.get(), fill_params, erSupportMaterialInterface, support_flow);
 
         fill_params.density = object_config.raft_first_layer_density * 0.01;
-        fill_expolygons_generate_paths(ts_layer->support_fills.entities, raft_base_areas,
-            filler_interface, fill_params, erSupportMaterial, support_flow);
+        ExPolygons base_fill_areas = raft_base_regions;
+        fill_expolygons_generate_paths(ts_layer->support_fills.entities, base_fill_areas,
+            filler_interface.get(), fill_params, erSupportMaterial, support_flow);
+        ts_layer->raft_support_islands = raft_base_regions;
+        ts_layer->raft_interface_islands = raft_interface_regions;
+        ExPolygons layer_islands = raft_base_regions;
+        expolygons_append(layer_islands, raft_interface_regions);
+        ts_layer->support_islands = union_ex(layer_islands);
     }
 
     // layers between raft and object
     for (; layer_nr < m_raft_layers; layer_nr++) {
         SupportLayer *ts_layer = m_object->get_support_layer(layer_nr);
         Flow support_flow(support_extrusion_width, ts_layer->height, nozzle_diameter);
-        Fill* filler_raft = Fill::new_from_type(raft_base_fill_pattern);
+        std::unique_ptr<Fill> filler_raft(Fill::new_from_type(raft_base_fill_pattern));
         filler_raft->angle = M_PI_2;
         filler_raft->spacing = support_flow.spacing();
         for (auto& poly : first_non_raft_base)
-            make_perimeter_and_infill(ts_layer->support_fills.entities, poly, std::min(size_t(1), wall_count), support_flow, erSupportMaterial, filler_raft, raft_interface_density, false);
+            make_perimeter_and_infill(ts_layer->support_fills.entities, poly, std::min(size_t(1), wall_count), support_flow, erSupportMaterial, filler_raft.get(), raft_interface_density, false,
+                raft_base_fill_pattern == ipConcentric);
     }
 
     if (m_object->support_layer_count() <= m_raft_layers)

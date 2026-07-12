@@ -19,5 +19,5 @@
     "raft_base_pattern": "rectilinear",
     "raft_base_pattern_spacing": "0.05",
     "raft_generate_bounding_box": "1",
-    "raft_ignore_internal_contours": "1"
+    "raft_ignore_internal_contours": "0"
 }

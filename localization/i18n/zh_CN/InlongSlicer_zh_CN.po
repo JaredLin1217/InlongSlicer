@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slic3rPE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 05:51+0800\n"
+"POT-Creation-Date: 2026-07-11 13:08+0800\n"
 "PO-Revision-Date: 2026-02-28 00:59\n"
 "Last-Translator: Handle <mail@bysb.net>\n"
 "Language-Team: \n"
@@ -7227,6 +7227,404 @@ msgstr "切割连接件"
 msgid "Layers"
 msgstr "层"
 
+msgid "High-shrinkage material"
+msgstr "高收缩材料"
+
+msgid "Bottom layer"
+msgstr "底层"
+
+msgid "Sharp corner"
+msgstr "尖角"
+
+msgid "Long path"
+msgstr "长路径"
+
+msgid "Large bottom area"
+msgstr "大底面"
+
+msgid "Excessive cooling"
+msgstr "冷却过强"
+
+msgid "Low chamber temperature"
+msgstr "腔温偏低"
+
+msgid "High thermal delta"
+msgstr "温差过高"
+
+msgid "High shrinkage"
+msgstr "收缩偏高"
+
+msgid "Brim/raft protected"
+msgstr "已有裙边/底筏保护"
+
+msgid "High thermal stress"
+msgstr "热应力高"
+
+msgid "Low bed temperature"
+msgstr "热床偏低"
+
+msgid "Low data confidence"
+msgstr "资料可信度不足"
+
+msgid "Remaining risk mainly comes from chamber, bed, or thermal delta"
+msgstr "剩余风险主要来自腔温、热床或温差"
+
+msgid "Remaining risk mainly comes from material shrinkage"
+msgstr "剩余风险主要来自材料收缩"
+
+msgid "Remaining risk mainly comes from a large bottom area"
+msgstr "剩余风险主要来自大底面"
+
+msgid "Remaining risk mainly comes from sharp-corner geometry"
+msgstr "剩余风险主要来自尖角几何"
+
+msgid "Remaining risk mainly comes from long paths"
+msgstr "剩余风险主要来自长路径"
+
+msgid "Remaining risk mainly comes from material, thermal control, or geometry"
+msgstr "剩余风险主要来自材料、温控或几何"
+
+msgid "High-temperature polymer"
+msgstr "高温工程材料"
+
+msgid "Engineering composite"
+msgstr "工程复合材料"
+
+msgid "Settings changed. Use the slice button above to regenerate G-code."
+msgstr "设置已变更，请使用上方切片按钮重新生成 G-code。"
+
+msgid ""
+"Max active layers is 0, so warp-prevention speed and fan changes are "
+"disabled. Increase it and reslice to emit warp-prevention G-code."
+msgstr ""
+"最大作用层数为 0，因此不会输出防翘曲速度、风扇或加速度调整。请提高层数并重新"
+"切片。"
+
+msgid ""
+"Warp prevention is off. Enable it and reslice to write smooth speed, fan, "
+"and acceleration changes into G-code."
+msgstr ""
+"防翘曲功能已关闭。请启用后重新切片，将平滑的速度、风扇和加速度调整写入 G-"
+"code。"
+
+msgid "Current simulation risk is low. Keep the current settings."
+msgstr "当前仿真风险较低，保持目前设置。"
+
+msgid ""
+"Warp prevention is enabled. Remaining risk comes from material, thermal "
+"control, or geometry."
+msgstr "防翘曲已启用；剩余风险主要来自材料、温控或几何。"
+
+msgid "Review material, chamber, bed, and geometry settings."
+msgstr "请检查材料、腔温、热床与模型几何设置。"
+
+msgid "Off; this G-code has no warp-prevention process changes."
+msgstr "关闭；这份 G-code 没有防翘曲工艺调整。"
+
+msgid "Analysis only; max active layers is 0."
+msgstr "仅分析；最大作用层数为 0。"
+
+msgid "Settings changed; reslice is required."
+msgstr "设置已变更，需要重新切片。"
+
+msgid ""
+"Enabled; exported G-code stays clean and uses standard speed, fan, and "
+"acceleration commands."
+msgstr "已启用；导出的 G-code 保持干净，并使用标准速度、风扇和加速度命令。"
+
+msgid "Included in the G-code estimate"
+msgstr "已包含在 G-code 时间估算中"
+
+msgid "Low enough for the current settings."
+msgstr "以目前设置来看风险已经足够低。"
+
+msgid "Increase maximum slowdown"
+msgstr "提高最大降速"
+
+msgid "Lower minimum bottom speed"
+msgstr "降低最低底面速度"
+
+msgid "Lower minimum wall speed"
+msgstr "降低最低墙速度"
+
+msgid "Increase max active layers"
+msgstr "增加最大作用层数"
+
+msgid "Raise chamber/bed temperature or add fillets"
+msgstr "提高腔温/热床温度或增加圆角"
+
+msgid "Highest display risk"
+msgstr "最高显示风险"
+
+msgid "Role"
+msgstr "线型"
+
+msgid "Reasons"
+msgstr "原因"
+
+msgid "Warp prevention"
+msgstr "防翘曲"
+
+msgid "Enabled in current settings"
+msgstr "当前设置已启用"
+
+msgid "Disabled"
+msgstr "已关闭"
+
+msgid "G-code status"
+msgstr "G-code 状态"
+
+msgid ""
+"Warp prevention was off for this slice, so speed, fan, and acceleration were "
+"not changed."
+msgstr "本次切片未启用防翘曲，因此速度、风扇和加速度没有被调整。"
+
+msgid "Thermal model resolution"
+msgstr "热模型解析度"
+
+msgid "Warp prevention parameters"
+msgstr "防翘曲参数"
+
+msgid "Not resliced yet"
+msgstr "尚未重新切片"
+
+msgid "Material"
+msgstr "材料"
+
+msgid "Local model"
+msgstr "本地模型"
+
+msgid "Useful adjustments"
+msgstr "可调整项目"
+
+msgid "Enable Balanced warp prevention"
+msgstr "启用均衡防翘曲"
+
+msgid "Enable warp prevention"
+msgstr "启用防翘曲"
+
+msgid ""
+"This does not change the original speed presets. After reslicing, local G-"
+"code slowdown is emitted only on high-risk early-layer paths."
+msgstr ""
+"不改变原始速度预设；重新切片后，只在高风险早期层路径输出局部降速 G-code。"
+
+msgid "fan"
+msgstr "风扇"
+
+msgid "first layer"
+msgstr "首层"
+
+msgid "Reduce cooling fan"
+msgstr "降低冷却风扇"
+
+msgid ""
+"High cooling increases thermal gradient on warp-prone paths; bridge and "
+"support cooling should stay controlled by their own settings."
+msgstr "高冷却会增加易翘曲路径的热梯度；桥接与支撑冷却仍应由各自设置控制。"
+
+msgid "Raise chamber temperature"
+msgstr "提高腔体温度"
+
+msgid ""
+"Higher chamber temperature lowers the cooling gradient before the material "
+"locks in shrink stress."
+msgstr "较高腔温可在材料锁定收缩应力前降低冷却梯度。"
+
+msgid "bed"
+msgstr "热床"
+
+msgid "Raise bed temperature"
+msgstr "提高热床温度"
+
+msgid ""
+"A warmer bed reduces the early-layer thermal drop and improves adhesion "
+"while the bottom layers shrink."
+msgstr "较高热床可降低早期层的温降，并在底层收缩时改善附着。"
+
+msgid "Brim width"
+msgstr "边缘宽度"
+
+msgid "Inner and outer brim"
+msgstr "内侧和外侧裙边"
+
+msgid "Increase brim adhesion"
+msgstr "增加裙边附着"
+
+msgid ""
+"Large bottom areas and first-layer edges need inner and outer bed contact. "
+"This changes the toolpath after reslicing."
+msgstr "大底面和首层边缘需要内侧与外侧都有热床接触；这会改变重新切片后的路径。"
+
+msgid "Sharp corners"
+msgstr "尖角"
+
+msgid "Mouse-ear brim"
+msgstr "鼠耳裙边"
+
+msgid "Add mouse-ear adhesion"
+msgstr "增加鼠耳附着"
+
+msgid ""
+"Mouse ears add local anchoring area near sharp corners without forcing a "
+"wide brim around the entire model."
+msgstr "鼠耳会在尖角附近增加局部固定面积，不会强制整圈都使用宽裙边。"
+
+msgid "raft layers"
+msgstr "筏层层数"
+
+msgid "Use raft for severe bottom warp"
+msgstr "严重底部翘曲时使用 raft"
+
+msgid ""
+"Raft is reserved for severe high-temperature material cases because it "
+"changes the bottom surface and print time."
+msgstr "raft 会改变底面与打印时间，因此只建议用在严重的高温材料案例。"
+
+msgid "Initial layer"
+msgstr "首层"
+
+msgid "Reduce high-risk wall speed"
+msgstr "降低高风险墙速度"
+
+msgid ""
+"Only speed items that would actually change are shown. Slower long wall "
+"paths add more thermal equalization time and lower locked-in stress."
+msgstr ""
+"只显示实际会改变的速度项目；较慢的长墙路径可增加均温时间，降低锁定应力。"
+
+msgid "thermal delta"
+msgstr "热梯度"
+
+msgid "raise chamber/bed first; lower nozzle only within material range"
+msgstr "优先提高腔温/热床；喷嘴只在材料允许范围内微降"
+
+msgid "Reduce thermal delta"
+msgstr "降低热梯度"
+
+msgid ""
+"The fastest safe change is usually chamber or bed heat; nozzle temperature "
+"changes need material-specific validation."
+msgstr "最快且较安全的调整通常是腔温或热床；喷嘴温度变更需要按材料验证。"
+
+msgid "partial material data"
+msgstr "材料数据不完整"
+
+msgid "unknown material family"
+msgstr "未知材料族群"
+
+msgid "Complete material properties"
+msgstr "补完整材料物性"
+
+msgid ""
+"Material shrink, vitrification temperature, and material family improve the "
+"thermal-stress estimate and advice confidence."
+msgstr "材料收缩、玻璃转移/软化温度与材料族群可提升热应力估算与建议可信度。"
+
+msgid "Use high thermal model resolution"
+msgstr "使用高热模型解析度"
+
+msgid ""
+"High resolution uses a finer local thermal-history grid for high-temperature "
+"materials. It improves advice quality but may increase slicing time."
+msgstr ""
+"高解析度会为高温材料使用更细的本地热历史网格，可提升建议品质，但可能增加切片"
+"时间。"
+
+msgid ""
+"This recommendation is already in the current settings. Re-slicing has "
+"started to update the preview and G-code."
+msgstr "此建议已在当前设置中；已开始重新切片以更新预览和 G-code。"
+
+msgid "This recommendation is already in the current settings."
+msgstr "此建议已在当前设置中。"
+
+msgid "Object simulation analysis"
+msgstr "物件仿真分析"
+
+msgid ""
+"Object simulation recommendation applied. Re-slicing has started to update "
+"the preview and G-code."
+msgstr "已套用物件仿真建议；已开始重新切片以更新预览和 G-code。"
+
+msgid "Object simulation recommendation applied."
+msgstr "已套用物件仿真建议。"
+
+msgid "Fast"
+msgstr "快速"
+
+msgid "First-layer fan"
+msgstr "首层风扇"
+
+msgid "Minimum fan"
+msgstr "最低风扇"
+
+msgid "Maximum fan"
+msgstr "最高风扇"
+
+msgid "Auxiliary fan"
+msgstr "辅助风扇"
+
+msgid "Chamber temperature"
+msgstr "腔温"
+
+msgid "First-layer bed temperature"
+msgstr "首层热床温度"
+
+msgid "Brim type"
+msgstr "边缘类型"
+
+msgid "Mouse-ear angle"
+msgstr "鼠耳角度"
+
+msgid "Mouse-ear detection length"
+msgstr "鼠耳侦测长度"
+
+msgid "Raft layers"
+msgstr "筏层层数"
+
+msgid "Inner wall speed"
+msgstr "内墙速度"
+
+msgid "Initial layer speed"
+msgstr "首层速度"
+
+msgid "Warp prevention level"
+msgstr "防翘曲等级"
+
+msgid "Maximum slowdown"
+msgstr "最大降速"
+
+msgid "Minimum wall speed"
+msgstr "最低墙速度"
+
+msgid "Minimum bottom speed"
+msgstr "最低底面速度"
+
+msgid "Max active layers"
+msgstr "最大作用层数"
+
+msgid "Adjust acceleration"
+msgstr "调整加速度"
+
+msgid "Maximum acceleration reduction"
+msgstr "最大加速度降低"
+
+msgid "Minimum wall acceleration"
+msgstr "最低墙加速度"
+
+msgid "Minimum bottom acceleration"
+msgstr "最低底面加速度"
+
+msgid "Material shrinkage"
+msgstr "材料收缩"
+
+msgid "Glass transition temperature"
+msgstr "玻璃转化温度"
+
+msgid "Material type"
+msgstr "材料类型"
+
 msgid ""
 "The application cannot run normally because OpenGL version is lower than "
 "3.2.\n"
@@ -8773,9 +9171,6 @@ msgstr ""
 "\n"
 "需要重启应用程序。"
 
-msgid "Disabled"
-msgstr "已关闭"
-
 msgid "FXAA post-processing"
 msgstr "FXAA 后处理"
 
@@ -10078,9 +10473,6 @@ msgstr "顶部/底部外壳"
 msgid "First layer speed"
 msgstr "首层速度"
 
-msgid "Warp prevention"
-msgstr "防翘曲"
-
 msgid "Other layers speed"
 msgstr "其他层速度"
 
@@ -10182,9 +10574,6 @@ msgstr "流量和压力提前"
 
 msgid "Print chamber temperature"
 msgstr "打印仓温度"
-
-msgid "Chamber temperature"
-msgstr "腔温"
 
 msgid ""
 "Target chamber temperature, and the minimal chamber temperature at which "
@@ -13201,14 +13590,8 @@ msgid ""
 msgstr ""
 "内部桥接的速度。如果该值以百分比表示，将基于桥接速度计算。默认值为150%。"
 
-msgid "Brim width"
-msgstr "边缘宽度"
-
 msgid "Distance from model to the outermost brim line."
 msgstr "从模型到最外圈边缘线的距离。"
-
-msgid "Brim type"
-msgstr "边缘类型"
 
 msgid ""
 "This controls the generation of the brim at outer and/or inner side of "
@@ -13267,9 +13650,6 @@ msgstr ""
 "启用防翘曲。启用后，会在生成的 G-code 中对高风险早期层墙体与底部路径进行局部"
 "降速。"
 
-msgid "Warp prevention level"
-msgstr "防翘曲等级"
-
 msgid ""
 "Preset template for warp prevention. Changing this fills default values; the "
 "detailed parameters remain editable."
@@ -13284,9 +13664,6 @@ msgstr "平衡"
 msgid "Aggressive"
 msgstr "激进"
 
-msgid "Thermal model resolution"
-msgstr "热模型解析度"
-
 msgid ""
 "Controls the local thermal-history model resolution used by warp prevention. "
 "Auto is suitable for daily slicing; High uses a finer real-coordinate grid "
@@ -13294,9 +13671,6 @@ msgid ""
 msgstr ""
 "控制防翘曲使用的局部热历史模型解析度。自动适合日常切片；高解析度会针对高温材"
 "料使用更细的真实坐标网格，耗时可能明显增加。"
-
-msgid "Fast"
-msgstr "快速"
 
 msgid "Warp prevention max slowdown"
 msgstr "防翘曲最大降速比例"
@@ -16731,17 +17105,32 @@ msgid "Raft contact Z distance"
 msgstr "筏层Z间距"
 
 msgid ""
-"Z gap between raft and object. If Support Top Z Distance is 0, this value is "
-"ignored and the object is printed in direct contact with the raft (no gap)."
+"Z gap between raft and object. Set to 0 for direct contact. When independent "
+"support layer height is disabled, the value is rounded to the nearest object "
+"layer height. The prime tower may disable independent support layer heights."
 msgstr ""
-"筏层与模型之间的Z间隙。如果支撑顶部Z距离为0，则忽略该值，模型与筏层直接接触打"
-"印（无间隙）。"
+"筏层与模型之间的 Z 间隙。设为 0 时直接接触。关闭独立支撑层高时，该值会按最接近"
+"的模型层高取整。启用擦拭塔可能会关闭独立支撑层高。"
 
 msgid "Raft expansion"
 msgstr "筏层扩展"
 
 msgid "Expand all raft layers in XY plane."
 msgstr "在XY平面扩展所有筏层"
+
+msgid "Raft layer expansion step"
+msgstr "筏层逐层扩展"
+
+msgid ""
+"Additional XY expansion applied cumulatively to each raft layer below the top "
+"contact layer. The top contact layer receives no additional expansion, the "
+"layer below expands by one step, and the bottom layer expands by (raft layers "
+"- 1) steps. Set to 0 to disable stepped expansion. Raft expansion and first "
+"layer expansion are still applied separately."
+msgstr ""
+"对顶部接触层以下的每一层筏层累计增加 XY 扩展。顶部接触层不增加扩展，下一层扩展"
+"一个步距，最底层扩展（筏层层数 - 1）个步距。设为 0 可关闭逐层扩展。筏层扩展与首"
+"层扩展仍会分别生效。"
 
 msgid "Raft support pattern"
 msgstr "筏层支撑样式"
@@ -16775,17 +17164,18 @@ msgstr "忽略内部轮廓"
 
 msgid ""
 "Fill the raft area under the first object layer by ignoring holes and "
-"internal contours."
-msgstr "忽略孔洞和内部轮廓，填满第一层模型下方的筏层区域。"
+"internal contours. This option is ignored when Generate box raft is enabled."
+msgstr ""
+"忽略孔洞和内部轮廓，填满第一层模型下方的筏层区域。启用“生成方框筏层”时将忽略此"
+"选项。"
 
 msgid "Generate box raft"
 msgstr "生成方框筏层"
 
-msgid "Generate the raft from the bounding box of the first object layer."
-msgstr "根据第一层模型的边界框生成筏层。"
-
-msgid "Raft layers"
-msgstr "Raft 层数"
+msgid ""
+"Generate the raft from the bounding box of the first object layer. This "
+"option takes priority over Ignore internal contours."
+msgstr "根据第一层模型的边界框生成筏层。此选项的优先级高于“忽略内部轮廓”。"
 
 msgid ""
 "Object will be raised by this number of support layers. Use this function to "
@@ -22876,6 +23266,22 @@ msgstr ""
 "避免翘曲\n"
 "您知道吗？打印ABS这类易翘曲材料时，适当提高热床温度可以降低翘曲的概率。"
 
+#~ msgid ""
+#~ "Z gap between raft and object. If Support Top Z Distance is 0, this value "
+#~ "is ignored and the object is printed in direct contact with the raft (no "
+#~ "gap)."
+#~ msgstr ""
+#~ "筏层与模型之间的Z间隙。如果支撑顶部Z距离为0，则忽略该值，模型与筏层直接接"
+#~ "触打印（无间隙）。"
+
+#~ msgid ""
+#~ "Fill the raft area under the first object layer by ignoring holes and "
+#~ "internal contours."
+#~ msgstr "忽略孔洞和内部轮廓，填满第一层模型下方的筏层区域。"
+
+#~ msgid "Generate the raft from the bounding box of the first object layer."
+#~ msgstr "根据第一层模型的边界框生成筏层。"
+
 #, c-format, boost-format
 #~ msgid ""
 #~ "Tightens the gyroid wave along the Z (vertical) axis at low infill "
@@ -24068,47 +24474,8 @@ msgstr ""
 #~ msgid "No compatible settings were changed by this advice."
 #~ msgstr "此建议没有变更任何兼容的设置。"
 
-#~ msgid "High-temperature polymer"
-#~ msgstr "高温工程材料"
-
-#~ msgid "Engineering composite"
-#~ msgstr "工程复合材料"
-
-#~ msgid "raise chamber/bed first; lower nozzle only within material range"
-#~ msgstr "优先提高腔温/热床；喷嘴只在材料允许范围内微降"
-
-#~ msgid "partial material data"
-#~ msgstr "材料数据不完整"
-
-#~ msgid "unknown material family"
-#~ msgstr "未知材料族群"
-
 #~ msgid "optional external FEM backend"
 #~ msgstr "可选外部 FEM 后端"
-
-#~ msgid "Reduce cooling fan"
-#~ msgstr "降低冷却风扇"
-
-#~ msgid ""
-#~ "High cooling increases thermal gradient on warp-prone paths; bridge and "
-#~ "support cooling should stay controlled by their own settings."
-#~ msgstr "高冷却会增加易翘曲路径的热梯度；桥接与支撑冷却仍应由各自设置控制。"
-
-#~ msgid "Raise chamber temperature"
-#~ msgstr "提高腔体温度"
-
-#~ msgid ""
-#~ "Higher chamber temperature lowers the cooling gradient before the "
-#~ "material locks in shrink stress."
-#~ msgstr "较高腔温可在材料锁定收缩应力前降低冷却梯度。"
-
-#~ msgid "Raise bed temperature"
-#~ msgstr "提高热床温度"
-
-#~ msgid ""
-#~ "A warmer bed reduces the early-layer thermal drop and improves adhesion "
-#~ "while the bottom layers shrink."
-#~ msgstr "较高热床可降低早期层的温降，并在底层收缩时改善附着。"
 
 #~ msgid "Add brim adhesion"
 #~ msgstr "增加 brim 附着"
@@ -24127,14 +24494,6 @@ msgstr ""
 #~ "width brim everywhere."
 #~ msgstr "鼠耳会在尖角加入局部锚定面积，不需要整圈都使用宽 brim。"
 
-#~ msgid "Use raft for severe bottom warp"
-#~ msgstr "严重底部翘曲时使用 raft"
-
-#~ msgid ""
-#~ "Raft is reserved for severe high-temperature material cases because it "
-#~ "changes the bottom surface and print time."
-#~ msgstr "raft 会改变底面与打印时间，因此只建议用在严重的高温材料案例。"
-
 #~ msgid "Slow risky walls"
 #~ msgstr "降低高风险墙速度"
 
@@ -24142,22 +24501,6 @@ msgstr ""
 #~ "Slower long walls reduce locked-in stress by giving hot paths more time "
 #~ "to equalize before the next segment."
 #~ msgstr "降低长墙速度可让热路径在下一段之前有更多时间均温，减少锁定应力。"
-
-#~ msgid "Reduce thermal delta"
-#~ msgstr "降低热梯度"
-
-#~ msgid ""
-#~ "The fastest safe change is usually chamber or bed heat; nozzle "
-#~ "temperature changes need material-specific validation."
-#~ msgstr "最快且较安全的调整通常是腔温或热床；喷嘴温度变更需要按材料验证。"
-
-#~ msgid "Complete material properties"
-#~ msgstr "补完整材料物性"
-
-#~ msgid ""
-#~ "Material shrink, vitrification temperature, and material family improve "
-#~ "the thermal-stress estimate and advice confidence."
-#~ msgstr "材料收缩、玻璃转移/软化温度与材料族群可提升热应力估算与建议可信度。"
 
 #~ msgid "High precision FEM backend is planned"
 #~ msgstr "已规划高精度 FEM 后端"
@@ -24187,29 +24530,11 @@ msgstr ""
 #~ msgid "Mouse-ear max angle"
 #~ msgstr "鼠耳最大角度"
 
-#~ msgid "Mouse-ear detection length"
-#~ msgstr "鼠耳侦测长度"
-
-#~ msgid "Inner wall speed"
-#~ msgstr "内墙速度"
-
-#~ msgid "Initial layer speed"
-#~ msgstr "首层速度"
-
 #~ msgid "Filament shrink"
 #~ msgstr "线材收缩率"
 
 #~ msgid "Vitrification temperature"
 #~ msgstr "玻璃转移/软化温度"
-
-#~ msgid "fan"
-#~ msgstr "风扇"
-
-#~ msgid "first layer"
-#~ msgstr "首层"
-
-#~ msgid "bed"
-#~ msgstr "热床"
 
 #~ msgid "brim width"
 #~ msgstr "brim 宽度"
@@ -24219,12 +24544,6 @@ msgstr ""
 
 #~ msgid "brim ears"
 #~ msgstr "鼠耳 brim"
-
-#~ msgid "raft layers"
-#~ msgstr "raft 层数"
-
-#~ msgid "thermal delta"
-#~ msgstr "热梯度"
 
 #~ msgid "fast thermal-stress estimate"
 #~ msgstr "快速热应力估算"
@@ -24334,17 +24653,6 @@ msgstr ""
 #~ "自动计算。设为 0 时保留物件仿真分析，但不输出防翘曲速度、风扇和加速度变"
 #~ "化。"
 
-#~ msgid "Use high thermal model resolution"
-#~ msgstr "使用高热模型解析度"
-
-#~ msgid ""
-#~ "High resolution uses a finer local thermal-history grid for high-"
-#~ "temperature materials. It improves advice quality but may increase "
-#~ "slicing time."
-#~ msgstr ""
-#~ "高解析度会为高温材料使用更细的本地热历史网格，可提升建议品质，但可能增加切"
-#~ "片时间。"
-
 #~ msgid "%.0f %% (%s), expected %.0f %% after reslicing"
 #~ msgstr "%.0f %%（%s），重新切片后预计 %.0f %%"
 
@@ -24380,16 +24688,6 @@ msgstr ""
 
 #~ msgid "Current risk"
 #~ msgstr "当前风险"
-
-#~ msgid "Settings changed. Use the slice button above to regenerate G-code."
-#~ msgstr "设置已变更，请使用上方切片按钮重新生成 G-code。"
-
-#~ msgid ""
-#~ "Max active layers is 0, so warp-prevention speed and fan changes are "
-#~ "disabled. Increase it and reslice to emit warp-prevention G-code."
-#~ msgstr ""
-#~ "最大作用层数为 0，因此不会输出防翘曲速度、风扇或加速度调整。请提高层数并重"
-#~ "新切片。"
 
 #~ msgid ""
 #~ "Enable warp prevention to emit local slowdown on high-risk early layers."
@@ -24437,12 +24735,6 @@ msgstr ""
 #~ msgid "Additional risks"
 #~ msgstr "辅助风险"
 
-#~ msgid "Material"
-#~ msgstr "材料"
-
-#~ msgid "Local model"
-#~ msgstr "本地模型"
-
 #~ msgid "Insufficient processing"
 #~ msgstr "实际介入不足"
 
@@ -24457,44 +24749,17 @@ msgstr ""
 #~ msgid "Why risk remains high"
 #~ msgstr "为什么仍然偏高"
 
-#~ msgid "Increase maximum slowdown"
-#~ msgstr "提高最大降速"
-
-#~ msgid "Lower minimum bottom speed"
-#~ msgstr "降低最低底面速度"
-
-#~ msgid "Lower minimum wall speed"
-#~ msgstr "降低最低墙速度"
-
-#~ msgid "Increase max active layers"
-#~ msgstr "增加最大作用层数"
-
-#~ msgid "Raise chamber/bed temperature or add fillets"
-#~ msgstr "提高腔温/热床温度或增加圆角"
-
-#~ msgid "Useful adjustments"
-#~ msgstr "可调整项目"
-
 #~ msgid "%.0f %% paths processed"
 #~ msgstr "已处理 %.0f %% 路径"
 
 #~ msgid "0 s"
 #~ msgstr "0 秒"
 
-#~ msgid "Analysis only; max active layers is 0."
-#~ msgstr "仅分析；最大作用层数为 0。"
-
-#~ msgid "Settings changed; reslice is required."
-#~ msgstr "设置已变更，需要重新切片。"
-
 #~ msgid "Enabled, but too few paths were actually slowed."
 #~ msgstr "已启用，但实际降速路径太少。"
 
 #~ msgid "Enabled, no eligible paths were slowed."
 #~ msgstr "已启用，但没有符合条件的路径被降速。"
-
-#~ msgid "Low enough for the current settings."
-#~ msgstr "以目前设置来看风险已经足够低。"
 
 #~ msgid "Processing warning"
 #~ msgstr "处理提醒"
@@ -24510,24 +24775,6 @@ msgstr ""
 #~ msgid ""
 #~ "Early solid infill is not sufficiently protected by the current settings."
 #~ msgstr "当前设置对早期实心填充的保护不足。"
-
-#~ msgid "Role"
-#~ msgstr "线型"
-
-#~ msgid "Reasons"
-#~ msgstr "原因"
-
-#~ msgid "Enabled in current settings"
-#~ msgstr "当前设置已启用"
-
-#~ msgid "Warp prevention parameters"
-#~ msgstr "防翘曲参数"
-
-#~ msgid "G-code status"
-#~ msgstr "G-code 状态"
-
-#~ msgid "Not resliced yet"
-#~ msgstr "尚未重新切片"
 
 #~ msgid "Slowed paths"
 #~ msgstr "降速路径"
@@ -24567,48 +24814,6 @@ msgstr ""
 #~ "路径类型可能未启用，速度已到下限，或属于支撑、桥接、擦拭塔、裙边或 brim 等"
 #~ "排除路径。"
 
-#~ msgid "First-layer fan"
-#~ msgstr "首层风扇"
-
-#~ msgid "Minimum fan"
-#~ msgstr "最低风扇"
-
-#~ msgid "Maximum fan"
-#~ msgstr "最高风扇"
-
-#~ msgid "Auxiliary fan"
-#~ msgstr "辅助风扇"
-
-#~ msgid "First-layer bed temperature"
-#~ msgstr "首层热床温度"
-
-#~ msgid "Mouse-ear angle"
-#~ msgstr "鼠耳角度"
-
-#~ msgid "Maximum slowdown"
-#~ msgstr "最大降速"
-
-#~ msgid "Minimum wall speed"
-#~ msgstr "最低墙速度"
-
-#~ msgid "Minimum bottom speed"
-#~ msgstr "最低底面速度"
-
-#~ msgid "Max active layers"
-#~ msgstr "最大作用层数"
-
-#~ msgid "Adjust acceleration"
-#~ msgstr "调整加速度"
-
-#~ msgid "Maximum acceleration reduction"
-#~ msgstr "最大加速度降低"
-
-#~ msgid "Minimum wall acceleration"
-#~ msgstr "最低墙加速度"
-
-#~ msgid "Minimum bottom acceleration"
-#~ msgstr "最低底面加速度"
-
 #~ msgid "Minimum effective acceleration change"
 #~ msgstr "最小有效加速度变化"
 
@@ -24636,66 +24841,10 @@ msgstr ""
 #~ msgid "Apply near corners"
 #~ msgstr "作用于尖角附近"
 
-#~ msgid "Material shrinkage"
-#~ msgstr "材料收缩"
-
-#~ msgid "Glass transition temperature"
-#~ msgstr "玻璃转化温度"
-
-#~ msgid "Material type"
-#~ msgstr "材料类型"
-
 #~ msgid ""
 #~ "This recommendation is already in the current settings. Reslice to update "
 #~ "the preview and G-code."
 #~ msgstr "这项建议已在当前设置中。请重新切片以更新预览与 G-code。"
-
-#~ msgid ""
-#~ "This recommendation is already in the current settings. Re-slicing has "
-#~ "started to update the preview and G-code."
-#~ msgstr "此建议已在当前设置中；已开始重新切片以更新预览和 G-code。"
-
-#~ msgid "This recommendation is already in the current settings."
-#~ msgstr "此建议已在当前设置中。"
-
-#~ msgid "High-shrinkage material"
-#~ msgstr "高收缩材料"
-
-#~ msgid "Bottom layer"
-#~ msgstr "底层"
-
-#~ msgid "Sharp corner"
-#~ msgstr "尖角"
-
-#~ msgid "Long path"
-#~ msgstr "长路径"
-
-#~ msgid "Large bottom area"
-#~ msgstr "大底面"
-
-#~ msgid "Excessive cooling"
-#~ msgstr "冷却过强"
-
-#~ msgid "Low chamber temperature"
-#~ msgstr "腔温偏低"
-
-#~ msgid "High thermal delta"
-#~ msgstr "温差过高"
-
-#~ msgid "High shrinkage"
-#~ msgstr "收缩偏高"
-
-#~ msgid "Brim/raft protected"
-#~ msgstr "已有裙边/底筏保护"
-
-#~ msgid "High thermal stress"
-#~ msgstr "热应力高"
-
-#~ msgid "Low bed temperature"
-#~ msgstr "热床偏低"
-
-#~ msgid "Low data confidence"
-#~ msgstr "资料可信度不足"
 
 #~ msgid "Warp prevention is disabled"
 #~ msgstr "防翘曲未启用"
@@ -24721,85 +24870,8 @@ msgstr ""
 #~ msgid "Processed or no slowdown needed"
 #~ msgstr "已处理或不需降速"
 
-#~ msgid "Remaining risk mainly comes from chamber, bed, or thermal delta"
-#~ msgstr "剩余风险主要来自腔温、热床或温差"
-
-#~ msgid "Remaining risk mainly comes from material shrinkage"
-#~ msgstr "剩余风险主要来自材料收缩"
-
-#~ msgid "Remaining risk mainly comes from a large bottom area"
-#~ msgstr "剩余风险主要来自大底面"
-
-#~ msgid "Remaining risk mainly comes from sharp-corner geometry"
-#~ msgstr "剩余风险主要来自尖角几何"
-
-#~ msgid "Remaining risk mainly comes from long paths"
-#~ msgstr "剩余风险主要来自长路径"
-
-#~ msgid ""
-#~ "Remaining risk mainly comes from material, thermal control, or geometry"
-#~ msgstr "剩余风险主要来自材料、温控或几何"
-
-#~ msgid "Enable Balanced warp prevention"
-#~ msgstr "启用均衡防翘曲"
-
 #~ msgid "Enable Aggressive warp prevention"
 #~ msgstr "启用强力防翘曲"
-
-#~ msgid "Enable warp prevention"
-#~ msgstr "启用防翘曲"
-
-#~ msgid ""
-#~ "This does not change the original speed presets. After reslicing, local G-"
-#~ "code slowdown is emitted only on high-risk early-layer paths."
-#~ msgstr ""
-#~ "不改变原始速度预设；重新切片后，只在高风险早期层路径输出局部降速 G-code。"
-
-#~ msgid "Inner and outer brim"
-#~ msgstr "内侧和外侧裙边"
-
-#~ msgid "Increase brim adhesion"
-#~ msgstr "增加裙边附着"
-
-#~ msgid ""
-#~ "Large bottom areas and first-layer edges need inner and outer bed "
-#~ "contact. This changes the toolpath after reslicing."
-#~ msgstr ""
-#~ "大底面和首层边缘需要内侧与外侧都有热床接触；这会改变重新切片后的路径。"
-
-#~ msgid "Sharp corners"
-#~ msgstr "尖角"
-
-#~ msgid "Mouse-ear brim"
-#~ msgstr "鼠耳裙边"
-
-#~ msgid "Add mouse-ear adhesion"
-#~ msgstr "增加鼠耳附着"
-
-#~ msgid ""
-#~ "Mouse ears add local anchoring area near sharp corners without forcing a "
-#~ "wide brim around the entire model."
-#~ msgstr "鼠耳会在尖角附近增加局部固定面积，不会强制整圈都使用宽裙边。"
-
-#~ msgid "Initial layer"
-#~ msgstr "首层"
-
-#~ msgid "Reduce high-risk wall speed"
-#~ msgstr "降低高风险墙速度"
-
-#~ msgid ""
-#~ "Only speed items that would actually change are shown. Slower long wall "
-#~ "paths add more thermal equalization time and lower locked-in stress."
-#~ msgstr ""
-#~ "只显示实际会改变的速度项目；较慢的长墙路径可增加均温时间，降低锁定应力。"
-
-#~ msgid "Off; this G-code has no warp-prevention process changes."
-#~ msgstr "关闭；这份 G-code 没有防翘曲工艺调整。"
-
-#~ msgid ""
-#~ "Warp prevention was off for this slice, so speed, fan, and acceleration "
-#~ "were not changed."
-#~ msgstr "本次切片未启用防翘曲，因此速度、风扇和加速度没有被调整。"
 
 #~ msgid "%.0f/%.0f%%, speed %.0f/%.0f%%, accel %.0f/%.0f%%"
 #~ msgstr "%.0f/%.0f%%，速度 %.0f/%.0f%%，加速度 %.0f/%.0f%%"
@@ -24812,25 +24884,8 @@ msgstr ""
 #~ msgid "Processed paths"
 #~ msgstr "已处理路径"
 
-#~ msgid "Current simulation risk is low. Keep the current settings."
-#~ msgstr "当前仿真风险较低，保持目前设置。"
-
-#~ msgid "Highest display risk"
-#~ msgstr "最高显示风险"
-
 #~ msgid "Simulation details"
 #~ msgstr "仿真详细信息"
-
-#~ msgid "Object simulation analysis"
-#~ msgstr "物件仿真分析"
-
-#~ msgid ""
-#~ "Object simulation recommendation applied. Re-slicing has started to "
-#~ "update the preview and G-code."
-#~ msgstr "已套用物件仿真建议；已开始重新切片以更新预览和 G-code。"
-
-#~ msgid "Object simulation recommendation applied."
-#~ msgstr "已套用物件仿真建议。"
 
 #~ msgid "Processing effect"
 #~ msgstr "处理效果"
@@ -24840,22 +24895,6 @@ msgstr ""
 
 #~ msgid "Warp prevention processing: "
 #~ msgstr "防翘曲处理："
-
-#~ msgid ""
-#~ "Warp prevention is enabled. Remaining risk comes from material, thermal "
-#~ "control, or geometry."
-#~ msgstr "防翘曲已启用；剩余风险主要来自材料、温控或几何。"
-
-#~ msgid "Review material, chamber, bed, and geometry settings."
-#~ msgstr "请检查材料、腔温、热床与模型几何设置。"
-
-#~ msgid ""
-#~ "Enabled; exported G-code stays clean and uses standard speed, fan, and "
-#~ "acceleration commands."
-#~ msgstr "已启用；导出的 G-code 保持干净，并使用标准速度、风扇和加速度命令。"
-
-#~ msgid "Included in the G-code estimate"
-#~ msgstr "已包含在 G-code 时间估算中"
 
 #~ msgid "0 (soluble)"
 #~ msgstr "0（可溶）"

@@ -283,6 +283,11 @@ public:
     // Polygons covered by the supports: base, interface and contact areas.
     // Used to suppress retraction if moving for a support extrusion over these support_islands.
     ExPolygons                  support_islands;
+    // Exact raft regions by extrusion role. These are retained until G-code
+    // generation so overlapping object instances can be unioned and filled as
+    // one continuous raft instead of clipping already generated paths.
+    ExPolygons                  raft_support_islands;
+    ExPolygons                  raft_interface_islands;
     // Extrusion paths for the support base and for the support interface and contacts.
     ExtrusionEntityCollection   support_fills;
     SupportInnerType            support_type = stInnerNormal;

@@ -12,15 +12,15 @@
                             "0.8"
                         ],
     "max_layer_height":  [
-                             "0.533333",
-                             "0.533333"
+                             "0.6",
+                             "0.6"
                          ],
     "printer_variant":  "0.8",
     "printable_area":  [
                            "0x0",
-                           "600x0",
-                           "600x500",
-                           "0x500"
+                           "605x0",
+                           "605x505",
+                           "0x505"
                        ],
     "default_filament_profile":  [
                                      "INLONG PET-CFGF",

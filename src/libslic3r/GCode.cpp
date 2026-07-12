@@ -23,6 +23,7 @@
 #include "libslic3r/format.hpp"
 #include "Time.hpp"
 #include "GCode/ExtrusionProcessor.hpp"
+#include "Support/SupportCommon.hpp"
 #include <algorithm>
 #include <cfloat>
 #include <cmath>
@@ -4912,6 +4913,11 @@ LayerResult GCode::process_layer(
 
     // Group extrusions by an extruder, then by an object, an island and a region.
     std::map<unsigned int, std::vector<ObjectByExtruder>> by_extruder;
+    struct RaftExtruderAssignment {
+        int support { -1 };
+        int interface { -1 };
+    };
+    std::map<const PrintObject *, RaftExtruderAssignment> raft_extruders;
     std::vector<std::unique_ptr<ExtrusionEntityCollection>> split_perimeter_storage;
     bool is_anything_overridden = const_cast<LayerTools&>(layer_tools).wiping_extrusions().is_anything_overridden();
     for (const LayerToPrint &layer_to_print : layers) {
@@ -5001,6 +5007,13 @@ LayerResult GCode::process_layer(
                         support_extruder = dontcare_extruder;
                     if (interface_dontcare)
                         interface_extruder = dontcare_extruder;
+                }
+                if (support_layer.id() < object.slicing_parameters().raft_layers()) {
+                    RaftExtruderAssignment &assignment = raft_extruders[&object];
+                    if (has_support)
+                        assignment.support = int(support_extruder);
+                    if (has_interface)
+                        assignment.interface = int(interface_extruder);
                 }
                 // Both the support and the support interface are printed with the same extruder, therefore
                 // the interface may be interleaved with the support base.
@@ -5181,6 +5194,72 @@ LayerResult GCode::process_layer(
                 const std::vector<const PrintInstance*>* ordering_for_filament = (print.config().print_order == PrintOrder::AsObjectList && ordering != nullptr) ? ordering: &new_ordering;
                 filament_to_print_instances[filament_id] = sort_print_object_instances(objects_by_extruder_it->second, layers, ordering_for_filament, single_object_instance_idx);
             }
+        }
+    }
+
+    using RaftInstanceKey = std::pair<const PrintObject *, size_t>;
+    std::map<RaftInstanceKey, const ExtrusionEntityCollection *> raft_path_overrides;
+    std::vector<std::unique_ptr<ExtrusionEntityCollection>> raft_path_override_storage;
+    if (single_object_instance_idx == size_t(-1)) {
+        std::map<const PrintObject *, const LayerToPrint *> raft_layers_by_object;
+        std::vector<const PrintObject *> raft_object_order;
+        for (const LayerToPrint &layer_to_print : layers) {
+            const PrintObject *object = layer_to_print.original_object;
+            const SupportLayer *support = layer_to_print.support_layer;
+            if (object != nullptr && support != nullptr && !support->support_fills.empty() &&
+                support->id() < object->slicing_parameters().raft_layers()) {
+                if (raft_layers_by_object.emplace(object, &layer_to_print).second)
+                    raft_object_order.emplace_back(object);
+            }
+        }
+
+        std::vector<RaftPathInstance> raft_instances;
+        std::vector<RaftInstanceKey> raft_instance_keys;
+        std::set<RaftInstanceKey> seen_instances;
+        auto append_raft_instance = [&](const PrintObject *object, size_t instance_id) {
+            auto layer_it = raft_layers_by_object.find(object);
+            RaftInstanceKey key{object, instance_id};
+            if (layer_it == raft_layers_by_object.end() || instance_id >= object->instances().size() ||
+                !seen_instances.insert(key).second)
+                return;
+
+            const SupportLayer *support = layer_it->second->support_layer;
+            const auto extruder_it = raft_extruders.find(object);
+            const RaftExtruderAssignment extruders = extruder_it == raft_extruders.end() ?
+                RaftExtruderAssignment{} : extruder_it->second;
+            raft_instances.push_back({
+                &support->support_fills,
+                &support->support_islands,
+                object->instances()[instance_id].shift,
+                object,
+                support,
+                extruders.support,
+                extruders.interface});
+            raft_instance_keys.emplace_back(key);
+        };
+
+        if (ordering != nullptr) {
+            for (const PrintInstance *instance : *ordering) {
+                const PrintObject *object = instance->print_object;
+                const auto instance_it = std::find_if(
+                    object->instances().begin(), object->instances().end(),
+                    [instance](const PrintInstance &candidate) { return &candidate == instance; });
+                if (instance_it != object->instances().end())
+                    append_raft_instance(object, size_t(instance_it - object->instances().begin()));
+            }
+        }
+        // Some layer orderings may omit an object that has no paths for the
+        // current extruder. Include every remaining raft instance so overlap
+        // ownership is still deterministic for all support extruders.
+        for (const PrintObject *object : raft_object_order)
+            for (size_t instance_id = 0; instance_id < object->instances().size(); ++instance_id)
+                append_raft_instance(object, instance_id);
+
+        if (raft_instances.size() > 1) {
+            raft_path_override_storage = merge_overlapping_raft_paths(raft_instances);
+            for (size_t index = 0; index < raft_path_override_storage.size(); ++index)
+                if (raft_path_override_storage[index] != nullptr)
+                    raft_path_overrides.emplace(raft_instance_keys[index], raft_path_override_storage[index].get());
         }
     }
 
@@ -5465,13 +5544,17 @@ LayerResult GCode::process_layer(
                     ExtrusionRole support_extrusion_role = instance_to_print.object_by_extruder.support_extrusion_role;
                     bool is_overridden = support_extrusion_role == erSupportMaterialInterface ? support_intf_overridden : support_overridden;
                     if (is_overridden == (print_wipe_extrusions != 0)) {
+                        const ExtrusionEntityCollection *support_paths = instance_to_print.object_by_extruder.support;
+                        auto raft_override = raft_path_overrides.find({&instance_to_print.print_object, instance_to_print.instance_id});
+                        if (raft_override != raft_path_overrides.end())
+                            support_paths = raft_override->second;
                         gcode += this->extrude_support(
                             // support_extrusion_role is erSupportMaterial, erSupportTransition, erSupportMaterialInterface or erMixed for all extrusion paths.
-                            *instance_to_print.object_by_extruder.support, support_extrusion_role);
+                            *support_paths, support_extrusion_role);
 
                         // Make sure ironing is the last
                         if (support_extrusion_role == erMixed || support_extrusion_role == erSupportMaterialInterface) {
-                            gcode += this->extrude_support(*instance_to_print.object_by_extruder.support, erIroning);
+                            gcode += this->extrude_support(*support_paths, erIroning);
                         }
                     }
 

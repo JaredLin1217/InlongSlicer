@@ -14,6 +14,7 @@
 #include "SupportCommon.hpp"
 
 #include <algorithm>
+#include <functional>
 #include <string_view>
 
 namespace Slic3r
@@ -696,13 +697,22 @@ public:
     {}
     InterfacePlacer(const InterfacePlacer& rhs) :
         slicing_parameters(rhs.slicing_parameters), support_parameters(rhs.support_parameters), config(rhs.config),
-        layer_storage(rhs.layer_storage), top_contacts(rhs.top_contacts), top_interfaces(rhs.top_interfaces), top_base_interfaces(rhs.top_base_interfaces) 
+        layer_storage(rhs.layer_storage), top_contacts(rhs.top_contacts), top_interfaces(rhs.top_interfaces), top_base_interfaces(rhs.top_base_interfaces),
+        layer_initializer(rhs.layer_initializer), allow_independent_contact_adjustment(rhs.allow_independent_contact_adjustment)
     {}
 
     const SlicingParameters    &slicing_parameters;
     const SupportParameters    &support_parameters;
     const TreeSupportSettings  &config;
     SupportGeneratorLayersPtr&  top_contacts_mutable() { return this->top_contacts; }
+    SupportGeneratorLayersPtr&  top_interfaces_mutable() { return this->top_interfaces; }
+    SupportGeneratorLayersPtr&  top_base_interfaces_mutable() { return this->top_base_interfaces; }
+
+    void set_layer_initializer(std::function<void(SupportGeneratorLayer &, size_t)> initializer)
+    {
+        layer_initializer = std::move(initializer);
+    }
+    void use_legacy_contact_layers() { allow_independent_contact_adjustment = false; }
 
 public:
     // Insert the contact layer and some of the inteface and base interface layers below.
@@ -744,11 +754,16 @@ public:
             dtt_roof <= interface_threshold ? this->top_interfaces : this->top_base_interfaces;
         SupportGeneratorLayer*& l = layers[insert_layer_idx];
         if (l == nullptr) {
-            l = &layer_allocate_unguarded(layer_storage, dtt_roof == 0 ? SupporLayerType::TopContact : SupporLayerType::TopInterface, 
-                    slicing_parameters, config, insert_layer_idx);
-            if (dtt_roof == 0 && support_parameters.independent_top_contact_layer_height && !support_parameters.independent_layer_height) {
+            const SupporLayerType layer_type = dtt_roof == 0 ? SupporLayerType::TopContact : SupporLayerType::TopInterface;
+            if (layer_initializer) {
+                l = &layer_storage.allocate_unguarded(layer_type);
+                layer_initializer(*l, insert_layer_idx);
+            } else {
+                l = &layer_allocate_unguarded(layer_storage, layer_type, slicing_parameters, config, insert_layer_idx);
+            }
+            if (!layer_initializer && allow_independent_contact_adjustment && dtt_roof == 0 && support_parameters.independent_top_contact_layer_height) {
                 const coordf_t support_top_distance = slicing_parameters.gap_support_object;
-                const coordf_t layer_height         = config.layer_height;
+                const coordf_t layer_height         = unscaled<coordf_t>(config.layer_height);
                 const coordf_t rounded_distance     = coordf_t(config.z_distance_top_layers) * layer_height;
                 const coordf_t z_adjust             = rounded_distance - support_top_distance;
                 if (z_adjust > EPSILON && z_adjust < layer_height - EPSILON) {
@@ -768,6 +783,8 @@ private:
     SupportGeneratorLayersPtr                          &top_contacts;
     SupportGeneratorLayersPtr                          &top_interfaces;
     SupportGeneratorLayersPtr                          &top_base_interfaces;
+    std::function<void(SupportGeneratorLayer &, size_t)> layer_initializer;
+    bool allow_independent_contact_adjustment{true};
 
     // Mutexes, guards
     std::mutex                                          m_mutex_layer_storage;

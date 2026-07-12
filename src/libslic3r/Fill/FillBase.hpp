@@ -76,6 +76,8 @@ struct FillParams
 
     // For Concentric infill, to switch between Classic and Arachne.
     bool        use_arachne{ false };
+    // Fill the final narrow center left by classic concentric paths. Raft-only.
+    bool        fill_concentric_gaps{ false };
     // Layer height for Concentric infill with Arachne.
     coordf_t    layer_height    { 0.f };
 

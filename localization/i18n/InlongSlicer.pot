@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 05:51+0800\n"
+"POT-Creation-Date: 2026-07-11 13:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6998,6 +6998,396 @@ msgstr ""
 msgid "Layers"
 msgstr ""
 
+msgid "High-shrinkage material"
+msgstr ""
+
+msgid "Bottom layer"
+msgstr ""
+
+msgid "Sharp corner"
+msgstr ""
+
+msgid "Long path"
+msgstr ""
+
+msgid "Large bottom area"
+msgstr ""
+
+msgid "Excessive cooling"
+msgstr ""
+
+msgid "Low chamber temperature"
+msgstr ""
+
+msgid "High thermal delta"
+msgstr ""
+
+msgid "High shrinkage"
+msgstr ""
+
+msgid "Brim/raft protected"
+msgstr ""
+
+msgid "High thermal stress"
+msgstr ""
+
+msgid "Low bed temperature"
+msgstr ""
+
+msgid "Low data confidence"
+msgstr ""
+
+msgid "Remaining risk mainly comes from chamber, bed, or thermal delta"
+msgstr ""
+
+msgid "Remaining risk mainly comes from material shrinkage"
+msgstr ""
+
+msgid "Remaining risk mainly comes from a large bottom area"
+msgstr ""
+
+msgid "Remaining risk mainly comes from sharp-corner geometry"
+msgstr ""
+
+msgid "Remaining risk mainly comes from long paths"
+msgstr ""
+
+msgid "Remaining risk mainly comes from material, thermal control, or geometry"
+msgstr ""
+
+msgid "High-temperature polymer"
+msgstr ""
+
+msgid "Engineering composite"
+msgstr ""
+
+msgid "Settings changed. Use the slice button above to regenerate G-code."
+msgstr ""
+
+msgid ""
+"Max active layers is 0, so warp-prevention speed and fan changes are "
+"disabled. Increase it and reslice to emit warp-prevention G-code."
+msgstr ""
+
+msgid ""
+"Warp prevention is off. Enable it and reslice to write smooth speed, fan, "
+"and acceleration changes into G-code."
+msgstr ""
+
+msgid "Current simulation risk is low. Keep the current settings."
+msgstr ""
+
+msgid ""
+"Warp prevention is enabled. Remaining risk comes from material, thermal "
+"control, or geometry."
+msgstr ""
+
+msgid "Review material, chamber, bed, and geometry settings."
+msgstr ""
+
+msgid "Off; this G-code has no warp-prevention process changes."
+msgstr ""
+
+msgid "Analysis only; max active layers is 0."
+msgstr ""
+
+msgid "Settings changed; reslice is required."
+msgstr ""
+
+msgid ""
+"Enabled; exported G-code stays clean and uses standard speed, fan, and "
+"acceleration commands."
+msgstr ""
+
+msgid "Included in the G-code estimate"
+msgstr ""
+
+msgid "Low enough for the current settings."
+msgstr ""
+
+msgid "Increase maximum slowdown"
+msgstr ""
+
+msgid "Lower minimum bottom speed"
+msgstr ""
+
+msgid "Lower minimum wall speed"
+msgstr ""
+
+msgid "Increase max active layers"
+msgstr ""
+
+msgid "Raise chamber/bed temperature or add fillets"
+msgstr ""
+
+msgid "Highest display risk"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Reasons"
+msgstr ""
+
+msgid "Warp prevention"
+msgstr ""
+
+msgid "Enabled in current settings"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "G-code status"
+msgstr ""
+
+msgid ""
+"Warp prevention was off for this slice, so speed, fan, and acceleration were "
+"not changed."
+msgstr ""
+
+msgid "Thermal model resolution"
+msgstr ""
+
+msgid "Warp prevention parameters"
+msgstr ""
+
+msgid "Not resliced yet"
+msgstr ""
+
+msgid "Material"
+msgstr ""
+
+msgid "Local model"
+msgstr ""
+
+msgid "Useful adjustments"
+msgstr ""
+
+msgid "Enable Balanced warp prevention"
+msgstr ""
+
+msgid "Enable warp prevention"
+msgstr ""
+
+msgid ""
+"This does not change the original speed presets. After reslicing, local G-"
+"code slowdown is emitted only on high-risk early-layer paths."
+msgstr ""
+
+msgid "fan"
+msgstr ""
+
+msgid "first layer"
+msgstr ""
+
+msgid "Reduce cooling fan"
+msgstr ""
+
+msgid ""
+"High cooling increases thermal gradient on warp-prone paths; bridge and "
+"support cooling should stay controlled by their own settings."
+msgstr ""
+
+msgid "Raise chamber temperature"
+msgstr ""
+
+msgid ""
+"Higher chamber temperature lowers the cooling gradient before the material "
+"locks in shrink stress."
+msgstr ""
+
+msgid "bed"
+msgstr ""
+
+msgid "Raise bed temperature"
+msgstr ""
+
+msgid ""
+"A warmer bed reduces the early-layer thermal drop and improves adhesion "
+"while the bottom layers shrink."
+msgstr ""
+
+msgid "Brim width"
+msgstr ""
+
+msgid "Inner and outer brim"
+msgstr ""
+
+msgid "Increase brim adhesion"
+msgstr ""
+
+msgid ""
+"Large bottom areas and first-layer edges need inner and outer bed contact. "
+"This changes the toolpath after reslicing."
+msgstr ""
+
+msgid "Sharp corners"
+msgstr ""
+
+msgid "Mouse-ear brim"
+msgstr ""
+
+msgid "Add mouse-ear adhesion"
+msgstr ""
+
+msgid ""
+"Mouse ears add local anchoring area near sharp corners without forcing a "
+"wide brim around the entire model."
+msgstr ""
+
+msgid "raft layers"
+msgstr ""
+
+msgid "Use raft for severe bottom warp"
+msgstr ""
+
+msgid ""
+"Raft is reserved for severe high-temperature material cases because it "
+"changes the bottom surface and print time."
+msgstr ""
+
+msgid "Initial layer"
+msgstr ""
+
+msgid "Reduce high-risk wall speed"
+msgstr ""
+
+msgid ""
+"Only speed items that would actually change are shown. Slower long wall "
+"paths add more thermal equalization time and lower locked-in stress."
+msgstr ""
+
+msgid "thermal delta"
+msgstr ""
+
+msgid "raise chamber/bed first; lower nozzle only within material range"
+msgstr ""
+
+msgid "Reduce thermal delta"
+msgstr ""
+
+msgid ""
+"The fastest safe change is usually chamber or bed heat; nozzle temperature "
+"changes need material-specific validation."
+msgstr ""
+
+msgid "partial material data"
+msgstr ""
+
+msgid "unknown material family"
+msgstr ""
+
+msgid "Complete material properties"
+msgstr ""
+
+msgid ""
+"Material shrink, vitrification temperature, and material family improve the "
+"thermal-stress estimate and advice confidence."
+msgstr ""
+
+msgid "Use high thermal model resolution"
+msgstr ""
+
+msgid ""
+"High resolution uses a finer local thermal-history grid for high-temperature "
+"materials. It improves advice quality but may increase slicing time."
+msgstr ""
+
+msgid ""
+"This recommendation is already in the current settings. Re-slicing has "
+"started to update the preview and G-code."
+msgstr ""
+
+msgid "This recommendation is already in the current settings."
+msgstr ""
+
+msgid "Object simulation analysis"
+msgstr ""
+
+msgid ""
+"Object simulation recommendation applied. Re-slicing has started to update "
+"the preview and G-code."
+msgstr ""
+
+msgid "Object simulation recommendation applied."
+msgstr ""
+
+msgid "Fast"
+msgstr ""
+
+msgid "First-layer fan"
+msgstr ""
+
+msgid "Minimum fan"
+msgstr ""
+
+msgid "Maximum fan"
+msgstr ""
+
+msgid "Auxiliary fan"
+msgstr ""
+
+msgid "Chamber temperature"
+msgstr ""
+
+msgid "First-layer bed temperature"
+msgstr ""
+
+msgid "Brim type"
+msgstr ""
+
+msgid "Mouse-ear angle"
+msgstr ""
+
+msgid "Mouse-ear detection length"
+msgstr ""
+
+msgid "Raft layers"
+msgstr ""
+
+msgid "Inner wall speed"
+msgstr ""
+
+msgid "Initial layer speed"
+msgstr ""
+
+msgid "Warp prevention level"
+msgstr ""
+
+msgid "Maximum slowdown"
+msgstr ""
+
+msgid "Minimum wall speed"
+msgstr ""
+
+msgid "Minimum bottom speed"
+msgstr ""
+
+msgid "Max active layers"
+msgstr ""
+
+msgid "Adjust acceleration"
+msgstr ""
+
+msgid "Maximum acceleration reduction"
+msgstr ""
+
+msgid "Minimum wall acceleration"
+msgstr ""
+
+msgid "Minimum bottom acceleration"
+msgstr ""
+
+msgid "Material shrinkage"
+msgstr ""
+
+msgid "Glass transition temperature"
+msgstr ""
+
+msgid "Material type"
+msgstr ""
+
 msgid ""
 "The application cannot run normally because OpenGL version is lower than "
 "3.2.\n"
@@ -8479,9 +8869,6 @@ msgid ""
 "Requires application restart."
 msgstr ""
 
-msgid "Disabled"
-msgstr ""
-
 msgid "FXAA post-processing"
 msgstr ""
 
@@ -9695,9 +10082,6 @@ msgstr ""
 msgid "First layer speed"
 msgstr ""
 
-msgid "Warp prevention"
-msgstr ""
-
 msgid "Other layers speed"
 msgstr ""
 
@@ -9795,9 +10179,6 @@ msgid "Flow ratio and Pressure Advance"
 msgstr ""
 
 msgid "Print chamber temperature"
-msgstr ""
-
-msgid "Chamber temperature"
 msgstr ""
 
 msgid ""
@@ -12497,13 +12878,7 @@ msgid ""
 "will be calculated based on the bridge_speed. Default value is 150%."
 msgstr ""
 
-msgid "Brim width"
-msgstr ""
-
 msgid "Distance from model to the outermost brim line."
-msgstr ""
-
-msgid "Brim type"
 msgstr ""
 
 msgid ""
@@ -12549,9 +12924,6 @@ msgid ""
 "paths are slowed locally in generated G-code."
 msgstr ""
 
-msgid "Warp prevention level"
-msgstr ""
-
 msgid ""
 "Preset template for warp prevention. Changing this fills default values; the "
 "detailed parameters remain editable."
@@ -12566,16 +12938,10 @@ msgstr ""
 msgid "Aggressive"
 msgstr ""
 
-msgid "Thermal model resolution"
-msgstr ""
-
 msgid ""
 "Controls the local thermal-history model resolution used by warp prevention. "
 "Auto is suitable for daily slicing; High uses a finer real-coordinate grid "
 "for high-temperature materials and may take much longer."
-msgstr ""
-
-msgid "Fast"
 msgstr ""
 
 msgid "Warp prevention max slowdown"
@@ -15531,14 +15897,26 @@ msgid "Raft contact Z distance"
 msgstr ""
 
 msgid ""
-"Z gap between raft and object. If Support Top Z Distance is 0, this value is "
-"ignored and the object is printed in direct contact with the raft (no gap)."
+"Z gap between raft and object. Set to 0 for direct contact. When independent "
+"support layer height is disabled, the value is rounded to the nearest object "
+"layer height. The prime tower may disable independent support layer heights."
 msgstr ""
 
 msgid "Raft expansion"
 msgstr ""
 
 msgid "Expand all raft layers in XY plane."
+msgstr ""
+
+msgid "Raft layer expansion step"
+msgstr ""
+
+msgid ""
+"Additional XY expansion applied cumulatively to each raft layer below the top "
+"contact layer. The top contact layer receives no additional expansion, the "
+"layer below expands by one step, and the bottom layer expands by (raft layers "
+"- 1) steps. Set to 0 to disable stepped expansion. Raft expansion and first "
+"layer expansion are still applied separately."
 msgstr ""
 
 msgid "Raft support pattern"
@@ -15573,16 +15951,15 @@ msgstr ""
 
 msgid ""
 "Fill the raft area under the first object layer by ignoring holes and "
-"internal contours."
+"internal contours. This option is ignored when Generate box raft is enabled."
 msgstr ""
 
 msgid "Generate box raft"
 msgstr ""
 
-msgid "Generate the raft from the bounding box of the first object layer."
-msgstr ""
-
-msgid "Raft layers"
+msgid ""
+"Generate the raft from the bounding box of the first object layer. This "
+"option takes priority over Ignore internal contours."
 msgstr ""
 
 msgid ""

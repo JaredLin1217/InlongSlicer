@@ -26,6 +26,7 @@
 
 #include <cassert>
 #include <chrono>
+#include <cmath>
 #include <optional>
 #include <stdio.h>
 #include <string>
@@ -48,6 +49,284 @@
 #include "../OpenVDBUtilsLegacy.hpp"
 #include <openvdb/tools/VolumeToSpheres.h>
 #endif // TREE_SUPPORT_ORGANIC_NUDGE_NEW
+
+namespace Slic3r {
+namespace TreeSupport3D {
+
+struct OrganicSupportLayerPlanEntry
+{
+    coordf_t  print_z{0.};
+    coordf_t  bottom_z{0.};
+    coordf_t  height{0.};
+    LayerIndex source_layer_begin{0};
+    LayerIndex source_layer_end{0};
+};
+
+// Branch topology stays on the object-synchronized grid. This plan describes
+// the independent Z grid used only when slicing the finished branch meshes.
+class OrganicSupportLayerPlan
+{
+public:
+    static OrganicSupportLayerPlan legacy(
+        const SlicingParameters &slicing_params,
+        const TreeSupportSettings &config,
+        size_t source_layer_count)
+    {
+        OrganicSupportLayerPlan result;
+        result.m_entries.reserve(source_layer_count);
+        for (size_t layer_idx = 0; layer_idx < source_layer_count; ++layer_idx) {
+            const coordf_t print_z  = layer_z(slicing_params, config, layer_idx);
+            const coordf_t bottom_z = layer_idx == 0 ? 0. : layer_z(slicing_params, config, layer_idx - 1);
+            result.m_entries.push_back({print_z, bottom_z, print_z - bottom_z,
+                                        LayerIndex(layer_idx), LayerIndex(layer_idx)});
+        }
+        return result;
+    }
+
+    static std::optional<OrganicSupportLayerPlan> independent(
+        const SlicingParameters              &slicing_params,
+        const TreeSupportSettings            &config,
+        size_t                                source_layer_count,
+        const SupportGeneratorLayersPtr      &top_contacts,
+        const std::vector<LayerIndex>         &mandatory_source_layers,
+        bool                                  preserve_source_grid,
+        std::string                           &failure_reason)
+    {
+        if (source_layer_count == 0 || slicing_params.max_suport_layer_height <= EPSILON) {
+            failure_reason = "missing source layers or maximum support layer height";
+            return std::nullopt;
+        }
+
+        const coordf_t min_height = std::max<coordf_t>(slicing_params.min_layer_height, EPSILON);
+        const coordf_t max_height = slicing_params.max_suport_layer_height;
+        if (!std::isfinite(min_height) || !std::isfinite(max_height) || min_height > max_height + EPSILON) {
+            failure_reason = "invalid minimum or maximum support layer height";
+            return std::nullopt;
+        }
+
+        OrganicSupportLayerPlan result;
+        result.m_independent = true;
+
+        struct Anchor {
+            coordf_t z;
+            bool     required;
+        };
+
+        const size_t raft_count = std::min(config.raft_layers.size(), source_layer_count);
+        std::vector<Anchor> anchors;
+        anchors.reserve((preserve_source_grid ? source_layer_count : mandatory_source_layers.size() + 2) +
+                        top_contacts.size() + raft_count);
+        for (size_t layer_idx = 0; layer_idx < raft_count; ++layer_idx)
+            anchors.push_back({layer_z(slicing_params, config, layer_idx), true});
+
+        if (preserve_source_grid) {
+            for (size_t layer_idx = raft_count; layer_idx < source_layer_count; ++layer_idx)
+                anchors.push_back({layer_z(slicing_params, config, layer_idx), false});
+        } else if (source_layer_count > raft_count) {
+            anchors.push_back({layer_z(slicing_params, config, raft_count), false});
+            anchors.push_back({layer_z(slicing_params, config, source_layer_count - 1), false});
+        }
+        for (LayerIndex source_layer : mandatory_source_layers) {
+            if (source_layer >= LayerIndex(raft_count) && source_layer < LayerIndex(source_layer_count))
+                anchors.push_back({layer_z(slicing_params, config, size_t(source_layer)), false});
+        }
+        for (const SupportGeneratorLayer *contact : top_contacts) {
+            if (contact == nullptr || contact->polygons.empty())
+                continue;
+            if (contact->print_z > EPSILON)
+                anchors.push_back({contact->print_z, true});
+        }
+
+        std::sort(anchors.begin(), anchors.end(), [](const Anchor &lhs, const Anchor &rhs) {
+            return lhs.z < rhs.z;
+        });
+        std::vector<Anchor> merged_anchors;
+        merged_anchors.reserve(anchors.size());
+        for (const Anchor &anchor : anchors) {
+            if (!std::isfinite(anchor.z) || anchor.z <= EPSILON) {
+                failure_reason = "an output layer anchor has an invalid Z position";
+                return std::nullopt;
+            }
+            if (!merged_anchors.empty() && std::abs(anchor.z - merged_anchors.back().z) <= EPSILON)
+                merged_anchors.back().required = merged_anchors.back().required || anchor.required;
+            else
+                merged_anchors.push_back(anchor);
+        }
+
+        // Exact contact Z is mandatory. Remove nearby topology-grid anchors instead of
+        // producing a sub-minimum contact layer (for example 0.03 mm for a 0.17 mm gap
+        // on a 0.20 mm object grid).
+        std::vector<Anchor> resolved_anchors;
+        resolved_anchors.reserve(merged_anchors.size());
+        for (const Anchor &anchor : merged_anchors) {
+            bool keep_anchor = true;
+            while (!resolved_anchors.empty() &&
+                   anchor.z - resolved_anchors.back().z < min_height - EPSILON) {
+                if (anchor.required && resolved_anchors.back().required) {
+                    failure_reason = "required output layer anchors are closer than the minimum support layer height";
+                    return std::nullopt;
+                }
+                if (anchor.required) {
+                    resolved_anchors.pop_back();
+                    continue;
+                }
+                keep_anchor = false;
+                break;
+            }
+            if (keep_anchor)
+                resolved_anchors.push_back(anchor);
+        }
+
+        std::vector<coordf_t> output_zs;
+        output_zs.reserve(resolved_anchors.size());
+
+        auto append_interval = [&](coordf_t target_z, bool enforce_minimum) -> bool {
+            if (!std::isfinite(target_z) || target_z <= EPSILON)
+                return false;
+            if (output_zs.empty()) {
+                output_zs.push_back(target_z);
+                return true;
+            }
+            const coordf_t distance = target_z - output_zs.back();
+            if (distance <= EPSILON)
+                return std::abs(distance) <= EPSILON;
+            const size_t steps = std::max<size_t>(1, size_t(std::ceil((distance - EPSILON) / max_height)));
+            const coordf_t step = distance / coordf_t(steps);
+            if (enforce_minimum && step < min_height - EPSILON)
+                return false;
+            const coordf_t start_z = output_zs.back();
+            for (size_t step_idx = 1; step_idx <= steps; ++step_idx)
+                output_zs.push_back(step_idx == steps ? target_z : start_z + coordf_t(step_idx) * step);
+            return true;
+        };
+
+        for (const Anchor &anchor : resolved_anchors) {
+            const bool first_non_raft_layer = output_zs.empty();
+            if (!append_interval(anchor.z, !first_non_raft_layer)) {
+                failure_reason = "an output layer interval cannot satisfy the configured support layer-height limits";
+                return std::nullopt;
+            }
+        }
+
+        if (output_zs.empty()) {
+            failure_reason = "no output layers were planned";
+            return std::nullopt;
+        }
+
+        result.m_entries.reserve(output_zs.size());
+        for (size_t output_idx = 0; output_idx < output_zs.size(); ++output_idx) {
+            const coordf_t print_z  = output_zs[output_idx];
+            const coordf_t bottom_z = output_idx == 0 ? 0. : output_zs[output_idx - 1];
+            const coordf_t height   = print_z - bottom_z;
+            if (height <= EPSILON) {
+                failure_reason = "the output plan contains a non-positive layer height";
+                return std::nullopt;
+            }
+
+            LayerIndex source_begin = layer_idx_floor(slicing_params, config, bottom_z + EPSILON);
+            LayerIndex source_end   = layer_idx_ceil(slicing_params, config, print_z - EPSILON);
+            source_begin = std::clamp<LayerIndex>(source_begin, 0, LayerIndex(source_layer_count - 1));
+            source_end   = std::clamp<LayerIndex>(source_end, source_begin, LayerIndex(source_layer_count - 1));
+            result.m_entries.push_back({print_z, bottom_z, height, source_begin, source_end});
+        }
+
+        return result;
+    }
+
+    bool independent() const { return m_independent; }
+    bool empty() const { return m_entries.empty(); }
+    size_t size() const { return m_entries.size(); }
+    const OrganicSupportLayerPlanEntry &operator[](size_t idx) const { return m_entries[idx]; }
+
+    LayerIndex find_exact(coordf_t print_z) const
+    {
+        auto it = std::lower_bound(m_entries.begin(), m_entries.end(), print_z,
+            [](const OrganicSupportLayerPlanEntry &entry, coordf_t z) { return entry.print_z < z - EPSILON; });
+        return it != m_entries.end() && std::abs(it->print_z - print_z) <= EPSILON ?
+            LayerIndex(std::distance(m_entries.begin(), it)) : -1;
+    }
+
+    LayerIndex at_or_below(coordf_t print_z) const
+    {
+        auto it = std::upper_bound(m_entries.begin(), m_entries.end(), print_z + EPSILON,
+            [](coordf_t z, const OrganicSupportLayerPlanEntry &entry) { return z < entry.print_z; });
+        return it == m_entries.begin() ? 0 : LayerIndex(std::distance(m_entries.begin(), it) - 1);
+    }
+
+    LayerIndex at_or_above_slice_z(coordf_t z) const
+    {
+        auto it = std::lower_bound(m_entries.begin(), m_entries.end(), z - EPSILON,
+            [](const OrganicSupportLayerPlanEntry &entry, coordf_t value) {
+                return 0.5 * (entry.bottom_z + entry.print_z) < value;
+            });
+        return it == m_entries.end() ? LayerIndex(m_entries.size()) : LayerIndex(std::distance(m_entries.begin(), it));
+    }
+
+    LayerIndex above_slice_z(coordf_t z) const
+    {
+        auto it = std::upper_bound(m_entries.begin(), m_entries.end(), z + EPSILON,
+            [](coordf_t value, const OrganicSupportLayerPlanEntry &entry) {
+                return value < 0.5 * (entry.bottom_z + entry.print_z);
+            });
+        return LayerIndex(std::distance(m_entries.begin(), it));
+    }
+
+    void initialize(SupportGeneratorLayer &layer, size_t layer_idx) const
+    {
+        const OrganicSupportLayerPlanEntry &entry = m_entries.at(layer_idx);
+        layer.print_z  = entry.print_z;
+        layer.bottom_z = entry.bottom_z;
+        layer.height   = entry.height;
+    }
+
+private:
+    std::vector<OrganicSupportLayerPlanEntry> m_entries;
+    bool m_independent{false};
+};
+
+static void restore_generator_layers_to_topology(
+    SupportGeneratorLayersPtr &layers,
+    const SlicingParameters &slicing_params,
+    const TreeSupportSettings &config)
+{
+    for (size_t layer_idx = 0; layer_idx < layers.size(); ++layer_idx)
+        if (SupportGeneratorLayer *layer = layers[layer_idx]; layer != nullptr)
+            layer_initialize(*layer, slicing_params, config, layer_idx);
+}
+
+static bool remap_generator_layers(
+    SupportGeneratorLayersPtr &layers,
+    const OrganicSupportLayerPlan &plan,
+    bool require_exact_z)
+{
+    if (layers.empty())
+        return true;
+    SupportGeneratorLayersPtr source_layers = layers;
+    if (require_exact_z) {
+        for (const SupportGeneratorLayer *layer : source_layers)
+            if (layer != nullptr && plan.find_exact(layer->print_z) < 0)
+                return false;
+    }
+    SupportGeneratorLayersPtr remapped(plan.size(), nullptr);
+    for (SupportGeneratorLayer *layer : source_layers) {
+        if (layer == nullptr)
+            continue;
+        const LayerIndex output_idx = require_exact_z ? plan.find_exact(layer->print_z) : plan.at_or_below(layer->print_z);
+        if (output_idx < 0 || output_idx >= LayerIndex(plan.size()))
+            return false;
+        plan.initialize(*layer, size_t(output_idx));
+        SupportGeneratorLayer *&destination = remapped[size_t(output_idx)];
+        if (destination == nullptr)
+            destination = layer;
+        else if (destination != layer)
+            destination->merge(std::move(*layer));
+    }
+    layers = std::move(remapped);
+    return true;
+}
+
+} // namespace TreeSupport3D
+} // namespace Slic3r
 
 #ifndef _L
 #define _L(s) Slic3r::I18N::translate(s)
@@ -1030,29 +1309,14 @@ int generate_raft_contact(
         // Create the raft contact layer.
         const ExPolygons &lslices   = print_object.get_layer(0)->lslices;
         double            expansion = print_object.config().raft_expansion.value;
-        if (print_object.config().raft_generate_bounding_box) {
-            BoundingBox bbox = get_extents(lslices);
-            if (bbox.defined) {
-                Polygons raft_contact_polygons { bbox.polygon() };
-                raft_contact_polygons.front().make_counter_clockwise();
-                if (expansion > 0)
-                    raft_contact_polygons = expand(raft_contact_polygons, scaled<float>(expansion));
-                interface_placer.add_roof_unguarded(std::move(raft_contact_polygons), raft_contact_layer_idx, 0);
-            }
-        } else if (print_object.config().raft_ignore_internal_contours) {
-            Polygons raft_contact_polygons;
-            raft_contact_polygons.reserve(lslices.size());
-            for (const ExPolygon &slice : lslices) {
-                Polygon contour = slice.contour;
-                contour.make_counter_clockwise();
-                raft_contact_polygons.emplace_back(std::move(contour));
-            }
-            if (expansion > 0)
-                raft_contact_polygons = expand(raft_contact_polygons, scaled<float>(expansion));
+        const ExPolygons raft_contact_areas = build_raft_first_layer_footprint(
+            lslices, {}, print_object.config().raft_generate_bounding_box,
+            print_object.config().raft_ignore_internal_contours);
+        Polygons raft_contact_polygons = expansion > 0 ?
+            expand(raft_contact_areas, scaled<float>(expansion)) :
+            to_polygons(raft_contact_areas);
+        if (!raft_contact_polygons.empty())
             interface_placer.add_roof_unguarded(std::move(raft_contact_polygons), raft_contact_layer_idx, 0);
-        } else {
-            interface_placer.add_roof_unguarded(expansion > 0 ? expand(lslices, scaled<float>(expansion)) : to_polygons(lslices), raft_contact_layer_idx, 0);
-        }
     }
     return raft_contact_layer_idx;
 }
@@ -1982,19 +2246,21 @@ static void increase_areas_one_layer(
                     Polygons base_error_area = union_(parent.influence_area, lines_offset);
                     result = increase_single_area(volumes, config, settings, layer_idx, parent,
                         base_error_area, to_bp_data, to_model_data, inc_wo_collision, (config.maximum_move_distance + extra_speed) * 1.5, mergelayer);
+                    if (!result) {
 #ifdef TREE_SUPPORT_SHOW_ERRORS
-                    BOOST_LOG_TRIVIAL(error)
+                        BOOST_LOG_TRIVIAL(error)
 #else // TREE_SUPPORT_SHOW_ERRORS
-                    BOOST_LOG_TRIVIAL(warning)
+                        BOOST_LOG_TRIVIAL(warning)
 #endif // TREE_SUPPORT_SHOW_ERRORS
-                          << "Influence area could not be increased! Data about the Influence area: "
-                             "Radius: " << radius << " at layer: " << layer_idx - 1 << " NextTarget: " << elem.layer_idx << " Distance to top: " << elem.distance_to_top <<
-                             " Elephant foot increases " << elem.elephant_foot_increases << " use_min_xy_dist " << elem.use_min_xy_dist << " to buildplate " << elem.to_buildplate <<
-                             " gracious " << elem.to_model_gracious << " safe " << elem.can_use_safe_radius << " until move " << elem.dont_move_until << " \n "
-                             "Parent " << &parent << ": Radius: " << support_element_collision_radius(config, parent.state) << " at layer: " << layer_idx << " NextTarget: " << parent.state.layer_idx <<
-                             " Distance to top: " << parent.state.distance_to_top << " Elephant foot increases " << parent.state.elephant_foot_increases << "  use_min_xy_dist " << parent.state.use_min_xy_dist <<
-                             " to buildplate " << parent.state.to_buildplate << " gracious " << parent.state.to_model_gracious << " safe " << parent.state.can_use_safe_radius << " until move " << parent.state.dont_move_until;
-                    tree_supports_show_error("Potentially lost branch!"sv, true);
+                            << "Influence area could not be increased! Data about the Influence area: "
+                               "Radius: " << radius << " at layer: " << layer_idx - 1 << " NextTarget: " << elem.layer_idx << " Distance to top: " << elem.distance_to_top <<
+                               " Elephant foot increases " << elem.elephant_foot_increases << " use_min_xy_dist " << elem.use_min_xy_dist << " to buildplate " << elem.to_buildplate <<
+                               " gracious " << elem.to_model_gracious << " safe " << elem.can_use_safe_radius << " until move " << elem.dont_move_until << " \n "
+                               "Parent " << &parent << ": Radius: " << support_element_collision_radius(config, parent.state) << " at layer: " << layer_idx << " NextTarget: " << parent.state.layer_idx <<
+                               " Distance to top: " << parent.state.distance_to_top << " Elephant foot increases " << parent.state.elephant_foot_increases << "  use_min_xy_dist " << parent.state.use_min_xy_dist <<
+                               " to buildplate " << parent.state.to_buildplate << " gracious " << parent.state.to_model_gracious << " safe " << parent.state.can_use_safe_radius << " until move " << parent.state.dont_move_until;
+                        tree_supports_show_error("Potentially lost branch!"sv, true);
+                    }
 #ifdef TREE_SUPPORTS_TRACK_LOST
                     if (result)
                         result->lost = true;
@@ -3669,6 +3935,7 @@ static void recover_pending_branch_roofs(
     InterfacePlacer        &interface_placer,
     const std::vector<const SupportElement*> &branch_path,
     const LayerIndex        layer_begin,
+    const OrganicSupportLayerPlan &layer_plan,
     std::vector<Polygons>  &slices)
 {
     if (! interface_placer.support_parameters.has_top_contacts)
@@ -3679,7 +3946,9 @@ static void recover_pending_branch_roofs(
         if (! el.state.has_pending_roof_recovery())
             break;
 
-        const LayerIndex slice_idx = el.state.layer_idx - layer_begin;
+        const coordf_t source_z = layer_z(interface_placer.slicing_parameters, interface_placer.config, el.state.layer_idx);
+        const LayerIndex output_layer_idx = layer_plan.at_or_below(source_z);
+        const LayerIndex slice_idx = output_layer_idx - layer_begin;
         if (slice_idx < 0 || slice_idx >= LayerIndex(slices.size()))
             continue;
         if (slices[size_t(slice_idx)].empty())
@@ -3687,7 +3956,7 @@ static void recover_pending_branch_roofs(
         if (el.state.roof_recovery_dtt > interface_placer.support_parameters.num_top_interface_layers)
             continue;
 
-        interface_placer.add_roof(std::move(slices[size_t(slice_idx)]), el.state.layer_idx, el.state.roof_recovery_dtt);
+        interface_placer.add_roof(std::move(slices[size_t(slice_idx)]), size_t(output_layer_idx), el.state.roof_recovery_dtt);
     }
 }
 
@@ -3872,11 +4141,104 @@ void organic_draw_branches(
     }
 
     const SlicingParameters &slicing_params = print_object.slicing_parameters();
+    const SupportParameters &support_params = interface_placer.support_parameters;
+    OrganicSupportLayerPlan layer_plan = OrganicSupportLayerPlan::legacy(slicing_params, config, move_bounds.size());
+
+    std::vector<LayerIndex> mandatory_source_layers;
+    for (const Tree &tree : trees) {
+        for (const Branch &branch : tree.branches) {
+            if (branch.has_root)
+                mandatory_source_layers.push_back(branch.path.front()->state.layer_idx);
+            if (branch.has_tip)
+                mandatory_source_layers.push_back(branch.path.back()->state.layer_idx);
+        }
+    }
+
+    const bool requested_independent_output =
+        support_params.organic_independent_layer_height ||
+        support_params.independent_top_contact_layer_height;
+    bool use_independent_output = requested_independent_output;
+    bool use_exact_top_contact  = support_params.independent_top_contact_layer_height;
+    std::string fallback_reason;
+    if (use_exact_top_contact) {
+        for (size_t contact_idx = 0; contact_idx < top_contacts.size(); ++contact_idx) {
+            if (contact_idx < config.raft_layers.size())
+                continue;
+            const SupportGeneratorLayer *contact = top_contacts[contact_idx];
+            if (contact == nullptr || contact->polygons.empty())
+                continue;
+            if (!std::isfinite(contact->print_z) || contact->print_z <= EPSILON) {
+                use_exact_top_contact = false;
+                use_independent_output = false;
+                fallback_reason = "an exact top contact layer has an invalid Z position";
+                break;
+            }
+        }
+    }
+
+    if (use_independent_output) {
+        const bool preserve_source_grid = !support_params.organic_independent_layer_height;
+        if (std::optional<OrganicSupportLayerPlan> independent_plan = OrganicSupportLayerPlan::independent(
+                slicing_params, config, move_bounds.size(), top_contacts, mandatory_source_layers,
+                preserve_source_grid, fallback_reason)) {
+            OrganicSupportLayerPlan candidate = std::move(*independent_plan);
+            SupportGeneratorLayersPtr &top_interfaces = interface_placer.top_interfaces_mutable();
+            SupportGeneratorLayersPtr &top_base_interfaces = interface_placer.top_base_interfaces_mutable();
+            const bool remapped =
+                remap_generator_layers(top_contacts, candidate, true) &&
+                remap_generator_layers(top_interfaces, candidate, false) &&
+                remap_generator_layers(top_base_interfaces, candidate, false);
+            if (remapped) {
+                layer_plan = std::move(candidate);
+                if (!bottom_contacts.empty())
+                    bottom_contacts.assign(layer_plan.size(), nullptr);
+                intermediate_layers.assign(layer_plan.size(), nullptr);
+                interface_placer.set_layer_initializer([&layer_plan](SupportGeneratorLayer &layer, size_t layer_idx) {
+                    layer_plan.initialize(layer, layer_idx);
+                });
+            } else {
+                use_independent_output = false;
+                fallback_reason = "contact or interface layers could not be mapped to the independent output plan";
+            }
+        } else {
+            use_independent_output = false;
+        }
+    }
+
+    if ((requested_independent_output && !use_independent_output) ||
+        (support_params.independent_top_contact_layer_height && !use_exact_top_contact)) {
+        restore_generator_layers_to_topology(top_contacts, slicing_params, config);
+        restore_generator_layers_to_topology(interface_placer.top_interfaces_mutable(), slicing_params, config);
+        restore_generator_layers_to_topology(interface_placer.top_base_interfaces_mutable(), slicing_params, config);
+        interface_placer.use_legacy_contact_layers();
+        layer_plan = OrganicSupportLayerPlan::legacy(slicing_params, config, move_bounds.size());
+        if (!bottom_contacts.empty())
+            bottom_contacts.assign(move_bounds.size(), nullptr);
+        intermediate_layers.assign(move_bounds.size(), nullptr);
+        BOOST_LOG_TRIVIAL(warning) << "Organic independent layer planning could not satisfy the configured layer-height constraints; using the legacy synchronized layer plan. Reason: "
+                                   << (fallback_reason.empty() ? "unspecified planning failure" : fallback_reason);
+    }
+
+    std::vector<Polygons> output_collisions;
+    if (layer_plan.independent()) {
+        output_collisions.resize(layer_plan.size());
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, layer_plan.size()),
+            [&output_collisions, &layer_plan, &volumes](const tbb::blocked_range<size_t> &range) {
+                for (size_t output_idx = range.begin(); output_idx < range.end(); ++output_idx) {
+                    const OrganicSupportLayerPlanEntry &entry = layer_plan[output_idx];
+                    Polygons collisions;
+                    for (LayerIndex source_idx = entry.source_layer_begin; source_idx <= entry.source_layer_end; ++source_idx)
+                        append(collisions, volumes.getCollision(0, source_idx, true));
+                    output_collisions[output_idx] = collisions.empty() ? Polygons{} : union_(collisions);
+                }
+            });
+    }
+
     MeshSlicingParams mesh_slicing_params;
     mesh_slicing_params.mode = MeshSlicingParams::SlicingMode::Positive;
 
     tbb::parallel_for(tbb::blocked_range<size_t>(0, trees.size(), 1),
-        [&trees, &volumes, &config, &slicing_params, &move_bounds, &mesh_slicing_params, &interface_placer, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
+        [&trees, &volumes, &config, &slicing_params, &move_bounds, &mesh_slicing_params, &interface_placer, &layer_plan, &output_collisions, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
             indexed_triangle_set    partial_mesh;
             std::vector<float>      slice_z;
             std::vector<Polygons>   bottom_contacts;
@@ -3886,16 +4248,40 @@ void organic_draw_branches(
                     // Triangulate the tube.
                     partial_mesh.clear();
                     std::pair<float, float> zspan = extrude_branch(branch.path, config, slicing_params, move_bounds, branch.has_root, partial_mesh);
-                    LayerIndex layer_begin = branch.has_root ?
-                        branch.path.front()->state.layer_idx : 
-                        std::min(branch.path.front()->state.layer_idx, layer_idx_ceil(slicing_params, config, zspan.first));
-                    LayerIndex layer_end   = (branch.has_tip ?
-                        branch.path.back()->state.layer_idx :
-                        std::max(branch.path.back()->state.layer_idx, layer_idx_floor(slicing_params, config, zspan.second))) + 1;
+                    LayerIndex layer_begin;
+                    LayerIndex layer_end;
+                    if (layer_plan.independent()) {
+                        layer_begin = layer_plan.at_or_above_slice_z(zspan.first);
+                        layer_end   = layer_plan.above_slice_z(zspan.second);
+                        if (branch.has_root) {
+                            const coordf_t root_z = layer_z(slicing_params, config, branch.path.front()->state.layer_idx);
+                            const LayerIndex root_idx = layer_plan.find_exact(root_z);
+                            if (root_idx >= 0)
+                                layer_begin = std::min(layer_begin, root_idx);
+                        }
+                        if (branch.has_tip) {
+                            const coordf_t tip_z = layer_z(slicing_params, config, branch.path.back()->state.layer_idx);
+                            const LayerIndex tip_idx = layer_plan.find_exact(tip_z);
+                            if (tip_idx >= 0)
+                                layer_end = std::max(layer_end, tip_idx + 1);
+                        }
+                        layer_begin = std::clamp<LayerIndex>(layer_begin, 0, LayerIndex(layer_plan.size()));
+                        layer_end   = std::clamp<LayerIndex>(layer_end, layer_begin, LayerIndex(layer_plan.size()));
+                    } else {
+                        layer_begin = branch.has_root ?
+                            branch.path.front()->state.layer_idx :
+                            std::min(branch.path.front()->state.layer_idx, layer_idx_ceil(slicing_params, config, zspan.first));
+                        layer_end = (branch.has_tip ?
+                            branch.path.back()->state.layer_idx :
+                            std::max(branch.path.back()->state.layer_idx, layer_idx_floor(slicing_params, config, zspan.second))) + 1;
+                    }
+                    if (layer_begin >= layer_end)
+                        continue;
                     slice_z.clear();
                     for (LayerIndex layer_idx = layer_begin; layer_idx < layer_end; ++ layer_idx) {
-                        const double print_z  = layer_z(slicing_params, config, layer_idx);
-                        const double bottom_z = layer_idx > 0 ? layer_z(slicing_params, config, layer_idx - 1) : 0.;
+                        const double print_z  = layer_plan.independent() ? layer_plan[size_t(layer_idx)].print_z : layer_z(slicing_params, config, layer_idx);
+                        const double bottom_z = layer_plan.independent() ? layer_plan[size_t(layer_idx)].bottom_z :
+                            (layer_idx > 0 ? layer_z(slicing_params, config, layer_idx - 1) : 0.);
                         slice_z.emplace_back(float(0.5 * (bottom_z + print_z)));
                     }
 
@@ -3911,7 +4297,9 @@ void organic_draw_branches(
                     //FIXME parallelize?
                     for (LayerIndex i = 0; i < LayerIndex(slices.size()); ++i) {
                         // INLONG: safety offset when trimming collision/bed to improve robustness.
-                        slices[i] = diff_clipped(slices[i], volumes.getCollision(0, layer_begin + i, true), ApplySafetyOffset::Yes); // FIXME parent_uses_min || draw_area.element->state.use_min_xy_dist);
+                        const Polygons &collision = layer_plan.independent() ?
+                            output_collisions[size_t(layer_begin + i)] : volumes.getCollision(0, layer_begin + i, true);
+                        slices[i] = diff_clipped(slices[i], collision, ApplySafetyOffset::Yes); // FIXME parent_uses_min || draw_area.element->state.use_min_xy_dist);
                         slices[i] = intersection(slices[i], volumes.m_bed_area, ApplySafetyOffset::Yes);
                         remove_small(slices[i], tiny_area);
                     }
@@ -3945,7 +4333,9 @@ void organic_draw_branches(
                                 if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
                                     contacts = slice_front_contact;
                                 else {
-                                    Polygons placeable = volumes.getPlaceableAreas(0, layer_begin, [] {});
+                                    const LayerIndex source_layer = layer_plan.independent() ?
+                                        layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
+                                    Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
                                     contacts = intersection_clipped(slice_front_contact, placeable, ApplySafetyOffset::Yes);
                                 }
 
@@ -3969,18 +4359,34 @@ void organic_draw_branches(
                             // Don't propagate further than 1.5 * bottom radius.
                             //LayerIndex                      layers_propagate_max = 2 * bottom_radius / config.layer_height;
                             LayerIndex                      layers_propagate_max = 5 * bottom_radius / config.layer_height;
-                            LayerIndex                      layer_bottommost = branch.path.front()->state.verylost ?
-                                // If the tree bottom is hanging in the air, bring it down to some surface.
-                                0 :
-                                //FIXME the "verylost" branches should stop when crossing another support.
-                                std::max(0, layer_begin - layers_propagate_max);
+                            LayerIndex                      layer_bottommost = 0;
+                            if (!branch.path.front()->state.verylost) {
+                                if (layer_plan.independent()) {
+                                    const coordf_t max_drop = unscaled<coordf_t>(5 * bottom_radius);
+                                    layer_bottommost = layer_begin;
+                                    while (layer_bottommost > 0 &&
+                                           layer_plan[size_t(layer_begin)].print_z - layer_plan[size_t(layer_bottommost - 1)].print_z <= max_drop + EPSILON)
+                                        --layer_bottommost;
+                                } else {
+                                    layer_bottommost = std::max(0, layer_begin - layers_propagate_max);
+                                }
+                            }
                             double                          support_area_min_radius = M_PI * sqr(double(config.branch_radius));
                             double                          support_area_stop = std::max(0.2 * M_PI * sqr(double(bottom_radius)), 0.5 * support_area_min_radius);
                              // Only propagate until the rest area is smaller than this threshold.
                             //double                          support_area_min = 0.1 * support_area_min_radius;
                             for (LayerIndex layer_idx = layer_begin - 1; layer_idx >= layer_bottommost; -- layer_idx) {
                                 LayerIndex collision_layer = (layer_idx == layer_begin - 1) ? layer_begin : layer_idx;
-                                Polygons collision = volumes.getCollision(0, collision_layer, false);
+                                Polygons collision;
+                                if (layer_plan.independent()) {
+                                    const OrganicSupportLayerPlanEntry &entry = layer_plan[size_t(collision_layer)];
+                                    for (LayerIndex source_idx = entry.source_layer_begin; source_idx <= entry.source_layer_end; ++source_idx)
+                                        append(collision, volumes.getCollision(0, source_idx, false));
+                                    if (!collision.empty())
+                                        collision = union_(collision);
+                                } else {
+                                    collision = volumes.getCollision(0, collision_layer, false);
+                                }
                                 rest_support = diff_clipped(rest_support.empty() ? slice_front_contact : rest_support, collision, ApplySafetyOffset::Yes);
                                 remove_small(rest_support, tiny_area);
                                 double rest_support_area = area(rest_support);
@@ -3992,8 +4398,11 @@ void organic_draw_branches(
                             // Now remove those bottom slices that are not supported at all.
 #if 0
                             while (! bottom_extra_slices.empty()) {
+                                const LayerIndex output_layer = layer_begin - LayerIndex(bottom_extra_slices.size());
+                                const LayerIndex source_layer = layer_plan.independent() ?
+                                    layer_plan[size_t(output_layer)].source_layer_end : output_layer;
                                 Polygons this_bottom_contacts = intersection_clipped(
-                                    bottom_extra_slices.back().polygons, volumes.getPlaceableAreas(0, layer_begin - LayerIndex(bottom_extra_slices.size()), [] {}));
+                                    bottom_extra_slices.back().polygons, volumes.getPlaceableAreas(0, source_layer, [] {}));
                                 if (area(this_bottom_contacts) < support_area_min)
                                     bottom_extra_slices.pop_back();
                                 else {
@@ -4014,7 +4423,9 @@ void organic_draw_branches(
                                     if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
                                         contacts = intersection_clipped(bottom_extra_slices[contact_idx].polygons, Polygons{volumes.m_bed_area}, ApplySafetyOffset::Yes);
                                     else {
-                                        Polygons placeable = volumes.getPlaceableAreas(0, layer_begin, [] {});
+                                        const LayerIndex source_layer = layer_plan.independent() ?
+                                            layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
+                                        Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
                                         contacts = intersection_clipped(bottom_extra_slices[contact_idx].polygons, placeable, ApplySafetyOffset::Yes);
                                     }
                                 } else {
@@ -4022,7 +4433,9 @@ void organic_draw_branches(
                                     if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
                                         contacts = slice_front_contact;
                                     else {
-                                        Polygons placeable = volumes.getPlaceableAreas(0, layer_begin, [] {});
+                                        const LayerIndex source_layer = layer_plan.independent() ?
+                                            layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
+                                        Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
                                         contacts = intersection_clipped(slice_front_contact, placeable, ApplySafetyOffset::Yes);
                                     }
                                 }
@@ -4052,7 +4465,7 @@ void organic_draw_branches(
                     }
                     // INLONG: bottom contacts provide the footprint; interface layers are built later.
 
-                    recover_pending_branch_roofs(interface_placer, branch.path, layer_begin, slices);
+                    recover_pending_branch_roofs(interface_placer, branch.path, layer_begin, layer_plan, slices);
 
                     while (! slices.empty() && slices.back().empty()) {
                         slices.pop_back();
@@ -4154,8 +4567,8 @@ void organic_draw_branches(
             }
         }
 
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, std::min(move_bounds.size(), slices.size()), 1),
-        [&print_object, &config, &slices, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_storage, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, slices.size(), 1),
+        [&print_object, &config, &slices, &bottom_contacts, &top_contacts, &intermediate_layers, &layer_storage, &layer_plan, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
         for (size_t layer_idx = range.begin(); layer_idx < range.end(); ++layer_idx) {
             Slice &slice = slices[layer_idx];
             assert(intermediate_layers[layer_idx] == nullptr);
@@ -4183,13 +4596,27 @@ void organic_draw_branches(
             }
             if (! bottom_contact_polygons.empty()) {
                 base_layer_polygons = diff(base_layer_polygons, bottom_contact_polygons);
-                SupportGeneratorLayer *bottom_contact_layer = bottom_contacts[layer_idx] = &layer_allocate(
-                    layer_storage, SupporLayerType::BottomContact, print_object.slicing_parameters(), config, layer_idx);
+                SupportGeneratorLayer *bottom_contact_layer;
+                if (layer_plan.independent()) {
+                    bottom_contact_layer = &layer_storage.allocate(SupporLayerType::BottomContact);
+                    layer_plan.initialize(*bottom_contact_layer, layer_idx);
+                } else {
+                    bottom_contact_layer = &layer_allocate(
+                        layer_storage, SupporLayerType::BottomContact, print_object.slicing_parameters(), config, layer_idx);
+                }
+                bottom_contacts[layer_idx] = bottom_contact_layer;
                 bottom_contact_layer->polygons = std::move(bottom_contact_polygons);
             }
             if (! base_layer_polygons.empty()) {
-                SupportGeneratorLayer *base_layer = intermediate_layers[layer_idx] = &layer_allocate(
-                    layer_storage, SupporLayerType::Base, print_object.slicing_parameters(), config, layer_idx);
+                SupportGeneratorLayer *base_layer;
+                if (layer_plan.independent()) {
+                    base_layer = &layer_storage.allocate(SupporLayerType::Base);
+                    layer_plan.initialize(*base_layer, layer_idx);
+                } else {
+                    base_layer = &layer_allocate(
+                        layer_storage, SupporLayerType::Base, print_object.slicing_parameters(), config, layer_idx);
+                }
+                intermediate_layers[layer_idx] = base_layer;
                 base_layer->polygons = union_(base_layer_polygons);
             }
 

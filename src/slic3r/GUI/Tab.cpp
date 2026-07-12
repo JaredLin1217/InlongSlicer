@@ -2712,6 +2712,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("raft_generate_bounding_box", "support_settings_raft");
         optgroup->append_single_option_line("raft_contact_distance", "support_settings_raft");
         optgroup->append_single_option_line("raft_expansion", "support_settings_raft");
+        optgroup->append_single_option_line("raft_layer_expansion_step", "support_settings_raft");
         optgroup->append_single_option_line("raft_base_pattern", "support_settings_raft");
         optgroup->append_single_option_line("raft_base_pattern_spacing", "support_settings_raft");
 

@@ -7,10 +7,51 @@
 #include "SupportLayer.hpp"
 #include "SupportParameters.hpp"
 
+#include <memory>
+
 namespace Slic3r {
 
 class PrintObject;
 class SupportLayer;
+
+// Build the common first-layer raft footprint. Box mode takes precedence over
+// filling internal contours so legacy presets with both options enabled remain
+// deterministic.
+ExPolygons build_raft_first_layer_footprint(
+    const ExPolygons &object_areas,
+    const ExPolygons &support_areas,
+    bool              generate_bounding_box,
+    bool              ignore_internal_contours);
+
+// Additional cumulative XY expansion for a raft layer. Layer zero is the
+// bottom layer and the last layer is the top contact layer.
+coordf_t raft_layer_expansion_offset(
+    const PrintObjectConfig &config,
+    size_t                   raft_layer_count,
+    size_t                   layer_id);
+
+struct RaftPathInstance
+{
+    const ExtrusionEntityCollection *paths;
+    const ExPolygons                 *footprint;
+    Point                             shift;
+    const PrintObject                *object { nullptr };
+    const SupportLayer               *layer { nullptr };
+    int                               support_extruder { -1 };
+    int                               interface_extruder { -1 };
+};
+
+// Remove portions of later raft paths that are already covered by an earlier
+// instance at the same print Z. Results are in instance-local coordinates;
+// nullptr means the source paths did not overlap and may be used unchanged.
+std::vector<std::unique_ptr<ExtrusionEntityCollection>> clip_overlapping_raft_paths(
+    const std::vector<RaftPathInstance> &instances);
+
+// Boolean-union compatible overlapping raft instances and regenerate each
+// connected component once in its owner's local coordinate system. Instances
+// with incompatible raft parameters use path clipping as a safe fallback.
+std::vector<std::unique_ptr<ExtrusionEntityCollection>> merge_overlapping_raft_paths(
+    const std::vector<RaftPathInstance> &instances);
 
 // Turn some of the base layers into base interface layers.
 // For soluble interfaces with non-soluble bases, print maximum two first interface layers with the base
@@ -44,7 +85,7 @@ SupportGeneratorLayersPtr generate_raft_base(
 void tree_supports_generate_paths(ExtrusionEntitiesPtr &dst, const Polygons &polygons, const Flow &flow, const SupportParameters &support_params);
 
 void fill_expolygons_with_sheath_generate_paths(
-    ExtrusionEntitiesPtr &dst, const Polygons &polygons, Fill *filler, float density, ExtrusionRole role, const Flow &flow, const SupportParameters& support_params, bool with_sheath, bool no_sort);
+    ExtrusionEntitiesPtr &dst, const Polygons &polygons, Fill *filler, float density, ExtrusionRole role, const Flow &flow, const SupportParameters& support_params, bool with_sheath, bool no_sort, bool fill_concentric_gaps = false);
 
 // returns sorted layers
 SupportGeneratorLayersPtr generate_support_layers(

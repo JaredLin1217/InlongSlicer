@@ -197,6 +197,7 @@ enum SupportMaterialPattern {
     smpRectilinear, smpRectilinearGrid, smpHoneycomb,
     smpLightning,
     smpNone,
+    smpConcentric,
 };
 
 enum SupportMaterialStyle {
@@ -963,6 +964,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,               mmu_segmented_region_interlocking_depth))
     ((ConfigOptionFloat,               raft_contact_distance))
     ((ConfigOptionFloat,               raft_expansion))
+    ((ConfigOptionFloat,               raft_layer_expansion_step))
     ((ConfigOptionEnum<SupportMaterialPattern>, raft_base_pattern))
     ((ConfigOptionFloat,               raft_base_pattern_spacing))
     ((ConfigOptionPercent,             raft_first_layer_density))

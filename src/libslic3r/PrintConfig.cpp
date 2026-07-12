@@ -341,6 +341,7 @@ static t_config_enum_values s_keys_map_SupportMaterialPattern {
     { "lightning",          smpLightning },
     { "default",            smpDefault},
     { "hollow",               smpNone},
+    { "concentric",         smpConcentric },
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(SupportMaterialPattern)
 
@@ -5312,9 +5313,9 @@ void PrintConfigDef::init_fff_params()
     def = this->add("raft_contact_distance", coFloat);
     def->label = L("Raft contact Z distance");
     def->category = L("Support");
-    def->tooltip = L("Z gap between raft and object. "
-                    "If Support Top Z Distance is 0, this value is ignored and "
-                    "the object is printed in direct contact with the raft (no gap).");
+    def->tooltip = L("Z gap between raft and object. Set to 0 for direct contact. "
+                     "When independent support layer height is disabled, the value is rounded to the nearest object layer height. "
+                     "The prime tower may disable independent support layer heights.");
     def->sidetext = L("mm");	// millimeters, CIS languages need translation
     def->min = 0;
     def->mode = comAdvanced;
@@ -5329,6 +5330,18 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(1.5));
 
+    def = this->add("raft_layer_expansion_step", coFloat);
+    def->label = L("Raft layer expansion step");
+    def->category = L("Support");
+    def->tooltip = L("Additional XY expansion applied cumulatively to each raft layer below the top contact layer. "
+                     "The top contact layer receives no additional expansion, the layer below expands by one step, "
+                     "and the bottom layer expands by (raft layers - 1) steps. Set to 0 to disable stepped expansion. "
+                     "Raft expansion and first layer expansion are still applied separately.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0.0));
+
     def = this->add("raft_base_pattern", coEnum);
     def->label = L("Raft support pattern");
     def->category = L("Support");
@@ -5337,9 +5350,11 @@ void PrintConfigDef::init_fff_params()
     def->enum_values.push_back("rectilinear");
     def->enum_values.push_back("rectilinear-grid");
     def->enum_values.push_back("honeycomb");
+    def->enum_values.push_back("concentric");
     def->enum_labels.push_back(L("Rectilinear"));
     def->enum_labels.push_back(L("Rectilinear grid"));
     def->enum_labels.push_back(L("Honeycomb"));
+    def->enum_labels.push_back(L("Concentric"));
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<SupportMaterialPattern>(smpRectilinear));
 
@@ -5375,16 +5390,18 @@ void PrintConfigDef::init_fff_params()
     def = this->add("raft_ignore_internal_contours", coBool);
     def->label = L("Ignore internal contours");
     def->category = L("Support");
-    def->tooltip = L("Fill the raft area under the first object layer by ignoring holes and internal contours.");
+    def->tooltip = L("Fill the raft area under the first object layer by ignoring holes and internal contours. "
+                     "This option is ignored when Generate box raft is enabled.");
     def->mode = comAdvanced;
-    def->set_default_value(new ConfigOptionBool(true));
+    def->set_default_value(new ConfigOptionBool(false));
 
     def = this->add("raft_generate_bounding_box", coBool);
     def->label = L("Generate box raft");
     def->category = L("Support");
-    def->tooltip = L("Generate the raft from the bounding box of the first object layer.");
+    def->tooltip = L("Generate the raft from the bounding box of the first object layer. "
+                     "This option takes priority over Ignore internal contours.");
     def->mode = comAdvanced;
-    def->set_default_value(new ConfigOptionBool(false));
+    def->set_default_value(new ConfigOptionBool(true));
 
     def = this->add("raft_layers", coInt);
     def->label = L("Raft layers");

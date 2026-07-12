@@ -795,12 +795,10 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     // settings specific to organic trees
     for (auto el : {"tree_support_branch_angle_organic", "tree_support_branch_distance_organic", "tree_support_branch_diameter_organic", "tree_support_angle_slow", "tree_support_tip_diameter", "tree_support_top_rate", "tree_support_branch_diameter_angle"})
         toggle_line(el, support_is_organic);
-    // INLONG: Independent support layer height is not compatible with organic tree supports,
-    // as they rely on the support layers being the same as the object layers to determine where to place branches.
-    toggle_line("independent_support_layer_height", have_support_material && !support_is_organic);
-    toggle_line("independent_support_top_contact_layer_height", have_support_material && !support_is_organic);
-    toggle_field("independent_support_top_contact_layer_height",
-        have_support_material && !support_is_organic);
+    toggle_line("independent_support_layer_height", have_support_material);
+    toggle_line("independent_support_top_contact_layer_height", have_support_material);
+    toggle_field("independent_support_layer_height", have_support_material);
+    toggle_field("independent_support_top_contact_layer_height", have_support_material);
 
     toggle_field("tree_support_brim_width", support_is_tree && !config->opt_bool("tree_support_auto_brim"));
     // tree support use max_bridge_length instead of bridge_no_support
@@ -836,8 +834,11 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
 
     toggle_line("raft_ignore_internal_contours", have_raft);
     toggle_line("raft_generate_bounding_box", have_raft);
+    toggle_field("raft_ignore_internal_contours",
+                 have_raft && !config->opt_bool("raft_generate_bounding_box"));
     toggle_line("raft_contact_distance", have_raft);
     toggle_line("raft_expansion", have_raft);
+    toggle_line("raft_layer_expansion_step", have_raft);
     toggle_line("raft_base_pattern", have_raft);
     toggle_line("raft_base_pattern_spacing", have_raft);
 

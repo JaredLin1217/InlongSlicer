@@ -38,7 +38,8 @@ inline InfillPattern support_base_fill_pattern(
     coordf_t density,
     bool with_sheath)
 {
-    return pattern == smpHoneycomb ? ipHoneycomb :
+    return pattern == smpConcentric ? ipConcentric :
+        pattern == smpHoneycomb ? ipHoneycomb :
         density > 0.95 || with_sheath ? ipRectilinear : ipSupportBase;
 }
 
@@ -249,8 +250,10 @@ struct SupportParameters {
         }
 
         independent_layer_height = print_config.independent_support_layer_height;
+        organic_independent_layer_height =
+            support_style == smsTreeOrganic &&
+            print_config.independent_support_layer_height;
         independent_top_contact_layer_height =
-            support_style != smsTreeOrganic &&
             (print_config.independent_support_layer_height || print_config.independent_support_top_contact_layer_height);
     }
     // Zero-gap interface flags for top / bottom contact.
@@ -354,6 +357,7 @@ struct SupportParameters {
 		
     bool independent_layer_height = false;
     bool independent_top_contact_layer_height = false;
+    bool organic_independent_layer_height = false;
     const double thresh_big_overhang = Slic3r::sqr(scale_(10));
 
 	bool          ironing;

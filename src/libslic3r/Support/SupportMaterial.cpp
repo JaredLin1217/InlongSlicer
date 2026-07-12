@@ -1398,8 +1398,12 @@ static inline ExPolygons detect_overhangs(
 
     if (layer_id == 0)
     {
-        // Don't fill in the holes. The user may apply a higher raft_expansion if one wants a better 1st layer adhesion.
-        overhang_polygons = to_polygons(layer.lslices);
+        // Apply the selected raft footprint only when a raft is requested.
+        overhang_polygons = object_config.raft_layers.value > 0 ?
+            to_polygons(build_raft_first_layer_footprint(
+                layer.lslices, {}, object_config.raft_generate_bounding_box,
+                object_config.raft_ignore_internal_contours)) :
+            to_polygons(layer.lslices);
 
         for (auto& slice : layer.lslices) {
             auto bbox_size = get_extents(slice).size();

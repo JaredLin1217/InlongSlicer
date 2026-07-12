@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <limits>
 
 #include "libslic3r.h"
@@ -149,13 +150,9 @@ SlicingParameters SlicingParameters::create_from_config(
     /*                INLONG: Gap assignment                */
     /* -------------------------------------------------- */
 
-    const bool organic_tree_support =
-        is_tree(object_config.support_type) &&
-        (object_config.support_style == smsTreeOrganic || object_config.support_style == smsDefault);
     const bool independent_top_contact_layer_height =
-        !organic_tree_support &&
-        (print_config.independent_support_layer_height ||
-         print_config.independent_support_top_contact_layer_height);
+        print_config.independent_support_layer_height ||
+        print_config.independent_support_top_contact_layer_height;
 
     // INLONG: Raft contact (raft -> object)
     if (zero_gap_interface_raft) {
@@ -202,11 +199,18 @@ SlicingParameters SlicingParameters::create_from_config(
     if (params.base_raft_layers > 0) {
         params.interface_raft_layers = (params.base_raft_layers + 1) / 2;
         params.base_raft_layers -= params.interface_raft_layers;
-        // Use as large as possible layer height for the intermediate raft layers.
-        params.base_raft_layer_height       = std::max(params.layer_height, 0.75 * support_material_extruder_dmr);
-        params.interface_raft_layer_height  = std::max(params.layer_height, 0.75 * support_material_interface_extruder_dmr);
+        const auto raft_layer_height = [&print_config](coordf_t nozzle_diameter, int extruder_id) {
+            return std::clamp(
+                0.75 * nozzle_diameter,
+                min_layer_height_from_nozzle(print_config, extruder_id),
+                max_layer_height_from_nozzle(print_config, extruder_id));
+        };
+        params.base_raft_layer_height = raft_layer_height(
+            support_material_extruder_dmr, object_config.support_filament.value);
+        params.interface_raft_layer_height = raft_layer_height(
+            support_material_interface_extruder_dmr, object_config.support_interface_filament.value);
         params.first_object_layer_bridging  = false;
-        params.contact_raft_layer_height    = std::max(params.layer_height, 0.75 * support_material_interface_extruder_dmr);
+        params.contact_raft_layer_height = params.interface_raft_layer_height;
         params.first_object_layer_height    = params.layer_height;
     }
 

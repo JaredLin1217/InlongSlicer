@@ -17,8 +17,10 @@ struct LineWithID
     Line          _line;
     const void *  _id;
     ExtrusionRole _role;
+    bool          _is_raft;
 
-    LineWithID(const Line &line, const void* id, ExtrusionRole role) : _line(line), _id(id), _role(role) {}
+    LineWithID(const Line &line, const void* id, ExtrusionRole role, bool is_raft = false) :
+        _line(line), _id(id), _role(role), _is_raft(is_raft) {}
 };
 
 using LineWithIDs = std::vector<LineWithID>;
@@ -29,6 +31,7 @@ struct ExtrusionLayer
     const Layer *  layer;
     float          bottom_z;
     float          height;
+    bool           is_raft{false};
 };
 
 enum class ExtrusionLayersType { INFILL, PERIMETERS, SUPPORT, WIPE_TOWER };
@@ -90,7 +93,7 @@ public:
                     Polyline check_polyline = path.polyline.to_polyline();
                     check_polyline.translate(_offset);
                     Lines tmpLines = check_polyline.lines();
-                    for (const Line &line : tmpLines) { lines.emplace_back(line, _id, path.role()); }
+                    for (const Line &line : tmpLines) { lines.emplace_back(line, _id, path.role(), _piles[i].is_raft); }
                 }
             }
         }

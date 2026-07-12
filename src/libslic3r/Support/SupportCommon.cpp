@@ -14,6 +14,10 @@
 #include <boost/log/trivial.hpp>
 
 #include <algorithm>
+#include <map>
+#include <numeric>
+#include <set>
+#include <tuple>
 #include <tbb/parallel_for.h>
 
 #include "SupportCommon.hpp"
@@ -42,6 +46,135 @@ namespace Slic3r {
 //#define SUPPORT_SURFACES_OFFSET_PARAMETERS ClipperLib::jtMiter, 3.
 //#define SUPPORT_SURFACES_OFFSET_PARAMETERS ClipperLib::jtMiter, 1.5
 #define SUPPORT_SURFACES_OFFSET_PARAMETERS ClipperLib::jtSquare, 0.
+
+ExPolygons build_raft_first_layer_footprint(
+    const ExPolygons &object_areas,
+    const ExPolygons &support_areas,
+    bool              generate_bounding_box,
+    bool              ignore_internal_contours)
+{
+    if (generate_bounding_box) {
+        BoundingBox bbox = get_extents(object_areas);
+        if (!support_areas.empty()) {
+            const BoundingBox support_bbox = get_extents(support_areas);
+            if (support_bbox.defined)
+                bbox.merge(support_bbox);
+        }
+
+        if (!bbox.defined)
+            return {};
+
+        ExPolygon footprint;
+        footprint.contour = bbox.polygon();
+        footprint.contour.make_counter_clockwise();
+        return {std::move(footprint)};
+    }
+
+    ExPolygons footprint;
+    footprint.reserve(object_areas.size() + support_areas.size());
+    if (ignore_internal_contours) {
+        for (const ExPolygon &area : object_areas) {
+            ExPolygon outer_area;
+            outer_area.contour = area.contour;
+            outer_area.contour.make_counter_clockwise();
+            footprint.emplace_back(std::move(outer_area));
+        }
+    } else {
+        footprint.insert(footprint.end(), object_areas.begin(), object_areas.end());
+    }
+    footprint.insert(footprint.end(), support_areas.begin(), support_areas.end());
+    return footprint;
+}
+
+coordf_t raft_layer_expansion_offset(
+    const PrintObjectConfig &config,
+    size_t                   raft_layer_count,
+    size_t                   layer_id)
+{
+    if (raft_layer_count <= 1 || layer_id >= raft_layer_count)
+        return 0.;
+    return config.raft_layer_expansion_step.value * coordf_t(raft_layer_count - layer_id - 1);
+}
+
+namespace {
+
+void append_valid_clipped_paths(
+    const ExtrusionPath         &path,
+    const ExPolygons            &occupied,
+    ExtrusionEntityCollection   &out)
+{
+    ExtrusionEntityCollection fragments;
+    path.subtract_expolygons(occupied, &fragments);
+    for (ExtrusionEntity *entity : fragments.entities) {
+        const auto *fragment = dynamic_cast<const ExtrusionPath *>(entity);
+        if (fragment != nullptr && fragment->polyline.points.size() >= 2 && fragment->length() > EPSILON)
+            out.entities.emplace_back(entity);
+        else
+            delete entity;
+    }
+    fragments.entities.clear();
+}
+
+void append_paths_without_overlap(
+    const ExtrusionEntity &entity,
+    const ExPolygons      &occupied,
+    ExtrusionEntityCollection &out)
+{
+    if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection *>(&entity)) {
+        for (const ExtrusionEntity *child : collection->entities)
+            append_paths_without_overlap(*child, occupied, out);
+    } else if (const auto *path = dynamic_cast<const ExtrusionPath *>(&entity)) {
+        append_valid_clipped_paths(*path, occupied, out);
+    } else if (const auto *multipath = dynamic_cast<const ExtrusionMultiPath *>(&entity)) {
+        for (const ExtrusionPath &path : multipath->paths)
+            append_valid_clipped_paths(path, occupied, out);
+    } else if (const auto *loop = dynamic_cast<const ExtrusionLoop *>(&entity)) {
+        for (const ExtrusionPath &path : loop->paths)
+            append_valid_clipped_paths(path, occupied, out);
+    } else {
+        throw Slic3r::InvalidArgument("Unsupported raft extrusion entity");
+    }
+}
+
+} // namespace
+
+std::vector<std::unique_ptr<ExtrusionEntityCollection>> clip_overlapping_raft_paths(
+    const std::vector<RaftPathInstance> &instances)
+{
+    std::vector<std::unique_ptr<ExtrusionEntityCollection>> result(instances.size());
+    ExPolygons occupied;
+
+    for (size_t index = 0; index < instances.size(); ++index) {
+        const RaftPathInstance &instance = instances[index];
+        if (instance.paths == nullptr || instance.paths->empty())
+            continue;
+
+        ExPolygons footprint = instance.footprint == nullptr ? ExPolygons{} : *instance.footprint;
+        if (footprint.empty())
+            footprint = union_ex(instance.paths->polygons_covered_by_spacing());
+        if (footprint.empty())
+            continue;
+
+        ExPolygons global_footprint = footprint;
+        translate(global_footprint, instance.shift);
+
+        if (!occupied.empty()) {
+            ExPolygons local_occupied = occupied;
+            translate(local_occupied, -instance.shift);
+            if (!intersection_ex(footprint, local_occupied).empty()) {
+                auto clipped = std::make_unique<ExtrusionEntityCollection>();
+                clipped->no_sort = instance.paths->no_sort;
+                append_paths_without_overlap(*instance.paths, local_occupied, *clipped);
+                result[index] = std::move(clipped);
+            }
+        }
+
+        expolygons_append(occupied, std::move(global_footprint));
+        occupied = union_ex(occupied);
+    }
+
+    return result;
+}
 
 // Convert some of the intermediate layers into top/bottom interface layers as well as base interface layers.
 std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> generate_interface_layers(
@@ -313,6 +446,11 @@ SupportGeneratorLayersPtr generate_raft_base(
 
     // Output vector.
     SupportGeneratorLayersPtr raft_layers;
+    auto apply_layer_expansion = [&object, &slicing_params](Polygons polygons, size_t layer_id) {
+        const coordf_t expansion = raft_layer_expansion_offset(
+            object.config(), slicing_params.raft_layers(), layer_id);
+        return expansion > EPSILON ? expand(polygons, scaled<float>(expansion)) : polygons;
+    };
 
     if (slicing_params.raft_layers() > 1) {
         Polygons base;
@@ -346,6 +484,7 @@ SupportGeneratorLayersPtr generate_raft_base(
             new_layer.bottom_z = 0.;
             first_layer = union_(std::move(first_layer), base);
             new_layer.polygons = inflate_factor_1st_layer > 0 ? expand(first_layer, inflate_factor_1st_layer) : first_layer;
+            new_layer.polygons = apply_layer_expansion(std::move(new_layer.polygons), 0);
         }
         // Insert the base layers.
         for (size_t i = 1; i < slicing_params.base_raft_layers; ++ i) {
@@ -355,7 +494,7 @@ SupportGeneratorLayersPtr generate_raft_base(
             new_layer.print_z  = print_z + slicing_params.base_raft_layer_height;
             new_layer.height   = slicing_params.base_raft_layer_height;
             new_layer.bottom_z = print_z;
-            new_layer.polygons = base;
+            new_layer.polygons = apply_layer_expansion(base, i);
         }
         // Insert the interface layers.
         for (size_t i = 1; i < slicing_params.interface_raft_layers; ++ i) {
@@ -365,7 +504,8 @@ SupportGeneratorLayersPtr generate_raft_base(
             new_layer.print_z = print_z + slicing_params.interface_raft_layer_height;
             new_layer.height  = slicing_params.interface_raft_layer_height;
             new_layer.bottom_z = print_z;
-            new_layer.polygons = interface_polygons;
+            const size_t layer_id = slicing_params.base_raft_layers + i - 1;
+            new_layer.polygons = apply_layer_expansion(interface_polygons, layer_id);
             //FIXME misusing contact_polygons for support columns.
             new_layer.contact_polygons = std::make_unique<Polygons>(columns);
         }
@@ -448,11 +588,15 @@ static inline void fill_expolygons_generate_paths(
     Fill                    *filler,
     float                    density,
     ExtrusionRole            role,
-    const Flow              &flow)
+    const Flow              &flow,
+    bool                     fill_concentric_gaps = false)
 {
     FillParams fill_params;
-    fill_params.density     = density;
-    fill_params.dont_adjust = true;
+    fill_params.density               = density;
+    fill_params.dont_adjust           = true;
+    fill_params.fill_concentric_gaps  = fill_concentric_gaps;
+    if (fill_concentric_gaps)
+        fill_params.flow = flow;
     fill_expolygons_generate_paths(dst, std::move(expolygons), filler, fill_params, density, role, flow);
 }
 
@@ -711,10 +855,18 @@ void fill_expolygons_with_sheath_generate_paths(
     const Flow              &flow,
     const SupportParameters& support_params,
     bool                     with_sheath,
-    bool                     no_sort)
+    bool                     no_sort,
+    bool                     fill_concentric_gaps)
 {
     if (polygons.empty())
         return;
+
+    FillParams fill_params;
+    fill_params.density              = density;
+    fill_params.dont_adjust          = true;
+    fill_params.fill_concentric_gaps = fill_concentric_gaps;
+    if (fill_concentric_gaps)
+        fill_params.flow = flow;
 
     if (with_sheath) {
         if (density == 0) {
@@ -723,13 +875,9 @@ void fill_expolygons_with_sheath_generate_paths(
         }
     }
     else {
-        fill_expolygons_generate_paths(dst, closing_ex(polygons, float(SCALED_EPSILON)), filler, density, role, flow);
+        fill_expolygons_generate_paths(dst, closing_ex(polygons, float(SCALED_EPSILON)), filler, fill_params, density, role, flow);
         return;
     }
-
-    FillParams fill_params;
-    fill_params.density     = density;
-    fill_params.dont_adjust = true;
 
     const double spacing = flow.scaled_spacing();
     // Clip the sheath path to avoid the extruder to get exactly on the first point of the loop.
@@ -749,6 +897,326 @@ void fill_expolygons_with_sheath_generate_paths(
         if (no_sort && ! eec->empty())
             dst.emplace_back(eec.release());
     }
+}
+
+namespace {
+
+using RaftExtrusionSignature = std::tuple<int, int64_t, int64_t, int64_t>;
+
+int64_t quantize_raft_value(double value)
+{
+    return int64_t(std::llround(value * 1'000'000.));
+}
+
+bool collect_raft_path_signatures(
+    const ExtrusionEntity              &entity,
+    std::set<RaftExtrusionSignature>   &signatures,
+    std::set<ExtrusionRole>            &roles)
+{
+    auto collect_path = [&signatures, &roles](const ExtrusionPath &path) {
+        roles.insert(path.role());
+        signatures.emplace(
+            int(path.role()), quantize_raft_value(path.mm3_per_mm),
+            quantize_raft_value(path.width), quantize_raft_value(path.height));
+    };
+
+    if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection *>(&entity)) {
+        for (const ExtrusionEntity *child : collection->entities)
+            if (child == nullptr || !collect_raft_path_signatures(*child, signatures, roles))
+                return false;
+    } else if (const auto *path = dynamic_cast<const ExtrusionPath *>(&entity)) {
+        collect_path(*path);
+    } else if (const auto *multipath = dynamic_cast<const ExtrusionMultiPath *>(&entity)) {
+        for (const ExtrusionPath &path : multipath->paths)
+            collect_path(path);
+    } else if (const auto *loop = dynamic_cast<const ExtrusionLoop *>(&entity)) {
+        for (const ExtrusionPath &path : loop->paths)
+            collect_path(path);
+    } else {
+        return false;
+    }
+    return true;
+}
+
+bool raft_path_signatures(
+    const ExtrusionEntityCollection    &paths,
+    std::set<RaftExtrusionSignature>   &signatures,
+    std::set<ExtrusionRole>            &roles)
+{
+    return collect_raft_path_signatures(paths, signatures, roles) &&
+        std::all_of(roles.begin(), roles.end(), [](ExtrusionRole role) {
+            return role == erSupportMaterial || role == erSupportMaterialInterface;
+        });
+}
+
+bool raft_instances_compatible(const RaftPathInstance &lhs, const RaftPathInstance &rhs)
+{
+    if (lhs.object == nullptr || rhs.object == nullptr || lhs.layer == nullptr || rhs.layer == nullptr)
+        return false;
+    if (lhs.layer->id() != rhs.layer->id() ||
+        std::abs(lhs.layer->height - rhs.layer->height) > EPSILON ||
+        std::abs(lhs.layer->print_z - rhs.layer->print_z) > EPSILON ||
+        lhs.support_extruder != rhs.support_extruder ||
+        lhs.interface_extruder != rhs.interface_extruder)
+        return false;
+
+    const PrintObjectConfig &lhs_config = lhs.object->config();
+    const PrintObjectConfig &rhs_config = rhs.object->config();
+    const SlicingParameters &lhs_slicing = lhs.object->slicing_parameters();
+    const SlicingParameters &rhs_slicing = rhs.object->slicing_parameters();
+    if (lhs_slicing.base_raft_layers != rhs_slicing.base_raft_layers ||
+        lhs_slicing.interface_raft_layers != rhs_slicing.interface_raft_layers ||
+        lhs_config.raft_base_pattern.value != rhs_config.raft_base_pattern.value ||
+        lhs_config.support_style.value != rhs_config.support_style.value ||
+        lhs_config.support_filament.value != rhs_config.support_filament.value ||
+        lhs_config.support_interface_filament.value != rhs_config.support_interface_filament.value ||
+        lhs_config.tree_support_wall_count.value != rhs_config.tree_support_wall_count.value ||
+        lhs_config.support_ironing.value != rhs_config.support_ironing.value ||
+        std::abs(lhs_config.raft_base_pattern_spacing.value - rhs_config.raft_base_pattern_spacing.value) > EPSILON ||
+        std::abs(lhs_config.raft_first_layer_density.value - rhs_config.raft_first_layer_density.value) > EPSILON ||
+        std::abs(lhs_config.raft_layer_expansion_step.value - rhs_config.raft_layer_expansion_step.value) > EPSILON ||
+        std::abs(lhs_config.support_angle.value - rhs_config.support_angle.value) > EPSILON)
+        return false;
+
+    std::set<RaftExtrusionSignature> lhs_signatures;
+    std::set<RaftExtrusionSignature> rhs_signatures;
+    std::set<ExtrusionRole> lhs_roles;
+    std::set<ExtrusionRole> rhs_roles;
+    return lhs.paths != nullptr && rhs.paths != nullptr &&
+        raft_path_signatures(*lhs.paths, lhs_signatures, lhs_roles) &&
+        raft_path_signatures(*rhs.paths, rhs_signatures, rhs_roles) &&
+        lhs_signatures == rhs_signatures && lhs_roles == rhs_roles;
+}
+
+struct RaftRoleRegions
+{
+    ExPolygons support;
+    ExPolygons interface;
+};
+
+bool get_raft_role_regions(const RaftPathInstance &instance, RaftRoleRegions &regions)
+{
+    if (instance.layer == nullptr || instance.paths == nullptr)
+        return false;
+
+    std::set<RaftExtrusionSignature> signatures;
+    std::set<ExtrusionRole> roles;
+    if (!raft_path_signatures(*instance.paths, signatures, roles))
+        return false;
+
+    regions.support = instance.layer->raft_support_islands;
+    regions.interface = instance.layer->raft_interface_islands;
+    if (regions.support.empty() && regions.interface.empty()) {
+        ExPolygons footprint = instance.footprint == nullptr ? ExPolygons{} : *instance.footprint;
+        if (footprint.empty())
+            footprint = union_ex(instance.paths->polygons_covered_by_spacing());
+        if (footprint.empty())
+            return false;
+
+        if (roles.size() == 1 && *roles.begin() == erSupportMaterial)
+            regions.support = std::move(footprint);
+        else if (roles.size() == 1 && *roles.begin() == erSupportMaterialInterface)
+            regions.interface = std::move(footprint);
+        else if (instance.layer->id() == 0 && roles.size() == 2 &&
+                 roles.count(erSupportMaterial) != 0 && roles.count(erSupportMaterialInterface) != 0)
+            // A one-layer raft uses the support role for its outer sheath and
+            // the interface role for the fill. Regenerating the interface
+            // region with a sheath reproduces both roles.
+            regions.interface = std::move(footprint);
+        else
+            return false;
+    }
+
+    if (regions.support.empty() && roles.count(erSupportMaterial) != 0 &&
+        !(instance.layer->id() == 0 && !regions.interface.empty()))
+        return false;
+    if (regions.interface.empty() && roles.count(erSupportMaterialInterface) != 0)
+        return false;
+    return true;
+}
+
+bool is_nonorganic_tree_style(SupportMaterialStyle style)
+{
+    return style == smsTreeSlim || style == smsTreeStrong || style == smsTreeHybrid;
+}
+
+void generate_merged_raft_region(
+    ExtrusionEntityCollection  &dst,
+    const ExPolygons           &regions,
+    ExtrusionRole               role,
+    const PrintObject          &object,
+    const SupportLayer         &layer)
+{
+    if (regions.empty())
+        return;
+
+    const PrintObjectConfig &config = object.config();
+    const SlicingParameters &slicing_params = object.slicing_parameters();
+    const SupportParameters support_params(object);
+    const bool first_layer = layer.id() == 0;
+    const bool interface_role = role == erSupportMaterialInterface;
+    const bool nonorganic_tree = is_nonorganic_tree_style(support_params.support_style);
+
+    const InfillPattern pattern = interface_role ?
+        support_params.raft_interface_fill_pattern : support_params.raft_base_fill_pattern;
+    std::unique_ptr<Fill> filler(Fill::new_from_type(pattern));
+    filler->set_bounding_box(get_extents(regions));
+    filler->layer_id = layer.id();
+    filler->z = layer.print_z;
+
+    Flow flow = first_layer ? support_params.first_layer_flow :
+        (interface_role ? support_params.raft_interface_flow : support_params.support_material_flow)
+            .with_height(float(layer.height));
+    float density = first_layer ? float(config.raft_first_layer_density.value * 0.01) :
+        float(interface_role ? support_params.raft_interface_density : support_params.raft_base_density);
+
+    if (first_layer) {
+        filler->angle = nonorganic_tree ? float(M_PI_2) : support_params.raft_angle_1st_layer;
+        filler->spacing = flow.spacing();
+    } else if (interface_role) {
+        filler->angle = nonorganic_tree ? float(M_PI_2) :
+            support_params.raft_interface_angle(layer.interface_id());
+        filler->spacing = nonorganic_tree ? flow.spacing() : support_params.raft_interface_flow.spacing();
+    } else if (nonorganic_tree) {
+        filler->angle = layer.id() < slicing_params.base_raft_layers ? 0.f : float(M_PI_2);
+        filler->spacing = flow.spacing();
+        if (layer.id() >= slicing_params.base_raft_layers)
+            density = layer.id() < slicing_params.base_raft_layers + slicing_params.interface_raft_layers ?
+                float(config.raft_first_layer_density.value * 0.01) : float(support_params.raft_interface_density);
+    } else {
+        filler->angle = support_params.raft_angle_base;
+        if (config.raft_base_pattern == smpRectilinearGrid && (layer.id() & 1) != 0)
+            filler->angle = support_params.raft_angle_interface;
+        filler->spacing = support_params.support_material_flow.spacing();
+    }
+
+    Polygons polygons = to_polygons(regions);
+    fill_expolygons_with_sheath_generate_paths(
+        dst.entities, polygons, filler.get(), density, role, flow,
+        support_params, first_layer, first_layer, pattern == ipConcentric);
+}
+
+std::unique_ptr<ExtrusionEntityCollection> generate_merged_raft_paths(
+    const RaftPathInstance &owner,
+    ExPolygons              support_regions,
+    ExPolygons              interface_regions)
+{
+    if (owner.object == nullptr || owner.layer == nullptr)
+        return nullptr;
+    if (owner.layer->id() == 0 && !support_regions.empty() && !interface_regions.empty())
+        return nullptr;
+
+    auto result = std::make_unique<ExtrusionEntityCollection>();
+    result->no_sort = owner.paths != nullptr && owner.paths->no_sort;
+    generate_merged_raft_region(*result, support_regions, erSupportMaterial, *owner.object, *owner.layer);
+    generate_merged_raft_region(*result, interface_regions, erSupportMaterialInterface, *owner.object, *owner.layer);
+    return result->empty() ? nullptr : std::move(result);
+}
+
+} // namespace
+
+std::vector<std::unique_ptr<ExtrusionEntityCollection>> merge_overlapping_raft_paths(
+    const std::vector<RaftPathInstance> &instances)
+{
+    std::vector<std::unique_ptr<ExtrusionEntityCollection>> result(instances.size());
+    if (instances.size() < 2)
+        return result;
+
+    std::vector<ExPolygons> global_footprints(instances.size());
+    std::vector<BoundingBox> global_footprint_bboxes(instances.size());
+    for (size_t index = 0; index < instances.size(); ++index) {
+        const RaftPathInstance &instance = instances[index];
+        global_footprints[index] = instance.footprint == nullptr ? ExPolygons{} : *instance.footprint;
+        if (global_footprints[index].empty() && instance.paths != nullptr)
+            global_footprints[index] = union_ex(instance.paths->polygons_covered_by_spacing());
+        translate(global_footprints[index], instance.shift);
+        global_footprint_bboxes[index] = get_extents(global_footprints[index]);
+    }
+
+    std::vector<size_t> parent(instances.size());
+    std::iota(parent.begin(), parent.end(), size_t(0));
+    auto find_root = [&parent](size_t index) {
+        while (parent[index] != index) {
+            parent[index] = parent[parent[index]];
+            index = parent[index];
+        }
+        return index;
+    };
+    auto unite = [&parent, &find_root](size_t lhs, size_t rhs) {
+        lhs = find_root(lhs);
+        rhs = find_root(rhs);
+        if (lhs != rhs)
+            parent[rhs] = lhs;
+    };
+
+    for (size_t lhs = 0; lhs < instances.size(); ++lhs)
+        for (size_t rhs = lhs + 1; rhs < instances.size(); ++rhs)
+            if (global_footprint_bboxes[lhs].defined && global_footprint_bboxes[rhs].defined &&
+                global_footprint_bboxes[lhs].overlap(global_footprint_bboxes[rhs]) &&
+                !intersection_ex(global_footprints[lhs], global_footprints[rhs]).empty())
+                unite(lhs, rhs);
+
+    std::map<size_t, std::vector<size_t>> components;
+    for (size_t index = 0; index < instances.size(); ++index)
+        components[find_root(index)].push_back(index);
+
+    for (const auto &[root, members] : components) {
+        (void) root;
+        if (members.size() < 2)
+            continue;
+
+        const size_t owner_index = members.front();
+        bool compatible = std::all_of(std::next(members.begin()), members.end(),
+            [&instances, owner_index](size_t index) {
+                return raft_instances_compatible(instances[owner_index], instances[index]);
+            });
+        ExPolygons support_regions;
+        ExPolygons interface_regions;
+        if (compatible) {
+            for (size_t index : members) {
+                RaftRoleRegions local_regions;
+                if (!get_raft_role_regions(instances[index], local_regions)) {
+                    compatible = false;
+                    break;
+                }
+                translate(local_regions.support, instances[index].shift);
+                translate(local_regions.interface, instances[index].shift);
+                expolygons_append(support_regions, std::move(local_regions.support));
+                expolygons_append(interface_regions, std::move(local_regions.interface));
+            }
+        }
+
+        if (compatible) {
+            support_regions = union_ex(support_regions);
+            interface_regions = union_ex(interface_regions);
+            if (!support_regions.empty() && !interface_regions.empty())
+                interface_regions = diff_ex(interface_regions, support_regions);
+            translate(support_regions, -instances[owner_index].shift);
+            translate(interface_regions, -instances[owner_index].shift);
+            result[owner_index] = generate_merged_raft_paths(
+                instances[owner_index], std::move(support_regions), std::move(interface_regions));
+            compatible = result[owner_index] != nullptr;
+        }
+
+        if (compatible) {
+            for (size_t index : members)
+                if (index != owner_index) {
+                    result[index] = std::make_unique<ExtrusionEntityCollection>();
+                    result[index]->no_sort = instances[index].paths != nullptr && instances[index].paths->no_sort;
+                }
+            continue;
+        }
+
+        std::vector<RaftPathInstance> fallback_instances;
+        fallback_instances.reserve(members.size());
+        for (size_t index : members)
+            fallback_instances.emplace_back(instances[index]);
+        auto fallback = clip_overlapping_raft_paths(fallback_instances);
+        for (size_t member_index = 0; member_index < members.size(); ++member_index)
+            result[members[member_index]] = std::move(fallback[member_index]);
+    }
+
+    return result;
 }
 
 // Support layers, partially processed.
@@ -1457,6 +1925,16 @@ void generate_support_toolpaths(
             filler_interface->set_bounding_box(bbox_object);
             filler_support->set_bounding_box(bbox_object);
 
+            Polygons raft_support_regions;
+            Polygons raft_interface_regions;
+            auto store_raft_regions = [&]() {
+                support_layer.raft_support_islands = union_ex(raft_support_regions);
+                support_layer.raft_interface_islands = union_ex(raft_interface_regions);
+                ExPolygons raft_islands = support_layer.raft_support_islands;
+                expolygons_append(raft_islands, support_layer.raft_interface_islands);
+                support_layer.support_islands = union_ex(raft_islands);
+            };
+
             // Print the tree supports cutting through the raft with the exception of the 1st layer, where a full support layer will be printed below
             // both the raft and the trees.
             // Trim the raft layers with the tree polygons.
@@ -1474,23 +1952,29 @@ void generate_support_toolpaths(
                 Flow flow(float(support_params.support_material_flow.width()), float(raft_layer.height), support_params.support_material_flow.nozzle_diameter());
                 assert(!raft_layer.bridging);
                 if (! to_infill_polygons.empty()) {
+                    Polygons support_region = tree_polygons.empty() ?
+                        to_infill_polygons : diff(to_infill_polygons, tree_polygons);
                     Fill *filler = filler_support.get();
                     filler->angle = raft_angles[support_layer_id % raft_angles.size()];
                     filler->spacing = support_params.support_material_flow.spacing();
                     filler->link_max_length = coord_t(scale_(filler->spacing * link_max_length_factor / support_params.raft_base_density));
+                    polygons_append(raft_support_regions, support_region);
                     fill_expolygons_with_sheath_generate_paths(
                         // Destination
                         support_layer.support_fills.entities,
                         // Regions to fill
-                        tree_polygons.empty() ? to_infill_polygons : diff(to_infill_polygons, tree_polygons),
+                        support_region,
                         // Filler and its parameters
                         filler, float(support_params.raft_base_density),
                         // Extrusion parameters
                         ExtrusionRole::erSupportMaterial, flow,
-                        support_params, support_params.with_sheath, false);
+                        support_params, support_params.with_sheath, false,
+                        support_params.raft_base_fill_pattern == ipConcentric);
                 }
-                if (! tree_polygons.empty())
+                if (! tree_polygons.empty()) {
+                    polygons_append(raft_support_regions, tree_polygons);
                     tree_supports_generate_paths(support_layer.support_fills.entities, tree_polygons, flow, support_params);
+                }
             }
 
             Fill *filler = filler_interface.get();
@@ -1509,20 +1993,31 @@ void generate_support_toolpaths(
                 assert(! raft_layer.bridging);
                 flow          = Flow(float(support_params.raft_interface_flow.width()), float(raft_layer.height), support_params.raft_interface_flow.nozzle_diameter());
                 density       = float(support_params.raft_interface_density);
-            } else
+            } else {
+                store_raft_regions();
                 continue;
+            }
             filler->link_max_length = coord_t(scale_(filler->spacing * link_max_length_factor / density));
+            Polygons raft_region = tree_polygons.empty() ?
+                raft_layer.polygons : diff(raft_layer.polygons, tree_polygons);
+            if (support_layer_id < slicing_params.base_raft_layers)
+                polygons_append(raft_support_regions, raft_region);
+            else
+                polygons_append(raft_interface_regions, raft_region);
             fill_expolygons_with_sheath_generate_paths(
                 // Destination
                 support_layer.support_fills.entities,
                 // Regions to fill
-                tree_polygons.empty() ? raft_layer.polygons : diff(raft_layer.polygons, tree_polygons),
+                raft_region,
                 // Filler and its parameters
                 filler, density,
                 // Extrusion parameters
                 (support_layer_id < slicing_params.base_raft_layers) ? ExtrusionRole::erSupportMaterial : ExtrusionRole::erSupportMaterialInterface, flow,
                 // sheath at first layer
-                support_params, support_layer_id == 0, support_layer_id == 0);
+                support_params, support_layer_id == 0, support_layer_id == 0,
+                support_params.raft_interface_fill_pattern == ipConcentric);
+
+            store_raft_regions();
         }
     });
 
@@ -1759,7 +2254,8 @@ void generate_support_toolpaths(
                         // Filler and its parameters
                         filler, float(density),
                         // Extrusion parameters
-                        interface_as_base ? ExtrusionRole::erSupportMaterial : ExtrusionRole::erSupportMaterialInterface, interface_flow);
+                        interface_as_base ? ExtrusionRole::erSupportMaterial : ExtrusionRole::erSupportMaterialInterface, interface_flow,
+                        raft_contact && support_params.raft_interface_fill_pattern == ipConcentric);
                 }
             };
             const bool top_interfaces = support_params.num_top_interface_layers > 0;

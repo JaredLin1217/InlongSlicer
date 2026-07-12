@@ -180,6 +180,8 @@ ExtrusionLayer getExtrusionPathsFromSupportLayer(SupportLayer *supportLayer)
     el.layer    = supportLayer;
     el.bottom_z = supportLayer->bottom_z();
     el.height   = supportLayer->height;
+    el.is_raft  = supportLayer->object()->print()->config().print_sequence == PrintSequence::ByLayer &&
+                  supportLayer->id() < supportLayer->object()->slicing_parameters().raft_layers();
     return el;
 }
 
@@ -310,6 +312,11 @@ ConflictComputeOpt ConflictChecker::line_intersect(const LineWithID &l1, const L
     constexpr double SUPPORT_THRESHOLD = 100;  // this large almost disables conflict check of supports
     constexpr double OTHER_THRESHOLD   = 0.01;
     if (l1._id == l2._id) { return {}; } // return true if lines are from same object
+    // Raft paths are de-overlapped in world coordinates immediately before
+    // G-code emission and may intentionally extend below a neighboring object.
+    // Keep wipe-tower conflicts because those paths are not part of that merge.
+    if ((l1._is_raft || l2._is_raft) &&
+        l1._role != erWipeTower && l2._role != erWipeTower) { return {}; }
     double overlap_length = 0.;
     bool   overlap  = l1._line.overlap(l2._line, overlap_length);
     if (overlap && overlap_length > scaled(OTHER_THRESHOLD)) return std::make_optional<ConflictComputeResult>(l1._id, l2._id);

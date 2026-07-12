@@ -12,7 +12,7 @@
     "bed_exclude_area":  [
 
                          ],
-    "bed_mesh_max":  "600,500",
+    "bed_mesh_max":  "605,505",
     "bed_mesh_min":  "0,0",
     "bed_mesh_probe_distance":  "100,100",
     "before_layer_change_gcode":  ";BEFORE_LAYER_CHANGE\nG92 E0\n;[layer_z]\n\n",
@@ -139,8 +139,8 @@
     "machine_unload_filament_time":  "10",
     "manual_filament_change":  "0",
     "max_layer_height":  [
-                             "0.4",
-                             "0.4"
+                             "0.45",
+                             "0.45"
                          ],
     "max_resonance_avoidance_speed":  "120",
     "min_layer_height":  [
@@ -160,7 +160,7 @@
     "pellet_modded_printer":  "0",
     "preferred_orientation":  "0",
     "resonance_avoidance":  "0",
-    "printable_height":  "600",
+    "printable_height":  "520",
     "printer_variant":  "0.6",
     "printhost_authorization_type":  "key",
     "printhost_ssl_ignore_revoke":  "0",
