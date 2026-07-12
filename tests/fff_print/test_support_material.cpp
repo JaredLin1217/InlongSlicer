@@ -5,6 +5,7 @@
 #include "libslic3r/Fill/FillBase.hpp"
 #include "libslic3r/Layer.hpp"
 #include "libslic3r/Support/SupportCommon.hpp"
+#include "libslic3r/Support/TreeSupportUtils.hpp"
 
 #include "test_data.hpp" // get access to init_print, etc
 #include "test_utils.hpp"
@@ -473,6 +474,36 @@ TEST_CASE("SupportMaterial: Organic independent output handles raft and model co
             REQUIRE(layer->height > EPSILON);
             previous_z = layer->print_z;
         }
+    }
+}
+
+TEST_CASE("SupportMaterial: manual tree roof fragments require a printable contact", "[SupportMaterial][TreeSupport]")
+{
+    const Flow flow(0.4, 0.2, 0.4);
+    const ExPolygon tiny_fragment = rectangular_area(0., 0., 0.5, 0.5);
+    const ExPolygon main_contact = rectangular_area(0., 0., 10., 2.);
+
+    SECTION("An expansion-only loop shorter than one nozzle circumference is discarded") {
+        const ExPolygons original_contact = { rectangular_area(2., 2., 3., 3.) };
+        REQUIRE(TreeSupportInternal::should_discard_manual_roof_fragment(
+            true, tiny_fragment, original_contact, flow));
+    }
+
+    SECTION("A main interface with valid infill is preserved") {
+        const ExPolygons original_contact = { main_contact };
+        REQUIRE_FALSE(TreeSupportInternal::should_discard_manual_roof_fragment(
+            true, main_contact, original_contact, flow));
+    }
+
+    SECTION("A genuine small manual contact that can carry a line is preserved") {
+        const ExPolygons original_contact = { tiny_fragment };
+        REQUIRE_FALSE(TreeSupportInternal::should_discard_manual_roof_fragment(
+            true, tiny_fragment, original_contact, flow));
+    }
+
+    SECTION("Automatic tree interfaces are outside the manual fragment filter") {
+        REQUIRE_FALSE(TreeSupportInternal::should_discard_manual_roof_fragment(
+            false, tiny_fragment, {}, flow));
     }
 }
 

@@ -90,6 +90,8 @@ struct SupportNode
             }
             is_sharp_tail = parent->is_sharp_tail;
             skin_direction = parent->skin_direction;
+            from_support_enforcer = parent->from_support_enforcer;
+            contact_layer_nr = parent->contact_layer_nr;
         }
     }
 
@@ -123,7 +125,9 @@ struct SupportNode
     bool           is_processed    = false;
     bool           need_extra_wall = false;
     bool           is_sharp_tail   = false;
+    bool           from_support_enforcer = false;
     bool           valid = true;
+    size_t         contact_layer_nr = size_t(-1);
     ExPolygon      overhang; // when type==ePolygon, set this value to get original overhang area
 
     /*!
@@ -425,6 +429,7 @@ private:
     PrintObject    *m_object;
     const PrintObjectConfig* m_object_config;
     SlicingParameters        m_slicing_params;
+    std::vector<ExPolygons>  m_manual_contact_masks;
     // Various precomputed support parameters to be shared with external functions.
     SupportParameters   m_support_params;
     size_t          m_raft_layers = 0;  // number of raft layers, including raft base, raft interface, raft gap

@@ -319,6 +319,9 @@ protected:
     // for tree support
     ExPolygons                                roof_areas;
     ExPolygons                                roof_1st_layer; // the layer just below roof. When working with PolySupport, this layer should be printed with regular material
+    // Unexpanded manual-enforcer contact regions and their clipped Roof1stLayer provenance.
+    ExPolygons                                manual_contact_regions;
+    ExPolygons                                manual_roof_regions;
     ExPolygons                                floor_areas;
     ExPolygons                                roof_gap_areas; // the areas in the gap between support roof and overhang
     enum AreaType { BaseType = 0, RoofType = 1, FloorType = 2, Roof1stLayer = 3 };
@@ -328,6 +331,7 @@ protected:
         int        type;
         int interface_id = 0;
         bool interface_as_base = false;
+        bool from_manual_contact = false;
         coordf_t   dist_to_top; // mm dist to top
         bool need_infill = false;
         bool need_extra_wall = false;

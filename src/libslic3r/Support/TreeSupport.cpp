@@ -14,6 +14,7 @@
 #include "TreeSupportCommon.hpp"
 #include "TreeSupport.hpp"
 #include "TreeSupport3D.hpp"
+#include "TreeSupportUtils.hpp"
 #include <libnest2d/backends/libslic3r/geometries.hpp>
 #include <libnest2d/placers/nfpplacer.hpp>
 
@@ -677,6 +678,8 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
     // Clear and create Tree Support Layers
     m_object->clear_support_layers();
     m_object->clear_tree_support_preview_cache();
+    overhang_types.clear();
+    m_manual_contact_masks.assign(m_object->layer_count(), {});
 
     const PrintObjectConfig& config = m_object->config();
     SupportType stype = support_type;
@@ -1100,6 +1103,10 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
         if (layer_nr < enforcers.size() && lower_layer) {
             ExPolygons enforced_overhangs   = intersection_ex(diff_ex(layer->lslices_extrudable, lower_layer->lslices_extrudable), enforcers[layer_nr]);
             if (!enforced_overhangs.empty()) {
+                // Keep the exact manual contact mask. The 0.8 mm expansion below
+                // is a tree-planning aid and must not define the printed interface.
+                if (stype == stTree)
+                    m_manual_contact_masks[layer_nr] = union_ex(enforced_overhangs);
                 // FIXME this is a hack to make enforcers work on steep overhangs. See STUDIO-7538.
                 enforced_overhangs = diff_ex(offset_ex(enforced_overhangs, enforcer_overhang_offset), lower_layer->lslices_extrudable);
                 append(layer->loverhangs, enforced_overhangs);
@@ -1286,6 +1293,37 @@ static void make_perimeter_and_inner_brim(ExtrusionEntitiesPtr &dst, const ExPol
     Polygons   loops;
     ExPolygons support_area_new = offset_ex(support_area, -0.5f * float(flow.scaled_spacing()), jtSquare);
     _make_loops(dst, support_area_new, role, wall_count, flow);
+}
+
+bool TreeSupportInternal::should_discard_manual_roof_fragment(
+    bool from_manual_contact,
+    const ExPolygon &fragment,
+    const ExPolygons &original_contact_regions,
+    const Flow &flow)
+{
+    if (!from_manual_contact)
+        return false;
+
+    const coordf_t spacing = flow.scaled_spacing();
+    const coordf_t width = flow.scaled_width();
+
+    // Roof1stLayer uses one perimeter. A non-empty one-spacing inset means
+    // the fragment can also produce an internal fill and must be preserved.
+    if (!offset_ex(fragment, -spacing, jtSquare).empty())
+        return false;
+
+    // Preserve a genuinely painted small contact whenever its overlap can
+    // carry a centered extrusion line. Expansion-only dust has no such core.
+    const ExPolygons overlap = intersection_ex({fragment}, original_contact_regions);
+    if (!overlap.empty() && !offset_ex(overlap, -0.45 * width, jtSquare).empty())
+        return false;
+
+    const ExPolygons perimeter_regions = offset_ex(fragment, -0.5 * spacing, jtSquare);
+    double max_perimeter_length = 0.;
+    for (const ExPolygon &region : perimeter_regions)
+        max_perimeter_length = std::max(max_perimeter_length, region.contour.length());
+
+    return max_perimeter_length < M_PI * width;
 }
 
 static void make_perimeter_and_infill(ExtrusionEntitiesPtr& dst, const ExPolygon& support_area, size_t wall_count, const Flow& flow, ExtrusionRole role, Fill* filler_support, double support_density, bool infill_first=true, bool fill_concentric_gaps=false)
@@ -1591,6 +1629,10 @@ void TreeSupport::generate_toolpaths()
                         fill_params.dont_sort = true;
                         Flow interface_base_flow = interface_as_base ? support_flow : interface_flow;
                         ExtrusionRole interface_role = interface_as_base ? erSupportMaterial : erSupportMaterialInterface;
+                        if (TreeSupportInternal::should_discard_manual_roof_fragment(
+                                area_group.from_manual_contact, poly,
+                                ts_layer->manual_contact_regions, interface_base_flow))
+                            continue;
                         // generate a perimeter first to support interface better
                         ExtrusionEntityCollection* temp_support_fills = new ExtrusionEntityCollection();
                         make_perimeter_and_infill(temp_support_fills->entities, poly, 1, interface_base_flow, interface_role,
@@ -2110,6 +2152,8 @@ void TreeSupport::draw_circles()
                 ExPolygons& base_areas = ts_layer->base_areas;
                 ExPolygons& roof_areas = ts_layer->roof_areas;
                 ExPolygons& roof_1st_layer = ts_layer->roof_1st_layer;
+                ExPolygons manual_roof_1st_layer;
+                std::unordered_set<size_t> manual_contact_layer_ids;
                 ExPolygons& floor_areas = ts_layer->floor_areas;
                 ExPolygons& roof_gap_areas = ts_layer->roof_gap_areas;
                 coordf_t         max_layers_above_base = 0;
@@ -2226,6 +2270,11 @@ void TreeSupport::draw_circles()
                              (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON && node.is_sharp_tail==false)
                     {
                         append(roof_1st_layer, area);
+                        if (node.from_support_enforcer && node.contact_layer_nr < m_manual_contact_masks.size() &&
+                            !m_manual_contact_masks[node.contact_layer_nr].empty()) {
+                            append(manual_roof_1st_layer, area);
+                            manual_contact_layer_ids.emplace(node.contact_layer_nr);
+                        }
                         max_layers_above_roof1 = std::max(max_layers_above_roof1, node.dist_mm_to_top);
                     }
                     // INLONG: Roof layers must also fit inside the mm cap.
@@ -2253,6 +2302,80 @@ void TreeSupport::draw_circles()
                 // roof_1st_layer and roof_areas may intersect, so need to subtract roof_areas from roof_1st_layer
                 roof_1st_layer = diff_ex(roof_1st_layer, ClipperUtils::clip_clipper_polygons_with_subject_bbox(roof_areas,get_extents(roof_1st_layer)));
                 roof_1st_layer = intersection_ex(roof_1st_layer, m_machine_border);
+
+                if (!manual_roof_1st_layer.empty()) {
+                    for (size_t contact_layer_nr : manual_contact_layer_ids)
+                        append(ts_layer->manual_contact_regions, m_manual_contact_masks[contact_layer_nr]);
+                    ts_layer->manual_contact_regions = union_ex(ts_layer->manual_contact_regions);
+
+                    const Flow interface_flow = support_material_interface_flow(m_object, ts_layer->height);
+                    const ExPolygons printable_contact = offset_ex(
+                        ts_layer->manual_contact_regions, 0.5 * interface_flow.scaled_width());
+
+                    manual_roof_1st_layer = offset2_ex(manual_roof_1st_layer, line_width_scaled, -line_width_scaled);
+                    manual_roof_1st_layer = diff_clipped(manual_roof_1st_layer, get_collision(false));
+                    if (!manual_roof_1st_layer.empty())
+                        manual_roof_1st_layer = diff_ex(
+                            manual_roof_1st_layer,
+                            ClipperUtils::clip_clipper_polygons_with_subject_bbox(
+                                roof_areas, get_extents(manual_roof_1st_layer)));
+                    manual_roof_1st_layer = intersection_ex(manual_roof_1st_layer, m_machine_border);
+
+                    ts_layer->manual_roof_regions = manual_roof_1st_layer;
+
+                    // Keep the original combined Roof1stLayer planning intact.
+                    // Reclip only isolated manual components that have no usable
+                    // painted core, so regular contacts and the main interface do
+                    // not get re-filled or reordered.
+                    std::vector<BoundingBox> main_contact_bounds;
+                    for (const ExPolygon &fragment : roof_1st_layer) {
+                        const ExPolygons original_overlap = intersection_ex(
+                            {fragment}, ts_layer->manual_contact_regions);
+                        const bool has_internal_fill = !offset_ex(
+                            fragment, -interface_flow.scaled_spacing(), jtSquare).empty();
+                        if (has_internal_fill && !original_overlap.empty())
+                            main_contact_bounds.emplace_back(get_extents(fragment));
+                    }
+
+                    ExPolygons filtered_roof_1st_layer;
+                    for (const ExPolygon &fragment : roof_1st_layer) {
+                        const bool from_manual_contact = overlaps(
+                            {fragment}, ts_layer->manual_roof_regions);
+                        if (!from_manual_contact) {
+                            filtered_roof_1st_layer.emplace_back(fragment);
+                            continue;
+                        }
+
+                        const ExPolygons original_overlap = intersection_ex(
+                            {fragment}, ts_layer->manual_contact_regions);
+                        const bool has_internal_fill = !offset_ex(
+                            fragment, -interface_flow.scaled_spacing(), jtSquare).empty();
+                        const Point fragment_center = get_extents(fragment).center();
+                        const bool inside_main_contact = std::any_of(
+                            main_contact_bounds.begin(), main_contact_bounds.end(),
+                            [&fragment_center](const BoundingBox &bounds) {
+                                return bounds.contains(fragment_center);
+                            });
+                        if ((has_internal_fill && !original_overlap.empty()) || inside_main_contact)
+                            filtered_roof_1st_layer.emplace_back(fragment);
+                        else
+                            append(filtered_roof_1st_layer, intersection_ex({fragment}, printable_contact));
+                    }
+
+                    filtered_roof_1st_layer.erase(
+                        std::remove_if(
+                            filtered_roof_1st_layer.begin(), filtered_roof_1st_layer.end(),
+                            [&](const ExPolygon &fragment) {
+                                return TreeSupportInternal::should_discard_manual_roof_fragment(
+                                    overlaps({fragment}, ts_layer->manual_roof_regions),
+                                    fragment, ts_layer->manual_contact_regions, interface_flow);
+                            }),
+                        filtered_roof_1st_layer.end());
+
+                    roof_1st_layer = std::move(filtered_roof_1st_layer);
+                    ts_layer->manual_roof_regions = intersection_ex(
+                        ts_layer->manual_roof_regions, roof_1st_layer);
+                }
 
                 ExPolygons roofs; append(roofs, roof_1st_layer); append(roofs, roof_areas);append(roofs, roof_gap_areas);
                 base_areas = diff_ex(base_areas, ClipperUtils::clip_clipper_polygons_with_subject_bbox(roofs, get_extents(base_areas)));
@@ -2440,6 +2563,8 @@ void TreeSupport::draw_circles()
                 for (auto &expoly : ts_layer->roof_1st_layer) {
                     //if (area(expoly) < SQ(scale_(1))) continue;
                     area_groups.emplace_back(&expoly, SupportLayer::Roof1stLayer, max_layers_above_roof1);
+                    area_groups.back().from_manual_contact = overlaps(
+                        {expoly}, ts_layer->manual_roof_regions);
                 }
 
                 for (auto &area_group : area_groups) {
@@ -2486,10 +2611,15 @@ void TreeSupport::draw_circles()
 
                 SupportLayer *contact_layer = m_object->add_tree_support_layer(int(ts_layers.size()), contact_height, contact_print_z, contact_print_z);
                 contact_layer->roof_1st_layer = src_layer->roof_1st_layer;
+                contact_layer->manual_contact_regions = src_layer->manual_contact_regions;
+                contact_layer->manual_roof_regions = src_layer->manual_roof_regions;
                 contact_layer->support_type = src_layer->support_type;
 
-                for (auto &expoly : contact_layer->roof_1st_layer)
+                for (auto &expoly : contact_layer->roof_1st_layer) {
                     contact_layer->area_groups.emplace_back(&expoly, SupportLayer::Roof1stLayer, m_slicing_params.gap_support_object);
+                    contact_layer->area_groups.back().from_manual_contact = overlaps(
+                        {expoly}, contact_layer->manual_roof_regions);
+                }
             }
 
             std::sort(ts_layers.begin(), ts_layers.end(), [](const SupportLayer *lhs, const SupportLayer *rhs) {
@@ -3582,6 +3712,7 @@ void TreeSupport::generate_contact_points()
             auto                                 bottom_z = m_object->get_layer(layer_nr)->bottom_z();
             bool                                 added = false; // Did we add a point this way?
             bool                                 is_sharp_tail = false;
+            bool                                 is_support_enforcer = false;
 
             // take the least restrictive avoidance possible
             ExPolygons relevant_forbidden = offset_ex(m_ts_data->m_layer_outlines[layer_nr - 1], scale_(MIN_BRANCH_RADIUS));
@@ -3605,6 +3736,8 @@ void TreeSupport::generate_contact_points()
                                                           radius);
                     contact_node->overhang = overhang;
                     contact_node->is_sharp_tail = is_sharp_tail;
+                    contact_node->from_support_enforcer = is_support_enforcer;
+                    contact_node->contact_layer_nr = is_support_enforcer ? layer_nr : size_t(-1);
                     curr_nodes.emplace_back(contact_node);
                     added = true;
                 };
@@ -3614,6 +3747,7 @@ void TreeSupport::generate_contact_points()
             for (const auto& overhang_part : layer->loverhangs)  {
                 const auto& overhang_type = this->overhang_types[&overhang_part];
                 is_sharp_tail = overhang_type == OverhangType::SharpTail;
+                is_support_enforcer = support_type == stTree && overhang_type == OverhangType::Enforced;
                 ExPolygons overhangs_regular;
                 if (m_support_params.support_style == smsTreeHybrid && overhang_part.area() > m_support_params.thresh_big_overhang && !is_sharp_tail) {
                     overhangs_regular           = offset_ex(intersection_ex({overhang_part}, m_ts_data->m_layer_outlines_below[layer_nr - 1]), radius_scaled);
@@ -3691,6 +3825,7 @@ void TreeSupport::generate_contact_points()
             }
             for (auto& pt_and_normal : vertical_enforcer_points_by_layers[layer_nr]) {
                 is_sharp_tail = true;// fake it as sharp tail point so the contact distance will be 0
+                is_support_enforcer = false;
                 auto vertical_enforcer_point= pt_and_normal.first;
                 auto node=insert_point(vertical_enforcer_point, ExPolygon(), false);
                 if (node)
