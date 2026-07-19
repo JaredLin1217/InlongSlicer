@@ -330,7 +330,7 @@ AboutDialog::AboutDialog()
               (boost::format(
               "<html>"
               "<body bgcolor= \"" + bgr_clr_str + "\" >"
-              "<p style=\"text-align:left\"><a style=\"color:#009789\" href=\"https://github.com/JaredLin1217/InlongSlicer\">https://github.com/JaredLin1217/InlongSlicer</a></p>"
+              "<p style=\"text-align:left\"><a style=\"color:#D66C47\" href=\"https://github.com/JaredLin1217/InlongSlicer\">https://github.com/JaredLin1217/InlongSlicer</a></p>"
               "</body>"
               "</html>")
             ).str());

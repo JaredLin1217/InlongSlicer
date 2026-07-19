@@ -673,9 +673,7 @@ int GuideFrame::SaveProfile()
 
     m_MainPtr->app_config->save();
 
-    std::string strAll = m_ProfileJson.dump(-1, ' ', false, json::error_handler_t::ignore);
-
-    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "before save to app_config: "<< std::endl<<strAll;
+    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << ": saving profile selections to app_config";
 
     //set filaments to app_config
     const std::string &section_name = AppConfig::SECTION_FILAMENTS;
@@ -1035,7 +1033,7 @@ bool GuideFrame::run()
 int GuideFrame::GetFilamentInfo( std::string VendorDirectory, json & pFilaList, std::string filepath, std::string &sVendor, std::string &sType)
 {
     //GetStardardFilePath(filepath);
-    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " GetFilamentInfo:VendorDirectory - " << VendorDirectory << ", Filepath - "<<filepath;
+    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << " GetFilamentInfo:VendorDirectory - " << VendorDirectory << ", Filepath - "<<filepath;
 
     // Resolve this file's own vendor/type into LOCAL variables, independent of
     // whatever the caller already accumulated. The cache entry for `filepath`
@@ -1058,29 +1056,28 @@ int GuideFrame::GetFilamentInfo( std::string VendorDirectory, json & pFilaList, 
         try {
             std::string contents;
             LoadFile(filepath, contents);
-            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": Json Contents: " << contents;
             json jLocal = json::parse(contents);
 
             if (jLocal.contains("filament_vendor"))
                 vendor = jLocal["filament_vendor"][0];
             else
-                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << filepath << " - Not Contains filament_vendor";
+                BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << filepath << " - Not Contains filament_vendor";
 
             if (jLocal.contains("filament_type"))
                 type = jLocal["filament_type"][0];
             else
-                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << filepath << " - Not Contains filament_type";
+                BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << filepath << " - Not Contains filament_type";
 
             if (vendor == "" || type == "") {
                 if (jLocal.contains("inherits")) {
                     std::string FName = jLocal["inherits"];
 
                     if (!pFilaList.contains(FName)) {
-                        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "pFilaList - Not Contains inherits filaments: " << FName;
+                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "pFilaList - Not Contains inherits filaments: " << FName;
                         status = -1;
                     } else {
                         std::string FPath = pFilaList[FName]["sub_path"];
-                        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " Before Format Inherits Path: VendorDirectory - " << VendorDirectory << ", sub_path - " << FPath;
+                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << " Before Format Inherits Path: VendorDirectory - " << VendorDirectory << ", sub_path - " << FPath;
                         wxString strNewFile = wxString::Format("%s%c%s", wxString(VendorDirectory.c_str(), wxConvUTF8), boost::filesystem::path::preferred_separator, FPath);
                         boost::filesystem::path inherits_path(w2s(strNewFile));
                         if (!boost::filesystem::exists(inherits_path))
@@ -1090,14 +1087,14 @@ int GuideFrame::GetFilamentInfo( std::string VendorDirectory, json & pFilaList, 
                             // Recurse with this file's own (vendor, type) as the chain accumulator.
                             status = GetFilamentInfo(VendorDirectory, pFilaList, inherits_path.string(), vendor, type);
                         } else {
-                            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " inherits File Not Exist: " << inherits_path;
+                            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << " inherits File Not Exist: " << inherits_path;
                             status = -1;
                         }
                     }
                 } else {
-                    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << filepath << " - Not Contains inherits";
+                    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << filepath << " - Not Contains inherits";
                     if (type == "") {
-                        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "sType is Empty";
+                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "sType is Empty";
                         status = -1;
                     } else {
                         if (vendor == "")
@@ -1205,9 +1202,7 @@ int GuideFrame::LoadProfileData()
                 SaveProfileData();
 
                 //sync to web after selections are populated
-                std::string strAll = m_ProfileJson.dump(-1, ' ', false, json::error_handler_t::ignore);
-
-                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ", finished, json contents: " << std::endl << strAll;
+                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ", finished loading profile metadata";
                 json m_Res           = json::object();
                 m_Res["command"]     = "userguide_profile_load_finish";
                 m_Res["sequence_id"] = "10001";
@@ -1420,7 +1415,7 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
             std::string s2    = OneFF["sub_path"];
 
             tFilaList[s1] = OneFF;
-            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Vendor: " << strVendor <<", tFilaList Add: " << s1;
+            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "Vendor: " << strVendor <<", tFilaList Add: " << s1;
         }
 
         int nFalse  = 0;
@@ -1443,7 +1438,7 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
                 json pm = json::parse(contents);
 
                 std::string strInstant = pm["instantiation"];
-                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Load Filament:" << s1 << ",Path:" << sub_file << ",instantiation?" << strInstant;
+                BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "Load Filament:" << s1 << ",Path:" << sub_file << ",instantiation?" << strInstant;
 
                 if (strInstant == "true") {
                     std::string sV;
@@ -1451,7 +1446,7 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
 
                     int nRet = GetFilamentInfo(vendor_dir.string(),tFilaList, sub_file, sV, sT);
                     if (nRet != 0) {
-                        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Load Filament:" << s1 << ",GetFilamentInfo Failed, Vendor:" << sV << ",Type:"<< sT;
+                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "Load Filament:" << s1 << ",GetFilamentInfo Failed, Vendor:" << sV << ",Type:"<< sT;
                         continue;
                     }
 

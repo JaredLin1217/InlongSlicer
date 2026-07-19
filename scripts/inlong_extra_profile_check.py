@@ -598,7 +598,7 @@ def main():
         run_checks(args.vendor)
     else:
         for vendor_dir in profiles_dir.iterdir():
-            if not vendor_dir.is_dir() or vendor_dir.name == "InlongFilamentLibrary":
+            if not vendor_dir.is_dir() or vendor_dir.name in {"InlongFilamentLibrary", "user"}:
                 continue
             run_checks(vendor_dir.name)
 

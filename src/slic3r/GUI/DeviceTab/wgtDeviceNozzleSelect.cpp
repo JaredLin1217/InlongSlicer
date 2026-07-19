@@ -13,7 +13,7 @@
 #include "slic3r/GUI/Widgets/Label.hpp" // Orca: explicit Label include
 
 static wxColour s_gray_clr("#B0B0B0");
-static wxColour s_hgreen_clr("#009688"); // Orca: accent green
+static wxColour s_hgreen_clr("#D66C47"); // Inlong accent
 static wxColour s_red_clr("#D01B1B");
 
 static std::vector<int> a_nozzle_seq = {16, 18, 20, 17, 19, 21};

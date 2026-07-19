@@ -164,13 +164,13 @@ NotificationManager::PopNotification::PopNotification(const NotificationData &n,
 {
     m_ErrorColor  = ImGuiWrapper::to_ImVec4(decode_color_to_float_array("#E14747")); // ORCA
     m_WarnColor   = ImGuiWrapper::to_ImVec4(decode_color_to_float_array("#F59B16")); // ORCA
-    m_NormalColor = ImVec4(0, 0.588, 0.533, 1);
+    m_NormalColor = ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 1);
 
 	m_CurrentColor = m_NormalColor;   //Default
 
 	m_WindowBkgColor = ImVec4(1, 1, 1, 1);
     m_TextColor      = ImVec4(.2f, .2f, .2f, 1.0f);
-    m_HyperTextColor = ImVec4(0, 0.588, 0.533, 1);
+    m_HyperTextColor = ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 1);
 }
 
 // We cannot call plater()->get_current_canvas3D() from constructor, so we do it here
@@ -238,8 +238,8 @@ void NotificationManager::PopNotification::use_bbl_theme()
 
 	m_WindowBkgColor = m_is_dark ? ImVec4(45 / 255.f, 45 / 255.f, 49 / 255.f, 1.f) : ImVec4(1, 1, 1, 1);
 	m_TextColor = m_is_dark ? ImVec4(224 / 255.f, 224 / 255.f, 224 / 255.f, 1.f) : ImVec4(.2f, .2f, .2f, 1.0f);
-	m_HyperTextColor = m_is_dark ? ImVec4(0, 0.588, 0.533, 1) : ImVec4(0, 0.588, 0.533, 1);
-	m_HyperTextColorHover = m_is_dark ? ImVec4(38.f / 255.f, 166.f / 255.f, 154.f / 255.f, 1) : ImVec4(0.f, 129.f / 255.f, 114.f / 255.f, 1); //#26A69A / #008172;
+	m_HyperTextColor = ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 1);
+	m_HyperTextColorHover = m_is_dark ? ImVec4(225.f / 255.f, 130.f / 255.f, 99.f / 255.f, 1) : ImVec4(185.f / 255.f, 87.f / 255.f, 58.f / 255.f, 1); // #E18263 / #B9573A
 
 	m_is_dark ? push_style_color(ImGuiCol_Border, {62 / 255.f, 62 / 255.f, 69 / 255.f, 1.f}, true, m_current_fade_opacity) : push_style_color(ImGuiCol_Border, m_CurrentColor, true, m_current_fade_opacity);
     push_style_color(ImGuiCol_WindowBg, m_WindowBkgColor, true, m_current_fade_opacity);

@@ -134,14 +134,22 @@ Required source anchors:
   `wxColour("#D66C47")` or `wxColour(0xD6, 0x6C, 0x47)`.
 - Web resources:
   - `resources/web/dialog/css/common.css`
-  - `resources/web/dialog/css/dark.css`
+  - `resources/web/dialog/css/theme.css`
   - `resources/web/guide/**`
   - `resources/web/model/**`
   - `resources/web/homepage/**`
 - SVG icons and image assets that previously used the Orca accent.
+- Flatpak branding colors in
+  `scripts/flatpak/io.github.JaredLin1217.InlongSlicer.metainfo.xml`.
 
 When changing color in the future, update all code, CSS, SVG, web, and bitmap
 asset sources together. Do not leave mixed brand accents.
+
+Run the automated color guard after every upstream merge:
+
+```powershell
+python scripts\check_inlong_brand_colors.py
+```
 
 ### Logos, Icons, And Images
 

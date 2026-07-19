@@ -40,8 +40,8 @@
             Inlong Slicer also provides built-in network printing capabilities for compatible printers.</p>
     </description>
     <branding>
-        <color type="primary" scheme_preference="light">#009688</color>
-        <color type="primary" scheme_preference="dark">#00695C</color>
+        <color type="primary" scheme_preference="light">#D66C47</color>
+        <color type="primary" scheme_preference="dark">#A64E33</color>
     </branding>
     <releases>
         <release version="2.4.2" date="2026-07-26">

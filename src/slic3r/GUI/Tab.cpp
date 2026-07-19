@@ -8257,12 +8257,44 @@ NozzleVolumeType Tab::get_actual_nozzle_volume_type(int extruder_id)
     return m_actual_nozzle_volumes[extruder_id];
 }
 
+bool Tab::get_extruder_sync_indices(int active_extruder, int &from_index, int &dest_index)
+{
+    from_index = -1;
+    dest_index = -1;
+
+    if (m_config == nullptr || m_preset_bundle == nullptr || active_extruder < 0 || active_extruder > 1)
+        return false;
+
+    const Preset &printer_preset = m_preset_bundle->printers.get_edited_preset();
+    const auto   *extruders      = printer_preset.config.option<ConfigOptionEnumsGeneric>("extruder_type");
+    if (extruders == nullptr || extruders->values.size() < 2)
+        return false;
+
+    const auto &variant_keys = extruder_variant_keys[m_type >= Preset::TYPE_COUNT ? Preset::TYPE_PRINT : m_type];
+    const auto  nozzle_type  = get_actual_nozzle_volume_type(active_extruder);
+    auto get_index = [this, extruders, &variant_keys, nozzle_type](int extruder_id) {
+        return m_config->get_index_for_extruder(extruder_id + 1,
+                                                variant_keys.first,
+                                                ExtruderType(extruders->values[extruder_id]),
+                                                nozzle_type,
+                                                variant_keys.second);
+    };
+
+    from_index = get_index(active_extruder);
+    dest_index = get_index(1 - active_extruder);
+    return from_index >= 0 && dest_index >= 0 && from_index != dest_index;
+}
+
 bool Tab::get_extruder_sync_enable_state(int extruder_id)
 {
+    if (m_preset_bundle == nullptr)
+        return false;
+
     Preset& printer_preset = m_preset_bundle->printers.get_edited_preset();
     auto nozzle_volumes = m_preset_bundle->project_config.option<ConfigOptionEnumsGeneric>("nozzle_volume_type");
     auto extruders = printer_preset.config.option<ConfigOptionEnumsGeneric>("extruder_type");
-    if (nozzle_volumes->values.size() < 2 || extruders->values.size() < 2) {
+    if (extruder_id < 0 || extruder_id > 1 || nozzle_volumes == nullptr || extruders == nullptr ||
+        nozzle_volumes->values.size() < 2 || extruders->values.size() < 2) {
         return false;
     }
 
@@ -8275,39 +8307,20 @@ bool Tab::get_extruder_sync_enable_state(int extruder_id)
         return false;
     }
 
-    if (left_nozzle == right_nozzle) {
-        return true;
+    bool compatible = left_nozzle == right_nozzle ||
+                      (left_nozzle == NozzleVolumeType::nvtHybrid && right_nozzle == NozzleVolumeType::nvtHybrid);
+
+    if (!compatible && (left_nozzle == NozzleVolumeType::nvtHybrid || right_nozzle == NozzleVolumeType::nvtHybrid)) {
+        const auto current_nozzle = get_actual_nozzle_volume_type(extruder_id);
+        compatible = (left_nozzle != NozzleVolumeType::nvtHybrid &&
+                      (extruder_id == 0 || (extruder_id == 1 && current_nozzle == left_nozzle))) ||
+                     (right_nozzle != NozzleVolumeType::nvtHybrid &&
+                      (extruder_id == 1 || (extruder_id == 0 && current_nozzle == right_nozzle)));
     }
 
-    if (left_nozzle != NozzleVolumeType::nvtHybrid && right_nozzle != NozzleVolumeType::nvtHybrid) {
-        return false;
-    }
-
-    if (left_nozzle == NozzleVolumeType::nvtHybrid && right_nozzle == NozzleVolumeType::nvtHybrid) {
-        return true;
-    }
-
-    // Hybrid rules
-    auto current_nozzle = get_actual_nozzle_volume_type(extruder_id);
-    if (left_nozzle != NozzleVolumeType::nvtHybrid) {
-        if (extruder_id == 0) {
-            return true;
-        }
-        if (extruder_id == 1 && current_nozzle == left_nozzle) {
-            return true;
-        }
-        return false;
-    }
-    if (right_nozzle != NozzleVolumeType::nvtHybrid) {
-        if (extruder_id == 1) {
-            return true;
-        }
-        if (extruder_id == 0 && current_nozzle == right_nozzle) {
-            return true;
-        }
-        return false;
-    }
-    return false;
+    int from_index;
+    int dest_index;
+    return compatible && get_extruder_sync_indices(extruder_id, from_index, dest_index);
 }
 
 void Tab::switch_excluder(int extruder_id, bool reload)
@@ -8392,20 +8405,19 @@ void Tab::switch_excluder(int extruder_id, bool reload)
 
 void Tab::sync_excluder()
 {
-    Preset & printer_preset = m_preset_bundle->printers.get_edited_preset();
-    auto nozzle_volumes = m_preset_bundle->project_config.option<ConfigOptionEnumsGeneric>("nozzle_volume_type");
-    auto extruders      = printer_preset.config.option<ConfigOptionEnumsGeneric>("extruder_type");
-    auto get_index_for_extruder =
-            [this, &extruders, &nozzle_volumes, variant_keys = extruder_variant_keys[m_type >= Preset::TYPE_COUNT ? Preset::TYPE_PRINT : m_type]](int extruder_id, NozzleVolumeType nozzle_type) {
-        return m_config->get_index_for_extruder(extruder_id + 1, variant_keys.first,
-            ExtruderType(extruders->values[extruder_id]), nozzle_type, variant_keys.second);
-    };
+    if (m_config == nullptr || m_presets == nullptr || m_active_page == nullptr)
+        return;
+
     int active_index = get_current_active_extruder();
-    auto active_nozzle = get_actual_nozzle_volume_type(active_index);
-    int from_index = get_index_for_extruder(active_index, active_nozzle);
-    int dest_index = get_index_for_extruder(1 - active_index, active_nozzle);
+    int from_index;
+    int dest_index;
+    if (!get_extruder_sync_indices(active_index, from_index, dest_index)) {
+        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << ": no matching source and destination parameter variants";
+        return;
+    }
+    const auto active_nozzle = get_actual_nozzle_volume_type(active_index);
+
     auto from_str = std::to_string(from_index);
-    auto dest_str = std::to_string(dest_index);
     auto dirty_options = m_presets->current_dirty_options(true);
     DynamicConfig config_origin, config_to_apply;
     for (int i = 0; i < dirty_options.size(); ++i) {
@@ -8426,7 +8438,14 @@ void Tab::sync_excluder()
         if (dirty) {
             auto key = opt.substr(0, n - 1);
             auto option = dynamic_cast<ConfigOptionVectorBase*>(m_config->option(key));
+            if (option == nullptr || static_cast<size_t>(from_index) >= option->size() ||
+                static_cast<size_t>(dest_index) >= option->size())
+                continue;
+
             auto option2 = dynamic_cast<ConfigOptionVectorBase*>(option->clone());
+            if (option2 == nullptr)
+                continue;
+
             option2->set_at(option, dest_index, from_index);
             if (*option == *option2) {
                 delete option2;

@@ -1,0 +1,41 @@
+name: Check Inlong branding
+
+on:
+  pull_request:
+    paths:
+      - "src/slic3r/GUI/**"
+      - "src/libslic3r/Color.hpp"
+      - "resources/web/**"
+      - "resources/images/**"
+      - "scripts/check_inlong_brand_colors.py"
+      - "scripts/flatpak/io.github.JaredLin1217.InlongSlicer.metainfo.xml"
+      - "InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md"
+      - ".github/workflows/check_inlong_branding.yml"
+  push:
+    branches:
+      - main
+      - feature/inlong-slicer-initial
+    paths:
+      - "src/slic3r/GUI/**"
+      - "src/libslic3r/Color.hpp"
+      - "resources/web/**"
+      - "resources/images/**"
+      - "scripts/check_inlong_brand_colors.py"
+      - "scripts/flatpak/io.github.JaredLin1217.InlongSlicer.metainfo.xml"
+      - "InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md"
+      - ".github/workflows/check_inlong_branding.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-brand-colors:
+    name: Check brand colors
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Reject legacy Orca UI accents
+        run: python3 scripts/check_inlong_brand_colors.py

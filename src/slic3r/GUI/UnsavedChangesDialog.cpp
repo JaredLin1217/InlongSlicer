@@ -1710,6 +1710,9 @@ std::string UnsavedChangesDialog::subreplace(std::string resource_str, std::stri
 
 void UnsavedChangesDialog::update_tree(Preset::Type type, DynamicConfig * config, int from, int to)
 {
+    if (config == nullptr || from < 0 || to < 0)
+        return;
+
     Search::OptionsSearcher &searcher = wxGetApp().sidebar().get_searcher();
     searcher.sort_options_by_key();
 
@@ -1718,8 +1721,15 @@ void UnsavedChangesDialog::update_tree(Preset::Type type, DynamicConfig * config
         const Search::Option &option        = searcher.get_option(opt_key, type, variant_index);
         auto category = option.category_local;
         auto opt = dynamic_cast<ConfigOptionVectorBase*>(config->option(opt_key));
-        std::string           value_from    = opt->vserialize()[from];
-        std::string           value_to    = opt->vserialize()[to];
+        if (opt == nullptr || static_cast<size_t>(from) >= opt->size() || static_cast<size_t>(to) >= opt->size())
+            continue;
+
+        const std::vector<std::string> values = opt->vserialize();
+        if (static_cast<size_t>(from) >= values.size() || static_cast<size_t>(to) >= values.size())
+            continue;
+
+        std::string           value_from    = values[from];
+        std::string           value_to      = values[to];
         PresetItem            pi            = {type, opt_key, category, option.group_local, option.label_local, into_u8(value_from), into_u8(value_to)};
         m_presetitems.push_back(pi);
     }
