@@ -44,7 +44,7 @@ void AboutDialogLogo::onRepaint(wxEvent &event)
 CopyrightsDialog::CopyrightsDialog()
     : DPIDialog(static_cast<wxWindow*>(wxGetApp().mainframe), wxID_ANY, from_u8((boost::format("%1% - %2%")
         % (wxGetApp().is_editor() ? SLIC3R_APP_FULL_NAME : GCODEVIEWER_APP_NAME)
-        % _utf8(L("Portions copyright"))).str()),
+        % _utf8(L("License Info"))).str()),
         wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
     this->SetFont(wxGetApp().normal_font());
@@ -147,9 +147,9 @@ wxString CopyrightsDialog::get_html_text()
                 "<font size=\"3\">",
          bgr_clr_str, text_clr_str, text_clr_str,
         _L("License"),
-        wxString(SLIC3R_APP_FULL_NAME) + _L(" is licensed under "),
-        "https://www.gnu.org/licenses/agpl-3.0.html",_L("GNU Affero General Public License v3.0 (AGPL-3.0)"),
-        wxString(SLIC3R_APP_FULL_NAME) + _L(" is based on PrusaSlicer and BambuStudio"),
+        _L("Inlong Slicer is licensed under "),
+        "https://www.gnu.org/licenses/agpl-3.0.html",_L("GNU Affero General Public License, version 3"),
+        _L("Inlong Slicer is based on PrusaSlicer and BambuStudio"),
         _L("Libraries"),
         _L("This software uses open source components whose copyright and other proprietary rights belong to their respective owners"));
 
@@ -243,7 +243,7 @@ AboutDialog::AboutDialog()
         // _build_string_font.SetStyle(wxFONTSTYLE_ITALIC);
 
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
-        auto          version_string = std::string(INLONGSLICER_VERSION); // _L("Inlong Slicer ") + " " + std::string(INLONGSLICER_VERSION);
+        auto          version_string = std::string(SoftFever_VERSION); // _L("Inlong Slicer ") + " " + std::string(SoftFever_VERSION);
         wxStaticText* version = new wxStaticText(this, wxID_ANY, version_string.c_str(), wxDefaultPosition, wxDefaultSize);
         wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format("Build %s", std::string(GIT_COMMIT_HASH)), wxDefaultPosition, wxDefaultSize);
         credits_string->SetFont(_build_string_font);
@@ -266,11 +266,12 @@ AboutDialog::AboutDialog()
     text_sizer_horiz->Add( 0, 0, 0, wxLEFT, FromDIP(20));
 
     std::vector<wxString> text_list;
-    text_list.push_back(_L("InlongSlicer is free software licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). It is developed for research and development purposes based on OrcaSlicer, and the source code is shared publicly from the GitHub repository below. This software is provided for study, testing, and lawful use without any warranty; users are responsible for evaluating suitability, print results, and related risks."));
+    text_list.push_back(_L("Open-source slicing stands on a tradition of collaboration and attribution. Slic3r, created by Alessandro Ranellucci and the RepRap community, laid the foundation. PrusaSlicer by Prusa Research built on that work, Bambu Studio forked from PrusaSlicer, and SuperSlicer extended it with community-driven enhancements. Each project carried the work of its predecessors forward, crediting those who came before."));
+    text_list.push_back(_L("InlongSlicer is based on OrcaSlicer and is maintained for Inlong-specific bug fixes, printer profiles, workflow integration, and further development."));
+    text_list.push_back(_L("InlongSlicer is free software licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). The software is provided without warranty; users are responsible for evaluating suitability, print results, and related risks."));
 
     text_sizer->Add( 0, 0, 0, wxTOP, FromDIP(33));
-    const auto language = wxGetApp().app_config->get("language");
-    bool is_zh = language == "zh_CN" || language == "zh_TW";
+    bool is_zh = wxGetApp().app_config->get("language") == "zh_CN";
     for (int i = 0; i < text_list.size(); i++)
     {
         auto staticText = new wxStaticText( this, wxID_ANY, wxEmptyString,wxDefaultPosition,wxSize(FromDIP(520), -1), wxALIGN_LEFT );
@@ -315,12 +316,6 @@ AboutDialog::AboutDialog()
 
     copyright_ver_sizer->Add(html_text, 0, wxALL , 0);
 
-    wxStaticText *license_text = new wxStaticText(this, wxID_ANY, _L("Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0)."), wxDefaultPosition, wxDefaultSize);
-    license_text->SetForegroundColour(wxColour(107, 107, 107));
-    license_text->SetFont(Label::Body_12);
-
-    copyright_ver_sizer->Add(license_text, 0, wxTOP, FromDIP(3));
-
     m_html = new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_NEVER /*NEVER*/);
       {
           wxFont font = get_default_font(this);
@@ -329,11 +324,13 @@ AboutDialog::AboutDialog()
           m_html->SetFonts(font.GetFaceName(), font.GetFaceName(), size);
           m_html->SetMinSize(wxSize(FromDIP(-1), FromDIP(16)));
           m_html->SetBorders(2);
+          wxColour   bgr_clr = GetBackgroundColour();
+          const auto bgr_clr_str = encode_color(ColorRGB(bgr_clr.Red(), bgr_clr.Green(), bgr_clr.Blue()));
           const auto text = from_u8(
               (boost::format(
               "<html>"
-              "<body>"
-              "<p style=\"text-align:left\"><a style=\"color:#D66C47\" href=\"https://github.com/JaredLin1217/InlongSlicer\">https://github.com/JaredLin1217/InlongSlicer</a></p>"
+              "<body bgcolor= \"" + bgr_clr_str + "\" >"
+              "<p style=\"text-align:left\"><a style=\"color:#009789\" href=\"https://github.com/JaredLin1217/InlongSlicer\">https://github.com/JaredLin1217/InlongSlicer</a></p>"
               "</body>"
               "</html>")
             ).str());
@@ -342,7 +339,7 @@ AboutDialog::AboutDialog()
           m_html->Bind(wxEVT_HTML_LINK_CLICKED, &AboutDialog::onLinkClicked, this);
       }
     //Add "Portions copyright" button
-    Button* button_portions = new Button(this,_L("Portions copyright"));
+    Button* button_portions = new Button(this,_L("License Info"));
     button_portions->SetStyle(ButtonStyle::Regular, ButtonType::Window);
 
     wxBoxSizer *copyright_button_ver = new wxBoxSizer(wxVERTICAL);

@@ -125,10 +125,20 @@ namespace Slic3r::GUI::GLGizmoUtils {
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
     }
 
+    void push_orca_button_style()
+    {
+        push_inlong_button_style();
+    }
+
     void pop_inlong_button_style()
     {
         ImGui::PopStyleVar(1);
         ImGui::PopStyleColor(4);
+    }
+
+    void pop_orca_button_style()
+    {
+        pop_inlong_button_style();
     }
 
 } // namespace Slic3r::GUI::GLGizmoUtils

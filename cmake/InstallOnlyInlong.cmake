@@ -73,6 +73,12 @@ foreach(runtime_file IN LISTS runtime_files)
     file(COPY "${runtime_file}" DESTINATION "${OUTPUT_DIR}")
 endforeach()
 
+set(python_runtime_dir "${binary_dir}/python")
+if(NOT EXISTS "${python_runtime_dir}/python.exe")
+    message(FATAL_ERROR "Cannot find bundled Python runtime: ${python_runtime_dir}")
+endif()
+file(COPY "${python_runtime_dir}" DESTINATION "${OUTPUT_DIR}")
+
 if(DEFINED SYSTEM_RUNTIME_LIBS AND NOT "${SYSTEM_RUNTIME_LIBS}" STREQUAL "")
     string(REPLACE "|" ";" system_runtime_libs "${SYSTEM_RUNTIME_LIBS}")
     foreach(system_runtime IN LISTS system_runtime_libs)
@@ -130,6 +136,10 @@ foreach(required_profile "InlongFilamentLibrary" "INLONG" "_Infinity3DP" "Inlong
         message(FATAL_ERROR "install_only_inlong did not copy required profile item: ${required_profile}")
     endif()
 endforeach()
+
+if(NOT EXISTS "${OUTPUT_DIR}/python/python.exe")
+    message(FATAL_ERROR "install_only_inlong did not copy the bundled Python runtime")
+endif()
 
 file(GLOB copied_profile_entries RELATIVE "${output_profiles_dir}" "${output_profiles_dir}/*")
 list(LENGTH copied_profile_entries copied_profile_count)

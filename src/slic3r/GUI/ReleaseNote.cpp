@@ -137,7 +137,7 @@ UpdatePluginDialog::UpdatePluginDialog(wxWindow* parent /*= nullptr*/)
     m_text_up_info->SetForegroundColour(wxColour(0x26, 0x2E, 0x30));
 
 
-    operation_tips = new ::Label(this, Label::Body_12, wxString::Format(_L("Click OK to update the Network plug-in when %s launches next time."), wxString(SLIC3R_APP_FULL_NAME)), LB_AUTO_WRAP);
+    operation_tips = new ::Label(this, Label::Body_12, _L("Click OK to update the Network plug-in now. If a file is in use, the update will be applied the next time Inlong Slicer launches."), LB_AUTO_WRAP);
     operation_tips->SetMinSize(wxSize(FromDIP(260), -1));
     operation_tips->SetMaxSize(wxSize(FromDIP(260), -1));
 
@@ -202,41 +202,52 @@ void UpdatePluginDialog::update_info(std::string json_path)
     wxString version;
     wxString description;
 
+    // Parse defensively: a missing or malformed changelog must never leave the
+    // dialog blank, so fall back to a generic prompt instead of returning early.
     try {
         boost::nowide::ifstream ifs(json_path);
         json j;
         ifs >> j;
 
-        version_str = j["version"];
-        description_str = j["description"];
+        if (j.contains("version"))
+            version_str = j["version"];
+        if (j.contains("description"))
+            description_str = j["description"];
     }
-    catch (nlohmann::detail::parse_error& err) {
-        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": parse " << json_path << " got a nlohmann::detail::parse_error, reason = " << err.what();
-        return;
+    catch (std::exception& err) {
+        BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": parse " << json_path << " failed, reason = " << err.what();
     }
 
     version = from_u8(version_str);
     description = from_u8(description_str);
 
-    m_text_up_info->SetLabel(wxString::Format(_L("A new Network plug-in (%s) is available. Do you want to install it?"), version));
+    if (version.IsEmpty())
+        m_text_up_info->SetLabel(_L("A new Network plug-in is available. Do you want to install it?"));
+    else
+        m_text_up_info->SetLabel(wxString::Format(_L("A new Network plug-in (%s) is available. Do you want to install it?"), version));
     m_text_up_info->SetMinSize(wxSize(FromDIP(260), -1));
     m_text_up_info->SetMaxSize(wxSize(FromDIP(260), -1));
-    wxBoxSizer* sizer_text_release_note = new wxBoxSizer(wxVERTICAL);
-    auto        m_text_label            = new ::Label(m_vebview_release_note, Label::Body_13, description, LB_AUTO_WRAP);
-    m_text_label->SetMinSize(wxSize(FromDIP(235), -1));
-    m_text_label->SetMaxSize(wxSize(FromDIP(235), -1));
 
-    sizer_text_release_note->Add(m_text_label, 0, wxALL, 5);
-    m_vebview_release_note->SetSizer(sizer_text_release_note);
-    m_vebview_release_note->Layout();
-    m_vebview_release_note->Fit();
+    if (description.IsEmpty()) {
+        m_vebview_release_note->Hide();
+    } else {
+        wxBoxSizer* sizer_text_release_note = new wxBoxSizer(wxVERTICAL);
+        auto        m_text_label            = new ::Label(m_vebview_release_note, Label::Body_13, description, LB_AUTO_WRAP);
+        m_text_label->SetMinSize(wxSize(FromDIP(235), -1));
+        m_text_label->SetMaxSize(wxSize(FromDIP(235), -1));
+
+        sizer_text_release_note->Add(m_text_label, 0, wxALL, 5);
+        m_vebview_release_note->SetSizer(sizer_text_release_note);
+        m_vebview_release_note->Layout();
+        m_vebview_release_note->Fit();
+    }
     wxGetApp().UpdateDlgDarkUI(this);
     Layout();
     Fit();
 }
 
 UpdateVersionDialog::UpdateVersionDialog(wxWindow *parent)
-    : DPIDialog(parent, wxID_ANY, wxString::Format(_L("New version of %s"), wxString(SLIC3R_APP_FULL_NAME)), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX | wxRESIZE_BORDER)
+    : DPIDialog(parent, wxID_ANY, _L("New version of Inlong Slicer"), wxDefaultPosition, wxDefaultSize, wxCAPTION | wxCLOSE_BOX | wxRESIZE_BORDER)
 {
     SetBackgroundColour(*wxWHITE);
 
@@ -460,7 +471,7 @@ void UpdateVersionDialog::update_version_info(wxString release_note, wxString ve
     //bbs check whether the web display is used
     bool use_web_link = false;
     url_line          = "";
-    // Inlong: not used in Inlong Slicer
+    // Orca: not used in Inlong Slicer
     // auto split_array = splitWithStl(release_note.ToStdString(), "###");
     // if (split_array.size() >= 3) {
     //     for (auto i = 0; i < split_array.size(); i++) {
@@ -483,14 +494,14 @@ void UpdateVersionDialog::update_version_info(wxString release_note, wxString ve
     //m_simplebook_release_note->SetMaxSize(wxSize(FromDIP(560), FromDIP(430)));
     m_simplebook_release_note->SetSelection(1);
     if (is_running_in_msix())
-        m_text_up_info->SetLabel(wxString::Format(_L("New version available: %s. Please update %s from the Microsoft Store."), version, SLIC3R_APP_NAME));
+        m_text_up_info->SetLabel(wxString::Format(_L("New version available: %s. Please update InlongSlicer from the Microsoft Store."), version));
     else
         m_text_up_info->SetLabel(wxString::Format(_L("Click to download new version in default browser: %s"), version));
     auto data_buf_in = release_note.utf8_str();
     auto bg_color = StateColor::darkModeColorFor(wxColour("#FFFFFF")).GetAsString();
     auto fg_color = StateColor::darkModeColorFor(wxColour("#262E30")).GetAsString();
     auto style    = "body {color:" + fg_color + "; background-color:" + bg_color + "; font-family:sans-serif}"
-                  + "a    {color: #D66C47}"               // matches hyperlink colors
+                  + "a    {color: #009688}"               // matches hyperlink colors
                   + "img  {max-width:100%; height:auto}"  // fixes overflowing images
                   + "ul   {padding-inline-start: 20px}";  // reduce left padding on list items
     html_source = (boost::format("<html><head><style>%1%</style></head><body>") % style).str();
@@ -510,7 +521,7 @@ void UpdateVersionDialog::update_version_info(wxString release_note, wxString ve
     Fit();
 }
 
-SecondaryCheckDialog::SecondaryCheckDialog(wxWindow* parent, wxWindowID id, const wxString& title, enum VisibleButtons btn_style, const wxPoint& pos, const wxSize& size, long style, bool not_show_again_check) // INLONG VisibleButtons instead ButtonStyle
+SecondaryCheckDialog::SecondaryCheckDialog(wxWindow* parent, wxWindowID id, const wxString& title, enum VisibleButtons btn_style, const wxPoint& pos, const wxSize& size, long style, bool not_show_again_check) // ORCA VisibleButtons instead ButtonStyle 
     :DPIFrame(parent, id, title, pos, size, style)
 {
     m_button_style = btn_style;
@@ -717,7 +728,7 @@ void SecondaryCheckDialog::on_hide()
     }
 }
 
-void SecondaryCheckDialog::update_title_style(wxString title, SecondaryCheckDialog::VisibleButtons style, wxWindow* parent) // INLONG VisibleButtons instead ButtonStyle
+void SecondaryCheckDialog::update_title_style(wxString title, SecondaryCheckDialog::VisibleButtons style, wxWindow* parent) // ORCA VisibleButtons instead ButtonStyle 
 {
     if (m_button_style == style && title == GetTitle()) return;
 
@@ -1059,7 +1070,7 @@ void PrintErrorDialog::init_button_list()
     init_button(FILAMENT_EXTRUDED, _L("Filament Extruded, Continue"));
     init_button(RETRY_FILAMENT_EXTRUDED, _L("Not Extruded Yet, Retry"));
     init_button(CONTINUE, _L("Finished, Continue"));
-    init_button(LOAD_VIRTUAL_TRAY, _L("Load Filament"));
+    init_button(LOAD_VIRTUAL_TRAY, _L("Load"));
     init_button(OK_BUTTON, _L("OK"));
     init_button(FILAMENT_LOAD_RESUME, _L("Filament Loaded, Resume"));
     init_button(JUMP_TO_LIVEVIEW, _L("View Liveview"));
@@ -1341,8 +1352,8 @@ void ConfirmBeforeSendDialog::edit_cancel_button_txt(const wxString& txt, bool s
 
     if (switch_green)
     {
-        StateColor btn_bg_green(std::pair<wxColour, int>(wxColour(185, 87, 58), StateColor::Pressed),
-                                std::pair<wxColour, int>(wxColour(225, 130, 99), StateColor::Hovered),
+        StateColor btn_bg_green(std::pair<wxColour, int>(wxColour(0, 137, 123), StateColor::Pressed),
+                                std::pair<wxColour, int>(wxColour(38, 166, 154), StateColor::Hovered),
                                 std::pair<wxColour, int>(AMS_CONTROL_BRAND_COLOUR, StateColor::Normal));
         m_button_cancel->SetBackgroundColor(btn_bg_green);
         m_button_cancel->SetBorderColor(*wxWHITE);
@@ -1352,12 +1363,12 @@ void ConfirmBeforeSendDialog::edit_cancel_button_txt(const wxString& txt, bool s
 
 void ConfirmBeforeSendDialog::disable_button_ok()
 {
-    m_button_ok->Disable(); // INLONG enabling / disabling buttons with conditions enough to change its style
+    m_button_ok->Disable(); // ORCA enabling / disabling buttons with conditions enough to change its style
 }
 
 void ConfirmBeforeSendDialog::enable_button_ok()
 {
-    m_button_ok->Enable(); // INLONG enabling / disabling buttons with conditions enough to change its style
+    m_button_ok->Enable(); // ORCA enabling / disabling buttons with conditions enough to change its style
 }
 
 void ConfirmBeforeSendDialog::rescale()
@@ -1385,7 +1396,7 @@ InputIpAddressDialog::InputIpAddressDialog(wxWindow *parent)
     m_line_top->SetBackgroundColour(wxColour(166, 169, 170));
 
     comfirm_before_check_text = _L("Try the following methods to update the connection parameters and reconnect to the printer.");
-    comfirm_before_enter_text = wxString::Format(_L("1. Please confirm %s and your printer are in the same LAN."), wxString(SLIC3R_APP_FULL_NAME));
+    comfirm_before_enter_text = _L("1. Please confirm Inlong Slicer and your printer are in the same LAN.");
     comfirm_after_enter_text  = _L("2. If the IP and Access Code below are different from the actual values on your printer, please correct them.");
     comfirm_last_enter_text   = _L("3. Please obtain the device SN from the printer side; it is usually found in the device information on the printer screen.");
 
@@ -1512,7 +1523,7 @@ InputIpAddressDialog::InputIpAddressDialog(wxWindow *parent)
 
     /*other*/
     m_test_right_msg = new Label(this, Label::Body_13, wxEmptyString, LB_AUTO_WRAP);
-    m_test_right_msg->SetForegroundColour(wxColour(225, 130, 99));
+    m_test_right_msg->SetForegroundColour(wxColour(38, 166, 154));
     m_test_right_msg->Hide();
 
     m_test_wrong_msg = new Label(this, Label::Body_13, wxEmptyString, LB_AUTO_WRAP);
@@ -1523,8 +1534,8 @@ InputIpAddressDialog::InputIpAddressDialog(wxWindow *parent)
     m_tip4->SetMinSize(wxSize(FromDIP(355), -1));
     m_tip4->SetMaxSize(wxSize(FromDIP(355), -1));
 
-    // INLONG standardized HyperLink
-    m_trouble_shoot = new HyperLink(this, "How to trouble shooting");
+    // ORCA standardized HyperLink
+    m_trouble_shoot = new HyperLink(this, _L("How to trouble shooting"));
 
     m_img_help = new wxStaticBitmap(this, wxID_ANY, create_scaled_bitmap("input_access_code_x1_en", this, 198), wxDefaultPosition, wxSize(FromDIP(355), -1), 0);
 
@@ -1686,7 +1697,7 @@ void InputIpAddressDialog::switch_input_panel(int index)
         m_step_icon_panel3->Show();
         m_tip3->Show();
 
-        // INLONG enabling / disabling buttons with conditions enough to change its style
+        // ORCA enabling / disabling buttons with conditions enough to change its style
         m_button_ok->Enable(false);
     }
     current_input_index = index;
@@ -1724,7 +1735,7 @@ void InputIpAddressDialog::set_machine_obj(MachineObject* obj)
 
     auto str_ip = m_input_ip->GetTextCtrl()->GetValue();
     auto str_access_code = m_input_access_code->GetTextCtrl()->GetValue();
-    // INLONG enabling / disabling buttons with conditions enough to change its style
+    // ORCA enabling / disabling buttons with conditions enough to change its style
     m_button_ok->Enable(isIp(str_ip.ToStdString()) && str_access_code.Length() == 8);
 
     Layout();
@@ -1801,7 +1812,7 @@ void InputIpAddressDialog::on_ok(wxMouseEvent& evt)
         str_model_id = it->second;
     }
 
-    // INLONG enabling / disabling buttons with conditions enough to change its style
+    // ORCA enabling / disabling buttons with conditions enough to change its style
     m_button_manual_setup->Enable(false);
     m_button_ok->Enable(false);
 
@@ -1840,7 +1851,7 @@ void InputIpAddressDialog::on_send_retry()
         return;
     }
 
-    m_button_ok->Enable(false); // INLONG enabling / disabling buttons with conditions enough to change its style
+    m_button_ok->Enable(false); // ORCA enabling / disabling buttons with conditions enough to change its style
 
     m_worker->wait_for_idle();
 
@@ -1934,7 +1945,7 @@ void InputIpAddressDialog::workerThreadFunc(std::string str_ip, std::string str_
     }
 
     if (w.expired()) return;
-
+  
     if (result < 0) {
         post_update_test_msg(w, wxEmptyString, true);
         if (result == -1) {
@@ -2037,7 +2048,7 @@ void InputIpAddressDialog::on_check_ip_address_failed(wxCommandEvent& evt)
     }
 
     m_button_ok->Enable(true);
-    // INLONG enabling / disabling buttons with conditions enough to change its style
+    // ORCA enabling / disabling buttons with conditions enough to change its style
 }
 
 void InputIpAddressDialog::on_text(wxCommandEvent &evt)
@@ -2055,7 +2066,7 @@ void InputIpAddressDialog::on_text(wxCommandEvent &evt)
         }
     }
 
-    // INLONG enabling / disabling buttons with conditions enough to change its style
+    // ORCA enabling / disabling buttons with conditions enough to change its style
     bool enable_btns = isIp(str_ip.ToStdString()) && str_access_code.Length() == 8 && invalid_access_code;
     m_button_manual_setup->Enable(enable_btns);
     m_button_ok->Enable(enable_btns);

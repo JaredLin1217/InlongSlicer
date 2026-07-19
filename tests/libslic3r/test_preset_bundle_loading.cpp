@@ -279,7 +279,7 @@ TEST_CASE("find_preset2 auto-matches removed Generic vendor profiles to the libr
 {
     PresetBundle bundle;
 
-    // The OrcaFilamentLibrary replacement that removed empty "<vendor> Generic" profiles map to.
+    // The InlongFilamentLibrary replacement that removed empty "<vendor> Generic" profiles map to.
     add_inmemory_preset(bundle.filaments, "Generic PLA @System");
 
     // Plain lookups do NOT fuzzy-match a removed vendor profile.

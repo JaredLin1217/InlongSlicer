@@ -70,7 +70,7 @@ wxFlexGridSizer* TroubleshootDialog::create_item_loaded_profiles()
 
     auto gen_stats = GetProfilesOverview();
     gen_stats      = ""; // clear mem. not needed after generating m_..._act, m_..._usr variables
-
+   
     auto add_sizer = [this, g_sizer, create_label](PresetCollection* col, wxString label, int in_use, int user) {
         int sys = 0;
         for (auto it = col->begin(); it != col->end(); it++) {
@@ -123,15 +123,15 @@ TroubleshootDialog::TroubleshootDialog()
     auto data_dir   = boost::filesystem::path(Slic3r::data_dir());
     auto app_config = wxGetApp().app_config;
     bool is_dark    = app_config->get("dark_color_mode") == "1";
-
+ 
     // LEFT SIZER //////////////////////
 
     // HEADER
-    m_logo            = ScalableBitmap(this, is_dark ? "InlongSlicer_about_dark" : "InlongSlicer_about", 64);
+    m_logo            = ScalableBitmap(this, is_dark ? "InlongSlicer_horizontal_dark" : "InlongSlicer_horizontal_light", 64);
     m_header_logo     = new wxStaticBitmap(this, wxID_ANY, m_logo.bmp());
     auto logo_line    = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1, FromDIP(2)));
-    logo_line->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#D66C47")));
-    auto version      = new Label(this, wxString(INLONGSLICER_VERSION), wxALIGN_CENTRE_HORIZONTAL);
+    logo_line->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#009687")));
+    auto version      = new Label(this, wxString(SoftFever_VERSION), wxALIGN_CENTRE_HORIZONTAL);
     wxFont version_font = GetFont();
     version_font = version_font.Scaled(1.65f); // SetPointSize(18) not works on macOS because it uses a 72 PPI reference
     version->SetFont(version_font);
@@ -139,7 +139,7 @@ TroubleshootDialog::TroubleshootDialog()
 
     auto build = new Button(this, wxString(GIT_COMMIT_HASH));
     build->SetStyle(ButtonStyle::Regular, ButtonType::Window);
-    auto hash_url = "https://github.com/JaredLin1217/InlongSlicer/commit/" + wxString(GIT_COMMIT_HASH);
+    auto hash_url = "https://github.com/InlongSlicer/InlongSlicer/commit/" + wxString(GIT_COMMIT_HASH);
     build->SetToolTip(hash_url);
     build->Bind(wxEVT_BUTTON, [hash_url](wxCommandEvent &e) {
          wxLaunchDefaultBrowser(hash_url);
@@ -248,11 +248,11 @@ TroubleshootDialog::TroubleshootDialog()
             return out;
         };
 
-        wxString url = "https://github.com/JaredLin1217/InlongSlicer/issues/new?template=bug_report.yml";
+        wxString url = "https://github.com/InlongSlicer/InlongSlicer/issues/new?template=bug_report.yml";
         wxString os = GetOStype();
         if(!os.IsEmpty())
             url += "&os_type=%22" + os +"%22";
-        url += "&version="     + encodeStr(wxString(INLONGSLICER_VERSION));
+        url += "&version="     + encodeStr(wxString(SoftFever_VERSION));
         url += "&os_version="  + encodeStr(GetOSinfo());
         wxLaunchDefaultBrowser(url);
     });
@@ -326,7 +326,7 @@ TroubleshootDialog::TroubleshootDialog()
     left_sizer->Add(sys_btn_sizer     , 0, wxEXPAND       | wxTOP, FromDIP(15));
     left_sizer->Add(link_wiki         , 0, wxALIGN_CENTER | wxTOP, FromDIP(15));
     left_sizer->AddSpacer(FromDIP(5));
-
+    
     wxBoxSizer *right_sizer  = new wxBoxSizer(wxVERTICAL);
 
     wxBoxSizer *pack_btn_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -342,7 +342,7 @@ TroubleshootDialog::TroubleshootDialog()
     right_sizer->Add(prf_sys_cache_szr              , 0, wxEXPAND | wxTOP, FromDIP(8));
     right_sizer->Add(prf_loaded_szr                 , 0, wxEXPAND | wxTOP, FromDIP(5));
     right_sizer->Add(profiles_loaded                , 0, wxEXPAND | wxTOP, FromDIP(5));
-
+    
     right_sizer->Add(create_title(_L("More"))       , 0, wxEXPAND | wxTOP, FromDIP(12));
     right_sizer->Add(cfg_folder_szr                 , 0, wxEXPAND | wxTOP, FromDIP(8));
     right_sizer->Add(log_level_szr                  , 0, wxEXPAND | wxTOP, FromDIP(5));
@@ -370,7 +370,7 @@ wxString TroubleshootDialog::GetTimestamp()
 wxString TroubleshootDialog::GetSysInfoAll()
 {
     wxString info;
-    info += "Version   :  " + wxString(INLONGSLICER_VERSION) + "\n"
+    info += "Version   :  " + wxString(SoftFever_VERSION) + "\n"
           + "Build     :  " + wxString(GIT_COMMIT_HASH)   + "\n"
           + "Package   :  " + GetPackageType() + "\n"
           + "Platform  :  " + GetOSinfo()      + "\n"
@@ -394,7 +394,7 @@ wxString TroubleshootDialog::GetConfigStr()
     } catch (const nlohmann::json::exception&) {
         return "{}";
     }
-    for (const auto& key : std::vector<std::string>{"recent_projects", "recent", "custom_color_list", "inlong_presets"})
+    for (const auto& key : std::vector<std::string>{"recent_projects", "recent", "custom_color_list", "orca_presets"})
         root.erase(key);
     if (root.contains("app")) {
         for (const auto& key : std::vector<std::string>{"last_backup_path", "last_export_path", "download_path", "slicer_uuid", "preset_folder"})
@@ -622,7 +622,7 @@ wxString TroubleshootDialog::GetWinVersion()
             osvi.dwOSVersionInfoSize = sizeof(osvi);
             if (RtlGetVersion(&osvi) == 0) {
                 int build = osvi.dwBuildNumber;
-                wxString win = (build >= 22000) ? "11"
+                wxString win = (build >= 22000) ? "11" 
                              : (build >= 10240) ? "10"
                              : (build >= 9200)  ? "8"
                              : (build >= 7601)  ? "7"
@@ -919,8 +919,8 @@ void TroubleshootDialog::PackAll()
     auto project_name = wxGetApp().plater()->get_project_filename(".3mf");
     if(!project_name.IsEmpty()){
         if (wxGetApp().plater()->is_project_dirty()) {
-            auto res = MessageDialog(this,
-                _L("The current project has unsaved changes, save it before continue?") +
+            auto res = MessageDialog(this, 
+                _L("The current project has unsaved changes. Would you like to save before continuing\?") +
                 "\n\n" +
                 _L("Select NO to close dialog and review project"),
                 wxString(SLIC3R_APP_FULL_NAME) + " - " + _L("Save"), wxYES_NO | wxCANCEL | wxYES_DEFAULT | wxCENTRE
@@ -948,8 +948,8 @@ void TroubleshootDialog::PackAll()
 void TroubleshootDialog::RebuildSystemProfiles()
 {
     if (wxGetApp().plater()->is_project_dirty()) {
-        auto res = MessageDialog(this,
-            _L("The current project has unsaved changes, save it before continue?") +
+        auto res = MessageDialog(this, 
+            _L("The current project has unsaved changes. Would you like to save before continuing\?") +
             "\n\n" +
             _L("Select NO to close dialog and review project."),
             wxString(SLIC3R_APP_FULL_NAME) + " - " + _L("Save"), wxYES_NO | wxCANCEL | wxYES_DEFAULT | wxCENTRE
@@ -962,7 +962,7 @@ void TroubleshootDialog::RebuildSystemProfiles()
             return;
         }
     }
-
+    
     MessageDialog msg(this,
         _L("Restart Required") + "\n" +
         _L("Please make sure any instances of InlongSlicer are not running") + "\n" +
@@ -1029,7 +1029,7 @@ bool TroubleshootDialog::RestartApplication()
 
 #ifdef __WXMSW__
     wxString cmd = wxString::Format(R"("%s")", execPath);
-
+    
     // CreateProcess needs a mutable buffer for lpCommandLine
     std::vector<wchar_t> cmdBuf(cmd.wc_str(), cmd.wc_str() + cmd.length() + 1);
 
@@ -1102,7 +1102,7 @@ void TroubleshootDialog::ClearLogs()
 void TroubleshootDialog::UpdateLogsStorage()
 {
     boost::filesystem::path logs_path = boost::filesystem::path(Slic3r::data_dir()) / "log";
-
+    
     uintmax_t total_bytes = 0;
     int file_count = 0;
     if (boost::filesystem::exists(logs_path) && boost::filesystem::is_directory(logs_path)) {
@@ -1254,7 +1254,7 @@ bool TroubleshootDialog::ExportAsZip(const std::vector<wxString>& sources, const
              wxString(SLIC3R_APP_FULL_NAME), wxICON_WARNING | wxOK
         ).ShowModal();
         return false;
-    }
+    } 
     else {
         MessageDialog(this, _L("Export successful"), wxString(SLIC3R_APP_FULL_NAME), wxICON_INFORMATION | wxOK).ShowModal();
     }
@@ -1372,7 +1372,7 @@ void TroubleshootDialog::on_dpi_changed(const wxRect& suggested_rect)
     auto processCtrls = [&](auto&& self, wxWindow* win) -> void {
         if (!win)
             return;
-
+        
         if (Button* btn = dynamic_cast<Button*>(win))
             btn->Rescale();
 

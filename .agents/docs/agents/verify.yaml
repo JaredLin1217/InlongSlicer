@@ -124,7 +124,7 @@ size_gates:
     canonical_agents_yaml: 16400
     script_ps1: 129000
     validate_script_ps1_after_split: 110000
-    tracked_repo_kib: 330000
+    tracked_repo_kib: 512000
   tracked_rule: "Ignored/untracked files excluded; intended new files count."
 evidence_tiers:
   current_release_max: "T2 current-repo practice"

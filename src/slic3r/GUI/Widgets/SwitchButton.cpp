@@ -31,7 +31,7 @@ SwitchButton::SwitchButton(wxWindow* parent, wxWindowID id)
 	, m_off(this, "toggle_off", 16)
     , text_color(std::pair{0xfffffe, (int) StateColor::Checked}, std::pair{0x6B6B6B, (int) StateColor::Normal})
 	, track_color(0xD9D9D9)
-    , thumb_color(std::pair{0xD66C47, (int) StateColor::Checked}, std::pair{0xD9D9D9, (int) StateColor::Normal})
+    , thumb_color(std::pair{0x009688, (int) StateColor::Checked}, std::pair{0xD9D9D9, (int) StateColor::Normal})
 {
 	SetBackgroundColour(StaticBox::GetParentBackgroundColor(parent));
 	Bind(wxEVT_TOGGLEBUTTON, [this](auto& e) { update(); e.Skip(); });
@@ -196,7 +196,7 @@ void SwitchButton::Rescale()
 #ifdef __WXOSX__
             bmp = wxBitmap(bmp.ConvertToImage(), -1, scale);
 #elif defined(__WXMSW__)
-            bmp.SetScaleFactor(scale); // INLONG
+            bmp.SetScaleFactor(scale); // ORCA
 #endif
 			(i == 0 ? m_off : m_on).bmp() = bmp;
 		}
@@ -226,18 +226,18 @@ ModeSwitchButton::ModeSwitchButton(wxWindow* parent, wxWindowID id)
     border_color = StateColor(
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Disabled),
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Hovered | ~StateColor::Focused),
-        std::make_pair(wxColour("#E18263"), (int) StateColor::Focused),
+        std::make_pair(wxColour("#26A69A"), (int) StateColor::Focused),
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Normal)
     );
     track_background = StateColor(
-        std::make_pair(wxColour("#D66C47"), (int) StateColor::Disabled),
-        std::make_pair(wxColour("#D66C47"), (int) StateColor::Normal)
+        std::make_pair(wxColour("#009688"), (int) StateColor::Disabled),
+        std::make_pair(wxColour("#009688"), (int) StateColor::Normal)
     );
     track_border = StateColor(
         std::make_pair(wxColour("#D9D9D9"), (int) StateColor::Disabled),
-        std::make_pair(wxColour("#D66C47"), (int) StateColor::Hovered | ~StateColor::Focused),
-        std::make_pair(wxColour("#E18263"), (int) StateColor::Focused),
-        std::make_pair(wxColour("#D66C47"), (int) StateColor::Normal)
+        std::make_pair(wxColour("#009688"), (int) StateColor::Hovered | ~StateColor::Focused),
+        std::make_pair(wxColour("#26A69A"), (int) StateColor::Focused),
+        std::make_pair(wxColour("#009688"), (int) StateColor::Normal)
     );
     dot_active = StateColor(
         std::make_pair(wxColour("#FFFEFE"), (int) StateColor::Disabled),
@@ -446,11 +446,176 @@ void ModeSwitchButton::update_tooltip()
         SetToolTip(m_tooltips[m_selection]);
 }
 
+SwitchBoard::SwitchBoard(wxWindow *parent, wxString leftL, wxString right, wxSize size)
+ : wxWindow(parent, wxID_ANY, wxDefaultPosition, size)
+{
+#ifdef __WINDOWS__
+    SetDoubleBuffered(true);
+#endif //__WINDOWS__
+
+    SetBackgroundColour(*wxWHITE);
+	leftLabel = leftL;
+    rightLabel = right;
+
+	SetMinSize(size);
+	SetMaxSize(size);
+
+    Bind(wxEVT_PAINT, &SwitchBoard::paintEvent, this);
+    Bind(wxEVT_LEFT_DOWN, &SwitchBoard::on_left_down, this);
+
+    Bind(wxEVT_ENTER_WINDOW, [this](auto &e) { SetCursor(wxCURSOR_HAND); });
+    Bind(wxEVT_LEAVE_WINDOW, [this](auto &e) { SetCursor(wxCURSOR_ARROW); });
+}
+
+void SwitchBoard::updateState(wxString target)
+{
+    if (target.empty()) {
+        if (!switch_left && !switch_right) {
+            return;
+        }
+
+        switch_left = false;
+        switch_right = false;
+    } else {
+        if (target == "left") {
+            if (switch_left && !switch_right) {
+                return;
+            }
+
+            switch_left = true;
+            switch_right = false;
+        } else if (target == "right") {
+            if (!switch_left && switch_right) {
+                return;
+            }
+
+            switch_left  = false;
+            switch_right = true;
+        }
+    }
+
+    Refresh();
+}
+
+void SwitchBoard::paintEvent(wxPaintEvent &evt)
+{
+    wxPaintDC dc(this);
+    render(dc);
+}
+
+void SwitchBoard::render(wxDC &dc)
+{
+#ifdef __WXMSW__
+    wxSize     size = GetSize();
+    wxMemoryDC memdc;
+    wxBitmap   bmp(size.x, size.y);
+    memdc.SelectObject(bmp);
+    memdc.Blit({0, 0}, size, &dc, {0, 0});
+
+    {
+        wxGCDC dc2(memdc);
+        doRender(dc2);
+    }
+
+    memdc.SelectObject(wxNullBitmap);
+    dc.DrawBitmap(bmp, 0, 0);
+#else
+    doRender(dc);
+#endif
+}
+
+void SwitchBoard::doRender(wxDC &dc)
+{
+    wxColour disable_color = wxColour(0xCECECE);
+
+    dc.SetPen(*wxTRANSPARENT_PEN);
+
+    if (is_enable) {dc.SetBrush(wxBrush(0xeeeeee));
+    } else {dc.SetBrush(disable_color);}
+    dc.DrawRoundedRectangle(0, 0, GetSize().x, GetSize().y, 8);
+
+	/*left*/
+    if (switch_left) {
+        is_enable ? dc.SetBrush(wxBrush(wxColour(0, 150, 136))) : dc.SetBrush(disable_color);
+        dc.DrawRoundedRectangle(0, 0, GetSize().x / 2, GetSize().y, 8);
+	}
+
+    if (switch_left) {
+		dc.SetTextForeground(*wxWHITE);
+    } else {
+        dc.SetTextForeground(0x333333);
+	}
+
+    dc.SetFont(::Label::Body_13);
+    Slic3r::GUI::WxFontUtils::get_suitable_font_size(0.6 * GetSize().GetHeight(), dc);
+
+    auto left_txt_size = dc.GetTextExtent(leftLabel);
+    dc.DrawText(leftLabel, wxPoint((GetSize().x / 2 - left_txt_size.x) / 2, (GetSize().y - left_txt_size.y) / 2));
+
+	/*right*/
+    if (switch_right) {
+        if (is_enable) {dc.SetBrush(wxBrush(wxColour(0, 150, 136)));
+        } else {dc.SetBrush(disable_color);}
+        dc.DrawRoundedRectangle(GetSize().x / 2, 0, GetSize().x / 2, GetSize().y, 8);
+	}
+
+    auto right_txt_size = dc.GetTextExtent(rightLabel);
+    if (switch_right) {
+        dc.SetTextForeground(*wxWHITE);
+    } else {
+        dc.SetTextForeground(0x333333);
+    }
+    dc.DrawText(rightLabel, wxPoint((GetSize().x / 2 - right_txt_size.x) / 2 + GetSize().x / 2, (GetSize().y - right_txt_size.y) / 2));
+
+}
+
+void SwitchBoard::on_left_down(wxMouseEvent &evt)
+{
+    if (!is_enable) {
+        return;
+    }
+    int index = -1;
+    auto pos = ClientToScreen(evt.GetPosition());
+    auto rect = ClientToScreen(wxPoint(0, 0));
+
+    if (pos.x > 0 && pos.x < rect.x + GetSize().x / 2) {
+        switch_left = true;
+        switch_right = false;
+        index = 1;
+    } else {
+        switch_left  = false;
+        switch_right = true;
+        index = 0;
+    }
+
+    if (auto_disable_when_switch)
+    {
+        is_enable = false;// make it disable while switching
+    }
+    Refresh();
+
+    wxCommandEvent event(wxCUSTOMEVT_SWITCH_POS);
+    event.SetInt(index);
+    wxPostEvent(this, event);
+}
+
+bool SwitchBoard::Enable(bool enable /* = true */)
+{
+    if (is_enable == enable)
+    {
+        return false;
+    }
+
+    is_enable = enable;
+    Refresh();
+    return true;
+}
+
 MultiSwitchButton::MultiSwitchButton(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long style)
     : StaticBox(parent, id, pos, size, style)
     , m_bg_color(StateColor(
           std::make_pair(0xE8E8E8, (int) StateColor::NotChecked),
-          std::make_pair(0xD66C47, (int) StateColor::Normal)))
+          std::make_pair(0x009688, (int) StateColor::Normal)))
     , m_text_color(StateColor(
           std::make_pair(0x6B6B6B, (int) StateColor::NotChecked),
           std::make_pair(0xFFFFFE, (int) StateColor::Normal)))
@@ -629,170 +794,5 @@ bool MultiSwitchButton::send_selection_event()
     evt.SetInt(sel);
     evt.SetString(GetSelectedText());
     GetEventHandler()->ProcessEvent(evt);
-    return true;
-}
-
-SwitchBoard::SwitchBoard(wxWindow *parent, wxString leftL, wxString right, wxSize size)
- : wxWindow(parent, wxID_ANY, wxDefaultPosition, size)
-{
-#ifdef __WINDOWS__
-    SetDoubleBuffered(true);
-#endif //__WINDOWS__
-
-    SetBackgroundColour(*wxWHITE);
-	leftLabel = leftL;
-    rightLabel = right;
-
-	SetMinSize(size);
-	SetMaxSize(size);
-
-    Bind(wxEVT_PAINT, &SwitchBoard::paintEvent, this);
-    Bind(wxEVT_LEFT_DOWN, &SwitchBoard::on_left_down, this);
-
-    Bind(wxEVT_ENTER_WINDOW, [this](auto &e) { SetCursor(wxCURSOR_HAND); });
-    Bind(wxEVT_LEAVE_WINDOW, [this](auto &e) { SetCursor(wxCURSOR_ARROW); });
-}
-
-void SwitchBoard::updateState(wxString target)
-{
-    if (target.empty()) {
-        if (!switch_left && !switch_right) {
-            return;
-        }
-
-        switch_left = false;
-        switch_right = false;
-    } else {
-        if (target == "left") {
-            if (switch_left && !switch_right) {
-                return;
-            }
-
-            switch_left = true;
-            switch_right = false;
-        } else if (target == "right") {
-            if (!switch_left && switch_right) {
-                return;
-            }
-
-            switch_left  = false;
-            switch_right = true;
-        }
-    }
-
-    Refresh();
-}
-
-void SwitchBoard::paintEvent(wxPaintEvent &evt)
-{
-    wxPaintDC dc(this);
-    render(dc);
-}
-
-void SwitchBoard::render(wxDC &dc)
-{
-#ifdef __WXMSW__
-    wxSize     size = GetSize();
-    wxMemoryDC memdc;
-    wxBitmap   bmp(size.x, size.y);
-    memdc.SelectObject(bmp);
-    memdc.Blit({0, 0}, size, &dc, {0, 0});
-
-    {
-        wxGCDC dc2(memdc);
-        doRender(dc2);
-    }
-
-    memdc.SelectObject(wxNullBitmap);
-    dc.DrawBitmap(bmp, 0, 0);
-#else
-    doRender(dc);
-#endif
-}
-
-void SwitchBoard::doRender(wxDC &dc)
-{
-    wxColour disable_color = wxColour(0xCECECE);
-
-    dc.SetPen(*wxTRANSPARENT_PEN);
-
-    if (is_enable) {dc.SetBrush(wxBrush(0xeeeeee));
-    } else {dc.SetBrush(disable_color);}
-    dc.DrawRoundedRectangle(0, 0, GetSize().x, GetSize().y, 8);
-
-	/*left*/
-    if (switch_left) {
-        is_enable ? dc.SetBrush(wxBrush(wxColour(214, 108, 71))) : dc.SetBrush(disable_color);
-        dc.DrawRoundedRectangle(0, 0, GetSize().x / 2, GetSize().y, 8);
-	}
-
-    if (switch_left) {
-		dc.SetTextForeground(*wxWHITE);
-    } else {
-        dc.SetTextForeground(0x333333);
-	}
-
-    dc.SetFont(::Label::Body_13);
-    Slic3r::GUI::WxFontUtils::get_suitable_font_size(0.6 * GetSize().GetHeight(), dc);
-
-    auto left_txt_size = dc.GetTextExtent(leftLabel);
-    dc.DrawText(leftLabel, wxPoint((GetSize().x / 2 - left_txt_size.x) / 2, (GetSize().y - left_txt_size.y) / 2));
-
-	/*right*/
-    if (switch_right) {
-        if (is_enable) {dc.SetBrush(wxBrush(wxColour(214, 108, 71)));
-        } else {dc.SetBrush(disable_color);}
-        dc.DrawRoundedRectangle(GetSize().x / 2, 0, GetSize().x / 2, GetSize().y, 8);
-	}
-
-    auto right_txt_size = dc.GetTextExtent(rightLabel);
-    if (switch_right) {
-        dc.SetTextForeground(*wxWHITE);
-    } else {
-        dc.SetTextForeground(0x333333);
-    }
-    dc.DrawText(rightLabel, wxPoint((GetSize().x / 2 - right_txt_size.x) / 2 + GetSize().x / 2, (GetSize().y - right_txt_size.y) / 2));
-
-}
-
-void SwitchBoard::on_left_down(wxMouseEvent &evt)
-{
-    if (!is_enable) {
-        return;
-    }
-    int index = -1;
-    auto pos = ClientToScreen(evt.GetPosition());
-    auto rect = ClientToScreen(wxPoint(0, 0));
-
-    if (pos.x > 0 && pos.x < rect.x + GetSize().x / 2) {
-        switch_left = true;
-        switch_right = false;
-        index = 1;
-    } else {
-        switch_left  = false;
-        switch_right = true;
-        index = 0;
-    }
-
-    if (auto_disable_when_switch)
-    {
-        is_enable = false;// make it disable while switching
-    }
-    Refresh();
-
-    wxCommandEvent event(wxCUSTOMEVT_SWITCH_POS);
-    event.SetInt(index);
-    wxPostEvent(this, event);
-}
-
-bool SwitchBoard::Enable(bool enable /* = true */)
-{
-    if (is_enable == enable)
-    {
-        return false;
-    }
-
-    is_enable = enable;
-    Refresh();
     return true;
 }

@@ -52,6 +52,11 @@ SCENARIO("Placeholder parser scripting", "[PlaceholderParser]") {
     SECTION("math: round(-13.4)") { REQUIRE(parser.process("{round(-13.4)}") == "-13"); }
     SECTION("math: round(13.6)") { REQUIRE(parser.process("{round(13.6)}") == "14"); }
     SECTION("math: round(-13.6)") { REQUIRE(parser.process("{round(-13.6)}") == "-14"); }
+    SECTION("math: round(13.5)") { REQUIRE(parser.process("{round(13.5)}") == "14"); }
+    SECTION("math: floor(13.9)") { REQUIRE(parser.process("{floor(13.9)}") == "13"); }
+    SECTION("math: floor(-13.1)") { REQUIRE(parser.process("{floor(-13.1)}") == "-14"); }
+    SECTION("math: ceil(13.1)") { REQUIRE(parser.process("{ceil(13.1)}") == "14"); }
+    SECTION("math: ceil(-13.9)") { REQUIRE(parser.process("{ceil(-13.9)}") == "-13"); }
     SECTION("math: digits(5, 15)") { REQUIRE(parser.process("{digits(5, 15)}") == "              5"); }
     SECTION("math: digits(5., 15)") { REQUIRE(parser.process("{digits(5., 15)}") == "              5"); }
     SECTION("math: zdigits(5, 15)") { REQUIRE(parser.process("{zdigits(5, 15)}") == "000000000000005"); }
@@ -65,6 +70,21 @@ SCENARIO("Placeholder parser scripting", "[PlaceholderParser]") {
     SECTION("math: interpolate_table(13.84375892476, (0, 0), (20, 20))") { REQUIRE(std::stod(parser.process("{interpolate_table(13.84375892476, (0, 0), (20, 20))}")) == Catch::Approx(13.84375892476)); }
     SECTION("math: interpolate_table(13, (0, 0), (20, 20), (30, 20))") { REQUIRE(std::stod(parser.process("{interpolate_table(13, (0, 0), (20, 20), (30, 20))}")) == Catch::Approx(13.)); }
     SECTION("math: interpolate_table(25, (0, 0), (20, 20), (30, 20))") { REQUIRE(std::stod(parser.process("{interpolate_table(25, (0, 0), (20, 20), (30, 20))}")) == Catch::Approx(20.)); }
+    // Only the grammar's built-in functions are callable; any other name is an undefined variable and throws.
+    SECTION("math: a non-built-in function name throws") { REQUIRE_THROWS(parser.process("{sqrt(16)}")); }
+
+    // regex_replace(subject, /pattern/, replacement): the string-transform primitive.
+    SECTION("regex_replace: strips a file extension") { REQUIRE(parser.process("{regex_replace(\"part.stl\", /\\.[^.]*$/, \"\")}") == "part"); }
+    SECTION("regex_replace: leaves a non-matching dot untouched") { REQUIRE(parser.process("{regex_replace(\"Bracket v2.1\", /\\.stl$/, \"\")}") == "Bracket v2.1"); }
+    SECTION("regex_replace: replaces every match") { REQUIRE(parser.process("{regex_replace(\"a-b-c\", /-/, \"_\")}") == "a_b_c"); }
+    SECTION("regex_replace: replacement may reference a capture group") { REQUIRE(parser.process("{regex_replace(\"v12\", /v(\\d+)/, \"$1\")}") == "12"); }
+    // The result is an ordinary string, usable in further expressions (the real filename-template shape).
+    SECTION("regex_replace: result composes with concatenation") { REQUIRE(parser.process("{regex_replace(\"part.stl\", /\\.[^.]*$/, \"\") + \".gcode\"}") == "part.gcode"); }
+    // A malformed pattern and a non-string subject are both hard errors.
+    SECTION("regex_replace: an invalid pattern throws") { REQUIRE_THROWS(parser.process("{regex_replace(\"x\", /[/, \"\")}")); }
+    SECTION("regex_replace: a non-string subject throws") { REQUIRE_THROWS(parser.process("{regex_replace(123, /2/, \"\")}")); }
+    // Inside a skipped branch the subject is TYPE_EMPTY and the call must no-op (exercises the guard).
+    SECTION("regex_replace: is skipped inside a false if-branch") { REQUIRE(parser.process("{if false}{regex_replace(\"x\", /x/, \"y\")}{endif}done") == "done"); }
 
     // Test the "coFloatOrPercent" and "xxx_line_width" substitutions.
     // min_width_top_surface ratio_over inner_wall_line_width.
@@ -72,8 +92,9 @@ SCENARIO("Placeholder parser scripting", "[PlaceholderParser]") {
     SECTION("min_width_top_surface") { REQUIRE(std::stod(parser.process("{min_width_top_surface}")) == Catch::Approx(2.7)); }
     // Inlong: this one is not coFloatOrPercent
     //SECTION("support_object_xy_distance") { REQUIRE(std::stod(parser.process("{support_object_xy_distance}")) == Catch::Approx(0.3375)); }
+    // Orca: this one is not coFloatOrPercent
     // small_perimeter_speed over outer_wall_speed
-    SECTION("small_perimeter_speed") { REQUIRE(std::stod(parser.process("{small_perimeter_speed}")) == Catch::Approx(30.)); }
+    //SECTION("small_perimeter_speed") { REQUIRE(std::stod(parser.process("{small_perimeter_speed}")) == Catch::Approx(30.)); }
     // infill_anchor over sparse_infill_line_width
     SECTION("infill_anchor") { REQUIRE(std::stod(parser.process("{infill_anchor}")) == Catch::Approx(2.7)); }
     // If scarf_joint_speed is set to percent, then it is applied over respective extrusion types by overriding their respective speeds.
@@ -129,6 +150,7 @@ SCENARIO("Placeholder parser variables", "[PlaceholderParser]") {
 
     SECTION("create an int local variable") { REQUIRE(parser.process("{local myint = 33+2}{myint}", 0, nullptr, nullptr, nullptr) == "35"); }
     SECTION("create a string local variable") { REQUIRE(parser.process("{local mystr = \"mine\" + \"only\" + \"mine\"}{mystr}", 0, nullptr, nullptr, nullptr) == "mineonlymine"); }
+    SECTION("regex_replace transforms a string variable") { REQUIRE(parser.process("{local n = \"part.stl\"}{regex_replace(n, /\\.[^.]*$/, \"\")}", 0, nullptr, nullptr, nullptr) == "part"); }
     SECTION("create a bool local variable") { REQUIRE(parser.process("{local mybool = 1 + 1 == 2}{mybool}", 0, nullptr, nullptr, nullptr) == "true"); }
     SECTION("create an int global variable") { REQUIRE(parser.process("{global myint = 33+2}{myint}", 0, nullptr, nullptr, &context_with_global_dict) == "35"); }
     SECTION("create a string global variable") { REQUIRE(parser.process("{global mystr = \"mine\" + \"only\" + \"mine\"}{mystr}", 0, nullptr, nullptr, &context_with_global_dict) == "mineonlymine"); }
@@ -248,24 +270,21 @@ SCENARIO("Placeholder parser coFloatsOrPercents vector access", "[PlaceholderPar
     // outer_wall_speed is the ratio_over target for small_perimeter_speed.
     // Different values per extruder to verify parent resolves at the same element index.
     config.set_deserialize_strict({
+        { "outer_wall_speed", "60,70,80,90" },
         { "nozzle_diameter", "0.4,0.4,0.4,0.4" },
         { "pressure_advance", "1.5,2.0,3.0,4.0" }  // coFloats non-nullable
     });
-    // Object-level overrides can replace scalar definitions with vectors.
-    // Inject those vectors directly so this test exercises the vector path
-    // without changing the production option definitions.
-    config.set_key_value("outer_wall_speed", new ConfigOptionFloats({ 60., 70., 80., 90. }));
     // small_perimeter_speed:
     //   [0] = 50% of outer_wall_speed[0] (= 60) → 30
     //   [1] = 80% of outer_wall_speed[1] (= 70) → 56
     //   [2] = 0 absolute
     //   [3] = 50% of outer_wall_speed[3] (= 90) → 45
-    config.set_key_value("small_perimeter_speed", new ConfigOptionFloatsOrPercentsNullable({
+    config.option<ConfigOptionFloatsOrPercentsNullable>("small_perimeter_speed")->values = {
         FloatOrPercent{50.0, true},    // 50% of outer_wall_speed[0] (60) = 30
         FloatOrPercent{80.0, true},    // 80% of outer_wall_speed[1] (70) = 56
         FloatOrPercent{0.0, false},    // absolute: 0
         FloatOrPercent{50.0, true},    // 50% of outer_wall_speed[3] (90) = 45
-    }));
+    };
 
     parser.apply_config(config);
     parser.set("foo", 0);

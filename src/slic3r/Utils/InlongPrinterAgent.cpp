@@ -78,7 +78,7 @@ int InlongPrinterAgent::bind_detect(std::string dev_ip, std::string sec_link, de
 }
 
 int InlongPrinterAgent::bind(
-    std::string dev_ip, std::string dev_id, std::string sec_link, std::string timezone, bool improved, OnUpdateStatusFn update_fn)
+    std::string dev_ip, std::string dev_id, std::string dev_model, std::string sec_link, std::string timezone, bool improved, OnUpdateStatusFn update_fn)
 {
     return BAMBU_NETWORK_SUCCESS;
 }
@@ -93,6 +93,15 @@ int InlongPrinterAgent::request_bind_ticket(std::string* ticket)
     if (ticket)
         *ticket = "";
     return BAMBU_NETWORK_SUCCESS;
+}
+
+int InlongPrinterAgent::get_hms_snapshot(std::string dev_id, std::string file_name, std::function<void(std::string, int)> callback)
+{
+    // No BBL cloud snapshot source; report failure so the caller falls back.
+    (void) dev_id;
+    (void) file_name;
+    (void) callback;
+    return -1;
 }
 
 int InlongPrinterAgent::set_server_callback(OnServerErrFn fn)
@@ -124,7 +133,8 @@ int InlongPrinterAgent::set_user_selected_machine(std::string dev_id)
 // ============================================================================
 AgentInfo InlongPrinterAgent::get_agent_info_static()
 {
-    return AgentInfo{INLONG_PRINTER_AGENT_ID, "Inlong", InlongPrinterAgent_VERSION, "Inlong printer communication protocol agent"};
+    return AgentInfo{INLONG_PRINTER_AGENT_ID, "Inlong", InlongPrinterAgent_VERSION,
+                     "Inlong printer communication protocol agent"};
 }
 
 // ============================================================================

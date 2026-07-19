@@ -72,6 +72,25 @@ struct FilamentBaseInfo
     bool is_support{ false };
     bool is_system{ true };
     int  filament_printable = 3;
+
+    // filament_extruder_compatibility packs one compatibility level per extruder into a single
+    // 32-bit int, 3 bits per extruder (up to 10 extruders). Levels: 0 = printable, 1 = error,
+    // 2 = critical warning, 3 = warning (4-7 reserved). extruder_id is 0-based.
+    int get_extruder_compatibility(int extruder_id) const {
+        constexpr int bits_per_extruder  = 3;
+        constexpr int extruder_mask      = (1 << bits_per_extruder) - 1; // 0x7
+        constexpr int max_extruder_count = 32 / bits_per_extruder;       // 10
+
+        if (extruder_id < 0 || extruder_id >= max_extruder_count)
+            return 0;
+        return (m_filament_extruder_compatibility >> (bits_per_extruder * extruder_id)) & extruder_mask;
+    }
+
+    void set_filament_extruder_compatibility(int value) { m_filament_extruder_compatibility = value; }
+    int  get_filament_extruder_compatibility() const    { return m_filament_extruder_compatibility; }
+
+private:
+    int  m_filament_extruder_compatibility = 0;
 };
 
 enum BundleType{
@@ -80,10 +99,10 @@ enum BundleType{
     Subscribed,
 };
 
-// Inlong: Bundle metadata structure for imported preset bundles
+// Orca: Bundle metadata structure for imported preset bundles
 struct BundleMetadata
 {
-    std::string                     id;         // Bundle ID: UUID (InlongCloud) or name+timestamp (external)
+    std::string                     id;         // Bundle ID: UUID (OrcaCloud) or name+timestamp (external)
     std::string                     name;       // Display name
     std::string                     version;    // Bundle version
     std::string                     description;
@@ -111,8 +130,8 @@ struct BundleMetadata
 
 struct PresetBundleMetadata
 {
-    // To make sure write locks take precedent, pausereads needs to be true for when Inlong needs to read or manipulate the container
-    // We only need to explicitly pause reads when entering a region in Inlong which we deem necessary to quickly acquire write locks.
+    // To make sure write locks take precedent, pausereads needs to be true for when Orca needs to read or manipulate the container
+    // We only need to explicitly pause reads when entering a region in Orca which we deem necessary to quickly acquire write locks.
     std::unordered_map<std::string, BundleMetadata> m_bundles;
     std::shared_mutex RWMtx;
     std::atomic<bool> pauseReads{false};
@@ -156,9 +175,10 @@ public:
                                                     const DynamicPrintConfig       &project_config,
                                                     std::vector<Preset>            &in_filament_presets,
                                                     bool                            apply_extruder,
-                                                    std::optional<std::vector<int>> filament_maps_new);
+                                                    std::optional<std::vector<int>> filament_maps_new,
+                                                    std::optional<std::vector<int>> filament_volume_maps_new = std::nullopt);
 
-    // INLONG: utility function to find the vendor for a given preset name
+    // ORCA: utility function to find the vendor for a given preset name
     static std::string find_preset_vendor(const std::string& preset_name, Preset::Type type);
 
     PresetBundle();
@@ -193,7 +213,7 @@ public:
     // BBS Load user presets
     PresetsConfigSubstitutions load_user_presets(std::string user, ForwardCompatibilitySubstitutionRule rule);
     PresetsConfigSubstitutions load_user_presets(AppConfig &config, std::map<std::string, std::map<std::string, std::string>>& my_presets, ForwardCompatibilitySubstitutionRule rule);
-    // Inlong: Import subscribed bundle presets (load and save to disk in one operation), handles one bundle at a time
+    // Orca: Import subscribed bundle presets (load and save to disk in one operation), handles one bundle at a time
     PresetsConfigSubstitutions update_subscribed_presets(AppConfig& config,
                                                          const std::map<std::string, std::map<std::string, std::string>>& bundle_presets,
                                                          const BundleMetadata& remote_metadata,
@@ -254,7 +274,7 @@ public:
 
     std::optional<FilamentBaseInfo> get_filament_by_filament_id(const std::string& filament_id, const std::string& printer_name = std::string()) const;
 
-    // Inlong: get vendor type
+    // Orca: get vendor type
     VendorType get_current_vendor_type();
     // Vendor related handy functions
     bool is_bbl_vendor() { return get_current_vendor_type() == VendorType::Marlin_BBL; }
@@ -292,7 +312,7 @@ public:
     void reset_default_nozzle_volume_type();
 
     std::vector<int> get_used_tpu_filaments(const std::vector<int> &used_filaments);
-    // Inlong: update selected filament and print
+    // Orca: update selected filament and print
     void           update_selections(AppConfig &config);
     void set_calibrate_printer(std::string name);
 
@@ -341,11 +361,11 @@ public:
     // and the system profiles will point to the VendorProfile instances owned by PresetBundle::vendors.
     VendorMap                   vendors;
 
-    // Inlong: for InlongFilamentLibrary
+    // Orca: for InlongFilamentLibrary
     std::map<std::string, DynamicPrintConfig> m_config_maps;
     std::map<std::string, std::string> m_filament_id_maps;
 
-    // Inlong: Bundle metadata and cached preset names
+    // Orca: Bundle metadata and cached preset names
     // std::map<std::string, BundleMetadata>  m_bundles;
     fs::path dir_user_presets_local;
     fs::path dir_user_presets_subscribed;
@@ -364,15 +384,24 @@ public:
     bool                        has_defauls_only() const
         { return prints.has_defaults_only() && filaments.has_defaults_only() && printers.has_defaults_only(); }
 
-    DynamicPrintConfig          full_config(bool apply_extruder = true, std::optional<std::vector<int>>filament_maps = std::nullopt) const;
+    DynamicPrintConfig          full_config(bool apply_extruder = true, std::optional<std::vector<int>>filament_maps = std::nullopt, std::optional<std::vector<int>> filament_volume_maps = std::nullopt) const;
     // full_config() with the some "useless" config removed.
     DynamicPrintConfig          full_config_secure(std::optional<std::vector<int>>filament_maps = std::nullopt) const;
 
+    // Default per-filament nozzle-volume types: each filament inherits the volume type of the
+    // extruder it maps to (1-based f_maps), Standard when unknown.
+    std::vector<int> get_default_nozzle_volume_types_for_filaments(std::vector<int>& f_maps);
+
+    // Per-extruder flush matrix [extruder_id][from_filament][to_filament] in mm^3, optionally scaled
+    // by the per-extruder flush_multiplier (or flush_multiplier_fast when prime_volume_mode==Fast).
+    // Used by the print-dispatch nozzle-mapping flush-weight estimate.
+    std::vector<std::vector<std::vector<float>>> get_full_flush_matrix(bool with_multiplier = true) const;
+
     //BBS: add some functions for multiple extruders
     int get_printer_extruder_count() const;
-    bool support_different_extruders();
+    bool support_different_extruders() const;
 
-    // Inlong: Ensure filament_presets has at least one slot per nozzle on FFF printers.
+    // Orca: Ensure filament_presets has at least one slot per nozzle on FFF printers.
     // Called from (load|update)_selections before the parallel project_config arrays
     // (filament_colour/colour_type/map) are sized off filament_presets.size(), so a
     // short saved filament list doesn't truncate the loaded colors.
@@ -414,7 +443,7 @@ public:
     // Don't do any config substitutions when loading a system profile, perform and report substitutions otherwise.
     /*std::pair<PresetsConfigSubstitutions, size_t> load_configbundle(
         const std::string &path, LoadConfigBundleAttributes flags, ForwardCompatibilitySubstitutionRule compatibility_rule);*/
-    //Inlong: load config bundle from json, pass the base bundle to support cross vendor inheritance
+    //Orca: load config bundle from json, pass the base bundle to support cross vendor inheritance
     std::pair<PresetsConfigSubstitutions, size_t> load_vendor_configs_from_json(
         const std::string &path, const std::string &vendor_name, LoadConfigBundleAttributes flags, ForwardCompatibilitySubstitutionRule compatibility_rule, const PresetBundle* base_bundle = nullptr);
 
@@ -470,7 +499,7 @@ public:
     std::pair<PresetsConfigSubstitutions, std::string> load_system_filaments_json(ForwardCompatibilitySubstitutionRule compatibility_rule);
     VendorProfile                                      get_custom_vendor_models() const;
 
-    // Inlong: add 'custom' as default
+    // Inlong: add 'custom' as default.
     static const char *INLONG_DEFAULT_BUNDLE;
 	static const char *INLONG_DEFAULT_PRINTER_MODEL;
 	static const char *INLONG_DEFAULT_PRINTER_VARIANT;
@@ -485,15 +514,15 @@ public:
         return      { Preset::TYPE_PRINTER, Preset::TYPE_SLA_PRINT, Preset::TYPE_SLA_MATERIAL };
     }
 
-    // Inlong: for validation only. The duplicate filament subtype check is opt-in for now.
+    // Orca: for validation only.
     bool has_errors(bool check_duplicate_filament_subtypes = false) const;
 
-    // Inlong: for validation only. Flag any system preset whose inherits / compatible_printers /
+    // Orca: for validation only. Flag any system preset whose inherits / compatible_printers /
     // compatible_prints references a deleted (unknown) or renamed (old) preset name.
     bool check_preset_references() const;
 
 private:
-    // Inlong: validation only - flag any printer with two or more compatible
+    // Orca: validation only - flag any printer with two or more compatible
     // filament presets sharing one filament_id (ambiguous AMS subtype match).
     bool check_duplicate_filament_subtypes() const;
 
@@ -519,10 +548,10 @@ private:
     /*ConfigSubstitutions         load_config_file_config_bundle(
         const std::string &path, const boost::property_tree::ptree &tree, ForwardCompatibilitySubstitutionRule compatibility_rule);*/
 
-    DynamicPrintConfig          full_fff_config(bool apply_extruder, std::optional<std::vector<int>> filament_maps=std::nullopt) const;
+    DynamicPrintConfig          full_fff_config(bool apply_extruder, std::optional<std::vector<int>> filament_maps=std::nullopt, std::optional<std::vector<int>> filament_volume_maps=std::nullopt) const;
     DynamicPrintConfig          full_sla_config() const;
 
-    // Inlong: used for validation only
+    // Orca: used for validation only
     bool validation_mode = false;
     std::string vendor_to_validate = "";
     int m_errors = 0;

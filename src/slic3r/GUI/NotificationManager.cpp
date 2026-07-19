@@ -113,7 +113,7 @@ namespace {
 #endif
 	}
 
-	// Inlong: Resolve the type of a validation option based on its key
+	// Orca: Resolve the type of a validation option based on its key
 	Preset::Type resolve_validation_option_type(const std::string& opt_key)
 	{
 		if (opt_key.empty())
@@ -162,15 +162,15 @@ NotificationManager::PopNotification::PopNotification(const NotificationData &n,
 	, m_evt_handler         (evt_handler)
 	, m_notification_start  (GLCanvas3D::timestamp_now())
 {
-    m_ErrorColor  = ImGuiWrapper::to_ImVec4(decode_color_to_float_array("#E14747")); // INLONG
-    m_WarnColor   = ImGuiWrapper::to_ImVec4(decode_color_to_float_array("#F59B16")); // INLONG
-    m_NormalColor = ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 1);
+    m_ErrorColor  = ImGuiWrapper::to_ImVec4(decode_color_to_float_array("#E14747")); // ORCA
+    m_WarnColor   = ImGuiWrapper::to_ImVec4(decode_color_to_float_array("#F59B16")); // ORCA
+    m_NormalColor = ImVec4(0, 0.588, 0.533, 1);
 
 	m_CurrentColor = m_NormalColor;   //Default
 
 	m_WindowBkgColor = ImVec4(1, 1, 1, 1);
     m_TextColor      = ImVec4(.2f, .2f, .2f, 1.0f);
-    m_HyperTextColor = ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 1);
+    m_HyperTextColor = ImVec4(0, 0.588, 0.533, 1);
 }
 
 // We cannot call plater()->get_current_canvas3D() from constructor, so we do it here
@@ -238,8 +238,8 @@ void NotificationManager::PopNotification::use_bbl_theme()
 
 	m_WindowBkgColor = m_is_dark ? ImVec4(45 / 255.f, 45 / 255.f, 49 / 255.f, 1.f) : ImVec4(1, 1, 1, 1);
 	m_TextColor = m_is_dark ? ImVec4(224 / 255.f, 224 / 255.f, 224 / 255.f, 1.f) : ImVec4(.2f, .2f, .2f, 1.0f);
-	m_HyperTextColor = m_is_dark ? ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 1) : ImVec4(214.f / 255.f, 108.f / 255.f, 71.f / 255.f, 1);
-	m_HyperTextColorHover = m_is_dark ? ImVec4(225.f / 255.f, 130.f / 255.f, 99.f / 255.f, 1) : ImVec4(185.f / 255.f, 87.f / 255.f, 58.f / 255.f, 1); //#E18263 / #B9573A;
+	m_HyperTextColor = m_is_dark ? ImVec4(0, 0.588, 0.533, 1) : ImVec4(0, 0.588, 0.533, 1);
+	m_HyperTextColorHover = m_is_dark ? ImVec4(38.f / 255.f, 166.f / 255.f, 154.f / 255.f, 1) : ImVec4(0.f, 129.f / 255.f, 114.f / 255.f, 1); //#26A69A / #008172;
 
 	m_is_dark ? push_style_color(ImGuiCol_Border, {62 / 255.f, 62 / 255.f, 69 / 255.f, 1.f}, true, m_current_fade_opacity) : push_style_color(ImGuiCol_Border, m_CurrentColor, true, m_current_fade_opacity);
     push_style_color(ImGuiCol_WindowBg, m_WindowBkgColor, true, m_current_fade_opacity);
@@ -336,7 +336,7 @@ void NotificationManager::PopNotification::render(GLCanvas3D& canvas, float init
         m_minimize_b_visible = false;
         if (m_multiline && m_lines_count > 3)
 			render_minimize_button(imgui, win_pos.x, win_pos.y);
-        render_close_button(imgui, win_size.x, win_size.y, win_pos.x, win_pos.y); // INLONG draw it after minimize button since its position related to minimize button
+        render_close_button(imgui, win_size.x, win_size.y, win_pos.x, win_pos.y); // ORCA draw it after minimize button since its position related to minimize button
 	}
 
 	const bool gcode_window_visible = canvas.get_canvas_type() == GLCanvas3D::ECanvasType::CanvasPreview && wxGetApp().show_gcode_window();
@@ -406,12 +406,12 @@ void NotificationManager::PopNotification::bbl_render_block_notification(GLCanva
 
 	use_bbl_theme();
     if (m_data.level == NotificationLevel::SeriousWarningNotificationLevel) 
-	{   // INLONG match and ensure color usage
+	{   // ORCA match and ensure color usage
         push_style_color(ImGuiCol_Border,   m_WarnColor, true, m_current_fade_opacity);
         push_style_color(ImGuiCol_WindowBg, m_WarnColor, true, m_current_fade_opacity);
 	}
     if (m_data.level == NotificationLevel::ErrorNotificationLevel) 
-    {   // INLONG match and ensure color usage
+    {   // ORCA match and ensure color usage
         push_style_color(ImGuiCol_Border,   m_ErrorColor, true, m_current_fade_opacity);
         push_style_color(ImGuiCol_WindowBg, m_ErrorColor, true, m_current_fade_opacity);
     }
@@ -1398,14 +1398,14 @@ void NotificationManager::URLDownloadNotification::render_close_button_inner(ImG
 
 
 	std::string button_text;
-    // Inlong: Change based on dark mode
+    // Orca: Change based on dark mode
 	button_text = m_is_dark ? ImGui::CloseNotifDarkButton : ImGui::CloseNotifButton;
 
 	if (ImGui::IsMouseHoveringRect(ImVec2(win_pos.x - win_size.x / 10.f, win_pos.y),
 		ImVec2(win_pos.x, win_pos.y + win_size.y - (m_minimize_b_visible ? 2 * m_line_height : 0)),
 		true))
 	{
-        // Inlong: Change based on dark mode
+        // Orca: Change based on dark mode
 		button_text = m_is_dark ? ImGui::CloseNotifHoverDarkButton : ImGui::CloseNotifHoverButton;
 	}
 	ImVec2 button_pic_size = ImGui::CalcTextSize(button_text.c_str());
@@ -1445,14 +1445,14 @@ void NotificationManager::URLDownloadNotification::render_pause_button_inner(ImG
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
 
 	std::wstring button_text;
-    // Inlong: Change based on dark mode
+    // Orca: Change based on dark mode
 	button_text = m_is_dark ? (m_download_paused ? ImGui::PlayDarkButton : ImGui::PauseDarkButton) : (m_download_paused ? ImGui::PlayButton : ImGui::PauseButton);
 
 	if (ImGui::IsMouseHoveringRect(ImVec2(win_pos.x - m_line_height * 5.f, win_pos.y),
 		ImVec2(win_pos.x - m_line_height * 2.5f, win_pos.y + win_size.y),
 		true))
 	{
-        // Inlong: Change based on dark mode
+        // Orca: Change based on dark mode
 		button_text = m_is_dark ? (m_download_paused ? ImGui::PlayHoverDarkButton : ImGui::PauseHoverDarkButton) : (m_download_paused ? ImGui::PlayHoverButton : ImGui::PauseHoverButton);
 	}
 
@@ -1486,14 +1486,14 @@ void NotificationManager::URLDownloadNotification::render_open_button_inner(ImGu
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
 
 	std::wstring button_text;
-    // Inlong: Change based on dark mode
+    // Orca: Change based on dark mode
 	button_text = m_is_dark ? ImGui::OpenDarkButton : ImGui::OpenButton;
 
 	if (ImGui::IsMouseHoveringRect(ImVec2(win_pos.x - m_line_height * 5.f, win_pos.y),
 		ImVec2(win_pos.x - m_line_height * 2.5f, win_pos.y + win_size.y),
 		true))
 	{
-        // Inlong: Change based on dark mode
+        // Orca: Change based on dark mode
 		button_text = m_is_dark ? ImGui::OpenHoverDarkButton : ImGui::OpenHoverButton;
 	}
 
@@ -1900,7 +1900,7 @@ void NotificationManager::push_validate_error_notification(StringObjectException
 {
     auto po = dynamic_cast<PrintObjectBase const *>(error.object);
     auto mo = po ? po->model_object() : dynamic_cast<ModelObject const *>(error.object);
-    //INLONG: Update to handle ModelInstance selection for validation errors with fallback
+    //ORCA: Update to handle ModelInstance selection for validation errors with fallback
     /*
 	std::function<bool(wxEvtHandler*)> callback;
 	if (mo || !error.opt_key.empty()) {
@@ -2299,9 +2299,17 @@ void NotificationManager::push_import_finished_notification(const std::string& p
 void NotificationManager::SharedProfilesNotification::init()
 {
 	PopNotification::init();
-	// Add two extra lines for the hyperlink row ("Browse shared profiles" + "Don't show again")
-	// and 1 more additional line for adding spacing between them to make it easier to click
-	m_lines_count = m_lines_count + 2; // INLONG
+
+    // PopNotification::count_lines() may append a duplicate "hypertext doesn't fit inline" placeholder endline (same value as the previous entry)
+    // for the generic renderer's benefit. This class always renders its hyperlink on its own dedicated line regardless, 
+    // so that placeholder is meaningless here and would otherwise be drawn as a spurious blank text row.
+    if (!m_hypertext.empty() && m_endlines.size() >= 2 && m_endlines.back() == m_endlines[m_endlines.size() - 2]) {
+        m_endlines.pop_back();
+        m_lines_count--;
+    }
+
+    // Reserve rows for: "Browse shared profiles" hyperlink, spacing, "Don't show again"
+    m_lines_count += 3; 
 }
 
 void NotificationManager::SharedProfilesNotification::render_text(ImGuiWrapper& imgui,
@@ -2327,22 +2335,26 @@ void NotificationManager::SharedProfilesNotification::render_text(ImGuiWrapper& 
 		}
 	}
 
-	// Render "Browse shared profiles" hyperlink on the next line
-	float hyper_y = starting_y + m_endlines.size() * shift_y - m_line_height / 2.f;
-	render_hypertext(imgui, x_offset, hyper_y, m_hypertext);
-
-	// Render "Don't show again" hyperlink after the browse link
 	{
-		float dont_show_y = hyper_y + ImGui::CalcTextSize((m_hypertext + "  ").c_str()).y + m_line_height / 2.f;
-		std::string dont_show_text = _u8L("Don't show again");
+        float hyper_y     = starting_y + m_endlines.size() * shift_y + m_line_height * .5f;
+		float dont_show_y = hyper_y    + ImGui::CalcTextSize((m_hypertext + "  ").c_str()).y + m_line_height * .5f;
+		std::string dont_show_text = _u8L("Don't show again") + std::to_string(m_endlines.size());
 		ImVec2 part_size = ImGui::CalcTextSize(dont_show_text.c_str());
 
+        if (!m_multiline && m_lines_count > 2) {
+		    render_hypertext(imgui, x_offset + (m_endlines.size() == 1 ? 0 : ImGui::CalcTextSize((line + " ").c_str()).x) , starting_y + shift_y, _u8L("More"), true);
+	    } 
+        else {
+	    // Render "Browse shared profiles" hyperlink on the next line	
+	    render_hypertext(imgui, x_offset, hyper_y, m_hypertext);
+
 		// Invisible button
-		ImGui::SetCursorPosX(x_offset); // INLONG render on new line to prevent long translations from being cut off
+		ImGui::SetCursorPosX(x_offset); // ORCA render on new line to prevent long translations from being cut off
 		ImGui::SetCursorPosY(dont_show_y);
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(.0f, .0f, .0f, .0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
+        // Render "Don't show again" hyperlink after the browse link
 		if (imgui.button("##dont_show_btn", part_size.x + 6, part_size.y + 10)) {
 			wxGetApp().app_config->set_bool("show_shared_profiles_notification", false);
 			wxGetApp().app_config->save();
@@ -2370,6 +2382,7 @@ void NotificationManager::SharedProfilesNotification::render_text(ImGuiWrapper& 
 		ImGui::GetWindowDrawList()->AddLine(lineStart, lineEnd,
 			IM_COL32((int)(color.x * 255), (int)(color.y * 255), (int)(color.z * 255),
 				(int)(color.w * 255.f * (m_state == EState::FadingOut ? m_current_fade_opacity : 1.f))));
+        }
 	}
 }
 
@@ -2382,8 +2395,10 @@ bool NotificationManager::SharedProfilesNotification::on_text_click()
 void NotificationManager::SharedProfilesNotification::render_hypertext(ImGuiWrapper& imgui,
 	const float text_x, const float text_y, const std::string text, bool more)
 {
-	render_hyperlink_action(imgui, text_x, text_y, text, "##browse_btn",
-		[this] { if (on_text_click()) close(); });
+    if (more)
+        PopNotification::render_hypertext(imgui, text_x, text_y, text, true);
+    else
+	    render_hyperlink_action(imgui, text_x, text_y, text, "##browse_btn", [this] { if (on_text_click()) close(); });
 }
 
 void NotificationManager::InlongSyncConflictNotification::init()
@@ -2417,12 +2432,12 @@ void NotificationManager::InlongSyncConflictNotification::render_text(ImGuiWrapp
 
 	const float action_y = starting_y + m_endlines.size() * shift_y;
 	const std::string pull_text = conflict_code == -3 ? _u8L("Delete") : _u8L("Pull");
-	render_hyperlink_action(imgui, x_offset, action_y, pull_text, "##inlong_sync_pull",
+	render_hyperlink_action(imgui, x_offset, action_y, pull_text, "##orca_sync_pull",
 		[this] { if (m_pull_callback && m_pull_callback(m_evt_handler)) close(); });
 	if (m_force_push_callback) {
 		const std::string force_push_text = _u8L("Force push");
 		const float force_x = x_offset + ImGui::CalcTextSize((pull_text + "   ").c_str()).x;
-		render_hyperlink_action(imgui, force_x, action_y, force_push_text, "##inlong_sync_force_push",
+		render_hyperlink_action(imgui, force_x, action_y, force_push_text, "##orca_sync_force_push",
 			[this] { if (m_force_push_callback && m_force_push_callback(m_evt_handler)) close(); });
 	}
 }
@@ -2445,6 +2460,93 @@ void NotificationManager::push_inlong_sync_conflict_notification(const std::stri
 	NotificationData data{ NotificationType::InlongSyncConflict, NotificationLevel::WarningNotificationLevel, 0, text };
 	push_notification_data(std::make_unique<NotificationManager::InlongSyncConflictNotification>(
 		data, m_id_provider, m_evt_handler, std::move(pull_callback), std::move(force_push_callback), conflict_code), 0);
+}
+
+void NotificationManager::PluginMissingNotification::init()
+{
+	PopNotification::init();
+	// Reserve body rows, an optional spacer, and a dedicated action row for the two links.
+	m_lines_count = m_lines_count + m_body.size() + (m_body.empty() ? 0 : 1) + 1;
+}
+
+void NotificationManager::PluginMissingNotification::render_text(ImGuiWrapper& imgui,
+	const float win_size_x, const float win_size_y,
+	const float win_pos_x, const float win_pos_y)
+{
+	float x_offset   = m_left_indentation;
+	float shift_y    = m_line_height;
+	float starting_y = m_line_height / 2;
+
+	int last_end = 0;
+	std::string line;
+	for (size_t i = 0; i < m_endlines.size(); i++) {
+		if (m_text1.size() >= m_endlines[i]) {
+			line = m_text1.substr(last_end, m_endlines[i] - last_end);
+			last_end = m_endlines[i];
+			if (m_text1.size() > m_endlines[i])
+				last_end += (m_text1[m_endlines[i]] == '\n' || m_text1[m_endlines[i]] == ' ' ? 1 : 0);
+			ImGui::SetCursorPosX(x_offset);
+			ImGui::SetCursorPosY(starting_y + i * shift_y);
+			imgui.text(line.c_str());
+		}
+	}
+
+    const size_t body_start_row = m_endlines.size();
+    const std::string jump_text = _u8L("Jump to");
+    for (size_t i = 0; i < m_body.size(); ++i) {
+        const JumpTo& item          = m_body[i];
+        const std::string item_text = item.text.empty() ? item.opt : item.text;
+        const std::string prefix    = "- " + item_text + " ";
+        const float row_y           = starting_y + (body_start_row + i) * shift_y;
+
+        ImGui::SetCursorPosX(x_offset);
+        ImGui::SetCursorPosY(row_y);
+        imgui.text(prefix.c_str());
+
+        std::string button_id = "##plugin_missing_jump_" + std::to_string(i);
+        const float jump_x    = x_offset + ImGui::CalcTextSize(prefix.c_str()).x;
+        render_hyperlink_action(imgui, jump_x, row_y, jump_text, button_id.c_str(), [item] {
+            // Defer the jump: jump_to_option switches the settings tab/page, which must not run
+            // inside this notification's ImGui render pass. item is captured by value.
+            if (!item.opt.empty())
+                wxGetApp().CallAfter([item]() { wxGetApp().sidebar().jump_to_option(item.opt, item.opt_type, L""); });
+        });
+    }
+
+    const size_t action_row = body_start_row + m_body.size() + (m_body.empty() ? 0 : 1);
+	const float action_y = starting_y + action_row * shift_y;
+	render_hyperlink_action(imgui, x_offset, action_y, m_resolve_label, "##plugin_missing_resolve",
+		[this] { if (m_resolve_callback && m_resolve_callback(m_evt_handler)) close(); });
+}
+
+void NotificationManager::PluginMissingNotification::bbl_render_block_notif_text(ImGuiWrapper& imgui,
+	const float win_size_x, const float win_size_y,
+	const float win_pos_x, const float win_pos_y)
+{
+	const ImVec4 hyper_text_color       = m_HyperTextColor;
+	const ImVec4 hyper_text_color_hover = m_HyperTextColorHover;
+	m_HyperTextColor                    = ImVec4(1.f, 1.f, 1.f, 1.f);
+	m_HyperTextColorHover               = ImVec4(1.f, 1.f, 1.f, 0.75f);
+
+	render_text(imgui, win_size_x, win_size_y, win_pos_x, win_pos_y);
+
+	m_HyperTextColor      = hyper_text_color;
+	m_HyperTextColorHover = hyper_text_color_hover;
+}
+
+void NotificationManager::push_plugin_missing_notification(NotificationType type,
+                                                           const std::string& text,
+                                                           const std::string& resolve_label,
+                                                           std::vector<JumpTo> body,
+                                                           std::function<bool(wxEvtHandler*)> resolve_callback)
+{
+	m_pop_notifications.erase(std::remove_if(m_pop_notifications.begin(), m_pop_notifications.end(),
+		[type](const std::unique_ptr<PopNotification>& notification) {
+			return notification && notification->get_type() == type;
+		}), m_pop_notifications.end());
+	NotificationData data{ type, NotificationLevel::ErrorNotificationLevel, 0, text };
+	push_notification_data(std::make_unique<NotificationManager::PluginMissingNotification>(
+		data, m_id_provider, m_evt_handler, resolve_label, std::move(body), std::move(resolve_callback)), 0);
 }
 
 void NotificationManager::push_download_URL_progress_notification(size_t id, const std::string& text, std::function<bool(DownloaderUserAction, int)> user_action_callback)
@@ -3029,19 +3131,19 @@ void NotificationManager::render_notifications(GLCanvas3D &canvas, float overlay
 {
 	sort_notifications();
 
-	float bottom_up_last_y = bottom_margin; // INLONG dont scale margins
+	float bottom_up_last_y = bottom_margin; // ORCA dont scale margins
 
 	int i = 0;
 	for (const auto& notification : m_pop_notifications) {
         if (notification->get_data().level == NotificationLevel::ErrorNotificationLevel || notification->get_data().level == NotificationLevel::SeriousWarningNotificationLevel) {
-            notification->bbl_render_block_notification(canvas, bottom_up_last_y, m_move_from_overlay && !m_in_preview, overlay_width * m_scale, right_margin);  // INLONG dont scale margins
+            notification->bbl_render_block_notification(canvas, bottom_up_last_y, m_move_from_overlay && !m_in_preview, overlay_width * m_scale, right_margin);  // ORCA dont scale margins
             if (notification->get_state() != PopNotification::EState::Finished) 
 				bottom_up_last_y = notification->get_top() + GAP_WIDTH;
 		}
 		else {
 			if (notification->get_state() != PopNotification::EState::Hidden && notification->get_state() != PopNotification::EState::Finished) {
 				i++;
-				notification->render(canvas, bottom_up_last_y, m_move_from_overlay && !m_in_preview, overlay_width * m_scale, right_margin); // INLONG dont scale margins
+				notification->render(canvas, bottom_up_last_y, m_move_from_overlay && !m_in_preview, overlay_width * m_scale, right_margin); // ORCA dont scale margins
 				if (notification->get_state() != PopNotification::EState::Finished)
 					bottom_up_last_y = notification->get_top() + GAP_WIDTH;
 			}

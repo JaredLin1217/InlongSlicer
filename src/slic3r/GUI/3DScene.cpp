@@ -495,7 +495,29 @@ void GLVolume::render_with_outline(const GUI::Size& cnv_size)
         simple_render(shader, model_objects, colors);
         return;
     }
-
+    // 0th. render pass, render the model using stencil buffer
+    glsafe(::glEnable(GL_STENCIL_TEST));
+    glsafe(::glStencilMask(0xFF));
+    glsafe(::glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE));
+    glsafe(::glClearStencil(0));
+    glsafe(::glClear(GL_STENCIL_BUFFER_BIT));
+    glsafe(::glStencilFunc(GL_ALWAYS, 0xFF, 0xFF));
+    if (tverts_range == std::make_pair<size_t, size_t>(0, -1))
+        model.render(shader);
+    else
+        model.render(this->tverts_range, shader);
+    glsafe(::glStencilFunc(GL_NOTEQUAL, 0xFF, 0xFF));
+    glsafe(::glStencilMask(0x00));
+    shader->set_uniform("is_outline", true);
+    shader->set_uniform("screen_size", Vec2f{cnv_size.get_width(), cnv_size.get_height()});
+    if (tverts_range == std::make_pair<size_t, size_t>(0, -1))
+        model.render(shader);
+    else
+        model.render(this->tverts_range, shader);
+    shader->set_uniform("is_outline", false);
+    glsafe(::glStencilMask(0xFF));
+    glsafe(::glDisable(GL_STENCIL_TEST));
+    // render the outline using depth buffer and discard the pixels that are not on the outline
     // 1st. render pass, render the model into a separate render target that has only depth buffer
     GLuint depth_fbo   = 0;
     GLuint depth_tex = 0;
@@ -706,18 +728,18 @@ void GLWipeTowerVolume::render()
         }
         this->model_per_colors[i].render();
     }
-
+    
     if (this->is_left_handed())
         glFrontFace(GL_CCW);
 }
 
-bool GLWipeTowerVolume::IsTransparent() {
+bool GLWipeTowerVolume::IsTransparent() { 
     for (size_t i = 0; i < m_colors.size(); i++) {
-        if (m_colors[i].is_transparent()) {
+        if (m_colors[i].is_transparent()) { 
             return true;
         }
     }
-    return false;
+    return false; 
 }
 
 std::vector<int> GLVolumeCollection::load_object(
@@ -759,11 +781,7 @@ int GLVolumeCollection::load_object_volume(
     v.set_color(color_from_model_volume(*model_volume));
     v.name = model_volume->name;
 
-#if ENABLE_SMOOTH_NORMALS
-    v.model.init_from(mesh, true);
-#else
     v.model.init_from(*mesh);
-#endif // ENABLE_SMOOTH_NORMALS
     if (need_raycaster) { v.mesh_raycaster = std::make_unique<GUI::MeshRaycaster>(mesh); }
     v.composite_id = GLVolume::CompositeID(obj_idx, volume_idx, instance_idx);
 
@@ -856,7 +874,7 @@ int GLVolumeCollection::load_wipe_tower_preview(
             colors.push_back(extruder_colors[0]);
     }
 
-    // Inlong: make it transparent
+    // Orca: make it transparent
     for(auto& color : colors)
         color.a(0.66f);
     volumes.emplace_back(new GLWipeTowerVolume(colors));
@@ -946,10 +964,10 @@ GLVolumeWithIdAndZList volumes_to_render(const GLVolumePtrs& volumes, GLVolumeCo
         GLVolume* volume = volumes[i];
         bool is_transparent = volume->render_color.is_transparent();
         auto tempGlwipeTowerVolume = dynamic_cast<GLWipeTowerVolume *>(volume);
-        if (tempGlwipeTowerVolume) {
+        if (tempGlwipeTowerVolume) { 
             is_transparent = tempGlwipeTowerVolume->IsTransparent();
         }
-        if (((type == GLVolumeCollection::ERenderType::Opaque && !is_transparent) ||
+        if (((type == GLVolumeCollection::ERenderType::Opaque && !is_transparent) || 
             (type == GLVolumeCollection::ERenderType::Transparent && is_transparent) ||
              type == GLVolumeCollection::ERenderType::All) &&
             (! filter_func || filter_func(*volume)))
@@ -999,7 +1017,7 @@ float GLVolumeCollection::get_selection_support_normal_z() const
         const size_t wall_extruder_idx   = (wall_filament_id > 0 && wall_filament_id <= static_cast<int>(nozzle_count))
             ? static_cast<size_t>(wall_filament_id - 1)
             : 0; // Invalid extruder index falls back to extruder 1.
-
+        
         // Use wall extruder's nozzle diameter for better estimation of external perimeter width,
         // which is more relevant to overhang printing than the default nozzle diameter.
         const double nozzle_diameter = nozzle_diameter_opt->values[wall_extruder_idx];
@@ -1028,7 +1046,8 @@ void GLVolumeCollection::render(GLVolumeCollection::ERenderType       type,
                                 const Transform3d&                    projection_matrix,
                                 const GUI::Size&                      cnv_size,
                                 std::function<bool(const GLVolume &)> filter_func,
-                                bool                                  partly_inside_enable) const
+                                bool                                  partly_inside_enable,
+                                std::vector<double> *                 printable_heights) const
 {
     GLVolumeWithIdAndZList to_render = volumes_to_render(volumes, type, view_matrix, filter_func);
     if (to_render.empty())
@@ -1111,6 +1130,23 @@ void GLVolumeCollection::render(GLVolumeCollection::ERenderType       type,
         else {
             //use -1 ad a invalid type
             shader->set_uniform("print_volume.type", -1);
+        }
+
+        // Per-extruder printable-height shading. The flag is set to
+        // 2.0 only for multi-extruder printers (two per-extruder heights); otherwise it is forced to 0.0
+        // on every render so no stale flag survives a multi->single-extruder plate switch, keeping the
+        // shared gouraud shader pixel-identical for single-extruder printers. When active the height
+        // branch reads print_volume.xy_data (the bed rect), so set it explicitly here.
+        std::array<float, 3> extruder_printable_heights = {0.0f, 0.0f, 0.0f};
+        if (printable_heights != nullptr && printable_heights->size() > 1) {
+            extruder_printable_heights[0] = 2.0f;
+            extruder_printable_heights[1] = static_cast<float>((*printable_heights)[0]);
+            extruder_printable_heights[2] = static_cast<float>((*printable_heights)[1]);
+            shader->set_uniform("extruder_printable_heights", extruder_printable_heights);
+            shader->set_uniform("print_volume.xy_data", m_print_volume.data);
+        }
+        else {
+            shader->set_uniform("extruder_printable_heights", extruder_printable_heights);
         }
 
         shader->set_uniform("volume_world_matrix", volume.first->world_matrix());
@@ -1499,7 +1535,7 @@ void GLVolumeCollection::reset_outside_state()
 
 void GLVolumeCollection::update_colors_by_extruder(const DynamicPrintConfig *config, bool is_update_alpha)
 {
-
+    
     using ColorItem = std::pair<std::string, ColorRGBA>;
     std::vector<ColorItem> colors;
 
@@ -1721,7 +1757,7 @@ static void thick_lines_to_geometry(
             // Share left / right vertices if possible.
             const double v_dot = v_prev.dot(v);
             // To reduce gpu memory usage, we try to reuse vertices
-            // To reduce the visual artifacts, due to averaged normals, we allow to reuse vertices only when any of two adjacent edges
+            // To reduce the visual artifacts, due to averaged normals, we allow to reuse vertices only when any of two adjacent edges 
             // is longer than a fixed threshold.
             // The following value is arbitrary, it comes from tests made on a bunch of models showing the visual artifacts
             const double len_threshold = 2.5;
@@ -1959,7 +1995,7 @@ static void thick_lines_to_geometry(
             const bool is_right_turn = n_top_prev.dot(unit_v_prev.cross(unit_v)) > 0.0;
 
             // To reduce gpu memory usage, we try to reuse vertices
-            // To reduce the visual artifacts, due to averaged normals, we allow to reuse vertices only when any of two adjacent edges
+            // To reduce the visual artifacts, due to averaged normals, we allow to reuse vertices only when any of two adjacent edges 
             // is longer than a fixed threshold.
             // The following value is arbitrary, it comes from tests made on a bunch of models showing the visual artifacts
             const double len_threshold = 2.5;

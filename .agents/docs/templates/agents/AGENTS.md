@@ -1,4 +1,4 @@
-﻿# Project Operating Rules
+# Project Operating Rules
 Repo rules for deployable Agents workflow. Durable rules/docs/skills/templates are English-only. Read `.agents/docs/agents/ai-runtime.yaml`; expand only named canonical YAML.
 
 ## Prefix

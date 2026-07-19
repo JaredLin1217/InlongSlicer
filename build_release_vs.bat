@@ -27,6 +27,12 @@ for %%a in (%*) do (
     )
 )
 
+@REM Check for unit-tests option ("tests")
+set BUILD_TESTS=OFF
+for %%a in (%*) do (
+    if /I "%%a"=="tests" set BUILD_TESTS=ON
+)
+
 if "%USE_NINJA%"=="1" (
     echo Using Ninja Multi-Config generator
     set CMAKE_GENERATOR="Ninja Multi-Config"
@@ -161,10 +167,10 @@ echo Build target set to %BUILD_TARGET%
 echo on
 set CMAKE_POLICY_VERSION_MINIMUM=3.5
 if "%USE_NINJA%"=="1" (
-    cmake .. -G %CMAKE_GENERATOR% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake .. -G %CMAKE_GENERATOR% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DBUILD_TESTS=%BUILD_TESTS% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET%
 ) else (
-    cmake .. -G %CMAKE_GENERATOR% -A %arch% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake .. -G %CMAKE_GENERATOR% -A %arch% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DBUILD_TESTS=%BUILD_TESTS% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET% -- /m /nr:false
 )
 @echo off

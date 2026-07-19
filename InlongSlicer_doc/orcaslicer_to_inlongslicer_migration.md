@@ -1,7 +1,8 @@
 # OrcaSlicer To InlongSlicer Migration Record
 
 This file is the source of truth for keeping the fork fully Inlong branded after
-upstream OrcaSlicer 2.4.x changes are merged. Use it before and after every
+upstream OrcaSlicer changes are merged. InlongSlicer follows `upstream/main`
+for version and architecture. Use this record before and after every
 upstream sync, rebase, cherry-pick, profile refresh, packaging change, or asset
 update.
 
@@ -51,6 +52,14 @@ Do not remove these without an explicit product decision:
   - `api.orcaslicer.com`
   - `/orcaslicer-login`
   - `orca_state`
+- Upstream Python plugin ABI and discovery contracts introduced on the 2.5
+  development line, including `ORCA_PY_*`, `orca_version`,
+  `[tool.orcaslicer.plugin]`, `orca_plugins`, `orca_stubgen`, upstream example
+  scripts, and sandbox filenames. These remain compatible even though visible
+  UI labels use Inlong branding.
+- OrcaSlicer G-code producer detection, legacy Flatpak data-directory names,
+  the `orcaslicer://` deep-link protocol, and imported `.orca_printer`,
+  `.orca_bundle`, and `.orca_filament` package formats.
 - Third-party dependency download origins that still live under SoftFever or
   Orca dependency repositories, for example `Orca-deps-wxWidgets`,
   `OrcaSlicer_deps`, and `orca_deps`.

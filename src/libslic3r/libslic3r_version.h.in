@@ -8,6 +8,8 @@
 #define SLIC3R_APP_ID "@SLIC3R_APP_ID@"
 #define SLIC3R_VERSION "@SLIC3R_VERSION@"
 #define INLONGSLICER_VERSION "@INLONGSLICER_VERSION@"
+// Upstream source and plugin ABI still use the historical version macro.
+#define SoftFever_VERSION INLONGSLICER_VERSION
 #ifndef GIT_COMMIT_HASH
     #define GIT_COMMIT_HASH "0000000" // 0000000 means uninitialized
 #endif

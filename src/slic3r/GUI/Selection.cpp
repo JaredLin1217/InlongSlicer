@@ -519,7 +519,7 @@ void Selection::center()
     Vec3d distance = Vec3d(tar_pos.x() - src_pos.x(), tar_pos.y() - src_pos.y(), 0);
 
     this->move_to_center(distance);
-    wxGetApp().plater()->get_view3D_canvas3D()->do_move(L("Move Object"));
+    wxGetApp().plater()->get_view3D_canvas3D()->do_move(L("Move object"));
     return;
 }
 
@@ -529,7 +529,7 @@ void Selection::drop()
         return; // shouldnt happen, but better check anyways, already checked in append_menu_item_drop()
     }
 
-    wxGetApp().plater()->take_snapshot(L("Move Object"));
+    wxGetApp().plater()->take_snapshot(L("Move object"));
 
     this->move_to_center(Vec3d(0, 0, -this->get_bounding_box().min.z()));
 
@@ -566,7 +566,7 @@ void Selection::center_plate(const int plate_idx) {
     Vec3d distance = Vec3d(tar_pos.x() - src_pos.x(), tar_pos.y() - src_pos.y(), 0);
 
     this->move_to_center(distance);
-    wxGetApp().plater()->get_view3D_canvas3D()->do_move(L("Move Object"));
+    wxGetApp().plater()->get_view3D_canvas3D()->do_move(L("Move object"));
     return;
 }
 
@@ -760,6 +760,9 @@ void Selection::clear()
 #endif
 
     // #et_FIXME fake KillFocus from sidebar
+    // Skip on shutdown: Plater's pImpl is already freed, so plater()->canvas3D() would use-after-free.
+    if (wxGetApp().is_closing())
+        return;
     wxGetApp().plater()->canvas3D()->handle_sidebar_focus_event("", false);
 }
 

@@ -24,7 +24,7 @@
 #include "Jobs/BoostThreadWorker.hpp"
 #include "Jobs/PlaterWorker.hpp"
 
-#include "Widgets/HyperLink.hpp" // INLONG
+#include "Widgets/HyperLink.hpp" // ORCA
 
 #define DESIGN_INPUT_SIZE wxSize(FromDIP(100), -1)
 
@@ -38,7 +38,7 @@ DownloadProgressDialog::DownloadProgressDialog(wxString title)
     wxString install_failed_url = wxT("https://wiki.bambulab.com/en/software/bambu-studio/failed-to-get-network-plugin");
 
     wxString download_failed_msg = _L("Failed to download the plug-in. Please check your firewall settings and VPN software and retry.");
-    wxString install_failed_msg = wxString::Format(_L("Failed to install the plug-in. The plug-in file may be in use. Please restart %s and try again. Also check whether it is blocked or deleted by anti-virus software."), wxString(SLIC3R_APP_FULL_NAME));
+    wxString install_failed_msg = _L("Failed to install the plug-in. The plug-in file may be in use. Please restart InlongSlicer and try again. Also check whether it is blocked or has been deleted by anti-virus software.");
 
     SetBackgroundColour(*wxWHITE);
     wxBoxSizer *m_sizer_main = new wxBoxSizer(wxVERTICAL);
@@ -73,7 +73,7 @@ DownloadProgressDialog::DownloadProgressDialog(wxString title)
 
     sizer_download_failed->Add(m_statictext_download_failed, 0, wxALIGN_CENTER | wxALL, 5);
 
-    // INLONG standardized HyperLink
+    // ORCA standardized HyperLink
     auto m_download_hyperlink = new HyperLink(m_panel_download_failed, _L("Click here to see more info"), download_failed_url);
     sizer_download_failed->Add(m_download_hyperlink, 0, wxALIGN_CENTER | wxALL, 5);
 
@@ -95,7 +95,7 @@ DownloadProgressDialog::DownloadProgressDialog(wxString title)
 
     sizer_install_failed->Add(m_statictext_install_failed, 0, wxALIGN_CENTER | wxALL, 5);
 
-    // INLONG standardized HyperLink
+    // ORCA standardized HyperLink
     auto m_install_hyperlink = new HyperLink(m_panel_install_failed, _L("Click here to see more info"), install_failed_url);
     sizer_install_failed->Add(m_install_hyperlink, 0, wxALIGN_CENTER | wxALL, 5);
 

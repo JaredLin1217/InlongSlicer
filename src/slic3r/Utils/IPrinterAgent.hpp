@@ -16,10 +16,10 @@ class ICloudServiceAgent;
  * implementation, used for discovery and selection purposes.
  */
 struct AgentInfo {
-    std::string id;         ///< Unique identifier for the agent, e.g. "inlong", "bbl"
-    std::string name;       ///< Human-readable agent name, e.g. "Inlong", "Bambu Lab"
+    std::string id;         ///< Unique identifier for the agent, e.g. "orca", "bbl"
+    std::string name;       ///< Human-readable agent name, e.g. "Orca", "Bambu Lab"
     std::string version;    ///< Agent version string, e.g. "1.0.0"
-    std::string description; ///< Brief description of the agent's capabilities, e.g. "Inlong printer agent"
+    std::string description; ///< Brief description of the agent's capabilities, e.g. "Orca printer agent"
 };
 
 /**
@@ -48,6 +48,8 @@ enum class FilamentSyncMode {
  *
  * Implementations:
  * - InlongPrinterAgent: Stub implementation (printer ops not yet supported)
+ * - PrinterAgentPluginCapability: Python printer-agent plugin capability that
+ *   implements IPrinterAgent directly and is handed out as the live agent
  * - BBLPrinterAgent: Wrapper around Bambu Lab's proprietary DLL
  *
  * Token Access:
@@ -127,7 +129,7 @@ public:
     /**
      * Execute the multi-stage printer binding workflow.
      */
-    virtual int bind(std::string dev_ip, std::string dev_id, std::string sec_link, std::string timezone, bool improved, OnUpdateStatusFn update_fn) = 0;
+    virtual int bind(std::string dev_ip, std::string dev_id, std::string dev_model, std::string sec_link, std::string timezone, bool improved, OnUpdateStatusFn update_fn) = 0;
 
     /**
      * Remove the association between account and printer.
@@ -138,6 +140,12 @@ public:
      * Request a one-time bind ticket from the server.
      */
     virtual int request_bind_ticket(std::string* ticket) = 0;
+
+    /**
+     * Fetch the cloud snapshot image captured at a print failure.
+     * Returns 0 if the request was dispatched; the image body arrives via callback(body, http_status).
+     */
+    virtual int get_hms_snapshot(std::string dev_id, std::string file_name, std::function<void(std::string, int)> callback) = 0;
 
     /**
      * Register callback for fatal HTTP errors.

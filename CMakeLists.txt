@@ -125,6 +125,131 @@ option(SLIC3R_PCH               "Use precompiled headers" 1)
 option(SLIC3R_MSVC_COMPILE_PARALLEL "Compile on Visual Studio in parallel" 1)
 option(SLIC3R_MSVC_PDB          "Generate PDB files on MSVC in Release mode" 1)
 option(SLIC3R_ASAN              "Enable ASan on Clang and GCC" 0)
+
+# Python stubgen module
+option(ORCA_BUILD_PYTHON_STUBGEN_MODULE "Build importable Python module for pybind11-stubgen" ON)
+set(INLONG_BUNDLED_UV_EXECUTABLE "" CACHE FILEPATH "Path to a uv executable to bundle for Python package installation. Leave empty to auto-download.")
+
+# Auto-download uv if not provided by the user.
+# uv is pinned: the executable ships inside the signed app, so the build must
+# be reproducible and the download verified. To upgrade, bump INLONG_UV_VERSION
+# and refresh every hash below from the release's .sha256 assets, e.g.:
+#   curl -sL https://github.com/astral-sh/uv/releases/download/<ver>/uv-<triple>.tar.gz.sha256
+set(INLONG_UV_VERSION "0.11.21")
+set(INLONG_UV_SHA256_aarch64-apple-darwin      "1f921d491ba5ffeea774eb04d6681ecee379101341cbb1500394993b541bf3f4")
+set(INLONG_UV_SHA256_x86_64-apple-darwin       "f3c8e5708a84b920c18b691214d54d2b0da6b984789caae95d47c95120cb7765")
+set(INLONG_UV_SHA256_aarch64-unknown-linux-gnu "88e800834007cc5efd4675f166eb2a51e7e3ad19876d85fa8805a6fb5c922397")
+set(INLONG_UV_SHA256_x86_64-unknown-linux-gnu  "8c88519b0ef0af9801fcdee419bbb12116bd9e6b18e162ae093c932d8b264050")
+set(INLONG_UV_SHA256_x86_64-pc-windows-msvc    "ace861f360c6de2babedc1607d0f454b6b09a820dbc8182dc15af927e4df9589")
+
+# Version-scoped cache dir so a version bump invalidates the cached binary.
+set(INLONG_UV_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}/.uv/${INLONG_UV_VERSION}")
+set(INLONG_UV_BINARY "${INLONG_UV_DOWNLOAD_DIR}/uv")
+if(WIN32)
+    set(INLONG_UV_BINARY "${INLONG_UV_DOWNLOAD_DIR}/uv.exe")
+endif()
+
+# Older configures FORCE-cached the auto-downloaded path; any cache entry
+# under .uv/ is that legacy value -- clear it so auto-download re-resolves
+# (user-provided paths never live under .uv/).
+if(INLONG_BUNDLED_UV_EXECUTABLE MATCHES "/\\.uv/")
+    set(INLONG_BUNDLED_UV_EXECUTABLE "" CACHE FILEPATH "Path to the auto-downloaded uv executable" FORCE)
+endif()
+
+if(NOT INLONG_BUNDLED_UV_EXECUTABLE)
+    if(NOT EXISTS "${INLONG_UV_BINARY}")
+        # Select uv by TARGET arch. On macOS universal builds each leg sets a single
+        # CMAKE_OSX_ARCHITECTURES (and the x86_64 leg cross-builds on an arm64 runner),
+        # so prefer it over the host CMAKE_SYSTEM_PROCESSOR -- otherwise both legs fetch
+        # the same arch and the later universal lipo merge of tools/uv/uv fails.
+        set(_inlong_uv_proc "${CMAKE_SYSTEM_PROCESSOR}")
+        if(APPLE AND CMAKE_OSX_ARCHITECTURES)
+            set(_inlong_uv_proc "${CMAKE_OSX_ARCHITECTURES}")
+        endif()
+        # All release archives are tar.gz except the Windows zip.
+        set(INLONG_UV_EXT "tar.gz")
+        if(_inlong_uv_proc MATCHES "x86_64|AMD64|amd64")
+            if(WIN32)
+                set(INLONG_UV_ARCH "x86_64-pc-windows-msvc")
+                set(INLONG_UV_EXT "zip")
+            elseif(APPLE)
+                set(INLONG_UV_ARCH "x86_64-apple-darwin")
+            else()
+                set(INLONG_UV_ARCH "x86_64-unknown-linux-gnu")
+            endif()
+        elseif(_inlong_uv_proc MATCHES "aarch64|arm64|ARM64")
+            if(APPLE)
+                set(INLONG_UV_ARCH "aarch64-apple-darwin")
+            else()
+                set(INLONG_UV_ARCH "aarch64-unknown-linux-gnu")
+            endif()
+        else()
+            message(WARNING "Unsupported architecture for auto-downloading uv: ${_inlong_uv_proc}")
+        endif()
+
+        if(INLONG_UV_ARCH)
+            set(INLONG_UV_URL "https://github.com/astral-sh/uv/releases/download/${INLONG_UV_VERSION}/uv-${INLONG_UV_ARCH}.${INLONG_UV_EXT}")
+            set(INLONG_UV_ARCHIVE "${INLONG_UV_DOWNLOAD_DIR}/uv-archive.${INLONG_UV_EXT}")
+            file(MAKE_DIRECTORY "${INLONG_UV_DOWNLOAD_DIR}")
+            message(STATUS "Downloading uv ${INLONG_UV_VERSION} from ${INLONG_UV_URL} ...")
+            file(DOWNLOAD "${INLONG_UV_URL}" "${INLONG_UV_ARCHIVE}" STATUS INLONG_UV_DL_STATUS TLS_VERIFY ON)
+            list(GET INLONG_UV_DL_STATUS 0 INLONG_UV_DL_CODE)
+            list(GET INLONG_UV_DL_STATUS 1 INLONG_UV_DL_MSG)
+            if(NOT INLONG_UV_DL_CODE EQUAL 0)
+                # Network failure keeps the historical graceful degradation (uv is
+                # optional at build time) -- but a hash mismatch below is fatal.
+                message(WARNING "Failed to download uv: ${INLONG_UV_DL_MSG}")
+                file(REMOVE "${INLONG_UV_ARCHIVE}")
+            else()
+                file(SHA256 "${INLONG_UV_ARCHIVE}" _inlong_uv_actual_sha256)
+                if(NOT _inlong_uv_actual_sha256 STREQUAL "${INLONG_UV_SHA256_${INLONG_UV_ARCH}}")
+                    file(REMOVE "${INLONG_UV_ARCHIVE}")
+                    message(FATAL_ERROR
+                        "uv archive checksum mismatch for ${INLONG_UV_ARCH} ${INLONG_UV_VERSION}:\n"
+                        "  expected ${INLONG_UV_SHA256_${INLONG_UV_ARCH}}\n"
+                        "  actual   ${_inlong_uv_actual_sha256}\n"
+                        "Possible tampering or a stale pin; refusing to bundle.")
+                endif()
+                message(STATUS "Extracting uv ...")
+                file(ARCHIVE_EXTRACT INPUT "${INLONG_UV_ARCHIVE}" DESTINATION "${INLONG_UV_DOWNLOAD_DIR}")
+                file(REMOVE "${INLONG_UV_ARCHIVE}")
+                # Pinned archives have a fixed layout: the tarballs hold
+                # uv-<triple>/uv, the Windows zip holds uv.exe at the root
+                # (already at INLONG_UV_BINARY). A layout change implies a new
+                # archive, hence a hash bump -- and RENAME fails loudly.
+                if(NOT WIN32)
+                    file(RENAME "${INLONG_UV_DOWNLOAD_DIR}/uv-${INLONG_UV_ARCH}/uv" "${INLONG_UV_BINARY}")
+                    file(REMOVE_RECURSE "${INLONG_UV_DOWNLOAD_DIR}/uv-${INLONG_UV_ARCH}")
+                endif()
+            endif()
+        endif()
+    endif()
+
+    if(EXISTS "${INLONG_UV_BINARY}")
+        # Plain set (shadows the empty cache entry for this configure run):
+        # the version-scoped path re-derives every configure, so a version
+        # bump takes effect in warm build dirs without cache surgery.
+        set(INLONG_BUNDLED_UV_EXECUTABLE "${INLONG_UV_BINARY}")
+    endif()
+endif()
+
+# Resolve INLONG_BUNDLED_UV_EXECUTABLE -> INLONG_BUNDLED_UV_EXECUTABLE_CONFIG / INLONG_BUNDLED_UV_FILENAME
+# Must run before add_subdirectory(src) so target_compile_definitions sees it.
+if(INLONG_BUNDLED_UV_EXECUTABLE)
+    if(EXISTS "${INLONG_BUNDLED_UV_EXECUTABLE}")
+        file(TO_CMAKE_PATH "${INLONG_BUNDLED_UV_EXECUTABLE}" INLONG_BUNDLED_UV_EXECUTABLE_CONFIG)
+        get_filename_component(INLONG_BUNDLED_UV_FILENAME "${INLONG_BUNDLED_UV_EXECUTABLE}" NAME)
+    else()
+        message(WARNING "INLONG_BUNDLED_UV_EXECUTABLE does not exist: ${INLONG_BUNDLED_UV_EXECUTABLE}")
+        set(INLONG_BUNDLED_UV_EXECUTABLE "")
+        set(INLONG_BUNDLED_UV_EXECUTABLE_CONFIG "")
+        set(INLONG_BUNDLED_UV_FILENAME "")
+    endif()
+else()
+    set(INLONG_BUNDLED_UV_EXECUTABLE_CONFIG "")
+    set(INLONG_BUNDLED_UV_FILENAME "")
+endif()
+
 # If SLIC3R_FHS is 1 -> SLIC3R_DESKTOP_INTEGRATION is always 0, othrewise variable.
 CMAKE_DEPENDENT_OPTION(SLIC3R_DESKTOP_INTEGRATION "Allow performing desktop integration during runtime" 1 "NOT SLIC3R_FHS" 0)
 
@@ -719,7 +844,7 @@ if(NOT MSGFMT_EXECUTABLE)
     message(WARNING "msgfmt was not found; localization .mo files will not be regenerated")
 endif()
 add_custom_target(gettext_make_pot
-    COMMAND xgettext --keyword=L --keyword=_L --keyword=_u8L --keyword=L_CONTEXT:1,2c --keyword=_L_PLURAL:1,2 --add-comments=TRN --from-code=UTF-8 --no-location --debug --boost
+    COMMAND xgettext --keyword=L --keyword=_L --keyword=_u8L --keyword=L_CONTEXT:1,2c --keyword=_CTX:1,2c --keyword=_CTX_utf8:1,2c --keyword=_L_PLURAL:1,2 --add-comments=TRN --from-code=UTF-8 --no-location --debug --boost
         -f "${BBL_L18N_DIR}/list.txt"
         -o "${BBL_L18N_DIR}/${SLIC3R_APP_KEY}.pot"
     COMMAND hintsToPot ${SLIC3R_RESOURCES_DIR} ${BBL_L18N_DIR}
@@ -761,6 +886,86 @@ foreach(po_file ${BBL_L10N_PO_FILES})
 endforeach()
 
 find_package(NLopt 1.4 REQUIRED)
+
+# Use bundled Python from deps instead of system Python
+set(_bundled_python_version "3.12.13")
+set(_bundled_python_abi "312")
+string(REGEX REPLACE "^([0-9]+\\.[0-9]+)\\..*$" "\\1" _bundled_python_version_short "${_bundled_python_version}")
+set(_bundled_python_root "${CMAKE_PREFIX_PATH}/libpython")
+set(Python3_ROOT_DIR "${_bundled_python_root}" CACHE PATH "Root directory for bundled Python" FORCE)
+set(Python3_USE_STATIC_LIBS OFF)
+set(Python3_FIND_STRATEGY LOCATION)
+set(Python3_FIND_IMPLEMENTATIONS CPython)
+
+if(WIN32)
+    set(_bundled_python_executable "${_bundled_python_root}/python.exe")
+    set(_bundled_python_library "${_bundled_python_root}/libs/python${_bundled_python_abi}.lib")
+    if(EXISTS "${_bundled_python_root}/python_d.exe")
+        set(_bundled_python_executable "${_bundled_python_root}/python_d.exe")
+    endif()
+    if(EXISTS "${_bundled_python_root}/libs/python${_bundled_python_abi}_d.lib")
+        set(_bundled_python_library "${_bundled_python_root}/libs/python${_bundled_python_abi}_d.lib")
+    endif()
+
+    set(Python3_FIND_REGISTRY NEVER)
+    set(Python3_EXECUTABLE "${_bundled_python_executable}" CACHE FILEPATH "Bundled Python executable" FORCE)
+    set(Python3_INCLUDE_DIR "${_bundled_python_root}/include" CACHE PATH "Bundled Python include directory" FORCE)
+    set(Python3_LIBRARY "${_bundled_python_library}" CACHE FILEPATH "Bundled Python embed import library" FORCE)
+elseif(APPLE)
+    set(Python3_FIND_FRAMEWORK NEVER)
+
+    find_program(_bundled_python_executable
+        NAMES python${_bundled_python_version_short} python3
+        PATHS "${_bundled_python_root}/bin"
+        NO_DEFAULT_PATH
+    )
+    find_path(_bundled_python_include_dir
+        NAMES Python.h
+        PATHS
+            "${_bundled_python_root}/include/python${_bundled_python_version_short}"
+            "${_bundled_python_root}/include"
+        NO_DEFAULT_PATH
+    )
+    find_library(_bundled_python_library
+        NAMES python${_bundled_python_version_short} libpython${_bundled_python_version_short}
+        PATHS "${_bundled_python_root}/lib"
+        NO_DEFAULT_PATH
+    )
+
+    if(NOT _bundled_python_executable)
+        message(FATAL_ERROR "Bundled Python executable not found under ${_bundled_python_root}/bin")
+    endif()
+    if(NOT _bundled_python_include_dir)
+        message(FATAL_ERROR "Bundled Python headers not found under ${_bundled_python_root}/include")
+    endif()
+    if(NOT _bundled_python_library)
+        message(FATAL_ERROR "Bundled Python library not found under ${_bundled_python_root}/lib")
+    endif()
+
+    set(Python3_EXECUTABLE "${_bundled_python_executable}" CACHE FILEPATH "Bundled Python executable" FORCE)
+    set(Python3_INCLUDE_DIR "${_bundled_python_include_dir}" CACHE PATH "Bundled Python include directory" FORCE)
+    set(Python3_LIBRARY "${_bundled_python_library}" CACHE FILEPATH "Bundled Python embed library" FORCE)
+endif()
+
+find_package(Python3 ${_bundled_python_version} EXACT REQUIRED
+    COMPONENTS Interpreter Development.Embed
+)
+
+# Provide a minimal pybind11::embed target sourced from deps_src/pybind11 headers.
+set(PYBIND11_SOURCE_DIR "${CMAKE_SOURCE_DIR}/deps_src/pybind11")
+if(NOT EXISTS "${PYBIND11_SOURCE_DIR}/include/pybind11/pybind11.h")
+    message(FATAL_ERROR "pybind11 headers not found in ${PYBIND11_SOURCE_DIR}. Did you initialize submodules?")
+endif()
+
+add_library(pybind11_headers INTERFACE)
+target_include_directories(pybind11_headers INTERFACE "${PYBIND11_SOURCE_DIR}/include")
+add_library(pybind11::headers ALIAS pybind11_headers)
+add_library(pybind11::pybind11 ALIAS pybind11_headers)
+
+add_library(pybind11_embed INTERFACE)
+target_link_libraries(pybind11_embed INTERFACE pybind11_headers Python3::Python)
+target_compile_definitions(pybind11_embed INTERFACE PYBIND11_SIMPLE_GIL_MANAGEMENT)
+add_library(pybind11::embed ALIAS pybind11_embed)
 
 
 if(SLIC3R_STATIC)
@@ -913,10 +1118,12 @@ if (NOT WIN32 AND NOT APPLE)
     configure_file(${LIBDIR}/dev-utils/platform/unix/build_appimage.sh.in ${CMAKE_CURRENT_BINARY_DIR}/build_appimage.sh USE_SOURCE_PERMISSIONS @ONLY)
 endif()
 
-
 # Resources install target, configure fhs.hpp on UNIX
 if (WIN32)
     install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "./resources")
+    if(INLONG_BUNDLED_UV_EXECUTABLE)
+        install(PROGRAMS "${INLONG_BUNDLED_UV_EXECUTABLE}" DESTINATION "./resources/tools/uv" RENAME "${INLONG_BUNDLED_UV_FILENAME}")
+    endif()
     set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
     include(InstallRequiredSystemLibraries)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION ".")
@@ -926,6 +1133,9 @@ elseif (SLIC3R_FHS)
     install(DIRECTORY ${SLIC3R_RESOURCES_DIR}/ DESTINATION ${SLIC3R_FHS_RESOURCES}
         PATTERN "*/udev" EXCLUDE
     )
+    if(INLONG_BUNDLED_UV_EXECUTABLE)
+        install(PROGRAMS "${INLONG_BUNDLED_UV_EXECUTABLE}" DESTINATION "${SLIC3R_FHS_RESOURCES}/tools/uv" RENAME "${INLONG_BUNDLED_UV_FILENAME}")
+    endif()
     install(FILES src/dev-utils/platform/unix/${SLIC3R_APP_ID}.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
     foreach(SIZE 32 128 192)
         install(FILES ${SLIC3R_RESOURCES_DIR}/images/${SLIC3R_APP_KEY}_${SIZE}px.png
@@ -934,9 +1144,15 @@ elseif (SLIC3R_FHS)
     endforeach()
 elseif (CMAKE_MACOSX_BUNDLE)
     # install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/${SLIC3R_APP_KEY}.app/Contents/resources")
+    if(INLONG_BUNDLED_UV_EXECUTABLE)
+        install(PROGRAMS "${INLONG_BUNDLED_UV_EXECUTABLE}" DESTINATION "${CMAKE_INSTALL_PREFIX}/${SLIC3R_APP_KEY}.app/Contents/Resources/tools/uv" RENAME "${INLONG_BUNDLED_UV_FILENAME}")
+    endif()
 else ()
     install(FILES src/dev-utils/platform/unix/${SLIC3R_APP_ID}.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/resources/applications)
     install(DIRECTORY "${SLIC3R_RESOURCES_DIR}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/resources")
+    if(INLONG_BUNDLED_UV_EXECUTABLE)
+        install(PROGRAMS "${INLONG_BUNDLED_UV_EXECUTABLE}" DESTINATION "${CMAKE_INSTALL_PREFIX}/resources/tools/uv" RENAME "${INLONG_BUNDLED_UV_FILENAME}")
+    endif()
 endif ()
 
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt DESTINATION ".")
