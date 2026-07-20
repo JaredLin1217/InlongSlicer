@@ -141,6 +141,10 @@ if(NOT EXISTS "${OUTPUT_DIR}/python/python.exe")
     message(FATAL_ERROR "install_only_inlong did not copy the bundled Python runtime")
 endif()
 
+set(DATA_DIR "${OUTPUT_DIR}/data_dir")
+set(ALLOWED_ROOT "${OUTPUT_DIR}")
+include("${SOURCE_ROOT}/cmake/EnsureEmptyDataDir.cmake")
+
 file(GLOB copied_profile_entries RELATIVE "${output_profiles_dir}" "${output_profiles_dir}/*")
 list(LENGTH copied_profile_entries copied_profile_count)
 message(STATUS "Installed Inlong-only runtime to ${OUTPUT_DIR}")

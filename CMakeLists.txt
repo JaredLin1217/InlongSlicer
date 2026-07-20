@@ -1156,6 +1156,13 @@ else ()
 endif ()
 
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt DESTINATION ".")
+if (WIN32)
+    install(CODE "
+        set(DATA_DIR \"\${CMAKE_INSTALL_PREFIX}/data_dir\")
+        set(ALLOWED_ROOT \"\${CMAKE_INSTALL_PREFIX}\")
+        include(\"${CMAKE_SOURCE_DIR}/cmake/EnsureEmptyDataDir.cmake\")
+    ")
+endif ()
 configure_file(${LIBDIR}/dev-utils/platform/unix/fhs.hpp.in ${LIBDIR_BIN}/dev-utils/platform/unix/fhs.hpp)
 
 if (WIN32)

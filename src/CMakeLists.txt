@@ -215,6 +215,16 @@ if (WIN32)
         WIN32_EXECUTABLE "$<NOT:$<CONFIG:RelWithDebInfo>>"
     )
     target_link_libraries(InlongSlicer_app_gui PRIVATE boost_headeronly)
+
+    add_custom_target(InlongSlicer_reset_build_data_dir
+        COMMAND ${CMAKE_COMMAND}
+            "-DDATA_DIR=${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/data_dir"
+            "-DALLOWED_ROOT=${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>"
+            -P "${CMAKE_SOURCE_DIR}/cmake/EnsureEmptyDataDir.cmake"
+        COMMENT "Resetting the build-local data_dir"
+        VERBATIM
+    )
+    add_dependencies(InlongSlicer InlongSlicer_reset_build_data_dir)
 endif ()
 
 # Link the resources dir to where Slic3r GUI expects it
