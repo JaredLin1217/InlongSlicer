@@ -36,7 +36,7 @@ namespace Slic3r
         AppConfig* config = GUI::wxGetApp().app_config;
         if (!config)
             return;
-        const auto& local_machines = config->get_local_machines();
+        const auto local_machines = config->get_local_machines();
         for (auto& it : local_machines) {
             const auto& m = it.second;
             if (localMachineList.count(m.dev_id))
@@ -558,6 +558,7 @@ namespace Slic3r
             }
             else
             {
+                Slic3r::GUI::wxGetApp().reset_unsigned_plugin_warning();
                 if (m_agent)
                 {
                     if (it->second->connection_type() != "lan" || it->second->connection_type().empty())

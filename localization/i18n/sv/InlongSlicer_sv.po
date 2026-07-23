@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 22:58+0800\n"
+"POT-Creation-Date: 2026-07-23 20:45+0800\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -240,7 +240,7 @@ msgid "Standard"
 msgstr "Standard"
 
 msgid "TPU High Flow"
-msgstr ""
+msgstr "TPU Hög Flöde"
 
 msgid "Unknown"
 msgstr "Okänd"
@@ -255,25 +255,25 @@ msgid "Tungsten Carbide"
 msgstr "Tungsten Carbide"
 
 msgid "The toolhead and hotend rack may move. Please keep your hands away from the chamber."
-msgstr ""
+msgstr "Verktygs huvudet och hotend stället kan röra sig. Håll händerna borta från kammaren."
 
 msgid "Warning"
 msgstr "Varning"
 
 msgid "Hotend information may be inaccurate. Would you like to re-read the hotend? (Hotend information may change during power-off)."
-msgstr ""
+msgstr "Informationen om hotend kan vara felaktig. Vill du läsa av hotend igen? (Informationen om hotend kan ändras vid avstängning)."
 
 msgid "I confirm all"
-msgstr ""
+msgstr "Jag bekräftar allt"
 
 msgid "Re-read all"
-msgstr ""
+msgstr "Läs om allt"
 
 msgid "Reading the hotends, please wait."
-msgstr ""
+msgstr "Läser av hotends, vänta."
 
 msgid "During the hotend upgrade, the toolhead will move. Don't reach into the chamber."
-msgstr ""
+msgstr "Under hotend uppgraderingen kommer verktygshuvudet att röra sig. Stoppa inte in något i kammaren."
 
 msgid "Update"
 msgstr "Uppdatera"
@@ -309,13 +309,13 @@ msgid "Latest version"
 msgstr "Senaste version"
 
 msgid "Row A"
-msgstr ""
+msgstr "Rad A"
 
 msgid "Row B"
-msgstr ""
+msgstr "Rad B"
 
 msgid "Toolhead"
-msgstr ""
+msgstr "Verktygshuvud"
 
 msgid "Empty"
 msgstr "Tom"
@@ -324,40 +324,40 @@ msgid "Error"
 msgstr "FEL"
 
 msgid "Induction Hotend Rack"
-msgstr ""
+msgstr "Induktion Hotend Ställning"
 
 msgid "Hotends Info"
-msgstr ""
+msgstr "Hotend Information"
 
 msgid "Read All"
-msgstr ""
+msgstr "Läs allt"
 
 msgid "Reading "
-msgstr ""
+msgstr "Läser "
 
 msgid "Please wait"
-msgstr ""
+msgstr "Vänligen vänta"
 
 msgid "Reading"
 msgstr ""
 
 msgid "Running..."
-msgstr ""
+msgstr "Kör..."
 
 msgid "Raised"
-msgstr ""
+msgstr "Upphöjd"
 
 msgid "The hotend is in an abnormal state and currently unavailable. Please go to 'Device -> Upgrade' to upgrade firmware."
-msgstr ""
+msgstr "Hotend är i ett onormalt tillstånd och är inte tillgängligt. Gå till 'Enhet -> Uppgradera' för att uppgradera firmware."
 
 msgid "Abnormal Hotend"
-msgstr ""
+msgstr "Onormal Hotend"
 
 msgid "Cancel"
 msgstr "Avbryt"
 
 msgid "Jump to the upgrade page"
-msgstr ""
+msgstr "Gå till uppgraderings sidan"
 
 msgid "Refresh"
 msgstr "Uppdatera"
@@ -366,7 +366,7 @@ msgid "Refreshing"
 msgstr "Uppdaterar"
 
 msgid "Hotend status abnormal, unavailable at present. Please upgrade the firmware and try again."
-msgstr ""
+msgstr "Hotend status onormal, ej tillgänglig för närvarande. Uppgradera firmware och försök igen."
 
 msgid "SN"
 msgstr "SN"
@@ -376,19 +376,19 @@ msgstr "Version"
 
 #, c-format, boost-format
 msgid "Used Time: %s"
-msgstr ""
+msgstr "Använd tid: %s"
 
 msgid "Dynamic nozzles are allocated on the current plate. Picking hotend is not supported."
-msgstr ""
+msgstr "Dynamiska nozzles är tilldelade på den aktuella plattan. Val av hotend stöds inte."
 
 msgid "Hotend Rack"
-msgstr ""
+msgstr "Hotend Ställning"
 
 msgid "ToolHead"
-msgstr ""
+msgstr "Verktygshuvud"
 
 msgid "Nozzle information needs to be read"
-msgstr ""
+msgstr "Nozzle information måste läsas"
 
 msgid "Support Painting"
 msgstr "Färgläggning av Support"
@@ -402,8 +402,9 @@ msgstr "Endast på markerade överhäng"
 msgid "Erase all"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Highlight overhangs"
-msgstr ""
+msgstr "Markera områden med överhäng"
 
 msgid "Tool type"
 msgstr "Verktygs typ"
@@ -478,8 +479,9 @@ msgstr "Ingen auto support"
 msgid "Done"
 msgstr "Klar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Support generated"
-msgstr ""
+msgstr "Support skapad"
 
 msgid "Entering Paint-on supports"
 msgstr ""
@@ -493,8 +495,9 @@ msgstr ""
 msgid "Gizmo-Place on Face"
 msgstr "Gizmo-Place on Face"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Lay on Face"
-msgstr ""
+msgstr "Lägg på yta"
 
 #, boost-format
 msgid "Filament count exceeds the maximum number that painting tool supports. Only the first %1% filaments will be available in painting tool."
@@ -662,29 +665,35 @@ msgstr "Rotate (relative)"
 msgid "Scale ratios"
 msgstr "Skalnings förhållande"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Object operations"
-msgstr ""
+msgstr "Objekt Åtgärder"
 
 msgid "Scale"
 msgstr "Skala"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Volume operations"
-msgstr ""
+msgstr "Volym Åtgärder"
 
 msgid "Translate"
 msgstr "Översätt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Group operations"
-msgstr ""
+msgstr "Grupp Åtgärder"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set orientation"
-msgstr ""
+msgstr "Ställ in Orientering"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set scale"
-msgstr ""
+msgstr "Ställ in Skala"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Reset position"
-msgstr ""
+msgstr "Återställ Position"
 
 msgid "Reset rotation"
 msgstr "Reset rotation"
@@ -715,7 +724,7 @@ msgstr "Reset current rotation to real zeros."
 
 msgctxt "Noun"
 msgid "Scale"
-msgstr ""
+msgstr "Skala"
 
 #. TRN - Input label. Be short as possible
 msgid "Size"
@@ -815,7 +824,7 @@ msgid "Count"
 msgstr ""
 
 msgid "Gap"
-msgstr ""
+msgstr "Glipa"
 
 msgid "Spacing"
 msgstr "Mellanrum"
@@ -985,8 +994,9 @@ msgstr ""
 msgid "Cut by Plane"
 msgstr "Cut by Plane"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Non-manifold edges be caused by cut tool: do you want to fix now?"
-msgstr ""
+msgstr "Icke-mångsidiga kanter orsakade av skärverktyg: vill du fixa det nu?"
 
 msgid "Repairing model object"
 msgstr "Reparerar modell objektet"
@@ -1050,8 +1060,9 @@ msgstr "%d trianglar"
 msgid "Show wireframe"
 msgstr "Visa trådram"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unable to apply when processing preview"
-msgstr ""
+msgstr "Kan inte tillämpas när processen förhandsgranskas."
 
 msgid "Operation already cancelling. Please wait a few seconds."
 msgstr "Åtgärden avbryts redan. Vänligen vänta."
@@ -1074,8 +1085,9 @@ msgstr "Målning av sömmar"
 msgid "Remove selection"
 msgstr "Ta bort val"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Entering seam painting"
-msgstr ""
+msgstr "Inmatning söm målning"
 
 msgid "Leaving Seam painting"
 msgstr "Lämnar söm målning"
@@ -1097,8 +1109,9 @@ msgstr "Text mellanrum"
 msgid "Angle"
 msgstr "Vinkel"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Embedded depth"
-msgstr ""
+msgstr "Inbäddat djup"
 
 msgid "Input text"
 msgstr "Skriv in text"
@@ -1920,12 +1933,14 @@ msgstr "Filament"
 msgid "Machine"
 msgstr "Maskin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The configuration package was loaded, but some values were not recognized."
-msgstr ""
+msgstr "Konfigurations paketet har laddats, men vissa värden känns inte igen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "The configuration file “%1%” was loaded, but some values were not recognized."
-msgstr ""
+msgstr "Konfigurations fil “%1%” har laddats, men vissa värden känns inte igen."
 
 msgid "Loading configuration"
 msgstr "Konfigurationen laddas"
@@ -2137,8 +2152,9 @@ msgstr "Ext"
 msgid "Some presets are modified."
 msgstr "Några inställningar har ändrats."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You can keep the modified presets for the new project, discard, or save changes as new presets."
-msgstr ""
+msgstr "Fortsätt med redigerings inställningarna till nytt projekt, avfärda dem eller spara som ny inställning."
 
 msgid "User logged out"
 msgstr "Användaren utloggad"
@@ -2390,9 +2406,10 @@ msgstr "Döp om"
 msgid "Inlong Slicer GUI initialization failed"
 msgstr "Inlong Slicer GUI-initiering misslyckades"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "Fatal error, exception: %1%"
-msgstr ""
+msgstr "Allvarligt fel, undantag hittat: %1%"
 
 msgid "Quality"
 msgstr "Kvalitet"
@@ -2418,17 +2435,20 @@ msgstr "Styrka"
 msgid "Top solid layers"
 msgstr "Solida topp lager"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Top minimum shell thickness"
-msgstr ""
+msgstr "Minsta Top Skal Tjocklek"
 
 msgid "Top Surface Density"
 msgstr "Top Surface Density"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Bottom solid layers"
-msgstr ""
+msgstr "Massiva Botten Lager"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Bottom minimum shell thickness"
-msgstr ""
+msgstr "Minsta Botten Skal Tjocklek"
 
 msgid "Bottom Surface Density"
 msgstr "Bottom Surface Density"
@@ -2436,14 +2456,16 @@ msgstr "Bottom Surface Density"
 msgid "Ironing"
 msgstr "Strykning"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Fuzzy skin"
-msgstr ""
+msgstr "Ojämn Yta"
 
 msgid "Extruders"
 msgstr "Extruders"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Extrusion width"
-msgstr ""
+msgstr "Extruderings Bredd"
 
 msgid "Wipe options"
 msgstr "Avstryknings val"
@@ -2451,20 +2473,24 @@ msgstr "Avstryknings val"
 msgid "Bed adhesion"
 msgstr "Byggplattans vidhäftningsförmåga"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Part"
-msgstr ""
+msgstr "Lägg till del"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Negative Part"
-msgstr ""
+msgstr "Lägg till negativ del"
 
 msgid "Add Modifier"
 msgstr "Lägg till Modifierare"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Support Blocker"
-msgstr ""
+msgstr "Lägg till support blockerare"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Support Enforcer"
-msgstr ""
+msgstr "Lägg till support förstärkning"
 
 msgid "Add text"
 msgstr "Add text"
@@ -2562,14 +2588,17 @@ msgstr "Förslag"
 msgid "Text"
 msgstr "Text"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Height Range Modifier"
-msgstr ""
+msgstr "Modifierare av höjd intervall"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Settings"
-msgstr ""
+msgstr "Lägg till inställning"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Change Type"
-msgstr ""
+msgstr "Ändra typ"
 
 msgid "Negative Part"
 msgstr "Negativ Del"
@@ -2581,13 +2610,15 @@ msgid "Support Enforcer"
 msgstr "Support Förstärkare"
 
 msgid "Change part type"
-msgstr ""
+msgstr "Ändra typ av del"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set as An Individual Object"
-msgstr ""
+msgstr "Ställ in som ett enskilt objekt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set as Individual Objects"
-msgstr ""
+msgstr "Ställ in som enskilda objekt"
 
 msgid "Fill bed with copies"
 msgstr "Fyll byggplattan med kopior"
@@ -2604,8 +2635,9 @@ msgstr ""
 msgid "Automatically drops the selected object to the build plate."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Fix Model"
-msgstr ""
+msgstr "Fixa modell"
 
 msgid "Export as one STL"
 msgstr "Exportera som en STL"
@@ -2674,17 +2706,21 @@ msgstr "Rensa in i objektets support"
 msgid "Edit in Parameter Table"
 msgstr "Redigera i Parameter Tabell"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Convert from Inches"
-msgstr ""
+msgstr "Konvertera ifrån inch"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Inch"
-msgstr ""
+msgstr "Återställ till inch"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Convert from Meters"
-msgstr ""
+msgstr "Konvertera ifrån meter"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
-msgstr ""
+msgstr "Återställ till meter"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Montera de valda objekten till ett objekt med multipla delar"
@@ -2698,23 +2734,29 @@ msgstr "Mesh boolean"
 msgid "Mesh boolean operations including union and subtraction"
 msgstr "Mesh boolean operationer inklusive union och subtraktion"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Along X Axis"
-msgstr ""
+msgstr "Längs med X Axis"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Mirror along the X Axis"
-msgstr ""
+msgstr "Spegelvänd längs med X Axis"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Along Y Axis"
-msgstr ""
+msgstr "Längs med Y Axis"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Mirror along the Y Axis"
-msgstr ""
+msgstr "Spegelvänd längs med Y Axis"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Along Z Axis"
-msgstr ""
+msgstr "Längs med Z Axis"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Mirror along the Z Axis"
-msgstr ""
+msgstr "Spegelvänd längs med Z Axis"
 
 msgid "Mirror object"
 msgstr "Spegelvänd objektet"
@@ -2746,14 +2788,16 @@ msgstr "Lägg till modeller"
 msgid "Show Labels"
 msgstr "Visa Etiketter"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "To Objects"
-msgstr ""
+msgstr "Till objekten"
 
 msgid "Split the selected object into multiple objects"
 msgstr "Dela det valda objektet till multipla objekt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "To Parts"
-msgstr ""
+msgstr "Till delarna"
 
 msgid "Split the selected object into multiple parts"
 msgstr "Dela det valda objektet till multipla delar"
@@ -2923,23 +2967,27 @@ msgstr[1] "%1$d inte mångfaldig kant@%1$d inte mångfaldiga kanter"
 msgid "Click the icon to repair model object"
 msgstr "Click the icon to repair model object"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Right click the icon to drop the object settings"
-msgstr ""
+msgstr "Höger klicka på ikonen för att släppa objekts inställningarna"
 
 msgid "Click the icon to reset all settings of the object"
 msgstr "Klicka på ikonen för att återställa alla objekts inställningar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Right click the icon to drop the object printable property"
-msgstr ""
+msgstr "Höger klicka på ikonen för att släppa objektets utskrifts egenskaper"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Click the icon to toggle printable properties of the object"
-msgstr ""
+msgstr "Klicka på ikonen för att bläddra igenom utskriftens egenskaper"
 
 msgid "Click the icon to edit support painting of the object"
 msgstr "Klicka på ikonen för att redigera support färgläggningen av objektet"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Click the icon to edit color painting for the object"
-msgstr ""
+msgstr "Klicka på ikonen för att redigera färgläggningen av objektet"
 
 msgid "Click the icon to shift this object to the bed"
 msgstr "Klicka på ikonen för att flytta detta föremål till byggplattan"
@@ -3025,12 +3073,17 @@ msgstr "Ta bort negativ volym från objekt som är en del av snittet"
 msgid "To save cut correspondence you can delete all connectors from all related objects."
 msgstr "För att spara korrespondens kan du ta bort alla kontakter från alla relaterade objekt."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This action will break a cut correspondence.\n"
 "After that, model consistency can't be guaranteed.\n"
 "\n"
 "To manipulate with solid parts or negative volumes you have to invalidate cut information first."
 msgstr ""
+"Denna åtgärd kommer att bryta en skuren korrespondens.\n"
+"Därefter kan inte modell konsistens garanteras .\n"
+"\n"
+"Om du vill manipulera med solida delar eller negativa volymer måste du först ogiltigförklara skär informationen."
 
 msgid "Delete all connectors"
 msgstr "Ta bort alla kopplingar"
@@ -3065,14 +3118,17 @@ msgstr "Manipulation av objekt"
 msgid "Group manipulation"
 msgstr "Grupp manipulation"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Object Settings to Modify"
-msgstr ""
+msgstr "Objektinställningar att ändra"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Part Settings to Modify"
-msgstr ""
+msgstr "Del inställningar att ändra"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Layer Range Settings to Modify"
-msgstr ""
+msgstr "Inställningar för lagerintervall att ändra"
 
 msgid "Part manipulation"
 msgstr "Manipulation av del"
@@ -3101,8 +3157,9 @@ msgstr "Om den första valda delen är ett objekt, så bör även den andra vara
 msgid "If the first selected item is a part, the second should be a part in the same object."
 msgstr "Om den första valda delen är en del, så bör den andra delen tillhöra samma objekt."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The type of the last solid object part cannot be changed."
-msgstr ""
+msgstr "Den sista fasta objekts delen ska inte ändras."
 
 msgid "Type:"
 msgstr "Typ:"
@@ -3226,14 +3283,17 @@ msgstr "1x1 Grid: %d mm"
 msgid "More"
 msgstr "Mer"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Open Preferences"
-msgstr ""
+msgstr "Öppna inställningar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Open next tip"
-msgstr ""
+msgstr "Öppna nästa tips"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Open documentation in web browser"
-msgstr ""
+msgstr "Öppna dokumentationen i webbläsaren"
 
 msgid "Color"
 msgstr "Färg"
@@ -3265,8 +3325,9 @@ msgstr "Ange anpassad G-kod som används på det aktuella lagret:"
 msgid "Jump to layer"
 msgstr "Hoppa till lager"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please enter the layer number."
-msgstr ""
+msgstr "Ange lager numret."
 
 msgid "Add Pause"
 msgstr "Lägg till paus"
@@ -3335,7 +3396,7 @@ msgid "Connection to printer failed"
 msgstr "Anslutning till skrivaren misslyckades"
 
 msgid "Please check the network connection of the printer and Orca."
-msgstr ""
+msgstr "Kontrollera nätverksanslutningen för skrivaren och Studio."
 
 msgid "Connecting..."
 msgstr "Sammankopplar..."
@@ -3349,8 +3410,9 @@ msgstr "Ladda"
 msgid "Unload"
 msgstr "Mata ut"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Choose an AMS slot then press \"Load\" or \"Unload\" button to automatically load or unload filament."
-msgstr ""
+msgstr "Välj ett AMS fack och tryck sedan på knappen \"Ladda\" eller \"Mata ut\" för att automatiskt ladda eller mata ut filament."
 
 msgid "Filament type is unknown which is required to perform this action. Please set target filament's informations."
 msgstr "Filament type is unknown which is required to perform this action. Please set target filament's informations."
@@ -3461,8 +3523,9 @@ msgstr "Värm upp nozzle"
 msgid "Cut filament"
 msgstr "Skär filament"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Pull back the current filament"
-msgstr ""
+msgstr "Reversera nuvarande filament"
 
 msgid "Push new filament into extruder"
 msgstr "Mata in nytt filament i extrudern"
@@ -3553,14 +3616,14 @@ msgid "Set nozzle count"
 msgstr ""
 
 msgid "Please set nozzle count"
-msgstr ""
+msgstr "Ange antal nozzle"
 
 msgid "Error: Can not set both nozzle count to zero."
-msgstr ""
+msgstr "Fel: Kan inte ställa in båda nozzle till noll."
 
 #, c-format, boost-format
 msgid "Error: Nozzle count can not exceed %d."
-msgstr ""
+msgstr "Fel: Antal nozzle får inte överskrida %d."
 
 msgid "Confirm"
 msgstr "Acceptera"
@@ -3569,35 +3632,35 @@ msgid "Extruder"
 msgstr "Extruder"
 
 msgid "Nozzle Selection"
-msgstr ""
+msgstr "Val av nozzle"
 
 msgid "Available Nozzles"
-msgstr ""
+msgstr "Tillgängliga nozzle"
 
 msgid "Nozzle Info"
 msgstr "Nozzle Info"
 
 msgid "Sync Nozzle status"
-msgstr ""
+msgstr "Synkronisera nozzle status"
 
 msgid "Caution: Mixing nozzle diameters in one print is not supported. If the selected size is only on one extruder, single-extruder printing will be enforced."
-msgstr ""
+msgstr "Varning: Blandning av nozzle diametrar i en utskrift stöds inte. Om den valda storleken bara är på en extruder kommer singel extruder utskrift att utföras."
 
 #, c-format, boost-format
 msgid "Refresh %d/%d..."
-msgstr ""
+msgstr "Uppdatera %d/%d..."
 
 msgid "Unknown nozzle detected. Refresh to update info (unrefreshed nozzles will be excluded during slicing). Verify nozzle diameter & flow rate against displayed values."
-msgstr ""
+msgstr "Okänd nozzle upptäckt. Uppdatera för att uppdatera info (ej uppdaterad nozzle kommer att uteslutas under beredning). Verifiera nozzle diameter och flödes hastighet mot visade värden."
 
 msgid "Unknown nozzle detected. Refresh to update (unrefreshed nozzles will be skipped in slicing)."
-msgstr ""
+msgstr "Okänd nozzle upptäckt. Uppdatera för att uppdatera (ej uppdaterad nozzle kommer att hoppas över i beredning)."
 
 msgid "Please confirm whether the required nozzle diameter and flow rate match the currently displayed values."
-msgstr ""
+msgstr "Bekräfta om den önskade nozzle diametern och flödes hastigheten matchar de värden som visas just nu."
 
 msgid "Your printer has different nozzles installed. Please select a nozzle for this print."
-msgstr ""
+msgstr "Din printer har olika nozzle installerade. Välj en nozzle för denna utskrift."
 
 msgid "Ignore"
 msgstr "Ignorera"
@@ -3631,8 +3694,9 @@ msgstr "Placerar"
 msgid "Arranging canceled."
 msgstr "Placering avbruten."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Arranging complete, but some items were not able to be arranged. Reduce spacing and try again."
-msgstr ""
+msgstr "Placering klar, några objekt kan inte placeras. Minska avståndet emellan dessa och försök igen."
 
 msgid "Arranging done."
 msgstr "Placering klar."
@@ -3698,8 +3762,9 @@ msgstr "Inloggning misslyckades"
 msgid "Please check the printer network connection."
 msgstr "Kontrollera skrivarens nätverksanslutning."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Abnormal print file data: please slice again."
-msgstr ""
+msgstr "Onormal utskrifts fil data: Vänligen bered igen."
 
 msgid "Task canceled."
 msgstr "Uppgiften avbruten."
@@ -3710,8 +3775,9 @@ msgstr "Uppladdningsuppgiften tog slut. Kontrollera nätverksstatusen och förs�
 msgid "Cloud service connection failed. Please try again."
 msgstr "Anslutningen till molntjänsten misslyckades. Försök igen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print file not found; please slice again."
-msgstr ""
+msgstr "Det gick inte att hitta utskrifts filen; bered den igen"
 
 msgid "The print file exceeds the maximum allowable size (1GB). Please simplify the model and slice again."
 msgstr "Utskrifts filen överskrider den högsta tillåtna storleken (1 GB). Förenkla modellen och bered igen"
@@ -3722,17 +3788,20 @@ msgstr "Det gick inte att skicka utskriftsjobbet. Var god försök igen."
 msgid "Failed to upload file to ftp. Please try again."
 msgstr "Det gick inte att ladda upp filen till ftp. Vänligen försök igen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Check the current status of the Bambu Lab server by clicking on the link above."
-msgstr ""
+msgstr "Kontrollera den aktuella statusen för Bambu Lab servern genom att klicka på länken ovan."
 
 msgid "The size of the print file is too large. Please adjust the file size and try again."
 msgstr "Storleken på utskrifts filen är för stor. Vänligen justera filstorleken och försök igen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print file not found; please slice it again and send it for printing."
-msgstr ""
+msgstr "Utskrifts filen hittades inte; bered den igen och skicka till utskrift."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Failed to upload print file via FTP. Please check the network status and try again."
-msgstr ""
+msgstr "Det gick inte att ladda upp utskriftsfilen via FTP. Kontrollera nätverksstatusen och försök igen."
 
 msgid "Sending print job over LAN"
 msgstr "Skicka utskriftsjobb via LAN"
@@ -3852,8 +3921,9 @@ msgstr "Remaining time: %dmin%ds"
 msgid "Importing SLA archive"
 msgstr "Importera SLA arkiv"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The SLA archive doesn't contain any presets. Please activate some SLA printer presets first before importing that SLA archive."
-msgstr ""
+msgstr "SLA arkivet innehåller inga förinställningar. Aktivera först några förinställningar för SLA skrivare innan du importerar SLA arkivet."
 
 msgid "Importing canceled."
 msgstr "Importen avbröts"
@@ -3864,8 +3934,9 @@ msgstr "Import utförd."
 msgid "The imported SLA archive did not contain any presets. The current SLA presets were used as fallback."
 msgstr "Det importerade SLA arkivet innehöll inga förinställningar. De aktuella SLA förinställningarna användes som reserv."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You cannot load an SLA project with a multi-part object on the bed"
-msgstr ""
+msgstr "Du kan inte ladda ett SLA projekt med ett fler delat objekt på byggplattan"
 
 msgid "Please check your object list before preset changing."
 msgstr "Kontrollera objektlistan innan du ändrar inställningen."
@@ -3891,8 +3962,9 @@ msgstr "Installerar"
 msgid "Install failed"
 msgstr "Installation misslyckades"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "License Info"
-msgstr ""
+msgstr "Information om licens"
 
 msgid "Copyright"
 msgstr "Upphovsrätt"
@@ -4032,8 +4104,9 @@ msgstr "Byggplattans temperatur"
 msgid "mm³"
 msgstr "mm³"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Start"
-msgstr ""
+msgstr "Starta"
 
 msgid "Next"
 msgstr "Nästa"
@@ -4046,7 +4119,7 @@ msgstr "Spara"
 
 msgctxt "Navigation"
 msgid "Back"
-msgstr ""
+msgstr "Tillbaka"
 
 msgid "Example"
 msgstr "Exempel"
@@ -4119,7 +4192,7 @@ msgstr "Right AMS"
 
 #, c-format, boost-format
 msgid "Printing with the current nozzle may produce an extra %0.2f g of waste."
-msgstr ""
+msgstr "Utskrift med det aktuell nozzle kan ge extra %0.2fg avfall."
 
 #, c-format, boost-format
 msgid "Tips: the filament type(%s) does not match with the filament type(%s) in the slicing file. If you want to use this slot, you can install %s instead of %s and change slot information on the 'Device' page."
@@ -4139,17 +4212,20 @@ msgstr ""
 msgid "Enable AMS"
 msgstr "Aktivera AMS"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in the AMS"
-msgstr ""
+msgstr "Skriv ut med filament i AMS"
 
 msgid "Disable AMS"
 msgstr "Inaktivera AMS"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament on external spool"
-msgstr ""
+msgstr "Skriv ut med filament på en extern spole"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please change the desiccant when it is too wet. The indicator may not represent accurately in following cases: when the lid is open or the desiccant pack is changed. It takes a few hours to absorb the moisture, and low temperatures also slow down the process."
-msgstr ""
+msgstr "Please change the desiccant when it is too wet. The indicator may not represent accurately in following cases: when the lid is open or the desiccant pack is changed. It take hours to absorb the moisture, and low temperatures also slow down the process."
 
 msgid "Configure which AMS slot should be used for a filament used in the print job."
 msgstr "Konfigurera vilket AMS-fack som ska användas för filamentet som används i utskriftsjobbet."
@@ -4166,11 +4242,13 @@ msgstr "Klicka för att välja AMS fack manuellt"
 msgid "Do not Enable AMS"
 msgstr "Aktivera inte AMS"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print using filament on external spool."
-msgstr ""
+msgstr "Skriv ut med filament på en extern spole."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
-msgstr ""
+msgstr "Skriv ut med filament i AMS"
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "När det aktuella materialet tar slut, fortsätter printern att skriva ut material i följande ordning."
@@ -4187,8 +4265,9 @@ msgstr "When the current material runs out, the printer would use identical fila
 msgid "The printer does not currently support auto refill."
 msgstr "Printern stöder för närvarande inte automatisk påfyllning."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "AMS filament backup is not enabled; please enable it in the AMS settings."
-msgstr ""
+msgstr "AMS filament backup is not enabled, please enable it in the AMS settings."
 
 msgid ""
 "When the current filament runs out, the printer will use identical filament to continue printing.\n"
@@ -4209,8 +4288,9 @@ msgstr "AMS Inställningar"
 msgid "Insertion update"
 msgstr "Infoga uppdatering"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The AMS will automatically read the filament information when inserting a new Bambu Lab filament spool. This takes about 20 seconds."
-msgstr ""
+msgstr "AMS läser automatiskt filament informationen när du sätter in ett nytt Bambu Lab-filament. Det tar ungefär 20 sekunder."
 
 msgid "Note: if a new filament is inserted during printing, the AMS will not automatically read any information until printing is completed."
 msgstr "Obs:  Om ett nytt filament sätts in under utskriften kommer AMS inte att automatiskt läsa av någon information förrän utskriften är klar."
@@ -4218,11 +4298,13 @@ msgstr "Obs:  Om ett nytt filament sätts in under utskriften kommer AMS inte at
 msgid "When inserting a new filament, the AMS will not automatically read its information, leaving it blank for you to enter manually."
 msgstr "Vid matning av nytt filament, AMS läser inte av dess information automatiskt utan lämnar det blankt för dig att fylla i manuellt."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Update on startup"
-msgstr ""
+msgstr "Slå på uppdatering"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The AMS will automatically read the information of inserted filament on start-up. It will take about 1 minute. The reading process will rotate the filament spools."
-msgstr ""
+msgstr "AMS läser automatiskt informationen om insatt Bambu Lab filament vid uppstart. Det tar cirka 1 minut. Läsprocessen kommer att rulla filamentspolarna."
 
 msgid "The AMS will not automatically read information from inserted filament during startup and will continue to use the information recorded before the last shutdown."
 msgstr "AMS kommer inte att automatiskt läsa informationen ifrån imatat filament under uppstart och senast använd information kommer att användas."
@@ -4299,18 +4381,21 @@ msgstr ") för att lokalisera verktygshuvudets position. Detta förhindrar att e
 msgid "Go Home"
 msgstr "Gå hem"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An error occurred. The system may have run out of memory, or a bug may have occurred."
-msgstr ""
+msgstr "Ett fel uppstod. För lite system minne eller en bugg i programmet"
 
 #, boost-format
 msgid "A fatal error occurred: \"%1%\""
 msgstr "A fatal error occurred: \"%1%\""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please save your project and restart the application."
-msgstr ""
+msgstr "Spara projekt och starta om programmet."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Processing G-Code from previous file…"
-msgstr ""
+msgstr "Processera G-Code från Föregående fil…"
 
 msgid "Slicing complete"
 msgstr "Beredning komplett"
@@ -4373,8 +4458,9 @@ msgstr "Copying of the temporary G-code has finished but the exported code could
 msgid "G-code file exported to %1%"
 msgstr "G-code file exported to %1%"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unknown error with G-code export"
-msgstr ""
+msgstr "Okänt fel vid exportering av G-code."
 
 #, boost-format
 msgid ""
@@ -4386,8 +4472,9 @@ msgstr ""
 "Felmeddelande: %1%.\n"
 "Source file %2%."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Copying of the temporary G-code to the output G-code failed."
-msgstr ""
+msgstr "Kopiering av den tillfälliga G-koden till utgången G-kod misslyckades."
 
 #, boost-format
 msgid "Scheduling upload to `%1%`. See Window -> Print Host Upload Queue"
@@ -4432,14 +4519,16 @@ msgstr "Välj en STL fil för att importera bygglattans form ifrån:"
 msgid "Invalid file format."
 msgstr "Ogiltligt fil-format."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Error: invalid model"
-msgstr ""
+msgstr "Fel! Ogiltlig model"
 
 msgid "The selected file contains no geometry."
 msgstr "Den valda filen saknar geometri."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The selected file contains several disjointed areas. This is not supported."
-msgstr ""
+msgstr "Den valda filen innehåller flera osammanhängande område. Denna fil stöds inte."
 
 msgid "Choose a file to import bed texture from (PNG/SVG):"
 msgstr "Välj fil att importera byggplattans textur från (PNG/SVG):"
@@ -4464,11 +4553,15 @@ msgstr "The recommended minimum temperature cannot be higher than the recommende
 msgid "Please check.\n"
 msgstr "Kontrollera.\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "The nozzle may become clogged when the temperature is out of the recommended range.\n"
 "Please make sure whether to use this temperature to print.\n"
 "\n"
 msgstr ""
+"Nozzeln kan blockeras när temperaturen är utanför rekommenderad intervall.\n"
+"Säkerställ om temperaturen ska användas vid utskrift.\n"
+"\n"
 
 #, c-format, boost-format
 msgid "The recommended nozzle temperature for this filament type is [%d, %d] degrees Celsius."
@@ -4477,28 +4570,38 @@ msgstr "Rekommenderad nozzel temperatur med denna filament typ är [%d, %d] grad
 msgid "Adaptive Pressure Advance model validation failed:\n"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Too small max volumetric speed.\n"
 "Value was reset to 0.5"
 msgstr ""
+"För liten max volymhastighet.\n"
+"Värdet återställdes till 0,5"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "Current chamber temperature is higher than the material's safe temperature; this may result in material softening and nozzle clogs. The maximum safe temperature for the material is %d"
-msgstr ""
+msgstr "Current chamber temperature is higher than the material's safe temperature, this may result in material softening and clogging. The maximum safe temperature for the material is %d"
 
 #, c-format, boost-format
 msgid "The minimal chamber temperature (%d℃) is higher than the target chamber temperature (%d℃). The minimal value is the threshold at which printing starts while the chamber keeps heating toward the target, so it should not exceed it. It will be clamped to the target."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Layer height too small\n"
 "It has been reset to 0.2"
 msgstr ""
+"För liten lagerhöjd.\n"
+"Den har återställts till 0.2"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Ironing spacing too small\n"
 "It has been reset to 0.1"
 msgstr ""
+"För litet avstånd för strykning.\n"
+"Återställ till 0.1"
 
 msgid ""
 "Zero initial layer height is invalid.\n"
@@ -4509,13 +4612,20 @@ msgstr ""
 "\n"
 "Första lagerhöjden kommer att återställas till 0,2."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This setting is only used for tuning model size by small amounts.\n"
 "For example, when the model size has small errors or when tolerances are incorrect. For large adjustments, please use the model scale function.\n"
 "\n"
 "The value will be reset to 0."
 msgstr ""
+"Den här inställningen används endast för optimering av modellstorlek med litet värde i vissa fall.\n"
+"Till exempel när modellstorleken har små fel och svåra att montera.\n"
+"För justering av stor storlek, använd modellskalnings funktionen.\n"
+"\n"
+"Värdet kommer att återställas till 0."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "The elephant foot compensation value is too large.\n"
 "If there are significant elephant foot issues, please check other settings.\n"
@@ -4523,6 +4633,11 @@ msgid ""
 "\n"
 "The value will be reset to 0."
 msgstr ""
+"För stor elefantfots kompensation är orimlig.\n"
+"Om det finns en elefantfotseffekt, kontrollera andra inställningar.\n"
+"Till exempel, byggytans temperatur kan vara för hög.\n"
+"\n"
+"Värdet kommer att återställas till 0."
 
 msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 msgstr "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
@@ -4602,11 +4717,15 @@ msgstr "Spiral mode only works when wall loops is 1, support is disabled, clumpi
 msgid " But machines with I3 structure will not generate timelapse videos."
 msgstr " Maskiner med I3-struktur kan dock inte generera timelapse videor."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Change these settings automatically?\n"
 "Yes - Change these settings and enable spiral/vase mode automatically\n"
 "No  - Cancel enabling spiral mode"
 msgstr ""
+"Ändra dessa inställningar automatiskt?\n"
+"JA -Ändra dessa inställningar och möjliggör Spiral läge automatiskt\n"
+"NEJ  -Avbryt Spiral läge denna gång"
 
 msgid "Printing"
 msgstr "Utskrift pågår"
@@ -5008,9 +5127,10 @@ msgstr "Tom sträng"
 msgid "Value is out of range."
 msgstr "Värdet är utanför intervallet."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "%s can’t be a percentage"
-msgstr ""
+msgstr "%s kan inte vara procent"
 
 #, c-format, boost-format
 msgid "Value %s is out of range, continue?"
@@ -5097,7 +5217,7 @@ msgid "Acceleration"
 msgstr "Acceleration"
 
 msgid "Jerk"
-msgstr ""
+msgstr "Jerk"
 
 msgid "Fan Speed"
 msgstr "Fläkt Hastighet"
@@ -5223,7 +5343,7 @@ msgid "Acceleration: "
 msgstr ""
 
 msgid "Jerk: "
-msgstr ""
+msgstr "Jerk: "
 
 msgid "PA: "
 msgstr "PA: "
@@ -5267,8 +5387,9 @@ msgstr "Torn"
 msgid "Total"
 msgstr "Totalt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Total estimation"
-msgstr ""
+msgstr "Total Uppskattning"
 
 msgid "Total time"
 msgstr "Total tid"
@@ -5336,11 +5457,13 @@ msgstr "från"
 msgid "Usage"
 msgstr "Användning"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Layer height (mm)"
-msgstr ""
+msgstr "Lagerhöjd (mm)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Line width (mm)"
-msgstr ""
+msgstr "Linje Bredd (mm)"
 
 msgid "Speed (mm/s)"
 msgstr "Hastighet (mm/s)"
@@ -5352,13 +5475,14 @@ msgid "Acceleration (mm/s²)"
 msgstr ""
 
 msgid "Jerk (mm/s)"
-msgstr ""
+msgstr "Jerk (mm/s)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Fan speed (%)"
-msgstr ""
+msgstr "Fläkt hastighet (%)"
 
 msgid "Temperature (℃)"
-msgstr ""
+msgstr "Temperatur (℃)"
 
 msgid "Volumetric flow rate (mm³/s)"
 msgstr "Volymetrisk flödeshastighet (mm³/s)"
@@ -5389,7 +5513,7 @@ msgstr "Färg byte"
 
 msgctxt "Noun"
 msgid "Print"
-msgstr ""
+msgstr "Skriv ut"
 
 msgid "Printer"
 msgstr "Skrivare"
@@ -5502,17 +5626,20 @@ msgstr "Left nozzle: X:%1%-%2%, Y:%3%-%4%, Z:%5%-%6%\n"
 msgid "Right nozzle: X:%1%-%2%, Y:%3%-%4%, Z:%5%-%6%"
 msgstr "Right nozzle: X:%1%-%2%, Y:%3%-%4%, Z:%5%-%6%"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Tool move"
-msgstr ""
+msgstr "Verktygs Förflyttning"
 
 msgid "Tool Rotate"
 msgstr "Verktygs rotation"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move object"
-msgstr ""
+msgstr "Flytta Objektet"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Auto orientation options"
-msgstr ""
+msgstr "Auto Placerings val"
 
 msgid "Enable rotation"
 msgstr "Aktivera rotation"
@@ -5543,15 +5670,15 @@ msgstr "Justera mot Y-axeln"
 
 msgctxt "Camera View"
 msgid "Back"
-msgstr ""
+msgstr "Tillbaka"
 
 msgctxt "Camera View"
 msgid "Left"
-msgstr ""
+msgstr "Vänster"
 
 msgctxt "Camera View"
 msgid "Right"
-msgstr ""
+msgstr "Höger"
 
 msgid "Add"
 msgstr "Lägg till"
@@ -5652,8 +5779,9 @@ msgstr "Explosions Förhållande"
 msgid "Section View"
 msgstr "Sektionsvy"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Assembly Control"
-msgstr ""
+msgstr "Monterings Kontroll"
 
 msgid "Selection Mode"
 msgstr "Selection Mode"
@@ -5680,8 +5808,9 @@ msgstr "Ett objekt är placerad över byggplattans begränsningar."
 msgid "A G-code path goes beyond the max print height."
 msgstr "En G-kod bana går utöver den maximala utskriftshöjden."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A G-code path goes beyond plate boundaries."
-msgstr ""
+msgstr "En G-kod väg passerar över byggplattans begränsningar."
 
 msgid "Not support printing 2 or more TPU filaments."
 msgstr "Not support printing 2 or more TPU filaments."
@@ -5818,8 +5947,9 @@ msgstr ""
 "You can find it in \"Setting > Setting > LAN only > Access Code\"\n"
 "on the printer, as shown in the figure:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Invalid input"
-msgstr ""
+msgstr "Ogiltig inmatning"
 
 msgid "New Window"
 msgstr "Nytt fönster"
@@ -5827,8 +5957,9 @@ msgstr "Nytt fönster"
 msgid "Open a new window"
 msgstr "Öppna ett nytt fönster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Closing application"
-msgstr ""
+msgstr "Begäran avslutas"
 
 msgid "Closing Application while some presets are modified."
 msgstr "Stänger Begäran medans vissa inställningar ändrats."
@@ -5871,7 +6002,7 @@ msgstr "Exportera G-kod filen"
 
 msgctxt "Verb"
 msgid "Print"
-msgstr ""
+msgstr "Skriv ut"
 
 msgid "Export plate sliced file"
 msgstr "Exportera byggplattans beredda fil"
@@ -6070,8 +6201,9 @@ msgstr "Klistra in"
 msgid "Paste clipboard"
 msgstr "Klistra in urklipp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Delete Selected"
-msgstr ""
+msgstr "Radera vald"
 
 msgid "Deletes the current selection"
 msgstr "Radera vald markering"
@@ -6079,8 +6211,9 @@ msgstr "Radera vald markering"
 msgid "Deletes all objects"
 msgstr "Radera alla objekt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Clone Selected"
-msgstr ""
+msgstr "Kopia vald"
 
 msgid "Clone copies of selections"
 msgstr "Kopiera markeringen"
@@ -6251,13 +6384,15 @@ msgstr "&Visa"
 msgid "&Help"
 msgstr "&Hjälp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "A file exists with the same name: %s. Do you want to overwrite it?"
-msgstr ""
+msgstr "Det finns en fil med samma namn: %s. Vill du åsidosätta den?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "A config exists with the same name: %s. Do you want to overwrite it?"
-msgstr ""
+msgstr "Det finns en konfiguration med samma namn: %s. Vill du åsidosätta den?"
 
 msgid "Overwrite file"
 msgstr "Skriv över fil"
@@ -6280,8 +6415,9 @@ msgid_plural "There are %d configs exported. (Only non-system configs)"
 msgstr[0] "%d konfiguration har exporterats. (Endast icke-systemkonfigurationer)"
 msgstr[1] "%d konfigurationer har exporterats. (Endast icke-systemkonfigurationer)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Export Result"
-msgstr ""
+msgstr "Exportera resultat"
 
 msgid "Select profile to load:"
 msgstr "Välj den profil som ska laddas:"
@@ -6328,8 +6464,9 @@ msgstr "Enhetenen kan inte hantera fler konversationer. Försök igen senare."
 msgid "Player is malfunctioning. Please reinstall the system player."
 msgstr "Spelaren fungerar inte som den ska. Vänligen installera om system spelaren."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The player is not loaded; please click the \"play\" button to retry."
-msgstr ""
+msgstr "Spelaren är inte laddad; klicka på \"play\" knappen för att försöka igen."
 
 msgid "The player is not loaded because the GStreamer GTK video sink is missing or failed to initialize."
 msgstr ""
@@ -6349,8 +6486,9 @@ msgstr "Ett problem har uppstått. Uppdatera printerns programvara och försök 
 msgid "LAN Only Liveview is off. Please turn on the liveview on printer screen."
 msgstr "LAN Only Liveview is off. Please turn on the liveview on printer screen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please enter the IP of the printer to connect."
-msgstr ""
+msgstr "Ange printerns IP för att ansluta."
 
 msgid "Initializing..."
 msgstr "Startar..."
@@ -6646,8 +6784,9 @@ msgstr "Online"
 msgid "Input access code"
 msgstr "Inmatning av åtkomstkod"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Can't find devices?"
-msgstr ""
+msgstr "Hittar du inte enheter?"
 
 msgid "Log out successful."
 msgstr "Utloggning lyckades."
@@ -6670,14 +6809,17 @@ msgstr "ogiltliga tecken:"
 msgid "illegal suffix:"
 msgstr "ogiltlig ändelse:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The name field is not allowed to be empty."
-msgstr ""
+msgstr "Namn fältet får inte vara tomt."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The name is not allowed to start with a space."
-msgstr ""
+msgstr "Namnet får inte börja med mellanrum."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The name is not allowed to end with a space."
-msgstr ""
+msgstr "Namnet får inte avslutas med mellanrum."
 
 msgid "The name is not allowed to exceed 32 characters."
 msgstr "The name is not allowed to exceed 32 characters."
@@ -6698,8 +6840,9 @@ msgstr "Switching..."
 msgid "Switching failed"
 msgstr "Switching failed"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Printing progress"
-msgstr ""
+msgstr "Utskriftsförlopp"
 
 msgid "Parts Skip"
 msgstr "Parts Skip"
@@ -6716,10 +6859,13 @@ msgstr "Click to view thermal preconditioning explanation"
 msgid "Clear"
 msgstr "Rensa"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "You have completed printing the mall model, \n"
 "but synchronizing rating information has failed."
 msgstr ""
+"You have completed printing the mall model, \n"
+"but the synchronization of rating information has failed."
 
 msgid "How do you like this printing file?"
 msgstr "Vad tycker du om den här utskriftsfilen?"
@@ -6811,9 +6957,10 @@ msgstr "Laddar ner..."
 msgid "Cloud Slicing..."
 msgstr "Moln beredning..."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "In Cloud Slicing Queue, there are %s tasks ahead of you."
-msgstr ""
+msgstr "I Moln Berednings Kön finns det %s uppgifter framför dig."
 
 #, c-format, boost-format
 msgid "Layer: %s"
@@ -6835,8 +6982,9 @@ msgstr "If the chamber temperature exceeds 40℃, the system will automatically 
 msgid "Please select an AMS slot before calibration"
 msgstr "Välj ett AMS-fack innan kalibrering"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cannot read filament info: the filament is loaded to the tool head. Please unload the filament and try again."
-msgstr ""
+msgstr "Kan inte läsa filament information: Filamentet är laddat till verktygshuvudet; ta bort filamentet och försök igen."
 
 msgid "This only takes effect during printing"
 msgstr "Detta gäller endast under utskrift."
@@ -7077,8 +7225,9 @@ msgstr "Please refer to Wiki before use->"
 msgid "3D Mouse disconnected."
 msgstr "3D mus bortkopplad."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A new configuration is available. Update now?"
-msgstr ""
+msgstr "Ny konfiguration upptäckt! Uppdatera nu?"
 
 msgid "Integration was successful."
 msgstr "Integrationen lyckades."
@@ -7101,14 +7250,17 @@ msgstr "Ny printer konfiguration tillgänglig."
 msgid "Undo integration failed."
 msgstr "Återställande av integrationen misslyckades."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Exporting"
-msgstr ""
+msgstr "Exporterar."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An update is available!"
-msgstr ""
+msgstr "En uppdatering finns tillgänglig."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Go to download page"
-msgstr ""
+msgstr "Besök nedladdnings sidan."
 
 msgid "Open Folder."
 msgstr "Öppna Mapp."
@@ -7611,8 +7763,9 @@ msgstr ""
 msgid "Enable detection of build plate position"
 msgstr "Aktivera detektering av byggplattans position"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The localization tag of the build plate will be detected, and printing will be paused if the tag is not in predefined range."
-msgstr ""
+msgstr "Lokaliseringsmärket på byggplattan registreras och utskriften pausas om märket inte ligger inom det fördefinierade intervallet."
 
 msgid "Build Plate Detection"
 msgstr "Build Plate Detection"
@@ -7671,8 +7824,9 @@ msgstr "Detects air printing caused by nozzle clogging or filament grinding."
 msgid "First Layer Inspection"
 msgstr "Första Lager Inspektion"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Auto-recover from step loss"
-msgstr ""
+msgstr "Automatisk återhämtning vid stegförlust"
 
 msgid "Store Sent Files on External Storage"
 msgstr "Store Sent Files on External Storage"
@@ -7683,8 +7837,9 @@ msgstr ""
 msgid "Allow Prompt Sound"
 msgstr "Tillåt Prompt Ljud"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament Tangle Detection"
-msgstr ""
+msgstr "Filament Tangle Detect"
 
 msgid "Check if the nozzle is clumping by filament or other foreign objects."
 msgstr "Check if the nozzle is clumping by filament or other foreign objects."
@@ -7877,10 +8032,10 @@ msgstr "Not installed"
 msgid "Configuration incompatible"
 msgstr "Ej kompatibel konfiguration"
 
-msgid "Filament switcher detected. All AMS filaments are now available for both extruders. The slicer will auto-assign for optimal printing. "
+msgid "Filament switcher detected. All AMS filaments are now available for both extruders. The slicer will auto-assign for optimal printing."
 msgstr ""
 
-msgid "A filament switcher is detected but not calibrated and thus currently unavailable. Please calibrate it on the printer and synchronize before use. "
+msgid "A filament switcher is detected but not calibrated and thus currently unavailable. Please calibrate it on the printer and synchronize before use."
 msgstr ""
 
 msgid "Tips"
@@ -7975,8 +8130,9 @@ msgstr "Avinstallationen lyckades. Enheten %s(%s) kan nu tas bort från datorn p
 msgid "Ejecting of device %s (%s) has failed."
 msgstr "Ejecting of device %s (%s) has failed."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Previously unsaved items have been detected. Do you want to restore them?"
-msgstr ""
+msgstr "Tidigare osparat projekt upptäckt, återställa det?"
 
 msgid "Restore"
 msgstr "Återställ"
@@ -7984,8 +8140,9 @@ msgstr "Återställ"
 msgid "The current heatbed temperature is relatively high. The nozzle may clog when printing this filament in a closed environment. Please open the front door and/or remove the upper glass."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The nozzle hardness required by the filament is higher than the default nozzle hardness of the printer. Please replace the hardened nozzle or filament, otherwise, the nozzle will be worn down or damaged."
-msgstr ""
+msgstr "Nozzelns hårdhet som filamentet kräver är högre än skrivarens standard för nozzeln. Byt ut den härdade nozzeln eller filamentet, annars kommer nozzeln att slitas ner eller skadas."
 
 msgid "Enabling traditional timelapse photography may cause surface imperfections. It is recommended to change to smooth mode."
 msgstr "Aktivering av traditionell timelapse fotografering kan orsaka ojämnheter i ytan. Det rekommenderas att ändra till jämnt läge."
@@ -8028,8 +8185,9 @@ msgstr ""
 msgid "The 3MF file version %s is newer than %s's version %s, found the following unrecognized keys:"
 msgstr "3mf:s version %s är nyare än %s version %s, Följande nycklar har hittats som inte känns igen:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You should update your software.\n"
-msgstr ""
+msgstr "Uppdatera mjukvaran.\n"
 
 #, fuzzy, c-format, boost-format
 msgid "The 3MF file version %s is newer than %s's version %s, we suggest to upgrade your software."
@@ -8055,8 +8213,9 @@ msgstr ""
 msgid "Invalid values found in the 3MF:"
 msgstr "Ogiltiga värden hittades i 3MF:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please correct them in the Param tabs"
-msgstr ""
+msgstr "Vänligen korrigera dem i Parameter flikarna"
 
 msgid "The 3MF has the following modified G-code in filament or printer presets:"
 msgstr "The 3MF has the following modified G-code in filament or printer presets:"
@@ -8076,11 +8235,13 @@ msgstr "Bekräfta att G-koderna i dessa inställningar är säkra för att förh
 msgid "Customized Preset"
 msgstr "Anpassad inställning"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Component name(s) inside step file not in UTF8 format!"
-msgstr ""
+msgstr "Komponent namnet i STEP filen är inte UTF8 format!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Because of unsupported text encoding, garbage characters may appear!"
-msgstr ""
+msgstr "På grund av textkodning som inte stöds så kan skräptecken visas!"
 
 msgid "Remember my choice."
 msgstr "Kom ihåg mitt val."
@@ -8095,20 +8256,27 @@ msgstr "Objekt utan volym raderade"
 msgid "The volume of the object is zero"
 msgstr "Objektet är utan volym"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid ""
 "The object from file %s is too small, and may be in meters or inches.\n"
 " Do you want to scale to millimeters?"
 msgstr ""
+"Objektets fil %s är för litet, det är kanske i meter eller inches.\n"
+"Skala om till millimeter?"
 
 msgid "Object too small"
 msgstr "För litet objekt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This file contains several objects positioned at multiple heights.\n"
 "Instead of considering them as multiple objects, should \n"
 "the file be loaded as a single object with multiple parts?"
 msgstr ""
+"Filen innehåller flera objekt som är placerade på olika höjder.\n"
+"Istället för att betrakta dem som flera objekt, ska\n"
+"filen laddas som ett enda objekt med flera delar?"
 
 msgid "Multi-part object detected"
 msgstr "Objekt i flera delar har upptäckts"
@@ -8116,8 +8284,9 @@ msgstr "Objekt i flera delar har upptäckts"
 msgid "Load these files as a single object with multiple parts?\n"
 msgstr "Ladda dessa filer som ett enkelt objekt med multipla delar?\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An object with multiple parts was detected"
-msgstr ""
+msgstr "Ett objekt med multipla delar har upptäckts"
 
 msgid "Auto-Drop"
 msgstr ""
@@ -8147,8 +8316,9 @@ msgstr "Export Draco file:"
 msgid "Export AMF file:"
 msgstr "Exportera AMF-fil:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Save file as"
-msgstr ""
+msgstr "Spara fil som:"
 
 msgid "Export OBJ file:"
 msgstr "Exportera OBJ-fil:"
@@ -8165,11 +8335,15 @@ msgstr "Bekräfta Spara som"
 msgid "Delete object which is a part of cut object"
 msgstr "Radera objekt som är en del av det utskurna objektet"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "You are trying to delete an object which is a part of a cut object.\n"
 "This action will break a cut correspondence.\n"
 "After that, model consistency can't be guaranteed."
 msgstr ""
+"Du försöker radera ett objekt som är en del av ett klippt objekt.\n"
+"Denna åtgärd kommer att bryta en klippt korrespondens.\n"
+"Efter det kan modell konsistens inte garanteras."
 
 msgid "Delete Object"
 msgstr ""
@@ -8198,8 +8372,9 @@ msgstr "En annan exportering pågår."
 msgid "Unable to replace with more than one volume"
 msgstr "Går inte att ersätta med mer än en volym"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Error during replacement"
-msgstr ""
+msgstr "Fel vid byte"
 
 msgid "Replace from:"
 msgstr "Ersätt från:"
@@ -8207,8 +8382,9 @@ msgstr "Ersätt från:"
 msgid "Select a new file"
 msgstr "Välj en ny fil"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "File for the replacement wasn't selected"
-msgstr ""
+msgstr "Ersättningsfilen valdes inte"
 
 msgid "Replace with 3D file"
 msgstr ""
@@ -8312,8 +8488,9 @@ msgstr ""
 msgid "Sync now"
 msgstr "Sync now"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You can keep the modified presets for the new project or discard them"
-msgstr ""
+msgstr "Fortsätt med redigerings inställningarna till nytt projekt eller avfärda dem"
 
 msgid "Creating a new project"
 msgstr "Skapar nytt projekt"
@@ -8321,10 +8498,13 @@ msgstr "Skapar nytt projekt"
 msgid "Load project"
 msgstr "Ladda projekt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Failed to save the project.\n"
 "Please check whether the folder exists online or if other programs have the project file open."
 msgstr ""
+"Det gick inte att spara projektet.\n"
+"Kontrollera om mappen finns online eller om andra program har projektfilen öppen."
 
 msgid "Save project"
 msgstr "Spara projekt"
@@ -8336,14 +8516,16 @@ msgstr "Importerar Modell"
 msgid "Preparing 3MF file..."
 msgstr "förbereder 3mf-filen..."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Download failed; unknown file format."
-msgstr ""
+msgstr "Download failed, unknown file format."
 
 msgid "Downloading project..."
 msgstr "laddar ner projekt ..."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Download failed; File size exception."
-msgstr ""
+msgstr "Download failed, File size exception."
 
 #, c-format, boost-format
 msgid "Project downloaded %d%%"
@@ -8368,11 +8550,13 @@ msgstr "Import SLA archive"
 msgid "The selected file"
 msgstr "Den valda filen"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Does not contain valid G-code."
-msgstr ""
+msgstr "Innehåller ingen giltlig G-kod."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An Error has occurred while loading the G-code file."
-msgstr ""
+msgstr "Fel uppstod vid laddningen av G-kod"
 
 #. TRN %1% is archive path
 #, boost-format
@@ -8400,23 +8584,27 @@ msgstr "Öppna som projekt"
 msgid "Import geometry only"
 msgstr "Importera endast geometrin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Only one G-code file can be opened at a time."
-msgstr ""
+msgstr "Endast en G-kod kan öppnas åt gången."
 
 msgid "G-code loading"
 msgstr "Laddar G-kod"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "G-code files and models cannot be loaded together!"
-msgstr ""
+msgstr "G-kod filer och modeller kan inte laddas tillsammans!!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unable to add models in preview mode"
-msgstr ""
+msgstr "Det gick inte att lägga till modeller i förhandsvisningsläge"
 
 msgid "All objects will be removed, continue?"
 msgstr "Alla objekt kommer att raderas, fortsätta?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The current project has unsaved changes. Would you like to save before continuing?"
-msgstr ""
+msgstr "Nuvarande projekt har ej sparade ändringar, spara innan du går vidare?"
 
 msgid "Number of copies:"
 msgstr "Antal kopior:"
@@ -8486,10 +8674,13 @@ msgstr "Upload and Print"
 msgid "Abnormal print file data. Please slice again"
 msgstr "Onormal utskrifts fil data. Vänligen bered igen"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Print By Object: \n"
 "We suggest using auto-arrange to avoid collisions when printing."
 msgstr ""
+"Skriv ut per Objekt:\n"
+"Rekommenderar att auto-placering för att undvika kollisioner under utskrift."
 
 msgid "Send G-code"
 msgstr "Skicka G-kod"
@@ -8603,9 +8794,10 @@ msgstr "Trianglar: %1%\n"
 msgid "Use \"Fix Model\" to repair the mesh."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "Plate %d: %s is not suggested for use printing filament %s (%s). If you still want to do this print job, please set this filament's bed temperature to a number that is not zero."
-msgstr ""
+msgstr "Platta %d: %s rekommenderas inte för användning av filament %s (%s). Om du fortfarande vill göra detta utskriftsjobb, vänligen ställ in detta filaments byggplattas temperatur till ett tal som inte är noll."
 
 msgid "Currently, the object configuration form cannot be used with a multiple-extruder printer."
 msgstr "Currently, the object configuration form cannot be used with a multiple-extruder printer."
@@ -8631,8 +8823,9 @@ msgstr "front"
 msgid "rear"
 msgstr "rear"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Switching languages requires the application to restart.\n"
-msgstr ""
+msgstr "Byte av språk krävs för omstart.\n"
 
 msgid "Do you want to continue?"
 msgstr "Fortsätta?"
@@ -8658,8 +8851,9 @@ msgstr "Nordamerika"
 msgid "Others"
 msgstr "Andra"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Changing the region will log you out of your account.\n"
-msgstr ""
+msgstr "Om du ändrar regionen loggas du ut från ditt konto.\n"
 
 msgid "Region selection"
 msgstr "Val av region"
@@ -8765,8 +8959,9 @@ msgstr "Default page"
 msgid "Set the page opened on startup."
 msgstr "Set the page opened on startup."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable dark Mode"
-msgstr ""
+msgstr "Aktivera mörkt läge"
 
 msgid "Allow only one InlongSlicer instance"
 msgstr "Allow only one InlongSlicer instance"
@@ -8816,8 +9011,9 @@ msgstr "Should printer/filament/process settings be loaded when opening a 3MF fi
 msgid "Auto backup"
 msgstr "Auto säkerhetskopiera"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Backup your project periodically to help with restoring from an occasional crash."
-msgstr ""
+msgstr "Säkerhetskopiera ditt projekt med jämna mellanrum för att underlätta återställning efter en tillfällig krasch."
 
 msgid "Maximum recent files"
 msgstr "Maximum recent files"
@@ -9074,7 +9270,7 @@ msgid "Renders cast shadows on the plate, other objects, and each object onto it
 msgstr ""
 
 msgid "Anti-aliasing"
-msgstr ""
+msgstr "Anti-aliasing"
 
 msgid "MSAA Multiplier"
 msgstr ""
@@ -9099,7 +9295,7 @@ msgid ""
 msgstr ""
 
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 msgid "FPS cap"
 msgstr ""
@@ -9116,6 +9312,15 @@ msgid "Show FPS overlay"
 msgstr ""
 
 msgid "Displays current viewport FPS in the top-right corner."
+msgstr ""
+
+msgid "G-code Preview"
+msgstr ""
+
+msgid "Dim lower layers"
+msgstr ""
+
+msgid "When scrubbing the layer slider in the sliced preview, render the layers below the current one darkened so that only the layer being viewed is shown at full brightness."
 msgstr ""
 
 msgid "Login region"
@@ -9171,8 +9376,9 @@ msgstr "Filament & Color"
 msgid "Color only"
 msgstr "Color only"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Update built-in presets automatically."
-msgstr ""
+msgstr "Uppdatera inbyggda förinställningar automatiskt."
 
 msgid "Use encrypted file for token storage"
 msgstr "Use encrypted file for token storage"
@@ -9325,11 +9531,13 @@ msgstr "Spar knappen för felsökning"
 msgid "Save debug settings"
 msgstr "spara felsöknings knappen"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Debug settings have been saved successfully!"
-msgstr ""
+msgstr "FELSÖKNINGS inställningarna har sparats!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cloud environment switched; please login again!"
-msgstr ""
+msgstr "Moln miljön har bytts ut; vänligen logga in igen!"
 
 msgid "System presets"
 msgstr "Systemets förinställningar"
@@ -9349,8 +9557,9 @@ msgstr "AMS-filament"
 msgid "Left filaments"
 msgstr "Left filaments"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "AMS filament"
-msgstr ""
+msgstr "AMS-filament"
 
 msgid "Right filaments"
 msgstr "Right filaments"
@@ -9385,8 +9594,9 @@ msgstr "Unsupported presets"
 msgid "Unsupported"
 msgstr "Stöds inte"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add/Remove filament"
-msgstr ""
+msgstr "Lägg till/Ta bort filament"
 
 msgid "Add/Remove materials"
 msgstr "Lägg till/Ta bort material"
@@ -9454,8 +9664,9 @@ msgstr "Godkänn"
 msgid "Log Out"
 msgstr "Logga ut"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Slice all plates to obtain time and filament estimation"
-msgstr ""
+msgstr "Bered alla plattor för att mottaga tid och filament uppskattning"
 
 msgid "Packing project data into 3MF file"
 msgstr "Packa projekt data till 3MF fil"
@@ -9514,8 +9725,9 @@ msgstr "Förinställning \"%1%\" finns redan."
 msgid "Preset \"%1%\" already exists and is incompatible with the current printer."
 msgstr "Förinställning \"%1%\" finns redan och fungerar inte med nuvarande skrivare."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please note that saving will overwrite the current preset."
-msgstr ""
+msgstr "Observera att om du sparar kommer den aktuella förinställningen att skrivas över"
 
 msgid "The name cannot be the same as a preset alias name."
 msgstr "Namnet får inte vara samma som förinställt namn."
@@ -9686,11 +9898,15 @@ msgstr "Filamentet matchar inte filamentet i AMS-facket. Uppdatera skrivarens pr
 msgid "The selected printer (%s) is incompatible with the print file configuration (%s). Please adjust the printer preset in the prepare page or choose a compatible printer on this page."
 msgstr "The selected printer (%s) is incompatible with the print file configuration (%s). Please adjust the printer preset in the prepare page or choose a compatible printer on this page."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "When spiral vase mode is enabled, machines with I3 structure will not generate timelapse videos."
-msgstr ""
+msgstr "When enable spiral vase mode, machines with I3 structure will not generate timelapse videos."
 
 msgid "The current printer does not support timelapse in Traditional Mode when printing By-Object."
 msgstr "The current printer does not support timelapse in Traditional Mode when printing By-Object."
+
+msgid "I have checked the installed nozzle and want to print anyway."
+msgstr ""
 
 msgid "Errors"
 msgstr "Fel"
@@ -9704,8 +9920,9 @@ msgstr "The filament type setting of external spool is different from the filame
 msgid "The printer type selected when generating G-code is not consistent with the currently selected printer. It is recommended that you use the same printer type for slicing."
 msgstr "Den skrivar typ som valdes vid generering av G-kod överensstämmer inte med den för tillfället valda skrivaren. Vi rekommenderar att du använder samma skrivartyp för beredning."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "There are some unknown filaments in the AMS mappings. Please check whether they are the required filaments. If they are okay, click \"Confirm\" to start printing."
-msgstr ""
+msgstr "Det finns några okända filament i AMS-mappningen. Kontrollera om det är de filament som krävs. Om de är okej, klicka du på \"Confirm\" för att börja skriva ut."
 
 msgid "Please check the following:"
 msgstr "Kontrollera följande:"
@@ -9799,8 +10016,8 @@ msgstr ""
 msgid "The nozzle flow setting of %s(%s) doesn't match with the slicing file(%s). Please make sure the nozzle installed matches with settings in printer, then set the corresponding printer preset while slicing."
 msgstr "The nozzle flow setting of %s(%s) doesn't match with the slicing file(%s). Please make sure the nozzle installed matches with settings in printer, then set the corresponding printer preset while slicing."
 
-msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
-msgstr "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
+msgid "Tips: If you changed your nozzle of your printer lately, please go to 'Device -> Printer parts' to change your nozzle setting."
+msgstr ""
 
 #, c-format, boost-format
 msgid "The %s diameter(%.1fmm) of current printer doesn't match with the slicing file (%.1fmm). Please make sure the nozzle installed matches with settings in printer, then set the corresponding printer preset when slicing."
@@ -9915,8 +10132,9 @@ msgstr "Storage is in abnormal state or is in read-only mode."
 msgid "Storage needs to be inserted before printing."
 msgstr "Storage needs to be inserted before printing."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cannot send the print job to a printer whose firmware must be updated."
-msgstr ""
+msgstr "Det går inte att skicka utskriftsjobbet till en skrivare vars fasta programvara måste uppdateras."
 
 msgid "Cannot send a print job for an empty plate."
 msgstr "Det går inte att skicka ett utskriftsjobb för en tom platta."
@@ -9973,8 +10191,9 @@ msgstr "Connection timed out, please check your network."
 msgid "Connection failed. Click the icon to retry"
 msgstr "Connection failed. Click the icon to retry"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cannot send print tasks when an update is in progress"
-msgstr ""
+msgstr "Det går inte att skicka utskriftsuppgiften när uppgraderingen pågår"
 
 msgid "The selected printer is incompatible with the chosen printer presets."
 msgstr "Den valda skrivaren är inte kompatibel med de valda skrivar inställningarna."
@@ -9997,8 +10216,9 @@ msgstr "File upload timed out. Please check if the firmware version supports thi
 msgid "Sending failed, please try again!"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Slice complete"
-msgstr ""
+msgstr "Beredning klar."
 
 msgid "View all Daily tips"
 msgstr "Visa alla dagliga tips"
@@ -10012,11 +10232,13 @@ msgstr "Det gick inte att ansluta uttaget"
 msgid "Failed to publish login request"
 msgstr "Det gick inte att publicera inloggningsbegäran"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Timeout getting ticket from device"
-msgstr ""
+msgstr "Timeout för att hämta ärende från enhet"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Timeout getting ticket from server"
-msgstr ""
+msgstr "Timeout för att hämta ärende från server"
 
 msgid "Failed to post ticket to server"
 msgstr "Misslyckades med att skicka biljett till server"
@@ -10128,10 +10350,11 @@ msgid "Click to reset all settings to the last saved preset."
 msgstr "Klicka för att återställa alla inställningar till den senast sparade förinställningen."
 
 msgid "Prime tower is required for nozzle changing. There may be flaws on the model without prime tower. Are you sure you want to disable prime tower?"
-msgstr ""
+msgstr "Prime tower krävs för nozzle byte. Det kan bli brister på modellen utan prime tower. Är du säker på att du vill inaktivera prime tower?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is required for smooth timelapse mode. There may be flaws on the model without a prime tower. Are you sure you want to disable the prime tower?"
-msgstr ""
+msgstr "Prime tower krävs för smooth timelapse-läge. Det kan bli fel på modellen utan ett prime tower. Är du säker på att du vill inaktivera prime tower?"
 
 msgid "A prime tower is required for clumping detection. There may be flaws on the model without prime tower. Are you sure you want to disable prime tower?"
 msgstr "A prime tower is required for clumping detection. There may be flaws on the model without prime tower. Are you sure you want to disable prime tower?"
@@ -10145,8 +10368,9 @@ msgstr "A prime tower is required for clumping detection. There may be flaws on 
 msgid "Enabling both precise Z height and the prime tower may cause slicing errors. Do you still want to enable precise Z height?"
 msgstr "Att aktivera både exakt Z-höjd och rengöringstornet kan orsaka skärningsfel. Vill du fortfarande aktivera exakt Z-höjd?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is required for smooth timelapse mode. There may be flaws on the model without prime tower. Do you want to enable the prime tower?"
-msgstr ""
+msgstr "Prime tower krävs för Smooth timelapse-läge. Det kan bli fel på modellen utan prime tower. Vill du aktivera prime tower?"
 
 msgid "Still print by object?"
 msgstr "Fortfarande utskrift per objekt?"
@@ -10166,11 +10390,15 @@ msgstr ""
 "Vid användning av stödmaterial för stödgränssnittet rekommenderar vi följande inställningar:\n"
 "0 top z-avstånd, 0 gränssnittsavstånd, koncentriskt mönster och inaktivera oberoende stödskiktshöjd."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Change these settings automatically?\n"
 "Yes - Change these settings automatically.\n"
 "No  - Do not change these settings for me."
 msgstr ""
+"Ändra dessa inställningar automatiskt?\n"
+"Ja - Ändra dessa inställningar automatiskt.\n"
+"Nej - Ändra inte dessa inställningar för mig."
 
 msgid ""
 "When using soluble material for the support interface, we recommend the following settings:\n"
@@ -10337,8 +10565,9 @@ msgstr "Jerk(XY)"
 msgid "Raft"
 msgstr "Raft"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament for Supports"
-msgstr ""
+msgstr "Support filament"
 
 msgid "Support ironing"
 msgstr "Support ironing"
@@ -10404,8 +10633,9 @@ msgstr "Allmän information"
 msgid "Recommended nozzle temperature"
 msgstr "Rekommenderad nozzel temperatur"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Recommended nozzle temperature range of this filament. 0 means not set"
-msgstr ""
+msgstr "Rekommenderat nozzel temperaturs område för detta filament. 0 betyder inte fastställt"
 
 msgid "Flow ratio and Pressure Advance"
 msgstr "Flow ratio and Pressure Advance"
@@ -10434,26 +10664,31 @@ msgstr "Bed temperature when the Cool Plate SuperTack is installed. A value of 0
 msgid "Cool Plate"
 msgstr "Kall platta"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Cool Plate is installed. A value of 0 means the filament does not support printing on the Cool Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur när Cool Plate är installerad. Värdet 0 betyder att filamentet inte stöder utskrift på Cool Plate."
 
 msgid "Textured Cool Plate"
 msgstr "Textured Cool Plate"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Textured Cool Plate is installed. A value of 0 means the filament does not support printing on the Textured Cool Plate."
-msgstr ""
+msgstr "Bed temperature when the Textured Cool Plate is installed. A value of 0 means the filament does not support printing on the Textured Cool Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the engineering plate is installed. A value of 0 means the filament does not support printing on the Engineering Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur när Engineering Plate är installerad. Ett värde på 0 betyder att filamentet inte stöder utskrift på Engineering Plate."
 
 msgid "Smooth PEI Plate / High Temp Plate"
 msgstr "Slät PEI platta / Högtemperaturs platta"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Smooth PEI Plate/High Temperature Plate is installed. A value of 0 means the filament does not support printing on the Smooth PEI Plate/High Temp Plate."
-msgstr ""
+msgstr "Bäddtemperatur när slät PEI-platta/Högtemperatur platta är installerad. Värde 0 betyder att filamentet inte stöder utskrift på den släta PEI-plattan/högtemperaturplattan"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Textured PEI Plate is installed. A value of 0 means the filament does not support printing on the Textured PEI Plate."
-msgstr ""
+msgstr "Byggplattans temperatur när texturerad PEI-platta är installerad. 0 betyder att filamentet inte stöds på den texturerade PEI-plattan"
 
 msgid "Volumetric speed limitation"
 msgstr "Volumetrisk hastighets begränsning"
@@ -10467,14 +10702,16 @@ msgstr "Del kylningsfläkten"
 msgid "Min fan speed threshold"
 msgstr "Min fläkt hastighets gräns"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan will run at the minimum fan speed when the estimated layer time is longer than the threshold value. When the layer time is shorter than the threshold, the fan speed will be interpolated between the minimum and maximum fan speed according to layer printing time."
-msgstr ""
+msgstr "Del kylfläktens hastigheten kommer att börja gå med min hastighet när den beräknade lagringstiden inte är längre än lagringstiden i inställningarna. När lager tiden är kortare än gräns värdet, ställer fläkthastigheten sig mellan lägsta och högsta fläkthastighet enligt lagrets utskriftstid"
 
 msgid "Max fan speed threshold"
 msgstr "Max fläkt hastighets gräns"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan will run at maximum speed when the estimated layer time is shorter than the threshold value."
-msgstr ""
+msgstr "Del kylfläktens hastighet kommer att vara max när den beräknade lagringstiden är kortare än inställningsvärdet"
 
 msgid "Heatbreak fan"
 msgstr ""
@@ -10699,9 +10936,10 @@ msgstr ""
 "Är du säker på att du vill radera den valda inställningen?\n"
 "Om inställningen motsvarar ett filament som för närvarande används på din skrivare, vänligen återställ filament informationen för den platsen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "Are you sure you want to %1% the selected preset?"
-msgstr ""
+msgstr "Välja %1% den valda förinställningen?"
 
 msgid "Select printers"
 msgstr "Select printers"
@@ -10765,14 +11003,16 @@ msgstr ""
 msgid "Click to reset current value and attach to the global value."
 msgstr "Klicka för att återställa aktuellt värde och koppla till det övergripande värdet."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Click to drop current modifications and reset to saved value."
-msgstr ""
+msgstr "Klicka för att släppa aktuell modifiering och återställa till sparat värde."
 
 msgid "Process Settings"
 msgstr "Processinställningar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "unsaved changes"
-msgstr ""
+msgstr "Ej sparade ändringar"
 
 msgid "Transfer or discard changes"
 msgstr "Överge eller Behåll ändringar"
@@ -10821,8 +11061,9 @@ msgstr ""
 msgid "Click the right mouse button to display the full text."
 msgstr "Högerklicka för att se hela texten."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "No changes will be saved."
-msgstr ""
+msgstr "Ändringarna sparas ej"
 
 msgid "All changes will be discarded."
 msgstr "Alla ändringar överges."
@@ -11335,16 +11576,16 @@ msgid "Global shortcuts"
 msgstr "Övergripande genvägar"
 
 msgid "Pan View"
-msgstr ""
+msgstr "Panoreringsvy"
 
 msgid "Rotate View"
-msgstr ""
+msgstr "Rotera vy"
 
 msgid "Middle mouse button"
 msgstr ""
 
 msgid "Zoom View"
-msgstr ""
+msgstr "Zoomvy"
 
 msgid "Auto orients selected objects or all objects. If there are selected objects, it just orients the selected ones. Otherwise, it will orient all objects in the current project."
 msgstr "Auto placera valda objekt eller alla objekt. Om det finns valda objekt så placeras endast dem. Annars kommer den att orientera alla objekt i det aktuella projektet."
@@ -11373,29 +11614,34 @@ msgstr "Välj objekt efter rektangel"
 msgid "Arrow Up"
 msgstr "Pil Upp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
-msgstr ""
+msgstr "Flytta markeringen 10mm i positiv Y riktning"
 
 msgid "Arrow Down"
 msgstr "Pil Ner"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
-msgstr ""
+msgstr "Flytta markeringen 10mm i negativ Y riktning"
 
 msgid "Arrow Left"
 msgstr "Pil Vänster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
-msgstr ""
+msgstr "Flytta markeringen 10mm i negativ X riktning"
 
 msgid "Arrow Right"
 msgstr "Pil Höger"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
-msgstr ""
+msgstr "Flytta markeringen 10mm i positiv X riktning"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Movement step set to 1mm"
-msgstr ""
+msgstr "Rörelse steg är vald till 1mm"
 
 msgid "Keyboard 1-9: set filament for object/part"
 msgstr "tangentbord 1-9: fastställer filament för objekt/del"
@@ -11681,7 +11927,7 @@ msgid "Filament Track Switch"
 msgstr ""
 
 msgid "Beta"
-msgstr ""
+msgstr "Beta"
 
 msgid "Update firmware"
 msgstr "Uppdatera programvara"
@@ -11699,13 +11945,14 @@ msgid "Update successful"
 msgstr "Uppdateringen lyckades"
 
 msgid "Hotends on Rack"
-msgstr ""
+msgstr "Hotends på ställning"
 
 msgid "Are you sure you want to update? This will take about 10 minutes. Do not turn off the power while the printer is updating."
 msgstr "Är du säker på att du vill uppdatera? Uppdateringen tar ca 10 minuter. Stäng inte av strömmen medans printern uppdaterar."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An important update was detected and needs to be run before printing can continue. Do you want to update now? You can also update later from 'Update firmware'."
-msgstr ""
+msgstr "En viktig uppdatering upptäcktes och måste köras innan utskriften kan fortsätta. Vill du uppdatera nu? Du kan också uppdatera senare från 'Uppdatera Mjukvaran'."
 
 msgid "The firmware version is abnormal. Repairing and updating are required before printing. Do you want to update now? You can also update later on the printer or update next time you start Inlong Slicer."
 msgstr ""
@@ -11720,8 +11967,9 @@ msgstr ""
 msgid "Repair finished"
 msgstr "Reparation klar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Repair failed"
-msgstr ""
+msgstr "Reparation misslyckades."
 
 msgid "Repair canceled"
 msgstr "Reparation avbruten"
@@ -11730,8 +11978,9 @@ msgstr "Reparation avbruten"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "Kopierar fil %1% till %2% misslyckade: %3%"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please check any unsaved changes before updating the configuration."
-msgstr ""
+msgstr "Kontrollera ej sparade ändringar innan konfigureringen uppdateras."
 
 msgid "Configuration package: "
 msgstr "Configuration package: "
@@ -11745,16 +11994,18 @@ msgstr "Öppna G-kod fil:"
 msgid "One object has an empty first layer and can't be printed. Please Cut the bottom or enable supports."
 msgstr "Ett objekt har ett tomt första lager och kan inte skrivas ut. Skär ut botten eller aktivera support."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "The object has empty layers between %1% and %2% and can’t be printed."
-msgstr ""
+msgstr "Ett objekt har tomma lager mellan %1% och %2% utskrift ej möjlig."
 
 #, boost-format
 msgid "Object: %1%"
 msgstr "Objekt: %1%"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Parts of the object at these heights may be too thin or the object may have a faulty mesh."
-msgstr ""
+msgstr "Delar av objektet på dessa höjder är för tunna eller så har objektet en felaktig mesh"
 
 msgid "Process change extrusion role G-code"
 msgstr ""
@@ -11762,8 +12013,9 @@ msgstr ""
 msgid "Filament change extrusion role G-code"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "No object can be printed. It may be too small."
-msgstr ""
+msgstr "Inget objekt kan skrivas ut. Det kan vara för litet"
 
 msgid "Your print is very close to the priming regions. Make sure there is no collision."
 msgstr "Your print is very close to the priming regions. Make sure there is no collision."
@@ -11808,21 +12060,15 @@ msgstr ""
 msgid "Internal Bridge"
 msgstr "Internal Bridge"
 
-#, boost-format
-msgid "Failed to calculate line width of %1%. Cannot get value of “%2%” "
-msgstr ""
-
-msgid "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
-msgstr "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
-
 msgid "undefined error"
 msgstr "Oidentifierat fel"
 
 msgid "too many files"
 msgstr "för många filer"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "File too large"
-msgstr ""
+msgstr "filen är för stor"
 
 msgid "unsupported method"
 msgstr "metoden stöds inte"
@@ -11842,8 +12088,9 @@ msgstr "inte ett ZIP arkiv"
 msgid "invalid header or corrupted"
 msgstr "ogiltig rubrik eller skadad"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Saving to RAID is not supported."
-msgstr ""
+msgstr "Spara till RAID stöds ej"
 
 msgid "decompression failed"
 msgstr "dekompression misslyckad"
@@ -11890,8 +12137,9 @@ msgstr "ogiltig parameter"
 msgid "invalid filename"
 msgstr "ogiltligt filnamn"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Buffer too small"
-msgstr ""
+msgstr "bufferten för liten"
 
 msgid "internal error"
 msgstr "internt fel"
@@ -11899,8 +12147,9 @@ msgstr "internt fel"
 msgid "file not found"
 msgstr "filen hittades inte"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Archive too large"
-msgstr ""
+msgstr "för stort arkiv"
 
 msgid "validation failed"
 msgstr "validering misslyckad"
@@ -11908,9 +12157,10 @@ msgstr "validering misslyckad"
 msgid "write callback failed"
 msgstr "skriv återuppringning misslyckad"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "%1% is too close to exclusion area. There may be collisions when printing."
-msgstr ""
+msgstr "%1% är för nära undantagsområde. Det kan förekomma kollisioner vid utskrift."
 
 #, boost-format
 msgid "%1% is too close to others, and collisions may be caused."
@@ -11932,8 +12182,9 @@ msgstr "Prime Torn"
 msgid " is too close to others, and collisions may be caused.\n"
 msgstr "är för nära andra och kollisioner kan orsakas.\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid " is too close to an exclusion area, and collisions will be caused.\n"
-msgstr ""
+msgstr " är för nära uteslutningsområdet, och kollisioner kommer att orsakas.\n"
 
 msgid " is too close to clumping detection area, and collisions will be caused.\n"
 msgstr " is too close to clumping detection area, and collisions will be caused.\n"
@@ -11965,8 +12216,9 @@ msgstr "A prime tower is required for clumping detection; otherwise, there may b
 msgid "Please select \"By object\" print sequence to print multiple objects in spiral vase mode."
 msgstr "Kontrollera \"Per objekt\" utskrifts sekvens för att skriva ut multipla objekt i Vase läge."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Spiral (vase) mode does not work when an object contains more than one material."
-msgstr ""
+msgstr "Spiral Vase läge fungerar inte när objektet innehåller mer än ett material."
 
 #, boost-format
 msgid "While the object %1% itself fits the build volume, it exceeds the maximum build volume height because of material shrinkage compensation."
@@ -11998,26 +12250,32 @@ msgstr "Ooze prevention is only supported with the wipe tower when 'single_extru
 msgid "The prime tower is currently only supported for the Marlin, RepRap/Sprinter, RepRapFirmware and Repetier G-code flavors."
 msgstr "Prime Tower stöds för närvarande endast för G-kods varianterna Marlin, RepRap/Sprinter, RepRapFirmware och Repetier."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is not supported in “By object” print."
-msgstr ""
+msgstr "Ett Prime Torn stöds inte i \"Per objekt\" utskrift."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is not supported when adaptive layer height is on. It requires that all objects have the same layer height."
-msgstr ""
+msgstr "Ett Prime Torn stöds inte med adaptiv lagerhöjd är aktiverad. Det kräver att samtliga objekt har samma lagerhöjd."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires any “support gap” to be a multiple of layer height."
-msgstr ""
+msgstr "Ett Prime Torn kräver att \"mellanrums ifyllnaden\" är av multipla lager höjder"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that all objects have the same layer height."
-msgstr ""
+msgstr "Ett Prime Torn kräver att alla objekt har samma lagerhöjd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that all objects are printed over the same number of raft layers."
-msgstr ""
+msgstr "Ett Prime Torn kräver att alla objekt skrivs ut med samma antal Raft lager"
 
 msgid "The prime tower is only supported for multiple objects if they are printed with the same support_top_z_distance."
 msgstr "The prime tower is only supported for multiple objects if they are printed with the same support_top_z_distance."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that all objects are sliced with the same layer height."
-msgstr ""
+msgstr "Ett Prime Torn kräver att alla object är beredda med samma lagerhöjd."
 
 msgid "The prime tower is only supported if all objects have the same variable layer height."
 msgstr "Prime Tower stöds endast om alla objekt har samma variabla lagerhöjd."
@@ -12025,17 +12283,20 @@ msgstr "Prime Tower stöds endast om alla objekt har samma variabla lagerhöjd."
 msgid "One or more object were assigned an extruder that the printer does not have."
 msgstr "One or more object were assigned an extruder that the printer does not have."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Line width too small"
-msgstr ""
+msgstr "För liten linjebredd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Line width too large"
-msgstr ""
+msgstr "För stor linjebredd"
 
 msgid "Printing with multiple extruders of differing nozzle diameters. If support is to be printed with the current filament (support_filament == 0 or support_interface_filament == 0), all nozzles have to be of the same diameter."
 msgstr "Printing with multiple extruders of differing nozzle diameters. If support is to be printed with the current filament (support_filament == 0 or support_interface_filament == 0), all nozzles have to be of the same diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that support has the same layer height as the object."
-msgstr ""
+msgstr "Ett Prime Torn kräver att  support har samma lagerhöjd som objektet."
 
 msgid "For Organic supports, two walls are supported only with the Hollow/Default base pattern."
 msgstr "For Organic supports, two walls are supported only with the Hollow/Default base pattern."
@@ -12134,8 +12395,9 @@ msgstr "Exporterar G-kod"
 msgid "Generating G-code"
 msgstr "Skapar G-kod"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Processing of the filename_format template failed."
-msgstr ""
+msgstr "Skapande av filnamn_format template misslyckades."
 
 msgid "Printer technology"
 msgstr "Printer technology"
@@ -12164,8 +12426,9 @@ msgstr ""
 msgid "Ordered list of bed exclude areas by parallel printhead count. Item 1 applies to one printhead, item 2 to two printheads, and so on. Leave an item empty for no excluded area."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Excluded bed area"
-msgstr ""
+msgstr "Utesluten yta av byggplattan"
 
 msgid "Unprintable area in XY plane. For example, X1 Series printers use the front left corner to cut filament during filament change. The area is expressed as polygon by points in following format: \"XxY, XxY, ...\""
 msgstr "Område som inte kan skrivas ut i XY-planet. För skrivare i X1-serien används till exempel det främre vänstra hörnet för att skära av filamentet vid byte av filament. Området uttrycks som en polygon med punkter i följande format: \"XxY, XxY, ...\""
@@ -12179,8 +12442,9 @@ msgstr "Anpassad byggplattas typ"
 msgid "Elephant foot compensation"
 msgstr "Elefant fots kompensation"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This shrinks the first layer on the build plate to compensate for elephant foot effect."
-msgstr ""
+msgstr "Minska första lager på byggplattan för att kompensera elefant fots effekten"
 
 msgid "Elephant foot compensation layers"
 msgstr "Elephant foot compensation layers"
@@ -12197,14 +12461,16 @@ msgid ""
 "Subsequent layers become linearly denser by the height specified in elefant_foot_compensation_layers."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the height for each layer. Smaller layer heights give greater accuracy but longer printing time."
-msgstr ""
+msgstr "Lagerhöjd för varje lager. Mindre lagerhöjd ger mer exakt tolerans men ökar även utskriftstiden"
 
 msgid "Printable height"
 msgstr "Utskriftsbar höjd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the maximum printable height which is limited by the height of the build area."
-msgstr ""
+msgstr "Maximala utskriftshöjd begränsas av skrivarens mekanism"
 
 msgid "Extruder printable height"
 msgstr "Extruder printable height"
@@ -12281,8 +12547,9 @@ msgstr "Lösenord"
 msgid "Ignore HTTPS certificate revocation checks"
 msgstr "Ignorera kontroller för återkallande av HTTPS-certifikat"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Ignore HTTPS certificate revocation checks in the case of missing or offline distribution points. One may want to enable this option for self signed certificates if connection fails."
-msgstr ""
+msgstr "Ignorera kontroller för återkallande av HTTPS-certifikat om distributionspunkter saknas eller är offline. Man kanske vill aktivera det här alternativet för självsignerade certifikat om anslutningen misslyckas."
 
 msgid "Names of presets related to the physical printer."
 msgstr "Namn på förinställningar relaterade till den fysiska skrivaren"
@@ -12302,14 +12569,16 @@ msgstr ""
 msgid "Avoid crossing walls"
 msgstr "Undvik att korsa väggar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This detours to avoid traveling across walls, which may cause blobs on the surface."
-msgstr ""
+msgstr "Undvik väggar vid förflyttning, för att undvika att filament droppar på ytan"
 
 msgid "Avoid crossing walls - Max detour length"
 msgstr "Undvik att korsa väggar - Max omvägslängd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Maximum detour distance for avoiding crossing wall: The printer won't detour if the detour distance is larger than this value. Detour length could be specified either as an absolute value or as percentage (for example 50%) of a direct travel path. A value of 0 will disable this."
-msgstr ""
+msgstr "Maximalt omvägsavstånd för att undvika att korsa vägg: Skrivaren kommer inte att omväga om omvägsavståndet är större än detta värde. Omvägs längd kan anges antingen som ett absolut värde eller som procent (till exempel 50 %) av en direkt färdväg. Ett värde på 0 kommer att inaktivera detta."
 
 msgid "mm or %"
 msgstr "mm eller %"
@@ -12320,20 +12589,25 @@ msgstr "Andra lager"
 msgid "Bed temperature for layers except the initial one. A value of 0 means the filament does not support printing on the Cool Plate SuperTack."
 msgstr "Bed temperature for layers except the initial one. A value of 0 means the filament does not support printing on the Cool Plate SuperTack."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Cool Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur för lager förutom det första. Värdet 0 betyder att filamentet inte stöder utskrift på Cool Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Textured Cool Plate."
-msgstr ""
+msgstr "Bed temperature for layers except the initial one. A value of 0 means the filament does not support printing on the Textured Cool Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Engineering Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur för lager förutom det första. Ett värde på 0 betyder att filamentet inte stöder utskrift på Engineering Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the High Temp Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur för lager förutom det första. Värdet 0 betyder att filamentet inte stöder utskrift på High Temp Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Textured PEI Plate."
-msgstr ""
+msgstr "Byggplattans temperatur efter det första lagret. 0 betyder att filamentet inte stöds på den texturerade PEI-plattan."
 
 msgid "First layer"
 msgstr "Första lager"
@@ -12341,26 +12615,33 @@ msgstr "Första lager"
 msgid "First layer bed temperature"
 msgstr "Byggplattans första lager temperatur"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Cool Plate SuperTack."
-msgstr ""
+msgstr "Bed temperature of the first layer. A value of 0 means the filament does not support printing on the Cool Plate SuperTack."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Cool Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur för första lager. Värdet 0 betyder att filamentet inte stöder utskrift på Cool Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Textured Cool Plate."
-msgstr ""
+msgstr "Bed temperature of the first layer. A value of 0 means the filament does not support printing on the Textured Cool Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Engineering Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur för första lager. Värdet 0 betyder att filamentet inte stöder utskrift på Engineering Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the High Temp Plate."
-msgstr ""
+msgstr "Detta är byggplattans temperatur för första lager. Värdet 0 betyder att filamentet inte stöder utskrift på High Temp Plate."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Textured PEI Plate."
-msgstr ""
+msgstr "Byggplattans temperatur för första lager 0 betyder att filamentet inte stöds på den texturerade PEI-plattan."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Plate types supported by the printer"
-msgstr ""
+msgstr "Byggplattans typ stöds av skrivaren"
 
 msgid "Default bed type"
 msgstr "Default bed type"
@@ -12392,8 +12673,9 @@ msgstr "Antal solida lager av bottenskalet, detta inkluderar botten lager. När 
 msgid "Bottom shell thickness"
 msgstr "Bottenskals tjocklek"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The number of bottom solid layers is increased when slicing if the thickness calculated by bottom shell layers is thinner than this value. This can avoid having too thin a shell when layer height is small. 0 means that this setting is disabled and the thickness of the bottom shell is determined simply by the number of bottom shell layers."
-msgstr ""
+msgstr "Antal solida botten lager ökar om tjockleken beräknas om bottenskals lager är tunnare än detta värde. Detta kan undvikas genom att ha tunnare väggar när lagerhöjden är liten. 0 betyder att denna inställningen är inaktiverad och bottenskalets tjocklek är styrd av bottenskalets lager"
 
 msgid "Apply gap fill"
 msgstr "Apply gap fill"
@@ -12798,11 +13080,13 @@ msgstr ""
 "Value 0 enables reversal on every even layers regardless.\n"
 "When Detect overhang wall is not enabled, this option is ignored and reversal happens on every even layers regardless."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Slow down for overhangs"
-msgstr ""
+msgstr "Sakta ner vid överhäng"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable this option to slow down when printing overhangs. The speeds for different overhang percentages are set below."
-msgstr ""
+msgstr "Aktivera detta val för att sänka hastigheten för olika överhängs grader"
 
 msgid "Slow down for curled perimeters"
 msgstr "Slow down for curled perimeters"
@@ -12840,8 +13124,9 @@ msgstr ""
 msgid "Speed of internal bridges. If the value is expressed as a percentage, it will be calculated based on the bridge_speed. Default value is 150%."
 msgstr "Speed of internal bridges. If the value is expressed as a percentage, it will be calculated based on the bridge_speed. Default value is 150%."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the distance from the model to the outermost brim line."
-msgstr ""
+msgstr "Avståndet från modellen till yttersta brim linjen"
 
 msgid "This controls the generation of the brim at outer and/or inner side of models. Auto means the brim width is analyzed and calculated automatically."
 msgstr "Detta styr genereringen av brim på modellens yttre och/eller inre sida. Auto innebär att brim bredd analyseras och beräknas automatiskt."
@@ -12849,8 +13134,9 @@ msgstr "Detta styr genereringen av brim på modellens yttre och/eller inre sida.
 msgid "Brim-object gap"
 msgstr "Avstånd mellan brim och modell"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This creates a gap between the innermost brim line and the object and can make the brim easier to remove."
-msgstr ""
+msgstr "Mellanrum mellan innersta brim linjen och objektet kan underlätta vid borttagande av brim"
 
 msgid "Brim flow ratio"
 msgstr ""
@@ -12992,8 +13278,9 @@ msgstr ""
 msgid "A Boolean expression using the configuration values of an active print profile. If this expression evaluates to true, this profile is considered compatible with the active print profile."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This determines the print sequence, allowing you to print layer-by-layer or object-by-object."
-msgstr ""
+msgstr "Utskrifts sekvens, lager för lager eller objekt för objekt"
 
 msgid "By layer"
 msgstr "Per lager"
@@ -13013,14 +13300,16 @@ msgstr "As object list"
 msgid "Slow printing down for better layer cooling"
 msgstr "Sakta ner utskrift för bättre kylning av lager"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable this option to slow printing speed down to ensure that the final layer time is not shorter than the layer time threshold in \"Max fan speed threshold\", so that the layer can be cooled for a longer time. This can improve the quality for small details."
-msgstr ""
+msgstr "Aktivera detta val för att sänka utskifts hastigheten för att göra den sista lager tiden inte kortare än lager tidströskeln \"Max fläkthastighets tröskel\", detta så att lager kan kylas under en längre tid. Detta kan förbättra kylnings kvaliteten för små detaljer"
 
 msgid "Normal printing"
 msgstr "Normal utskrift"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the default acceleration for both normal printing and travel after the first layer."
-msgstr ""
+msgstr "Standard acceleration för både normal utskrift och förflyttning förrutom första lager"
 
 msgid "Acceleration of travel moves."
 msgstr "Acceleration of travel moves."
@@ -13081,8 +13370,9 @@ msgstr "Stoppa alla kylfläktar vid det första valda lager. Kylfläkten ska var
 msgid "Don't support bridges"
 msgstr "Ingen support vid bridges/bryggor"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This disables supporting bridges, which decreases the amount of support required. Bridges can usually be printed directly without support over a reasonable distance."
-msgstr ""
+msgstr "Detta inaktiverar support vid bridges/bryggor för att minska mängden av support. Bridges/Bryggor kan vanligtvis skrivas ut utan support om de inte är för långa avstånd"
 
 msgid "Thick external bridges"
 msgstr "Thick external bridges"
@@ -13168,14 +13458,16 @@ msgstr "No filtering"
 msgid "Max bridge length"
 msgstr "Max bridge/brygg längd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the maximum length of bridges that don't need support. Set it to 0 if you want all bridges to be supported, and set it to a very large value if you don't want any bridges to be supported."
-msgstr ""
+msgstr "Maxlängd för bridge/brygga som inte behöver support. Ange 0 om du vill att alla bridges/bryggor ska få support, och ett mycket stort värde om du inte vill att några bridges/bryggor ska få support."
 
 msgid "End G-code"
 msgstr "Slut G-kod"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add end G-Code when finishing the entire print."
-msgstr ""
+msgstr "Lägg till slut G-kod när utskriften har avslutas"
 
 msgid "Between Object G-code"
 msgstr "Mellan objekt G kod"
@@ -13183,8 +13475,9 @@ msgstr "Mellan objekt G kod"
 msgid "Insert G-code between objects. This parameter will only come into effect when you print your models object by object."
 msgstr "Infoga G-kod mellan objekt. Denna parameter träder i kraft först när du skriver ut dina modeller objekt för objekt."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add end G-code when finishing the printing of this filament."
-msgstr ""
+msgstr "Lägg till slut G-kod när utskriften har avslutas med detta filament"
 
 msgid "Ensure vertical shell thickness"
 msgstr "Säkerställ vertikal skaltjocklek"
@@ -13231,8 +13524,9 @@ msgstr ""
 msgid "Top surface pattern"
 msgstr "Topp ytans mönster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern for top surface infill."
-msgstr ""
+msgstr "Linjemönster för topp ytans ifyllnad"
 
 msgid "Monotonic"
 msgstr "Monoton"
@@ -13269,7 +13563,7 @@ msgstr ""
 
 msgid ""
 "Expands the top surfaces by this distance to connect distinct top surfaces and fill gaps.\n"
-"Useful for cases where the top surface is interrupted by a raised feature, such as text on a plane.Expanding it removes the holes beneath these features and creates a continuous path with a better finish for printing on top.The expansion is applied to the original top surface, before any other processing such as bridging or overhang detection."
+"Useful for cases where the top surface is interrupted by a raised feature, such as text on a plane. Expanding it removes the holes beneath these features and creates a continuous path with a better finish for printing on top. The expansion is applied to the original top surface, before any other processing such as bridging or overhang detection."
 msgstr ""
 
 msgid "Top expansion wall margin"
@@ -13303,8 +13597,9 @@ msgstr ""
 msgid "Bottom surface pattern"
 msgstr "Botten ytans mönster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern of bottom surface infill, not including bridge infill."
-msgstr ""
+msgstr "Botten ytans ifyllnads linjemönster, inte bridge/brygg ifyllnad"
 
 msgid "Bottom surface density"
 msgstr "Bottom surface density"
@@ -13343,8 +13638,9 @@ msgstr "Line pattern of internal solid infill. if the detect narrow internal sol
 msgid "Line width of outer wall. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Line width of outer wall. If expressed as a %, it will be computed over the nozzle diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the printing speed for the outer walls of parts. These are generally printed slower than inner walls for higher quality."
-msgstr ""
+msgstr "Hastigheten på yttre vägg som är mest synlig. Denna bör vara långsammare än hastigheten på inner vägg för att uppnå bättre kvalitet."
 
 msgid "Small perimeters"
 msgstr "Små perimetrar"
@@ -13430,17 +13726,20 @@ msgstr "Clockwise"
 msgid "Height to rod"
 msgstr "Höjd till axel"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Distance from the nozzle tip to the lower rod. Used for collision avoidance in by-object printing."
-msgstr ""
+msgstr "Avstånd från nozzel spetsen till den nedre stången. Används för att undvika kollisioner vid utskrift av flera objekt."
 
 msgid "Height to lid"
 msgstr "Höjd till locket"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Distance from the nozzle tip to the lid. Used for collision avoidance in by-object printing."
-msgstr ""
+msgstr "Avstånd från nozzel spetsen till locket. Används för att undvika kollisioner vid utskrift av flera objekt."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Clearance radius around extruder: used for collision avoidance in by-object printing."
-msgstr ""
+msgstr "Frigångsradie runt extrudern: används för att undvika kollisioner vid utskrift av flera objekt."
 
 msgid "Nozzle height"
 msgstr "Nozzel höjd"
@@ -13578,8 +13877,9 @@ msgstr "Default line width if other line widths are set to 0. If expressed as a 
 msgid "Keep fan always on"
 msgstr "Behåll alltid fläkten på"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enabling this setting means that part cooling fan will never stop entirely and will instead run at least at minimum speed to reduce the frequency of starting and stopping."
-msgstr ""
+msgstr "Om den här inställningen aktiveras, kommer en del kylfläkten aldrig stoppas och den kommer att åtminstone gå på lägsta hastighet för att minska frekvensen av start och stopp"
 
 msgid "Don't slow down outer walls"
 msgstr "Don't slow down outer walls"
@@ -13598,8 +13898,9 @@ msgstr ""
 msgid "Layer time"
 msgstr "Lager tid"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan will be enabled for layers where the estimated time is shorter than this value. Fan speed is interpolated between the minimum and maximum fan speeds according to layer printing time."
-msgstr ""
+msgstr "Del kylfläkten kommer att aktiveras för lager vars beräknade tid är kortare än detta värde. Fläkthastigheten interpoleras mellan den lägsta och högsta fläkthastigheten enligt utskriftstiden för lager"
 
 msgid "s"
 msgstr "s"
@@ -13623,8 +13924,9 @@ msgstr "You can put your notes regarding the filament here."
 msgid "Required nozzle HRC"
 msgstr "HRC nozzle krävs"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Minimum HRC of nozzle required to print the filament. A value of 0 means no checking of the nozzle's HRC."
-msgstr ""
+msgstr "Minsta HRC för nozzle som krävs för att skriva ut filament. Värdet 0 betyder ingen kontroll av munstyckets HRC."
 
 msgid "Filament map to extruder"
 msgstr "Filament map to extruder"
@@ -13651,7 +13953,7 @@ msgid "Auto For Match"
 msgstr "Auto For Match"
 
 msgid "Nozzle Manual"
-msgstr ""
+msgstr "Nozzle manual"
 
 msgid "Flush temperature"
 msgstr "Flush temperature"
@@ -13668,8 +13970,9 @@ msgstr "Flush volumetric speed"
 msgid "Volumetric speed when flushing filament. 0 indicates the max volumetric speed."
 msgstr "Volumetric speed when flushing filament. 0 indicates the max volumetric speed."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This setting is the volume of filament that can be melted and extruded per second. Printing speed is limited by max volumetric speed, in case of too high and unreasonable speed setting. This value cannot be zero."
-msgstr ""
+msgstr "Den här inställningen är volymen filament som kan smältas och extruderas per sekund. Utskriftshastigheten begränsas av den maximala volymhastigheten om hastigheten är för hög och orimlig. Det här värdet kan inte vara noll."
 
 msgid "Filament load time"
 msgstr "Inmatningstid för filament"
@@ -13701,8 +14004,9 @@ msgstr "By First filament"
 msgid "By Highest Temp"
 msgstr "By Highest Temp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament diameter is used to calculate extrusion variables in G-code, so it is important that this is accurate and precise."
-msgstr ""
+msgstr "Filament diametern används för att beräkna extruderingen i G-kod, viktigt att detta är rätt"
 
 msgid "Pellet flow coefficient"
 msgstr "Pellet flow coefficient"
@@ -13820,10 +14124,10 @@ msgid "After a tool change, the exact position of the newly loaded filament insi
 msgstr "After a tool change, the exact position of the newly loaded filament inside the nozzle may not be known, and the filament pressure is likely not yet stable. Before purging the print head into an infill or a sacrificial object, Inlong Slicer will always prime this amount of material into the wipe tower to produce successive infill or sacrificial object extrusions reliably."
 
 msgid "Wipe tower cooling"
-msgstr ""
+msgstr "Wipe Tower kylning"
 
 msgid "Temperature drop before entering filament tower"
-msgstr ""
+msgstr "Temperaturen sjunker innan ankomst till filament tornet"
 
 msgid "Interface layer pre-extrusion distance"
 msgstr "Interface layer pre-extrusion distance"
@@ -13891,14 +14195,16 @@ msgstr "Flow used for ramming the filament before the tool change."
 msgid "Density"
 msgstr "Densitet"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament density, for statistical purposes only."
-msgstr ""
+msgstr "Filament densitet, endast för statistiska ändamål"
 
 msgid "g/cm³"
 msgstr "g/cm³"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament material type"
-msgstr ""
+msgstr "Filament material"
 
 msgid "Soluble material"
 msgstr "Lösligt material"
@@ -13933,14 +14239,16 @@ msgstr ""
 msgid "Softening temperature"
 msgstr "Mjuknings temperatur"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The material softens at this temperature, so when the bed temperature is equal to or greater than this, it's highly recommended to open the front door and/or remove the upper glass to avoid clogs."
-msgstr ""
+msgstr "The material softens at this temperature, so when the bed temperature is equal to or greater than this, it's highly recommended to open the front door and/or remove the upper glass to avoid clogging."
 
 msgid "Price"
 msgstr "Pris"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament price, for statistical purposes only."
-msgstr ""
+msgstr "Filament pris, endast för statistiska ändamål"
 
 msgid "money/kg"
 msgstr "pris/kg"
@@ -13957,8 +14265,9 @@ msgstr "(Oidentifierad)"
 msgid "Sparse infill direction"
 msgstr "Sparse infill direction"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the angle for sparse infill pattern, which controls the start or main direction of lines."
-msgstr ""
+msgstr "Vinkeln för sparsam ifyllnads mönster, som styr start- eller huvudriktningen för linjer"
 
 msgid "Solid infill direction"
 msgstr "Solid infill direction"
@@ -14019,8 +14328,9 @@ msgstr ""
 msgid "Sparse infill pattern"
 msgstr "Sparsam ifyllnads mönster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern for internal sparse infill."
-msgstr ""
+msgstr "Linjemönster för sparsam ifyllnad"
 
 msgid "Zig Zag"
 msgstr "Zig Zag"
@@ -14079,11 +14389,13 @@ msgstr "TPMS-FK"
 msgid "Gyroid"
 msgstr "Gyroid"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the acceleration of top surface infill. Using a lower value may improve top surface quality."
-msgstr ""
+msgstr "Acceleration av fyllning av toppytan. Att använda ett lägre värde kan förbättra ytkvaliteten"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Acceleration of outer wall: using a lower value can improve quality."
-msgstr ""
+msgstr "Acceleration av yttervägg: ett lägre värde kan förbättra kvaliteten."
 
 msgid "Acceleration of inner walls."
 msgstr "Acceleration of inner walls."
@@ -14094,8 +14406,9 @@ msgstr "Acceleration av gles utfyllnad. Om värdet uttrycks som en procentsats (
 msgid "Acceleration of internal solid infill. If the value is expressed as a percentage (e.g. 100%), it will be calculated based on the default acceleration."
 msgstr "Acceleration of internal solid infill. If the value is expressed as a percentage (e.g. 100%), it will be calculated based on the default acceleration."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the printing acceleration for the first layer. Using limited acceleration can improve build plate adhesion."
-msgstr ""
+msgstr "Utskrifts acceleration för första lager. Ett lägre värde kan förbättra objektets fäste på byggplattan"
 
 msgid "Enable accel_to_decel"
 msgstr "Aktivera accel_to_decel"
@@ -14149,14 +14462,16 @@ msgstr "Första lagerhöjd"
 msgid "Height of the first layer. Making the first layer height thicker can improve build plate adhesion."
 msgstr "Första lagerhöjd. Högre första lager kan förbättra objektets fäste på byggplattan"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for the first layer except for solid infill sections."
-msgstr ""
+msgstr "Hastigheten för det första lagret förutom för solida ifyllnads sektioner"
 
 msgid "First layer infill"
 msgstr "Första lager ifyllnad"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for solid infill parts of the first layer."
-msgstr ""
+msgstr "Hastigheten för fasta ifyllnadsdelar av det första lagret"
 
 msgid "First layer travel speed"
 msgstr "First layer travel speed"
@@ -14173,8 +14488,9 @@ msgstr "The first few layers are printed slower than normal. The speed is gradua
 msgid "First layer nozzle temperature"
 msgstr "Nozzel temperatur för första lager"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Nozzle temperature for printing the first layer with this filament"
-msgstr ""
+msgstr "Nozzel temperatur för första lager med detta filament"
 
 msgid "Full fan speed at layer"
 msgstr "Full fläkthastighet vid lager"
@@ -14260,8 +14576,9 @@ msgstr "Stryknings hastighet"
 msgid "Filament-specific override for ironing speed. This allows you to customize the print speed of ironing lines for each filament type."
 msgstr "Filament-specific override for ironing speed. This allows you to customize the print speed of ironing lines for each filament type."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This setting makes the toolhead randomly jitter while printing walls so that the surface has a rough textured look. This setting controls the fuzzy position."
-msgstr ""
+msgstr "Inställningen gör att verktygshuvudet skakar slumpmässigt vid utskrift av väggar så att ytan får ett strävt utseende. Denna inställning styr fuzzy position"
 
 msgid "Painted only"
 msgstr "Endast målad"
@@ -14281,8 +14598,9 @@ msgstr "Alla väggar"
 msgid "Fuzzy skin thickness"
 msgstr "Fuzzy skin tjocklek"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The width of jittering: it’s recommended to keep this lower than the outer wall line width."
-msgstr ""
+msgstr "Bredd på skakning: Det rekommenderas att hålla denna lägre än den yttre vägglinjens bredd"
 
 msgid "Fuzzy skin point distance"
 msgstr "Fuzzy skin punktavstånd"
@@ -14347,7 +14665,7 @@ msgid "Voronoi"
 msgstr "Voronoi"
 
 msgid "Ripple"
-msgstr ""
+msgstr "Ripple"
 
 msgid "Fuzzy skin feature size"
 msgstr "Fuzzy skin feature size"
@@ -14404,8 +14722,9 @@ msgstr "Lager och perimetrar"
 msgid "Don't print gap fill with a length is smaller than the threshold specified (in mm). This setting applies to top, bottom and solid infill and, if using the classic perimeter generator, to wall gap fill."
 msgstr "Don't print gap fill with a length is smaller than the threshold specified (in mm). This setting applies to top, bottom and solid infill and, if using the classic perimeter generator, to wall gap fill."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for gap infill. Gaps usually have irregular line width and should be printed more slowly."
-msgstr ""
+msgstr "Hastigheten för fyllning av mellanrum. Mellanrum har vanligtvis oregelbunden linjebredd och bör skrivas ut långsammare"
 
 msgid "Precise Z height"
 msgstr "Precise Z height"
@@ -14434,8 +14753,9 @@ msgstr "Aktivera detta för att lägga till rad nummer(Nx) i början av varje G-
 msgid "Scan first layer"
 msgstr "Skanna första lager"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable this to allow the camera on the printer to check the quality of the first layer."
-msgstr ""
+msgstr "Aktivera detta för att låta kameran i skrivaren kontrollera kvaliteten på det första lager"
 
 msgid "Power Loss Recovery"
 msgstr "Power Loss Recovery"
@@ -14449,8 +14769,9 @@ msgstr "Printer configuration"
 msgid "Nozzle type"
 msgstr "Nozzel typ"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The metallic material of the nozzle: This determines the abrasive resistance of the nozzle and what kind of filament can be printed."
-msgstr ""
+msgstr "Nozzelns metalliska material avgör munstyckets nötningsbeständighet och vilken typ av filament som kan skrivas ut"
 
 msgid "Hardened steel"
 msgstr "Härdat stål"
@@ -14464,8 +14785,9 @@ msgstr "Tungsten carbide"
 msgid "Nozzle HRC"
 msgstr "Nozzle HRC"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The nozzle's hardness. Zero means no checking for nozzle hardness during slicing."
-msgstr ""
+msgstr "Nozzelns hårdhet. Noll innebär att ingen kontroll av nozzelns hårdhet görs under beredningen."
 
 msgid "HRC"
 msgstr "HRC"
@@ -14553,8 +14875,9 @@ msgstr "The printer cost per hour."
 msgid "money/h"
 msgstr "money/h"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Support controlling chamber temperature"
-msgstr ""
+msgstr "Stöd för kontroll av kammarens temperatur"
 
 msgid ""
 "This option is enabled if machine support controlling chamber temperature\n"
@@ -14592,10 +14915,10 @@ msgstr ""
 "G-code command: M106 P3 S(0-255)"
 
 msgid "Use cooling filter"
-msgstr ""
+msgstr "Använd kylfilter"
 
 msgid "Enable this if printer support cooling filter"
-msgstr ""
+msgstr "Aktivera detta om printern stöder kylfilter"
 
 msgid "G-code flavor"
 msgstr "G-kod smak"
@@ -14639,8 +14962,9 @@ msgstr "Enable this to get a commented G-code file, with each line explained by 
 msgid "Infill combination"
 msgstr "Ifyllnads kombination"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Automatically combine sparse infill of several layers to print together in order to reduce time. Walls are still printed with original layer height."
-msgstr ""
+msgstr "Automatiskt kombinera sparsam ifyllnad av flera lager att skrivas ut tillsammans för att minska tiden. Väggar skrivs fortfarande ut med vald lagerhöjd."
 
 msgid "Infill shift step"
 msgstr "Infill shift step"
@@ -14812,12 +15136,14 @@ msgstr ""
 msgid "Line width of internal sparse infill. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Line width of internal sparse infill. If expressed as a %, it will be computed over the nozzle diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Infill/wall overlap"
-msgstr ""
+msgstr "Ifyllnad/Vägg överlapp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, no-c-format, no-boost-format
 msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to line width of sparse infill. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
-msgstr ""
+msgstr "Infill area is enlarged slightly to overlap with wall for better bonding. The percentage value is relative to line width of sparse infill. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
 
 msgid "Top/Bottom solid infill/wall overlap"
 msgstr "Top/Bottom solid infill/wall overlap"
@@ -14826,8 +15152,9 @@ msgstr "Top/Bottom solid infill/wall overlap"
 msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to line width of sparse infill."
 msgstr "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to line width of sparse infill."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for internal sparse infill."
-msgstr ""
+msgstr "Hastighet för sparsam ifyllnad"
 
 msgid "Inherits profile"
 msgstr "Inherits profile"
@@ -14844,8 +15171,9 @@ msgstr "Force the generation of solid shells between adjacent materials/volumes.
 msgid "Maximum width of a segmented region"
 msgstr "Maximal bredd för en segmenterad region"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Maximum width of a segmented region. A value of 0 disables this feature."
-msgstr ""
+msgstr "Maximum width of a segmented region. Zero disables this feature."
 
 msgid "Interlocking depth of a segmented region"
 msgstr "Sammanhängande djup i en segmenterad region"
@@ -14889,20 +15217,24 @@ msgstr "Interlocking boundary avoidance"
 msgid "The distance from the outside of a model where interlocking structures will not be generated, measured in cells."
 msgstr "The distance from the outside of a model where interlocking structures will not be generated, measured in cells."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Ironing type"
-msgstr ""
+msgstr "Stryknings typ"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Ironing uses a small flow to print at the same height of a surface to make flat surfaces smoother. This setting controls which layers are being ironed."
-msgstr ""
+msgstr "Strykning använder ett litet flöde för att skriva ut på samma höjd av en yta för att göra plana ytor jämnare. Inställningen kontrollerar vilket lager som ska strykas."
 
 msgid "No ironing"
 msgstr "Ingen strykning"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "All top surfaces"
-msgstr ""
+msgstr "Top ytor"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Topmost surface only"
-msgstr ""
+msgstr "Endast högsta ytan"
 
 #, fuzzy
 msgid "All solid layers"
@@ -14914,17 +15246,20 @@ msgstr "Mönster för strykning"
 msgid "The pattern that will be used when ironing."
 msgstr "The pattern that will be used when ironing."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the amount of material to be extruded during ironing. It is relative to the flow of normal layer height. Too high a value will result in overextrusion on the surface."
-msgstr ""
+msgstr "Denna mängd av material kommer att extruderas under strykningen. Den är relativ till flödet av normal lagerhöjd. För högt värde resulterar i över extrudering på ytan"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the distance between the lines used for ironing."
-msgstr ""
+msgstr "Avståndet mellan linjerna när strykning utförs"
 
 msgid "The distance to keep from the edges. A value of 0 sets this to half of the nozzle diameter."
 msgstr "The distance to keep from the edges. A value of 0 sets this to half of the nozzle diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the print speed for ironing lines."
-msgstr ""
+msgstr "Utskrifts hastighet för strykning"
 
 msgid "Ironing angle offset"
 msgstr "Ironing angle offset"
@@ -14979,11 +15314,13 @@ msgstr "Denna G-kod infogas vid varje lagerbyte efter lyft av Z axis"
 msgid "Clumping detection G-code"
 msgstr "Clumping detection G-code"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Silent Mode"
-msgstr ""
+msgstr "Tyst läge"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Whether the machine supports silent mode in which machine uses lower acceleration to print more quietly"
-msgstr ""
+msgstr "Om maskinen stöder tyst läge där maskinen använder lägre acceleration för att skriva ut"
 
 msgid "Emit limits to G-code"
 msgstr "Emit limits to G-code"
@@ -15111,28 +15448,28 @@ msgid "Minimum travel speed (M205 T)"
 msgstr "Min förflyttnings hastighet (M205 T)"
 
 msgid "Maximum force of the Y axis"
-msgstr ""
+msgstr "Maximal kraft för Y-axeln"
 
 msgid "The allowed maximum output force of Y axis"
-msgstr ""
+msgstr "Den maximalt tillåtna utgående kraften för Y-axeln"
 
 msgid "N"
 msgstr ""
 
 msgid "Bed mass of the Y axis"
-msgstr ""
+msgstr "Y-axelns bäddmassa"
 
 msgid "The machine bed mass load of Y axis"
-msgstr ""
+msgstr "Maskinbäddens massbelastning på Y-axeln"
 
 msgid "g"
 msgstr ""
 
 msgid "The allowed max printed mass"
-msgstr ""
+msgstr "Den maximalt tillåtna tryckta massan"
 
 msgid "The allowed max printed mass on a plate"
-msgstr ""
+msgstr "Den maximalt tillåtna tryckta massan på en platta"
 
 msgid "Maximum acceleration for extruding"
 msgstr "Max acceleration för extrudering"
@@ -15192,40 +15529,40 @@ msgid ""
 msgstr ""
 
 msgid "MZV"
-msgstr ""
+msgstr "MZV"
 
 msgid "ZV"
-msgstr ""
+msgstr "ZV"
 
 msgid "ZVD"
-msgstr ""
+msgstr "ZVD"
 
 msgid "ZVDD"
-msgstr ""
+msgstr "ZVDD"
 
 msgid "ZVDDD"
-msgstr ""
+msgstr "ZVDDD"
 
 msgid "EI"
-msgstr ""
+msgstr "EI"
 
 msgid "EI2"
-msgstr ""
+msgstr "EI2"
 
 msgid "2HUMP_EI"
-msgstr ""
+msgstr "2HUMP_EI"
 
 msgid "EI3"
-msgstr ""
+msgstr "EI3"
 
 msgid "3HUMP_EI"
-msgstr ""
+msgstr "3HUMP_EI"
 
 msgid "DAA"
-msgstr ""
+msgstr "DAA"
 
 msgid "X"
-msgstr ""
+msgstr "X"
 
 msgid ""
 "Resonant frequency for the X axis input shaper.\n"
@@ -15238,7 +15575,7 @@ msgid "Hz"
 msgstr "Hz"
 
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 msgid ""
 "Resonant frequency for the Y axis input shaper.\n"
@@ -15259,8 +15596,9 @@ msgid ""
 "To disable input shaping, use the Disable type."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan speed may be increased when auto cooling is enabled. This is the maximum speed for the part cooling fan."
-msgstr ""
+msgstr "Del kylfläktens hastighet kan ökas när automatisk kylning är aktiverad. Detta är max hastighets begränsning för en del kylfläkt"
 
 msgid "The highest printable layer height for the extruder. Used to limit the maximum layer height when enable adaptive layer height."
 msgstr "The highest printable layer height for the extruder. Used to limit the maximum layer height when enable adaptive layer height."
@@ -15333,10 +15671,10 @@ msgstr ""
 "Please enable auxiliary_fan in printer settings to use this feature. G-code command: M106 P2 S(0-255)"
 
 msgid "For the first"
-msgstr ""
+msgstr "För det första"
 
 msgid "Set special auxiliary cooling fan for the first certain layers."
-msgstr ""
+msgstr "Ställ in en speciell extra kylfläkt för de första utvalda lagren."
 
 msgid ""
 "Auxiliary fan speed will be ramped up linearly from layer \"For the first\" to maximum at layer \"Full fan speed at layer\".\n"
@@ -15373,8 +15711,9 @@ msgstr "Inlong Slicer kan ladda upp G-kod filer till en skrivar värd. Det här 
 msgid "Nozzle volume"
 msgstr "Nozzle volym"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Volume of nozzle between the filament cutter and the end of the nozzle"
-msgstr ""
+msgstr "Volymen av nozzlen mellan skäraren och nozzlens ände"
 
 msgid "Cooling tube position"
 msgstr "Cooling tube position"
@@ -15409,8 +15748,9 @@ msgstr "When set to zero, the distance the filament is moved from parking positi
 msgid "Start end points"
 msgstr "Start- och slutpunkter"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The start and end points which are from the cutter area to the excess chute."
-msgstr ""
+msgstr "Start- och slutpunkterna från skärområdet till överskottsrännan."
 
 msgid "Reduce infill retraction"
 msgstr "Minska ifyllnads retraktionen"
@@ -15424,8 +15764,9 @@ msgstr "This option will drop the temperature of the inactive extruders to preve
 msgid "Filename format"
 msgstr "Filnamns format"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Users can decide project file names when exporting."
-msgstr ""
+msgstr "Användaren kan bestämma projekt namn när den ska exporteras"
 
 msgid "Make overhangs printable"
 msgstr "Make overhangs printable"
@@ -15449,9 +15790,10 @@ msgstr "Maximum area of a hole in the base of the model before it's filled by co
 msgid "Detect overhang walls"
 msgstr "Upptäck överhängs vägg"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "This detects the overhang percentage relative to line width and uses a different speed to print. For 100%% overhang, bridging speed is used."
-msgstr ""
+msgstr "Upptäck överhängs procenten i förhållande till linjebredden och använd olika hastigheter för att skriva ut. Vid 100%% överhäng, bridge/brygg hastighet användas."
 
 msgid "Outer walls"
 msgstr ""
@@ -15472,11 +15814,13 @@ msgstr ""
 msgid "Line width of inner wall. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Line width of inner wall. If expressed as a %, it will be computed over the nozzle diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for inner walls."
-msgstr ""
+msgstr "Hastighet för inre vägg"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the number of walls per layer."
-msgstr ""
+msgstr "Antal väggar för varje lager"
 
 msgid "Alternate extra wall"
 msgstr "Alternate extra wall"
@@ -15536,8 +15880,9 @@ msgstr ""
 msgid "Raft expansion"
 msgstr "Raft expansion"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This expands all raft layers in XY plane."
-msgstr ""
+msgstr "Öka alla raft lager i XY planet"
 
 msgid "Raft layer expansion step"
 msgstr ""
@@ -15563,14 +15908,16 @@ msgstr ""
 msgid "First layer density"
 msgstr "Första lager densitet"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the density of the first raft or support layer."
-msgstr ""
+msgstr "Densiteten av första raft eller support lager"
 
 msgid "First layer expansion"
 msgstr "Första lager expansion"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This expands the first raft or support layer to improve bed adhesion."
-msgstr ""
+msgstr "Öka första raft eller support lager för att förbättra fäste emot byggplattan"
 
 msgid "Ignore internal contours"
 msgstr ""
@@ -15587,8 +15934,9 @@ msgstr ""
 msgid "Object will be raised by this number of support layers. Use this function to avoid warping when printing ABS."
 msgstr "Objekt kommer att höjas med detta antal support lager. Använd denna funktion för att undvika warping vid utskrift av ABS"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The G-code path is generated after simplifying the contour of models to avoid too many points and G-code lines. Smaller values mean higher resolution and more time required to slice."
-msgstr ""
+msgstr "G-kods vägen genereras efter förenkling av modellens konturer för att undvika för många punkter och G-kod linjer. Mindre värden betyder högre upplösning och mer tid krävs för att bereda"
 
 msgid "Travel distance threshold"
 msgstr "Förflyttningsavståndets gräns"
@@ -15599,8 +15947,9 @@ msgstr "Aktivera endast retraktion när förflyttnings sträckan är längre än
 msgid "Retract amount before wipe"
 msgstr "Retraktions mängd innan wipe"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the length of fast retraction before a wipe, relative to retraction length."
-msgstr ""
+msgstr "Detta är längden av snabb retraktion före en wipe, i förhållande till retraktions längden"
 
 msgid "Retract amount after wipe"
 msgstr ""
@@ -15611,11 +15960,13 @@ msgid ""
 "The value will be clamped by 100% minus the retract amount before the wipe value."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Retract on layer change"
-msgstr ""
+msgstr "Retraktera vid lager byte"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This forces a retraction on layer changes."
-msgstr ""
+msgstr "Tvinga retraktion vid lager byte"
 
 msgid "Retraction Length"
 msgstr "Retraktions längd"
@@ -15647,8 +15998,9 @@ msgstr ""
 msgid "Z-hop height"
 msgstr "Z-hop height"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Whenever there is a retraction, the nozzle is lifted a little to create clearance between the nozzle and the print. This prevents the nozzle from hitting the print when traveling more. Using spiral lines to lift z can prevent stringing."
-msgstr ""
+msgstr "När det är en retraktion lyfts nozzel en aning för att skapa ett spel mellan nozzel och utskriften. Detta förhindrar att nozzel träffar utskriften när den förflyttas. Att använda spirallinjer för att lyfta z kan förhindra strängning"
 
 msgid "Z-hop lower boundary"
 msgstr "Z-hopp nedre gräns"
@@ -15809,14 +16161,16 @@ msgstr "When the retraction is compensated after the travel move, the extruder w
 msgid "When the retraction is compensated after changing tool, the extruder will push this additional amount of filament."
 msgstr "When the retraction is compensated after changing tool, the extruder will push this additional amount of filament."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Retraction speed"
-msgstr ""
+msgstr "Retraktions hastighet"
 
 msgid "Speed for retracting filament from the nozzle."
 msgstr "Speed for retracting filament from the nozzle."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Deretraction speed"
-msgstr ""
+msgstr "Åter retraktions hastighet"
 
 msgid "Speed for reloading filament into the nozzle. Zero means same speed of retraction."
 msgstr "Speed for reloading filament into the nozzle. Zero means same speed of retraction."
@@ -15845,8 +16199,9 @@ msgstr "Disable generating of the M73: Set remaining print time in the final G-c
 msgid "Seam position"
 msgstr "Söm position"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the starting position for each part of the outer wall."
-msgstr ""
+msgstr "Utskriftens start position för varje del av yttre väggen"
 
 msgid "Nearest"
 msgstr "Närmaste"
@@ -15987,8 +16342,9 @@ msgstr "Torkhastigheten bestäms av den hastighetsinställning som anges i denna
 msgid "Skirt distance"
 msgstr "Skirt avstånd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the distance from the skirt to the brim or the object."
-msgstr ""
+msgstr "Avståndet ifrån skirt till brim eller objektet"
 
 msgid "Skirt start point"
 msgstr "Skirt start point"
@@ -15999,8 +16355,9 @@ msgstr "Angle from the object center to skirt start point. Zero is the most righ
 msgid "Skirt height"
 msgstr "Skirt höjd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Number of skirt layers: usually only one"
-msgstr ""
+msgstr "Antal skirt lager: vanligtvis bara en"
 
 msgid "Single loop after first layer"
 msgstr "Single loop after first layer"
@@ -16037,8 +16394,9 @@ msgstr "Per object"
 msgid "Skirt loops"
 msgstr "Skirt varv"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the number of loops for the skirt. 0 means the skirt is disabled."
-msgstr ""
+msgstr "Antal skirt varv. 0 betyder att skirt är inaktiverad"
 
 msgid "Skirt speed"
 msgstr "Skirt speed"
@@ -16066,8 +16424,9 @@ msgstr "Utskriftshastigheten i exporterad G-kod kommer att saktas ner när den b
 msgid "Minimum sparse infill threshold"
 msgstr "Min sparsam ifyllnads gräns"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Sparse infill areas which are smaller than this threshold value are replaced by internal solid infill."
-msgstr ""
+msgstr "Sparsam ifyllnads ytor som är mindre än detta gränsvärde ersätts med inre solid ifyllnad"
 
 msgid ""
 "Filament to print internal solid infill.\n"
@@ -16087,11 +16446,13 @@ msgstr ""
 msgid "Line width of internal solid infill. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Line width of internal solid infill. If expressed as a %, it will be computed over the nozzle diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for internal solid infill, not including the top or bottom surface."
-msgstr ""
+msgstr "Hastighet för inre solid ifyllnad, förrutom topp och botten ytorna"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This enables spiraling, which smooths out the Z moves of the outer contour and turns a solid model into a single walled print with solid bottom layers. The final generated model has no seam."
-msgstr ""
+msgstr "Möjliggör spiral bildning, vilket jämnar ut Z-rörelserna på den yttre konturen och förvandlar en solid modell till en enkelväggig utskrift med solida bottenlager. Den slutgiltligt genererade modellen har ingen söm"
 
 msgid "Smooth Spiral"
 msgstr "Smooth Spiral"
@@ -16120,8 +16481,9 @@ msgstr "Spiral finishing flow ratio"
 msgid "Sets the finishing flow ratio while ending the spiral. Normally the spiral transition scales the flow ratio from 100% to 0% during the last loop which can in some cases lead to under extrusion at the end of the spiral."
 msgstr "Sets the finishing flow ratio while ending the spiral. Normally the spiral transition scales the flow ratio from 100% to 0% during the last loop which can in some cases lead to under extrusion at the end of the spiral."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "If smooth or traditional mode is selected, a timelapse video will be generated for each print. After each layer is printed, a snapshot is taken with the chamber camera. All of these snapshots are composed into a timelapse video when printing completes. If smooth mode is selected, the toolhead will move to the excess chute after each layer is printed and then take a snapshot. Since the melt filament may leak from the nozzle during the process of taking a snapshot, a prime tower is required for smooth mode to wipe the nozzle."
-msgstr ""
+msgstr "Om Smooth eller Traditionellt läge väljs genereras en timelapse-video för varje utskrift. När varje lager har skrivits ut tas en ögonblicksbild med kammarkameran. Alla dessa ögonblicksbilder är sammansatta i en timelapse-video när utskriften är klar. Om Smooth läge är valt flyttas verktygshuvudet till utloppsrännan efter att varje lager har skrivits ut och tar sedan en ögonblicksbild. Eftersom smält filament kan läcka från nozzeln under processen att ta en ögonblicksbild krävs ett prime torn för Smooth läge för att torka nozzeln."
 
 msgid "Traditional"
 msgstr "Traditionell"
@@ -16160,11 +16522,13 @@ msgstr "G-code written at the very top of the output file, before any other cont
 msgid "Start G-code"
 msgstr "Starta G-kod"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "G-code added when starting a print."
-msgstr ""
+msgstr "Starta G-kod när utskrift startar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "G-code added when the printer starts using this filament"
-msgstr ""
+msgstr "Starta G-kod när utskrift startar med detta filament"
 
 msgid "Single Extruder Multi Material"
 msgstr "Single Extruder Multi Material"
@@ -16262,8 +16626,9 @@ msgstr "This value will be added (or subtracted) from all the Z coordinates in t
 msgid "Enable support"
 msgstr "Aktivera support"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This enables support generation."
-msgstr ""
+msgstr "Aktivera support generering."
 
 msgid "Normal (auto) and Tree (auto) are used to generate support automatically. If Normal (manual) or Tree (manual) is selected, only support enforcers are generated."
 msgstr "normal (auto) och tree (auto) används för att generera support automatiskt. Om normal (manual) eller tree (manual) väljs, genereras endast support förstärkare."
@@ -16283,8 +16648,9 @@ msgstr "tree (manuell)"
 msgid "Support/object XY distance"
 msgstr "Support/objekt XY distans"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This controls the XY separation between an object and its support."
-msgstr ""
+msgstr "XY avstånd mellan objektet och support"
 
 msgid "Support/object first layer gap"
 msgstr "Support/object first layer gap"
@@ -16301,8 +16667,9 @@ msgstr "Använd den här inställningen för att rotera support mönstret i hori
 msgid "On build plate only"
 msgstr "Endast på byggplattan"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This setting only generates supports that begin on the build plate."
-msgstr ""
+msgstr "Inställningen skapar bara support som utgår ifrån byggplattan"
 
 msgid "Support critical regions only"
 msgstr "Endast support på kritiska områden"
@@ -16331,10 +16698,11 @@ msgstr "Z-gapet mellan objektet och supportens botten. Om Topp Z-distans är 0 o
 msgid "Support/raft base"
 msgstr "Support/raft bas"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Filament to print support base and raft.\n"
 "\"Default\" means no specific filament for support and current filament is used."
-msgstr ""
+msgstr "Filament för att skriva ut support och rafts. ”Standard” betyder ingen specifik filament för support, och nuvarande filament används"
 
 msgid "Avoid interface filament for base"
 msgstr "Undvik gränssnitts filament för basen"
@@ -16345,25 +16713,29 @@ msgstr "Undvik om möjligt att använda filament för stöd gränssnitt för att
 msgid "Line width of support. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Line width of support. If expressed as a %, it will be computed over the nozzle diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Loop pattern interface"
-msgstr ""
+msgstr "Loop mönstrets gränssnitt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This covers the top contact layer of the supports with loops. It is disabled by default."
-msgstr ""
+msgstr "Täcker den övre kontaktytan av support med öglor. Den är inaktiverad som standard."
 
 msgid "Support/raft interface"
 msgstr "Gränssnitt för support/raft"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Filament to print support interface.\n"
 "\"Default\" means no specific filament for support interface and current filament is used."
-msgstr ""
+msgstr "Filament för att skriva ut supportens anläggningsyta. ” Standard” betyder ingen specifik filament för supportens anläggningsyta, och nuvarande filament används"
 
 msgid "Top interface layers"
 msgstr "Översta gränssnitts lager"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the number of top interface layers."
-msgstr ""
+msgstr "Number of slow layers"
 
 msgid "Bottom interface layers"
 msgstr "Botten gränssnitts lager"
@@ -16395,8 +16767,9 @@ msgstr ""
 msgid "Bottom interface spacing"
 msgstr "Botten gränssnitts mellanrum"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the spacing of bottom interface lines. 0 means solid interface."
-msgstr ""
+msgstr "Mellanrummet på botten gränssnittets linjer. 0 betyder solid gränssnitt"
 
 msgid "Bottom contact spacing"
 msgstr ""
@@ -16404,8 +16777,9 @@ msgstr ""
 msgid "Spacing of the first support interface layer directly above the object. Set to -1 to use the bottom interface spacing. Zero means solid contact."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for support interfaces."
-msgstr ""
+msgstr "Support gränssnittets hastighet"
 
 msgid "Base pattern"
 msgstr "Botten mönster"
@@ -16429,8 +16803,9 @@ msgstr "Ihålig"
 msgid "Interface pattern"
 msgstr "Gränssnitts mönster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern for support interfaces. The default pattern for non-soluble support interfaces is Rectilinear while the default pattern for soluble support interfaces is Concentric."
-msgstr ""
+msgstr "Linje mönster för support gränssnittsytan .Standardmönstret för olösligt (material) support gränssnittet är Räta medan standardmönstret för lösligt(material) stödgränssnittet är koncentriskt"
 
 msgid "Rectilinear Interlaced"
 msgstr "Rätlinjig sammanflätning"
@@ -16450,8 +16825,9 @@ msgstr ""
 msgid "Base pattern spacing"
 msgstr "Basens mönster mellanrum"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This determines the spacing between support lines."
-msgstr ""
+msgstr "Mellanrum mellan support linjer"
 
 msgid "Normal support expansion"
 msgstr ""
@@ -16459,8 +16835,9 @@ msgstr ""
 msgid "Expand (+) or shrink (-) the horizontal span of normal support."
 msgstr "Expandera (+) eller krymp (-) det horisontella spännvidden för normalt stöd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for support."
-msgstr ""
+msgstr "Support hastighet"
 
 msgid ""
 "Style and shape of the support. For normal support, projecting the supports into a regular grid will create more stable supports (default), while snug support towers will save material and reduce object scarring.\n"
@@ -16642,8 +17019,9 @@ msgstr ""
 msgid "Chamber minimal temperature"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Nozzle temperature after the first layer"
-msgstr ""
+msgstr "Nozzel temperatur efter första lager"
 
 msgid "Head wrap detect zone"
 msgstr ""
@@ -16652,8 +17030,9 @@ msgstr ""
 msgid "Detect thin walls"
 msgstr "Upptäck tunna väggar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This detects thin walls which can’t contain two lines and uses a single line to print. It may not print as well because it’s not a closed loop."
-msgstr ""
+msgstr "Upptäck tunna väggar som inte kan ha två linjer och använder en linje för att skrivas ut. Utskrifts kvaliteten begränsas efter som det inte är en sluten slinga"
 
 msgid "This G-code is inserted when filament is changed, including T commands to trigger tool change."
 msgstr "G-koden sätts in vid filament byte, inklusive T kommando som aktiverar verktygs byte"
@@ -16670,8 +17049,9 @@ msgstr ""
 msgid "Line width for top surfaces. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Line width for top surfaces. If expressed as a %, it will be computed over the nozzle diameter."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for solid top surface infill."
-msgstr ""
+msgstr "Hastighet för solida topp ytors ifyllnad"
 
 msgid "Top shell layers"
 msgstr "Övre skal lager"
@@ -16682,8 +17062,9 @@ msgstr "Antal solida topp lager på topp skal, inkluderar topp ytans lager. När
 msgid "Top shell thickness"
 msgstr "Övre skalets tjocklek"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The number of top solid layers is increased when slicing if the thickness calculated by top shell layers is thinner than this value. This can avoid having too thin a shell when layer height is small. 0 means that this setting is disabled and thickness of top shell is determined simply by the number of top shell layers."
-msgstr ""
+msgstr "Antal solida övre lager ökas när tjockleken kalkyleras och övre skalet är tunnare än detta värde. Detta kan undvika att ha för tunt skal när lagerhöjden är liten. 0 betyder att den här inställningen är inaktiverad och tjockleken på det övre skalet bestäms av de övre skal lagerna"
 
 msgid "Separated infills"
 msgstr ""
@@ -16714,17 +17095,20 @@ msgstr ""
 msgid "Each Assembly"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed at which traveling is done."
-msgstr ""
+msgstr "Förflyttnings hastighet"
 
 msgid "Wipe while retracting"
 msgstr "Avskrapa medans retraktering"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This moves the nozzle along the last extrusion path when retracting to clean any leaked material on the nozzle. This can minimize blobs when printing a new part after traveling."
-msgstr ""
+msgstr "Detta flyttarnozzeln längs den sista extruderingsbanan när det retrakterar för att rengöra eventuellt läckt material på nozzeln. Detta kan minimera blobbar när du skriver ut en ny del efter förflyttning"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Wipe distance"
-msgstr ""
+msgstr "Avskrapnings avstånd"
 
 msgid ""
 "Describe how long the nozzle will move along the last path when retracting.\n"
@@ -16739,8 +17123,9 @@ msgstr ""
 "\n"
 "Setting a value in the retract amount before wipe setting below will perform any excess retraction before the wipe, else it will be performed after."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The wiping tower can be used to clean up residue on the nozzle and stabilize the chamber pressure inside the nozzle in order to avoid appearance defects when printing objects."
-msgstr ""
+msgstr "Avstryknings tornet kan användas för att avlägsna rester på munstycket och stabilisera kammartrycket inuti munstycket för att undvika utseendefel vid utskrift av objekt."
 
 msgid "Internal ribs"
 msgstr "Internal ribs"
@@ -16754,8 +17139,9 @@ msgstr "Rensnings volym"
 msgid "Flush multiplier"
 msgstr "Rensnings multiplikator"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The actual flushing volumes is equal to the flush multiplier value multiplied by the flushing volumes in the table."
-msgstr ""
+msgstr "Den faktiska rensnings volymen är lika med värdet för rensnings multiplikatorn multiplicerat med rensnings volymerna i tabellen."
 
 msgid "Flush multiplier (Fast mode)"
 msgstr ""
@@ -16766,8 +17152,9 @@ msgstr ""
 msgid "Prime volume"
 msgstr "Prime volym (volymen av ut pressat material)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the volume of material to prime the extruder with on the tower."
-msgstr ""
+msgstr "Material volymen att (pressa ut) genom extrudern på tornet."
 
 msgid "Prime volume mode"
 msgstr ""
@@ -16778,8 +17165,9 @@ msgstr ""
 msgid "Saving"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the width of prime towers."
-msgstr ""
+msgstr "Prime tornets bredd"
 
 msgid "Wipe tower rotation angle"
 msgstr "Wipe tower rotation angle"
@@ -16891,11 +17279,13 @@ msgstr "Infill gap"
 msgid "Infill gap."
 msgstr "Infill gap."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Purging after filament change will be done inside objects' infills. This may lower the amount of waste and decrease the print time. If the walls are printed with transparent filament, the mixed color infill will be visible. It will not take effect unless the prime tower is enabled."
-msgstr ""
+msgstr "Rensning efter filamentbyte kommer att göras inuti objektens fyllningar. Detta kan minska mängden avfall och minska utskriftstiden. Om väggarna är tryckta med transparent filament kommer den blandade färgfyllningen att synas. Det träder inte i kraft om inte prime tower är aktiverat."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Purging after filament change will be done inside objects' support. This may lower the amount of waste and decrease the print time. It will not take effect unless a prime tower is enabled."
-msgstr ""
+msgstr "Rensning efter filamentbyte kommer att göras inuti objektens support. Detta kan minska mängden avfall och minska utskriftstiden. Det träder inte i kraft om inte ett prime tower är aktiverat."
 
 msgid "This object will be used to purge the nozzle after a filament change to save filament and decrease the print time. Colors of the objects will be mixed as a result. It will not take effect unless the prime tower is enabled."
 msgstr "Det här objektet används för att rensa nozzeln efter ett filamentbyte för att spara filament och minska utskriftstiden. Färgerna i objekten kommer att blandas som ett resultat. Det kommer inte att få effekt om inte prime tower är aktiverat."
@@ -16927,14 +17317,16 @@ msgstr "Nozzle temperature when the tool is currently not used in multi-tool set
 msgid "X-Y hole compensation"
 msgstr "X-Y håls kompensation"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Holes in objects will expand or contract in the XY plane by the set value. Positive values make holes bigger and negative values make holes smaller. This function is used to adjust sizes slightly when objects have assembly issues."
-msgstr ""
+msgstr "Objektets hål kommer att krympa eller öka i XY planet med valt värde. Positivt värde ökar och negativt värde minskar hålets storlek. Denna funktion används för att justera storleken något när det finns monterings svårigheter"
 
 msgid "X-Y contour compensation"
 msgstr "X-Y kontur kompenstation"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Contours of objects will expand or contract in the XY plane by the set value. Positive values make contours bigger and negative values make contours smaller. This function is used to adjust sizes slightly when objects have assembly issues."
-msgstr ""
+msgstr "Objektets kontur kommer att krympa eller öka i XY planet med konfigurerat värde. Positivt värde ökar och negativt värde minskar konturens storlek. Denna funktion används för att justera storleken något när det finns monterings svårigheter"
 
 msgid "Convert holes to polyholes"
 msgstr "Convert holes to polyholes"
@@ -16991,8 +17383,9 @@ msgstr "Använd relativa E avstånd"
 msgid "Relative extrusion is recommended when using \"label_objects\" option. Some extruders work better with this option unchecked (absolute extrusion mode). Wipe tower is only compatible with relative mode. It is recommended on most printers. Default is checked."
 msgstr "Relative extrusion is recommended when using \"label_objects\" option. Some extruders work better with this option unchecked (absolute extrusion mode). Wipe tower is only compatible with relative mode. It is recommended on most printers. Default is checked."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The classic wall generator produces walls with constant extrusion width and for very thin areas, gap-fill is used. The Arachne engine produces walls with variable extrusion width."
-msgstr ""
+msgstr "Den klassiska vägg generatorn producerar väggar med konstant extruderings bredd och för mycket tunna områden används gap-fill. Arachne-motorn producerar väggar med variabel extruderings bredd."
 
 msgid "Arachne"
 msgstr "Arachne"
@@ -17064,40 +17457,40 @@ msgid "Width of the wall that will replace thin features (according to the Minim
 msgstr "Bredden på den vägg som ska ersätta tunna element (enligt minsta storlek för element) i modellen. Om den minsta väggbredden är tunnare än tjockleken på elementet blir väggen lika tjock som själva elementet. Den uttrycks i procent av nozzel diametern."
 
 msgid "Hotend change time"
-msgstr ""
+msgstr "Tid för byte av hotend"
 
 msgid "Time to change hotend."
-msgstr ""
+msgstr "Dags att byta hotend."
 
 msgid "Hotend change"
-msgstr ""
+msgstr "Byte av hotend"
 
 msgid "When changing the hotend, it is recommended to extrude a certain length of filament from the original nozzle. This helps minimize nozzle oozing."
-msgstr ""
+msgstr "När du byter hotend, rekommenderas det att extrudera en viss längd av filament från det ursprungliga nozzle. Detta hjälper till att minimera nozzle läckage."
 
 msgid "Extruder change"
-msgstr ""
+msgstr "Extruder byte"
 
 msgid "To prevent oozing, the nozzle will perform a reverse travel movement for a certain period after the ramming is complete. The setting define the travel time."
-msgstr ""
+msgstr "För att förhindra oozing ur nozzle görs en bakåtriktad rörelse under en viss period efter att ramningen är klar. Inställningen definierar rörelse tiden."
 
 msgid "To prevent oozing, the nozzle temperature will be cooled during ramming. Therefore, the ramming time must be greater than the cooldown time. 0 means disabled."
-msgstr ""
+msgstr "För att förhindra ooze ur nozzle kyls nozzle temperatur under ramning. Ramningstiden måste därför vara längre än nedkylningstiden. 0 betyder avaktiverad."
 
 msgid "The maximum volumetric speed for ramming before extruder change, where -1 means using the maximum volumetric speed."
-msgstr ""
+msgstr "Den maximala volymetriska hastigheten för ramning före extruder byte, där -1 innebär att den maximala volymetriska hastigheten används."
 
 msgid "To prevent oozing, the nozzle temperature will be cooled during ramming. Note: only a cooldown command and fan activation are triggered, reaching the target temperature is not guaranteed. 0 means disabled."
-msgstr ""
+msgstr "För att förhindra läckage kyls nozzle temperatur ner under ramningen. Obs: endast ett nedkylnings kommando och fläktaktivering utlöses, det är inte garanterat att måltemperaturen uppnås. 0 betyder inaktiverad."
 
 msgid "The maximum volumetric speed for ramming before a hotend change, where -1 means using the maximum volumetric speed."
-msgstr ""
+msgstr "Den maximala volymetriska hastigheten för ramning före ett hotend byte, där -1 innebär att den maximala volymetriska hastigheten används."
 
 msgid "length when change hotend"
-msgstr ""
+msgstr "längd vid byte av hotend"
 
 msgid "When this retraction value is modified, it will be used as the amount of filament retracted inside the hotend before changing hotends."
-msgstr ""
+msgstr "När detta indragnings värde ändras, kommer det att användas som mängden indraget filament inuti hotend innan du byter hotend."
 
 msgid "Support fast purge mode"
 msgstr ""
@@ -17105,14 +17498,20 @@ msgstr ""
 msgid "Whether this printer supports fast purge mode with optimized temperature and multiplier."
 msgstr ""
 
-msgid "The volume of material required to prime the extruder for a hotend change on the tower."
+msgid "Filament change"
 msgstr ""
+
+msgid "The volume of material required to prime the extruder on the tower, excluding a hotend change."
+msgstr ""
+
+msgid "The volume of material required to prime the extruder for a hotend change on the tower."
+msgstr "Volymen av material som krävs för att prima extrudern för en hotend förändring på tower."
 
 msgid "Preheat temperature delta"
-msgstr ""
+msgstr "Förvärmningstemperaturdelta"
 
 msgid "Temperature delta applied during pre-heating before tool change."
-msgstr ""
+msgstr "Temperaturdelta tillämpad under förvärmning före verktygsbyte."
 
 #, fuzzy
 msgid "Detect narrow internal solid infills"
@@ -17140,14 +17539,16 @@ msgstr " inte inom intervallet "
 msgid "Export 3MF"
 msgstr "Exportera 3mf"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This exports the project as a 3MF file."
-msgstr ""
+msgstr "Exportera projekt som 3MF."
 
 msgid "Export slicing data"
 msgstr "Exportera beredningsdata"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Export slicing data to a folder"
-msgstr ""
+msgstr "Exportera beredningsdata till en mapp"
 
 msgid "Load slicing data"
 msgstr "Ladda berednings data"
@@ -17170,8 +17571,9 @@ msgstr "Export the objects as multiple STLs to directory."
 msgid "Slice the plates: 0-all plates, i-plate i, others-invalid"
 msgstr "Bered plattorna: 0-alla plattor, i-platta i, andra-ogiltiga"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This shows command help."
-msgstr ""
+msgstr "Visa kommandohjälp."
 
 msgid "UpToDate"
 msgstr "Aktuell"
@@ -17194,14 +17596,16 @@ msgstr "Export 3MF with minimum size."
 msgid "mtcpp"
 msgstr "mtcpp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "max triangle count per plate for slicing"
-msgstr ""
+msgstr "max antal trianglar per platta för beredning"
 
 msgid "mstpp"
 msgstr "mstpp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "max slicing time per plate in seconds"
-msgstr ""
+msgstr "Max berednings tid per platta i sekunder"
 
 msgid "No check"
 msgstr "Ingen kontroll"
@@ -17218,14 +17622,16 @@ msgstr "Kontrollera de normativa objekten."
 msgid "Output Model Info"
 msgstr "Mata ut modell information"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This outputs the model’s information."
-msgstr ""
+msgstr "Mata ut modellens information."
 
 msgid "Export Settings"
 msgstr "Exportera inställningar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This exports settings to a file."
-msgstr ""
+msgstr "Exportera inställningar till en fil."
 
 msgid "Send progress to pipe"
 msgstr "Skicka framsteg till röret (SLA)"
@@ -17311,8 +17717,9 @@ msgstr "Clone objects in the load list."
 msgid "Load uptodate process/machine settings when using uptodate"
 msgstr "Load uptodate process/machine settings when using uptodate"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "load up-to-date process/machine settings from the specified file when using up-to-date"
-msgstr ""
+msgstr "ladda aktuella process/maskin inställningar från angiven fil vid användning av aktuella"
 
 msgid "Load uptodate filament settings when using uptodate"
 msgstr "Load uptodate filament settings when using uptodate"
@@ -17347,8 +17754,9 @@ msgstr "Load and store settings at the given directory. This is useful for maint
 msgid "Output directory"
 msgstr "Mata ut katalog"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the output directory for exported files."
-msgstr ""
+msgstr "Mata ut katalogen för exporterade filer."
 
 msgid "Debug level"
 msgstr "Felsökningsnivå"
@@ -17789,14 +18197,17 @@ msgstr "Laddning av modell filen misslyckades."
 msgid "Meshing of a model file failed or no valid shape."
 msgstr "Meshing of a model file failed or no valid shape."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The supplied file couldn't be read because it's empty."
-msgstr ""
+msgstr "Den medföljande filen kunde inte läsas eftersom den är tom."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unknown file format: input file must have .stl, .obj, or .amf(.xml) extension."
-msgstr ""
+msgstr "Okänt filformat: indata filen måste ha tillägget .stl, .obj eller .amf(.xml)."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unknown file format: input file must have .3mf or .zip.amf extension."
-msgstr ""
+msgstr "Okänt filformat: indata filen måste ha fil ändelsen .3mf eller .zip.amf."
 
 msgid "load_obj: failed to parse"
 msgstr "load_obj: misslyckades med att analysera"
@@ -17846,8 +18257,9 @@ msgstr "Kalibrera"
 msgid "Finish"
 msgstr "Slutför"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "How can I use calibration results?"
-msgstr ""
+msgstr "Hur kan jag använda kalibreringsresultaten?"
 
 msgid "You could change the Flow Dynamics Calibration Factor in material editing"
 msgstr "Du kan ändra kalibreringsfaktorn för flödesdynamik i material redigeringen"
@@ -17917,18 +18329,22 @@ msgstr "Välj filament för kalibrering."
 msgid "The input value size must be 3."
 msgstr "Storleken på ingångsvärdet måste vara 3."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This machine type can only hold 16 historical results per nozzle. You can delete the existing historical results and then start calibration. Or you can continue the calibration, but you cannot create new calibration historical results.\n"
 "Do you still want to continue the calibration?"
 msgstr ""
+"This machine type can only hold 16 history results per nozzle. You can delete the existing historical results and then start calibration. Or you can continue the calibration, but you cannot create new calibration historical results.\n"
+"Do you still want to continue the calibration?"
 
 #, c-format, boost-format
 msgid "Only one of the results with the same name: %s will be saved. Are you sure you want to override the other results?"
 msgstr "Only one of the results with the same name: %s will be saved. Are you sure you want to override the other results?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "There is already a previous calibration result with the same name: %s. Only one result with a name is saved. Are you sure you want to overwrite the previous result?"
-msgstr ""
+msgstr "Det finns redan ett tidigare kalibreringsresultat med samma namn: %s. Endast ett resultat med ett namn sparas. Är du säker på att du vill skriva över det tidigare resultatet?"
 
 #, c-format, boost-format
 msgid ""
@@ -17938,9 +18354,10 @@ msgstr ""
 "Within the same extruder, the name(%s) must be unique when the filament type, nozzle diameter, and nozzle flow are the same.\n"
 "Are you sure you want to override the historical result?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "This machine type can only hold %d historical results per nozzle. This result will not be saved."
-msgstr ""
+msgstr "This machine type can only hold %d history results per nozzle. This result will not be saved."
 
 msgid "Connecting to printer..."
 msgstr "Ansluter till skrivaren..."
@@ -18019,6 +18436,7 @@ msgstr "Dessutom är flödeshastighets kalibrering avgörande för skummande mat
 msgid "Flow Rate Calibration measures the ratio of expected to actual extrusion volumes. The default setting works well in Bambu Lab printers and official filaments as they were pre-calibrated and fine-tuned. For a regular filament, you usually won't need to perform a Flow Rate Calibration unless you still see the listed defects after you have done other calibrations. For more details, please check out the wiki article."
 msgstr "Flödeskalibrering mäter förhållandet mellan förväntade och faktiska extruderings volymer. Standardinställningen fungerar bra med Bambu Lab printers och officiella filament eftersom de är förkalibrerade och finjusterade. För ett vanligt filament behöver du vanligtvis inte utföra en flödeshastighets kalibrering om du inte fortfarande ser de listade defekterna efter att du har gjort andra kalibreringar. För mer information, se vår wiki-artikel."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Auto Flow Rate Calibration utilizes Bambu Lab's Micro-Lidar technology, directly measuring the calibration patterns. However, please be advised that the efficacy and accuracy of this method may be compromised with specific types of materials. Particularly, filaments that are transparent or semi-transparent, have sparkles, or have a highly-reflective finish may not be suitable for this calibration and can produce less-than-desirable results.\n"
 "\n"
@@ -18026,6 +18444,11 @@ msgid ""
 "\n"
 "Caution: Flow Rate Calibration is an advanced process, to be attempted only by those who fully understand its purpose and implications. Incorrect usage can lead to sub-par prints or printer damage. Please make sure to carefully read and understand the process before doing it."
 msgstr ""
+"Auto Flow Rate Calibration utilizes Bambu Lab's Micro-Lidar technology, directly measuring the calibration patterns. However, please be advised that the efficacy and accuracy of this method may be compromised with specific types of materials. Particularly, filaments that are transparent or semi-transparent, sparkling-particled, or have a high-reflective finish may not be suitable for this calibration and can produce less-than-desirable results.\n"
+"\n"
+"The calibration results may vary between each calibration or filament. We are still improving the accuracy and compatibility of this calibration through firmware updates over time.\n"
+"\n"
+"Caution: Flow Rate Calibration is an advanced process, to be attempted only by those who fully understand its purpose and implications. Incorrect usage can lead to sub-par prints or printer damage. Please make sure to carefully read and understand the process before doing it."
 
 msgid "When you need Max Volumetric Speed Calibration"
 msgstr "När du behöver kalibrering av maximal volymhastighet"
@@ -18061,7 +18484,7 @@ msgid "Nozzle ID"
 msgstr ""
 
 msgid "Standard Flow"
-msgstr ""
+msgstr "Standard flöde"
 
 msgid "Please find the best line on your plate"
 msgstr "Hitta den bästa linjen på din platta."
@@ -18222,19 +18645,21 @@ msgstr "Inget historikresultat"
 msgid "Success to get history result"
 msgstr "Lyckades med att få historiskt resultat"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Refreshing the previous Flow Dynamics Calibration records"
-msgstr ""
+msgstr "Uppdatering av tidigare kalibreringsposter för flödesdynamik"
 
 #, c-format, boost-format
 msgid "Note: The hotend number on the %s is tied to the holder. When the hotend is moved to a new holder, its number will update automatically."
-msgstr ""
+msgstr "Obs: Hotend numret på %s är kopplat till hållaren. När hotend flyttas till en ny hållare uppdateras dess nummer automatiskt."
 
 msgid "Action"
 msgstr "Åtgärd"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "This machine type can only hold %d historical results per nozzle."
-msgstr ""
+msgstr "This machine type can only hold %d history results per nozzle."
 
 msgid "Edit Flow Dynamics Calibration"
 msgstr "Redigera kalibrering av flödesdynamik"
@@ -18872,8 +19297,9 @@ msgstr ""
 msgid "All inputs in the custom vendor or serial are spaces. Please re-enter."
 msgstr "Alla inmatningar i den anpassade leverantören eller serien är mellanslag. Vänligen ange på nytt."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The vendor cannot be a number; please re-enter."
-msgstr ""
+msgstr "The vendor cannot be a number. Please re-enter."
 
 msgid "You have not selected a printer or preset yet. Please select at least one."
 msgstr "Du har ännu inte valt någon printer eller inställning. Välj minst en."
@@ -18964,8 +19390,9 @@ msgstr "Filen överstiger %d MB, vänligen importera igen."
 msgid "Exception in obtaining file size, please import again."
 msgstr "Undantag vid erhållande av filstorlek, vänligen importera igen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Preset path was not found; please reselect vendor."
-msgstr ""
+msgstr "Inställd sökväg hittades inte; vänligen välj leverantör igen."
 
 msgid "The printer model was not found, please reselect."
 msgstr "Printer modellen hittades inte, välj igen."
@@ -18988,8 +19415,9 @@ msgstr "Mall för process inställning"
 msgid "You have not yet chosen which printer preset to create based on. Please choose the vendor and model of the printer"
 msgstr "Du har ännu inte valt vilken printer inställning du vill skapa baserat på. Välj leverantör och modell för printern"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You have entered a disallowed character in the printable area section on the first page. Please use only numbers."
-msgstr ""
+msgstr "Du har angett ett otillåtet tecken i det utskrivbara området på första sidan. Använd endast siffror."
 
 msgid ""
 "The printer preset you created already has a preset with the same name. Do you want to overwrite it?\n"
@@ -19010,14 +19438,16 @@ msgstr "Skapa inställningar för filament misslyckades. Enligt följande:\n"
 msgid "Create process presets failed. As follows:\n"
 msgstr "Skapa process inställningar misslyckades. Enligt följande:\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Vendor was not found; please reselect."
-msgstr ""
+msgstr "Leverantören hittades inte; välj igen."
 
 msgid "Current vendor has no models, please reselect."
 msgstr "Nuvarande leverantör har inga modeller, vänligen välj om."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You have not selected the vendor and model or input the custom vendor and model."
-msgstr ""
+msgstr "Du har inte valt leverantör och modell eller angett anpassad leverantör och modell."
 
 msgid "There may be escape characters in the custom printer vendor or model. Please delete and re-enter."
 msgstr "Det kan finnas escape tecken i den anpassade printerns leverantör eller modell. Vänligen radera och ange igen."
@@ -19028,8 +19458,9 @@ msgstr "Alla inmatningar i den anpassade printer leverantören eller modellen ä
 msgid "Please check bed printable shape and origin input."
 msgstr "Kontrollera byggplattans utskrivbara form och ursprungs inmatning."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You have not yet selected the printer to replace the nozzle for; please choose a printer."
-msgstr ""
+msgstr "Du har ännu inte valt vilken printer som nozzeln ska bytas ut på; välj en printer."
 
 msgid "The entered nozzle diameter is invalid, please re-enter:\n"
 msgstr "The entered nozzle diameter is invalid, please re-enter:\n"
@@ -19068,10 +19499,13 @@ msgstr "Gå till printer inställningar för att redigera dina inställningar"
 msgid "Filament Created"
 msgstr "Filament skapad"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Please go to filament settings to edit your presets if you need to.\n"
 "Please note that nozzle temperature, hot bed temperature, and maximum volumetric speed each have a significant impact on printing quality. Please set them carefully."
 msgstr ""
+"Gå till filament inställningar för att redigera dina inställningar om du behöver.\n"
+"Observera att nozzel temperatur, värmebädds temperatur och maximal volymhastighet alla har en betydande inverkan på utskriftskvaliteten. Ställ in dem noggrant."
 
 msgid ""
 "\n"
@@ -19146,8 +19580,9 @@ msgstr ""
 "Användarens inställning för filament.\n"
 "Kan delas med andra."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Only display printers with changes to printer, filament, and process presets are displayed."
-msgstr ""
+msgstr "Endast printer med ändringar av inställningar för printer, filament och process visas."
 
 msgid "Only display the filament names with changes to filament presets."
 msgstr "Visa endast filament namnen vid ändringar av filament inställningar."
@@ -19172,8 +19607,9 @@ msgstr ""
 msgid "Please select at least one printer or filament."
 msgstr "Välj minst en printer eller ett filament."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please select a preset type you want to export"
-msgstr ""
+msgstr "Välj en inställningstyp som du vill exportera"
 
 msgid "Failed to create temporary folder, please try Export Configs again."
 msgstr "Failed to create temporary folder, please try Export Configs again."
@@ -19408,7 +19844,7 @@ msgstr ""
 msgid "Pack"
 msgstr ""
 
-msgid "Cleans and rebuilds system profiles cache on next launch"
+msgid "Cleans and rebuilds system profiles cache on next launch."
 msgstr ""
 
 msgid "Clean system profiles cache"
@@ -19420,16 +19856,16 @@ msgstr ""
 msgid "Loaded profiles overview"
 msgstr ""
 
-msgid "This section shows information for loaded profiles"
+msgid "This section shows information for loaded profiles."
 msgstr ""
 
-msgid "Exports detailed overview of loaded profiles in json format"
+msgid "Exports detailed overview of loaded profiles in json format."
 msgstr ""
 
 msgid "Configurations folder"
 msgstr ""
 
-msgid "Opens configurations folder"
+msgid "Opens configurations folder."
 msgstr ""
 
 msgid "Log level"
@@ -19444,13 +19880,10 @@ msgstr ""
 msgid "Profiles"
 msgstr ""
 
-msgid "Select NO to close dialog and review project"
+msgid "Select NO to close dialog and review project."
 msgstr ""
 
 msgid "No project file on current session. Only logs will be included to package"
-msgstr ""
-
-msgid "Select NO to close dialog and review project."
 msgstr ""
 
 msgid "Please make sure any instances of InlongSlicer are not running"
@@ -19863,8 +20296,9 @@ msgstr "printers at the same time. (It depends on how many devices can undergo h
 msgid "Wait"
 msgstr "Vänta"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "minute each batch. (It depends on how long it takes to complete heating.)"
-msgstr ""
+msgstr "minute each batch. (It depends on how long it takes to complete the heating.)"
 
 msgid "Task Sending"
 msgstr "Task Sending"
@@ -19983,7 +20417,7 @@ msgid "Global settings"
 msgstr "Global settings"
 
 msgid "Video tutorial"
-msgstr ""
+msgstr "Videohandledning"
 
 msgid "(Sync with printer)"
 msgstr "(Sync with printer)"
@@ -20107,7 +20541,7 @@ msgstr ""
 msgid "Error code not found"
 msgstr ""
 
-msgid "The printer is busy, Please check the device page for the file and try to start printing again."
+msgid "The printer is busy, please check the device page for the file and try to start printing again."
 msgstr ""
 
 msgid "The file is lost, please check and try again."
@@ -20182,8 +20616,9 @@ msgstr "Warning: The brim type is not set to \"painted\", the brim ears will not
 msgid "Set the brim type of this object to \"painted\""
 msgstr "Set the brim type of this object to \"painted\""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "invalid brim ears"
-msgstr ""
+msgstr " ogiltiga öron"
 
 msgid "Brim Ears"
 msgstr "Brätte Öron"
@@ -20272,14 +20707,14 @@ msgstr "Error: %s"
 msgid "Show details"
 msgstr "Show details"
 
+msgid "Hide details"
+msgstr ""
+
 msgid "Version to install:"
 msgstr "Version to install:"
 
 msgid "Download and Install"
 msgstr "Download and Install"
-
-msgid "Skip for Now"
-msgstr "Skip for Now"
 
 msgid "A new version of the Bambu Network Plug-in is available."
 msgstr "A new version of the Bambu Network Plug-in is available."
@@ -20291,17 +20726,11 @@ msgstr "Current version: %s"
 msgid "Update to version:"
 msgstr "Update to version:"
 
-msgid "Update Now"
-msgstr "Update Now"
-
-msgid "Remind Later"
-msgstr "Remind Later"
-
-msgid "Skip Version"
-msgstr "Skip Version"
-
 msgid "Don't Ask Again"
 msgstr "Don't Ask Again"
+
+msgid "Update Now"
+msgstr "Update Now"
 
 msgid "(Latest)"
 msgstr "(Latest)"
@@ -20317,9 +20746,6 @@ msgstr "A restart is required to load the new plug-in. Would you like to restart
 
 msgid "Restart Now"
 msgstr "Restart Now"
-
-msgid "Restart Later"
-msgstr "Restart Later"
 
 msgid "NO RAMMING AT ALL"
 msgstr "NO RAMMING AT ALL"
@@ -20797,12 +21223,15 @@ msgstr ""
 "Dela upp dina utskrifter i byggytor\n"
 "Visste du att du kan dela upp en modell med många delar i enskilda byggytor som är färdiga att skrivas ut? Detta förenklar processen att hålla reda på alla delar."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Speed up your print with Adaptive Layer
 #: Height]
 msgid ""
 "Speed up your print with Adaptive Layer Height\n"
 "Did you know that you can print a model even faster by using the Adaptive Layer Height option? Check it out!"
 msgstr ""
+"Snabba upp utskriften med Adaptiv Lager Höjd\n"
+"Visste du att du kan skriva ut en modell ännu snabbare med alternativet Adaptiv Lager Höjd? Kolla in det!"
 
 #: resources/data/hints.ini: [hint:Support painting]
 msgid ""
@@ -20812,17 +21241,23 @@ msgstr ""
 "Support målning\n"
 "Visste du att du kan måla platsen för dina support? Denna funktion gör det enkelt att placera support material endast på de delar av modellen som faktiskt behöver det."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Different types of supports]
 msgid ""
 "Different types of supports\n"
 "Did you know that you can choose from multiple types of supports? Tree supports work great for organic models while saving filament and improving print speed. Check them out!"
 msgstr ""
+"Olika typer av support\n"
+"Visste du att du kan välja mellan flera typer av support? Trädsupport fungerar bra för organiska modeller samtidigt som du sparar glödtråd och förbättrar utskriftshastigheten. Kolla in dem!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Printing Silk Filament]
 msgid ""
 "Printing Silk Filament\n"
 "Did you know that Silk filament needs special consideration to print successfully? A higher temperature and lower speed are always recommended for the best results."
 msgstr ""
+"Utskrift med Silk Filament\n"
+"Visste du att Silk filament behöver särskild hänsyn för att utskriften ska lyckas? En högre temperatur och lägre hastighet rekommenderas alltid för bästa resultat."
 
 #: resources/data/hints.ini: [hint:Brim for better adhesion]
 msgid ""
@@ -20848,11 +21283,14 @@ msgstr ""
 "Stapla objekt\n"
 "Visste du att du kan stapla objekt som en hel?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Flush into support/objects/infill]
 msgid ""
 "Flush into support/objects/infill\n"
 "Did you know that you can reduce wasted filament by flushing it into support/objects/infill during filament changes?"
 msgstr ""
+"Rensa in i support/objekt/ifyllnad\n"
+"Visste du att du kan minska filament åtgång genom att rensa den till support/objekt/ifyllning under filament byten?"
 
 #: resources/data/hints.ini: [hint:Improve strength]
 msgid ""
@@ -20862,12 +21300,15 @@ msgstr ""
 "Förbättra styrkan\n"
 "Visste du att du kan använda fler väggslingor och högre gles fyllningstäthet för att förbättra modellens styrka?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:When do you need to print with the printer
 #: door opened]
 msgid ""
 "When do you need to print with the printer door opened?\n"
 "Did you know that opening the printer door can reduce the probability of extruder/hotend clogging when printing lower temperature filament with a higher enclosure temperature? There is more info about this in the Wiki."
 msgstr ""
+"När behöver du skriva ut med printer dörren öppen?\n"
+"Visste du att en öppen printer dörr kan minska risken för igensättning av extruder/hotend vid utskrift av filament med lägre temperatur och högre kapslingstemperatur? Det finns mer information om detta i Wiki."
 
 #: resources/data/hints.ini: [hint:Avoid warping]
 msgid ""
@@ -20876,6 +21317,24 @@ msgid ""
 msgstr ""
 "Undvik vridning\n"
 "Visste du att när du skriver ut material som är benägna att vrida, såsom ABS, kan en lämplig ökning av värmebäddens temperatur minska sannolikheten för vridning?"
+
+#~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
+#~ msgstr "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
+
+#~ msgid "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
+#~ msgstr "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
+
+#~ msgid "Skip for Now"
+#~ msgstr "Skip for Now"
+
+#~ msgid "Remind Later"
+#~ msgstr "Remind Later"
+
+#~ msgid "Skip Version"
+#~ msgstr "Skip Version"
+
+#~ msgid "Restart Later"
+#~ msgstr "Restart Later"
 
 #~ msgid "Perform"
 #~ msgstr "Utför"

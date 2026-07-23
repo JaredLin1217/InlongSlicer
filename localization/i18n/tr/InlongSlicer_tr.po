@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 22:58+0800\n"
+"POT-Creation-Date: 2026-07-23 20:45+0800\n"
 "PO-Revision-Date: 2026-04-08 23:59+0300\n"
 "Last-Translator: GlauTech\n"
 "Language-Team: \n"
@@ -405,8 +405,9 @@ msgstr "Yalnızca vurgulanan çıkıntılarda"
 msgid "Erase all"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Highlight overhangs"
-msgstr ""
+msgstr "Çıkıntı alanlarını vurgulayın"
 
 msgid "Tool type"
 msgstr "Araç türü"
@@ -481,8 +482,9 @@ msgstr "Otomatik destek yok"
 msgid "Done"
 msgstr "Tamamlandı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Support generated"
-msgstr ""
+msgstr "Destek Oluşturuldu"
 
 msgid "Entering Paint-on supports"
 msgstr ""
@@ -496,8 +498,9 @@ msgstr ""
 msgid "Gizmo-Place on Face"
 msgstr "Gizmo-Yüzeye yerleştir"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Lay on Face"
-msgstr ""
+msgstr "Yüzüstü yatır"
 
 #, boost-format
 msgid "Filament count exceeds the maximum number that painting tool supports. Only the first %1% filaments will be available in painting tool."
@@ -626,7 +629,7 @@ msgstr "Yönü optimize edin"
 
 msgctxt "Verb"
 msgid "Scale"
-msgstr ""
+msgstr "Ölçeklendir"
 
 msgid "Gizmo-Scale"
 msgstr "Gizmo-Ölçeklendir"
@@ -665,29 +668,35 @@ msgstr "Döndür (göreceli)"
 msgid "Scale ratios"
 msgstr "Ölçek oranları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Object operations"
-msgstr ""
+msgstr "Nesne İşlemleri"
 
 msgid "Scale"
 msgstr "Ölçeklendir"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Volume operations"
-msgstr ""
+msgstr "Hacim İşlemleri"
 
 msgid "Translate"
 msgstr "Çeviri"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Group operations"
-msgstr ""
+msgstr "Grup Operasyonları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set orientation"
-msgstr ""
+msgstr "Yönü Ayarla"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set scale"
-msgstr ""
+msgstr "Ölçeği Ayarla"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Reset position"
-msgstr ""
+msgstr "Konumu Sıfırla"
 
 msgid "Reset rotation"
 msgstr "Döndürmeyi sıfırla"
@@ -718,7 +727,7 @@ msgstr "Mevcut dönüşü gerçek sıfırlara sıfırla."
 
 msgctxt "Noun"
 msgid "Scale"
-msgstr ""
+msgstr "Ölçeklendir"
 
 #. TRN - Input label. Be short as possible
 msgid "Size"
@@ -818,7 +827,7 @@ msgid "Count"
 msgstr ""
 
 msgid "Gap"
-msgstr ""
+msgstr "Boşluk"
 
 msgid "Spacing"
 msgstr "Boşluk"
@@ -988,8 +997,9 @@ msgstr ""
 msgid "Cut by Plane"
 msgstr "Düzlemsel Kes"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Non-manifold edges be caused by cut tool: do you want to fix now?"
-msgstr ""
+msgstr "Ana kat olmayan kenarlar kesme aletinden kaynaklanıyor, şimdi düzeltmek istiyor musunuz?"
 
 msgid "Repairing model object"
 msgstr "Model nesnesini onarma"
@@ -1053,8 +1063,9 @@ msgstr "%d üçgen"
 msgid "Show wireframe"
 msgstr "Wireframe göster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unable to apply when processing preview"
-msgstr ""
+msgstr "İşlem önizlemesi sırasında uygulanamaz."
 
 msgid "Operation already cancelling. Please wait a few seconds."
 msgstr "İşlem zaten iptal ediliyor. Lütfen birkaç saniye bekleyin."
@@ -1077,8 +1088,9 @@ msgstr "Dikiş boyama"
 msgid "Remove selection"
 msgstr "Seçimi kaldır"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Entering seam painting"
-msgstr ""
+msgstr "Dikiş boyamaya girişi"
 
 msgid "Leaving Seam painting"
 msgstr "Dikiş boyamasından çık"
@@ -1100,8 +1112,11 @@ msgstr "Metin Boşluğu"
 msgid "Angle"
 msgstr "Açı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Embedded depth"
 msgstr ""
+"Gömülü\n"
+"derinlik"
 
 msgid "Input text"
 msgstr "Giriş metni"
@@ -1923,12 +1938,14 @@ msgstr "Filament"
 msgid "Machine"
 msgstr "Makine"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The configuration package was loaded, but some values were not recognized."
-msgstr ""
+msgstr "Yapılandırma paketi yüklendi ancak bazı değerler tanınamadı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "The configuration file “%1%” was loaded, but some values were not recognized."
-msgstr ""
+msgstr "\"%1%\" yapılandırma dosyası yüklendi ancak bazı değerler tanınamadı."
 
 msgid "Loading configuration"
 msgstr "Yapılandırma yükleniyor"
@@ -1948,8 +1965,9 @@ msgstr "AMF dosyaları"
 msgid "3MF files"
 msgstr "3MF dosyaları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "G-code 3MF files"
-msgstr ""
+msgstr "Gcode 3MF dosyaları"
 
 msgid "G-code files"
 msgstr "G kodu dosyaları"
@@ -2140,8 +2158,9 @@ msgstr "Dahili"
 msgid "Some presets are modified."
 msgstr "Bazı ön ayarlar değiştirildi."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You can keep the modified presets for the new project, discard, or save changes as new presets."
-msgstr ""
+msgstr "Modifield ön ayarlarını yeni projede tutabilir, değişiklikleri atabilir veya yeni ön ayarlar olarak kaydedebilirsiniz."
 
 msgid "User logged out"
 msgstr "Kullanıcı oturumu kapattı"
@@ -2393,9 +2412,10 @@ msgstr "Yeniden adlandır"
 msgid "Inlong Slicer GUI initialization failed"
 msgstr "Inlong Dilimleyici GUI'si başlatılamadı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "Fatal error, exception: %1%"
-msgstr ""
+msgstr "Önemli hata, istisna yakalandı: %1%"
 
 msgid "Quality"
 msgstr "Kalite"
@@ -2421,17 +2441,20 @@ msgstr "Dayanıklılık"
 msgid "Top solid layers"
 msgstr "Üst katı katmanlar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Top minimum shell thickness"
-msgstr ""
+msgstr "Üst Minimum Kabuk Kalınlığı"
 
 msgid "Top Surface Density"
 msgstr "Üst yüzey yoğunluğu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Bottom solid layers"
-msgstr ""
+msgstr "Alt Katı Katmanlar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Bottom minimum shell thickness"
-msgstr ""
+msgstr "Alt Minimum Kabuk Kalınlığı"
 
 msgid "Bottom Surface Density"
 msgstr "Alt yüzey yoğunluğu"
@@ -2439,14 +2462,16 @@ msgstr "Alt yüzey yoğunluğu"
 msgid "Ironing"
 msgstr "Ütüleme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Fuzzy skin"
-msgstr ""
+msgstr "Pütürlü Yüzey"
 
 msgid "Extruders"
 msgstr "Ekstruderler"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Extrusion width"
-msgstr ""
+msgstr "Ekstrüzyon Genişliği"
 
 msgid "Wipe options"
 msgstr "Temizleme seçenekleri"
@@ -2454,20 +2479,24 @@ msgstr "Temizleme seçenekleri"
 msgid "Bed adhesion"
 msgstr "Tabla Yapışması"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Part"
-msgstr ""
+msgstr "Parça ekle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Negative Part"
-msgstr ""
+msgstr "Negatif parça ekle"
 
 msgid "Add Modifier"
 msgstr "Değiştirici Ekle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Support Blocker"
-msgstr ""
+msgstr "Destek engelleyici ekle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Support Enforcer"
-msgstr ""
+msgstr "Destek uygulayıcısı ekle"
 
 msgid "Add text"
 msgstr "Yazı ekle"
@@ -2565,14 +2594,17 @@ msgstr "Telkin"
 msgid "Text"
 msgstr "Metin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Height Range Modifier"
-msgstr ""
+msgstr "Yükseklik aralığı değiştirici"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add Settings"
-msgstr ""
+msgstr "Ayar ekle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Change Type"
-msgstr ""
+msgstr "Türü değiştir"
 
 msgid "Negative Part"
 msgstr "Negatif Parça"
@@ -2586,11 +2618,13 @@ msgstr "Destek Uygulayıcısı"
 msgid "Change part type"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set as An Individual Object"
-msgstr ""
+msgstr "Ayrı bir nesne olarak ayarla"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Set as Individual Objects"
-msgstr ""
+msgstr "Bireysel nesneler olarak ayarla"
 
 msgid "Fill bed with copies"
 msgstr "Yatağı kopyalarla doldurun"
@@ -2607,8 +2641,9 @@ msgstr ""
 msgid "Automatically drops the selected object to the build plate."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Fix Model"
-msgstr ""
+msgstr "Modeli düzelt"
 
 msgid "Export as one STL"
 msgstr "STL olarak dışa aktar"
@@ -2677,17 +2712,21 @@ msgstr "Nesnelerin desteğine akıt"
 msgid "Edit in Parameter Table"
 msgstr "Parametre tablosunda düzenle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Convert from Inches"
-msgstr ""
+msgstr "İnçten dönüştür"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Inch"
-msgstr ""
+msgstr "İnçe geri çevir"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Convert from Meters"
-msgstr ""
+msgstr "Metreden dönüştür"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
-msgstr ""
+msgstr "Metreye geri çevir"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Seçilen nesneleri birden çok parçalı bir nesneyle birleştirin"
@@ -2701,23 +2740,29 @@ msgstr "Mesh bölme"
 msgid "Mesh boolean operations including union and subtraction"
 msgstr "Birleştirme ve çıkarma dahil mesh bölme işlemleri"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Along X Axis"
-msgstr ""
+msgstr "X ekseni boyunca"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Mirror along the X Axis"
-msgstr ""
+msgstr "X ekseni boyunca aynalama"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Along Y Axis"
-msgstr ""
+msgstr "Y ekseni boyunca"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Mirror along the Y Axis"
-msgstr ""
+msgstr "Y ekseni boyunca aynalama"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Along Z Axis"
-msgstr ""
+msgstr "Z ekseni boyunca"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Mirror along the Z Axis"
-msgstr ""
+msgstr "Z ekseni boyunca aynalama"
 
 msgid "Mirror object"
 msgstr "Nesneyi aynala"
@@ -2749,14 +2794,16 @@ msgstr "Model ekle"
 msgid "Show Labels"
 msgstr "Etiketleri Göster"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "To Objects"
-msgstr ""
+msgstr "Nesnelere"
 
 msgid "Split the selected object into multiple objects"
 msgstr "Seçilen nesneyi birden çok nesneye bölme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "To Parts"
-msgstr ""
+msgstr "Parçalara"
 
 msgid "Split the selected object into multiple parts"
 msgstr "Seçilen nesneyi birden çok parçaya böl"
@@ -2926,23 +2973,27 @@ msgstr[1] "%1$d manifold olmayan kenar"
 msgid "Click the icon to repair model object"
 msgstr "Model nesnesini onarmak için simgeye tıklayın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Right click the icon to drop the object settings"
-msgstr ""
+msgstr "Nesne ayarlarını bırakmak için simgeye sağ tıklayın"
 
 msgid "Click the icon to reset all settings of the object"
 msgstr "Nesnenin tüm ayarlarını sıfırlamak için simgeye tıklayın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Right click the icon to drop the object printable property"
-msgstr ""
+msgstr "Nesnenin yazdırılabilir özelliğini bırakmak için simgeye sağ tıklayın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Click the icon to toggle printable properties of the object"
-msgstr ""
+msgstr "Nesnenin yazdırılabilir özelliğini değiştirmek için simgeyi tıklayın"
 
 msgid "Click the icon to edit support painting of the object"
 msgstr "Nesnenin destek resmini düzenlemek için simgeye tıklayın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Click the icon to edit color painting for the object"
-msgstr ""
+msgstr "Nesnenin renk resmini düzenlemek için simgeye tıklayın"
 
 msgid "Click the icon to shift this object to the bed"
 msgstr "Bu nesneyi yatağa taşımak için simgeye tıklayın"
@@ -3028,12 +3079,17 @@ msgstr "Kesimin bir parçası olan nesneden negatif hacmi silin"
 msgid "To save cut correspondence you can delete all connectors from all related objects."
 msgstr "Kesilmiş yazışmaları kaydetmek için ilgili tüm nesnelerden tüm bağlayıcıları silebilirsiniz."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This action will break a cut correspondence.\n"
 "After that, model consistency can't be guaranteed.\n"
 "\n"
 "To manipulate with solid parts or negative volumes you have to invalidate cut information first."
 msgstr ""
+"Bu eylem kesilmiş bir yazışmayı bozacaktır.\n"
+"Bundan sonra model tutarlılığı garanti edilemez.\n"
+"\n"
+"Katı parçalarla veya negatif hacimlerle işlem yapmak için öncelikle kesim bilgisini geçersiz kılmanız gerekir."
 
 msgid "Delete all connectors"
 msgstr "Tüm bağlayıcıları sil"
@@ -3068,14 +3124,17 @@ msgstr "Nesne manipülasyonu"
 msgid "Group manipulation"
 msgstr "Grup manipülasyonu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Object Settings to Modify"
-msgstr ""
+msgstr "Değiştirilecek Nesne Ayarları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Part Settings to Modify"
-msgstr ""
+msgstr "Değiştirilecek Parça Ayarları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Layer Range Settings to Modify"
-msgstr ""
+msgstr "Katman aralığı Değiştirilecek ayarlar"
 
 msgid "Part manipulation"
 msgstr "Parça manipülasyonu"
@@ -3104,8 +3163,9 @@ msgstr "İlk seçilen öğe bir nesne ise ikincisi de nesne olmalıdır."
 msgid "If the first selected item is a part, the second should be a part in the same object."
 msgstr "İlk seçilen öğe bir parça ise ikincisi aynı nesnenin parçası olmalıdır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The type of the last solid object part cannot be changed."
-msgstr ""
+msgstr "Son katı nesne parçasının tipi değiştirilNozullidir."
 
 msgid "Type:"
 msgstr "Tip:"
@@ -3228,14 +3288,17 @@ msgstr "1x1 Izgara: %d mm"
 msgid "More"
 msgstr "Daha"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Open Preferences"
-msgstr ""
+msgstr "Tercihler'i açın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Open next tip"
-msgstr ""
+msgstr "Sonraki ipucunu açın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Open documentation in web browser"
-msgstr ""
+msgstr "Belgeleri web tarayıcısında açın."
 
 msgid "Color"
 msgstr "Renk"
@@ -3264,11 +3327,13 @@ msgstr "Özel G kodu"
 msgid "Enter Custom G-code used on current layer:"
 msgstr "Geçerli katmanda kullanılan Özel G kodunu girin:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Jump to layer"
-msgstr ""
+msgstr "Katmana Atla"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please enter the layer number."
-msgstr ""
+msgstr "Lütfen katman numarasını girin"
 
 msgid "Add Pause"
 msgstr "Duraklatma Ekle"
@@ -3337,7 +3402,7 @@ msgid "Connection to printer failed"
 msgstr "Yazıcıya bağlantı başarısız oldu"
 
 msgid "Please check the network connection of the printer and Orca."
-msgstr ""
+msgstr "Lütfen yazıcının ve Studio'nun ağ bağlantısını kontrol edin."
 
 msgid "Connecting..."
 msgstr "Bağlanıyor..."
@@ -3351,8 +3416,9 @@ msgstr "Yükle"
 msgid "Unload"
 msgstr "Boşalt"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Choose an AMS slot then press \"Load\" or \"Unload\" button to automatically load or unload filament."
-msgstr ""
+msgstr "Bir AMS yuvası seçin ve filamentleri otomatik olarak yüklemek veya boşaltmak için “Yükle” veya “Boşalt” düğmesine basın."
 
 msgid "Filament type is unknown which is required to perform this action. Please set target filament's informations."
 msgstr "Bu eylemi gerçekleştirmek için gereken filaman türü bilinmiyor. Lütfen hedef filamanın bilgilerini ayarlayın."
@@ -3463,8 +3529,9 @@ msgstr "Nozulu ısıtın"
 msgid "Cut filament"
 msgstr "Filamenti kes"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Pull back the current filament"
-msgstr ""
+msgstr "Mevcut filamenti geri çekin"
 
 msgid "Push new filament into extruder"
 msgstr "Yeni filamenti ekstrudere itin"
@@ -3633,8 +3700,9 @@ msgstr "Hizalanıyor"
 msgid "Arranging canceled."
 msgstr "Hizalama iptal edildi."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Arranging complete, but some items were not able to be arranged. Reduce spacing and try again."
-msgstr ""
+msgstr "Hizalama yapıldı ancak paketlenmemiş ürünler var. Aralığı azaltın ve tekrar deneyin."
 
 msgid "Arranging done."
 msgstr "Hizalama tamamlandı."
@@ -3700,8 +3768,9 @@ msgstr "Giriş başarısız oldu"
 msgid "Please check the printer network connection."
 msgstr "Lütfen yazıcının ağ bağlantısını kontrol edin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Abnormal print file data: please slice again."
-msgstr ""
+msgstr "Anormal yazdırma dosyası verileri. Lütfen tekrar dilimleyin."
 
 msgid "Task canceled."
 msgstr "Görev iptal edildi."
@@ -3712,8 +3781,9 @@ msgstr "Yükleme görevi zaman aşımına uğradı. Lütfen ağ durumunu kontrol
 msgid "Cloud service connection failed. Please try again."
 msgstr "Bulut hizmeti bağlantısı başarısız oldu. Lütfen tekrar deneyin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print file not found; please slice again."
-msgstr ""
+msgstr "Yazdırma dosyası bulunamadı. lütfen tekrar dilimleyin."
 
 msgid "The print file exceeds the maximum allowable size (1GB). Please simplify the model and slice again."
 msgstr "Yazdırma dosyası izin verilen maksimum boyutu (1 GB) aşıyor. Lütfen modeli basitleştirin ve tekrar dilimleyin."
@@ -3724,17 +3794,20 @@ msgstr "Yazdırma işi gönderilemedi. Lütfen tekrar deneyin."
 msgid "Failed to upload file to ftp. Please try again."
 msgstr "Dosya ftp'ye yüklenemedi. Lütfen tekrar deneyin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Check the current status of the Bambu Lab server by clicking on the link above."
-msgstr ""
+msgstr "Yukarıdaki bağlantıya tıklayarak bambu sunucusunun mevcut durumunu kontrol edin."
 
 msgid "The size of the print file is too large. Please adjust the file size and try again."
 msgstr "Yazdırma dosyasının boyutu çok büyük. Lütfen dosya boyutunu ayarlayıp tekrar deneyin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print file not found; please slice it again and send it for printing."
-msgstr ""
+msgstr "Yazdırma dosyası bulunamadı. Lütfen tekrar dilimleyip baskıya gönderin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Failed to upload print file via FTP. Please check the network status and try again."
-msgstr ""
+msgstr "Yazdırma dosyası FTP'ye yüklenemedi. Lütfen ağ durumunu kontrol edin ve tekrar deneyin."
 
 msgid "Sending print job over LAN"
 msgstr "Yazdırma işi LAN üzerinden gönderiliyor"
@@ -3854,8 +3927,9 @@ msgstr "Kalan süre: %dmin%ds"
 msgid "Importing SLA archive"
 msgstr "SLA arşivi içe aktarılıyor"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The SLA archive doesn't contain any presets. Please activate some SLA printer presets first before importing that SLA archive."
-msgstr ""
+msgstr "SLA arşivi herhangi bir ön ayar içermez. Lütfen SLA arşivini içe aktarmadan önce bazı SLA yazıcı ön ayarlarını etkinleştirin."
 
 msgid "Importing canceled."
 msgstr "İçe aktarma iptal edildi."
@@ -3866,8 +3940,9 @@ msgstr "İçe aktarma tamamlandı."
 msgid "The imported SLA archive did not contain any presets. The current SLA presets were used as fallback."
 msgstr "İçe aktarılan SLA arşivi herhangi bir ön ayar içermiyordu. Geçerli SLA ön ayarları geri dönüş olarak kullanıldı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You cannot load an SLA project with a multi-part object on the bed"
-msgstr ""
+msgstr "Çok parçalı bir nesne içeren SLA projesini yatağa yükleyemezsiniz"
 
 msgid "Please check your object list before preset changing."
 msgstr "Lütfen ön ayarı değiştirmeden önce nesne listenizi kontrol edin."
@@ -3893,8 +3968,9 @@ msgstr "Yükleniyor"
 msgid "Install failed"
 msgstr "Yükleme başarısız"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "License Info"
-msgstr ""
+msgstr "Bazı bölümlerin telif hakkı"
 
 msgid "Copyright"
 msgstr "Telif hakkı"
@@ -4034,8 +4110,9 @@ msgstr "Yatak Sıcaklığı"
 msgid "mm³"
 msgstr "mm³"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Start"
-msgstr ""
+msgstr "Kalibrasyonu başlat"
 
 msgid "Next"
 msgstr "Sonraki"
@@ -4048,7 +4125,7 @@ msgstr "Kaydet"
 
 msgctxt "Navigation"
 msgid "Back"
-msgstr ""
+msgstr "Arka"
 
 msgid "Example"
 msgstr "Örnek"
@@ -4141,17 +4218,20 @@ msgstr ""
 msgid "Enable AMS"
 msgstr "AMS'yi etkinleştir"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in the AMS"
-msgstr ""
+msgstr "AMS'deki filamentlerle yazdırma"
 
 msgid "Disable AMS"
 msgstr "AMS'yi devre dışı bırak"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament on external spool"
-msgstr ""
+msgstr "Şasinin arkasına monte edilmiş filamentle yazdırma"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please change the desiccant when it is too wet. The indicator may not represent accurately in following cases: when the lid is open or the desiccant pack is changed. It takes a few hours to absorb the moisture, and low temperatures also slow down the process."
-msgstr ""
+msgstr "Lütfen kurutucuyu çok ıslandığında değiştirin. Gösterge aşağıdaki durumlarda doğru temsil etmeyebilir: kapak açıkken veya nem çekici paketi değiştirildiğinde. nemin emilmesi saatler alır, düşük sıcaklıklar da süreci yavaşlatır."
 
 msgid "Configure which AMS slot should be used for a filament used in the print job."
 msgstr "Yazdırma işinde kullanılan filament için hangi AMS yuvasının kullanılması gerektiğini yapılandırma."
@@ -4168,11 +4248,13 @@ msgstr "AMS yuvasını manuel olarak seçmek için tıklayın"
 msgid "Do not Enable AMS"
 msgstr "AMS'yi Etkinleştirme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print using filament on external spool."
-msgstr ""
+msgstr "Kasanın arkasına monte edilen malzemeleri kullanarak yazdırma"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
-msgstr ""
+msgstr "AMS içerisindeki filamentlerle yazdırma"
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "Mevcut malzeme bittiğinde yazıcı aşağıdaki sırayla yazdırmaya devam edecektir."
@@ -4189,8 +4271,9 @@ msgstr "Mevcut malzeme bittiğinde yazıcı, yazdırmaya devam etmek için aynı
 msgid "The printer does not currently support auto refill."
 msgstr "Yazıcı şu anda otomatik yeniden doldurmayı desteklemiyor."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "AMS filament backup is not enabled; please enable it in the AMS settings."
-msgstr ""
+msgstr "AMS filament yedekleme özelliği etkin değil, lütfen AMS ayarlarından etkinleştirin."
 
 msgid ""
 "When the current filament runs out, the printer will use identical filament to continue printing.\n"
@@ -4211,8 +4294,9 @@ msgstr "AMS Ayarları"
 msgid "Insertion update"
 msgstr "Ekleme güncellemesi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The AMS will automatically read the filament information when inserting a new Bambu Lab filament spool. This takes about 20 seconds."
-msgstr ""
+msgstr "AMS, yeni bir Bambu Lab filamenti takıldığında filament bilgilerini otomatik olarak okuyacaktır. Bu yaklaşık 20 saniye sürer."
 
 msgid "Note: if a new filament is inserted during printing, the AMS will not automatically read any information until printing is completed."
 msgstr "Not: Yazdırma sırasında yeni bir filaman takılırsa AMS, yazdırma tamamlanana kadar herhangi bir bilgiyi otomatik olarak okumayacaktır."
@@ -4220,11 +4304,13 @@ msgstr "Not: Yazdırma sırasında yeni bir filaman takılırsa AMS, yazdırma t
 msgid "When inserting a new filament, the AMS will not automatically read its information, leaving it blank for you to enter manually."
 msgstr "Yeni bir filament yerleştirirken AMS, bilgileri otomatik olarak okumaz ve manuel olarak girmeniz için boş bırakır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Update on startup"
-msgstr ""
+msgstr "Güncellemeyi aç"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The AMS will automatically read the information of inserted filament on start-up. It will take about 1 minute. The reading process will rotate the filament spools."
-msgstr ""
+msgstr "AMS, başlangıçta takılan filamentin bilgilerini otomatik olarak okuyacaktır. Yaklaşık 1 dakika sürecektir. Okuma işlemi filament makaralarını saracaktır."
 
 msgid "The AMS will not automatically read information from inserted filament during startup and will continue to use the information recorded before the last shutdown."
 msgstr "AMS, başlatma sırasında takılan filamentden bilgileri otomatik olarak okumaz ve son kapatmadan önce kaydedilen bilgileri kullanmaya devam eder."
@@ -4301,18 +4387,21 @@ msgstr ") takım kafasının konumunu bulmak için. Bu, cihazın yazdırılabili
 msgid "Go Home"
 msgstr "Anasayfaya Git"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An error occurred. The system may have run out of memory, or a bug may have occurred."
-msgstr ""
+msgstr "Bir hata oluştu. Belki sistemin hafızası yeterli değildir veya programın bir hatasıdır"
 
 #, boost-format
 msgid "A fatal error occurred: \"%1%\""
 msgstr "Ölümcül bir hata oluştu: “%1%”"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please save your project and restart the application."
-msgstr ""
+msgstr "Lütfen projeyi kaydedin ve programı yeniden başlatın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Processing G-Code from previous file…"
-msgstr ""
+msgstr "Önceki dosyadan G Kodu işleniyor..."
 
 msgid "Slicing complete"
 msgstr "Dilimleme tamamlandı"
@@ -4375,8 +4464,9 @@ msgstr "Geçici G kodunun kopyalanması tamamlandı ancak kopya kontrolü sıras
 msgid "G-code file exported to %1%"
 msgstr "G kodu dosyası %1%’e aktarıldı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unknown error with G-code export"
-msgstr ""
+msgstr "G kodunu dışa aktarırken bilinmeyen hata."
 
 #, boost-format
 msgid ""
@@ -4388,8 +4478,9 @@ msgstr ""
 "Hata mesajı: %1%.\n"
 "Kaynak dosya %2%."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Copying of the temporary G-code to the output G-code failed."
-msgstr ""
+msgstr "Geçici G kodunun çıkış G koduna kopyalanması başarısız oldu"
 
 #, boost-format
 msgid "Scheduling upload to `%1%`. See Window -> Print Host Upload Queue"
@@ -4434,14 +4525,16 @@ msgstr "Yatak şeklini içe aktarmak için bir STL dosyası seçin:"
 msgid "Invalid file format."
 msgstr "Geçersiz dosya formatı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Error: invalid model"
-msgstr ""
+msgstr "Hata! Geçersiz model"
 
 msgid "The selected file contains no geometry."
 msgstr "Seçilen dosya geometri içermiyor."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The selected file contains several disjointed areas. This is not supported."
-msgstr ""
+msgstr "Seçilen dosya birkaç ayrık alan içeriyor. Bu desteklenmiyor."
 
 msgid "Choose a file to import bed texture from (PNG/SVG):"
 msgstr "Yatak dokusunu içe aktarmak için bir dosya seçin (PNG/SVG):"
@@ -4466,11 +4559,15 @@ msgstr "Önerilen minimum sıcaklık, önerilen maksimum sıcaklıktan yüksek o
 msgid "Please check.\n"
 msgstr "Lütfen kontrol edin.\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "The nozzle may become clogged when the temperature is out of the recommended range.\n"
 "Please make sure whether to use this temperature to print.\n"
 "\n"
 msgstr ""
+"Sıcaklık önerilen aralığın dışında olduğunda nozul tıkanmış olabilir.\n"
+"Lütfen yazdırmak için sıcaklığı kullanıp kullanmayacağınızdan emin olun.\n"
+"\n"
 
 #, c-format, boost-format
 msgid "The recommended nozzle temperature for this filament type is [%d, %d] degrees Celsius."
@@ -4479,28 +4576,38 @@ msgstr "Bu filament tipinin tavsiye edilen Nozul sıcaklığı [%d, %d] derece s
 msgid "Adaptive Pressure Advance model validation failed:\n"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Too small max volumetric speed.\n"
 "Value was reset to 0.5"
 msgstr ""
+"Maksimum hacimsel hız çok küçük.\n"
+"0,5'e sıfırla."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "Current chamber temperature is higher than the material's safe temperature; this may result in material softening and nozzle clogs. The maximum safe temperature for the material is %d"
-msgstr ""
+msgstr "Mevcut hazne sıcaklığı malzemenin güvenli sıcaklığından yüksektir, malzemenin yumuşamasına ve tıkanmasına neden olabilir Malzeme için maksimum güvenli sıcaklık %d'dir"
 
 #, c-format, boost-format
 msgid "The minimal chamber temperature (%d℃) is higher than the target chamber temperature (%d℃). The minimal value is the threshold at which printing starts while the chamber keeps heating toward the target, so it should not exceed it. It will be clamped to the target."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Layer height too small\n"
 "It has been reset to 0.2"
 msgstr ""
+"Katman yüksekliği çok küçük.\n"
+"0,2'ye sıfırla."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Ironing spacing too small\n"
 "It has been reset to 0.1"
 msgstr ""
+"Çok küçük ütüleme aralığı.\n"
+"0,1'e sıfırla."
 
 msgid ""
 "Zero initial layer height is invalid.\n"
@@ -4511,13 +4618,20 @@ msgstr ""
 "\n"
 "İlk katman yüksekliği 0.2 olarak sıfırlanacak."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This setting is only used for tuning model size by small amounts.\n"
 "For example, when the model size has small errors or when tolerances are incorrect. For large adjustments, please use the model scale function.\n"
 "\n"
 "The value will be reset to 0."
 msgstr ""
+"Bu ayar yalnızca bazı durumlarda küçük değere sahip model boyutu ayarı için kullanılır.\n"
+"Örneğin, model boyutunda hata küçük olduğunda ve montajı zor olduğunda.\n"
+"Büyük boyutlu ayarlama için lütfen model ölçeği işlevini kullanın.\n"
+"\n"
+"Değer 0'a sıfırlanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "The elephant foot compensation value is too large.\n"
 "If there are significant elephant foot issues, please check other settings.\n"
@@ -4525,6 +4639,11 @@ msgid ""
 "\n"
 "The value will be reset to 0."
 msgstr ""
+"Çok büyük fil ayağı telafisi mantıksızdır.\n"
+"Gerçekten fil ayağı etkisi ciddi ise lütfen diğer ayarları kontrol edin.\n"
+"Örneğin yatak sıcaklığının çok yüksek olup olmadığı.\n"
+"\n"
+"Değer 0'a sıfırlanacaktır."
 
 msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 msgstr "Alternatif ekstra duvar, dikey kabuk kalınlığının Tümü olarak ayarlandığından emin olunduğunda iyi çalışmaz."
@@ -4604,11 +4723,15 @@ msgstr "Spiral mod yalnızca duvar döngüleri 1 olduğunda, destek devre dış�
 msgid " But machines with I3 structure will not generate timelapse videos."
 msgstr " Ancak I3 yapısına sahip yazıcılar timelapse videolar oluşturmayacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Change these settings automatically?\n"
 "Yes - Change these settings and enable spiral/vase mode automatically\n"
 "No  - Cancel enabling spiral mode"
 msgstr ""
+"Bu ayarlar otomatik olarak değiştirilsin mi?\n"
+"Evet - Bu ayarları değiştirin ve spiral modunu otomatik olarak etkinleştirin\n"
+"Hayır - Bu sefer spiral modunu kullanmaktan vazgeçin"
 
 msgid "Printing"
 msgstr "Baskı"
@@ -5010,9 +5133,10 @@ msgstr "Boş dize"
 msgid "Value is out of range."
 msgstr "Değer aralık dışında."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "%s can’t be a percentage"
-msgstr ""
+msgstr "%s yüzde olamaz"
 
 #, c-format, boost-format
 msgid "Value %s is out of range, continue?"
@@ -5099,7 +5223,7 @@ msgid "Acceleration"
 msgstr "Hızlanma"
 
 msgid "Jerk"
-msgstr ""
+msgstr "Jerk"
 
 msgid "Fan Speed"
 msgstr "Fan hızı"
@@ -5225,7 +5349,7 @@ msgid "Acceleration: "
 msgstr ""
 
 msgid "Jerk: "
-msgstr ""
+msgstr "Jerk: "
 
 msgid "PA: "
 msgstr "PA:"
@@ -5269,8 +5393,9 @@ msgstr "Kule"
 msgid "Total"
 msgstr "Toplam"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Total estimation"
-msgstr ""
+msgstr "Toplam Tahmini"
 
 msgid "Total time"
 msgstr "Toplam süre"
@@ -5338,11 +5463,13 @@ msgstr "itibaren"
 msgid "Usage"
 msgstr "Kullan"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Layer height (mm)"
-msgstr ""
+msgstr "Katman Yüksekliği (mm)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Line width (mm)"
-msgstr ""
+msgstr "Çizgi Genişliği (mm)"
 
 msgid "Speed (mm/s)"
 msgstr "Hız (mm/s)"
@@ -5354,13 +5481,14 @@ msgid "Acceleration (mm/s²)"
 msgstr ""
 
 msgid "Jerk (mm/s)"
-msgstr ""
+msgstr "Jerk (mm/s)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Fan speed (%)"
-msgstr ""
+msgstr "Fan hızı (%)"
 
 msgid "Temperature (℃)"
-msgstr ""
+msgstr "Sıcaklık (℃)"
 
 msgid "Volumetric flow rate (mm³/s)"
 msgstr "Hacimsel akış hızı (mm³/s)"
@@ -5384,14 +5512,14 @@ msgid "Filament change times"
 msgstr "Filament değişim süreleri"
 
 msgid "Tool changes"
-msgstr ""
+msgstr "Takım değişiklikleri"
 
 msgid "Color change"
 msgstr "Renk değişimi"
 
 msgctxt "Noun"
 msgid "Print"
-msgstr ""
+msgstr "Yazdır"
 
 msgid "Printer"
 msgstr "Yazıcı"
@@ -5504,17 +5632,20 @@ msgstr "Sol püskürtme ucu: X:%1%-%2%, Y:%3%-%4%, Z:%5%-%6%\n"
 msgid "Right nozzle: X:%1%-%2%, Y:%3%-%4%, Z:%5%-%6%"
 msgstr "Sağ nozul: X:%1%-%2%, Y:%3%-%4%, Z:%5%-%6%"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Tool move"
-msgstr ""
+msgstr "Araç Taşıma"
 
 msgid "Tool Rotate"
 msgstr "Araç Döndürme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move object"
-msgstr ""
+msgstr "Nesneyi Taşı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Auto orientation options"
-msgstr ""
+msgstr "Otomatik Yönlendirme seçenekleri"
 
 msgid "Enable rotation"
 msgstr "Döndürmeyi etkinleştir"
@@ -5545,15 +5676,15 @@ msgstr "Y eksenine hizala"
 
 msgctxt "Camera View"
 msgid "Back"
-msgstr ""
+msgstr "Arka"
 
 msgctxt "Camera View"
 msgid "Left"
-msgstr ""
+msgstr "Sol"
 
 msgctxt "Camera View"
 msgid "Right"
-msgstr ""
+msgstr "Sağ"
 
 msgid "Add"
 msgstr "Ekle"
@@ -5654,8 +5785,9 @@ msgstr "Patlama Oranı"
 msgid "Section View"
 msgstr "Bölüm Görünümü"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Assembly Control"
-msgstr ""
+msgstr "Montaj Kontrolü"
 
 msgid "Selection Mode"
 msgstr "Seçim Modu"
@@ -5682,8 +5814,9 @@ msgstr "Plakanın sınırına bir nesne serilir."
 msgid "A G-code path goes beyond the max print height."
 msgstr "Bir G kodu yolu maksimum baskı yüksekliğinin ötesine geçer."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A G-code path goes beyond plate boundaries."
-msgstr ""
+msgstr "Bir G kodu yolu plakanın sınırlarının ötesine geçer."
 
 msgid "Not support printing 2 or more TPU filaments."
 msgstr "2 veya daha fazla TPU filamentinin yazdırılmasını desteklemez."
@@ -5820,8 +5953,9 @@ msgstr ""
 "Bunu \"Ayar > Ayar > Yalnızca LAN > Erişim Kodu\" bölümünde bulabilirsiniz.\n"
 "şekilde gösterildiği gibi yazıcıda:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Invalid input"
-msgstr ""
+msgstr "Geçersiz Giriş."
 
 msgid "New Window"
 msgstr "Yeni Pencere"
@@ -5829,8 +5963,9 @@ msgstr "Yeni Pencere"
 msgid "Open a new window"
 msgstr "Yeni pencere aç"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Closing application"
-msgstr ""
+msgstr "Uygulama kapanıyor"
 
 msgid "Closing Application while some presets are modified."
 msgstr "Bazı ön ayarlar değiştirilirken Uygulama kapatılıyor."
@@ -5873,7 +6008,7 @@ msgstr "G-kod dosyasını dışa aktar"
 
 msgctxt "Verb"
 msgid "Print"
-msgstr ""
+msgstr "Yazdır"
 
 msgid "Export plate sliced file"
 msgstr "Dilimlenmiş plaka dosyasını dışa aktar"
@@ -6072,8 +6207,9 @@ msgstr "Yapıştır"
 msgid "Paste clipboard"
 msgstr "Panoyu yapıştır"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Delete Selected"
-msgstr ""
+msgstr "Seçileni sil"
 
 msgid "Deletes the current selection"
 msgstr "Geçerli seçimi sil"
@@ -6081,8 +6217,9 @@ msgstr "Geçerli seçimi sil"
 msgid "Deletes all objects"
 msgstr "Tüm nesneleri sil"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Clone Selected"
-msgstr ""
+msgstr "Seçili olanı klonla"
 
 msgid "Clone copies of selections"
 msgstr "Seçimlerin kopyalarını kopyala"
@@ -6253,13 +6390,15 @@ msgstr "&Görünüm"
 msgid "&Help"
 msgstr "&Yardım"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "A file exists with the same name: %s. Do you want to overwrite it?"
-msgstr ""
+msgstr "Aynı adda bir dosya var: %s, üzerine yazmak istiyor musunuz?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "A config exists with the same name: %s. Do you want to overwrite it?"
-msgstr ""
+msgstr "Aynı adda bir yapılandırma mevcut: %s, üzerine yazmak istiyor musunuz?"
 
 msgid "Overwrite file"
 msgstr "Dosyanın üzerine yaz"
@@ -6282,8 +6421,9 @@ msgid_plural "There are %d configs exported. (Only non-system configs)"
 msgstr[0] "Dışa aktarılan %d yapılandırma var. (Yalnızca sistem dışı yapılandırmalar)"
 msgstr[1] "Dışa aktarılan %d yapılandırma var. (Yalnızca sistem dışı yapılandırmalar)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Export Result"
-msgstr ""
+msgstr "Sonucu dışa aktar"
 
 msgid "Select profile to load:"
 msgstr "Yüklenecek profili seç:"
@@ -6330,8 +6470,9 @@ msgstr "Cihaz daha fazla konuşmayı yönetemiyor. Lütfen daha sonra tekrar den
 msgid "Player is malfunctioning. Please reinstall the system player."
 msgstr "Oynatıcı arızalı. Lütfen sistem oynatıcısını yeniden yükleyin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The player is not loaded; please click the \"play\" button to retry."
-msgstr ""
+msgstr "Oynatıcı yüklü değil, lütfen yeniden denemek için “oynat” düğmesine tıklayın."
 
 msgid "The player is not loaded because the GStreamer GTK video sink is missing or failed to initialize."
 msgstr ""
@@ -6351,8 +6492,9 @@ msgstr "Sorun oluştu. Lütfen yazıcının ürün yazılımını güncelleyin v
 msgid "LAN Only Liveview is off. Please turn on the liveview on printer screen."
 msgstr "Yalnızca LAN Canlı İzleme kapalı. Lütfen yazıcı ekranındaki canlı görüntülemeyi açın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please enter the IP of the printer to connect."
-msgstr ""
+msgstr "Lütfen bağlanmak için yazıcının IP’sini girin."
 
 msgid "Initializing..."
 msgstr "Başlatılıyor..."
@@ -6647,8 +6789,9 @@ msgstr "Çevrimiçi"
 msgid "Input access code"
 msgstr "Erişim kodunu girin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Can't find devices?"
-msgstr ""
+msgstr "Cihazlarımı bulamıyor musunuz?"
 
 msgid "Log out successful."
 msgstr "Çıkış Başarılı."
@@ -6671,14 +6814,17 @@ msgstr "yasadışı karakterler:"
 msgid "illegal suffix:"
 msgstr "yasadışı sonek:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The name field is not allowed to be empty."
-msgstr ""
+msgstr "Ad alanı boş bırakılamaz."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The name is not allowed to start with a space."
-msgstr ""
+msgstr "Adın boşluk karakteriyle başlamasına izin verilmez."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The name is not allowed to end with a space."
-msgstr ""
+msgstr "Adın boşluk karakteriyle bitmesine izin verilmez."
 
 msgid "The name is not allowed to exceed 32 characters."
 msgstr "Adın 32 karakteri aşmasına izin verilmez."
@@ -6699,8 +6845,9 @@ msgstr "Değiştiriliyor..."
 msgid "Switching failed"
 msgstr "Geçiş başarısız oldu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Printing progress"
-msgstr ""
+msgstr "Yazdırma İlerlemesi"
 
 msgid "Parts Skip"
 msgstr "Parça Atlama"
@@ -6717,10 +6864,13 @@ msgstr "Termal ön koşullandırma açıklamasını görüntülemek için tıkla
 msgid "Clear"
 msgstr "Temizle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "You have completed printing the mall model, \n"
 "but synchronizing rating information has failed."
 msgstr ""
+"Mall modelinin baskısını tamamladınız, \n"
+"ancak puanlama bilgilerinin senkronizasyonu başarısız oldu."
 
 msgid "How do you like this printing file?"
 msgstr "Bu baskı dosyasını nasıl buldunuz?"
@@ -6812,9 +6962,10 @@ msgstr "İndiriliyor..."
 msgid "Cloud Slicing..."
 msgstr "Bulut Dilimleme..."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "In Cloud Slicing Queue, there are %s tasks ahead of you."
-msgstr ""
+msgstr "Bulut Dilimleme Sırasında önünüzde %s görev var."
 
 #, c-format, boost-format
 msgid "Layer: %s"
@@ -6836,8 +6987,9 @@ msgstr "Oda sıcaklığı 40°C'yi aşarsa sistem otomatik olarak ısıtma modun
 msgid "Please select an AMS slot before calibration"
 msgstr "Lütfen kalibrasyondan önce bir AMS yuvası seçin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cannot read filament info: the filament is loaded to the tool head. Please unload the filament and try again."
-msgstr ""
+msgstr "Filament bilgisi okunamıyor: Filament alet kafasına yüklenmiştir, lütfen filamenti boşaltın ve tekrar deneyin."
 
 msgid "This only takes effect during printing"
 msgstr "Bu yalnızca yazdırma sırasında etkili olur"
@@ -7075,8 +7227,9 @@ msgstr "Lütfen kullanmadan önce Wiki'ye bakın->"
 msgid "3D Mouse disconnected."
 msgstr "3D Fare bağlantısı kesildi."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A new configuration is available. Update now?"
-msgstr ""
+msgstr "Yapılandırma şimdi güncellenebilir."
 
 msgid "Integration was successful."
 msgstr "Entegrasyon başarılı oldu."
@@ -7099,14 +7252,17 @@ msgstr "Yeni yazıcı yapılandırması mevcut."
 msgid "Undo integration failed."
 msgstr "Entegrasyon geri alınamadı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Exporting"
-msgstr ""
+msgstr "Dışa Aktarılıyor."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An update is available!"
-msgstr ""
+msgstr "Yazılımın Yeni sürümü var."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Go to download page"
-msgstr ""
+msgstr "İndirme sayfasına gidin."
 
 msgid "Open Folder."
 msgstr "Klasörü Aç."
@@ -7609,8 +7765,9 @@ msgstr ""
 msgid "Enable detection of build plate position"
 msgstr "Yapı plakası konumunun algılanmasını etkinleştir"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The localization tag of the build plate will be detected, and printing will be paused if the tag is not in predefined range."
-msgstr ""
+msgstr "Baskı plakasının yerelleştirme etiketi algılanır ve etiket önceden tanımlanmış aralıkta değilse yazdırma duraklatılır."
 
 msgid "Build Plate Detection"
 msgstr "Yapı Plakası Algılama"
@@ -7669,8 +7826,9 @@ msgstr "Nozul tıkanması veya filaman taşlamasından kaynaklanan hava baskıs�
 msgid "First Layer Inspection"
 msgstr "Birinci Katman Denetimi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Auto-recover from step loss"
-msgstr ""
+msgstr "Adım kaybından otomatik kurtarma"
 
 msgid "Store Sent Files on External Storage"
 msgstr "Gönderilen Dosyaları Harici Depolamada Saklayın"
@@ -7681,8 +7839,9 @@ msgstr ""
 msgid "Allow Prompt Sound"
 msgstr "Uyarı Sesine İzin Ver"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament Tangle Detection"
-msgstr ""
+msgstr "Filament Dolaşma Tespiti"
 
 msgid "Check if the nozzle is clumping by filament or other foreign objects."
 msgstr "Nozulun filament veya diğer yabancı cisimler nedeniyle topaklanıp topaklanmadığını kontrol edin."
@@ -7875,10 +8034,10 @@ msgstr "Kurulu değil"
 msgid "Configuration incompatible"
 msgstr "Yapılandırma uyumsuz"
 
-msgid "Filament switcher detected. All AMS filaments are now available for both extruders. The slicer will auto-assign for optimal printing. "
+msgid "Filament switcher detected. All AMS filaments are now available for both extruders. The slicer will auto-assign for optimal printing."
 msgstr ""
 
-msgid "A filament switcher is detected but not calibrated and thus currently unavailable. Please calibrate it on the printer and synchronize before use. "
+msgid "A filament switcher is detected but not calibrated and thus currently unavailable. Please calibrate it on the printer and synchronize before use."
 msgstr ""
 
 msgid "Tips"
@@ -7973,17 +8132,20 @@ msgstr "Başarıyla kaldırıldı. %s(%s) aygıtı artık bilgisayardan güvenli
 msgid "Ejecting of device %s (%s) has failed."
 msgstr "%s (%s) aygıtının çıkarılması başarısız oldu."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Previously unsaved items have been detected. Do you want to restore them?"
-msgstr ""
+msgstr "Önceki kaydedilmemiş proje algılandı, geri yüklemek istiyor musunuz?"
 
 msgid "Restore"
 msgstr "Geri Yükleme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The current heatbed temperature is relatively high. The nozzle may clog when printing this filament in a closed environment. Please open the front door and/or remove the upper glass."
-msgstr ""
+msgstr "Mevcut sıcak yatak sıcaklığı oldukça yüksek. Bu filamenti kapalı bir muhafaza içinde bastırırken nozzle tıkanabilir. Lütfen ön kapağı açın ve/veya üst camı çıkarın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The nozzle hardness required by the filament is higher than the default nozzle hardness of the printer. Please replace the hardened nozzle or filament, otherwise, the nozzle will be worn down or damaged."
-msgstr ""
+msgstr "Filamentin gerektirdiği nozul sertliği, yazıcının varsayılan nozul sertliğinden daha yüksektir. Lütfen sertleşmiş nozulu veya filamenti değiştirin, aksi takdirde nozul aşınır veya hasar görür."
 
 msgid "Enabling traditional timelapse photography may cause surface imperfections. It is recommended to change to smooth mode."
 msgstr "Geleneksel timelapse etkinleştirilmesi yüzey kusurlarına neden olabilir. Yumuşak moda geçilmesi önerilir."
@@ -8026,8 +8188,9 @@ msgstr ""
 msgid "The 3MF file version %s is newer than %s's version %s, found the following unrecognized keys:"
 msgstr "3mf'nin %s sürümü, %s'in %s sürümünden daha yeni, Aşağıdaki anahtarlar tanınmadan bulundu:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You should update your software.\n"
-msgstr ""
+msgstr "Yazılımınızı yükseltseniz iyi olur.\n"
 
 #, c-format, boost-format
 msgid "The 3MF file version %s is newer than %s's version %s, we suggest to upgrade your software."
@@ -8053,8 +8216,9 @@ msgstr ""
 msgid "Invalid values found in the 3MF:"
 msgstr "3mf'de geçersiz değerler bulundu:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please correct them in the Param tabs"
-msgstr ""
+msgstr "Lütfen bunları parametre sekmelerinde düzeltin"
 
 msgid "The 3MF has the following modified G-code in filament or printer presets:"
 msgstr "3mf dosyasında filament veya yazıcı ön ayarlarında şu değiştirilmiş G-kodları bulunmaktadır:"
@@ -8074,11 +8238,13 @@ msgstr "Lütfen bu ön ayarlar içindeki G-kodlarının makineye herhangi bir za
 msgid "Customized Preset"
 msgstr "Özel Ayar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Component name(s) inside step file not in UTF8 format!"
-msgstr ""
+msgstr "Step dosyasındaki bileşenlerin adı UTF8 formatında değil!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Because of unsupported text encoding, garbage characters may appear!"
-msgstr ""
+msgstr "İsimde çöp karakterler görünebilir!"
 
 msgid "Remember my choice."
 msgstr "Seçimimi hatırla."
@@ -8093,20 +8259,27 @@ msgstr "Sıfır hacimli nesneler kaldırıldı"
 msgid "The volume of the object is zero"
 msgstr "Cismin hacmi sıfır"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid ""
 "The object from file %s is too small, and may be in meters or inches.\n"
 " Do you want to scale to millimeters?"
 msgstr ""
+"%s dosyasındaki nesne çok küçük; metre veya inç cinsinden olabilir.\n"
+" Milimetreye ölçeklendirmek istiyor musunuz?"
 
 msgid "Object too small"
 msgstr "Nesne çok küçük"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This file contains several objects positioned at multiple heights.\n"
 "Instead of considering them as multiple objects, should \n"
 "the file be loaded as a single object with multiple parts?"
 msgstr ""
+"Bu dosya birden fazla yükseklikte konumlandırılmış birkaç nesne içerir.\n"
+"Bunları birden fazla nesne olarak düşünmek yerine,\n"
+"dosya birden fazla parçaya sahip tek bir nesne olarak mı yüklenecek?"
 
 msgid "Multi-part object detected"
 msgstr "Çok parçalı nesne algılandı"
@@ -8114,8 +8287,9 @@ msgstr "Çok parçalı nesne algılandı"
 msgid "Load these files as a single object with multiple parts?\n"
 msgstr "Bu dosyalar birden fazla parçadan oluşan tek bir nesne olarak mı yüklensin?\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An object with multiple parts was detected"
-msgstr ""
+msgstr "Birden fazla parçaya sahip nesne algılandı"
 
 msgid "Auto-Drop"
 msgstr ""
@@ -8145,17 +8319,21 @@ msgstr "Draco dosyasını dışa aktar:"
 msgid "Export AMF file:"
 msgstr "AMF dosyasını dışa aktar:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Save file as"
-msgstr ""
+msgstr "Farklı kaydet:"
 
 msgid "Export OBJ file:"
 msgstr "OBJ dosyasını dışa aktar:"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid ""
 "The file %s already exists.\n"
 "Do you want to replace it?"
 msgstr ""
+"%s dosyası zaten mevcut\n"
+"değiştirmek istiyor musun?"
 
 msgid "Confirm Save As"
 msgstr "Farklı Kaydetmeyi Onayla"
@@ -8163,11 +8341,15 @@ msgstr "Farklı Kaydetmeyi Onayla"
 msgid "Delete object which is a part of cut object"
 msgstr "Kesilen nesnenin bir parçası olan nesneyi silin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "You are trying to delete an object which is a part of a cut object.\n"
 "This action will break a cut correspondence.\n"
 "After that, model consistency can't be guaranteed."
 msgstr ""
+"Kesilmiş bir nesnenin parçası olan bir nesneyi silmeye çalışıyorsunuz.\n"
+"Bu eylem kesilmiş bir yazışmayı bozacaktır.\n"
+"Bundan sonra model tutarlılığı garanti edilemez."
 
 msgid "Delete Object"
 msgstr ""
@@ -8196,8 +8378,9 @@ msgstr "Başka bir ihracat işi yürütülüyor."
 msgid "Unable to replace with more than one volume"
 msgstr "Birden fazla hacimle değiştirme yapılamıyor"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Error during replacement"
-msgstr ""
+msgstr "Değiştirme sırasında hata"
 
 msgid "Replace from:"
 msgstr "Değiştirilecek olan:"
@@ -8205,8 +8388,9 @@ msgstr "Değiştirilecek olan:"
 msgid "Select a new file"
 msgstr "Yeni dosya seç"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "File for the replacement wasn't selected"
-msgstr ""
+msgstr "Değiştirme dosyası seçilmedi"
 
 msgid "Replace with 3D file"
 msgstr ""
@@ -8310,8 +8494,9 @@ msgstr ""
 msgid "Sync now"
 msgstr "Şimdi senkronize et"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You can keep the modified presets for the new project or discard them"
-msgstr ""
+msgstr "Değiştirilen ön ayarları yeni projede tutabilir veya silebilirsiniz"
 
 msgid "Creating a new project"
 msgstr "Yeni bir proje oluşturma"
@@ -8319,10 +8504,13 @@ msgstr "Yeni bir proje oluşturma"
 msgid "Load project"
 msgstr "Projeyi Aç"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Failed to save the project.\n"
 "Please check whether the folder exists online or if other programs have the project file open."
 msgstr ""
+"Proje kaydedilemedi.\n"
+"Lütfen klasörün çevrimiçi olup olmadığını veya proje dosyasını başka programların açıp açmadığını kontrol edin."
 
 msgid "Save project"
 msgstr "Projeyi kaydet"
@@ -8333,14 +8521,16 @@ msgstr "Model İçe aktarılıyor"
 msgid "Preparing 3MF file..."
 msgstr "3mf dosyasını hazırla..."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Download failed; unknown file format."
-msgstr ""
+msgstr "İndirme başarısız oldu, dosya türü bilinmiyor."
 
 msgid "Downloading project..."
 msgstr "proje indiriliyor..."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Download failed; File size exception."
-msgstr ""
+msgstr "İndirme başarısız oldu, Dosya boyutu sorunlu."
 
 #, c-format, boost-format
 msgid "Project downloaded %d%%"
@@ -8365,11 +8555,13 @@ msgstr "SLA arşivini içe aktar"
 msgid "The selected file"
 msgstr "Seçili dosya"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Does not contain valid G-code."
-msgstr ""
+msgstr "geçerli gcode içermiyor."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An Error has occurred while loading the G-code file."
-msgstr ""
+msgstr "G kodu dosyası yüklenirken hata oluşuyor"
 
 #. TRN %1% is archive path
 #, boost-format
@@ -8397,23 +8589,27 @@ msgstr "Proje olarak aç"
 msgid "Import geometry only"
 msgstr "Yalnızca geometriyi içe aktar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Only one G-code file can be opened at a time."
-msgstr ""
+msgstr "Aynı anda yalnızca bir G kodu dosyası açılabilir."
 
 msgid "G-code loading"
 msgstr "G-kod yükleniyor"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "G-code files and models cannot be loaded together!"
-msgstr ""
+msgstr "G kodu dosyaları modellerle birlikte yüklenemez!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unable to add models in preview mode"
-msgstr ""
+msgstr "Önizleme modundayken model eklenemiyor!"
 
 msgid "All objects will be removed, continue?"
 msgstr "Tüm nesneler kaldırılacak, devam edilsin mi?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The current project has unsaved changes. Would you like to save before continuing?"
-msgstr ""
+msgstr "Mevcut projede kaydedilmemiş değişiklikler var. Devam etmeden önce kaydedilsin mi?"
 
 msgid "Number of copies:"
 msgstr "Kopya sayısı:"
@@ -8483,10 +8679,13 @@ msgstr "Yükle ve Yazdır"
 msgid "Abnormal print file data. Please slice again"
 msgstr "Anormal yazdırma dosyası verileri. Lütfen tekrar dilimleyin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Print By Object: \n"
 "We suggest using auto-arrange to avoid collisions when printing."
 msgstr ""
+"Nesneye Göre Yazdır:\n"
+"Yazdırma sırasında çarpışmaları önlemek için otomatik düzenlemeyi kullanmanızı önerin."
 
 msgid "Send G-code"
 msgstr "G-kodu gönder"
@@ -8600,9 +8799,10 @@ msgstr "Üçgenler: %1%\n"
 msgid "Use \"Fix Model\" to repair the mesh."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "Plate %d: %s is not suggested for use printing filament %s (%s). If you still want to do this print job, please set this filament's bed temperature to a number that is not zero."
-msgstr ""
+msgstr "Plaka %d: %s'nin %s(%s) filamentinı yazdırmak için kullanılması önerilmez. Eğer yine de bu baskıyı yapmak istiyorsanız, lütfen bu filamentin plaka sıcaklığını sıfır olmayan bir değere ayarlayın."
 
 msgid "Currently, the object configuration form cannot be used with a multiple-extruder printer."
 msgstr "Şu anda nesne yapılandırma formu çoklu ekstruder yazıcıyla kullanılamaz."
@@ -8628,8 +8828,9 @@ msgstr "ön"
 msgid "rear"
 msgstr "arka"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Switching languages requires the application to restart.\n"
-msgstr ""
+msgstr "Dili değiştirmek uygulamanın yeniden başlatılmasını gerektirir.\n"
 
 msgid "Do you want to continue?"
 msgstr "Devam etmek istiyor musun?"
@@ -8655,8 +8856,9 @@ msgstr "Kuzey Amerika"
 msgid "Others"
 msgstr "Diğer"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Changing the region will log you out of your account.\n"
-msgstr ""
+msgstr "Bölgeyi değiştirmek hesabınızdan çıkış yapmanıza neden olacaktır.\n"
 
 msgid "Region selection"
 msgstr "Bölge seçimi"
@@ -8762,8 +8964,9 @@ msgstr "Varsayılan sayfa"
 msgid "Set the page opened on startup."
 msgstr "Açılışta açılacak sayfayı ayarlayın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable dark Mode"
-msgstr ""
+msgstr "Karanlık modu etkinleştir"
 
 msgid "Allow only one InlongSlicer instance"
 msgstr "Yalnızca bir InlongSlicer örneğine izin ver"
@@ -8813,8 +9016,9 @@ msgstr "Bir .3mf açılırken yazıcı/filament/işlem ayarları yüklenmeli mi?
 msgid "Auto backup"
 msgstr "Otomatik yedekleme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Backup your project periodically to help with restoring from an occasional crash."
-msgstr ""
+msgstr "Ara sıra meydana gelen çökmelerden sonra geri yüklemek için projenizi düzenli aralıklarla yedekleyin."
 
 msgid "Maximum recent files"
 msgstr "Son kullanılan dosyaların maksimum sayısı"
@@ -8891,7 +9095,7 @@ msgid "Remember printer configuration"
 msgstr "Yazıcı yapılandırmasını hatırla"
 
 msgid "If enabled, Orca will remember and switch filament/process configuration for each printer automatically."
-msgstr ""
+msgstr "Etkinleştirilirse, Orca her yazıcı için filament/işlem yapılandırmasını hatırlayacak ve otomatik olarak değiştirecektir."
 
 msgid "Group user filament presets"
 msgstr "Grup kullanıcı filament ön ayarları"
@@ -9071,7 +9275,7 @@ msgid "Renders cast shadows on the plate, other objects, and each object onto it
 msgstr ""
 
 msgid "Anti-aliasing"
-msgstr ""
+msgstr "Anti-aliasing"
 
 msgid "MSAA Multiplier"
 msgstr ""
@@ -9096,7 +9300,7 @@ msgid ""
 msgstr ""
 
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 msgid "FPS cap"
 msgstr ""
@@ -9113,6 +9317,15 @@ msgid "Show FPS overlay"
 msgstr ""
 
 msgid "Displays current viewport FPS in the top-right corner."
+msgstr ""
+
+msgid "G-code Preview"
+msgstr ""
+
+msgid "Dim lower layers"
+msgstr ""
+
+msgid "When scrubbing the layer slider in the sliced preview, render the layers below the current one darkened so that only the layer being viewed is shown at full brightness."
 msgstr ""
 
 msgid "Login region"
@@ -9168,8 +9381,9 @@ msgstr "Filament ve Renk"
 msgid "Color only"
 msgstr "Yalnızca renk"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Update built-in presets automatically."
-msgstr ""
+msgstr "Yerleşik Ön Ayarları otomatik olarak güncelleyin."
 
 msgid "Use encrypted file for token storage"
 msgstr "Belirteç depolaması için şifrelenmiş dosyayı kullan"
@@ -9321,11 +9535,13 @@ msgstr "hata ayıklama kaydet düğmesi"
 msgid "Save debug settings"
 msgstr "hata ayıklama ayarlarını kaydet"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Debug settings have been saved successfully!"
-msgstr ""
+msgstr "DEBUG ayarları başarıyla kaydedildi!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cloud environment switched; please login again!"
-msgstr ""
+msgstr "Bulut ortamını değiştirin, lütfen tekrar giriş yapın!"
 
 msgid "System presets"
 msgstr "Sistem ön ayarları"
@@ -9345,8 +9561,9 @@ msgstr "AMS filamentler"
 msgid "Left filaments"
 msgstr "Sol filamentler"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "AMS filament"
-msgstr ""
+msgstr "AMS filamentler"
 
 msgid "Right filaments"
 msgstr "Sağ filamentler"
@@ -9381,8 +9598,9 @@ msgstr "Desteklenmeyen ön ayarlar"
 msgid "Unsupported"
 msgstr "Desteklenmiyor"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add/Remove filament"
-msgstr ""
+msgstr "Filament Ekle/Kaldır"
 
 msgid "Add/Remove materials"
 msgstr "Materyal Ekle/Kaldır"
@@ -9450,8 +9668,9 @@ msgstr "Kabul et"
 msgid "Log Out"
 msgstr "Çıkış"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Slice all plates to obtain time and filament estimation"
-msgstr ""
+msgstr "Zaman ve filament tahminini elde etmek için tüm plakayı dilimleyin"
 
 msgid "Packing project data into 3MF file"
 msgstr "Proje verilerini 3MF dosyasına paketleme"
@@ -9510,8 +9729,9 @@ msgstr "\"%1%\" ön ayarı zaten mevcut."
 msgid "Preset \"%1%\" already exists and is incompatible with the current printer."
 msgstr "\"%1%\" ön ayarı zaten mevcut ve mevcut yazıcıyla uyumlu değil."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please note that saving will overwrite the current preset."
-msgstr ""
+msgstr "Kaydetme eyleminin bu ön ayarın yerini alacağını lütfen unutmayın."
 
 msgid "The name cannot be the same as a preset alias name."
 msgstr "Ad, önceden ayarlanmış bir takma adla aynı olamaz."
@@ -9682,11 +9902,15 @@ msgstr "Filament, AMS yuvasındaki filamentle eşleşmiyor. AMS yuvası ataması
 msgid "The selected printer (%s) is incompatible with the print file configuration (%s). Please adjust the printer preset in the prepare page or choose a compatible printer on this page."
 msgstr "Seçilen yazıcı (%s), yazdırma dosyası yapılandırmasıyla (%s) uyumlu değil. Lütfen hazırlama sayfasında yazıcı ön ayarını yapın veya bu sayfada uyumlu bir yazıcı seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "When spiral vase mode is enabled, machines with I3 structure will not generate timelapse videos."
-msgstr ""
+msgstr "Spiral vazo modu etkinleştirildiğinde, I3 yapısına sahip makineler zaman atlamalı videolar oluşturmayacaktır."
 
 msgid "The current printer does not support timelapse in Traditional Mode when printing By-Object."
 msgstr "Geçerli yazıcı, Nesneye Göre yazdırırken Geleneksel Modda hızlandırılmış geçişi desteklememektedir."
+
+msgid "I have checked the installed nozzle and want to print anyway."
+msgstr ""
 
 msgid "Errors"
 msgstr "Hatalar"
@@ -9700,8 +9924,9 @@ msgstr "Harici makaranın filaman türü ayarı, dilimleme dosyasındaki filaman
 msgid "The printer type selected when generating G-code is not consistent with the currently selected printer. It is recommended that you use the same printer type for slicing."
 msgstr "G Kodu oluşturulurken seçilen yazıcı türü mevcut seçili yazıcıyla tutarlı değil. Dilimleme için aynı yazıcı tipini kullanmanız tavsiye edilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "There are some unknown filaments in the AMS mappings. Please check whether they are the required filaments. If they are okay, click \"Confirm\" to start printing."
-msgstr ""
+msgstr "AMS eşlemelerinde bazı bilinmeyen filamentler var. Lütfen bunların gerekli filamentler olup olmadığını kontrol edin. Sorun yoksa, yazdırmayı başlatmak için \"Onayla\"ya basın."
 
 msgid "Please check the following:"
 msgstr "Lütfen aşağıdakileri kontrol edin:"
@@ -9795,7 +10020,7 @@ msgstr ""
 msgid "The nozzle flow setting of %s(%s) doesn't match with the slicing file(%s). Please make sure the nozzle installed matches with settings in printer, then set the corresponding printer preset while slicing."
 msgstr "%s(%s)'nin püskürtme ucu akış ayarı dilimleme dosyasıyla(%s) eşleşmiyor. Lütfen takılan püskürtme ucunun yazıcıdaki ayarlarla eşleştiğinden emin olun, ardından dilimleme sırasında ilgili yazıcı ön ayarını yapın."
 
-msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
+msgid "Tips: If you changed your nozzle of your printer lately, please go to 'Device -> Printer parts' to change your nozzle setting."
 msgstr "İpuçları: Yazıcınızın püskürtme ucunu yakın zamanda değiştirdiyseniz, püskürtme ucu ayarınızı değiştirmek için lütfen 'Cihaz -> Yazıcı parçaları'na gidin."
 
 #, c-format, boost-format
@@ -9911,8 +10136,9 @@ msgstr "Depolama anormal durumda veya salt okunur modda."
 msgid "Storage needs to be inserted before printing."
 msgstr "Yazdırmadan önce depolamanın eklenmesi gerekir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cannot send the print job to a printer whose firmware must be updated."
-msgstr ""
+msgstr "Yazdırma işi, ürün yazılımının güncellenmesi gereken bir yazıcıya gönderilemiyor."
 
 msgid "Cannot send a print job for an empty plate."
 msgstr "Boş kalıp için yazdırma işi gönderilemiyor"
@@ -9969,8 +10195,9 @@ msgstr "Bağlantı zaman aşımına uğradı, lütfen ağınızı kontrol edin."
 msgid "Connection failed. Click the icon to retry"
 msgstr "Bağlantı başarısız oldu. Yeniden denemek için simgeyi tıklayın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Cannot send print tasks when an update is in progress"
-msgstr ""
+msgstr "Yükseltme devam ederken yazdırma görevi gönderilemiyor"
 
 msgid "The selected printer is incompatible with the chosen printer presets."
 msgstr "Seçilen yazıcı, seçilen yazıcı ön ayarlarıyla uyumlu değil."
@@ -9993,8 +10220,9 @@ msgstr "Dosya yükleme zaman aşımına uğradı. Lütfen ürün yazılımı sü
 msgid "Sending failed, please try again!"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Slice complete"
-msgstr ""
+msgstr "Dilimleme tamam."
 
 msgid "View all Daily tips"
 msgstr "Tüm Günlük ipuçlarını görüntüleyin"
@@ -10008,11 +10236,13 @@ msgstr "Soket bağlanamadı"
 msgid "Failed to publish login request"
 msgstr "Giriş isteği yayınlanamadı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Timeout getting ticket from device"
-msgstr ""
+msgstr "Cihaz zaman aşımından bilet al"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Timeout getting ticket from server"
-msgstr ""
+msgstr "Sunucu zaman aşımından bilet al"
 
 msgid "Failed to post ticket to server"
 msgstr "Sunucuya bilet gönderilemedi"
@@ -10126,8 +10356,9 @@ msgstr "Tüm ayarları en son kaydedilen ön ayara sıfırlamak için tıklayın
 msgid "Prime tower is required for nozzle changing. There may be flaws on the model without prime tower. Are you sure you want to disable prime tower?"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is required for smooth timelapse mode. There may be flaws on the model without a prime tower. Are you sure you want to disable the prime tower?"
-msgstr ""
+msgstr "Sorunsuz timeplace için Prime Tower gereklidir. Prime tower olmayan modelde kusurlar olabilir. Prime tower'ı devre dışı bırakmak istediğinizden emin misiniz?"
 
 msgid "A prime tower is required for clumping detection. There may be flaws on the model without prime tower. Are you sure you want to disable prime tower?"
 msgstr "Topaklanma tespiti için bir ana kule gereklidir. Prime tower olmayan modelde kusurlar olabilir. Prime tower'ı devre dışı bırakmak istediğinizden emin misiniz?"
@@ -10141,8 +10372,9 @@ msgstr "Topaklanma tespiti için bir ana kule gereklidir. Prime tower olmayan mo
 msgid "Enabling both precise Z height and the prime tower may cause slicing errors. Do you still want to enable precise Z height?"
 msgstr "Hem hassas Z yüksekliğini hem de hazırlık kulesini etkinleştirmek dilimleme hatalarına neden olabilir. Yine de hassas Z yüksekliğini etkinleştirmek istiyor musunuz?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is required for smooth timelapse mode. There may be flaws on the model without prime tower. Do you want to enable the prime tower?"
-msgstr ""
+msgstr "Sorunsuz hızlandırılmış çekim için Prime Tower gereklidir. Prime tower olmayan modelde kusurlar olabilir. Prime tower'ı etkinleştirmek istiyor musunuz?"
 
 msgid "Still print by object?"
 msgstr "Hala nesneye göre yazdırıyor musunuz?"
@@ -10161,11 +10393,15 @@ msgstr ""
 "Destek arayüzü için destek malzemesi kullanırken aşağıdaki ayarları öneririz:\n"
 "0 üst Z mesafesi, 0 arayüz aralığı, iç içe geçmiş doğrusal desen ve bağımsız destek katmanı yüksekliğini devre dışı bırak."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Change these settings automatically?\n"
 "Yes - Change these settings automatically.\n"
 "No  - Do not change these settings for me."
 msgstr ""
+"Bu ayarlar otomatik olarak değiştirilsin mi?\n"
+"Evet - Bu ayarları otomatik olarak değiştir\n"
+"Hayır - Bu ayarları benim için değiştirme"
 
 msgid ""
 "When using soluble material for the support interface, we recommend the following settings:\n"
@@ -10332,8 +10568,9 @@ msgstr "Sarsıntı(XY)"
 msgid "Raft"
 msgstr "Raft"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament for Supports"
-msgstr ""
+msgstr "Destek Filamenti"
 
 msgid "Support ironing"
 msgstr "Destek Ütüleme"
@@ -10399,8 +10636,9 @@ msgstr "Temel Bilgiler"
 msgid "Recommended nozzle temperature"
 msgstr "Önerilen nozul sıcaklığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Recommended nozzle temperature range of this filament. 0 means not set"
-msgstr ""
+msgstr "Bu filamentin önerilen Nozul sıcaklığı aralığı. 0 ayar yok anlamına gelir"
 
 msgid "Flow ratio and Pressure Advance"
 msgstr "Akış Oranı Ve Basınç İlerlemesi"
@@ -10429,26 +10667,31 @@ msgstr "Cool Plate SuperTack takılıyken yatak sıcaklığı. 0 değeri, filame
 msgid "Cool Plate"
 msgstr "Soğuk plaka"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Cool Plate is installed. A value of 0 means the filament does not support printing on the Cool Plate."
-msgstr ""
+msgstr "Cool Plate takıldığında yatak sıcaklığı. 0 değeri, filamentin Cool Plate üzerine yazdırmayı desteklemediği anlamına gelir."
 
 msgid "Textured Cool Plate"
 msgstr "Textured Cool Plate"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Textured Cool Plate is installed. A value of 0 means the filament does not support printing on the Textured Cool Plate."
-msgstr ""
+msgstr "Cool Plate takıldığında yatak sıcaklığı. 0 Değeri, filamentin Textured Cool Plate üzerine yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the engineering plate is installed. A value of 0 means the filament does not support printing on the Engineering Plate."
-msgstr ""
+msgstr "Engineering Plate takıldığında yatak sıcaklığı. Değer 0, filamentin Engineering Plate yazdırmayı desteklemediği anlamına gelir."
 
 msgid "Smooth PEI Plate / High Temp Plate"
 msgstr "Smooth PEI Plate / High Temp Plate"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Smooth PEI Plate/High Temperature Plate is installed. A value of 0 means the filament does not support printing on the Smooth PEI Plate/High Temp Plate."
-msgstr ""
+msgstr "Smooth PEI Plate / High Temp Plate takılığın da yatak sıcaklığı. 0 Değeri, filamentin Smooth PEI Plate / High Temp Plate üzerine baskı yapmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature when the Textured PEI Plate is installed. A value of 0 means the filament does not support printing on the Textured PEI Plate."
-msgstr ""
+msgstr "Textured PEI Plate takıldığın da yatak sıcaklığı. 0 Değeri, filamentin Textured PEI Plate üzerine yazdırmayı desteklemediği anlamına gelir."
 
 msgid "Volumetric speed limitation"
 msgstr "Hacimsel Hız Sınırlaması"
@@ -10462,14 +10705,16 @@ msgstr "Parça Soğutma Fanı"
 msgid "Min fan speed threshold"
 msgstr "Minimum fan hızı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan will run at the minimum fan speed when the estimated layer time is longer than the threshold value. When the layer time is shorter than the threshold, the fan speed will be interpolated between the minimum and maximum fan speed according to layer printing time."
-msgstr ""
+msgstr "Tahmini katman süresi ayardaki katman süresinden uzun olmadığında parça soğutma fanı hızı minimum hızda çalışmaya başlayacaktır. Katman süresi eşikten kısa olduğunda fan hızı, katman yazdırma süresine göre minimum ve maksimum fan hızı arasında enterpole edilir"
 
 msgid "Max fan speed threshold"
 msgstr "Maksimum fan hızı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan will run at maximum speed when the estimated layer time is shorter than the threshold value."
-msgstr ""
+msgstr "Tahmini katman süresi ayar değerinden kısa olduğunda parça soğutma fanı hızı maksimum olacaktır"
 
 msgid "Heatbreak fan"
 msgstr ""
@@ -10694,9 +10939,10 @@ msgstr ""
 "Seçilen ön ayarı silmek istediğinizden emin misiniz?\n"
 "Eğer ön ayar, şu anda yazıcınızda kullanılan bir filamente karşılık geliyorsa, lütfen o slot için filament bilgilerini sıfırlayın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "Are you sure you want to %1% the selected preset?"
-msgstr ""
+msgstr "Seçilen ön ayarı %1% yaptığınızdan emin misiniz?"
 
 msgid "Select printers"
 msgstr "Yazıcıları seçin"
@@ -10760,14 +11006,16 @@ msgstr ""
 msgid "Click to reset current value and attach to the global value."
 msgstr "Geçerli değeri sıfırlamak ve genel değere eklemek için tıklayın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Click to drop current modifications and reset to saved value."
-msgstr ""
+msgstr "Geçerli değişikliği bırakmak ve kaydedilen değere sıfırlamak için tıklayın."
 
 msgid "Process Settings"
 msgstr "İşlem Ayarları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "unsaved changes"
-msgstr ""
+msgstr "Kaydedilmemiş Değişiklikler"
 
 msgid "Transfer or discard changes"
 msgstr "Değişiklikleri Çıkart veya Sakla"
@@ -10816,8 +11064,9 @@ msgstr ""
 msgid "Click the right mouse button to display the full text."
 msgstr "Tam metni görüntülemek için farenin sağ tuşuna tıklayın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "No changes will be saved."
-msgstr ""
+msgstr "Tüm değişiklikler kaydedilmeyecek"
 
 msgid "All changes will be discarded."
 msgstr "Tüm değişiklikler iptal edilecek."
@@ -11330,16 +11579,16 @@ msgid "Global shortcuts"
 msgstr "Genel kısayollar"
 
 msgid "Pan View"
-msgstr ""
+msgstr "Pan Görünümü"
 
 msgid "Rotate View"
-msgstr ""
+msgstr "Görüntüyü döndür"
 
 msgid "Middle mouse button"
 msgstr ""
 
 msgid "Zoom View"
-msgstr ""
+msgstr "Zoom Görünümü"
 
 msgid "Auto orients selected objects or all objects. If there are selected objects, it just orients the selected ones. Otherwise, it will orient all objects in the current project."
 msgstr "Seçilen nesneleri veya tüm nesneleri otomatik olarak yönlendirir. Seçilen nesneler varsa, yalnızca seçilenleri yönlendirir. Aksi takdirde mevcut projedeki tüm nesneler yönlendirilecektir."
@@ -11368,29 +11617,34 @@ msgstr "Nesneleri dikdörtgene göre seç"
 msgid "Arrow Up"
 msgstr "Yukarı ok"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
-msgstr ""
+msgstr "Seçimi pozitif Y yönünde 10 mm taşı"
 
 msgid "Arrow Down"
 msgstr "Aşağı ok"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
-msgstr ""
+msgstr "Seçimi negatif Y yönünde 10 mm taşı"
 
 msgid "Arrow Left"
 msgstr "Sol Yön Tuşu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
-msgstr ""
+msgstr "Seçimi negatif X yönünde 10 mm taşı"
 
 msgid "Arrow Right"
 msgstr "Sağ Yön Tuşu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
-msgstr ""
+msgstr "Seçimi pozitif X yönünde 10 mm taşı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Movement step set to 1mm"
-msgstr ""
+msgstr "Hareket adımı 1 mm'ye ayarlandı"
 
 msgid "Keyboard 1-9: set filament for object/part"
 msgstr "klavye 1-9: nesne/parça için filamenti ayarlayın"
@@ -11676,7 +11930,7 @@ msgid "Filament Track Switch"
 msgstr ""
 
 msgid "Beta"
-msgstr ""
+msgstr "Beta"
 
 msgid "Update firmware"
 msgstr "Ürün yazılımını güncelle"
@@ -11699,8 +11953,9 @@ msgstr ""
 msgid "Are you sure you want to update? This will take about 10 minutes. Do not turn off the power while the printer is updating."
 msgstr "Güncellemek istediğinizden emin misiniz? Bu yaklaşık 10 dakika sürecektir. Yazıcı güncellenirken gücü kapatmayın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "An important update was detected and needs to be run before printing can continue. Do you want to update now? You can also update later from 'Update firmware'."
-msgstr ""
+msgstr "Önemli bir güncelleme algılandı ve yazdırmanın devam edebilmesi için çalıştırılması gerekiyor. Şimdi güncellemek istiyor musunuz? Daha sonra 'Firmware'i yükselt' seçeneğinden de güncelleme yapabilirsiniz."
 
 msgid "The firmware version is abnormal. Repairing and updating are required before printing. Do you want to update now? You can also update later on the printer or update next time you start Inlong Slicer."
 msgstr ""
@@ -11715,8 +11970,9 @@ msgstr ""
 msgid "Repair finished"
 msgstr "Onarım tamamlandı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Repair failed"
-msgstr ""
+msgstr "Onarım başarısız oldu."
 
 msgid "Repair canceled"
 msgstr "Onarım iptal edildi"
@@ -11725,8 +11981,9 @@ msgstr "Onarım iptal edildi"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "%1% dosyasının %2% dosyasına kopyalanması başarısız oldu: %3%"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please check any unsaved changes before updating the configuration."
-msgstr ""
+msgstr "Yapılandırma güncellemelerinden önce kaydedilmemiş değişiklikleri kontrol etmeniz gerekir."
 
 msgid "Configuration package: "
 msgstr "Yapılandırma paketi: "
@@ -11740,16 +11997,18 @@ msgstr "G kodu dosyasını açın:"
 msgid "One object has an empty first layer and can't be printed. Please Cut the bottom or enable supports."
 msgstr "Bir nesnenin başlangıç katmanı boş ve yazdırılamıyor. Lütfen alt kısmı kesin veya destekleri etkinleştirin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "The object has empty layers between %1% and %2% and can’t be printed."
-msgstr ""
+msgstr "%1% ile %2% arasındaki boş katman için nesne yazdırılamıyor."
 
 #, boost-format
 msgid "Object: %1%"
 msgstr "Nesne: %1%"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Parts of the object at these heights may be too thin or the object may have a faulty mesh."
-msgstr ""
+msgstr "Belki nesnenin bu yükseklikteki bazı kısımları çok incedir veya nesnenin ağı hatalı olabilir"
 
 msgid "Process change extrusion role G-code"
 msgstr ""
@@ -11757,8 +12016,9 @@ msgstr ""
 msgid "Filament change extrusion role G-code"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "No object can be printed. It may be too small."
-msgstr ""
+msgstr "Hiçbir nesne yazdırılamaz. Belki çok küçük"
 
 msgid "Your print is very close to the priming regions. Make sure there is no collision."
 msgstr "Baskınız hazırlama bölgelerine çok yakın. Çarpışma olmadığından emin olun."
@@ -11803,21 +12063,15 @@ msgstr ""
 msgid "Internal Bridge"
 msgstr "İç Köprü"
 
-#, boost-format
-msgid "Failed to calculate line width of %1%. Cannot get value of “%2%” "
-msgstr ""
-
-msgid "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
-msgstr "Flow::with_spacing()'e sağlanan geçersiz boşluk, kat yüksekliğinizi ve ekstrüzyon genişliğinizi kontrol edin"
-
 msgid "undefined error"
 msgstr "bilinmeyen hata"
 
 msgid "too many files"
 msgstr "çok fazla dosya"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "File too large"
-msgstr ""
+msgstr "dosya çok büyük"
 
 msgid "unsupported method"
 msgstr "desteklenmeyen yöntem"
@@ -11837,8 +12091,9 @@ msgstr "dosya ZIP arşivi değil"
 msgid "invalid header or corrupted"
 msgstr "geçersiz başlık veya bozuk"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Saving to RAID is not supported."
-msgstr ""
+msgstr "desteklenmeyen çoklu disk"
 
 msgid "decompression failed"
 msgstr "dekompresyon başarısız oldu"
@@ -11885,8 +12140,9 @@ msgstr "geçersiz parametre"
 msgid "invalid filename"
 msgstr "geçersiz dosya adı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Buffer too small"
-msgstr ""
+msgstr "arabellek çok küçük"
 
 msgid "internal error"
 msgstr "dahili hata"
@@ -11894,8 +12150,9 @@ msgstr "dahili hata"
 msgid "file not found"
 msgstr "dosya bulunamadı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Archive too large"
-msgstr ""
+msgstr "arşiv çok büyük"
 
 msgid "validation failed"
 msgstr "doğrulama başarısız"
@@ -11903,9 +12160,10 @@ msgstr "doğrulama başarısız"
 msgid "write callback failed"
 msgstr "geri arama yazma başarısız oldu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, boost-format
 msgid "%1% is too close to exclusion area. There may be collisions when printing."
-msgstr ""
+msgstr "%1%, hariç tutma alanına çok yakın; yazdırma sırasında çarpışmalar meydana gelebilir."
 
 #, boost-format
 msgid "%1% is too close to others, and collisions may be caused."
@@ -11927,8 +12185,9 @@ msgstr "Başbakan Kulesi"
 msgid " is too close to others, and collisions may be caused.\n"
 msgstr " başkalarına çok yakın olduğundan çarpışmalara neden olabilir.\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid " is too close to an exclusion area, and collisions will be caused.\n"
-msgstr ""
+msgstr " dışlama alanına çok yakın ve çarpışmalara neden olacak.\n"
 
 msgid " is too close to clumping detection area, and collisions will be caused.\n"
 msgstr "topaklanma tespit alanına çok yakınsa çarpışmalara neden olur.\n"
@@ -11960,8 +12219,9 @@ msgstr "Topaklanma tespiti için bir ana kule gereklidir; Aksi takdirde modelde 
 msgid "Please select \"By object\" print sequence to print multiple objects in spiral vase mode."
 msgstr "Birden fazla nesneyi spiral vazo modunda yazdırmak için lütfen \"Nesneye göre\" yazdırma sırasını seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Spiral (vase) mode does not work when an object contains more than one material."
-msgstr ""
+msgstr "Bir nesne birden fazla malzeme içerdiğinde spiral vazo modu çalışmaz."
 
 #, boost-format
 msgid "While the object %1% itself fits the build volume, it exceeds the maximum build volume height because of material shrinkage compensation."
@@ -11993,26 +12253,32 @@ msgstr "Sızıntı önleme yalnızca ‘tek ekstruder çoklu malzeme’ kapalıy
 msgid "The prime tower is currently only supported for the Marlin, RepRap/Sprinter, RepRapFirmware and Repetier G-code flavors."
 msgstr "Prime tower şu anda yalnızca Marlin, RepRap/Sprinter, RepRapFirmware ve Repetier G kodu türleri için desteklenmektedir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is not supported in “By object” print."
-msgstr ""
+msgstr "Prime tower, \"Nesneye göre\" yazdırmada desteklenmez."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower is not supported when adaptive layer height is on. It requires that all objects have the same layer height."
-msgstr ""
+msgstr "Uyarlanabilir katman yüksekliği açıkken ana kule desteklenmez. Tüm nesnelerin aynı katman yüksekliğine sahip olmasını gerektirir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires any “support gap” to be a multiple of layer height."
-msgstr ""
+msgstr "Ana kule \"destek boşluğunun\" katman yüksekliğinin katı olmasını gerektirir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that all objects have the same layer height."
-msgstr ""
+msgstr "Prime tower, tüm nesnelerin aynı katman yüksekliğine sahip olmasını gerektirir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that all objects are printed over the same number of raft layers."
-msgstr ""
+msgstr "Ana kule, tüm nesnelerin aynı sayıda sal katmanı üzerine yazdırılmasını gerektirir."
 
 msgid "The prime tower is only supported for multiple objects if they are printed with the same support_top_z_distance."
 msgstr "Prime kulesi yalnızca aynı destek üst z mesafesi ile yazdırılırlarsa birden fazla nesne için desteklenir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that all objects are sliced with the same layer height."
-msgstr ""
+msgstr "Prime tower, tüm nesnelerin aynı katman yüksekliğinde dilimlenmesini gerektirir."
 
 msgid "The prime tower is only supported if all objects have the same variable layer height."
 msgstr "Prime tower yalnızca tüm nesnelerin aynı değişken katman yüksekliğine sahip olması durumunda desteklenir."
@@ -12020,17 +12286,20 @@ msgstr "Prime tower yalnızca tüm nesnelerin aynı değişken katman yüksekli�
 msgid "One or more object were assigned an extruder that the printer does not have."
 msgstr "Bir veya daha fazla nesneye yazıcının sahip olmadığı bir ekstruder atandı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Line width too small"
-msgstr ""
+msgstr "Çizgi genişliği çok küçük"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Line width too large"
-msgstr ""
+msgstr "Çok büyük çizgi genişliği"
 
 msgid "Printing with multiple extruders of differing nozzle diameters. If support is to be printed with the current filament (support_filament == 0 or support_interface_filament == 0), all nozzles have to be of the same diameter."
 msgstr "Farklı nozul çaplarına sahip birden fazla ekstruderle baskı. Destek mevcut filamentle (support_filament == 0 veya support_interface_filament == 0) basılacaksa, tüm nozulların aynı çapta olması gerekir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A prime tower requires that support has the same layer height as the object."
-msgstr ""
+msgstr "Prime kulesi için, destek, nesne ile aynı katman yüksekliğine sahip olmalıdır."
 
 msgid "For Organic supports, two walls are supported only with the Hollow/Default base pattern."
 msgstr "Organik destekler için iki duvar yalnızca İçi Boş/Varsayılan taban düzeniyle desteklenir."
@@ -12086,24 +12355,36 @@ msgid ""
 "Orca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the maximum jerk setting in your printer's configuration to get higher speeds."
 msgstr ""
+"Sarsıntı ayarı yazıcının maksimum sarsıntısını aşıyor (machine_max_jerk_x/machine_max_jerk_y).\n"
+"Orca, yazıcının yeteneklerini aşmadığından emin olmak için sarsıntı hızını otomatik olarak sınırlayacaktır.\n"
+"Daha yüksek hızlar elde etmek için yazıcınızın yapılandırmasında maksimum sarsıntı ayarını yapabilirsiniz."
 
 msgid ""
 "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\n"
 "Orca will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits."
 msgstr ""
+"Bağlantı noktası sapması ayarı, yazıcının maksimum değerini (machine_max_junction_deviation) aşıyor.\n"
+"Orca, yazıcının kapasitesini aşmaması için bağlantı noktası sapmasını otomatik olarak sınırlayacaktır.\n"
+"Daha yüksek sınırlar elde etmek için yazıcınızın yapılandırmasında machine_max_junction_deviation değerini ayarlayabilirsiniz."
 
 msgid ""
 "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\n"
 "Orca will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds."
 msgstr ""
+"Hızlanma ayarı yazıcının maksimum hızlanmasını aşıyor (machine_max_acceleration_extruding).\n"
+"Orca, yazıcının yeteneklerini aşmadığından emin olmak için hızlanma hızını otomatik olarak sınırlayacaktır.\n"
+"Daha yüksek hızlar elde etmek için yazıcınızın yapılandırmasındaki machine_max_acceleration_extruding değerini ayarlayabilirsiniz."
 
 msgid ""
 "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\n"
 "Orca will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds."
 msgstr ""
+"Hareket ivmesi ayarı, yazıcının maksimum hareket ivmesini (machine_max_acceleration_travel) aşıyor.\n"
+"Orca, yazıcının yeteneklerini aşmadığından emin olmak için seyahat hızlanma hızını otomatik olarak sınırlayacaktır.\n"
+"Daha yüksek hızlar elde etmek için yazıcınızın yapılandırmasındaki machine_max_acceleration_travel değerini ayarlayabilirsiniz."
 
 msgid "The precise wall option will be ignored for outer-inner or inner-outer-inner wall sequences."
 msgstr "Dış–iç veya iç–dış–iç duvar sıralamaları için 'Hassas duvar' seçeneği yok sayılacaktır."
@@ -12129,8 +12410,9 @@ msgstr "G kodu dışa aktarılıyor"
 msgid "Generating G-code"
 msgstr "G kodu oluşturuluyor"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Processing of the filename_format template failed."
-msgstr ""
+msgstr "Dosyaadı_format şablonunun işlenmesi başarısız oldu."
 
 msgid "Printer technology"
 msgstr "Yazıcı teknolojisi"
@@ -12159,8 +12441,9 @@ msgstr ""
 msgid "Ordered list of bed exclude areas by parallel printhead count. Item 1 applies to one printhead, item 2 to two printheads, and so on. Leave an item empty for no excluded area."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Excluded bed area"
-msgstr ""
+msgstr "Tablada hariç tutulan bölge"
 
 msgid "Unprintable area in XY plane. For example, X1 Series printers use the front left corner to cut filament during filament change. The area is expressed as polygon by points in following format: \"XxY, XxY, ...\""
 msgstr "XY düzleminde yazdırılamayan alan. Örneğin X1 Serisi yazıcılar, filament değişimi sırasında filamenti kesmek için sol ön köşeyi kullanır. Alan şu formatta noktalarla çokgen olarak ifade edilir: \"XxY, XxY, ...\""
@@ -12174,8 +12457,9 @@ msgstr "Özel plaka modeli"
 msgid "Elephant foot compensation"
 msgstr "Fil ayağı telafi oranı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This shrinks the first layer on the build plate to compensate for elephant foot effect."
-msgstr ""
+msgstr "Fil ayağı etkisini telafi etmek için baskı plakasındaki ilk katmanı küçültün."
 
 msgid "Elephant foot compensation layers"
 msgstr "Fil ayağı telafisi"
@@ -12192,14 +12476,16 @@ msgid ""
 "Subsequent layers become linearly denser by the height specified in elefant_foot_compensation_layers."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the height for each layer. Smaller layer heights give greater accuracy but longer printing time."
-msgstr ""
+msgstr "Her katman için dilimleme yüksekliği. Daha küçük katman yüksekliği, daha doğru ve daha fazla baskı süresi anlamına gelir."
 
 msgid "Printable height"
 msgstr "Yazdırılabilir yükseklik"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the maximum printable height which is limited by the height of the build area."
-msgstr ""
+msgstr "Yazıcının mekanizması tarafından sınırlanan maksimum yazdırılabilir yükseklik."
 
 msgid "Extruder printable height"
 msgstr "Ekstruder yazdırılabilir yükseklik"
@@ -12276,8 +12562,9 @@ msgstr "Şifre"
 msgid "Ignore HTTPS certificate revocation checks"
 msgstr "HTTPS sertifikası iptal kontrollerini yoksay"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Ignore HTTPS certificate revocation checks in the case of missing or offline distribution points. One may want to enable this option for self signed certificates if connection fails."
-msgstr ""
+msgstr "Eksik veya çevrimdışı dağıtım noktaları olması durumunda HTTPS sertifikası iptal kontrollerini göz ardı edin. Bağlantı başarısız olursa, kendinden imzalı sertifikalar için bu seçeneğin etkinleştirilmesi istenebilir."
 
 msgid "Names of presets related to the physical printer."
 msgstr "Fiziksel yazıcıyla ilgili ön ayarların adları."
@@ -12297,14 +12584,16 @@ msgstr ""
 msgid "Avoid crossing walls"
 msgstr "Duvar geçişinden kaçın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This detours to avoid traveling across walls, which may cause blobs on the surface."
-msgstr ""
+msgstr "Yüzeyde lekelenmeye neden olabilecek duvar boyunca ilerlemekten kaçın."
 
 msgid "Avoid crossing walls - Max detour length"
 msgstr "Duvarı geçmekten kaçının - maksimum servis yolu uzunluğu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Maximum detour distance for avoiding crossing wall: The printer won't detour if the detour distance is larger than this value. Detour length could be specified either as an absolute value or as percentage (for example 50%) of a direct travel path. A value of 0 will disable this."
-msgstr ""
+msgstr "Duvarı geçmekten kaçınmak için maksimum sapma mesafesi. Yoldan sapma mesafesi bu değerden büyükse yoldan sapmayın. Yol uzunluğu, mutlak bir değer olarak veya doğrudan seyahat yolunun yüzdesi (örneğin %50) olarak belirtilebilir. Devre dışı bırakmak için sıfır."
 
 msgid "mm or %"
 msgstr "mm veya %"
@@ -12315,20 +12604,25 @@ msgstr "Diğer katmanlar"
 msgid "Bed temperature for layers except the initial one. A value of 0 means the filament does not support printing on the Cool Plate SuperTack."
 msgstr "İlk katman hariç tüm katmanlar için yatak sıcaklığı. 0 değeri, filamentin Cool Plate SuperTack üzerine baskıyı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Cool Plate."
-msgstr ""
+msgstr "İlk katman dışındaki katmanlar için yatak sıcaklığı. 0 değeri, filamentin Cool Plate üzerine yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Textured Cool Plate."
-msgstr ""
+msgstr "İlk katman dışındaki katmanlar için yatak sıcaklığı. 0 Değeri, filamentin Dokulu Soğuk Plaka üzerine yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Engineering Plate."
-msgstr ""
+msgstr "İlk katman dışındaki katmanlar için yatak sıcaklığı. Değer 0, filamentin Mühendislik Plakasına yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the High Temp Plate."
-msgstr ""
+msgstr "İlk katman dışındaki katmanlar için yatak sıcaklığı. 0 değeri, filamentin Yüksek Sıcaklık Plakasına yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature for layers except for the first one. A value of 0 means the filament does not support printing on the Textured PEI Plate."
-msgstr ""
+msgstr "İlk katman dışındaki katmanlar için yatak sıcaklığı. 0 Değeri, filamentin Dokulu PEI Plaka üzerine yazdırmayı desteklemediği anlamına gelir."
 
 msgid "First layer"
 msgstr "Başlangıç katmanı"
@@ -12336,26 +12630,33 @@ msgstr "Başlangıç katmanı"
 msgid "First layer bed temperature"
 msgstr "İlk katman yatak sıcaklığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Cool Plate SuperTack."
-msgstr ""
+msgstr "İlk katmanın yatak sıcaklığı. 0 değeri, filamentin Soğuk Plaka SuperTack üzerine yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Cool Plate."
-msgstr ""
+msgstr "İlk katmanın yatak sıcaklığı. 0 değeri, filamentin Cool Plate üzerine yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Textured Cool Plate."
-msgstr ""
+msgstr "İlk katmanın yatak sıcaklığı. 0 Değeri, filamentin Dokulu Soğuk Plaka üzerine yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Engineering Plate."
-msgstr ""
+msgstr "İlk katmanın yatak sıcaklığı. Değer 0, filamentin Mühendislik Plakasına yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the High Temp Plate."
-msgstr ""
+msgstr "İlk katmanın yatak sıcaklığı. 0 değeri, filamentin Yüksek Sıcaklık Plakasına yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the bed temperature of the first layer. A value of 0 means the filament does not support printing on the Textured PEI Plate."
-msgstr ""
+msgstr "İlk katmanın yatak sıcaklığı. 0 Değeri, filamentin Dokulu PEI Plaka üzerine yazdırmayı desteklemediği anlamına gelir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Plate types supported by the printer"
-msgstr ""
+msgstr "Yazıcının desteklediği yatak türleri."
 
 msgid "Default bed type"
 msgstr "Varsayılan yatak türü"
@@ -12387,8 +12688,9 @@ msgstr "Bu, alt yüzey katmanı da dahil olmak üzere alt kabuğun katı katmanl
 msgid "Bottom shell thickness"
 msgstr "Alt katman kalınlığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The number of bottom solid layers is increased when slicing if the thickness calculated by bottom shell layers is thinner than this value. This can avoid having too thin a shell when layer height is small. 0 means that this setting is disabled and the thickness of the bottom shell is determined simply by the number of bottom shell layers."
-msgstr ""
+msgstr "Alt kabuk katmanları tarafından hesaplanan kalınlık bu değerden daha ince ise dilimleme sırasında alt katı katmanların sayısı arttırılır. Bu, katman yüksekliği küçük olduğunda kabuğun çok ince olmasını önleyebilir. 0, bu ayarın devre dışı olduğu ve alt kabuğun kalınlığının mutlaka alt kabuk katmanları tarafından belirlendiği anlamına gelir."
 
 msgid "Apply gap fill"
 msgstr "Boşluk doldurmayı uygula"
@@ -12793,11 +13095,13 @@ msgstr ""
 "0 değeri ne olursa olsun her çift katmanda ters çevirmeyi mümkün kılar.\n"
 "Çıkıntı duvarını algıla etkinleştirilmediğinde, bu seçenek göz ardı edilir ve geri dönüş, her çift katmanda gerçekleşir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Slow down for overhangs"
-msgstr ""
+msgstr "Çıkıntılarda yavaşla"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable this option to slow down when printing overhangs. The speeds for different overhang percentages are set below."
-msgstr ""
+msgstr "Farklı sarkma derecelerinde yazdırmayı yavaşlatmak için bu seçeneği etkinleştirin."
 
 msgid "Slow down for curled perimeters"
 msgstr "Kıvrılmış dış duvarlarda hızı düşür"
@@ -12835,8 +13139,9 @@ msgstr ""
 msgid "Speed of internal bridges. If the value is expressed as a percentage, it will be calculated based on the bridge_speed. Default value is 150%."
 msgstr "İç köprülerin hızı. Değer yüzde olarak ifade edilirse köprü hızına göre hesaplanacaktır. Varsayılan değer %150’dir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the distance from the model to the outermost brim line."
-msgstr ""
+msgstr "Modelden en dış kenar çizgisine kadar olan mesafe."
 
 msgid "This controls the generation of the brim at outer and/or inner side of models. Auto means the brim width is analyzed and calculated automatically."
 msgstr "Bu, modellerin dış ve/veya iç kısmındaki Kenar oluşumunu kontrol eder. Otomatik, kenar genişliğinin otomatik olarak analiz edilip hesaplandığı anlamına gelir."
@@ -12844,8 +13149,9 @@ msgstr "Bu, modellerin dış ve/veya iç kısmındaki Kenar oluşumunu kontrol e
 msgid "Brim-object gap"
 msgstr "Kenar-nesne boşluğu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This creates a gap between the innermost brim line and the object and can make the brim easier to remove."
-msgstr ""
+msgstr "En içteki kenar çizgisi ile nesne arasındaki boşluk, kenarlığın daha kolay çıkarılmasını sağlayabilir."
 
 msgid "Brim flow ratio"
 msgstr ""
@@ -12897,7 +13203,7 @@ msgid "Maximum local slowdown applied by warp prevention."
 msgstr ""
 
 msgid "%"
-msgstr ""
+msgstr "%"
 
 msgid "Warp prevention minimum wall speed"
 msgstr ""
@@ -12981,14 +13287,17 @@ msgstr "yukarı doğru uyumlu makine"
 msgid "Condition"
 msgstr "Durum"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A Boolean expression using the configuration values of an active printer profile. If this expression evaluates to true, this profile is considered compatible with the active printer profile."
-msgstr ""
+msgstr "Etkin bir yazıcı profilinin yapılandırma değerlerini kullanan bir boole ifadesi. Bu ifade doğru olarak değerlendirilirse bu profilin etkin yazıcı profiliyle uyumlu olduğu kabul edilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "A Boolean expression using the configuration values of an active print profile. If this expression evaluates to true, this profile is considered compatible with the active print profile."
-msgstr ""
+msgstr "Etkin yazdırma profilinin yapılandırma değerlerini kullanan bir boole ifadesi. Bu ifade doğru olarak değerlendirilirse bu profilin etkin yazdırma profiliyle uyumlu olduğu kabul edilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This determines the print sequence, allowing you to print layer-by-layer or object-by-object."
-msgstr ""
+msgstr "Yazdırma sırası, katman katman veya nesne nesne."
 
 msgid "By layer"
 msgstr "Katmana göre"
@@ -13008,14 +13317,16 @@ msgstr "Nesne listesi olarak"
 msgid "Slow printing down for better layer cooling"
 msgstr "Daha iyi katman soğutması için baskıyı yavaşlat"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable this option to slow printing speed down to ensure that the final layer time is not shorter than the layer time threshold in \"Max fan speed threshold\", so that the layer can be cooled for a longer time. This can improve the quality for small details."
-msgstr ""
+msgstr "Son katman süresinin \"Maksimum fan hızı eşiği\"ndeki katman süresi eşiğinden kısa olmamasını sağlamak amacıyla yazdırma hızını yavaşlatmak için bu seçeneği etkinleştirin, böylece katman daha uzun süre soğutulabilir. Bu, iğne ve küçük detaylar için soğutma kalitesini artırabilir."
 
 msgid "Normal printing"
 msgstr "Normal baskı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the default acceleration for both normal printing and travel after the first layer."
-msgstr ""
+msgstr "İlk katman dışında hem normal yazdırmanın hem de ilerlemenin varsayılan ivmesi."
 
 msgid "Acceleration of travel moves."
 msgstr "Seyahat hareketlerinin hızlandırılması."
@@ -13076,8 +13387,9 @@ msgstr "İlk belirli katmanlar için tüm soğutma fanını kapatın. Daha iyi b
 msgid "Don't support bridges"
 msgstr "Köprülerde destek olmasın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This disables supporting bridges, which decreases the amount of support required. Bridges can usually be printed directly without support over a reasonable distance."
-msgstr ""
+msgstr "Desteği çok büyük yapan tüm köprü alanını desteklemeyin. Bridge genellikle çok uzun olmasa da destek olmadan doğrudan yazdırılabilir."
 
 msgid "Thick external bridges"
 msgstr "Kalın dış köprüler"
@@ -13163,14 +13475,16 @@ msgstr "Filtresiz"
 msgid "Max bridge length"
 msgstr "Maksimum köprü uzunluğu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the maximum length of bridges that don't need support. Set it to 0 if you want all bridges to be supported, and set it to a very large value if you don't want any bridges to be supported."
-msgstr ""
+msgstr "Desteğe ihtiyaç duymayan maksimum köprü uzunluğu. Tüm köprülerin desteklenmesini istiyorsanız bunu 0'a, hiçbir köprünün desteklenmesini istemiyorsanız çok büyük bir değere ayarlayın."
 
 msgid "End G-code"
 msgstr "Bitiş G kodu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add end G-Code when finishing the entire print."
-msgstr ""
+msgstr "Tüm yazdırmayı tamamladığında çalışacak olan G Kodu."
 
 msgid "Between Object G-code"
 msgstr "Nesne Arası Gcode"
@@ -13178,8 +13492,9 @@ msgstr "Nesne Arası Gcode"
 msgid "Insert G-code between objects. This parameter will only come into effect when you print your models object by object."
 msgstr "Nesnelerin arasına Gcode ekleyin. Bu parametre yalnızca modellerinizi nesne nesne yazdırdığınızda etkili olacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Add end G-code when finishing the printing of this filament."
-msgstr ""
+msgstr "Bu filament ile baskı bittiğinde çalışacak G kod."
 
 msgid "Ensure vertical shell thickness"
 msgstr "Dikey kabuk kalınlığını onayla"
@@ -13226,8 +13541,9 @@ msgstr ""
 msgid "Top surface pattern"
 msgstr "Üst yüzey deseni"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern for top surface infill."
-msgstr ""
+msgstr "Üst yüzey dolgusunun çizgi deseni."
 
 msgid "Monotonic"
 msgstr "Monotonic"
@@ -13264,7 +13580,7 @@ msgstr ""
 
 msgid ""
 "Expands the top surfaces by this distance to connect distinct top surfaces and fill gaps.\n"
-"Useful for cases where the top surface is interrupted by a raised feature, such as text on a plane.Expanding it removes the holes beneath these features and creates a continuous path with a better finish for printing on top.The expansion is applied to the original top surface, before any other processing such as bridging or overhang detection."
+"Useful for cases where the top surface is interrupted by a raised feature, such as text on a plane. Expanding it removes the holes beneath these features and creates a continuous path with a better finish for printing on top. The expansion is applied to the original top surface, before any other processing such as bridging or overhang detection."
 msgstr ""
 
 msgid "Top expansion wall margin"
@@ -13298,8 +13614,9 @@ msgstr ""
 msgid "Bottom surface pattern"
 msgstr "Alt yüzey deseni"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern of bottom surface infill, not including bridge infill."
-msgstr ""
+msgstr "Köprü dolgusu değil, alt yüzey dolgusunun çizgi deseni."
 
 msgid "Bottom surface density"
 msgstr "Alt yüzey yoğunluğu"
@@ -13338,8 +13655,9 @@ msgstr "İç katı dolgunun çizgi deseni. doğal iç katı dolguyu tespit etme 
 msgid "Line width of outer wall. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Dış duvarın çizgi genişliği. % olarak ifade edilirse Nozul çapı üzerinden hesaplanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the printing speed for the outer walls of parts. These are generally printed slower than inner walls for higher quality."
-msgstr ""
+msgstr "En dışta görünen ve görünen dış duvarın hızı. Daha iyi kalite elde etmek için iç duvar hızından daha yavaş olması kullanılır."
 
 msgid "Small perimeters"
 msgstr "Küçük çevre (perimeter)"
@@ -13425,17 +13743,20 @@ msgstr "Saat yönünde"
 msgid "Height to rod"
 msgstr "Çubuğa kadar olan yükseklik"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Distance from the nozzle tip to the lower rod. Used for collision avoidance in by-object printing."
-msgstr ""
+msgstr "Nozul ucunun alt çubuğa olan mesafesi. Nesneye göre yazdırmada çarpışmayı önlemek için kullanılır."
 
 msgid "Height to lid"
 msgstr "Kapağa kadar olan yükseklik"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Distance from the nozzle tip to the lid. Used for collision avoidance in by-object printing."
-msgstr ""
+msgstr "Nozul ucunun kapağa olan mesafesi. Nesneye göre yazdırmada çarpışmayı önlemek için kullanılır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Clearance radius around extruder: used for collision avoidance in by-object printing."
-msgstr ""
+msgstr "Ekstruder etrafındaki boşluk yarıçapı. Nesneye göre yazdırmada çarpışmayı önlemek için kullanılır."
 
 msgid "Nozzle height"
 msgstr "Nozul yüksekliği"
@@ -13572,8 +13893,9 @@ msgstr "Diğer çizgi genişlikleri 0'a ayarlanmışsa varsayılan çizgi geniş
 msgid "Keep fan always on"
 msgstr "Fanı her zaman açık tut"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enabling this setting means that part cooling fan will never stop entirely and will instead run at least at minimum speed to reduce the frequency of starting and stopping."
-msgstr ""
+msgstr "Bu ayarı etkinleştirirseniz, parça soğutma fanı hiçbir zaman durdurulmayacak ve başlatma ve durdurma sıklığını azaltmak için en azından minimum hızda çalışacaktır."
 
 msgid "Don't slow down outer walls"
 msgstr "Dış duvarları yavaşlatma"
@@ -13592,8 +13914,9 @@ msgstr ""
 msgid "Layer time"
 msgstr "Katman süresi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan will be enabled for layers where the estimated time is shorter than this value. Fan speed is interpolated between the minimum and maximum fan speeds according to layer printing time."
-msgstr ""
+msgstr "Tahmini süresi bu değerden kısa olan katlarda parça soğutma fanı devreye girecektir. Fan hızı, katman yazdırma süresine göre minimum ve maksimum fan hızları arasında enterpole edilir."
 
 msgid "s"
 msgstr "s"
@@ -13617,8 +13940,9 @@ msgstr "Filament ile ilgili notlarınızı buraya yazabilirsiniz."
 msgid "Required nozzle HRC"
 msgstr "Gerekli nozul HRC"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Minimum HRC of nozzle required to print the filament. A value of 0 means no checking of the nozzle's HRC."
-msgstr ""
+msgstr "Filamenti yazdırmak için gereken minimum HRC nozul. Sıfır, nozulun HRC'sinin kontrol edilmediği anlamına gelir."
 
 msgid "Filament map to extruder"
 msgstr "Ekstrudere filaman haritası"
@@ -13662,8 +13986,9 @@ msgstr "Yıkama hacimsel hızı"
 msgid "Volumetric speed when flushing filament. 0 indicates the max volumetric speed."
 msgstr "Filament yıkanırken hacimsel hız. 0 maksimum hacimsel hızı gösterir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This setting is the volume of filament that can be melted and extruded per second. Printing speed is limited by max volumetric speed, in case of too high and unreasonable speed setting. This value cannot be zero."
-msgstr ""
+msgstr "Bu ayar, saniyede ne kadar miktarda filamentin eritilip ekstrude edilebileceğini gösterir. Çok yüksek ve makul olmayan hız ayarı durumunda, yazdırma hızı maksimum hacimsel hız ile sınırlanır. Sıfır olamaz."
 
 msgid "Filament load time"
 msgstr "Filament yükleme süresi"
@@ -13695,8 +14020,9 @@ msgstr "İlk filamente göre"
 msgid "By Highest Temp"
 msgstr "En Yüksek Sıcaklığa Göre"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament diameter is used to calculate extrusion variables in G-code, so it is important that this is accurate and precise."
-msgstr ""
+msgstr "Filament çapı, gcode'da ekstrüzyonu hesaplamak için kullanılır; bu nedenle önemlidir ve doğru olmalıdır."
 
 msgid "Pellet flow coefficient"
 msgstr "Pelet akış katsayısı"
@@ -13885,14 +14211,16 @@ msgstr "Araç değişiminden önce filamenti sıkıştırmak için kullanılan a
 msgid "Density"
 msgstr "Yoğunluk"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament density, for statistical purposes only."
-msgstr ""
+msgstr "Filament yoğunluğu. Yalnızca istatistikler için."
 
 msgid "g/cm³"
 msgstr "g/cm³"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament material type"
-msgstr ""
+msgstr "Filament malzeme türü."
 
 msgid "Soluble material"
 msgstr "Çözünür malzeme"
@@ -13927,14 +14255,16 @@ msgstr ""
 msgid "Softening temperature"
 msgstr "Yumuşama sıcaklığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The material softens at this temperature, so when the bed temperature is equal to or greater than this, it's highly recommended to open the front door and/or remove the upper glass to avoid clogs."
-msgstr ""
+msgstr "Filament bu sıcaklıkta yumuşar, bu nedenle yatak sıcaklığı bununla eşit veya daha yüksekse, tıkanmaları önlemek için ön kapağı açmanız ve/veya üst camı çıkarmanız şiddetle önerilir."
 
 msgid "Price"
 msgstr "Fiyat"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament price, for statistical purposes only."
-msgstr ""
+msgstr "Filament fiyatı. Yalnızca istatistikler için."
 
 msgid "money/kg"
 msgstr "ücret/kg"
@@ -13951,8 +14281,9 @@ msgstr "(Tanımsız)"
 msgid "Sparse infill direction"
 msgstr "Seyrek dolgu yönü"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the angle for sparse infill pattern, which controls the start or main direction of lines."
-msgstr ""
+msgstr "Hattın başlangıcını veya ana yönünü kontrol eden seyrek dolgu deseni açısı."
 
 msgid "Solid infill direction"
 msgstr "Katı dolgu yönü"
@@ -14013,8 +14344,9 @@ msgstr ""
 msgid "Sparse infill pattern"
 msgstr "Dolgu deseni"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern for internal sparse infill."
-msgstr ""
+msgstr "İç dolgu deseni."
 
 msgid "Zig Zag"
 msgstr "Zig zag"
@@ -14073,11 +14405,13 @@ msgstr "Tpms-fk"
 msgid "Gyroid"
 msgstr "Jiroid"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the acceleration of top surface infill. Using a lower value may improve top surface quality."
-msgstr ""
+msgstr "Üst yüzey dolgusunun hızlandırılması. Daha düşük bir değerin kullanılması üst yüzey kalitesini iyileştirebilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Acceleration of outer wall: using a lower value can improve quality."
-msgstr ""
+msgstr "Dış duvarın hızlanması. Daha düşük bir değer kullanmak kaliteyi artırabilir."
 
 msgid "Acceleration of inner walls."
 msgstr "İç duvarların hızlandırılması."
@@ -14088,8 +14422,9 @@ msgstr "Seyrek dolgunun hızlandırılması. Değer yüzde olarak ifade edilirse
 msgid "Acceleration of internal solid infill. If the value is expressed as a percentage (e.g. 100%), it will be calculated based on the default acceleration."
 msgstr "İç katı dolgunun hızlandırılması. Değer yüzde olarak ifade edilirse (örn. %100), varsayılan ivmeye göre hesaplanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the printing acceleration for the first layer. Using limited acceleration can improve build plate adhesion."
-msgstr ""
+msgstr "Başlangıç katmanının hızlandırılması. Daha düşük bir değerin kullanılması baskı plakası yapışkanlığını iyileştirebilir."
 
 msgid "Enable accel_to_decel"
 msgstr "Accel_to_decel'i etkinleştir"
@@ -14142,14 +14477,16 @@ msgstr "Başlangıç katman yüksekliği"
 msgid "Height of the first layer. Making the first layer height thicker can improve build plate adhesion."
 msgstr "İlk katmanın yüksekliği. İlk katman yüksekliğini biraz kalın yapmak, baskı plakasının yapışmasını iyileştirebilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for the first layer except for solid infill sections."
-msgstr ""
+msgstr "Katı dolgu kısmı dışındaki ilk katmanın hızı."
 
 msgid "First layer infill"
 msgstr "Başlangıç katman dolgusu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for solid infill parts of the first layer."
-msgstr ""
+msgstr "İlk katmanın katı dolgu kısmının hızı."
 
 msgid "First layer travel speed"
 msgstr "İlk katman seyahat hızı"
@@ -14166,8 +14503,9 @@ msgstr "İlk birkaç katman normalden daha yavaş yazdırılır. Hız, belirtile
 msgid "First layer nozzle temperature"
 msgstr "İlk katman nozul sıcaklığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Nozzle temperature for printing the first layer with this filament"
-msgstr ""
+msgstr "Bu filamenti kullanırken ilk katmanı yazdırmak için nozul sıcaklığı."
 
 msgid "Full fan speed at layer"
 msgstr "Maksimum fan hızı"
@@ -14254,8 +14592,9 @@ msgstr "Ütüleme hızı"
 msgid "Filament-specific override for ironing speed. This allows you to customize the print speed of ironing lines for each filament type."
 msgstr "Ütüleme hızı için filamana özgü geçersiz kılma. Bu, her filaman türü için ütüleme hatlarının baskı hızını özelleştirmenize olanak tanır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This setting makes the toolhead randomly jitter while printing walls so that the surface has a rough textured look. This setting controls the fuzzy position."
-msgstr ""
+msgstr "Duvara baskı yaparken rastgele titreme, böylece yüzeyin pürüzlü bir görünüme sahip olması. Bu ayar pütürlü konumu kontrol eder."
 
 msgid "Painted only"
 msgstr "Sadece boyalı"
@@ -14275,8 +14614,9 @@ msgstr "Tüm duvarlar"
 msgid "Fuzzy skin thickness"
 msgstr "Pütürlü yüzey kalınlığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The width of jittering: it’s recommended to keep this lower than the outer wall line width."
-msgstr ""
+msgstr "Titremenin gerçekleşeceği genişlik. Dış duvar çizgi genişliğinin altında olması sakıncalıdır."
 
 msgid "Fuzzy skin point distance"
 msgstr "Pütürlü yüzey nokta mesafesi"
@@ -14341,7 +14681,7 @@ msgid "Voronoi"
 msgstr "Voronoi"
 
 msgid "Ripple"
-msgstr ""
+msgstr "Ripple"
 
 msgid "Fuzzy skin feature size"
 msgstr "Pütürlü yüzey özellik boyutu"
@@ -14398,8 +14738,9 @@ msgstr "Katmanlar ve Çevreler"
 msgid "Don't print gap fill with a length is smaller than the threshold specified (in mm). This setting applies to top, bottom and solid infill and, if using the classic perimeter generator, to wall gap fill."
 msgstr "Belirtilen eşikten (mm cinsinden) daha küçük bir uzunluğa sahip boşluk dolgusunu yazdırmayın. Bu ayar üst, alt ve katı dolgu için ve klasik çevre oluşturucu kullanılıyorsa duvar boşluğu dolgusu için geçerlidir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for gap infill. Gaps usually have irregular line width and should be printed more slowly."
-msgstr ""
+msgstr "Boşluk doldurma hızı. Boşluk genellikle düzensiz çizgi genişliğine sahiptir ve daha yavaş yazdırılmalıdır."
 
 msgid "Precise Z height"
 msgstr "Hassas z yüksekliği"
@@ -14428,8 +14769,9 @@ msgstr "Her G Kodu satırının başına satır numarası (Nx) eklemek için bun
 msgid "Scan first layer"
 msgstr "İlk katmanı tara"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Enable this to allow the camera on the printer to check the quality of the first layer."
-msgstr ""
+msgstr "Yazıcıdaki kameranın ilk katmanın kalitesini kontrol etmesini sağlamak için bunu etkinleştirin."
 
 msgid "Power Loss Recovery"
 msgstr "Güç Kaybının Geri Kazanımı"
@@ -14443,8 +14785,9 @@ msgstr "Yazıcı yapılandırması"
 msgid "Nozzle type"
 msgstr "Nozul tipi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The metallic material of the nozzle: This determines the abrasive resistance of the nozzle and what kind of filament can be printed."
-msgstr ""
+msgstr "Nozulnin metalik malzemesi. Bu, nozulun aşınma direncini ve ne tür filamentin basılabileceğini belirler."
 
 msgid "Hardened steel"
 msgstr "Güçlendirilmiş çelik"
@@ -14458,8 +14801,9 @@ msgstr "Tungsten karbür"
 msgid "Nozzle HRC"
 msgstr "Nozul HRC"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The nozzle's hardness. Zero means no checking for nozzle hardness during slicing."
-msgstr ""
+msgstr "Nozul sertliği. Sıfır, dilimleme sırasında nozul sertliğinin kontrol edilmediği anlamına gelir."
 
 msgid "HRC"
 msgstr "hrc"
@@ -14547,8 +14891,9 @@ msgstr "Yazıcı saat başına maliyeti."
 msgid "money/h"
 msgstr "ücret/sa"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Support controlling chamber temperature"
-msgstr ""
+msgstr "Destek kontrol ortam sıcaklığı"
 
 msgid ""
 "This option is enabled if machine support controlling chamber temperature\n"
@@ -14633,8 +14978,9 @@ msgstr "Her satırın açıklayıcı bir metinle açıklandığı, yorumlu bir G
 msgid "Infill combination"
 msgstr "Dolgu kombinasyonu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Automatically combine sparse infill of several layers to print together in order to reduce time. Walls are still printed with original layer height."
-msgstr ""
+msgstr "Zamanı azaltmak amacıyla birden fazla katmanın seyrek dolgusunu otomatik olarak birleştirerek birlikte yazdırın. Duvar hala orijinal katman yüksekliğinde basılmaktadır."
 
 msgid "Infill shift step"
 msgstr "Doldu kaydırma adımı"
@@ -14806,12 +15152,14 @@ msgstr ""
 msgid "Line width of internal sparse infill. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "İç seyrek dolgunun çizgi genişliği. % olarak ifade edilirse Nozul çapı üzerinden hesaplanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Infill/wall overlap"
-msgstr ""
+msgstr "Dolgu/Duvar örtüşmesi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, no-c-format, no-boost-format
 msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to line width of sparse infill. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
-msgstr ""
+msgstr "Daha iyi yapışma için dolgu alanı duvarla örtüşecek şekilde hafifçe genişletilir. Yüzde değeri seyrek dolgunun çizgi genişliğine göredir. Aşırı ekstrüzyon ve pürüzlü üst yüzeylere neden olan malzeme birikmesi potansiyelini en aza indirmek için bu değeri ~%10-15’e ayarlayın."
 
 msgid "Top/Bottom solid infill/wall overlap"
 msgstr "Üst/Alt katı dolgu/Duvar örtüşmesi"
@@ -14820,8 +15168,9 @@ msgstr "Üst/Alt katı dolgu/Duvar örtüşmesi"
 msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to line width of sparse infill."
 msgstr "Üst katı dolgu alanı, daha iyi yapışma sağlamak ve üst dolgunun duvarlarla buluştuğu yerde küçük deliklerin görünümünü en aza indirmek için duvarla üst üste gelecek şekilde hafifçe genişletilir. %25-30’luk bir değer, iğne deliklerinin görünümünü en aza indiren iyi bir başlangıç noktasıdır. Yüzde değeri seyrek dolgunun çizgi genişliğine göredir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for internal sparse infill."
-msgstr ""
+msgstr "İç seyrek dolgunun hızı."
 
 msgid "Inherits profile"
 msgstr "Miras profil"
@@ -14838,8 +15187,9 @@ msgstr "Bitişik malzemeler/hacimler arasında katı kabuk oluşumunu zorlayın.
 msgid "Maximum width of a segmented region"
 msgstr "Bölümlere ayrılmış bir bölgenin maksimum genişliği"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Maximum width of a segmented region. A value of 0 disables this feature."
-msgstr ""
+msgstr "Bölümlere ayrılmış bir bölgenin maksimum genişliği. 0 bu özelliği devre dışı bırakır."
 
 msgid "Interlocking depth of a segmented region"
 msgstr "Bölümlere ayrılmış bir bölgenin birbirine kenetlenen derinliği"
@@ -14883,20 +15233,24 @@ msgstr "Birbirine kenetlenen sınırdan kaçınma"
 msgid "The distance from the outside of a model where interlocking structures will not be generated, measured in cells."
 msgstr "Birbirine kenetlenen yapıların oluşturulmayacağı bir modelin dışına olan mesafe, hücrelerde ölçülür."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Ironing type"
-msgstr ""
+msgstr "Ütüleme tipi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Ironing uses a small flow to print at the same height of a surface to make flat surfaces smoother. This setting controls which layers are being ironed."
-msgstr ""
+msgstr "Ütüleme, düz yüzeyi daha pürüzsüz hale getirmek için aynı yükseklikteki yüzeye tekrar baskı yapmak için küçük akış kullanmaktır. Bu ayar hangi katmanın ütüleneceğini kontrol eder."
 
 msgid "No ironing"
 msgstr "Ütüleme yok"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "All top surfaces"
-msgstr ""
+msgstr "Üst yüzeyler"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Topmost surface only"
-msgstr ""
+msgstr "En üst yüzey"
 
 msgid "All solid layers"
 msgstr "Tamamı katı katman"
@@ -14907,17 +15261,20 @@ msgstr "Ütüleme Deseni"
 msgid "The pattern that will be used when ironing."
 msgstr "Ütüleme işlemi sırasında kullanılacak desen."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the amount of material to be extruded during ironing. It is relative to the flow of normal layer height. Too high a value will result in overextrusion on the surface."
-msgstr ""
+msgstr "Ütüleme sırasında çıkacak malzeme miktarı. Normal katman yüksekliğindeki akışa göre. Çok yüksek değer yüzeyde aşırı ekstrüzyona neden olur."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the distance between the lines used for ironing."
-msgstr ""
+msgstr "Ütü çizgileri arasındaki mesafe."
 
 msgid "The distance to keep from the edges. A value of 0 sets this to half of the nozzle diameter."
 msgstr "Kenarlardan korunacak mesafe. 0 değeri bunu nozül çapının yarısına ayarlar."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the print speed for ironing lines."
-msgstr ""
+msgstr "Ütüleme çizgilerinin baskı hızı."
 
 msgid "Ironing angle offset"
 msgstr "Ütüleme açısı ofseti"
@@ -14972,11 +15329,13 @@ msgstr "Bu gcode kısmı, z kaldırma işleminden sonra her katman değişikliğ
 msgid "Clumping detection G-code"
 msgstr "Topaklanma tespiti G kodu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Silent Mode"
-msgstr ""
+msgstr "Sessiz modu destekler"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Whether the machine supports silent mode in which machine uses lower acceleration to print more quietly"
-msgstr ""
+msgstr "Makinenin yazdırmak için daha düşük hızlanma kullandığı sessiz modu destekleyip desteklemediği."
 
 msgid "Emit limits to G-code"
 msgstr "G-kod sınırları"
@@ -15185,40 +15544,40 @@ msgid ""
 msgstr ""
 
 msgid "MZV"
-msgstr ""
+msgstr "MZV"
 
 msgid "ZV"
-msgstr ""
+msgstr "ZV"
 
 msgid "ZVD"
-msgstr ""
+msgstr "ZVD"
 
 msgid "ZVDD"
-msgstr ""
+msgstr "ZVDD"
 
 msgid "ZVDDD"
-msgstr ""
+msgstr "ZVDDD"
 
 msgid "EI"
-msgstr ""
+msgstr "EI"
 
 msgid "EI2"
-msgstr ""
+msgstr "EI2"
 
 msgid "2HUMP_EI"
-msgstr ""
+msgstr "2HUMP_EI"
 
 msgid "EI3"
-msgstr ""
+msgstr "EI3"
 
 msgid "3HUMP_EI"
-msgstr ""
+msgstr "3HUMP_EI"
 
 msgid "DAA"
-msgstr ""
+msgstr "DAA"
 
 msgid "X"
-msgstr ""
+msgstr "X"
 
 msgid ""
 "Resonant frequency for the X axis input shaper.\n"
@@ -15231,7 +15590,7 @@ msgid "Hz"
 msgstr "Hz."
 
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 msgid ""
 "Resonant frequency for the Y axis input shaper.\n"
@@ -15252,8 +15611,9 @@ msgid ""
 "To disable input shaping, use the Disable type."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The part cooling fan speed may be increased when auto cooling is enabled. This is the maximum speed for the part cooling fan."
-msgstr ""
+msgstr "Otomatik soğutma etkinleştirildiğinde parça soğutma fanı hızı artırılabilir. Bu, parça soğutma fanının maksimum hız sınırlamasıdır."
 
 msgid "The highest printable layer height for the extruder. Used to limit the maximum layer height when enable adaptive layer height."
 msgstr "Ekstruder için yazdırılabilir en yüksek katman yüksekliği. Uyarlanabilir katman yüksekliği etkinleştirildiğinde maksimum katman yüksekliğini sınırlamak için kullanılır."
@@ -15326,7 +15686,7 @@ msgstr ""
 "Lütfen bu özelliği kullanmak için yazıcı ayarlarında yardımcı_fan'ı etkinleştirin. G-code komut: M106 P2 S(0-255)"
 
 msgid "For the first"
-msgstr ""
+msgstr "İlk olarak"
 
 msgid "Set special auxiliary cooling fan for the first certain layers."
 msgstr ""
@@ -15366,8 +15726,9 @@ msgstr "Inlong Slicer, G kodu dosyalarını bir yazıcı ana bilgisayarına yük
 msgid "Nozzle volume"
 msgstr "Nozul hacmi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Volume of nozzle between the filament cutter and the end of the nozzle"
-msgstr ""
+msgstr "Kesici ile nozulun ucu arasındaki nozul hacmi."
 
 msgid "Cooling tube position"
 msgstr "Soğutma borusu konumu"
@@ -15402,8 +15763,9 @@ msgstr "Sıfır olarak ayarlandığında, yükleme sırasında filamentin park k
 msgid "Start end points"
 msgstr "Başlangıç bitiş noktaları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The start and end points which are from the cutter area to the excess chute."
-msgstr ""
+msgstr "Kesici bölgeden çöp kutusuna kadar olan başlangıç ve bitiş noktaları."
 
 msgid "Reduce infill retraction"
 msgstr "Dolguda geri çekmeyi azalt"
@@ -15417,8 +15779,9 @@ msgstr "Bu seçenek sızıntıyı önlemek için aktif olmayan ekstrüderlerin s
 msgid "Filename format"
 msgstr "Dosya adı formatı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Users can decide project file names when exporting."
-msgstr ""
+msgstr "Kullanıcı dışa aktarma sırasında proje dosyası adını kendisi tanımlayabilir."
 
 msgid "Make overhangs printable"
 msgstr "Çıkıntılar yazdırılabilir"
@@ -15441,9 +15804,10 @@ msgstr "Modelin tabanındaki bir deliğin, konik malzemeyle doldurulmadan önce 
 msgid "Detect overhang walls"
 msgstr "Çıkıntılı duvarı algıla"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "This detects the overhang percentage relative to line width and uses a different speed to print. For 100%% overhang, bridging speed is used."
-msgstr ""
+msgstr "Çizgi genişliğine göre çıkıntı yüzdesini tespit edin ve yazdırmak için farklı hızlar kullanın. %%100 çıkıntı için köprü hızı kullanılır."
 
 msgid "Outer walls"
 msgstr ""
@@ -15464,11 +15828,13 @@ msgstr ""
 msgid "Line width of inner wall. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "İç duvarın çizgi genişliği. % olarak ifade edilirse Nozul çapı üzerinden hesaplanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for inner walls."
-msgstr ""
+msgstr "İç duvarın hızı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the number of walls per layer."
-msgstr ""
+msgstr "Her katmanın duvar sayısı."
 
 msgid "Alternate extra wall"
 msgstr "Alternatif ekstra duvar"
@@ -15528,8 +15894,9 @@ msgstr ""
 msgid "Raft expansion"
 msgstr "Raft genişletme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This expands all raft layers in XY plane."
-msgstr ""
+msgstr "XY düzlemindeki tüm rafa katmanlarını genişlet."
 
 msgid "Raft layer expansion step"
 msgstr ""
@@ -15555,14 +15922,16 @@ msgstr ""
 msgid "First layer density"
 msgstr "Başlangıç katman yoğunluğu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the density of the first raft or support layer."
-msgstr ""
+msgstr "İlk sal veya destek katmanının yoğunluğu."
 
 msgid "First layer expansion"
 msgstr "İlk katman genişletme"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This expands the first raft or support layer to improve bed adhesion."
-msgstr ""
+msgstr "Yatak plakası yapışmasını iyileştirmek için ilk raft veya destek katmanını genişletin."
 
 msgid "Ignore internal contours"
 msgstr ""
@@ -15579,8 +15948,9 @@ msgstr ""
 msgid "Object will be raised by this number of support layers. Use this function to avoid warping when printing ABS."
 msgstr "Nesne bu sayıdaki destek katmanı tarafından yükseltilecektir. ABS yazdırırken sarmayı önlemek için bu işlevi kullanın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The G-code path is generated after simplifying the contour of models to avoid too many points and G-code lines. Smaller values mean higher resolution and more time required to slice."
-msgstr ""
+msgstr "Gcode dosyasında çok fazla nokta ve gcode çizgisinin olmaması için modelin konturu basitleştirildikten sonra G-code yolu oluşturulur. Daha küçük değer, daha yüksek çözünürlük ve dilimleme için daha fazla zaman anlamına gelir."
 
 msgid "Travel distance threshold"
 msgstr "Seyahat mesafesi"
@@ -15591,8 +15961,9 @@ msgstr "Geri çekmeyi yalnızca hareket mesafesi bu eşikten daha uzun olduğund
 msgid "Retract amount before wipe"
 msgstr "Temizleme işlemi öncesi geri çekme miktarı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the length of fast retraction before a wipe, relative to retraction length."
-msgstr ""
+msgstr "Geri çekme uzunluğuna göre, temizlemeden önce hızlı geri çekilmenin uzunluğu."
 
 msgid "Retract amount after wipe"
 msgstr ""
@@ -15603,11 +15974,13 @@ msgid ""
 "The value will be clamped by 100% minus the retract amount before the wipe value."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Retract on layer change"
-msgstr ""
+msgstr "Katman değişiminde geri çek"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This forces a retraction on layer changes."
-msgstr ""
+msgstr "Katmanı değiştirdiğinde geri çekilmeyi zorla."
 
 msgid "Retraction Length"
 msgstr "Geri Çekme Uzunluğu"
@@ -15639,8 +16012,9 @@ msgstr ""
 msgid "Z-hop height"
 msgstr "Z-Sıçrama yüksekliği"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Whenever there is a retraction, the nozzle is lifted a little to create clearance between the nozzle and the print. This prevents the nozzle from hitting the print when traveling more. Using spiral lines to lift z can prevent stringing."
-msgstr ""
+msgstr "Geri çekme işlemi her yapıldığında, nozul ile baskı arasında açıklık oluşturmak için nozul biraz kaldırılır. Hareket halindeyken nozulun baskıya çarpmasını önler. Z'yi kaldırmak için spiral çizgi kullanmak çekmeyi önleyebilir."
 
 msgid "Z-hop lower boundary"
 msgstr "Z sıçrama alt sınırı"
@@ -15801,14 +16175,16 @@ msgstr "İlerleme hareketinden sonra geri çekilme telafi edildiğinde, ekstrude
 msgid "When the retraction is compensated after changing tool, the extruder will push this additional amount of filament."
 msgstr "Takım değiştirildikten sonra geri çekilme telafi edildiğinde, ekstruder bu ilave filament miktarını itecektir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Retraction speed"
-msgstr ""
+msgstr "Geri çekme hızı"
 
 msgid "Speed for retracting filament from the nozzle."
 msgstr "Nozuldan filamentin geri çekilme hızı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Deretraction speed"
-msgstr ""
+msgstr "İleri itme hızı"
 
 msgid "Speed for reloading filament into the nozzle. Zero means same speed of retraction."
 msgstr "Filamentin nozüle yeniden yüklenme hızı. Sıfır, geri çekilme hızının aynı olduğu anlamına gelir."
@@ -15837,8 +16213,9 @@ msgstr "M73'ün oluşturulmasını devre dışı bırakın: Son gcode'da kalan y
 msgid "Seam position"
 msgstr "Dikiş konumu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the starting position for each part of the outer wall."
-msgstr ""
+msgstr "Dış duvarın her bir parçasını yazdırmak için başlangıç konumu."
 
 msgid "Nearest"
 msgstr "En yakın"
@@ -15979,8 +16356,9 @@ msgstr "Temizleme hızı, bu konfigürasyonda belirtilen hız ayarına göre bel
 msgid "Skirt distance"
 msgstr "Etek mesafesi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the distance from the skirt to the brim or the object."
-msgstr ""
+msgstr "Etekten kenara veya nesneye olan mesafe."
 
 msgid "Skirt start point"
 msgstr "Etek başlangıç noktası"
@@ -15991,8 +16369,9 @@ msgstr "Nesnenin merkezinden etek başlangıç noktasına kadar olan açı. Sıf
 msgid "Skirt height"
 msgstr "Etek yüksekliği"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Number of skirt layers: usually only one"
-msgstr ""
+msgstr "Etek katman sayısı. Genellikle tek katman."
 
 msgid "Single loop after first layer"
 msgstr "İlk katmandan sonra tek duvar"
@@ -16029,8 +16408,9 @@ msgstr "Nesneye göre"
 msgid "Skirt loops"
 msgstr "Etek sayısı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the number of loops for the skirt. 0 means the skirt is disabled."
-msgstr ""
+msgstr "Etek için ilmek sayısı. Sıfır, eteği devre dışı bırakmak anlamına gelir."
 
 msgid "Skirt speed"
 msgstr "Etek hızı"
@@ -16058,8 +16438,9 @@ msgstr "Tahmini katman süresi bu değerden kısa olduğunda, bu katmanlar için
 msgid "Minimum sparse infill threshold"
 msgstr "Minimum seyrek dolgu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Sparse infill areas which are smaller than this threshold value are replaced by internal solid infill."
-msgstr ""
+msgstr "Eşik değerinden küçük olan seyrek dolgu alanı, yerini iç katı dolguya bırakmıştır."
 
 msgid ""
 "Filament to print internal solid infill.\n"
@@ -16079,11 +16460,13 @@ msgstr ""
 msgid "Line width of internal solid infill. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "İç katı dolgunun çizgi genişliği. % olarak ifade edilirse Nozul çapı üzerinden hesaplanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for internal solid infill, not including the top or bottom surface."
-msgstr ""
+msgstr "Üst ve alt yüzeyin değil, iç katı dolgunun hızı."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This enables spiraling, which smooths out the Z moves of the outer contour and turns a solid model into a single walled print with solid bottom layers. The final generated model has no seam."
-msgstr ""
+msgstr "Spiralleştirme, dış konturun z hareketlerini yumuşatır. Ve katı bir modeli, katı alt katmanlara sahip tek duvarlı bir baskıya dönüştürür. Oluşturulan son modelde dikiş yok."
 
 msgid "Smooth Spiral"
 msgstr "Pürüzsüz spiral"
@@ -16112,8 +16495,9 @@ msgstr "Spiral bitirme akış oranı"
 msgid "Sets the finishing flow ratio while ending the spiral. Normally the spiral transition scales the flow ratio from 100% to 0% during the last loop which can in some cases lead to under extrusion at the end of the spiral."
 msgstr "Spirali sonlandırırken bitirme akış oranını ayarlar. Normalde spiral geçiş, son döngü sırasında akış oranını %100 den %0 a ölçeklendirir; bu da bazı durumlarda spiralin sonunda yetersiz ekstrüzyona yol açabilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "If smooth or traditional mode is selected, a timelapse video will be generated for each print. After each layer is printed, a snapshot is taken with the chamber camera. All of these snapshots are composed into a timelapse video when printing completes. If smooth mode is selected, the toolhead will move to the excess chute after each layer is printed and then take a snapshot. Since the melt filament may leak from the nozzle during the process of taking a snapshot, a prime tower is required for smooth mode to wipe the nozzle."
-msgstr ""
+msgstr "Düzgün veya geleneksel mod seçilirse her baskı için bir hızlandırılmış video oluşturulacaktır. Her katman basıldıktan sonra oda kamerasıyla anlık görüntü alınır. Bu anlık görüntülerin tümü, yazdırma tamamlandığında hızlandırılmış bir video halinde birleştirilir. Düzgün modu seçilirse, her katman yazdırıldıktan sonra araç kafası fazla kanala hareket edecek ve ardından bir anlık görüntü alacaktır. Anlık görüntü alma işlemi sırasında eriyen filament nozulden sızabileceğinden, nozulu silmek için düzgün modun kullanılması için prime tower gereklidir."
 
 msgid "Traditional"
 msgstr "Geleneksel"
@@ -16152,11 +16536,13 @@ msgstr "G kodu, çıktı dosyasının en üstünde, diğer içeriklerden önce y
 msgid "Start G-code"
 msgstr "Başlangıç G Kodu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "G-code added when starting a print."
-msgstr ""
+msgstr "Baskı başladığında çalışacak G Kodu."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "G-code added when the printer starts using this filament"
-msgstr ""
+msgstr "Bu filament ile baskı başladığında çalıştırılacak G-Kod."
 
 msgid "Single Extruder Multi Material"
 msgstr "Tek ekstruder çoklu malzeme"
@@ -16254,8 +16640,9 @@ msgstr "Bu değer, çıkış G-kodu içindeki tüm Z koordinatlarına eklenir (v
 msgid "Enable support"
 msgstr "Desteği etkinleştir"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This enables support generation."
-msgstr ""
+msgstr "Destek oluşturmayı etkinleştir."
 
 msgid "Normal (auto) and Tree (auto) are used to generate support automatically. If Normal (manual) or Tree (manual) is selected, only support enforcers are generated."
 msgstr "Desteğin otomatik olarak oluşturulması için Normal (Otomatik) ve Ağaç (Otomatik) kullanılır. Normal (Manuel) veya Ağaç (Manuel) seçilirse yalnızca destek uygulayıcıları oluşturulur."
@@ -16275,8 +16662,9 @@ msgstr "Ağaç (Manuel)"
 msgid "Support/object XY distance"
 msgstr "Destek/nesne XY mesafesi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This controls the XY separation between an object and its support."
-msgstr ""
+msgstr "Bir nesne ile desteği arasındaki XY ayrımı."
 
 msgid "Support/object first layer gap"
 msgstr "Destek/nesne ilk katman boşluğu"
@@ -16293,8 +16681,9 @@ msgstr "Destek desenini yatay düzlemde döndürmek için bu ayarı kullanın."
 msgid "On build plate only"
 msgstr "Yalnızca baskı plakasında"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This setting only generates supports that begin on the build plate."
-msgstr ""
+msgstr "Model yüzeyinde destek oluşturmayın, yalnızca baskı plakasında."
 
 msgid "Support critical regions only"
 msgstr "Yalnızca kritik bölgeleri destekleyin"
@@ -16323,10 +16712,11 @@ msgstr "Nesne ile destek altı arasındaki Z boşluğu. Destek üst Z mesafesi 0
 msgid "Support/raft base"
 msgstr "Destek/raft tabanı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Filament to print support base and raft.\n"
 "\"Default\" means no specific filament for support and current filament is used."
-msgstr ""
+msgstr "Destek tabanını ve salı yazdırmak için filament. \"Varsayılan\", destek için belirli bir filamentin olmadığı ve mevcut filamentin kullanıldığı anlamına gelir."
 
 msgid "Avoid interface filament for base"
 msgstr "Taban için arayüz filamentini azaltın"
@@ -16337,25 +16727,29 @@ msgstr "Destek tabanını yazdırmak için destek arayüzü filamentini kullanma
 msgid "Line width of support. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Desteğin çizgi genişliği. % olarak ifade edilirse Nozul çapı üzerinden hesaplanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Loop pattern interface"
-msgstr ""
+msgstr "Arayüz kullanım döngüsü modeli"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This covers the top contact layer of the supports with loops. It is disabled by default."
-msgstr ""
+msgstr "Desteklerin üst temas katmanını ilmeklerle örtün. Varsayılan olarak devre dışıdır."
 
 msgid "Support/raft interface"
 msgstr "Destek/raft arayüzü"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Filament to print support interface.\n"
 "\"Default\" means no specific filament for support interface and current filament is used."
-msgstr ""
+msgstr "Filament baskı desteği arayüzü. \"Varsayılan\", destek arayüzü için özel bir filamentin olmadığı ve mevcut filamentin kullanıldığı anlamına gelir."
 
 msgid "Top interface layers"
 msgstr "Üst arayüz katmanları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the number of top interface layers."
-msgstr ""
+msgstr "Yavaş katman sayısı"
 
 msgid "Bottom interface layers"
 msgstr "Alt arayüz katmanları"
@@ -16387,8 +16781,9 @@ msgstr ""
 msgid "Bottom interface spacing"
 msgstr "Alt arayüz aralığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the spacing of bottom interface lines. 0 means solid interface."
-msgstr ""
+msgstr "Alt arayüz çizgilerinin aralığı. Sıfır, sağlam arayüz anlamına gelir."
 
 msgid "Bottom contact spacing"
 msgstr ""
@@ -16396,8 +16791,9 @@ msgstr ""
 msgid "Spacing of the first support interface layer directly above the object. Set to -1 to use the bottom interface spacing. Zero means solid contact."
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for support interfaces."
-msgstr ""
+msgstr "Destek arayüzünün hızı."
 
 msgid "Base pattern"
 msgstr "Destek deseni"
@@ -16421,8 +16817,9 @@ msgstr "Oyuk"
 msgid "Interface pattern"
 msgstr "Arayüz deseni"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the line pattern for support interfaces. The default pattern for non-soluble support interfaces is Rectilinear while the default pattern for soluble support interfaces is Concentric."
-msgstr ""
+msgstr "Destek arayüzünün çizgi deseni. Çözünmeyen destek arayüzü için varsayılan model Doğrusaldır, çözünebilir destek arayüzü için varsayılan model ise eşmerkezlidir."
 
 msgid "Rectilinear Interlaced"
 msgstr "Doğrusal Taramalı"
@@ -16442,17 +16839,20 @@ msgstr ""
 msgid "Base pattern spacing"
 msgstr "Destek desen aralığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This determines the spacing between support lines."
-msgstr ""
+msgstr "Destek hatları arasındaki boşluk."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Normal support expansion"
-msgstr ""
+msgstr "Normal destek genişletmesi"
 
 msgid "Expand (+) or shrink (-) the horizontal span of normal support."
 msgstr "Normal desteğin yatay açıklığını genişletin (+) veya daraltın (-)"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for support."
-msgstr ""
+msgstr "Destek hızı."
 
 msgid ""
 "Style and shape of the support. For normal support, projecting the supports into a regular grid will create more stable supports (default), while snug support towers will save material and reduce object scarring.\n"
@@ -16634,8 +17034,9 @@ msgstr ""
 msgid "Chamber minimal temperature"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Nozzle temperature after the first layer"
-msgstr ""
+msgstr "İlk katmandan sonraki katmanlar için nozul sıcaklığı."
 
 msgid "Head wrap detect zone"
 msgstr ""
@@ -16643,8 +17044,9 @@ msgstr ""
 msgid "Detect thin walls"
 msgstr "İnce duvarı algıla"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This detects thin walls which can’t contain two lines and uses a single line to print. It may not print as well because it’s not a closed loop."
-msgstr ""
+msgstr "İki çizgi genişliğini içeremeyen ince duvarı tespit edin. Ve yazdırmak için tek satır kullanın. Kapalı döngü olmadığından pek iyi basılmamış olabilir."
 
 msgid "This G-code is inserted when filament is changed, including T commands to trigger tool change."
 msgstr "Bu gcode, takım değişimini tetiklemek için T komutu da dahil olmak üzere filament değiştirildiğinde eklenir."
@@ -16661,8 +17063,9 @@ msgstr ""
 msgid "Line width for top surfaces. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "Üst yüzeyler için çizgi genişliği. % olarak ifade edilirse Nozul çapı üzerinden hesaplanacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed for solid top surface infill."
-msgstr ""
+msgstr "Sağlam üst yüzey dolgusunun hızı."
 
 msgid "Top shell layers"
 msgstr "Üst katmanlar"
@@ -16673,8 +17076,9 @@ msgstr "Bu, üst yüzey katmanı da dahil olmak üzere üst kabuğun katı katma
 msgid "Top shell thickness"
 msgstr "Üst katman kalınlığı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The number of top solid layers is increased when slicing if the thickness calculated by top shell layers is thinner than this value. This can avoid having too thin a shell when layer height is small. 0 means that this setting is disabled and thickness of top shell is determined simply by the number of top shell layers."
-msgstr ""
+msgstr "Üst kabuk katmanları tarafından hesaplanan kalınlık bu değerden daha ince ise dilimleme sırasında üst katı katmanların sayısı artırılır. Bu, katman yüksekliği küçük olduğunda kabuğun çok ince olmasını önleyebilir. 0, bu ayarın devre dışı olduğu ve üst kabuğun kalınlığının kesinlikle üst kabuk katmanları tarafından belirlendiği anlamına gelir."
 
 msgid "Separated infills"
 msgstr ""
@@ -16705,17 +17109,20 @@ msgstr ""
 msgid "Each Assembly"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the speed at which traveling is done."
-msgstr ""
+msgstr "Daha hızlı ve ekstrüzyonsuz seyahat hızı."
 
 msgid "Wipe while retracting"
 msgstr "Geri çekme esnasında temizlik"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This moves the nozzle along the last extrusion path when retracting to clean any leaked material on the nozzle. This can minimize blobs when printing a new part after traveling."
-msgstr ""
+msgstr "Nozul üzerinde sızan malzemeyi temizlemek için geri çekerken Nozulu son ekstrüzyon yolu boyunca hareket ettirin. Bu işlem yeni parça yazdırırken damlamayı en aza indirebilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Wipe distance"
-msgstr ""
+msgstr "Temizleme mesafesi"
 
 msgid ""
 "Describe how long the nozzle will move along the last path when retracting.\n"
@@ -16730,8 +17137,9 @@ msgstr ""
 "\n"
 "Aşağıdaki silme ayarından önce geri çekme miktarına bir değer ayarlamak, silme işleminden önce aşırı geri çekme işlemini gerçekleştirecektir, aksi takdirde silme işleminden sonra gerçekleştirilecektir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The wiping tower can be used to clean up residue on the nozzle and stabilize the chamber pressure inside the nozzle in order to avoid appearance defects when printing objects."
-msgstr ""
+msgstr "Temizleme kulesi, nesneleri yazdırırken görünüm kusurlarını önlemek amacıyla nozul üzerindeki kalıntıları temizlemek ve nozul içindeki oda basıncını dengelemek için kullanılabilir."
 
 msgid "Internal ribs"
 msgstr "İç kaburgalar"
@@ -16745,8 +17153,9 @@ msgstr "Hacimlerin temizlenmesi"
 msgid "Flush multiplier"
 msgstr "Temizleme çarpanı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The actual flushing volumes is equal to the flush multiplier value multiplied by the flushing volumes in the table."
-msgstr ""
+msgstr "Gerçek temizleme hacimleri, tablodaki temizleme hacimleri ile temizleme çarpanının çarpımına eşittir."
 
 msgid "Flush multiplier (Fast mode)"
 msgstr ""
@@ -16757,8 +17166,9 @@ msgstr ""
 msgid "Prime volume"
 msgstr "Ana hacim"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the volume of material to prime the extruder with on the tower."
-msgstr ""
+msgstr "Kule üzerindeki ana ekstruder malzeme hacmi."
 
 msgid "Prime volume mode"
 msgstr ""
@@ -16769,8 +17179,9 @@ msgstr ""
 msgid "Saving"
 msgstr ""
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the width of prime towers."
-msgstr ""
+msgstr "Prime tower genişliği."
 
 msgid "Wipe tower rotation angle"
 msgstr "Silme kulesi dönüş açısı"
@@ -16882,11 +17293,13 @@ msgstr "Dolgu boşluğu"
 msgid "Infill gap."
 msgstr "Boşluğu doldurun."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Purging after filament change will be done inside objects' infills. This may lower the amount of waste and decrease the print time. If the walls are printed with transparent filament, the mixed color infill will be visible. It will not take effect unless the prime tower is enabled."
-msgstr ""
+msgstr "Filament değişiminden sonra temizleme, nesnelerin dolgularının içinde yapılacaktır. Bu, atık miktarını azaltabilir ve baskı süresini kısaltabilir. Duvarlar şeffaf filament ile basılmışsa, karışık renkli dolgu dışarıda görülecektir. Ana kule etkinleştirilmediği sürece etkili olmayacaktır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Purging after filament change will be done inside objects' support. This may lower the amount of waste and decrease the print time. It will not take effect unless a prime tower is enabled."
-msgstr ""
+msgstr "Filament değişiminden sonra temizleme, nesnelerin desteğinin içinde yapılacaktır. Bu, atık miktarını azaltabilir ve baskı süresini kısaltabilir. Prime tower etkinleştirilmediği sürece etkili olmayacaktır."
 
 msgid "This object will be used to purge the nozzle after a filament change to save filament and decrease the print time. Colors of the objects will be mixed as a result. It will not take effect unless the prime tower is enabled."
 msgstr "Bu nesne, filamentten tasarruf etmek ve baskı süresini azaltmak için filament değişiminden sonra nozulu temizlemek için kullanılacaktır. Sonuç olarak nesnelerin renkleri karıştırılacaktır. Prime tower etkinleştirilmediği sürece etkili olmayacaktır."
@@ -16918,14 +17331,16 @@ msgstr "Alet şu anda çoklu alet kurulumlarında kullanılmadığında püskür
 msgid "X-Y hole compensation"
 msgstr "X-Y delik telafisi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Holes in objects will expand or contract in the XY plane by the set value. Positive values make holes bigger and negative values make holes smaller. This function is used to adjust sizes slightly when objects have assembly issues."
-msgstr ""
+msgstr "Nesnenin delikleri XY düzleminde yapılandırılan değer kadar büyütülür veya küçültülür. Pozitif değer delikleri büyütür. Negatif değer delikleri küçültür. Bu fonksiyon, nesnenin montaj sorunu olduğunda boyutu hafifçe ayarlamak için kullanılır."
 
 msgid "X-Y contour compensation"
 msgstr "X-Y kontur telafisi"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Contours of objects will expand or contract in the XY plane by the set value. Positive values make contours bigger and negative values make contours smaller. This function is used to adjust sizes slightly when objects have assembly issues."
-msgstr ""
+msgstr "Nesnenin konturu XY düzleminde yapılandırılan değer kadar büyütülür veya küçültülür. Pozitif değer konturu büyütür. Negatif değer konturu küçültür. Bu fonksiyon, nesnenin montaj sorunu olduğunda boyutu hafifçe ayarlamak için kullanılır."
 
 msgid "Convert holes to polyholes"
 msgstr "Delikleri çokgen deliklere dönüştür"
@@ -16982,8 +17397,9 @@ msgstr "Göreceli (relative) E mesafelerini kullan"
 msgid "Relative extrusion is recommended when using \"label_objects\" option. Some extruders work better with this option unchecked (absolute extrusion mode). Wipe tower is only compatible with relative mode. It is recommended on most printers. Default is checked."
 msgstr "\"label_objects\" seçeneği kullanılırken göreceli ekstrüzyon önerilir. Bazı ekstrüderler bu seçenek işaretlenmediğinde daha iyi çalışır (mutlak ekstrüzyon modu). Silme kulesi yalnızca göreceli modla uyumludur. Çoğu yazıcıda önerilir. Varsayılan işaretlendi."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The classic wall generator produces walls with constant extrusion width and for very thin areas, gap-fill is used. The Arachne engine produces walls with variable extrusion width."
-msgstr ""
+msgstr "Klasik duvar oluşturucu sabit ekstrüzyon genişliğine sahip duvarlar üretir ve çok ince alanlar için boşluk doldurma kullanılır. Arachne motoru değişken ekstrüzyon genişliğine sahip duvarlar üretir."
 
 msgid "Arachne"
 msgstr "Arachne"
@@ -17070,10 +17486,10 @@ msgid "Extruder change"
 msgstr ""
 
 msgid "To prevent oozing, the nozzle will perform a reverse travel movement for a certain period after the ramming is complete. The setting define the travel time."
-msgstr ""
+msgstr "Sızmayı önlemek için nozul, sıkıştırma tamamlandıktan sonra belirli bir süre boyunca ters hareket hareketi gerçekleştirecektir. Ayar, hareket süresini tanımlar."
 
 msgid "To prevent oozing, the nozzle temperature will be cooled during ramming. Therefore, the ramming time must be greater than the cooldown time. 0 means disabled."
-msgstr ""
+msgstr "Sızıntıyı önlemek için, nozul sıcaklığı tokmaklama sırasında soğutulacaktır. Bu nedenle, sıkıştırma süresi soğuma süresinden büyük olmalıdır. 0 devre dışı anlamına gelir."
 
 msgid "The maximum volumetric speed for ramming before extruder change, where -1 means using the maximum volumetric speed."
 msgstr ""
@@ -17094,6 +17510,12 @@ msgid "Support fast purge mode"
 msgstr ""
 
 msgid "Whether this printer supports fast purge mode with optimized temperature and multiplier."
+msgstr ""
+
+msgid "Filament change"
+msgstr ""
+
+msgid "The volume of material required to prime the extruder on the tower, excluding a hotend change."
 msgstr ""
 
 msgid "The volume of material required to prime the extruder for a hotend change on the tower."
@@ -17129,14 +17551,16 @@ msgstr " aralıkta değil "
 msgid "Export 3MF"
 msgstr "3MF'yi dışa aktar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This exports the project as a 3MF file."
-msgstr ""
+msgstr "Projeyi 3MF olarak dışa aktarın."
 
 msgid "Export slicing data"
 msgstr "Dilimleme verilerini dışa aktar"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Export slicing data to a folder"
-msgstr ""
+msgstr "Dilimleme verilerini bir klasöre aktarın."
 
 msgid "Load slicing data"
 msgstr "Dilimleme verilerini yükle"
@@ -17159,8 +17583,9 @@ msgstr "Nesneleri birden fazla STL olarak dizine aktarın."
 msgid "Slice the plates: 0-all plates, i-plate i, others-invalid"
 msgstr "Plakaları dilimleyin: 0-tüm plakalar, i-plaka i, diğerleri-geçersiz"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This shows command help."
-msgstr ""
+msgstr "Komut yardımını göster."
 
 msgid "UpToDate"
 msgstr "Güncel"
@@ -17183,14 +17608,16 @@ msgstr "3mf'yi minimum boyutta dışa aktarın."
 msgid "mtcpp"
 msgstr "mtcpp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "max triangle count per plate for slicing"
-msgstr ""
+msgstr "dilimleme için plaka başına maksimum üçgen sayısı."
 
 msgid "mstpp"
 msgstr "mstpp"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "max slicing time per plate in seconds"
-msgstr ""
+msgstr "saniye cinsinden plaka başına maksimum dilimleme süresi."
 
 msgid "No check"
 msgstr "Kontrol yok"
@@ -17207,14 +17634,16 @@ msgstr "Normatif maddeleri kontrol edin."
 msgid "Output Model Info"
 msgstr "Çıktı Model Bilgileri"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This outputs the model’s information."
-msgstr ""
+msgstr "Modelin bilgilerini çıktıla."
 
 msgid "Export Settings"
 msgstr "Dışa Aktarma Ayarları"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This exports settings to a file."
-msgstr ""
+msgstr "Ayarları bir dosyaya aktarın."
 
 msgid "Send progress to pipe"
 msgstr "İlerlemeyi kanala gönder"
@@ -17300,8 +17729,9 @@ msgstr "Yükleme listesindeki nesneleri klonlama."
 msgid "Load uptodate process/machine settings when using uptodate"
 msgstr "Güncel olan bir baskı süreci (process) veya makine (printer) profili seçildiğinde, ona ait en güncel ayarları otomatik olarak yükle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "load up-to-date process/machine settings from the specified file when using up-to-date"
-msgstr ""
+msgstr "Güncellemeyi kullanırken belirtilen dosyadan güncel işlem/yazıcı ayarlarını yükle."
 
 msgid "Load uptodate filament settings when using uptodate"
 msgstr "Güncel olan bir filament profili kullanırken, onun en güncel ayarlarını yükle"
@@ -17336,8 +17766,9 @@ msgstr "Ayarları verilen dizine yükleyin ve saklayın. Bu, farklı profilleri 
 msgid "Output directory"
 msgstr "Çıkış dizini"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "This is the output directory for exported files."
-msgstr ""
+msgstr "Dışa aktarılan dosyalar için çıkış dizini."
 
 msgid "Debug level"
 msgstr "Hata ayıklama düzeyi"
@@ -17776,14 +18207,17 @@ msgstr "Model dosyasının yüklenmesi başarısız oldu."
 msgid "Meshing of a model file failed or no valid shape."
 msgstr "Bir model dosyasının meshlenmesi başarısız oldu veya geçerli bir şekil yok."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The supplied file couldn't be read because it's empty."
-msgstr ""
+msgstr "Sağlanan dosya boş olduğundan okunamadı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unknown file format: input file must have .stl, .obj, or .amf(.xml) extension."
-msgstr ""
+msgstr "Bilinmeyen dosya formatı. Giriş dosyası .stl, .obj, .amf(.xml) uzantılı olmalıdır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Unknown file format: input file must have .3mf or .zip.amf extension."
-msgstr ""
+msgstr "Bilinmeyen dosya formatı. Giriş dosyası .3mf veya .zip.amf uzantılı olmalıdır."
 
 msgid "load_obj: failed to parse"
 msgstr "load_obj: ayrıştırılamadı"
@@ -17833,8 +18267,9 @@ msgstr "Kalibre et"
 msgid "Finish"
 msgstr "Bitir"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "How can I use calibration results?"
-msgstr ""
+msgstr "Kalibrasyon sonucu nasıl kullanılır?"
 
 msgid "You could change the Flow Dynamics Calibration Factor in material editing"
 msgstr "Malzeme düzenlemede Akış Dinamiği Kalibrasyon Faktörünü değiştirebilirsiniz"
@@ -17904,18 +18339,22 @@ msgstr "Lütfen kalibre edilecek filamenti seçin."
 msgid "The input value size must be 3."
 msgstr "Giriş değeri boyutu 3 olmalıdır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "This machine type can only hold 16 historical results per nozzle. You can delete the existing historical results and then start calibration. Or you can continue the calibration, but you cannot create new calibration historical results.\n"
 "Do you still want to continue the calibration?"
 msgstr ""
+"Bu makine tipi, püskürtme ucu başına yalnızca 16 geçmiş sonucu tutabilir. Mevcut geçmiş sonuçları silebilir ve ardından kalibrasyona başlayabilirsiniz. Veya kalibrasyona devam edebilirsiniz ancak yeni kalibrasyon geçmişi sonuçları oluşturamazsınız.\n"
+"Hala kalibrasyona devam etmek istiyor musunuz?"
 
 #, c-format, boost-format
 msgid "Only one of the results with the same name: %s will be saved. Are you sure you want to override the other results?"
 msgstr "Aynı ada sahip sonuçlardan yalnızca biri: %s kaydedilecek. Diğer sonuçları geçersiz kılmak istediğinizden emin misiniz?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "There is already a previous calibration result with the same name: %s. Only one result with a name is saved. Are you sure you want to overwrite the previous result?"
-msgstr ""
+msgstr "Aynı ada sahip geçmiş bir kalibrasyon sonucu zaten var: %s. Aynı ada sahip sonuçlardan yalnızca biri kaydedilir. Geçmiş sonucu geçersiz kılmak istediğinizden emin misiniz?"
 
 #, c-format, boost-format
 msgid ""
@@ -17925,9 +18364,10 @@ msgstr ""
 "Aynı ekstruder içinde filament tipi, nozül çapı ve nozül akışı aynı olduğunda adın(%s) benzersiz olması gerekir.\n"
 "Geçmiş sonucu geçersiz kılmak istediğinizden emin misiniz?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "This machine type can only hold %d historical results per nozzle. This result will not be saved."
-msgstr ""
+msgstr "Bu makine türü püskürtme ucu başına yalnızca %d geçmiş sonucunu tutabilir. Bu sonuç kaydedilmeyecek."
 
 msgid "Connecting to printer..."
 msgstr "Yazıcıya bağlanılıyor..."
@@ -18007,6 +18447,7 @@ msgstr "Ayrıca RC uçaklarında kullanılan LW-PLA gibi köpürtücü malzemele
 msgid "Flow Rate Calibration measures the ratio of expected to actual extrusion volumes. The default setting works well in Bambu Lab printers and official filaments as they were pre-calibrated and fine-tuned. For a regular filament, you usually won't need to perform a Flow Rate Calibration unless you still see the listed defects after you have done other calibrations. For more details, please check out the wiki article."
 msgstr "Akış Hızı Kalibrasyonu, beklenen ekstrüzyon hacimlerinin gerçek ekstrüzyon hacimlerine oranını ölçer. Varsayılan ayar, önceden kalibre edilmiş ve ince ayar yapılmış olduğundan Bambu Lab yazıcılarında ve resmi filamentlerde iyi çalışır. Normal bir filament için, diğer kalibrasyonları yaptıktan sonra listelenen kusurları hâlâ göremediğiniz sürece genellikle Akış Hızı Kalibrasyonu yapmanıza gerek kalmaz. Daha fazla ayrıntı için lütfen wiki makalesine göz atın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Auto Flow Rate Calibration utilizes Bambu Lab's Micro-Lidar technology, directly measuring the calibration patterns. However, please be advised that the efficacy and accuracy of this method may be compromised with specific types of materials. Particularly, filaments that are transparent or semi-transparent, have sparkles, or have a highly-reflective finish may not be suitable for this calibration and can produce less-than-desirable results.\n"
 "\n"
@@ -18014,6 +18455,11 @@ msgid ""
 "\n"
 "Caution: Flow Rate Calibration is an advanced process, to be attempted only by those who fully understand its purpose and implications. Incorrect usage can lead to sub-par prints or printer damage. Please make sure to carefully read and understand the process before doing it."
 msgstr ""
+"Otomatik Akış Hızı Kalibrasyonu, Bambu Lab'ın Mikro-Lidar teknolojisini kullanarak kalibrasyon modellerini doğrudan ölçer. Ancak, bu yöntemin etkinliğinin ve doğruluğunun belirli malzeme türleriyle tehlikeye girebileceğini lütfen unutmayın. Özellikle şeffaf veya yarı şeffaf, parlak parçacıklı veya yüksek yansıtıcı yüzeye sahip filamentler bu kalibrasyon için uygun olmayabilir ve arzu edilenden daha az sonuçlar üretebilir.\n"
+"\n"
+"Kalibrasyon sonuçları her kalibrasyon veya filament arasında farklılık gösterebilir. Zaman içinde ürün yazılımı güncellemeleriyle bu kalibrasyonun doğruluğunu ve uyumluluğunu geliştirmeye devam ediyoruz.\n"
+"\n"
+"Dikkat: Akış Hızı Kalibrasyonu, yalnızca amacını ve sonuçlarını tam olarak anlayan kişiler tarafından denenmesi gereken gelişmiş bir işlemdir. Yanlış kullanım, ortalamanın altında baskılara veya yazıcının zarar görmesine neden olabilir. Lütfen işlemi yapmadan önce işlemi dikkatlice okuyup anladığınızdan emin olun."
 
 msgid "When you need Max Volumetric Speed Calibration"
 msgstr "Maksimum Hacimsel Hız Kalibrasyonuna ihtiyaç duyduğunuzda"
@@ -18210,8 +18656,9 @@ msgstr "Geçmiş Sonucu Yok"
 msgid "Success to get history result"
 msgstr "Geçmiş sonucunu alma başarısı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Refreshing the previous Flow Dynamics Calibration records"
-msgstr ""
+msgstr "Geçmiş Akış Dinamiği Kalibrasyon kayıtlarını yenileme"
 
 #, c-format, boost-format
 msgid "Note: The hotend number on the %s is tied to the holder. When the hotend is moved to a new holder, its number will update automatically."
@@ -18220,9 +18667,10 @@ msgstr ""
 msgid "Action"
 msgstr "İşlem"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid "This machine type can only hold %d historical results per nozzle."
-msgstr ""
+msgstr "Bu makine türü püskürtme ucu başına yalnızca %d geçmiş sonucunu tutabilir."
 
 msgid "Edit Flow Dynamics Calibration"
 msgstr "Akış Dinamiği Kalibrasyonunu Düzenle"
@@ -18839,11 +19287,13 @@ msgstr "Filament Ön Ayarı"
 msgid "Create"
 msgstr "Oluştur"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Vendor is not selected; please reselect vendor."
-msgstr ""
+msgstr "Satıcı seçilmedi, lütfen satıcıyı yeniden seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Custom vendor missing; please input custom vendor."
-msgstr ""
+msgstr "Özel satıcı girişi yapılmaz, lütfen özel satıcıyı girin."
 
 msgid "\"Bambu\" or \"Generic\" cannot be used as a Vendor for custom filaments."
 msgstr "\"Bambu\" veya \"Genel\" özel filamentler için Satıcı olarak kullanılamaz."
@@ -18851,17 +19301,20 @@ msgstr "\"Bambu\" veya \"Genel\" özel filamentler için Satıcı olarak kullan�
 msgid "Filament type is not selected, please reselect type."
 msgstr "Filament türü seçilmedi, lütfen türünü seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Filament serial missing; please input serial."
-msgstr ""
+msgstr "Filamentin serisi girilmedi, lütfen seri numarasını girin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "There may be disallowed characters in the vendor or serial input of the filament. Please delete and re-enter."
-msgstr ""
+msgstr "Filamentin satıcı veya seri numarası girişinde kaçış karakterleri olabilir. Lütfen silip tekrar giriniz."
 
 msgid "All inputs in the custom vendor or serial are spaces. Please re-enter."
 msgstr "Özel satıcı veya seri numarasındaki tüm girişler boşluklardan oluşuyor. Lütfen tekrar girin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The vendor cannot be a number; please re-enter."
-msgstr ""
+msgstr "Üretici bir sayı olamaz. Lütfen tekrar girin."
 
 msgid "You have not selected a printer or preset yet. Please select at least one."
 msgstr "Henüz bir yazıcı veya ön ayar seçmediniz. Lütfen en az birini seçin."
@@ -18912,8 +19365,9 @@ msgstr "Ön Ayarı İçe Aktar"
 msgid "Create Type"
 msgstr "Tür Oluştur"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The model was not found; please reselect vendor."
-msgstr ""
+msgstr "Model bulunamadı, lütfen satıcıyı seçin."
 
 msgid "Select Printer"
 msgstr "Yazıcıyı Seçin"
@@ -18952,17 +19406,20 @@ msgstr "Dosya %d MB'yi aşıyor lütfen tekrar içe aktarın."
 msgid "Exception in obtaining file size, please import again."
 msgstr "Dosya boyutunun elde edilmesinde istisna, lütfen tekrar içe aktarın."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Preset path was not found; please reselect vendor."
-msgstr ""
+msgstr "Ön ayar yolu bulunamıyor, lütfen satıcıyı yeniden seçin."
 
 msgid "The printer model was not found, please reselect."
 msgstr "Yazıcı modeli bulunamadı, lütfen yeniden seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The nozzle diameter was not found; please reselect."
-msgstr ""
+msgstr "Nozul çapı bulunamadı, lütfen yeniden seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "The printer preset was not found; please reselect."
-msgstr ""
+msgstr "Yazıcı ön ayarı bulunamadı, lütfen yeniden seçin."
 
 msgid "Printer Preset"
 msgstr "Yazıcı Ön Ayarı"
@@ -18976,15 +19433,21 @@ msgstr "İşleme Ön Ayarı Şablonu"
 msgid "You have not yet chosen which printer preset to create based on. Please choose the vendor and model of the printer"
 msgstr "Hangi yazıcı ön ayarının temel alınacağını henüz seçmediniz. Lütfen yazıcının satıcısını ve modelini seçin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You have entered a disallowed character in the printable area section on the first page. Please use only numbers."
-msgstr ""
+msgstr "İlk sayfadaki yazdırılabilir alan kısmına geçersiz bir giriş yaptınız. Lütfen oluşturmadan önce kontrol edin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "The printer preset you created already has a preset with the same name. Do you want to overwrite it?\n"
 "\tYes: Overwrite the printer preset with the same name, and filament and process presets with the same preset name will be recreated \n"
 "and filament and process presets without the same preset name will be reserved.\n"
 "\tCancel: Do not create a preset; return to the creation interface."
 msgstr ""
+"Oluşturduğunuz yazıcı ön ayarının zaten aynı ada sahip bir ön ayarı var. Üzerine yazmak istiyor musunuz?\n"
+"\tEvet: Aynı adı taşıyan yazıcı ön ayarının üzerine yazın; aynı ön ayar adı taşıyan filaman ve proses ön ayarları yeniden oluşturulacak ve aynı ön ayar \n"
+"adı olmayan filament ve işlem ön ayarları rezerve edilecektir.\n"
+"\tİptal: Ön ayar oluşturmayın, oluşturma arayüzüne dönün."
 
 msgid "You need to select at least one filament preset."
 msgstr "En az bir filament ön ayarı seçmeniz gerekir."
@@ -18998,14 +19461,16 @@ msgstr "Filament ön ayarları oluşturulamadı. Şu şekilde:\n"
 msgid "Create process presets failed. As follows:\n"
 msgstr "İşlem ön ayarları oluşturulamadı. Şu şekilde:\n"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Vendor was not found; please reselect."
-msgstr ""
+msgstr "Satıcı bulunamadı, lütfen yeniden seçin."
 
 msgid "Current vendor has no models, please reselect."
 msgstr "Mevcut satıcının modeli yok, lütfen yeniden seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You have not selected the vendor and model or input the custom vendor and model."
-msgstr ""
+msgstr "Satıcıyı ve modeli seçmediniz veya özel satıcıyı ve modeli girmediniz."
 
 msgid "There may be escape characters in the custom printer vendor or model. Please delete and re-enter."
 msgstr "Özel yazıcı satıcısında veya modelinde kaçış karakterleri olabilir. Lütfen silip tekrar giriniz."
@@ -19016,8 +19481,9 @@ msgstr "Özel yazıcı satıcısı veya modelindeki tüm girişler boşluklardan
 msgid "Please check bed printable shape and origin input."
 msgstr "Lütfen baskı yapılabilir şekil ve başlangıç noktası girişini kontrol edin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "You have not yet selected the printer to replace the nozzle for; please choose a printer."
-msgstr ""
+msgstr "Hala nozulu değiştirmek için yazıcı seçmediniz, lütfen bir seçim yapın."
 
 msgid "The entered nozzle diameter is invalid, please re-enter:\n"
 msgstr "Girilen meme çapı geçersiz, lütfen tekrar girin:\n"
@@ -19056,10 +19522,13 @@ msgstr "Ön ayarlarınızı düzenlemek için lütfen yazıcı ayarlarına gidin
 msgid "Filament Created"
 msgstr "Filament Oluşturuldu"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid ""
 "Please go to filament settings to edit your presets if you need to.\n"
 "Please note that nozzle temperature, hot bed temperature, and maximum volumetric speed each have a significant impact on printing quality. Please set them carefully."
 msgstr ""
+"İhtiyacınız olursa ön ayarlarınızı düzenlemek için lütfen filament ayarına gidin.\n"
+"Lütfen püskürtme ucu sıcaklığının, sıcak yatak sıcaklığının ve maksimum hacimsel hızın baskı kalitesi üzerinde önemli bir etkiye sahip olduğunu unutmayın. Lütfen bunları dikkatlice ayarlayın."
 
 msgid ""
 "\n"
@@ -19104,11 +19573,14 @@ msgstr "ZIP dosyasını açma başarısız"
 msgid "Export successful"
 msgstr "Dışa aktarma başarılı"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #, c-format, boost-format
 msgid ""
 "The '%s' folder already exists in the current directory. Do you want to clear it and rebuild it?\n"
 "If not, a time suffix will be added, and you can modify the name after creation."
 msgstr ""
+"'%s' klasörü mevcut dizinde zaten mevcut. Onu temizleyip yeniden oluşturmak mı istiyorsunuz?\n"
+"Değilse, bir zaman son eki eklenecektir ve oluşturulduktan sonra adı değiştirebilirsiniz."
 
 #, c-format, boost-format
 msgid ""
@@ -19133,8 +19605,9 @@ msgstr ""
 "Kullanıcının filament ön ayarı.\n"
 "Başkalarıyla paylaşılabilir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Only display printers with changes to printer, filament, and process presets are displayed."
-msgstr ""
+msgstr "Yazıcı adlarını yalnızca yazıcı, filament ve işlem ön ayarlarında yapılan değişikliklerle görüntüleyin."
 
 msgid "Only display the filament names with changes to filament presets."
 msgstr "Filament adlarını yalnızca filament ön ayarlarında yapılan değişikliklerle görüntüleyin."
@@ -19159,8 +19632,9 @@ msgstr ""
 msgid "Please select at least one printer or filament."
 msgstr "Lütfen en az bir yazıcı veya filament seçin."
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "Please select a preset type you want to export"
-msgstr ""
+msgstr "Lütfen dışa aktarmak istediğiniz türü seçin"
 
 msgid "Failed to create temporary folder, please try Export Configs again."
 msgstr "Geçici klasör oluşturulamadı. Lütfen Yapılandırmaları Dışa Aktarmayı tekrar deneyin."
@@ -19222,8 +19696,9 @@ msgstr "[Silme Gerekli]"
 msgid "Edit Preset"
 msgstr "Ön Ayarı Düzenle"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "For more information, please check out our Wiki"
-msgstr ""
+msgstr "Daha fazla bilgi için lütfen Wiki'ye göz atın"
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -19395,7 +19870,7 @@ msgstr ""
 msgid "Pack"
 msgstr ""
 
-msgid "Cleans and rebuilds system profiles cache on next launch"
+msgid "Cleans and rebuilds system profiles cache on next launch."
 msgstr ""
 
 msgid "Clean system profiles cache"
@@ -19407,16 +19882,16 @@ msgstr ""
 msgid "Loaded profiles overview"
 msgstr ""
 
-msgid "This section shows information for loaded profiles"
+msgid "This section shows information for loaded profiles."
 msgstr ""
 
-msgid "Exports detailed overview of loaded profiles in json format"
+msgid "Exports detailed overview of loaded profiles in json format."
 msgstr ""
 
 msgid "Configurations folder"
 msgstr ""
 
-msgid "Opens configurations folder"
+msgid "Opens configurations folder."
 msgstr ""
 
 msgid "Log level"
@@ -19431,13 +19906,10 @@ msgstr ""
 msgid "Profiles"
 msgstr ""
 
-msgid "Select NO to close dialog and review project"
+msgid "Select NO to close dialog and review project."
 msgstr ""
 
 msgid "No project file on current session. Only logs will be included to package"
-msgstr ""
-
-msgid "Select NO to close dialog and review project."
 msgstr ""
 
 msgid "Please make sure any instances of InlongSlicer are not running"
@@ -19850,8 +20322,9 @@ msgstr "aynı anda kaç yazıcının ısıtma işleminden geçebileceği, aynı 
 msgid "Wait"
 msgstr "Bekleyin"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "minute each batch. (It depends on how long it takes to complete heating.)"
-msgstr ""
+msgstr "her parti başına dakika. (Isıtmanın tamamlanması ne kadar sürerse buna bağlıdır.)"
 
 msgid "Task Sending"
 msgstr "Görev Gönderme"
@@ -19970,7 +20443,7 @@ msgid "Global settings"
 msgstr "Genel ayarlar"
 
 msgid "Video tutorial"
-msgstr ""
+msgstr "Öğretici Video"
 
 msgid "(Sync with printer)"
 msgstr "(Yazıcıyla senkronize edin)"
@@ -20094,7 +20567,7 @@ msgstr ""
 msgid "Error code not found"
 msgstr ""
 
-msgid "The printer is busy, Please check the device page for the file and try to start printing again."
+msgid "The printer is busy, please check the device page for the file and try to start printing again."
 msgstr ""
 
 msgid "The file is lost, please check and try again."
@@ -20169,8 +20642,9 @@ msgstr "Uyarı: Siperlik tipi \"boyalı\" olarak ayarlanmamışsa, siperlik kula
 msgid "Set the brim type of this object to \"painted\""
 msgstr "Bu nesnenin kenar türünü \"boyalı\" olarak ayarlayın"
 
+# TODO: Review, changed by lang refactor. PR 14254
 msgid "invalid brim ears"
-msgstr ""
+msgstr " geçersi̇z kenarlı kulaklar"
 
 msgid "Brim Ears"
 msgstr "Kenar  kulakları"
@@ -20259,14 +20733,14 @@ msgstr "Hata: %s"
 msgid "Show details"
 msgstr "Ayrıntıları göster"
 
+msgid "Hide details"
+msgstr ""
+
 msgid "Version to install:"
 msgstr "Yüklenecek sürüm:"
 
 msgid "Download and Install"
 msgstr "İndirin ve Yükleyin"
-
-msgid "Skip for Now"
-msgstr "Şimdilik Atla"
 
 msgid "A new version of the Bambu Network Plug-in is available."
 msgstr "Bambu Ağ Eklentisinin yeni bir sürümü mevcut."
@@ -20278,17 +20752,11 @@ msgstr "Güncel sürüm: %s"
 msgid "Update to version:"
 msgstr "Sürüme güncelleme:"
 
-msgid "Update Now"
-msgstr "Şimdi Güncelle"
-
-msgid "Remind Later"
-msgstr "Daha Sonra Hatırlat"
-
-msgid "Skip Version"
-msgstr "Sürümü Atla"
-
 msgid "Don't Ask Again"
 msgstr "Bir daha sorma"
+
+msgid "Update Now"
+msgstr "Şimdi Güncelle"
 
 msgid "(Latest)"
 msgstr "(En sonuncu)"
@@ -20304,9 +20772,6 @@ msgstr "Yeni eklentiyi yüklemek için yeniden başlatma gerekiyor. Şimdi yenid
 
 msgid "Restart Now"
 msgstr "Şimdi Yeniden Başlat"
-
-msgid "Restart Later"
-msgstr "Daha Sonra Yeniden Başlat"
 
 msgid "NO RAMMING AT ALL"
 msgstr "HİÇBİR ŞEKİLDE ÇARPMA YOK"
@@ -20784,12 +21249,15 @@ msgstr ""
 "Baskılarınızı plakalara ayırın\n"
 "Çok sayıda parçası olan bir modeli baskıya hazır ayrı kalıplara bölebileceğinizi biliyor muydunuz? Bu, tüm parçaları takip etme sürecini basitleştirecektir."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Speed up your print with Adaptive Layer
 #: Height]
 msgid ""
 "Speed up your print with Adaptive Layer Height\n"
 "Did you know that you can print a model even faster by using the Adaptive Layer Height option? Check it out!"
 msgstr ""
+"Uyarlanabilir Katman Yüksekliği ile baskınızı hızlandırın\n"
+"Uyarlanabilir Katman Yüksekliği seçeneğini kullanarak bir modeli daha da hızlı yazdırabileceğinizi biliyor muydunuz? Buna bir bak!"
 
 #: resources/data/hints.ini: [hint:Support painting]
 msgid ""
@@ -20799,17 +21267,23 @@ msgstr ""
 "Destek boyama\n"
 "Desteklerinizin yerini boyayabileceğinizi biliyor muydunuz? Bu özellik, destek malzemesinin yalnızca modelin gerçekten ihtiyaç duyulan bölümlerine yerleştirilmesini kolaylaştırır."
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Different types of supports]
 msgid ""
 "Different types of supports\n"
 "Did you know that you can choose from multiple types of supports? Tree supports work great for organic models while saving filament and improving print speed. Check them out!"
 msgstr ""
+"Farklı destek türleri\n"
+"Birden fazla destek türü arasından seçim yapabileceğinizi biliyor muydunuz? Ağaç destekleri organik modeller için harika çalışır, filamentten tasarruf sağlar ve baskı hızını artırır. Onlara bir göz atın!"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Printing Silk Filament]
 msgid ""
 "Printing Silk Filament\n"
 "Did you know that Silk filament needs special consideration to print successfully? A higher temperature and lower speed are always recommended for the best results."
 msgstr ""
+"İpek Filament Baskı\n"
+"İpek filamentin başarılı bir şekilde basılabilmesi için özel dikkat gösterilmesi gerektiğini biliyor muydunuz? En iyi sonuçlar için her zaman daha yüksek sıcaklık ve daha düşük hız önerilir."
 
 #: resources/data/hints.ini: [hint:Brim for better adhesion]
 msgid ""
@@ -20835,11 +21309,14 @@ msgstr ""
 "Nesneleri yığınla\n"
 "Nesneleri bir bütün olarak istifleyebileceğinizi biliyor muydunuz?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:Flush into support/objects/infill]
 msgid ""
 "Flush into support/objects/infill\n"
 "Did you know that you can reduce wasted filament by flushing it into support/objects/infill during filament changes?"
 msgstr ""
+"Desteğe/nesnelere/dolguya hizalayın\n"
+"Filament değişimi sırasında, boşa harcanan filamenti desteğe/nesnelere/dolguya yıkayarak kurtarabileceğinizi biliyor muydunuz?"
 
 #: resources/data/hints.ini: [hint:Improve strength]
 msgid ""
@@ -20849,12 +21326,15 @@ msgstr ""
 "Gücü artırın\n"
 "Modelin gücünü artırmak için daha fazla duvar halkası ve daha yüksek seyrek dolgu yoğunluğu kullanabileceğinizi biliyor muydunuz?"
 
+# TODO: Review, changed by lang refactor. PR 14254
 #: resources/data/hints.ini: [hint:When do you need to print with the printer
 #: door opened]
 msgid ""
 "When do you need to print with the printer door opened?\n"
 "Did you know that opening the printer door can reduce the probability of extruder/hotend clogging when printing lower temperature filament with a higher enclosure temperature? There is more info about this in the Wiki."
 msgstr ""
+"Yazıcı kapısı açıkken yazdırmanız gerektiğinde\n"
+"Yazıcı kapısının açılmasının, daha yüksek muhafaza sıcaklığıyla daha düşük sıcaklıktaki filamenti yazdırırken ekstrüder/sıcak ucun tıkanma olasılığını azaltabileceğini biliyor muydunuz? Bununla ilgili daha fazla bilgiyi Wiki'de bulabilirsiniz."
 
 #: resources/data/hints.ini: [hint:Avoid warping]
 msgid ""
@@ -20863,6 +21343,24 @@ msgid ""
 msgstr ""
 "Eğilmeyi önleyin\n"
 "ABS gibi bükülmeye yatkın malzemelere baskı yaparken, ısıtma yatağı sıcaklığının uygun şekilde arttırılmasının bükülme olasılığını azaltabileceğini biliyor muydunuz?"
+
+#~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
+#~ msgstr "İpuçları: Yazıcınızın püskürtme ucunu yakın zamanda değiştirdiyseniz, püskürtme ucu ayarınızı değiştirmek için lütfen 'Cihaz -> Yazıcı parçaları'na gidin."
+
+#~ msgid "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
+#~ msgstr "Flow::with_spacing()'e sağlanan geçersiz boşluk, kat yüksekliğinizi ve ekstrüzyon genişliğinizi kontrol edin"
+
+#~ msgid "Skip for Now"
+#~ msgstr "Şimdilik Atla"
+
+#~ msgid "Remind Later"
+#~ msgstr "Daha Sonra Hatırlat"
+
+#~ msgid "Skip Version"
+#~ msgstr "Sürümü Atla"
+
+#~ msgid "Restart Later"
+#~ msgstr "Daha Sonra Yeniden Başlat"
 
 #~ msgid "Perform"
 #~ msgstr "Uygula"

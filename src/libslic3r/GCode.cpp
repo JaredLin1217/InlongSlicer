@@ -487,17 +487,17 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
             retraction_length_before_wipe = 0,
             retraction_length_during_wipe = 0,
             retraction_length_after_wipe = 0;
-        
+
         // Initialise the remaining retraction amount with the full retraction amount.
-        retraction_length_remaining = toolchange ? 
+        retraction_length_remaining = toolchange ?
             extruder->retract_length_toolchange() : extruder->retraction_length();
-        
+
         // Nothing to retract - return early
         if (retraction_length_remaining <= EPSILON)
             return { 0.f, 0.f, 0.f };
-        
-        // Calculate retraction before and after wipe distances from the user setting. 
-        // Keep adding to the for retraction before wipe variable any excess retraction 
+
+        // Calculate retraction before and after wipe distances from the user setting.
+        // Keep adding to the for retraction before wipe variable any excess retraction
         // needed to be performed before the wipe.
         retraction_length_before_wipe = retraction_length_remaining * extruder->retract_before_wipe();
         retraction_length_after_wipe = retraction_length_remaining * extruder->retract_after_wipe();
@@ -506,9 +506,9 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
         retraction_length_remaining -= retraction_length_before_wipe + retraction_length_after_wipe;
 
         // All of the retraction is to be done before the wipe
-        if (retraction_length_remaining <= EPSILON) 
+        if (retraction_length_remaining <= EPSILON)
             return { retraction_length_before_wipe, 0., retraction_length_after_wipe };
-        
+
         // Calculate wipe speed
         // Orca: resolve the travel_speed slot via the Print-side per-layer resolver; the writer's
         // per-layer synced config would yield the same index.
@@ -522,20 +522,20 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
         double wipe_path_length = std::min(wipe_path.length(), wipe_dist);
 
         // Calculate the maximum retraction amount during wipe
-        retraction_length_during_wipe = config.retraction_speed.get_at(extruder_id) * 
+        retraction_length_during_wipe = config.retraction_speed.get_at(extruder_id) *
             unscale_(wipe_path_length) / wipe_speed;
 
         // If the maximum retraction amount during wipe is too small,
         // disable wipe-time retraction and leave any remaining retract amount
         // to the subsequent standard retract flow.
-        if (retraction_length_during_wipe <= EPSILON) 
+        if (retraction_length_during_wipe <= EPSILON)
             return { retraction_length_before_wipe, 0., retraction_length_after_wipe };
-        
+
         // If the maximum retraction amount during wipe is greater than any remaining retraction length
         // return the remaining retraction length to be retracted during the wipe
-        if (retraction_length_during_wipe - retraction_length_remaining > EPSILON) 
+        if (retraction_length_during_wipe - retraction_length_remaining > EPSILON)
             return { retraction_length_before_wipe, retraction_length_remaining, retraction_length_after_wipe };
-        
+
         // We will always proceed with incrementing the retraction amount before wiping with the difference
         // and return the maximum allowed wipe amount to be retracted during the wipe move
         retraction_length_before_wipe += retraction_length_remaining - retraction_length_during_wipe;
@@ -771,6 +771,42 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
             for (; *ptr == '\r' || *ptr == '\n'; ++ ptr);
         }
         return temp_set_by_gcode;
+    }
+
+    struct CustomGCodeMotionStateChanges
+    {
+        bool acceleration = false;
+        bool jerk         = false;
+    };
+
+    static bool custom_gcode_line_has_xy_parameter(const std::string &raw)
+    {
+        const size_t comment_pos = raw.find(';');
+        const std::string_view code(raw.data(), comment_pos == std::string::npos ? raw.size() : comment_pos);
+        return code.find_first_of("XxYy") != std::string_view::npos;
+    }
+
+    static CustomGCodeMotionStateChanges custom_gcode_motion_state_changes(const std::string &gcode)
+    {
+        CustomGCodeMotionStateChanges changes;
+        GCodeReader parser;
+        parser.parse_buffer(gcode, [&changes](GCodeReader &parser, const GCodeReader::GCodeLine &line) {
+            const std::string_view cmd = line.cmd();
+            if (boost::iequals(cmd, "M204") || boost::iequals(cmd, "M201") ||
+                boost::iequals(cmd, "M202"))
+                changes.acceleration = true;
+            else if ((boost::iequals(cmd, "M205") || boost::iequals(cmd, "M207") || boost::iequals(cmd, "M566")) &&
+                     custom_gcode_line_has_xy_parameter(line.raw()))
+                changes.jerk = true;
+            else if (boost::iequals(cmd, "SET_VELOCITY_LIMIT")) {
+                changes.acceleration |= boost::icontains(line.raw(), "ACCEL=");
+                changes.jerk         |= boost::icontains(line.raw(), "SQUARE_CORNER_VELOCITY=");
+            }
+
+            if (changes.acceleration && changes.jerk)
+                parser.quit_parsing();
+        });
+        return changes;
     }
 
     // BBS
@@ -3290,10 +3326,27 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
 
         BoundingBoxf bbox;
         auto pts = std::make_unique<ConfigOptionPoints>();
-        if (print.calib_mode() == CalibMode::Calib_PA_Line || print.calib_mode() == CalibMode::Calib_PA_Pattern) {
+        if (print.calib_mode() == CalibMode::Calib_PA_Pattern) {
+            //PA_Pattern can have any size or arrangement - not dependent on 3mf model size
             bbox = bbox_bed;
             bbox.offset(-25.0);
             // add 4 corner points of bbox into pts
+            pts->values.reserve(4);
+            pts->values.emplace_back(bbox.min.x(), bbox.min.y());
+            pts->values.emplace_back(bbox.max.x(), bbox.min.y());
+            pts->values.emplace_back(bbox.max.x(), bbox.max.y());
+            pts->values.emplace_back(bbox.min.x(), bbox.max.y());
+
+        } else if (print.calib_mode() == CalibMode::Calib_PA_Line) {
+            // Derive X bounds from the actual calibration geometry.
+            CalibPressureAdvanceLine temp_pa_line_forsize(this);
+            BoundingBoxf pattern_extents = temp_pa_line_forsize.print_extents(bbox_bed);
+
+            bbox = bbox_bed;
+            bbox.offset(-25.0);
+            bbox.min.x() = std::max(pattern_extents.min.x(), bbox.min.x());
+            bbox.max.x() = std::min(pattern_extents.max.x(), bbox.max.x());
+
             pts->values.reserve(4);
             pts->values.emplace_back(bbox.min.x(), bbox.min.y());
             pts->values.emplace_back(bbox.max.x(), bbox.min.y());
@@ -4362,6 +4415,11 @@ PlaceholderParserIntegration &ppi = m_placeholder_parser_integration;
         ppi.update_from_gcodewriter(m_writer);
         std::string output = ppi.parser.process(templ, current_filament_id, config_override, &ppi.output_config, &ppi.context);
         ppi.validate_output_vector_variables();
+        const CustomGCodeMotionStateChanges motion_state_changes = custom_gcode_motion_state_changes(output);
+        if (motion_state_changes.acceleration)
+            m_writer.invalidate_acceleration();
+        if (motion_state_changes.jerk)
+            m_writer.invalidate_jerk();
 
         if (const std::vector<double> &pos = ppi.opt_position->values; ppi.position != pos) {
             // Update G-code writer.
@@ -4415,7 +4473,7 @@ void GCode::print_machine_envelope(GCodeOutputStream &file, Print &print)
         }
 
         // Get the max limit value among used extruders
-        auto get_max_value = [&used_extruders](const std::string key, const ConfigOptionFloats& v) { 
+        auto get_max_value = [&used_extruders](const std::string key, const ConfigOptionFloats& v) {
             unsigned int stride = 1;
             if (printer_options_with_variant_2.count(key) > 0) {
                 stride = 2;
@@ -7118,7 +7176,7 @@ std::string GCode::extrude_support(const ExtrusionEntityCollection &support_fill
 
         double small_perimeter_speed = -1.0;
 
-        const auto base_speed = (role == erSupportMaterialInterface) 
+        const auto base_speed = (role == erSupportMaterialInterface)
             ? NOZZLE_CONFIG(support_interface_speed) : NOZZLE_CONFIG(support_speed);
 
         if (NOZZLE_CONFIG(small_support_perimeter_speed).value == 0)
@@ -7531,7 +7589,7 @@ std::string GCode::_extrude(const ExtrusionPath &path, std::string description, 
     } else if (m_config.slow_down_layers > 1 && m_config.raft_layers > 0 ) {
 
         if (_layer > m_config.raft_layers && (_layer - m_config.raft_layers) < m_config.slow_down_layers) {
-            const auto first_layer_speed 
+            const auto first_layer_speed
                 = is_perimeter(path.role()) ? NOZZLE_CONFIG(initial_layer_speed) :
                                                                        NOZZLE_CONFIG(initial_layer_infill_speed);
             if (first_layer_speed < speed) {
@@ -8597,7 +8655,7 @@ std::string GCode::travel_to(const Point& point, ExtrusionRole role, std::string
     if (this->on_first_layer()) {
         unsigned int initial_layer_travel_acceleration = m_config.get_abs_value_at("initial_layer_travel_acceleration", get_nozzle_config_index(m_writer.filament()->id()));
         double initial_layer_travel_jerk = m_config.get_abs_value_at("initial_layer_travel_jerk", get_nozzle_config_index(m_writer.filament()->id()));
-    
+
         if (NOZZLE_CONFIG(default_acceleration) > 0 && initial_layer_travel_acceleration > 0) {
             acceleration_to_set = (unsigned int) floor(initial_layer_travel_acceleration + 0.5);
         }
@@ -9468,7 +9526,7 @@ std::string GCode::set_object_info(Print *print) {
     std::ostringstream gcode;
     size_t object_id = 0;
     // Inlong: check if we are in pa calib mode
-    if (print->calib_mode() == CalibMode::Calib_PA_Line || print->calib_mode() == CalibMode::Calib_PA_Pattern) {
+    if (print->calib_mode() == CalibMode::Calib_PA_Pattern) {
         BoundingBoxf bbox_bed(print->config().printable_area.values);
         bbox_bed.offset(-25.0);
         Polygon polygon_bed;
@@ -9479,6 +9537,8 @@ std::string GCode::set_object_info(Print *print) {
         gcode << "EXCLUDE_OBJECT_DEFINE NAME="
               << "Inlong-PA-Calibration-Test"
               << " CENTER=" << 0 << "," << 0 << " POLYGON=" << polygon_to_string(polygon_bed, print, true) << "\n";
+    } else if (print->calib_mode() == CalibMode::Calib_PA_Line) {
+        // PA_Line has only one object, no EXCLUDE_OBJECT_DEFINE needed
     } else {
         size_t unique_id = 0;
         for (PrintObject* object : print->objects()) {

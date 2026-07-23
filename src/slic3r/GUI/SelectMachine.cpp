@@ -559,7 +559,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     sizer_split_options->Add(m_split_options_line, 1, wxALIGN_CENTER, 0);
 
     m_options_other = new wxPanel(m_scroll_area);
-
+    m_options_other->SetBackgroundColour(*wxWHITE);
 
     auto option_timelapse = new PrintOption(m_options_other, _L("Timelapse"), wxEmptyString, ops_no_auto, "timelapse");
 
@@ -2269,8 +2269,11 @@ void SelectMachineDialog::show_status(PrintDialogStatus status, std::vector<wxSt
         Enable_Refresh_Button(true);
         Enable_Send_Button(false);
     } else if (status == PrintStatusNozzleDiameterMismatch) {
+        // Orca: overridable — a non-standard nozzle is a valid reason to differ. Send is gated on
+        // the acknowledgement checkbox added to the message board below (add_with_checkbox), which
+        // is enabled only while the user's acknowledgement still matches the current mismatch.
         Enable_Refresh_Button(true);
-        Enable_Send_Button(false);
+        Enable_Send_Button(!m_nozzle_diameter_ack_msg.empty() && m_nozzle_diameter_ack_msg == m_nozzle_diameter_mismatch_msg);
     } else if (status == PrintStatusNozzleTypeMismatch) {
         Enable_Refresh_Button(true);
         Enable_Send_Button(false);
@@ -2470,7 +2473,19 @@ void SelectMachineDialog::show_status(PrintDialogStatus status, std::vector<wxSt
 
     /*enter perpare mode*/
     prepare_mode(false);
-    m_pre_print_checker.add(status, msg, tips, wiki_url);
+    if (status == PrintDialogStatus::PrintStatusNozzleDiameterMismatch) {
+        // Short label on purpose: the 420px message panel caps its width and a wxCheckBox label
+        // does not wrap; the full explanation is in the warning text above it.
+        m_pre_print_checker.add_with_checkbox(status, msg,
+            _L("I have checked the installed nozzle and want to print anyway."),
+            !m_nozzle_diameter_ack_msg.empty() && m_nozzle_diameter_ack_msg == m_nozzle_diameter_mismatch_msg,
+            [this](bool checked) {
+                m_nozzle_diameter_ack_msg = checked ? m_nozzle_diameter_mismatch_msg : wxString();
+                Enable_Send_Button(checked);
+            });
+    } else {
+        m_pre_print_checker.add(status, msg, tips, wiki_url);
+    }
 
 }
 
@@ -3144,7 +3159,7 @@ void SelectMachineDialog::save_option_vals(MachineObject *obj) {
 void SelectMachineDialog::Enable_Auto_Refill(bool enable)
 {
     if (enable) {
-        m_ams_backup_tip->SetForegroundColour(wxColour("#D66C47"));
+        m_ams_backup_tip->SetForegroundColour(StateColor::darkModeColorFor("#D66C47"));
     }
     else {
         m_ams_backup_tip->SetForegroundColour(wxColour(0x90, 0x90, 0x90));
@@ -3169,19 +3184,21 @@ void SelectMachineDialog::show_timelapse_folder_popup()
         return;
     }
 
-    // build popup with rounded corners + light border
+    // build popup with rounded corners + themed border
+    const wxColour popup_bg     = wxGetApp().dark_mode() ? wxColour("#333337") : wxColour(0xF0, 0xF0, 0xF0);
+    const wxColour popup_border = StateColor::darkModeColorFor(wxColour(0xCE, 0xCE, 0xCE));
     m_timelapse_storage_popup = new PopupWindow(this, wxBORDER_NONE);
-    m_timelapse_storage_popup->SetBackgroundColour(wxColour(0xF0, 0xF0, 0xF0));
-    m_timelapse_storage_popup->Bind(wxEVT_PAINT, [this](wxPaintEvent&) {
+    m_timelapse_storage_popup->SetBackgroundColour(popup_bg);
+    m_timelapse_storage_popup->Bind(wxEVT_PAINT, [this, popup_bg, popup_border](wxPaintEvent&) {
         wxPaintDC dc(m_timelapse_storage_popup);
         auto size = m_timelapse_storage_popup->GetSize();
-        dc.SetPen(wxPen(wxColour(0xCE, 0xCE, 0xCE)));
-        dc.SetBrush(wxBrush(wxColour(0xF0, 0xF0, 0xF0)));
+        dc.SetPen(wxPen(popup_border));
+        dc.SetBrush(wxBrush(popup_bg));
         dc.DrawRoundedRectangle(0, 0, size.x, size.y, FromDIP(8));
     });
 
     auto* panel = new wxPanel(m_timelapse_storage_popup, wxID_ANY);
-    panel->SetBackgroundColour(wxColour(0xF0, 0xF0, 0xF0));
+    panel->SetBackgroundColour(popup_bg);
 
     // horizontal layout: [ Internal]  [External]
     auto* sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -3202,7 +3219,8 @@ void SelectMachineDialog::show_timelapse_folder_popup()
         if (enabled) radio->Enable(); else radio->Disable();
 
         auto* text = new Label(panel, Label::Body_14, label);
-        text->SetForegroundColour(enabled ? wxColour(0x5C, 0x5C, 0x5C) : wxColour(0xAC, 0xAC, 0xAC));
+        text->SetForegroundColour(enabled ? (wxGetApp().dark_mode() ? wxColour("#E5E5E4") : wxColour(0x5C, 0x5C, 0x5C))
+                                          : StateColor::darkModeColorFor(wxColour(0xAC, 0xAC, 0xAC)));
 
         if (enabled) {
             auto on_select = [this, val](wxMouseEvent&) {
@@ -3376,7 +3394,7 @@ void SelectMachineDialog::show_timelapse_storage_dialog(MachineObject* obj)
         create_scaled_bitmap("obj_warning", &dlg, 16), wxDefaultPosition, wxSize(FromDIP(16), FromDIP(16)));
     auto* msg_label = new Label(&dlg, body_text);
     msg_label->SetFont(Label::Body_14);
-    msg_label->SetForegroundColour(wxColour(0x33, 0x33, 0x33));
+    msg_label->SetForegroundColour(wxGetApp().dark_mode() ? wxColour("#EFEFF0") : wxColour(0x33, 0x33, 0x33));
     msg_label->Wrap(FromDIP(340));
     msg_sizer->Add(warn_bmp, 0, wxALIGN_TOP | wxRIGHT, FromDIP(6));
     msg_sizer->Add(msg_label, 1, wxEXPAND);
@@ -3417,6 +3435,7 @@ void SelectMachineDialog::show_timelapse_storage_dialog(MachineObject* obj)
     dlg.SetSizer(main_sizer);
     dlg.Fit();
     dlg.CenterOnParent();
+    wxGetApp().UpdateDlgDarkUI(&dlg);
 
     // ShowModal returns after the dialog closes; handle the action outside the modal stack.
     // wxID_CANCEL is returned when the user clicks X (close button) -> do nothing in that case.
@@ -4077,12 +4096,15 @@ void SelectMachineDialog::on_timer(wxTimerEvent &event)
         if (m_ams_backup_tip->IsShown()) {
             m_ams_backup_tip->Hide();
             img_ams_backup->Hide();
+            m_scroll_area->Layout();
         }
     }
     else {
         if (!m_ams_backup_tip->IsShown()) {
             m_ams_backup_tip->Show();
             img_ams_backup->Show();
+            // first show: position them, they were never laid out while hidden
+            m_scroll_area->Layout();
         }
     }
 
@@ -4532,7 +4554,7 @@ bool SelectMachineDialog::CheckErrorExtruderNozzleWithSlicing(MachineObject* obj
                         pos, installed_nozzle_str, slicing_nozzle_str);
 
                     std::vector<wxString> params{ error_message };
-                    params.emplace_back(_L("Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."));
+                    params.emplace_back(_L("Tips: If you changed your nozzle of your printer lately, please go to 'Device -> Printer parts' to change your nozzle setting."));
                     show_status(PrintDialogStatus::PrintStatusNozzleMatchInvalid, params);
                     return false;
                 }
@@ -4557,9 +4579,15 @@ bool SelectMachineDialog::CheckErrorExtruderNozzleWithSlicing(MachineObject* obj
                         msg_params.emplace_back(nozzle_message);
                     }
 
-                    msg_params.emplace_back(_L("Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."));
+                    msg_params.emplace_back(_L("Tips: If you changed your nozzle of your printer lately, please go to 'Device -> Printer parts' to change your nozzle setting."));
+
+                    // Orca: non-blocking. A diameter that differs from the one the printer
+                    // remembers is legitimate with a non-standard nozzle, so the print is held back
+                    // only by the acknowledgement checkbox shown in the message board, not by a
+                    // disabled Send outright. Keep checking the remaining extruders.
+                    m_nozzle_diameter_mismatch_msg = msg_params.front();
                     show_status(PrintDialogStatus::PrintStatusNozzleDiameterMismatch, msg_params);
-                    return false;
+                    continue;
                 }
             }
         }
@@ -4601,6 +4629,9 @@ static wxString _get_ext_loc_str(const std::unordered_set<int>& extruders, int t
 void SelectMachineDialog::update_show_status(MachineObject* obj_)
 {
     m_pre_print_checker.clear();
+    // Orca: re-raised by CheckErrorExtruderNozzleWithSlicing() below if the mismatch is still there,
+    // so an early return from this pass cannot leave a stale warning behind.
+    m_nozzle_diameter_mismatch_msg.clear();
 
     /*agent check and printer valid check*/
     NetworkAgent* agent = Slic3r::GUI::wxGetApp().getAgent();
