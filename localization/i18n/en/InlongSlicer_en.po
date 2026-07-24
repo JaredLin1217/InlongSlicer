@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: 2025-05-18 09:32-0300\n"
 "Last-Translator: Alexandre Folle de Menezes\n"
 "Language-Team: \n"
@@ -548,6 +548,7 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
 msgstr ""
 
@@ -873,6 +874,7 @@ msgstr ""
 msgid "Select all connectors"
 msgstr ""
 
+msgctxt "Cut tool"
 msgid "Cut"
 msgstr ""
 
@@ -1728,12 +1730,14 @@ msgstr ""
 msgid "Select point"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
 msgstr ""
 
 msgid "Restart selection"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
 msgstr ""
 
@@ -1834,6 +1838,7 @@ msgstr ""
 msgid "Leaving Measure gizmo"
 msgstr ""
 
+msgctxt "Assembly tool"
 msgid "Assemble"
 msgstr ""
 
@@ -2345,6 +2350,9 @@ msgstr ""
 msgid "Import File"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
 msgid "Choose files"
 msgstr ""
 
@@ -2463,12 +2471,14 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
 msgstr ""
 
 msgid "Delete the selected object"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
 msgstr ""
 
@@ -2651,6 +2661,9 @@ msgid "Convert from Meters"
 msgstr ""
 
 msgid "Restore to Meter"
+msgstr ""
+
+msgid "Assemble"
 msgstr ""
 
 msgid "Assemble the selected objects into an object with multiple parts"
@@ -3397,6 +3410,7 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr ""
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
 msgstr ""
 
@@ -4112,6 +4126,14 @@ msgid "Print using filament on external spool."
 msgstr ""
 
 msgid "Print with filament in AMS"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
 msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
@@ -5344,6 +5366,7 @@ msgstr ""
 msgid "Quality / Speed"
 msgstr ""
 
+msgctxt "Mesh action"
 msgid "Smooth"
 msgstr ""
 
@@ -5952,6 +5975,9 @@ msgstr ""
 msgid "Redo"
 msgstr ""
 
+msgid "Cut"
+msgstr ""
+
 msgid "Cut selection to clipboard"
 msgstr ""
 
@@ -6049,6 +6075,10 @@ msgid "Show outline around selected object in 3D scene."
 msgstr ""
 
 msgid "Preferences"
+msgstr ""
+
+msgctxt "Menu"
+msgid "Edit"
 msgstr ""
 
 msgid "View"
@@ -9259,6 +9289,7 @@ msgstr ""
 msgid "The selected preset is null!"
 msgstr ""
 
+msgctxt "Layer range"
 msgid "End"
 msgstr ""
 
@@ -11177,24 +11208,28 @@ msgstr ""
 msgid "Select objects by rectangle"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
 msgstr ""
 
 msgid "Move selection 10mm in positive Y direction"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
 msgstr ""
 
 msgid "Move selection 10mm in negative Y direction"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
 msgstr ""
 
 msgid "Move selection 10mm in negative X direction"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
 msgstr ""
 
@@ -11279,7 +11314,15 @@ msgstr ""
 msgid "Toggle printable for object/part"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
+msgstr ""
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
 msgstr ""
 
 msgid "Open actions speed dial"
@@ -11339,7 +11382,15 @@ msgstr ""
 msgid "Move slider 5x faster"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
+msgstr ""
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
 msgstr ""
 
 msgid "Horizontal slider - Move to last position"
@@ -15694,6 +15745,9 @@ msgid "If smooth or traditional mode is selected, a timelapse video will be gene
 msgstr ""
 
 msgid "Traditional"
+msgstr ""
+
+msgid "Smooth"
 msgstr ""
 
 msgid "Farthest point timelapse"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slic3rPE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: 2026-02-28 00:59\n"
 "Last-Translator: Handle <mail@bysb.net>\n"
 "Language-Team: \n"
@@ -554,8 +554,9 @@ msgstr "重映射"
 msgid "Reset"
 msgstr "重置"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "Enter"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "快捷键 "
@@ -890,8 +891,9 @@ msgstr "取消选择连接件"
 msgid "Select all connectors"
 msgstr "选择所有连接件"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "剪切"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "旋转剖切面"
@@ -1753,14 +1755,16 @@ msgstr "选择"
 msgid "Select point"
 msgstr "选择点"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "删除"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "重新选择"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "取消一个特征直到退出"
@@ -1863,8 +1867,9 @@ msgstr "进入测量小工具"
 msgid "Leaving Measure gizmo"
 msgstr "离开测量小工具"
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "组合"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "请确认爆炸比例 = 1 并选择至少两个部件。"
@@ -2412,6 +2417,9 @@ msgstr "无法启动URL下载。目标文件夹没有设置。请在配置向导
 msgid "Import File"
 msgstr "导入文件"
 
+msgid "Delete"
+msgstr "删除"
+
 msgid "Choose files"
 msgstr "选择文件"
 
@@ -2540,14 +2548,16 @@ msgstr "隐藏"
 msgid "Show"
 msgstr "显示"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "删除"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "删除所选对象"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "回退键"
+msgstr ""
 
 msgid "Load..."
 msgstr "加载..."
@@ -2745,6 +2755,9 @@ msgstr "从米转换"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
 msgstr "恢复到米"
+
+msgid "Assemble"
+msgstr "组合"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "组合所选对象为一个多零件对象"
@@ -3511,8 +3524,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "左（辅助）"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "热端"
+msgstr ""
 
 msgid "Parts"
 msgstr "打印件"
@@ -4260,6 +4274,14 @@ msgstr "使用安装在机箱背面的材料进行打印"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
 msgstr "采用AMS里的材料打印"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "当前材料耗尽时，打印机将按照以下顺序继续打印。"
@@ -5570,8 +5592,9 @@ msgstr "自适应"
 msgid "Quality / Speed"
 msgstr "细节/速度"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "平滑模式"
+msgstr ""
 
 msgid "Radius"
 msgstr "半径"
@@ -6192,6 +6215,9 @@ msgstr "撤销"
 msgid "Redo"
 msgstr "重做"
 
+msgid "Cut"
+msgstr "剪切"
+
 msgid "Cut selection to clipboard"
 msgstr "剪切所选项到剪贴板"
 
@@ -6292,6 +6318,10 @@ msgstr "在3D场景中显示选中对象的轮廓"
 
 msgid "Preferences"
 msgstr "偏好设置"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "视图"
@@ -9615,8 +9645,9 @@ msgstr "不兼容的预设"
 msgid "The selected preset is null!"
 msgstr "选择的预设为空！"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "结束"
+msgstr ""
 
 msgid "Customize"
 msgstr "自定义"
@@ -11637,29 +11668,33 @@ msgstr "选择多个对象"
 msgid "Select objects by rectangle"
 msgstr "框选多个零件"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "上箭头"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
 msgstr "Y方向移动 10mm"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "下箭头"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
 msgstr "Y方向移动 10mm"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "左箭头"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
 msgstr "X方向移动 10mm"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "右箭头"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
@@ -11744,8 +11779,16 @@ msgstr "缩小"
 msgid "Toggle printable for object/part"
 msgstr "切换对象/零件的可打印状态"
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "准备/预览之间的切换"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11804,8 +11847,16 @@ msgstr "开启/关闭G-code窗口"
 msgid "Move slider 5x faster"
 msgstr "5倍速移动滑动条"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "水平滑块 - 移动到起始位置"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "水平滑块 - 移动到末尾位置"
@@ -16632,6 +16683,9 @@ msgstr "如果启用平滑模式或者传统模式，将在每次打印时生成
 
 msgid "Traditional"
 msgstr "传统模式"
+
+msgid "Smooth"
+msgstr "平滑模式"
 
 msgid "Farthest point timelapse"
 msgstr ""
@@ -21490,6 +21544,36 @@ msgid ""
 msgstr ""
 "避免翘曲\n"
 "您知道吗？打印ABS这类易翘曲材料时，适当提高热床温度可以降低翘曲的概率。"
+
+#~ msgid "Enter"
+#~ msgstr "Enter"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "删除"
+
+#~ msgid "Backspace"
+#~ msgstr "回退键"
+
+#~ msgid "Hotend"
+#~ msgstr "热端"
+
+#~ msgid "End"
+#~ msgstr "结束"
+
+#~ msgid "Arrow Up"
+#~ msgstr "上箭头"
+
+#~ msgid "Arrow Down"
+#~ msgstr "下箭头"
+
+#~ msgid "Arrow Left"
+#~ msgstr "左箭头"
+
+#~ msgid "Arrow Right"
+#~ msgstr "右箭头"
 
 #~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
 #~ msgstr "提示：如果您最近更换了打印机喷嘴，请进入“设备 -> 打印机部件”更改喷嘴设置。"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer Ukrainian\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: 2025-03-07 09:30+0200\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
@@ -555,8 +555,9 @@ msgstr "Переорганізувати"
 msgid "Reset"
 msgstr "Скинути"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "Ввести"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "Комбінація клавіш "
@@ -891,8 +892,9 @@ msgstr "Видалити з'єднувач зі списку вибору"
 msgid "Select all connectors"
 msgstr "Виберіть усі з'єднувачі"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "Вирізати"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "Поверніть площину розрізу"
@@ -1764,14 +1766,16 @@ msgstr "Вибір"
 msgid "Select point"
 msgstr "Виберіть точку"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "Delete"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "Вибрати заново"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "Скасувати функцію до виходу"
@@ -1876,8 +1880,9 @@ msgstr "Вхід у gizmo-вимірювання"
 msgid "Leaving Measure gizmo"
 msgstr "Вихід з gizmo-вимірювання"
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "Об'єднати у збірку"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "Будь ласка, підтвердіть коефіцієнт вибуху = 1 та виберіть принаймні два об’єми."
@@ -2403,6 +2408,9 @@ msgstr "Не вдалося розпочати завантаження URL-ад
 msgid "Import File"
 msgstr "Імпортувати файл"
 
+msgid "Delete"
+msgstr "Delete"
+
 msgid "Choose files"
 msgstr "Вибрати файли"
 
@@ -2531,14 +2539,16 @@ msgstr "Приховати"
 msgid "Show"
 msgstr "Показати"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "Видалити"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "Видалення вибраних моделей"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "Назад"
+msgstr ""
 
 msgid "Load..."
 msgstr "Завантажити..."
@@ -2733,6 +2743,9 @@ msgstr "Конвертувати з метричної"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
 msgstr "Відновити в метричну"
+
+msgid "Assemble"
+msgstr "Об'єднати у збірку"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Зібрати вибрані об'єкти в об'єкт з кількома частинами"
@@ -3518,8 +3531,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "Лівий(Вент)"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "Хотенд"
+msgstr ""
 
 msgid "Parts"
 msgstr "Частини"
@@ -4269,6 +4283,14 @@ msgstr "Друк із використанням матеріалів, закр�
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
 msgstr "Друк філаментами в ams"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "Коли поточний матеріал закінчується, принтер буде продовжувати друк у наступному порядку."
@@ -5581,8 +5603,9 @@ msgstr "Адаптивні"
 msgid "Quality / Speed"
 msgstr "Якість/Швидкість"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "Згладити"
+msgstr ""
 
 msgid "Radius"
 msgstr "Радіус"
@@ -6201,6 +6224,9 @@ msgstr "Скасувати"
 msgid "Redo"
 msgstr "Повторити"
 
+msgid "Cut"
+msgstr "Вирізати"
+
 msgid "Cut selection to clipboard"
 msgstr "Вирізати виділення в буфер обміну"
 
@@ -6301,6 +6327,10 @@ msgstr "Показувати контур навколо виділеного о
 
 msgid "Preferences"
 msgstr "Налаштування"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "Вид"
@@ -9635,8 +9665,9 @@ msgstr "Несумісний"
 msgid "The selected preset is null!"
 msgstr "Обраний пресет є порожнім!"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "Кінець"
+msgstr ""
 
 msgid "Customize"
 msgstr "Налаштувати"
@@ -11627,29 +11658,33 @@ msgstr "Вибрати кілька об'єктів"
 msgid "Select objects by rectangle"
 msgstr "Виділити об'єкти прямокутником"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "Стрілка вгору"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
 msgstr "Перемістити виділення на 10 мм у позитивному напрямку Y"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "Стрілка вниз"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
 msgstr "Перемістити виділення на 10 мм у негативному напрямку Y"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "Стрілка вліво"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
 msgstr "Перемістити виділення на 10 мм у негативному напрямку по осі X"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "Стрілка праворуч"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
@@ -11734,8 +11769,16 @@ msgstr "Віддалити"
 msgid "Toggle printable for object/part"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "Переключення між Підготовка/Попередній перегляд"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11794,8 +11837,16 @@ msgstr "Увімкнення/вимкнення вікна G-коду"
 msgid "Move slider 5x faster"
 msgstr "Переміщення повзунка в 5 разів швидше"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "Горизонтальний повзунок - Перемістити в початкове положення"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "Горизонтальний повзунок - Перемістити в останню позицію"
@@ -16496,6 +16547,9 @@ msgstr "Якщо вибрано плавний або традиційний р�
 
 msgid "Traditional"
 msgstr "Традиційний"
+
+msgid "Smooth"
+msgstr "Згладити"
 
 msgid "Farthest point timelapse"
 msgstr "Таймлапс найдальшої точки"
@@ -21317,6 +21371,36 @@ msgid ""
 msgstr ""
 "Уникнення деформації\n"
 "Чи знаєте ви, що при друку матеріалами, схильними до деформації, такими як ABS, відповідне підвищення температури гарячого ліжка може зменшити ймовірність деформації?"
+
+#~ msgid "Enter"
+#~ msgstr "Ввести"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "Видалити"
+
+#~ msgid "Backspace"
+#~ msgstr "Назад"
+
+#~ msgid "Hotend"
+#~ msgstr "Хотенд"
+
+#~ msgid "End"
+#~ msgstr "Кінець"
+
+#~ msgid "Arrow Up"
+#~ msgstr "Стрілка вгору"
+
+#~ msgid "Arrow Down"
+#~ msgstr "Стрілка вниз"
+
+#~ msgid "Arrow Left"
+#~ msgstr "Стрілка вліво"
+
+#~ msgid "Arrow Right"
+#~ msgstr "Стрілка праворуч"
 
 #~ msgid "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
 #~ msgstr "Неправильний інтервал, переданий до Flow::with_spacing(), перевірте висоту шару та ширину екструзії"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -551,8 +551,9 @@ msgstr "Rimappa"
 msgid "Reset"
 msgstr "Reimposta"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "Invio"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "Tasto di scelta rapida "
@@ -887,8 +888,9 @@ msgstr "Rimuovi connettore dalla selezione"
 msgid "Select all connectors"
 msgstr "Seleziona tutti i connettori"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "Taglia"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "Ruota il piano di taglio"
@@ -1755,14 +1757,16 @@ msgstr "Seleziona"
 msgid "Select point"
 msgstr "Seleziona punto"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "Elimina"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "Riavvio della selezione"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "Annulla un elemento fino all'uscita"
@@ -1867,8 +1871,9 @@ msgstr ""
 msgid "Leaving Measure gizmo"
 msgstr ""
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "Assembla"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "Confermare il rapporto di esplosione = 1 e selezionare almeno due volumi."
@@ -2397,6 +2402,9 @@ msgstr "Impossibile avviare il download dell'URL. La cartella di destinazione no
 msgid "Import File"
 msgstr "Importa File"
 
+msgid "Delete"
+msgstr "Elimina"
+
 msgid "Choose files"
 msgstr "Scegli file"
 
@@ -2525,14 +2533,16 @@ msgstr "Nascondi"
 msgid "Show"
 msgstr "Mostra"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "Elimina"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "Elimina l'oggetto selezionato"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "Backspace"
+msgstr ""
 
 msgid "Load..."
 msgstr "Carica..."
@@ -2727,6 +2737,9 @@ msgstr "Converti da metri"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
 msgstr "Ripristina in metri"
+
+msgid "Assemble"
+msgstr "Assembla"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Assembla gli oggetti selezionati in un oggetto composto da più parti"
@@ -3498,8 +3511,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "Sinistra (Aux)"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "Hotend"
+msgstr ""
 
 msgid "Parts"
 msgstr "Parti"
@@ -4253,6 +4267,14 @@ msgstr "Stampa filamento con bobina esterna"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
 msgstr "Stampa con filamento nell'AMS"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "Quando si esaurisce il materiale corrente, la stampante continuerà a stampare nel seguente ordine."
@@ -5568,8 +5590,9 @@ msgstr "Adattiva"
 msgid "Quality / Speed"
 msgstr "Qualità / Velocità"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "Leviga"
+msgstr ""
 
 msgid "Radius"
 msgstr "Raggio"
@@ -6189,6 +6212,9 @@ msgstr "Annulla"
 msgid "Redo"
 msgstr "Ripeti"
 
+msgid "Cut"
+msgstr "Taglia"
+
 msgid "Cut selection to clipboard"
 msgstr "Taglia la selezione negli appunti"
 
@@ -6289,6 +6315,10 @@ msgstr "Mostra il contorno attorno all'oggetto selezionato nella scena 3D."
 
 msgid "Preferences"
 msgstr "Preferenze"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "Vista"
@@ -9616,8 +9646,9 @@ msgstr "Non compatibile"
 msgid "The selected preset is null!"
 msgstr "Il profilo selezionato è nullo!"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "Fine"
+msgstr ""
 
 msgid "Customize"
 msgstr "Personalizza"
@@ -11623,29 +11654,33 @@ msgstr "Seleziona più oggetti"
 msgid "Select objects by rectangle"
 msgstr "Seleziona oggetti per rettangolo"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "Freccia Su"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
 msgstr "Sposta selezione di 10 mm in direzione Y positiva"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "Freccia Giù"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
 msgstr "Sposta selezione di 10 mm in direzione Y negativa"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "Freccia Sinistra"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
 msgstr "Sposta selezione di 10 mm in direzione X negativa"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "Freccia Destra"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
@@ -11730,8 +11765,16 @@ msgstr "Rimpicciolisci"
 msgid "Toggle printable for object/part"
 msgstr "Attiva/disattiva stampa per oggetto/parte"
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "Passa tra Prepara e Anteprima"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11790,8 +11833,16 @@ msgstr "Attiva/Disattiva finestra G-code"
 msgid "Move slider 5x faster"
 msgstr "Sposta il cursore 5 volte più velocemente"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "Cursore di scorrimento orizzontale - Sposta alla posizione iniziale"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "Cursore di scorrimento orizzontale - Sposta alla posizione finale"
@@ -16572,6 +16623,9 @@ msgstr "Se si seleziona la modalità fluida o tradizionale, per ogni stampa verr
 
 msgid "Traditional"
 msgstr "Tradizionale"
+
+msgid "Smooth"
+msgstr "Leviga"
 
 msgid "Farthest point timelapse"
 msgstr ""
@@ -21418,6 +21472,36 @@ msgid ""
 msgstr ""
 "Evita le deformazioni\n"
 "Sapevi che quando si stampano materiali soggetti a deformazioni come l'ABS, aumentare in modo appropriato la temperatura del piano riscaldato può ridurre la probabilità di deformazione?"
+
+#~ msgid "Enter"
+#~ msgstr "Invio"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "Elimina"
+
+#~ msgid "Backspace"
+#~ msgstr "Backspace"
+
+#~ msgid "Hotend"
+#~ msgstr "Hotend"
+
+#~ msgid "End"
+#~ msgstr "Fine"
+
+#~ msgid "Arrow Up"
+#~ msgstr "Freccia Su"
+
+#~ msgid "Arrow Down"
+#~ msgstr "Freccia Giù"
+
+#~ msgid "Arrow Left"
+#~ msgstr "Freccia Sinistra"
+
+#~ msgid "Arrow Right"
+#~ msgstr "Freccia Destra"
 
 #~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
 #~ msgstr "Suggerimento: se hai cambiato l'ugello della stampante di recente, vai a 'Dispositivo -> Parti stampante' per modificare le impostazioni dell'ugello."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Orca Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: 2026-06-04 12:39+0700\n"
 "Last-Translator: Icezaza\n"
 "Language-Team: Thai\n"
@@ -552,8 +552,9 @@ msgstr "รีแมป"
 msgid "Reset"
 msgstr "รีเซ็ต"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "เข้า"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "ปุ่มลัด"
@@ -882,8 +883,9 @@ msgstr "ลบตัวเชื่อมต่อออกจากการเ
 msgid "Select all connectors"
 msgstr "เลือกตัวเชื่อมต่อทั้งหมด"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "ตัด"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "หมุนระนาบการตัด"
@@ -1742,14 +1744,16 @@ msgstr "เลือก"
 msgid "Select point"
 msgstr "เลือกจุด"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "ลบ"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "เริ่มการเลือกใหม่"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "ยกเลิกคุณลักษณะจนกว่าจะออก"
@@ -1854,8 +1858,9 @@ msgstr "เข้าสู่กิซโมวัด"
 msgid "Leaving Measure gizmo"
 msgstr "ออกจากกิซโมวัด"
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "ประกอบ"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "โปรดยืนยันอัตราส่วนการระเบิด = 1 และเลือกอย่างน้อยสองวอลุ่ม"
@@ -2375,6 +2380,9 @@ msgstr "ไม่สามารถเริ่มการดาวน์โห
 msgid "Import File"
 msgstr "นำเข้าไฟล์"
 
+msgid "Delete"
+msgstr "ลบ"
+
 msgid "Choose files"
 msgstr "ไฟล์เลือก"
 
@@ -2493,14 +2501,16 @@ msgstr "ซ่อน"
 msgid "Show"
 msgstr "แสดง"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "เดล"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "ลบวัตถุที่เลือก"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "แบ็คสเปซ"
+msgstr ""
 
 msgid "Load..."
 msgstr "โหลด..."
@@ -2685,6 +2695,9 @@ msgstr "แปลงจากเมตร"
 
 msgid "Restore to Meter"
 msgstr "คืนค่าเป็นเมตร"
+
+msgid "Assemble"
+msgstr "ประกอบ"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "ประกอบวัตถุที่เลือกให้เป็นวัตถุที่มีหลายส่วน"
@@ -3429,8 +3442,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "ซ้าย(เสริม)"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "ฮอตเอนด์"
+msgstr ""
 
 msgid "Parts"
 msgstr "ชิ้นส่วน"
@@ -4168,6 +4182,14 @@ msgstr "พิมพ์โดยใช้เส้นพลาสติกจา
 
 msgid "Print with filament in AMS"
 msgstr "พิมพ์ด้วยเส้นพลาสติกในระบบ AMS"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "เมื่อวัสดุปัจจุบันหมด เครื่องพิมพ์จะพิมพ์ต่อตามลำดับต่อไปนี้"
@@ -5460,8 +5482,9 @@ msgstr "ปรับตัวได้"
 msgid "Quality / Speed"
 msgstr "คุณภาพ/ความเร็ว"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "เรียบ"
+msgstr ""
 
 msgid "Radius"
 msgstr "รัศมี"
@@ -6075,6 +6098,9 @@ msgstr "เลิกทำ"
 msgid "Redo"
 msgstr "ทำซ้ำ"
 
+msgid "Cut"
+msgstr "ตัด"
+
 msgid "Cut selection to clipboard"
 msgstr "ตัดส่วนที่เลือกไปที่คลิปบอร์ด"
 
@@ -6173,6 +6199,10 @@ msgstr "แสดงเค้าร่างรอบๆ วัตถุที�
 
 msgid "Preferences"
 msgstr "การตั้งค่า"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "มุมมอง"
@@ -9449,8 +9479,9 @@ msgstr "เข้ากันไม่ได้"
 msgid "The selected preset is null!"
 msgstr "ค่าที่ตั้งล่วงหน้าที่เลือกเป็นโมฆะ!"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "จบ"
+msgstr ""
 
 msgid "Customize"
 msgstr "ปรับแต่ง"
@@ -11443,26 +11474,30 @@ msgstr "เลือกหลายวัตถุ"
 msgid "Select objects by rectangle"
 msgstr "เลือกวัตถุตามสี่เหลี่ยม"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "ลูกศรขึ้น"
+msgstr ""
 
 msgid "Move selection 10mm in positive Y direction"
 msgstr "เลื่อนส่วนที่เลือกไป 10 มม. ในทิศทางบวก Y"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "ลูกศรลง"
+msgstr ""
 
 msgid "Move selection 10mm in negative Y direction"
 msgstr "ย้ายส่วนที่เลือกไป 10 มม. ในทิศทางลบ Y"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "ลูกศรซ้าย"
+msgstr ""
 
 msgid "Move selection 10mm in negative X direction"
 msgstr "ย้ายส่วนที่เลือกไป 10 มม. ในทิศทาง X ลบ"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "ลูกศรขวา"
+msgstr ""
 
 msgid "Move selection 10mm in positive X direction"
 msgstr "เลื่อนส่วนที่เลือกไป 10 มม. ในทิศทาง X บวก"
@@ -11545,8 +11580,16 @@ msgstr "ซูมออก"
 msgid "Toggle printable for object/part"
 msgstr "สลับการพิมพ์สำหรับวัตถุ/ชิ้นส่วน"
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "สลับระหว่างการเตรียม/ดูตัวอย่าง"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11605,8 +11648,16 @@ msgstr "เปิด/ปิดหน้าต่างรหัส G"
 msgid "Move slider 5x faster"
 msgstr "เลื่อนตัวเลื่อนเร็วขึ้น 5 เท่า"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "แถบเลื่อนแนวนอน - เลื่อนไปยังตำแหน่งเริ่มต้น"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "แถบเลื่อนแนวนอน - เลื่อนไปยังตำแหน่งสุดท้าย"
@@ -16329,6 +16380,9 @@ msgstr "หากเลือกโหมดเรียบหรือโหม
 
 msgid "Traditional"
 msgstr "แบบดั้งเดิม"
+
+msgid "Smooth"
+msgstr "เรียบ"
 
 msgid "Farthest point timelapse"
 msgstr ""
@@ -21093,6 +21147,36 @@ msgid ""
 msgstr ""
 "หลีกเลี่ยงการบิดเบี้ยว\n"
 "คุณรู้หรือไม่ว่าเมื่อพิมพ์วัสดุที่มีแนวโน้มที่จะเกิดการบิดเบี้ยว เช่น ABS การเพิ่มอุณหภูมิฐานพิมพ์อย่างเหมาะสมสามารถลดความน่าจะเป็นของการบิดเบี้ยวได้"
+
+#~ msgid "Enter"
+#~ msgstr "เข้า"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "เดล"
+
+#~ msgid "Backspace"
+#~ msgstr "แบ็คสเปซ"
+
+#~ msgid "Hotend"
+#~ msgstr "ฮอตเอนด์"
+
+#~ msgid "End"
+#~ msgstr "จบ"
+
+#~ msgid "Arrow Up"
+#~ msgstr "ลูกศรขึ้น"
+
+#~ msgid "Arrow Down"
+#~ msgstr "ลูกศรลง"
+
+#~ msgid "Arrow Left"
+#~ msgstr "ลูกศรซ้าย"
+
+#~ msgid "Arrow Right"
+#~ msgstr "ลูกศรขวา"
 
 #~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
 #~ msgstr "เคล็ดลับ: หากคุณเปลี่ยนหัวฉีดของเครื่องพิมพ์เมื่อเร็วๆ นี้ โปรดไปที่ 'อุปกรณ์ -> ชิ้นส่วนเครื่องพิมพ์' เพื่อเปลี่ยนการตั้งค่าหัวฉีดของคุณ"

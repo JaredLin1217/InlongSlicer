@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -548,8 +548,9 @@ msgstr "Újrakiosztás"
 msgid "Reset"
 msgstr "Visszaállítás"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "Enter"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "Gyorsgomb "
@@ -884,8 +885,9 @@ msgstr "Csatlakozó eltávolítása a kijelölésből"
 msgid "Select all connectors"
 msgstr "Összes csatlakozó kijelölése"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "Vágás"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "Vágósík forgatása"
@@ -1752,14 +1754,16 @@ msgstr "Kiválasztás"
 msgid "Select point"
 msgstr "Pont kiválasztása"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "Törlés"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "Kijelölés újrakezdése"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "Jellemző visszavonása kilépésig"
@@ -1864,8 +1868,9 @@ msgstr ""
 msgid "Leaving Measure gizmo"
 msgstr ""
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "Összeállítás"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "Erősítsd meg, hogy a terjedési arány = 1, és válassz ki legalább két térfogatot."
@@ -2395,6 +2400,9 @@ msgstr "Az URL letöltése nem indítható. A célmappa nincs beállítva. Vála
 msgid "Import File"
 msgstr "Fájl importálása"
 
+msgid "Delete"
+msgstr "Törlés"
+
 msgid "Choose files"
 msgstr "Fájlok kiválasztása"
 
@@ -2523,14 +2531,16 @@ msgstr "Elrejtés"
 msgid "Show"
 msgstr "Megjelenítés"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "Del"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "Kiválasztott objektum törlése"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "Visszatörlés"
+msgstr ""
 
 msgid "Load..."
 msgstr "Betöltés..."
@@ -2725,6 +2735,9 @@ msgstr "Átváltás méterről"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
 msgstr "Visszaállítás méterre"
+
+msgid "Assemble"
+msgstr "Összeállítás"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Összeállítja a kijelölt objektumot egy több részből álló objektummá"
@@ -3498,8 +3511,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "Bal(Aux)"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "Fejegység"
+msgstr ""
 
 msgid "Parts"
 msgstr "Alkatrészek"
@@ -4253,6 +4267,14 @@ msgstr "Nyomtatás külső tartón lévő filamenttel."
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
 msgstr "Nyomtatás az AMS-ben lévő filamentekkel"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "Amikor az aktuális filament elfogy, a nyomtató a következő sorrendben folytatja a nyomtatást."
@@ -5568,8 +5590,9 @@ msgstr "Adaptív"
 msgid "Quality / Speed"
 msgstr "Minőség / sebesség"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "Sima"
+msgstr ""
 
 msgid "Radius"
 msgstr "Sugár"
@@ -6189,6 +6212,9 @@ msgstr "Visszavonás"
 msgid "Redo"
 msgstr "Mégis"
 
+msgid "Cut"
+msgstr "Vágás"
+
 msgid "Cut selection to clipboard"
 msgstr "Kijelölés kivágása a vágólapra"
 
@@ -6289,6 +6315,10 @@ msgstr "Körvonal megjelenítése a kijelölt objektum körül a 3D nézetben."
 
 msgid "Preferences"
 msgstr "Beállítások"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "Nézet"
@@ -9627,8 +9657,9 @@ msgstr "Nem kompatibilis"
 msgid "The selected preset is null!"
 msgstr "A kiválasztott beállítás nulla!"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "Vége"
+msgstr ""
 
 msgid "Customize"
 msgstr "Testreszabás"
@@ -11642,29 +11673,33 @@ msgstr "Több objektum kijelölése"
 msgid "Select objects by rectangle"
 msgstr "Objektumok kijelölése téglalapok alapján"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "Felfelé nyíl"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
 msgstr "Kijelölés mozgatása 10 mm-rel pozitív Y irányban"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "Lefelé nyíl"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
 msgstr "Kijelölés mozgatása 10 mm-rel negatív Y irányban"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "Balra nyíl"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
 msgstr "Kijelölés mozgatása 10 mm-rel negatív X irányban"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "Jobbra nyíl"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
@@ -11749,8 +11784,16 @@ msgstr "Zoom távolítás"
 msgid "Toggle printable for object/part"
 msgstr "Nyomtathatóság váltása objektumhoz/alkatrészhez"
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "Váltás előkészítés/előnézet között"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11809,8 +11852,16 @@ msgstr "G-kód ablak be/ki"
 msgid "Move slider 5x faster"
 msgstr "Csúszka 5x gyorsabb mozgatása"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "Vízszintes csúszka - Ugrás a kezdőpozícióra"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "Vízszintes csúszka - Ugrás az utolsó pozícióra"
@@ -16603,6 +16654,9 @@ msgstr "Ha a sima vagy a hagyományos mód van kiválasztva, minden nyomtatásn�
 
 msgid "Traditional"
 msgstr "Hagyományos"
+
+msgid "Smooth"
+msgstr "Sima"
 
 msgid "Farthest point timelapse"
 msgstr ""
@@ -21439,6 +21493,36 @@ msgid ""
 msgstr ""
 "Kunkorodás elkerülése\n"
 "Tudtad, hogy a kunkorodásra hajlamos anyagok (például ABS) nyomtatásakor a tárgyasztal hőmérsékletének növelése csökkentheti a kunkorodás valószínűségét?"
+
+#~ msgid "Enter"
+#~ msgstr "Enter"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "Del"
+
+#~ msgid "Backspace"
+#~ msgstr "Visszatörlés"
+
+#~ msgid "Hotend"
+#~ msgstr "Fejegység"
+
+#~ msgid "End"
+#~ msgstr "Vége"
+
+#~ msgid "Arrow Up"
+#~ msgstr "Felfelé nyíl"
+
+#~ msgid "Arrow Down"
+#~ msgstr "Lefelé nyíl"
+
+#~ msgid "Arrow Left"
+#~ msgstr "Balra nyíl"
+
+#~ msgid "Arrow Right"
+#~ msgstr "Jobbra nyíl"
 
 #~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
 #~ msgstr "Tipp: Ha nemrég cseréltél fúvókát a nyomtatón, lépj az 'Eszköz -> Nyomtató alkatrészei' menübe, és módosítsd a fúvóka beállítását."

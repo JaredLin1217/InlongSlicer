@@ -300,10 +300,6 @@ else ()
             COMMAND ln -sf InlongSlicer ${SLIC3R_APP_CMD}
             WORKING_DIRECTORY "$<TARGET_FILE_DIR:InlongSlicer>"
             VERBATIM)
-    else ()
-        add_custom_command(TARGET InlongSlicer POST_BUILD
-            WORKING_DIRECTORY "$<TARGET_FILE_DIR:InlongSlicer>"
-            VERBATIM)
     endif ()
     if (XCODE)
         # Because of Debug/Release/etc. configurations (similar to MSVC) the slic3r binary is located in an extra level

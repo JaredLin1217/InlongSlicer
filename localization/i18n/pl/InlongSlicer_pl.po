@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: InlongSlicer 2.3.0-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Krzysztof Morga <<tlumaczeniebs@gmail.com>>\n"
 "Language-Team: \n"
@@ -553,8 +553,9 @@ msgstr ""
 msgid "Reset"
 msgstr "Resetuj"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "Drukarka"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "Skrót klawiszowy "
@@ -889,8 +890,9 @@ msgstr "Usuń łącznik z zaznaczenia"
 msgid "Select all connectors"
 msgstr "Zaznacz wszystkie łączniki"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "Wytnij"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "Obróć przekrój"
@@ -1760,14 +1762,16 @@ msgstr "Wybierz"
 msgid "Select point"
 msgstr "Wybierz punkt"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "Usuń"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "Restartuj wybór"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "Anuluj funkcję przed wyjściem"
@@ -1872,8 +1876,9 @@ msgstr "Otwieranie uchwytu pomiaru"
 msgid "Leaving Measure gizmo"
 msgstr "Zamykanie uchwytu wytłaczania"
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "Złożenie"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "Proszę potwierdzić współczynnik eksplozji = 1 i wybrać co najmniej dwie objętości."
@@ -2394,6 +2399,9 @@ msgstr "Nie można rozpocząć pobierania pliku z adresu URL. Folder docelowy ni
 msgid "Import File"
 msgstr "Importuj plik"
 
+msgid "Delete"
+msgstr "Usuń"
+
 msgid "Choose files"
 msgstr "Wybierz pliki"
 
@@ -2522,14 +2530,16 @@ msgstr "Ukryj"
 msgid "Show"
 msgstr "Pokaż"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "Del"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "Usuń wybrany obiekt"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "Wstecz"
+msgstr ""
 
 msgid "Load..."
 msgstr "Wczytaj..."
@@ -2724,6 +2734,9 @@ msgstr "Konwertuj z metra"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
 msgstr "Przywróć do metra"
+
+msgid "Assemble"
+msgstr "Złożenie"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Zmontuj wybrane obiekty w obiekt wieloczęściowy"
@@ -3501,8 +3514,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "Lewy (Aux)"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "Hotend"
+msgstr ""
 
 msgid "Parts"
 msgstr "Wydruk"
@@ -4259,6 +4273,14 @@ msgstr "Drukowanie przy użyciu materiałów zamontowanych na tylnej części ob
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
 msgstr "Drukowanie filamentem z AMS"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "Gdy obecny filament się skończy, drukarka będzie kontynuować druk w następującej kolejności."
@@ -5569,8 +5591,9 @@ msgstr "Adaptacyjne"
 msgid "Quality / Speed"
 msgstr "Jakość / Prędkość"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "Wygładź"
+msgstr ""
 
 msgid "Radius"
 msgstr "Promień"
@@ -6190,6 +6213,9 @@ msgstr "Cofnij"
 msgid "Redo"
 msgstr "Ponów"
 
+msgid "Cut"
+msgstr "Wytnij"
+
 msgid "Cut selection to clipboard"
 msgstr "Przenosi zaznaczone obiekty do schowka"
 
@@ -6290,6 +6316,10 @@ msgstr "Przełącza wyświetlanie konturu wokół zaznaczonego obiektu w scenie 
 
 msgid "Preferences"
 msgstr "Preferencje"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "Widok"
@@ -9616,8 +9646,9 @@ msgstr "Niekompatybilne"
 msgid "The selected preset is null!"
 msgstr "Wybrany profil jest pusty!"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "Koniec"
+msgstr ""
 
 msgid "Customize"
 msgstr "Dostosuj"
@@ -11614,29 +11645,33 @@ msgstr "Wybierz wiele obiektów"
 msgid "Select objects by rectangle"
 msgstr "Wybierz obiekty prostokątem"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "Strzałka w górę"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
 msgstr "Przesuń wybrane o 10 mm w kierunku dodatnim osi Y"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "Strzałka w dół"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
 msgstr "Przesuń wybrane o 10 mm w kierunku ujemnym osi Y"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "Strzałka w lewo"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
 msgstr "Przesuń wybrane o 10 mm w kierunku ujemnym osi X"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "Strzałka w prawo"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
@@ -11721,8 +11756,16 @@ msgstr "Oddalenie"
 msgid "Toggle printable for object/part"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "Przełączanie między przygotowaniem/podglądem"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11781,8 +11824,16 @@ msgstr "Włącz/Wyłącz okno G-code"
 msgid "Move slider 5x faster"
 msgstr "Przesuń suwak 5x szybciej"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "Suwak poziomy - Przesuń do pozycji początkowej"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "Suwak poziomy - Przesuń do ostatniej pozycji"
@@ -16472,6 +16523,9 @@ msgstr "Jeśli wybrany jest tryb „Tradycyjny”, dla każdego wydruku będzie 
 
 msgid "Traditional"
 msgstr "Tradycyjny"
+
+msgid "Smooth"
+msgstr "Wygładź"
 
 msgid "Farthest point timelapse"
 msgstr ""
@@ -21284,6 +21338,36 @@ msgid ""
 msgstr ""
 "Unikaj odkształceń\n"
 "Czy wiesz, że podczas drukowania filamentami podatnymi na odkształcenia, takimi jak ABS, odpowiednie zwiększenie temperatury podgrzewanej płyty może zmniejszyć prawdopodobieństwo odkształceń?"
+
+#~ msgid "Enter"
+#~ msgstr "Drukarka"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "Del"
+
+#~ msgid "Backspace"
+#~ msgstr "Wstecz"
+
+#~ msgid "Hotend"
+#~ msgstr "Hotend"
+
+#~ msgid "End"
+#~ msgstr "Koniec"
+
+#~ msgid "Arrow Up"
+#~ msgstr "Strzałka w górę"
+
+#~ msgid "Arrow Down"
+#~ msgstr "Strzałka w dół"
+
+#~ msgid "Arrow Left"
+#~ msgstr "Strzałka w lewo"
+
+#~ msgid "Arrow Right"
+#~ msgstr "Strzałka w prawo"
 
 #~ msgid "Invalid spacing supplied to Flow::with_spacing(), check your layer height and extrusion width"
 #~ msgstr "Nieprawidłowy odstęp podany do Flow::with_spacing(), sprawdź wysokość warstwy i szerokość ekstruzji."

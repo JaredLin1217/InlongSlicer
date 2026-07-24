@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: 2026-04-08 23:59+0300\n"
 "Last-Translator: GlauTech\n"
 "Language-Team: \n"
@@ -551,8 +551,9 @@ msgstr "Yeniden eşleştir"
 msgid "Reset"
 msgstr "Sıfırla"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "Enter"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "Kısayol tuşu "
@@ -887,8 +888,9 @@ msgstr "Bağlayıcıyı seçimden kaldır"
 msgid "Select all connectors"
 msgstr "Tüm bağlayıcıları seç"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "Kes"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "Kesim düzlemini döndür"
@@ -1755,14 +1757,16 @@ msgstr "Seç"
 msgid "Select point"
 msgstr "Nokta seç"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "Sil"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "Seçimi sıfırla"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "İptal et"
@@ -1867,8 +1871,9 @@ msgstr ""
 msgid "Leaving Measure gizmo"
 msgstr ""
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "Birleştir"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "Lütfen patlama oranının = 1 olduğunu doğrulayın ve en az iki cilt seçin."
@@ -2397,6 +2402,9 @@ msgstr "URL indirme işlemi başlatılamadı. Hedef klasör ayarlanmamış. Lüt
 msgid "Import File"
 msgstr "Dosya İçe Aktar"
 
+msgid "Delete"
+msgstr "Sil"
+
 msgid "Choose files"
 msgstr "Dosyaları seç"
 
@@ -2525,14 +2533,16 @@ msgstr "Gizle"
 msgid "Show"
 msgstr "Göster"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "Sil"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "Seçilen nesneyi sil"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "Backspace"
+msgstr ""
 
 msgid "Load..."
 msgstr "Yükle..."
@@ -2727,6 +2737,9 @@ msgstr "Metreden dönüştür"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Restore to Meter"
 msgstr "Metreye geri çevir"
+
+msgid "Assemble"
+msgstr "Birleştir"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Seçilen nesneleri birden çok parçalı bir nesneyle birleştirin"
@@ -3499,8 +3512,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "Sol (Yardımcı)"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "Hotend"
+msgstr ""
 
 msgid "Parts"
 msgstr "Parçalar"
@@ -4255,6 +4269,14 @@ msgstr "Kasanın arkasına monte edilen malzemeleri kullanarak yazdırma"
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
 msgstr "AMS içerisindeki filamentlerle yazdırma"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "Mevcut malzeme bittiğinde yazıcı aşağıdaki sırayla yazdırmaya devam edecektir."
@@ -5571,8 +5593,9 @@ msgstr "Uyarlanabilir"
 msgid "Quality / Speed"
 msgstr "Kalite / Hız"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "Pürüzsüz"
+msgstr ""
 
 msgid "Radius"
 msgstr "Yarıçap"
@@ -6192,6 +6215,9 @@ msgstr "Geri al"
 msgid "Redo"
 msgstr "İleri Al"
 
+msgid "Cut"
+msgstr "Kes"
+
 msgid "Cut selection to clipboard"
 msgstr "Seçimi panoya kes"
 
@@ -6292,6 +6318,10 @@ msgstr "3D sahnede seçilen nesnenin etrafındaki ana hatları göster."
 
 msgid "Preferences"
 msgstr "Tercihler"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "Görünüm"
@@ -9617,8 +9647,9 @@ msgstr "Uyumsuz"
 msgid "The selected preset is null!"
 msgstr "Seçilen ön ayar boş!"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "Son"
+msgstr ""
 
 msgid "Customize"
 msgstr "Özelleştir"
@@ -11614,29 +11645,33 @@ msgstr "Birden fazla nesne seç"
 msgid "Select objects by rectangle"
 msgstr "Nesneleri dikdörtgene göre seç"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "Yukarı ok"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive Y direction"
 msgstr "Seçimi pozitif Y yönünde 10 mm taşı"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "Aşağı ok"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative Y direction"
 msgstr "Seçimi negatif Y yönünde 10 mm taşı"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "Sol Yön Tuşu"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in negative X direction"
 msgstr "Seçimi negatif X yönünde 10 mm taşı"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "Sağ Yön Tuşu"
+msgstr ""
 
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Move selection 10mm in positive X direction"
@@ -11721,8 +11756,16 @@ msgstr "Uzaklaştır"
 msgid "Toggle printable for object/part"
 msgstr ""
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "Hazırlama/Önizleme arasında geçiş yap"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11781,8 +11824,16 @@ msgstr "G-kodu penceresini aç/kapat"
 msgid "Move slider 5x faster"
 msgstr "Kaydırıcıyı 5 kat daha hızlı hareket ettirin"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "Yatay kaydırıcı - Başlangıç konumuna taşıyın"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "Yatay kaydırıcı - Son konuma git"
@@ -16501,6 +16552,9 @@ msgstr "Düzgün veya geleneksel mod seçilirse her baskı için bir hızlandır
 
 msgid "Traditional"
 msgstr "Geleneksel"
+
+msgid "Smooth"
+msgstr "Pürüzsüz"
 
 msgid "Farthest point timelapse"
 msgstr ""
@@ -21343,6 +21397,36 @@ msgid ""
 msgstr ""
 "Eğilmeyi önleyin\n"
 "ABS gibi bükülmeye yatkın malzemelere baskı yaparken, ısıtma yatağı sıcaklığının uygun şekilde arttırılmasının bükülme olasılığını azaltabileceğini biliyor muydunuz?"
+
+#~ msgid "Enter"
+#~ msgstr "Enter"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "Sil"
+
+#~ msgid "Backspace"
+#~ msgstr "Backspace"
+
+#~ msgid "Hotend"
+#~ msgstr "Hotend"
+
+#~ msgid "End"
+#~ msgstr "Son"
+
+#~ msgid "Arrow Up"
+#~ msgstr "Yukarı ok"
+
+#~ msgid "Arrow Down"
+#~ msgstr "Aşağı ok"
+
+#~ msgid "Arrow Left"
+#~ msgstr "Sol Yön Tuşu"
+
+#~ msgid "Arrow Right"
+#~ msgstr "Sağ Yön Tuşu"
 
 #~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
 #~ msgstr "İpuçları: Yazıcınızın püskürtme ucunu yakın zamanda değiştirdiyseniz, püskürtme ucu ayarınızı değiştirmek için lütfen 'Cihaz -> Yazıcı parçaları'na gidin."

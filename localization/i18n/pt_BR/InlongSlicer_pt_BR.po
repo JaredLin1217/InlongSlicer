@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-23 20:45+0800\n"
+"POT-Creation-Date: 2026-07-25 06:48+0800\n"
 "PO-Revision-Date: 2026-03-22 17:15-0300\n"
 "Last-Translator: Alexandre Folle de Menezes\n"
 "Language-Team: Portuguese, Brazilian\n"
@@ -553,8 +553,9 @@ msgstr "Remapear"
 msgid "Reset"
 msgstr "Reiniciar"
 
+msgctxt "Keyboard Shortcut"
 msgid "Enter"
-msgstr "Enter"
+msgstr ""
 
 msgid "Shortcut Key "
 msgstr "Tecla de atalho "
@@ -883,8 +884,9 @@ msgstr "Remover conector da seleção"
 msgid "Select all connectors"
 msgstr "Selecionar todos os conectores"
 
+msgctxt "Cut tool"
 msgid "Cut"
-msgstr "Cortar"
+msgstr ""
 
 msgid "Rotate cut plane"
 msgstr "Rotacionar plano de corte"
@@ -1745,14 +1747,16 @@ msgstr "Selecionar"
 msgid "Select point"
 msgstr "Selecionar ponto"
 
+msgctxt "Keyboard Shortcut"
 msgid "Delete"
-msgstr "Excluir"
+msgstr ""
 
 msgid "Restart selection"
 msgstr "Reiniciar seleção"
 
+msgctxt "Keyboard Shortcut"
 msgid "Esc"
-msgstr "Esc"
+msgstr ""
 
 msgid "Cancel a feature until exit"
 msgstr "Cancelar um recurso até sair"
@@ -1857,8 +1861,9 @@ msgstr "Entrando no gizmo de Medida"
 msgid "Leaving Measure gizmo"
 msgstr "Saindo do gizmo de Medida"
 
+msgctxt "Assembly tool"
 msgid "Assemble"
-msgstr "Montar"
+msgstr ""
 
 msgid "Please confirm explosion ratio = 1 and select at least two volumes."
 msgstr "Por favor, confirme a taxa de explosão = 1 e selecione pelo menos dois volumes."
@@ -2396,6 +2401,9 @@ msgstr "Não foi possível baixar da URL. A pasta de destino não está definida
 msgid "Import File"
 msgstr "Importar Arquivo"
 
+msgid "Delete"
+msgstr "Excluir"
+
 msgid "Choose files"
 msgstr "Escolher arquivos"
 
@@ -2514,14 +2522,16 @@ msgstr "Ocultar"
 msgid "Show"
 msgstr "Mostrar"
 
+msgctxt "Keyboard Shortcut"
 msgid "Del"
-msgstr "Del"
+msgstr ""
 
 msgid "Delete the selected object"
 msgstr "Apagar o objeto selecionado"
 
+msgctxt "Keyboard Shortcut"
 msgid "Backspace"
-msgstr "Backspace"
+msgstr ""
 
 msgid "Load..."
 msgstr "Carregar…"
@@ -2706,6 +2716,9 @@ msgstr "Converter de Metros"
 
 msgid "Restore to Meter"
 msgstr "Restaurar para Metros"
+
+msgid "Assemble"
+msgstr "Montar"
 
 msgid "Assemble the selected objects into an object with multiple parts"
 msgstr "Montar os objetos selecionados em um objeto com várias peças"
@@ -3455,8 +3468,9 @@ msgctxt "air_duct"
 msgid "Left(Aux)"
 msgstr "Esquerda(Aux)"
 
+msgctxt "Hotend Heat Breaker Fan"
 msgid "Hotend"
-msgstr "Extrusora"
+msgstr "Hotend"
 
 msgid "Parts"
 msgstr "Peças"
@@ -4207,6 +4221,14 @@ msgstr "Imprimir usando filamento no carretel externo."
 # TODO: Review, changed by lang refactor. PR 14254
 msgid "Print with filament in AMS"
 msgstr "Imprimir com filamentos no AMS"
+
+msgctxt "Nozzle position"
+msgid "Left"
+msgstr ""
+
+msgctxt "Nozzle position"
+msgid "Right"
+msgstr ""
 
 msgid "When the current material run out, the printer will continue to print in the following order."
 msgstr "Quando o material atual acabar, a impressora continuará a imprimir na seguinte ordem."
@@ -5506,8 +5528,9 @@ msgstr "Adaptativo"
 msgid "Quality / Speed"
 msgstr "Qualidade / Velocidade"
 
+msgctxt "Mesh action"
 msgid "Smooth"
-msgstr "Suave"
+msgstr ""
 
 msgid "Radius"
 msgstr "Raio"
@@ -6126,6 +6149,9 @@ msgstr "Desfazer"
 msgid "Redo"
 msgstr "Refazer"
 
+msgid "Cut"
+msgstr "Cortar"
+
 msgid "Cut selection to clipboard"
 msgstr "Recortar seleção para área de transferência"
 
@@ -6226,6 +6252,10 @@ msgstr "Mostrar contorno ao redor do objeto selecionado na cena 3D."
 
 msgid "Preferences"
 msgstr "Preferências"
+
+msgctxt "Menu"
+msgid "Edit"
+msgstr ""
 
 msgid "View"
 msgstr "Visualizar"
@@ -9546,8 +9576,9 @@ msgstr "Incompatível"
 msgid "The selected preset is null!"
 msgstr "A predefinição selecionada é nula!"
 
+msgctxt "Layer range"
 msgid "End"
-msgstr "Fim"
+msgstr ""
 
 msgid "Customize"
 msgstr "Personalizar"
@@ -11554,26 +11585,30 @@ msgstr "Selecionar vários objetos"
 msgid "Select objects by rectangle"
 msgstr "Selecionar objetos por retângulo"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "Seta para cima"
+msgstr ""
 
 msgid "Move selection 10mm in positive Y direction"
 msgstr "Mover seleção 10mm na direção Y positiva"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "Seta para baixo"
+msgstr ""
 
 msgid "Move selection 10mm in negative Y direction"
 msgstr "Mover seleção 10mm na direção Y negativa"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "Seta para esquerda"
+msgstr ""
 
 msgid "Move selection 10mm in negative X direction"
 msgstr "Mover seleção 10mm na direção X negativa"
 
+msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "Seta para direita"
+msgstr ""
 
 msgid "Move selection 10mm in positive X direction"
 msgstr "Mover seleção 10mm na direção X positiva"
@@ -11656,8 +11691,16 @@ msgstr "Afastar zoom"
 msgid "Toggle printable for object/part"
 msgstr "Alternar modo de impressão para objeto/peça"
 
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr ""
+
 msgid "Switch between Prepare/Preview"
 msgstr "Alternar entre Preparar/Pré-visualizar"
+
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr ""
 
 msgid "Open actions speed dial"
 msgstr ""
@@ -11716,8 +11759,16 @@ msgstr "Ativar/Desativar janela de G-code"
 msgid "Move slider 5x faster"
 msgstr "Mover o controle deslizante 5 vezes mais rápido"
 
+msgctxt "Keyboard Shortcut"
+msgid "Home"
+msgstr ""
+
 msgid "Horizontal slider - Move to start position"
 msgstr "Barra deslizante horizontal — Mover para a posição inicial"
+
+msgctxt "Keyboard Shortcut"
+msgid "End"
+msgstr ""
 
 msgid "Horizontal slider - Move to last position"
 msgstr "Barra deslizante horizontal — Mover para a última posição"
@@ -16481,6 +16532,9 @@ msgstr "Se o modo suave ou tradicional for selecionado, um vídeo em timelapse s
 
 msgid "Traditional"
 msgstr "Tradicional"
+
+msgid "Smooth"
+msgstr "Suave"
 
 msgid "Farthest point timelapse"
 msgstr ""
@@ -21270,6 +21324,36 @@ msgid ""
 msgstr ""
 "Evitar empenamento\n"
 "Você sabia que ao imprimir materiais propensos ao empenamento, como ABS, aumentar adequadamente a temperatura da mesa aquecida pode reduzir a probabilidade de empenamento?"
+
+#~ msgid "Enter"
+#~ msgstr "Enter"
+
+#~ msgid "Esc"
+#~ msgstr "Esc"
+
+#~ msgid "Del"
+#~ msgstr "Del"
+
+#~ msgid "Backspace"
+#~ msgstr "Backspace"
+
+#~ msgid "Hotend"
+#~ msgstr "Extrusora"
+
+#~ msgid "End"
+#~ msgstr "Fim"
+
+#~ msgid "Arrow Up"
+#~ msgstr "Seta para cima"
+
+#~ msgid "Arrow Down"
+#~ msgstr "Seta para baixo"
+
+#~ msgid "Arrow Left"
+#~ msgstr "Seta para esquerda"
+
+#~ msgid "Arrow Right"
+#~ msgstr "Seta para direita"
 
 #~ msgid "Tips: If you changed your nozzle of your printer lately, Please go to 'Device -> Printer parts' to change your nozzle setting."
 #~ msgstr "Dica: Se você trocou o bico da sua impressora recentemente, acesse 'Dispositivo -> Peças da impressora' para alterar as configurações do bico."
