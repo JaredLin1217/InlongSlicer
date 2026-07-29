@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 16:58+0800\n"
+"POT-Creation-Date: 2026-07-30 06:51+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3604,6 +3604,9 @@ msgid "Arranging..."
 msgstr ""
 
 msgid "Arranging"
+msgstr ""
+
+msgid "Arranging "
 msgstr ""
 
 msgid "Arranging canceled."
@@ -9018,6 +9021,17 @@ msgstr ""
 msgid "When scrubbing the layer slider in the sliced preview, render the layers below the current one darkened so that only the layer being viewed is shown at full brightness."
 msgstr ""
 
+msgid "Dimmed layer brightness"
+msgstr ""
+
+msgid "%"
+msgstr ""
+
+msgid ""
+"How brightly the dimmed layers are rendered when \"Dim lower layers\" is enabled.\n"
+"99% is barely darkened, 0% renders them black. Capped at 99% because 100% would be the same as disabling the option."
+msgstr ""
+
 msgid "Login region"
 msgstr ""
 
@@ -12685,9 +12699,6 @@ msgid "Warp prevention max slowdown"
 msgstr ""
 
 msgid "Maximum local slowdown applied by warp prevention."
-msgstr ""
-
-msgid "%"
 msgstr ""
 
 msgid "Warp prevention minimum wall speed"
