@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-25 06:48+0800\n"
+"POT-Creation-Date: 2026-07-29 16:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -982,7 +982,7 @@ msgstr ""
 #, possible-boost-format
 msgid ""
 "Objects(%1%) have duplicated connectors. Some connectors may be missing in slicing result.\n"
-"Please report to PrusaSlicer team in which scenario this issue happened.\n"
+"Please report to the InlongSlicer team and describe the scenario in which this issue happened.\n"
 "Thank you."
 msgstr ""
 
@@ -3383,7 +3383,6 @@ msgstr ""
 msgid "Innerloop"
 msgstr ""
 
-#. TRN To be shown in the main menu View->Top
 msgid "Top"
 msgstr ""
 
@@ -5472,7 +5471,21 @@ msgid "Align to Y axis"
 msgstr ""
 
 msgctxt "Camera View"
+msgid "Front"
+msgstr ""
+
+msgctxt "Camera View"
 msgid "Back"
+msgstr ""
+
+#. TRN To be shown in the main menu View->Top
+msgctxt "Camera View"
+msgid "Top"
+msgstr ""
+
+#. TRN To be shown in the main menu View->Bottom
+msgctxt "Camera View"
+msgid "Bottom"
 msgstr ""
 
 msgctxt "Camera View"
@@ -5855,19 +5868,13 @@ msgstr ""
 msgid "Top View"
 msgstr ""
 
-#. TRN To be shown in the main menu View->Bottom
-msgid "Bottom"
-msgstr ""
-
 msgid "Bottom View"
-msgstr ""
-
-msgid "Front"
 msgstr ""
 
 msgid "Front View"
 msgstr ""
 
+msgctxt "Camera View"
 msgid "Rear"
 msgstr ""
 
@@ -12778,10 +12785,24 @@ msgstr ""
 msgid "Intra-layer order"
 msgstr ""
 
-msgid "Print order within a single layer."
+msgid ""
+"Order in which object instances are visited within a single layer, which controls how much travel is spent moving between them.\n"
+"\n"
+"Default: nearest-neighbor chaining, refined with 2-opt and crossing removal. A good general choice.\n"
+"As object list: instances are printed in the same order as the object list, without any path optimization. Use it when you need a predictable, manually controlled order.\n"
+"Best of all (shortest path): every strategy is evaluated and the shortest one is used. The object instance order is decided once for the whole print, while the ordering of individual islands is decided per layer, so different layers may end up using different strategies. Slightly slower to slice.\n"
+"Snake: serpentine row-by-row traversal, refined with 2-opt. Well suited to regular grids of many small parts.\n"
+"\n"
+"With multiple filaments or tools in the same layer, minimizing tool changes takes priority: objects are grouped by filament first and this setting only orders the instances within each filament group, so the overall sequence may not look like the shortest path across the plate."
 msgstr ""
 
 msgid "As object list"
+msgstr ""
+
+msgid "Best of all (shortest path)"
+msgstr ""
+
+msgid "Snake"
 msgstr ""
 
 msgid "Slow printing down for better layer cooling"
@@ -15241,7 +15262,7 @@ msgstr ""
 msgid "Retract amount after wipe"
 msgstr ""
 
-#, possible-c-format
+#, no-c-format, no-boost-format
 msgid ""
 "The length of fast retraction after wipe, relative to retraction length.\n"
 "The value will be clamped by 100% minus the retract amount before the wipe value."
@@ -17830,6 +17851,15 @@ msgid ""
 "Please select one that should be used."
 msgstr ""
 
+msgid "Auto-scale for nozzle"
+msgstr ""
+
+msgid ""
+"This model is designed around a 0.4 mm nozzle with a 0.2 mm layer height. \n"
+"When the scaling option is enabled (recommended), it dynamically resizes to match your current nozzle diameter and an appropriate layer height, making the test both accurate and easy to read.\n"
+"Turn scaling off only if you wish to print the reference model exactly as-is."
+msgstr ""
+
 msgid "PA Calibration"
 msgstr ""
 
@@ -17952,11 +17982,50 @@ msgstr ""
 msgid "End speed: "
 msgstr ""
 
+msgid "Auto-adjust to max volumetric speed"
+msgstr ""
+
+msgid "If the end speed would exceed the filament's maximum volumetric speed, automatically lower the layer height (keeping standard values and staying within the machine's limits) to reach it. If even the minimum layer height is not enough, lower the end speed instead."
+msgstr ""
+
 msgid ""
 "Please input valid values:\n"
 "start > 10\n"
 "step >= 0\n"
 "end > start + step"
+msgstr ""
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"The end speed (%.0f mm/s) exceeds the filament's maximum volumetric speed (%.1f mm³/s), which limits the outer wall to about %.0f mm/s at this line width and layer height.\n"
+" Speeds above this will be clamped, so the upper blocks of the tower will not print at the requested speed.\n"
+"\n"
+"%s"
+msgstr ""
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"The end speed (%.0f mm/s) exceeds the filament's maximum volumetric speed (%.1f mm³/s) at the default layer height (%.2f mm).\n"
+"\n"
+"The layer height has been reduced to %.2f mm (a value used by this printer's profiles) so the tower can reach the requested speed."
+msgstr ""
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"Even at the smallest layer height used by this printer's profiles (%.2f mm) the end speed (%.0f mm/s) exceeds the filament's maximum volumetric speed (%.1f mm³/s).\n"
+"\n"
+"The layer height will be set to %.2f mm and the end speed lowered to %.0f mm/s.\n"
+"\n"
+"Continue?"
+msgstr ""
+
+msgid "Continue anyway?"
+msgstr ""
+
+msgid "Enable \"Auto-adjust\" to fix this automatically, or continue anyway?"
+msgstr ""
+
+msgid "Enable \"Auto-scale for nozzle\" and \"Auto-adjust\" to fix this automatically, or continue anyway?"
 msgstr ""
 
 msgid "Start retraction length: "

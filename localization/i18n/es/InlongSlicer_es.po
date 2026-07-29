@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-25 06:48+0800\n"
+"POT-Creation-Date: 2026-07-29 16:58+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Ian A. Bassi <>\n"
 "Language-Team: \n"
@@ -983,12 +983,9 @@ msgstr "Conector"
 #, boost-format
 msgid ""
 "Objects(%1%) have duplicated connectors. Some connectors may be missing in slicing result.\n"
-"Please report to PrusaSlicer team in which scenario this issue happened.\n"
+"Please report to the InlongSlicer team and describe the scenario in which this issue happened.\n"
 "Thank you."
 msgstr ""
-"Los objetos(%1%) tienen conectores duplicados. Es posible que falten algunos conectores en el resultado del laminado.\n"
-"Informe al equipo de PrusaSlicer sobre el escenario en el que se produjo este problema.\n"
-"Gracias."
 
 msgid "Cut by Plane"
 msgstr "Corte por plano"
@@ -3377,7 +3374,7 @@ msgid "Connection to printer failed"
 msgstr "Conexión fallida con la impresora"
 
 msgid "Please check the network connection of the printer and Orca."
-msgstr "Compruebe la conexión de red de la impresora y Orca."
+msgstr "Compruebe la conexión de red de la impresora y Inlong."
 
 msgid "Connecting..."
 msgstr "Conectando..."
@@ -3442,7 +3439,6 @@ msgstr "Recámara"
 msgid "Innerloop"
 msgstr "Bucle interno"
 
-#. TRN To be shown in the main menu View->Top
 msgid "Top"
 msgstr "Superior"
 
@@ -5616,9 +5612,26 @@ msgstr "Evitar la zona de calibración del extrusor"
 msgid "Align to Y axis"
 msgstr "Alinear con el eje Y"
 
+# AI Translated
+msgctxt "Camera View"
+msgid "Front"
+msgstr "Frontal"
+
 msgctxt "Camera View"
 msgid "Back"
 msgstr "Posterior"
+
+# AI Translated
+#. TRN To be shown in the main menu View->Top
+msgctxt "Camera View"
+msgid "Top"
+msgstr "Superior"
+
+# AI Translated
+#. TRN To be shown in the main menu View->Bottom
+msgctxt "Camera View"
+msgid "Bottom"
+msgstr "Inferior"
 
 msgctxt "Camera View"
 msgid "Left"
@@ -6006,19 +6019,14 @@ msgstr "Vista por Defecto"
 msgid "Top View"
 msgstr "Vista superior"
 
-#. TRN To be shown in the main menu View->Bottom
-msgid "Bottom"
-msgstr "Inferior"
-
 msgid "Bottom View"
 msgstr "Vista inferior"
-
-msgid "Front"
-msgstr "Frontal"
 
 msgid "Front View"
 msgstr "Vista frontal"
 
+# AI Translated
+msgctxt "Camera View"
 msgid "Rear"
 msgstr "Trasera"
 
@@ -9004,7 +9012,7 @@ msgid "Remember printer configuration"
 msgstr "Recordar la configuración de la impresora"
 
 msgid "If enabled, Orca will remember and switch filament/process configuration for each printer automatically."
-msgstr "Si está activada, Orca recordará y cambiará la configuración de archivos/procesos para cada impresora automáticamente."
+msgstr "Si está activada, Inlong recordará y cambiará la configuración de archivos/procesos para cada impresora automáticamente."
 
 msgid "Group user filament presets"
 msgstr "Agrupar perfiles de filamento del usuario"
@@ -12265,7 +12273,7 @@ msgid ""
 "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\n"
 "Orca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the maximum jerk setting in your printer's configuration to get higher speeds."
-msgstr "El ajuste de jerk supera el jerk máximo de la impresora (machine_max_jerk_x/machine_max_jerk_y). Orca limitará automáticamente la velocidad de jerk para garantizar que no supere las capacidades de la impresora. Puede ajustar el ajuste de jerk máximo en la configuración de la impresora para usar velocidades más altas."
+msgstr "El ajuste de jerk supera el jerk máximo de la impresora (machine_max_jerk_x/machine_max_jerk_y). Inlong limitará automáticamente la velocidad de jerk para garantizar que no supere las capacidades de la impresora. Puede ajustar el ajuste de jerk máximo en la configuración de la impresora para usar velocidades más altas."
 
 msgid ""
 "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\n"
@@ -12273,14 +12281,14 @@ msgid ""
 "You can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits."
 msgstr ""
 "El ajuste de Junction deviation supera el valor máximo de la impresora (machine_max_junction_deviation).\n"
-"Orca limitará automáticamente la Junction deviation para garantizar que no supere las capacidades de la impresora.\n"
+"Inlong limitará automáticamente la Junction deviation para garantizar que no supere las capacidades de la impresora.\n"
 "Puede ajustar el valor machine_max_junction_deviation en la configuración de la impresora para obtener límites más altos."
 
 msgid ""
 "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\n"
 "Orca will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds."
-msgstr "El ajuste de aceleración supera la aceleración máxima de la impresora (machine_max_acceleration_extruding). Orca limitará automáticamente la velocidad de aceleración para garantizar que no supere las capacidades de la impresora. Puede ajustar el valor machine_max_acceleration_extruding en la configuración de la impresora para usar velocidades superiores."
+msgstr "El ajuste de aceleración supera la aceleración máxima de la impresora (machine_max_acceleration_extruding). Inlong limitará automáticamente la velocidad de aceleración para garantizar que no supere las capacidades de la impresora. Puede ajustar el valor machine_max_acceleration_extruding en la configuración de la impresora para usar velocidades superiores."
 
 msgid ""
 "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\n"
@@ -12288,7 +12296,7 @@ msgid ""
 "You can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds."
 msgstr ""
 "El ajuste de aceleración de desplazamiento supera la aceleración máxima de desplazamiento de la impresora (machine_max_acceleration_travel).\n"
-"Orca limitará automáticamente la velocidad de aceleración de desplazamiento para garantizar que no supere las capacidades de la impresora.\n"
+"Inlong limitará automáticamente la velocidad de aceleración de desplazamiento para garantizar que no supere las capacidades de la impresora.\n"
 "Puede ajustar el valor de machine_max_acceleration_travel en la configuración de la impresora para usar velocidades más altas."
 
 msgid "The precise wall option will be ignored for outer-inner or inner-outer-inner wall sequences."
@@ -13267,11 +13275,25 @@ msgstr "Por objeto"
 msgid "Intra-layer order"
 msgstr "Orden dentro de la capa"
 
-msgid "Print order within a single layer."
-msgstr "Orden de impresión dentro de cada capa."
+msgid ""
+"Order in which object instances are visited within a single layer, which controls how much travel is spent moving between them.\n"
+"\n"
+"Default: nearest-neighbor chaining, refined with 2-opt and crossing removal. A good general choice.\n"
+"As object list: instances are printed in the same order as the object list, without any path optimization. Use it when you need a predictable, manually controlled order.\n"
+"Best of all (shortest path): every strategy is evaluated and the shortest one is used. The object instance order is decided once for the whole print, while the ordering of individual islands is decided per layer, so different layers may end up using different strategies. Slightly slower to slice.\n"
+"Snake: serpentine row-by-row traversal, refined with 2-opt. Well suited to regular grids of many small parts.\n"
+"\n"
+"With multiple filaments or tools in the same layer, minimizing tool changes takes priority: objects are grouped by filament first and this setting only orders the instances within each filament group, so the overall sequence may not look like the shortest path across the plate."
+msgstr ""
 
 msgid "As object list"
 msgstr "Como lista de objetos"
+
+msgid "Best of all (shortest path)"
+msgstr ""
+
+msgid "Snake"
+msgstr ""
 
 msgid "Slow printing down for better layer cooling"
 msgstr "Reducir la velocidad de impresión para mejorar la refrigeración de las capas"
@@ -15965,7 +15987,7 @@ msgstr "La longitud de la retracción rápida antes de la purga, en relación co
 msgid "Retract amount after wipe"
 msgstr "Cantidad de retracción después de la limpieza"
 
-#, c-format
+#, no-c-format, no-boost-format
 msgid ""
 "The length of fast retraction after wipe, relative to retraction length.\n"
 "The value will be clamped by 100% minus the retract amount before the wipe value."
@@ -18687,6 +18709,15 @@ msgstr ""
 "Hay varias direcciones IP resueltas del nombre del host  %1%.\n"
 "Por favor, seleccione la que debe usarse."
 
+msgid "Auto-scale for nozzle"
+msgstr ""
+
+msgid ""
+"This model is designed around a 0.4 mm nozzle with a 0.2 mm layer height. \n"
+"When the scaling option is enabled (recommended), it dynamically resizes to match your current nozzle diameter and an appropriate layer height, making the test both accurate and easy to read.\n"
+"Turn scaling off only if you wish to print the reference model exactly as-is."
+msgstr ""
+
 msgid "PA Calibration"
 msgstr "Calibración PA"
 
@@ -18823,6 +18854,12 @@ msgstr "Velocidad inicial: "
 msgid "End speed: "
 msgstr "Velocidad final: "
 
+msgid "Auto-adjust to max volumetric speed"
+msgstr ""
+
+msgid "If the end speed would exceed the filament's maximum volumetric speed, automatically lower the layer height (keeping standard values and staying within the machine's limits) to reach it. If even the minimum layer height is not enough, lower the end speed instead."
+msgstr ""
+
 msgid ""
 "Please input valid values:\n"
 "start > 10\n"
@@ -18833,6 +18870,39 @@ msgstr ""
 "inicio > 10\n"
 "incremento >=0\n"
 "final > inicio + paso"
+
+#, c-format, boost-format
+msgid ""
+"The end speed (%.0f mm/s) exceeds the filament's maximum volumetric speed (%.1f mm³/s), which limits the outer wall to about %.0f mm/s at this line width and layer height.\n"
+" Speeds above this will be clamped, so the upper blocks of the tower will not print at the requested speed.\n"
+"\n"
+"%s"
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"The end speed (%.0f mm/s) exceeds the filament's maximum volumetric speed (%.1f mm³/s) at the default layer height (%.2f mm).\n"
+"\n"
+"The layer height has been reduced to %.2f mm (a value used by this printer's profiles) so the tower can reach the requested speed."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Even at the smallest layer height used by this printer's profiles (%.2f mm) the end speed (%.0f mm/s) exceeds the filament's maximum volumetric speed (%.1f mm³/s).\n"
+"\n"
+"The layer height will be set to %.2f mm and the end speed lowered to %.0f mm/s.\n"
+"\n"
+"Continue?"
+msgstr ""
+
+msgid "Continue anyway?"
+msgstr ""
+
+msgid "Enable \"Auto-adjust\" to fix this automatically, or continue anyway?"
+msgstr ""
+
+msgid "Enable \"Auto-scale for nozzle\" and \"Auto-adjust\" to fix this automatically, or continue anyway?"
+msgstr ""
 
 msgid "Start retraction length: "
 msgstr "Longitud de retracción inicial: "
@@ -21293,6 +21363,18 @@ msgid ""
 msgstr ""
 "Evita la deformación\n"
 "¿Sabías que al imprimir materiales propensos a la deformación como el ABS, aumentar adecuadamente la temperatura de la cama térmica puede reducir la probabilidad de deformaciones?"
+
+#~ msgid "Print order within a single layer."
+#~ msgstr "Orden de impresión dentro de cada capa."
+
+#~ msgid "Bottom"
+#~ msgstr "Inferior"
+
+#~ msgid "Front"
+#~ msgstr "Frontal"
+
+#~ msgid "Rear"
+#~ msgstr "Posterior"
 
 #~ msgid "Enter"
 #~ msgstr "Enter"

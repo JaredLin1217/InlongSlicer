@@ -1591,8 +1591,13 @@ void TreeSupport::generate_toolpaths()
                     for (Fill *filler : { filler_interface.get(), filler_Roof1stLayer.get(), filler_bottom_contact.get() }) {
                         filler->fixed_angle = false;
                         filler->layer_id = size_t(-1);
-                        filler->angle = base_support_angle + M_PI_2; // default interface angle is perpendicular to support angle
                     }
+                    filler_interface->angle = m_support_params.support_interface_angle(
+                        m_support_params.interface_pattern, area_group.interface_id);
+                    filler_Roof1stLayer->angle = m_support_params.support_interface_angle(
+                        m_support_params.top_contact_pattern, area_group.interface_id);
+                    filler_bottom_contact->angle = m_support_params.support_interface_angle(
+                        m_support_params.bottom_contact_pattern, area_group.interface_id);
                     if (area_group.type != SupportLayer::BaseType) {
                         // interface
                         if (layer_id == 0) {
@@ -1618,15 +1623,12 @@ void TreeSupport::generate_toolpaths()
                         fill_params.density = top_contact_density;
                         // Note: spacing means the separation between two lines as if they are tightly extruded
                         filler_Roof1stLayer->spacing = interface_flow.spacing();
-                        filler_Roof1stLayer->angle = base_support_angle;
-                        if (m_support_params.top_contact_pattern == smipGrid)
-                            fill_params.dont_sort = true;
-                        if (m_support_params.top_contact_pattern == smipRectilinearInterlaced) {
-                            filler_Roof1stLayer->fixed_angle = true;
-                            filler_Roof1stLayer->angle = base_support_angle + ((area_group.interface_id & 1) * M_PI_2);
-                            fill_params.dont_sort = true;
-                        }
+                        filler_Roof1stLayer->angle = m_support_params.support_interface_angle(
+                            m_support_params.top_contact_pattern, area_group.interface_id);
                         fill_params.dont_sort = true;
+                        filler_Roof1stLayer->fixed_angle =
+                            m_support_params.top_contact_pattern == smipRectilinearInterlaced ||
+                            m_support_params.top_contact_pattern == smipRectilinear;
                         Flow interface_base_flow = interface_as_base ? support_flow : interface_flow;
                         ExtrusionRole interface_role = interface_as_base ? erSupportMaterial : erSupportMaterialInterface;
                         if (TreeSupportInternal::should_discard_manual_roof_fragment(
@@ -1653,18 +1655,12 @@ void TreeSupport::generate_toolpaths()
                         fill_params.density = bottom_contact_layer ? bottom_contact_density : bottom_interface_density;
                         filler_floor->spacing = interface_flow.spacing();
 
-                        if (bottom_pattern == smipGrid) {
-                            filler_floor->angle = base_support_angle;
-                            fill_params.dont_sort = true;
-                        }
-
-                        if (bottom_pattern == smipRectilinearInterlaced) {
-                            // INLONG: explicit 0/90 alternation for rectilinear interlaced interfaces.
-                            filler_floor->fixed_angle = true;
-                            filler_floor->angle = base_support_angle + ((area_group.interface_id & 1) * M_PI_2);
-                            fill_params.dont_sort = true;
-                        }
-
+                        filler_floor->angle = m_support_params.support_interface_angle(
+                            bottom_pattern, area_group.interface_id);
+                        fill_params.dont_sort =
+                            bottom_pattern == smipGrid || bottom_pattern == smipRectilinearInterlaced;
+                        filler_floor->fixed_angle =
+                            bottom_pattern == smipRectilinearInterlaced || bottom_pattern == smipRectilinear;
 
                         Flow interface_base_flow = interface_as_base ? support_flow : interface_flow;
                         ExtrusionRole interface_role = interface_as_base ? erSupportMaterial : erSupportMaterialInterface;
@@ -1676,17 +1672,14 @@ void TreeSupport::generate_toolpaths()
                         fill_params.density       = interface_density;
                         filler_interface->spacing = interface_flow.spacing();
 
-                        if (m_support_params.interface_pattern == smipGrid) {
-                            filler_interface->angle = base_support_angle;
-                            fill_params.dont_sort = true;
-                        }
-
-                        if (m_support_params.interface_pattern == smipRectilinearInterlaced) {
-                            // INLONG: explicit 0/90 alternation for rectilinear interlaced interfaces.
-                            filler_interface->fixed_angle = true;
-                            filler_interface->angle = base_support_angle + ((area_group.interface_id & 1) * M_PI_2);
-                            fill_params.dont_sort = true;
-                        }
+                        filler_interface->angle = m_support_params.support_interface_angle(
+                            m_support_params.interface_pattern, area_group.interface_id);
+                        fill_params.dont_sort =
+                            m_support_params.interface_pattern == smipGrid ||
+                            m_support_params.interface_pattern == smipRectilinearInterlaced;
+                        filler_interface->fixed_angle =
+                            m_support_params.interface_pattern == smipRectilinearInterlaced ||
+                            m_support_params.interface_pattern == smipRectilinear;
 
                         Flow interface_base_flow = interface_as_base ? support_flow : interface_flow;
                         ExtrusionRole interface_role = interface_as_base ? erSupportMaterial : erSupportMaterialInterface;
@@ -2111,6 +2104,9 @@ void TreeSupport::draw_circles()
     // generate areas
     const coordf_t layer_height = config.layer_height.value;
     const size_t top_interface_layers = m_support_params.num_top_interface_layers;
+    const int top_base_interface_layers = std::min<int>(
+        int(m_support_params.num_top_base_interface_layers),
+        top_interface_layers > 0 ? int(top_interface_layers) - 1 : 0);
     const size_t bottom_interface_layers = number_of_support_interface_bottom_layers(config);
     const double nozzle_diameter = m_object->print()->config().nozzle_diameter.get_at(0);
     const coordf_t line_width = config.get_abs_value("support_line_width", nozzle_diameter);
@@ -2151,6 +2147,7 @@ void TreeSupport::draw_circles()
 
                 ExPolygons& base_areas = ts_layer->base_areas;
                 ExPolygons& roof_areas = ts_layer->roof_areas;
+                ExPolygons roof_base_areas;
                 ExPolygons& roof_1st_layer = ts_layer->roof_1st_layer;
                 ExPolygons manual_roof_1st_layer;
                 std::unordered_set<size_t> manual_contact_layer_ids;
@@ -2159,6 +2156,7 @@ void TreeSupport::draw_circles()
                 coordf_t         max_layers_above_base = 0;
                 coordf_t         max_layers_above_roof = 0;
                 coordf_t         max_layers_above_roof1 = 0;
+                size_t           first_base_roof_area = 0;
                 bool             floor_interface_as_base = false;
                 bool has_circle_node = false;
                 bool need_extra_wall = false;
@@ -2266,8 +2264,9 @@ void TreeSupport::draw_circles()
                     // INLONG: support_top_contact belongs to the printable roof layer
                     // nearest to the object. The remaining roof layers below it are
                     // regular top interfaces.
-                    else if (obj_layer_nr > 0 && node.distance_to_top == 0 && top_interface_layers > 0 &&
-                             (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON && node.is_sharp_tail==false)
+                    else if (obj_layer_nr > 0 && node.support_roof_layers_below == 1 &&
+                             (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON &&
+                             node.is_sharp_tail == false)
                     {
                         append(roof_1st_layer, area);
                         if (node.from_support_enforcer && node.contact_layer_nr < m_manual_contact_masks.size() &&
@@ -2278,10 +2277,11 @@ void TreeSupport::draw_circles()
                         max_layers_above_roof1 = std::max(max_layers_above_roof1, node.dist_mm_to_top);
                     }
                     // INLONG: Roof layers must also fit inside the mm cap.
-                    else if (obj_layer_nr > 0 && node.support_roof_layers_below > 0 &&
-                             (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON && node.is_sharp_tail == false)
+                    else if (obj_layer_nr > 0 && node.support_roof_layers_below > 1 &&
+                             (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON &&
+                             node.is_sharp_tail == false)
                     {
-                        append(roof_areas, area);
+                        append(node.support_roof_layers_below <= top_base_interface_layers ? roof_base_areas : roof_areas, area);
                         max_layers_above_roof = std::max(max_layers_above_roof, node.dist_mm_to_top);
                     }
                     else
@@ -2295,9 +2295,17 @@ void TreeSupport::draw_circles()
                 //m_object->print()->set_status(65, (boost::format( _u8L("Support: generate polygons at layer %d")) % layer_nr).str());
 
                 // join roof segments
-                roof_areas     = diff_clipped(offset2_ex(roof_areas, line_width_scaled, -line_width_scaled), get_collision(false));
+                roof_areas     = diff_clipped(closing_ex(roof_areas, line_width_scaled), get_collision(false));
                 roof_areas     = intersection_ex(roof_areas, m_machine_border);
-                roof_1st_layer = diff_clipped(offset2_ex(roof_1st_layer, line_width_scaled, -line_width_scaled), get_collision(false));
+                roof_base_areas = diff_clipped(closing_ex(roof_base_areas, line_width_scaled), get_collision(false));
+                roof_base_areas = intersection_ex(roof_base_areas, m_machine_border);
+                if (!roof_base_areas.empty() && !roof_areas.empty())
+                    roof_base_areas = diff_ex(roof_base_areas,
+                        ClipperUtils::clip_clipper_polygons_with_subject_bbox(roof_areas, get_extents(roof_base_areas)));
+
+                first_base_roof_area = roof_areas.size();
+                append(roof_areas, std::move(roof_base_areas));
+                roof_1st_layer = diff_clipped(closing_ex(roof_1st_layer, line_width_scaled), get_collision(false));
 
                 // roof_1st_layer and roof_areas may intersect, so need to subtract roof_areas from roof_1st_layer
                 roof_1st_layer = diff_ex(roof_1st_layer, ClipperUtils::clip_clipper_polygons_with_subject_bbox(roof_areas,get_extents(roof_1st_layer)));
@@ -2551,9 +2559,11 @@ void TreeSupport::draw_circles()
                     area_groups.back().need_infill = overlaps({ expoly }, area_poly);
                     area_groups.back().need_extra_wall = need_extra_wall && !area_groups.back().need_infill;
                 }
-                for (auto& expoly : ts_layer->roof_areas) {
+                for (size_t roof_idx = 0; roof_idx < ts_layer->roof_areas.size(); ++roof_idx) {
+                    auto &expoly = ts_layer->roof_areas[roof_idx];
                     //if (area(expoly) < SQ(scale_(1))) continue;
                     area_groups.emplace_back(&expoly, SupportLayer::RoofType, max_layers_above_roof);
+                    area_groups.back().interface_as_base = roof_idx >= first_base_roof_area;
                 }
                 for (auto &expoly : ts_layer->floor_areas) {
                     //if (area(expoly) < SQ(scale_(1))) continue;
@@ -2565,6 +2575,7 @@ void TreeSupport::draw_circles()
                     area_groups.emplace_back(&expoly, SupportLayer::Roof1stLayer, max_layers_above_roof1);
                     area_groups.back().from_manual_contact = overlaps(
                         {expoly}, ts_layer->manual_roof_regions);
+                    area_groups.back().interface_as_base = top_base_interface_layers > 0;
                 }
 
                 for (auto &area_group : area_groups) {
@@ -2592,7 +2603,6 @@ void TreeSupport::draw_circles()
 
             }
         });
-
         if (m_support_params.independent_top_contact_layer_height && !m_support_params.independent_layer_height) {
             SupportLayerPtrs &ts_layers = m_object->support_layers();
             const size_t original_layer_count = ts_layers.size();
@@ -3121,7 +3131,7 @@ void TreeSupport::drop_nodes()
                     node_parent->merged_neighbours.push_front(node_parent == p_node ? neighbour : p_node);
                     const bool to_buildplate = !is_inside_ex(get_collision(0, obj_layer_nr_next), next_position);
                     SupportNode* next_node = m_ts_data->create_node(next_position, node_parent->distance_to_top + 1, obj_layer_nr_next,
-                        node_parent->support_roof_layers_below - (node_parent->distance_to_top > 0 ? 1 : 0),
+                        node_parent->support_roof_layers_below - (node_parent->distance_to_top >= 0 ? 1 : 0),
                         to_buildplate, node_parent, print_z_next, height_next);
                     get_max_move_dist(next_node);
                     m_ts_data->m_mutex.lock();
@@ -3173,7 +3183,7 @@ void TreeSupport::drop_nodes()
                     for(auto& overhang:overhangs_next) {
                         Point        next_pt     = overhang.contour.centroid();
                         SupportNode *next_node   = m_ts_data->create_node(next_pt, p_node->distance_to_top + 1, obj_layer_nr_next,
-                                                                          p_node->support_roof_layers_below - (p_node->distance_to_top > 0 ? 1 : 0),
+                                                                          p_node->support_roof_layers_below - (p_node->distance_to_top >= 0 ? 1 : 0),
                                                                           to_buildplate, p_node, print_z_next, height_next);
                         next_node->max_move_dist = 0;
                         next_node->overhang = std::move(overhang);
@@ -3320,7 +3330,7 @@ void TreeSupport::drop_nodes()
                 auto              next_collision = get_collision(0, obj_layer_nr_next);
                 const bool   to_buildplate  = !is_inside_ex(m_ts_data->m_layer_outlines[obj_layer_nr_next], next_layer_vertex);
                 SupportNode *     next_node     = m_ts_data->create_node(next_layer_vertex, node.distance_to_top + 1, obj_layer_nr_next,
-                    node.support_roof_layers_below - (node.distance_to_top > 0 ? 1 : 0),
+                    node.support_roof_layers_below - (node.distance_to_top >= 0 ? 1 : 0),
                     to_buildplate, p_node, print_z_next, height_next);
                 // don't increase radius if next node will collide partially with the object (STUDIO-7883)
                 to_outside             = projection_onto(next_collision, next_node->position);
@@ -3726,7 +3736,7 @@ void TreeSupport::generate_contact_points()
                 if (force_add || !already_inserted.count(hash_pos)) {
                     already_inserted.emplace(hash_pos);
                     bool to_buildplate = true;
-                    size_t roof_layers = add_interface ? (support_roof_layers > 0 ? support_roof_layers - 1 : 0) : 0;  // subtract 1 because the contact node itself counts as one layer
+                    size_t roof_layers = add_interface ? support_roof_layers : 0;
                     // add a new node as a virtual node which acts as the invisible gap between support and object
                     // distance_to_top=-1: it's virtual
                     // print_z=object_layer->bottom_z: it directly contacts the bottom
