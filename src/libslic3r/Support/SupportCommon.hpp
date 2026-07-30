@@ -85,7 +85,17 @@ SupportGeneratorLayersPtr generate_raft_base(
 void tree_supports_generate_paths(ExtrusionEntitiesPtr &dst, const Polygons &polygons, const Flow &flow, const SupportParameters &support_params);
 
 void fill_expolygons_with_sheath_generate_paths(
-    ExtrusionEntitiesPtr &dst, const Polygons &polygons, Fill *filler, float density, ExtrusionRole role, const Flow &flow, const SupportParameters& support_params, bool with_sheath, bool no_sort, bool fill_concentric_gaps = false);
+    ExtrusionEntitiesPtr &dst,
+    const Polygons       &polygons,
+    Fill                 *filler,
+    float                 density,
+    ExtrusionRole         role,
+    const Flow           &flow,
+    const SupportParameters &support_params,
+    bool                  with_sheath,
+    bool                  no_sort,
+    bool                  fill_concentric_gaps = false,
+    bool                  short_boundary_links = false);
 
 // returns sorted layers
 SupportGeneratorLayersPtr generate_support_layers(

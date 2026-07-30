@@ -44,6 +44,9 @@ TriangleMesh mesh(TestMesh m)
 {
     TriangleMesh mesh;
     switch(m) {
+        case TestMesh::cube_20x20x20:
+            mesh = make_cube(20., 20., 20.);
+            break;
         case TestMesh::sphere_50mm:
             mesh = Slic3r::make_sphere(50, PI / 243.0);
             break;

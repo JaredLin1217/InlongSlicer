@@ -2889,8 +2889,12 @@ void TreeSupport::drop_nodes()
     const coordf_t support_extrusion_width = m_support_params.support_extrusion_width;
     const coordf_t layer_height = config.layer_height.value;
     const double angle = config.tree_support_branch_angle.value * M_PI / 180.;
+    const double preferred_angle = is_strong ?
+        std::min(std::max(config.tree_support_angle_slow.value * M_PI / 180., 0.), std::max(angle, 0.)) :
+        angle;
     const int wall_count = std::max(1, config.tree_support_wall_count.value);
     double tan_angle = tan(angle); // when nodes are thick, they can move further. this is the max angle
+    const double tan_preferred_angle = tan(preferred_angle);
     const coordf_t max_move_distance = (angle < M_PI / 2) ? (coordf_t)(tan_angle * layer_height)*wall_count : std::numeric_limits<coordf_t>::max();
     const double max_move_distance2 = max_move_distance * max_move_distance;
     const size_t tip_layers = base_radius / layer_height; //The number of layers to be shrinking the circle to create a tip. This produces a 45 degree angle.
@@ -2907,6 +2911,14 @@ void TreeSupport::drop_nodes()
         }
         double move_dist = node->max_move_dist;
         if (power == 2) move_dist = SQ(move_dist);
+        return move_dist;
+    };
+    auto get_convergence_move_dist = [this, tan_preferred_angle, support_extrusion_width, &get_max_move_dist](const SupportNode *node, int power = 1) {
+        if (!this->is_strong)
+            return get_max_move_dist(node, power);
+        double move_dist = std::min(tan_preferred_angle * node->height, support_extrusion_width);
+        if (power == 2)
+            move_dist = SQ(move_dist);
         return move_dist;
     };
 
@@ -3106,7 +3118,7 @@ void TreeSupport::drop_nodes()
                             neighbour_node->valid = false;
                         }
                     }
-                } else if (neighbours.size() == 1 && vsize2_with_unscale(neighbours[0] - node.position) < get_max_move_dist(p_node, 2) &&
+                } else if (neighbours.size() == 1 && vsize2_with_unscale(neighbours[0] - node.position) < get_convergence_move_dist(p_node, 2) &&
                            mst.adjacent_nodes(neighbours[0]).size() == 1 &&
                            nodes_this_part[neighbours[0]]->type!=ePolygon) // We have just two nodes left, and they're very close, and the only neighbor is not ePolygon
                 {
@@ -3145,7 +3157,7 @@ void TreeSupport::drop_nodes()
                     //Remove all neighbours that are too close and merge them into this node.
                     for (const Point& neighbour : neighbours)
                     {
-                        if (vsize2_with_unscale(neighbour - node.position) < get_max_move_dist(&node,2))
+                        if (vsize2_with_unscale(neighbour - node.position) < get_convergence_move_dist(&node,2))
                         {
                             SupportNode* neighbour_node = nodes_this_part[neighbour];
                             if (neighbour_node->type == ePolygon) continue;
@@ -3229,7 +3241,7 @@ void TreeSupport::drop_nodes()
                 // 2. Only merge node with single neighbor in distance between [max_move_distance, 10mm/layer_height]
                 float dist2_to_first_neighbor = neighbours.empty() ? 0 : vsize2_with_unscale(neighbours[0] - node.position);
                 if (node.print_z > DO_NOT_MOVER_UNDER_MM &&
-                    (neighbours.size() > 1 || (neighbours.size() == 1 && dist2_to_first_neighbor >= get_max_move_dist(p_node, 2)))) // Only nodes that aren't about to collapse.
+                    (neighbours.size() > 1 || (neighbours.size() == 1 && dist2_to_first_neighbor >= get_convergence_move_dist(p_node, 2)))) // Only nodes that aren't about to collapse.
                 {
                     // Move towards the average position of all neighbours.
                     Point sum_direction(0, 0);
@@ -3244,7 +3256,8 @@ void TreeSupport::drop_nodes()
 
                         coordf_t branch_bottom_radius = calc_radius(node.dist_mm_to_top + node.print_z);
                         coordf_t neighbour_bottom_radius = calc_radius(neighbour_node->dist_mm_to_top + neighbour_node->print_z);
-                        double max_converge_distance = tan_angle * (p_node->print_z - DO_NOT_MOVER_UNDER_MM) + std::max(branch_bottom_radius, neighbour_bottom_radius);
+                        const double convergence_tan_angle = is_strong ? tan_preferred_angle : tan_angle;
+                        double max_converge_distance = convergence_tan_angle * (p_node->print_z - DO_NOT_MOVER_UNDER_MM) + std::max(branch_bottom_radius, neighbour_bottom_radius);
                         if (dist2_to_neighbor > max_converge_distance * max_converge_distance) continue;
 
                         if (is_line_cut_by_contour(node.position, neighbour)) continue;
@@ -3258,10 +3271,10 @@ void TreeSupport::drop_nodes()
                     if (!is_strong)
                         move_to_neighbor_center = sum_direction;
                     else {
-                        if (vsize2_with_unscale(sum_direction) <= get_max_move_dist(p_node, 2)) {
+                        if (vsize2_with_unscale(sum_direction) <= get_convergence_move_dist(p_node, 2)) {
                             move_to_neighbor_center = sum_direction;
                         } else {
-                            move_to_neighbor_center = normal(sum_direction, scale_(get_max_move_dist(p_node)));
+                            move_to_neighbor_center = normal(sum_direction, scale_(get_convergence_move_dist(p_node)));
                         }
                     }
                 }
@@ -3313,7 +3326,7 @@ void TreeSupport::drop_nodes()
                 else if (dist2_to_outer > 0)
                     movement = normal(direction_to_outer, scale_(get_max_move_dist(&node)));
                 else
-                    movement = normal(move_to_neighbor_center, scale_(get_max_move_dist(&node)));
+                    movement = normal(move_to_neighbor_center, scale_(get_convergence_move_dist(&node)));
 
                 next_layer_vertex += movement;
 

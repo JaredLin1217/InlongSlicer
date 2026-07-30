@@ -864,7 +864,8 @@ void fill_expolygons_with_sheath_generate_paths(
     const SupportParameters& support_params,
     bool                     with_sheath,
     bool                     no_sort,
-    bool                     fill_concentric_gaps)
+    bool                     fill_concentric_gaps,
+    bool                     short_boundary_links)
 {
     if (polygons.empty())
         return;
@@ -875,6 +876,11 @@ void fill_expolygons_with_sheath_generate_paths(
     fill_params.fill_concentric_gaps = fill_concentric_gaps;
     if (fill_concentric_gaps)
         fill_params.flow = flow;
+    if (short_boundary_links) {
+        filler->link_max_length = coord_t(scale_(2. * flow.width()));
+        fill_params.anchor_length = float(flow.width());
+        fill_params.anchor_length_max = 2.f * fill_params.anchor_length;
+    }
 
     if (with_sheath) {
         if (density == 0) {
@@ -2357,7 +2363,9 @@ void generate_support_toolpaths(
                         filler, density,
                         // Extrusion parameters
                         ExtrusionRole::erSupportMaterial, flow,
-                        support_params, sheath, no_sort);
+                        support_params, sheath, no_sort, false,
+                        support_body_uses_short_boundary_links(
+                            config.support_base_pattern, density, is_tree(config.support_type)));
             }
 
             // Merge base_interface_layers to base_layers to avoid unneccessary retractions

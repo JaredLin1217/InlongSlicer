@@ -1,13 +1,22 @@
 #include <catch2/catch_all.hpp>
 
+#include <array>
+#include <cstdint>
+#include <map>
+#include <tbb/global_control.h>
+
 #include "libslic3r/GCodeReader.hpp"
 #include "libslic3r/GCode/ConflictChecker.hpp"
 #include "libslic3r/Fill/FillBase.hpp"
 #include "libslic3r/Layer.hpp"
 #include "libslic3r/Support/SupportCommon.hpp"
+#include "libslic3r/Support/SupportParameters.hpp"
+#include "libslic3r/Support/TreeSupport.hpp"
 #include "libslic3r/Support/TreeSupportUtils.hpp"
+#include "libslic3r/Thread.hpp"
 
 #include "test_helpers.hpp" // get access to init_print, etc
+#include "test_utils.hpp"
 
 using namespace Slic3r::Test;
 using namespace Slic3r;
@@ -284,9 +293,358 @@ void process_overlapping_box_rafts(
     print.process();
 }
 
+using TreeNodeSignatureEntry = std::array<int64_t, 11>;
+using TreeContactSignatureEntry = std::array<int64_t, 4>;
+
+struct TreeSupportMetrics
+{
+    std::vector<TreeNodeSignatureEntry> node_signature;
+    std::vector<TreeContactSignatureEntry> contact_signature;
+    std::vector<double> free_segment_angles;
+    std::map<int64_t, size_t> free_node_counts;
+    size_t buildplate_nodes = 0;
+};
+
+TriangleMesh suspended_tree_platform()
+{
+    TriangleMesh platform = make_cube(36., 12., 2.);
+    platform.translate(0., 0., 20.);
+
+    // Keep the disconnected platform elevated when the test helper drops the object onto the bed.
+    // The anchor is far enough away that the support below the platform remains unobstructed.
+    TriangleMesh anchor = make_cube(1., 1., 1.);
+    anchor.translate(50., 0., 0.);
+    platform.merge(anchor);
+    return platform;
+}
+
+DynamicPrintConfig classic_tree_support_config(
+    const std::string &style, double maximum_angle, double preferred_angle)
+{
+    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        {"enable_support", true},
+        {"support_type", "tree(auto)"},
+        {"support_style", style},
+        {"support_threshold_angle", 30},
+        {"dont_support_bridges", false},
+        {"max_bridge_length", 0},
+        {"support_on_build_plate_only", true},
+        {"support_remove_small_overhang", false},
+        {"layer_height", 0.2},
+        {"initial_layer_print_height", 0.2},
+        {"nozzle_diameter", "0.6"},
+        {"min_layer_height", "0.05"},
+        {"max_layer_height", "0.4"},
+        {"support_line_width", "0.6"},
+        {"support_top_z_distance", 0.2},
+        {"support_bottom_z_distance", 0.2},
+        {"support_interface_top_layers", 2},
+        {"support_interface_bottom_layers", 0},
+        {"support_top_contact_spacing", 0.2},
+        {"support_interface_spacing", 0.5},
+        {"support_base_pattern_spacing", 2.5},
+        {"tree_support_branch_angle", maximum_angle},
+        {"tree_support_angle_slow", preferred_angle},
+        {"tree_support_branch_distance", 5.0},
+        {"tree_support_branch_diameter", 2.0},
+        {"tree_support_wall_count", 1},
+        {"tree_support_auto_brim", false},
+        {"tree_support_brim_width", 0.0},
+        {"independent_support_layer_height", false},
+        {"independent_support_top_contact_layer_height", false},
+        {"skirt_loops", 0}
+    });
+    return config;
+}
+
+TreeSupportMetrics tree_support_metrics(Print &print)
+{
+    TreeSupportMetrics result;
+    PrintObject *object = print.get_object(0);
+    const std::shared_ptr<TreeSupportData> tree_data = object->alloc_tree_support_preview_cache();
+
+    for (const std::unique_ptr<SupportNode> &owned_node : tree_data->contact_nodes) {
+        const SupportNode &node = *owned_node;
+        const SupportNode *parent = node.parent;
+        const int64_t z = std::llround(node.print_z * 1'000'000.);
+        const int64_t parent_z = parent == nullptr ? 0 : std::llround(parent->print_z * 1'000'000.);
+        result.node_signature.push_back({
+            int64_t(node.position.x()), int64_t(node.position.y()), z,
+            parent == nullptr ? 0 : 1,
+            parent == nullptr ? 0 : int64_t(parent->position.x()),
+            parent == nullptr ? 0 : int64_t(parent->position.y()),
+            parent_z,
+            node.valid ? 1 : 0,
+            node.to_buildplate ? 1 : 0,
+            int64_t(node.distance_to_top),
+            int64_t(node.obj_layer_nr)
+        });
+
+        if (parent == nullptr && node.distance_to_top <= 0)
+            result.contact_signature.push_back({
+                int64_t(node.position.x()), int64_t(node.position.y()), z, int64_t(node.obj_layer_nr)});
+
+        if (node.valid && node.to_buildplate && node.print_z <= 0.2 + EPSILON)
+            ++result.buildplate_nodes;
+
+        constexpr double free_min_z = 5.5;
+        constexpr double free_max_z = 18.0;
+        if (node.valid && node.to_buildplate &&
+            node.print_z >= free_min_z && node.print_z <= free_max_z)
+            ++result.free_node_counts[std::llround(node.print_z * 1'000.)];
+
+        if (parent == nullptr || !node.to_buildplate || !parent->to_buildplate ||
+            node.print_z < free_min_z || parent->print_z > free_max_z)
+            continue;
+
+        const double vertical_distance = parent->print_z - node.print_z;
+        if (vertical_distance <= EPSILON)
+            continue;
+        const double dx = unscale<double>(parent->position.x() - node.position.x());
+        const double dy = unscale<double>(parent->position.y() - node.position.y());
+        const double horizontal_distance = std::hypot(dx, dy);
+        result.free_segment_angles.push_back(
+            std::atan2(horizontal_distance, vertical_distance) * 180. / M_PI);
+    }
+
+    std::sort(result.node_signature.begin(), result.node_signature.end());
+    std::sort(result.contact_signature.begin(), result.contact_signature.end());
+
+    return result;
+}
+
+TreeSupportMetrics process_tree_support(
+    const std::string &style, double maximum_angle, double preferred_angle)
+{
+    // Initialize the worker pool before restricting this test slice to one worker.
+    // Initializing it under the restriction deadlocks the worker-naming barrier.
+    name_tbb_thread_pool_threads_set_locale();
+    const tbb::global_control single_thread(
+        tbb::global_control::max_allowed_parallelism, 1);
+    Print print;
+    init_and_process_print(
+        {suspended_tree_platform()}, print,
+        classic_tree_support_config(style, maximum_angle, preferred_angle));
+    return tree_support_metrics(print);
+}
+
 } // namespace
 
-TEST_CASE("SupportMaterial: Three raft layers created", "[SupportMaterial]")
+TEST_CASE("Strong tree honors the preferred angle in unobstructed space", "[TreeSupport][StrongTree]")
+{
+    const TreeSupportMetrics preferred_10 = process_tree_support("tree_strong", 30., 10.);
+    const TreeSupportMetrics preferred_25 = process_tree_support("tree_strong", 30., 25.);
+
+    REQUIRE(preferred_10.buildplate_nodes > 0);
+    REQUIRE(preferred_25.buildplate_nodes > 0);
+    REQUIRE_FALSE(preferred_10.free_segment_angles.empty());
+    REQUIRE_FALSE(preferred_25.free_segment_angles.empty());
+
+    constexpr double angle_tolerance = 0.75;
+    for (double angle : preferred_10.free_segment_angles)
+        REQUIRE(angle <= 10. + angle_tolerance);
+    for (double angle : preferred_25.free_segment_angles)
+        REQUIRE(angle <= 25. + angle_tolerance);
+
+    const double maximum_10 = *std::max_element(
+        preferred_10.free_segment_angles.begin(), preferred_10.free_segment_angles.end());
+    const double maximum_25 = *std::max_element(
+        preferred_25.free_segment_angles.begin(), preferred_25.free_segment_angles.end());
+    CAPTURE(maximum_10, maximum_25);
+    REQUIRE(maximum_25 > maximum_10 + 2.);
+    REQUIRE(maximum_25 > 12.);
+
+    size_t compared_layers = 0;
+    for (const auto &[z, low_count] : preferred_10.free_node_counts) {
+        const auto high = preferred_25.free_node_counts.find(z);
+        if (high == preferred_25.free_node_counts.end())
+            continue;
+        ++compared_layers;
+        REQUIRE(low_count >= high->second);
+    }
+    REQUIRE(compared_layers > 0);
+
+    REQUIRE(preferred_10.contact_signature == preferred_25.contact_signature);
+}
+
+TEST_CASE("Strong tree clamps the preferred angle to the maximum branch angle", "[TreeSupport][StrongTree]")
+{
+    const TreeSupportMetrics preferred_30 = process_tree_support("tree_strong", 30., 30.);
+    const TreeSupportMetrics preferred_45 = process_tree_support("tree_strong", 30., 45.);
+
+    REQUIRE(preferred_30.buildplate_nodes > 0);
+    REQUIRE(preferred_45.buildplate_nodes > 0);
+    REQUIRE(preferred_30.contact_signature == preferred_45.contact_signature);
+    REQUIRE_FALSE(preferred_30.free_segment_angles.empty());
+    REQUIRE_FALSE(preferred_45.free_segment_angles.empty());
+    for (double angle : preferred_30.free_segment_angles)
+        REQUIRE(angle <= 30.75);
+    for (double angle : preferred_45.free_segment_angles) {
+        REQUIRE(std::isfinite(angle));
+        REQUIRE(angle <= 30.75);
+    }
+    REQUIRE(*std::max_element(
+        preferred_30.free_segment_angles.begin(), preferred_30.free_segment_angles.end()) > 20.);
+    REQUIRE(*std::max_element(
+        preferred_45.free_segment_angles.begin(), preferred_45.free_segment_angles.end()) > 20.);
+
+    const TreeSupportMetrics zero_maximum = process_tree_support("tree_strong", 0., 25.);
+    REQUIRE(zero_maximum.buildplate_nodes > 0);
+    REQUIRE_FALSE(zero_maximum.free_segment_angles.empty());
+    for (double angle : zero_maximum.free_segment_angles) {
+        REQUIRE(std::isfinite(angle));
+        REQUIRE(angle <= 0.75);
+    }
+}
+
+TEST_CASE("Preferred branch angle does not affect other classic tree styles", "[TreeSupport][StrongTree]")
+{
+    for (const std::string style : {"tree_slim", "tree_hybrid"}) {
+        DYNAMIC_SECTION(style << " ignores the preferred branch angle") {
+            const TreeSupportMetrics preferred_10 = process_tree_support(style, 30., 10.);
+            const TreeSupportMetrics preferred_45 = process_tree_support(style, 30., 45.);
+
+            REQUIRE(preferred_10.buildplate_nodes > 0);
+            REQUIRE(preferred_45.buildplate_nodes > 0);
+            REQUIRE(preferred_10.contact_signature == preferred_45.contact_signature);
+            REQUIRE_FALSE(preferred_10.free_segment_angles.empty());
+            REQUIRE_FALSE(preferred_45.free_segment_angles.empty());
+            REQUIRE(*std::max_element(
+                preferred_10.free_segment_angles.begin(), preferred_10.free_segment_angles.end()) > 15.);
+            REQUIRE(*std::max_element(
+                preferred_45.free_segment_angles.begin(), preferred_45.free_segment_angles.end()) > 15.);
+        }
+    }
+}
+
+TEST_CASE("Changing the strong tree preferred angle invalidates support once", "[TreeSupport][StrongTree]")
+{
+    Model model;
+    Print print;
+    DynamicPrintConfig preferred_10 = classic_tree_support_config("tree_strong", 30., 10.);
+    init_print({suspended_tree_platform()}, print, model, preferred_10);
+    print.process();
+
+    REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
+    const std::shared_ptr<TreeSupportData> first_cache =
+        print.get_object(0)->alloc_tree_support_preview_cache();
+    const std::vector<TreeNodeSignatureEntry> first_signature =
+        tree_support_metrics(print).node_signature;
+
+    DynamicPrintConfig preferred_25 = classic_tree_support_config("tree_strong", 30., 25.);
+    const PrintBase::ApplyStatus changed_status = print.apply(model, preferred_25);
+    REQUIRE(changed_status == PrintBase::APPLY_STATUS_INVALIDATED);
+    REQUIRE_FALSE(print.objects().front()->is_step_done(posSupportMaterial));
+
+    print.validate();
+    print.process();
+    REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
+    const std::shared_ptr<TreeSupportData> second_cache =
+        print.get_object(0)->alloc_tree_support_preview_cache();
+    const std::vector<TreeNodeSignatureEntry> second_signature =
+        tree_support_metrics(print).node_signature;
+    REQUIRE(second_cache != first_cache);
+    REQUIRE(second_signature != first_signature);
+
+    const PrintBase::ApplyStatus unchanged_status = print.apply(model, preferred_25);
+    REQUIRE(unchanged_status != PrintBase::APPLY_STATUS_INVALIDATED);
+    REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
+    REQUIRE(print.get_object(0)->alloc_tree_support_preview_cache() == second_cache);
+}
+
+TEST_CASE("Explicit rectilinear support uses the regular line planner", "[SupportMaterial][NormalSupport]")
+{
+    constexpr coordf_t sparse_density = 0.1;
+
+    REQUIRE(support_body_fill_pattern(smpRectilinear, sparse_density, false, false) == ipRectilinear);
+    REQUIRE(support_body_fill_pattern(smpDefault, sparse_density, false, false) == ipSupportBase);
+    REQUIRE(support_body_fill_pattern(smpRectilinearGrid, sparse_density, false, false) == ipSupportBase);
+    REQUIRE(support_body_fill_pattern(smpConcentric, sparse_density, false, false) == ipConcentric);
+    REQUIRE(support_body_fill_pattern(smpHoneycomb, sparse_density, false, false) == ipHoneycomb);
+    REQUIRE(support_body_uses_short_boundary_links(smpRectilinear, sparse_density, false));
+    REQUIRE_FALSE(support_body_uses_short_boundary_links(smpRectilinear, 1., false));
+    REQUIRE_FALSE(support_body_uses_short_boundary_links(smpDefault, sparse_density, false));
+
+    SECTION("Rafts and tree supports retain their structural planner")
+    {
+        REQUIRE(support_base_fill_pattern(smpRectilinear, sparse_density, false) == ipSupportBase);
+        REQUIRE(support_body_fill_pattern(smpRectilinear, sparse_density, false, true) == ipSupportBase);
+        REQUIRE_FALSE(support_body_uses_short_boundary_links(smpRectilinear, sparse_density, true));
+    }
+}
+
+TEST_CASE("Explicit rectilinear support limits links along irregular boundaries", "[SupportMaterial][NormalSupport]")
+{
+    const ExPolygon support_region{Polygon{Points{
+        Point::new_scale(0., 0.),
+        Point::new_scale(36., 5.),
+        Point::new_scale(42., 28.),
+        Point::new_scale(6., 23.)}}};
+    const Flow flow(0.63f, 0.3f, 0.6f);
+
+    auto fill_paths = [&](bool short_boundary_links) {
+        std::unique_ptr<Fill> filler(Fill::new_from_type(ipRectilinear));
+        filler->set_bounding_box(get_extents(support_region.contour));
+        filler->angle = 0.;
+        filler->layer_id = 1;
+        filler->spacing = flow.spacing();
+
+        FillParams fill_params;
+        fill_params.density = 0.1f;
+        fill_params.dont_adjust = true;
+        if (short_boundary_links) {
+            filler->link_max_length = coord_t(scale_(2. * flow.width()));
+            fill_params.anchor_length = flow.width();
+            fill_params.anchor_length_max = 2.f * fill_params.anchor_length;
+        }
+
+        const Surface surface(stInternal, support_region);
+        return filler->fill_surface(&surface, fill_params);
+    };
+    auto longest_segment_angle = [](const Polylines &paths) {
+        double longest = 0.;
+        double angle = 0.;
+        for (const Polyline &path : paths) {
+            for (size_t idx = 1; idx < path.points.size(); ++idx) {
+                const Point delta = path.points[idx] - path.points[idx - 1];
+                const double segment_length = delta.cast<double>().norm();
+                if (segment_length > longest) {
+                    longest = segment_length;
+                    angle = std::atan2(double(delta.y()), double(delta.x()));
+                }
+            }
+        }
+        return angle;
+    };
+    auto off_direction_length = [](const Polylines &paths, double fill_angle) {
+        double length = 0.;
+        for (const Polyline &path : paths) {
+            for (size_t idx = 1; idx < path.points.size(); ++idx) {
+                const Point delta = path.points[idx] - path.points[idx - 1];
+                double angle_delta = std::fmod(
+                    std::abs(std::atan2(double(delta.y()), double(delta.x())) - fill_angle), M_PI);
+                angle_delta = std::min(angle_delta, M_PI - angle_delta);
+                if (angle_delta > Geometry::deg2rad(1.))
+                    length += unscale_(delta.cast<double>().norm());
+            }
+        }
+        return length;
+    };
+
+    const Polylines unrestricted = fill_paths(false);
+    const Polylines limited = fill_paths(true);
+    const double fill_angle = longest_segment_angle(limited);
+    const double unrestricted_off_direction = off_direction_length(unrestricted, fill_angle);
+    const double limited_off_direction = off_direction_length(limited, fill_angle);
+
+    CAPTURE(unrestricted.size(), limited.size(), unrestricted_off_direction, limited_off_direction);
+    REQUIRE_FALSE(unrestricted.empty());
+    REQUIRE_FALSE(limited.empty());
+    REQUIRE(limited.size() > unrestricted.size());
+    REQUIRE(limited_off_direction < 0.5 * unrestricted_off_direction);
+}
+
 TEST_CASE("Three raft layers are created", "[SupportMaterial]")
 {
 	Slic3r::Print print;
@@ -1030,7 +1388,6 @@ TEST_CASE("SupportMaterial: Concentric raft fills a partially collapsed branch",
     REQUIRE(raft.second > legacy.second);
 }
 
-SCENARIO("SupportMaterial: support_layers_z and contact_distance", "[SupportMaterial]")
 SCENARIO("Support layer Z honors contact distance", "[SupportMaterial]")
 {
     // Box h = 20mm, hole bottom at 5mm, hole height 10mm (top edge at 15mm).

@@ -18,6 +18,6 @@ target_compile_definitions(${_TEST_NAME}_tests PRIVATE
     )
 set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 
-orcaslicer_copy_test_dlls()
+inlongslicer_copy_test_dlls()
 
 orcaslicer_discover_tests(${_TEST_NAME}_tests)

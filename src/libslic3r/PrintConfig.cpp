@@ -7287,7 +7287,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("tree_support_angle_slow", coFloat);
     def->label = L("Preferred Branch Angle");
     def->category = L("Support");
-    // TRN PrintSettings: "Organic supports" > "Preferred Branch Angle"
+    // TRN PrintSettings: "Organic supports" / "Tree Strong" > "Preferred Branch Angle"
     def->tooltip = L("The preferred angle of the branches, when they do not have to avoid the model. "
                      "Use a lower angle to make them more vertical and more stable. Use a higher angle for branches to merge faster.");
     def->sidetext = u8"°";	// degrees, don't need translation

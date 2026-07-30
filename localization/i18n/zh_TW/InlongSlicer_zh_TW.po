@@ -17181,7 +17181,7 @@ msgid "This is the spacing of bottom interface lines. 0 means solid interface."
 msgstr "底部接觸面走線的線距。0 表示實心接觸面"
 
 msgid "Bottom contact spacing"
-msgstr ""
+msgstr "底部接觸面間距"
 
 msgid "Spacing of the first support interface layer directly above the object. Set to -1 to use the bottom interface spacing. Zero means solid contact."
 msgstr ""

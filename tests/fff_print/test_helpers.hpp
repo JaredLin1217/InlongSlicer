@@ -34,6 +34,7 @@ enum class TestMesh {
     sphere_50mm,
     bridge,
     bridge_with_hole,
+    cube_20x20x20,
     cube_with_concave_hole,
     cube_with_hole,
     gt2_teeth,

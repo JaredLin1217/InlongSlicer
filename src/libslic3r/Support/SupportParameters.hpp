@@ -43,6 +43,29 @@ inline InfillPattern support_base_fill_pattern(
         density > 0.95 || with_sheath ? ipRectilinear : ipSupportBase;
 }
 
+inline InfillPattern support_body_fill_pattern(
+    SupportMaterialPattern pattern,
+    coordf_t density,
+    bool with_sheath,
+    bool tree_support)
+{
+    // The specialized sparse support planner adds long boundary arches, caps
+    // and T-joints. Keep those structural connections for the default, grid,
+    // raft and tree-support paths, while honoring an explicit rectilinear
+    // choice for normal support with the regular line planner.
+    return ! tree_support && pattern == smpRectilinear ?
+        ipRectilinear :
+        support_base_fill_pattern(pattern, density, with_sheath);
+}
+
+inline bool support_body_uses_short_boundary_links(
+    SupportMaterialPattern pattern,
+    coordf_t density,
+    bool tree_support)
+{
+    return ! tree_support && pattern == smpRectilinear && density <= 0.95;
+}
+
 inline int number_of_support_interface_bottom_layers(const PrintObjectConfig& object_config)
 {
     return object_config.support_interface_bottom_layers.value < 0 ?
@@ -181,7 +204,8 @@ struct SupportParameters {
 
         SupportMaterialPattern  support_pattern = object_config.support_base_pattern;
         this->with_sheath = object_config.tree_support_wall_count > 0;
-        this->base_fill_pattern = support_base_fill_pattern(support_pattern, this->support_density, this->with_sheath);
+        this->base_fill_pattern = support_body_fill_pattern(
+            support_pattern, this->support_density, this->with_sheath, is_tree(object_config.support_type));
         this->raft_base_fill_pattern = support_base_fill_pattern(object_config.raft_base_pattern, this->raft_base_density, false);
         this->interface_fill_pattern = support_interface_fill_pattern(
             this->interface_pattern, this->top_interface_density, this->zero_gap_interface_top);
