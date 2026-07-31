@@ -1,10 +1,10 @@
 {
     "type":  "machine",
-    "name":  "Infinity3DP X3 common",
+    "name":  "Infinity3DP X600HD common",
     "from":  "system",
     "instantiation":  "false",
     "printer_technology":  "FFF",
-    "adaptive_bed_mesh_margin":  "10",
+    "adaptive_bed_mesh_margin":  "20",
     "auxiliary_fan":  "0",
     "bbl_use_printhost":  "0",
     "bed_custom_model":  "",
@@ -12,9 +12,9 @@
     "bed_exclude_area":  [
 
                          ],
-    "bed_mesh_max":  "300,300",
+    "bed_mesh_max":  "605,505",
     "bed_mesh_min":  "0,0",
-    "bed_mesh_probe_distance":  "150,150",
+    "bed_mesh_probe_distance":  "100,100",
     "before_layer_change_gcode":  ";BEFORE_LAYER_CHANGE\nG92 E0\n;[layer_z]\n\n",
     "best_object_pos":  "0.5,0.5",
     "change_extrusion_role_gcode":  "",
@@ -22,33 +22,35 @@
     "cooling_tube_length":  "10",
     "cooling_tube_retraction":  "35",
     "default_filament_profile":  [
-                                     "Infinity3DP PLA",
-                                     "Infinity3DP PLA"
+                                     "Infinity3DP PET-CFGF",
+                                     "Infinity3DP PET-CFGF"
                                  ],
     "default_print_profile":  "",
     "deretraction_speed":  [
+                               "40",
                                "40"
                            ],
     "disable_m73":  "1",
-    "emit_machine_limits_to_gcode":  "1",
-    "enable_filament_ramming":  "0",
+    "emit_machine_limits_to_gcode":  "0",
+    "enable_filament_ramming":  "1",
     "enable_long_retraction_when_cut":  "0",
     "extra_loading_move":  "-0.5",
-    "extruder_clearance_height_to_lid":  "390",
-    "extruder_clearance_height_to_rod":  "36",
+    "extruder_clearance_height_to_lid":  "300",
+    "extruder_clearance_height_to_rod":  "40",
     "extruder_clearance_radius":  "65",
     "extruder_colour":  [
                             "#D66C47",
                             "#494949"
                         ],
     "extruder_offset":  [
+                            "0x0",
                             "0x0"
                         ],
     "fan_kickstart":  "0",
     "fan_speedup_overhangs":  "1",
     "fan_speedup_time":  "0",
     "printer_structure":  "corexy",
-    "gcode_flavor":  "marlin2",
+    "gcode_flavor":  "klipper",
     "heatbreak_fan_control_mode":  "global_m710",
     "heatbreak_fan_gcode_template":  "",
     "head_wrap_detect_zone":  [
@@ -58,98 +60,114 @@
     "is_custom_defined":  "0",
     "layer_change_gcode":  ";AFTER_LAYER_CHANGE\n;[layer_z]",
     "long_retractions_when_cut":  [
+                                      "0",
                                       "0"
                                   ],
-    "machine_end_gcode":  "M400\nG92 E1\nG1 E-0.2 F300\nG1 X0 Y0 F7500\nG28 Z\nM104 S0\nM140 S0\nM84\nM710 S200\n",
+    "machine_end_gcode":  "M400\nG92 E0\nG1 E-1 F300\nG1 X0 Y0 F7500\nG28 Z\nM104 S0\nM140 S0\nM84\nM710 S200\nEND_PRINTING\n",
     "machine_load_filament_time":  "20",
     "machine_max_acceleration_e":  [
+                                       "6000",
                                        "6000"
                                    ],
     "machine_max_acceleration_extruding":  [
-                                               "6000"
+                                               "10000",
+                                               "10000"
                                            ],
     "machine_max_acceleration_retracting":  [
-                                                "5000"
+                                                "10000",
+                                                "10000"
                                             ],
     "machine_max_acceleration_travel":  [
-                                            "5000"
+                                            "10000",
+                                            "10000"
                                         ],
     "machine_max_acceleration_x":  [
-                                       "5000"
+                                       "10000",
+                                       "10000"
                                    ],
     "machine_max_acceleration_y":  [
-                                       "5000"
+                                       "10000",
+                                       "10000"
                                    ],
     "machine_max_acceleration_z":  [
-                                       "300"
+                                       "1000",
+                                       "1000"
                                    ],
     "machine_max_jerk_e":  [
+                               "4",
                                "4"
                            ],
     "machine_max_jerk_x":  [
+                               "9",
                                "9"
                            ],
     "machine_max_jerk_y":  [
+                               "9",
                                "9"
                            ],
     "machine_max_jerk_z":  [
+                               "4",
                                "4"
                            ],
     "machine_max_speed_e":  [
+                                "55",
                                 "55"
                             ],
     "machine_max_speed_x":  [
-                                "500"
+                                "1000",
+                                "1000"
                             ],
     "machine_max_speed_y":  [
-                                "500"
+                                "1000",
+                                "1000"
                             ],
     "machine_max_speed_z":  [
-                                "30"
+                                "100",
+                                "100"
                             ],
     "machine_min_extruding_rate":  [
+                                       "0",
                                        "0"
                                    ],
     "machine_min_travel_rate":  [
+                                    "0",
                                     "0"
                                 ],
-    "machine_pause_gcode":  "M601",
+    "machine_pause_gcode":  "PAUSE",
     "machine_start_gcode":  "{if gcode_flavor == \"klipper\"}\nSTART_PRINTING\n{endif}\n\nM710 S96\nG90\nM83\nG28\n\n; 如果设备支持热仓且有设定热仓温度，先启动热仓加温，但不等待\n{if support_chamber_temp_control and overall_chamber_temperature > 0}\nM141 S{overall_chamber_temperature}\n{endif}\n\n; 先等热床到目标温度 -5\nM190 S{max(0, first_layer_bed_temperature[initial_extruder]-5)}\n\n; 先预热所有会用到的喷头\n{if is_extruder_used[0]}\nM104 T0 S{first_layer_temperature[0]+standby_temperature_delta}\n{endif}\n{if is_extruder_used[1]}\nM104 T1 S{first_layer_temperature[1]+standby_temperature_delta}\n{endif}\n\n; 等热床到最终目标温度\nM190 S{first_layer_bed_temperature[initial_extruder]}\n\n; 如果设备支持热仓且有设定热仓温度，等待热仓到最终目标温度\n{if support_chamber_temp_control and overall_chamber_temperature > 0}\nM191 S{overall_chamber_temperature}\n{endif}\n\n; ===== 清洁非初始喷嘴 T0，左侧清洁 =====\n{if is_extruder_used[0] and initial_extruder != 0}\nT0\nM710 S{round(filament_heatbreak_fan_speed[0] * 255 / 100)}\nM109 T0 S{first_layer_temperature[0]}\nG92 E0\nG1 X{print_bed_min[0]} Y{print_bed_min[1]-0.5} F{travel_speed*60}\nG1 Z{first_layer_height} F300\nG1 E10 F300\nG1 X{print_bed_min[0]+48} E10 F900\nG1 X{print_bed_min[0]+50} Z0 F600\nG1 E-{retract_length_toolchange[0]} F{filament_retraction_speed[0]*60}\nM104 T0 S{first_layer_temperature[0]+standby_temperature_delta}\nG1 Z{first_layer_height} F600\nG1 F{travel_speed*60}\n{endif}\n\n; ===== 清洁非初始喷嘴 T1，右侧清洁 =====\n{if is_extruder_used[1] and initial_extruder != 1}\nT1\nM710 S{round(filament_heatbreak_fan_speed[1] * 255 / 100)}\nM109 T1 S{first_layer_temperature[1]}\nG92 E0\nG1 X{print_bed_max[0]} Y{print_bed_min[1]-0.5} F{travel_speed*60}\nG1 Z{first_layer_height} F300\nG1 E10 F300\nG1 X{print_bed_max[0]-48} E10 F900\nG1 X{print_bed_max[0]-50} Z0 F600\nG1 E-{retract_length_toolchange[1]} F{filament_retraction_speed[1]*60}\nM104 T1 S{first_layer_temperature[1]+standby_temperature_delta}\nG1 Z{first_layer_height} F600\nG1 F{travel_speed*60}\n{endif}\n\n; ===== 清洁初始喷嘴 T0，左侧清洁 =====\n{if initial_extruder == 0}\nT0\nM710 S{round(filament_heatbreak_fan_speed[0] * 255 / 100)}\nM109 T0 S{first_layer_temperature[0]}\nG92 E0\nG1 X{print_bed_min[0]} Y{print_bed_min[1]-0.5} F{travel_speed*60}\nG1 Z{first_layer_height} F300\nG1 E10 F300\nG1 X{print_bed_min[0]+48} E10 F900\nG1 X{print_bed_min[0]+50} Z0 F600\nG1 Z{first_layer_height} F600\nG1 F{travel_speed*60}\n{endif}\n\n; ===== 清洁初始喷嘴 T1，右侧清洁 =====\n{if initial_extruder == 1}\nT1\nM710 S{round(filament_heatbreak_fan_speed[1] * 255 / 100)}\nM109 T1 S{first_layer_temperature[1]}\nG92 E0\nG1 X{print_bed_max[0]} Y{print_bed_min[1]-0.5} F{travel_speed*60}\nG1 Z{first_layer_height} F300\nG1 E10 F300\nG1 X{print_bed_max[0]-48} E10 F900\nG1 X{print_bed_max[0]-50} Z0 F600\nG1 Z{first_layer_height} F300\nG1 F{travel_speed*60}\n{endif}\n",
     "machine_tool_change_time":  "5",
     "machine_unload_filament_time":  "10",
     "manual_filament_change":  "0",
     "max_layer_height":  [
-                             "0.3",
-                             "0.3"
+                             "0.45",
+                             "0.45"
                          ],
+    "max_resonance_avoidance_speed":  "120",
     "min_layer_height":  [
                              "0.05",
                              "0.05"
                          ],
+    "min_resonance_avoidance_speed":  "70",
     "nozzle_diameter":  [
-                            "0.4",
-                            "0.4"
+                            "0.6",
+                            "0.6"
                         ],
     "nozzle_height":  "2.5",
-    "nozzle_hrc":  "0",
-    "nozzle_type":  "brass",
+    "nozzle_hrc":  "6",
+    "nozzle_type":  "hardened_steel",
     "nozzle_volume":  "0",
     "parking_pos_retraction":  "20",
     "pellet_modded_printer":  "0",
     "preferred_orientation":  "0",
-    "printable_area":  [
-                           "0x0",
-                           "300x0",
-                           "300x300",
-                           "0x300"
-                       ],
-    "printable_height":  "400",
-    "printer_variant":  "0.4",
+    "resonance_avoidance":  "0",
+    "printable_height":  "520",
+    "printer_variant":  "0.6",
     "printhost_authorization_type":  "key",
     "printhost_ssl_ignore_revoke":  "0",
     "printing_by_object_gcode":  "",
     "purge_in_prime_tower":  "1",
     "retract_before_wipe":  [
+                                "0%",
                                 "0%"
                             ],
     "retract_length_toolchange":  [
@@ -157,33 +175,43 @@
                                       "8"
                                   ],
     "retract_lift_above":  [
+                               "0",
                                "0"
                            ],
     "retract_lift_below":  [
+                               "0",
                                "0"
                            ],
     "retract_lift_enforce":  [
+                                 "All Surfaces",
                                  "All Surfaces"
                              ],
     "retract_restart_extra":  [
+                                  "0",
                                   "0"
                               ],
     "retract_restart_extra_toolchange":  [
+                                             "0",
                                              "0"
                                          ],
     "retract_when_changing_layer":  [
+                                        "1",
                                         "1"
                                     ],
     "retraction_distances_when_cut":  [
+                                          "18",
                                           "18"
                                       ],
     "retraction_length":  [
+                              "1",
                               "1"
                           ],
     "retraction_minimum_travel":  [
+                                      "2",
                                       "2"
                                   ],
     "retraction_speed":  [
+                             "55",
                              "55"
                          ],
     "scan_first_layer":  "0",
@@ -193,11 +221,12 @@
     "support_chamber_temp_control":  "1",
     "support_multi_bed_types":  "0",
     "template_custom_gcode":  "",
-    "thumbnails":  "48x48/PNG",
+    "thumbnails":  "300x300/PNG",
     "thumbnails_format":  "PNG",
-    "time_cost":  "20",
+    "time_cost":  "10",
     "time_lapse_gcode":  "",
     "travel_slope":  [
+                         "45",
                          "45"
                      ],
     "upward_compatible_machine":  [
@@ -206,15 +235,19 @@
     "use_firmware_retraction":  "0",
     "use_relative_e_distances":  "1",
     "wipe":  [
+                 "0",
                  "0"
              ],
     "wipe_distance":  [
+                          "1",
                           "1"
                       ],
     "z_hop":  [
+                  "0.5",
                   "0.5"
               ],
     "z_hop_types":  [
+                        "Auto Lift",
                         "Auto Lift"
                     ],
     "z_offset":  "0"

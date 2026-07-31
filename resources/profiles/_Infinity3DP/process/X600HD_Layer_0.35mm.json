@@ -1,17 +1,14 @@
 {
     "type": "process",
-    "setting_id": "rWbGHmY9smCXPg41",
-    "name": "Layer: 0.35mm",
+    "setting_id": "v3AoKGhgk6MEdjRl",
+    "name": "X600HD_Layer: 0.35mm",
     "from": "system",
     "instantiation": "true",
-    "inherits": "process_common",
+    "inherits": "X600HD_common",
     "compatible_printers": [
-        "Vulcan600 0.5mm nozzle",
-        "Vulcan600 0.6mm nozzle",
-        "Vulcan600 0.8mm nozzle",
-        "Vulcan1200 0.5mm nozzle",
-        "Vulcan1200 0.6mm nozzle",
-        "Vulcan1200 0.8mm nozzle"
+        "Infinity3DP X600HD 0.5mm nozzle",
+        "Infinity3DP X600HD 0.6mm nozzle",
+        "Infinity3DP X600HD 0.8mm nozzle"
     ],
     "layer_height": "0.35",
     "initial_layer_print_height": "0.35",

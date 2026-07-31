@@ -5,6 +5,15 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "X2_DUO_common",
+    "compatible_printers": [
+        "Infinity3DP X2 DUO 0.3mm nozzle",
+        "Infinity3DP X2 DUO 0.4mm nozzle",
+        "Infinity3DP X2 DUO 0.5mm nozzle",
+        "Infinity3DP X2 DUO 0.6mm nozzle",
+        "Infinity3DP X2 DUO 0.8mm nozzle",
+        "Infinity3DP X2 DUO 1.0mm nozzle",
+        "Infinity3DP X2 DUO 1.2mm nozzle"
+    ],
     "layer_height": "0.2",
     "initial_layer_print_height": "0.2",
     "top_shell_layers": "4",

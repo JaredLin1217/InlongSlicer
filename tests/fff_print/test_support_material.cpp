@@ -553,7 +553,7 @@ TEST_CASE("Changing the strong tree preferred angle invalidates support once", "
     REQUIRE(print.get_object(0)->alloc_tree_support_preview_cache() == second_cache);
 }
 
-TEST_CASE("Explicit rectilinear support uses the regular line planner", "[SupportMaterial][NormalSupport]")
+TEST_CASE("Explicit rectilinear support uses alternating end connections", "[SupportMaterial][NormalSupport]")
 {
     constexpr coordf_t sparse_density = 0.1;
 
@@ -562,28 +562,33 @@ TEST_CASE("Explicit rectilinear support uses the regular line planner", "[Suppor
     REQUIRE(support_body_fill_pattern(smpRectilinearGrid, sparse_density, false, false) == ipSupportBase);
     REQUIRE(support_body_fill_pattern(smpConcentric, sparse_density, false, false) == ipConcentric);
     REQUIRE(support_body_fill_pattern(smpHoneycomb, sparse_density, false, false) == ipHoneycomb);
-    REQUIRE(support_body_uses_short_boundary_links(smpRectilinear, sparse_density, false));
-    REQUIRE_FALSE(support_body_uses_short_boundary_links(smpRectilinear, 1., false));
-    REQUIRE_FALSE(support_body_uses_short_boundary_links(smpDefault, sparse_density, false));
+
+    REQUIRE(support_body_uses_zigzag_connections(smpRectilinear, sparse_density, false));
+    REQUIRE_FALSE(support_body_uses_zigzag_connections(smpRectilinear, 1., false));
+    REQUIRE_FALSE(support_body_uses_zigzag_connections(smpDefault, sparse_density, false));
 
     SECTION("Rafts and tree supports retain their structural planner")
     {
         REQUIRE(support_base_fill_pattern(smpRectilinear, sparse_density, false) == ipSupportBase);
         REQUIRE(support_body_fill_pattern(smpRectilinear, sparse_density, false, true) == ipSupportBase);
-        REQUIRE_FALSE(support_body_uses_short_boundary_links(smpRectilinear, sparse_density, true));
+        REQUIRE_FALSE(support_body_uses_zigzag_connections(smpRectilinear, sparse_density, true));
     }
 }
 
-TEST_CASE("Explicit rectilinear support limits links along irregular boundaries", "[SupportMaterial][NormalSupport]")
+TEST_CASE("Explicit rectilinear support uses native contour topology without an outline", "[SupportMaterial][NormalSupport]")
 {
     const ExPolygon support_region{Polygon{Points{
         Point::new_scale(0., 0.),
-        Point::new_scale(36., 5.),
-        Point::new_scale(42., 28.),
-        Point::new_scale(6., 23.)}}};
+        Point::new_scale(36., 0.),
+        Point::new_scale(36., 24.),
+        Point::new_scale(24., 24.),
+        Point::new_scale(24., 14.),
+        Point::new_scale(18., 14.),
+        Point::new_scale(18., 24.),
+        Point::new_scale(0., 24.)}}};
     const Flow flow(0.63f, 0.3f, 0.6f);
 
-    auto fill_paths = [&](bool short_boundary_links) {
+    auto fill_paths = [&](bool connect_support_zigzag) {
         std::unique_ptr<Fill> filler(Fill::new_from_type(ipRectilinear));
         filler->set_bounding_box(get_extents(support_region.contour));
         filler->angle = 0.;
@@ -593,56 +598,92 @@ TEST_CASE("Explicit rectilinear support limits links along irregular boundaries"
         FillParams fill_params;
         fill_params.density = 0.1f;
         fill_params.dont_adjust = true;
-        if (short_boundary_links) {
-            filler->link_max_length = coord_t(scale_(2. * flow.width()));
-            fill_params.anchor_length = flow.width();
-            fill_params.anchor_length_max = 2.f * fill_params.anchor_length;
-        }
+        fill_params.connect_support_zigzag = connect_support_zigzag;
+        if (!connect_support_zigzag)
+            fill_params.anchor_length_max = 0.f;
 
         const Surface surface(stInternal, support_region);
         return filler->fill_surface(&surface, fill_params);
     };
-    auto longest_segment_angle = [](const Polylines &paths) {
-        double longest = 0.;
-        double angle = 0.;
+    const Polylines disconnected = fill_paths(false);
+    const Polylines connected = fill_paths(true);
+    constexpr double primary_min_length = 12.;
+    auto is_primary_segment = [primary_min_length](const Point &first, const Point &second) {
+        const Vec2d delta = (second - first).cast<double>();
+        return std::abs(unscale_(delta.x())) <= 1e-3 &&
+               std::abs(unscale_(delta.y())) > primary_min_length;
+    };
+    auto primary_segment_count = [&is_primary_segment](const Polylines &paths) {
+        size_t count = 0;
+        for (const Polyline &path : paths)
+            for (size_t idx = 1; idx < path.points.size(); ++idx)
+                if (is_primary_segment(path.points[idx - 1], path.points[idx]))
+                    ++count;
+        return count;
+    };
+    bool has_boundary_arc_connector = false;
+    auto connector_lengths = [&is_primary_segment, &has_boundary_arc_connector](const Polylines &paths) {
+        std::vector<double> lengths;
         for (const Polyline &path : paths) {
+            bool seen_primary = false;
+            double connector_length = 0.;
+            size_t connector_segments = 0;
             for (size_t idx = 1; idx < path.points.size(); ++idx) {
-                const Point delta = path.points[idx] - path.points[idx - 1];
-                const double segment_length = delta.cast<double>().norm();
-                if (segment_length > longest) {
-                    longest = segment_length;
-                    angle = std::atan2(double(delta.y()), double(delta.x()));
+                const Point &first = path.points[idx - 1];
+                const Point &second = path.points[idx];
+                if (is_primary_segment(first, second)) {
+                    if (seen_primary && connector_length > 0.) {
+                        lengths.emplace_back(connector_length);
+                        has_boundary_arc_connector |= connector_segments > 1;
+                    }
+                    seen_primary = true;
+                    connector_length = 0.;
+                    connector_segments = 0;
+                } else if (seen_primary) {
+                    connector_length += unscale_((second - first).cast<double>().norm());
+                    ++connector_segments;
                 }
             }
         }
-        return angle;
+        return lengths;
     };
-    auto off_direction_length = [](const Polylines &paths, double fill_angle) {
-        double length = 0.;
-        for (const Polyline &path : paths) {
-            for (size_t idx = 1; idx < path.points.size(); ++idx) {
-                const Point delta = path.points[idx] - path.points[idx - 1];
-                double angle_delta = std::fmod(
-                    std::abs(std::atan2(double(delta.y()), double(delta.x())) - fill_angle), M_PI);
-                angle_delta = std::min(angle_delta, M_PI - angle_delta);
-                if (angle_delta > Geometry::deg2rad(1.))
-                    length += unscale_(delta.cast<double>().norm());
-            }
+    const std::vector<double> connectors = connector_lengths(connected);
+    const double line_spacing = flow.spacing() / 0.1;
+
+    CAPTURE(disconnected.size(), connected.size(), connectors, has_boundary_arc_connector);
+    REQUIRE_FALSE(disconnected.empty());
+    REQUIRE_FALSE(connected.empty());
+    REQUIRE(connected.size() < disconnected.size());
+    REQUIRE(connected.size() == 1);
+    const size_t primary_count = primary_segment_count(connected);
+    REQUIRE(primary_count == primary_segment_count(disconnected));
+    REQUIRE_FALSE(connectors.empty());
+    REQUIRE(connectors.size() == primary_count - 1);
+    REQUIRE(has_boundary_arc_connector);
+    REQUIRE(std::all_of(connectors.begin(), connectors.end(), [line_spacing](double length) {
+        return length <= 3. * line_spacing + 1e-3;
+    }));
+    REQUIRE(std::any_of(connectors.begin(), connectors.end(), [line_spacing](double length) {
+        return length > 2.5 * line_spacing + 1e-3;
+    }));
+    REQUIRE(std::none_of(connected.begin(), connected.end(), [](const Polyline &path) {
+        return path.points.size() > 2 && path.first_point() == path.last_point();
+    }));
+    REQUIRE(std::all_of(connected.begin(), connected.end(), [&support_region](const Polyline &path) {
+        return support_region.contains(path);
+    }));
+    for (const Polyline &path : connected) {
+        int previous_direction = 0;
+        for (size_t idx = 1; idx < path.points.size(); ++idx) {
+            if (!is_primary_segment(path.points[idx - 1], path.points[idx]))
+                continue;
+            const Vec2d delta = (path.points[idx] - path.points[idx - 1]).cast<double>();
+            const int direction = delta.y() > 0. ? 1 : -1;
+            if (previous_direction != 0)
+                REQUIRE(direction == -previous_direction);
+            previous_direction = direction;
         }
-        return length;
-    };
-
-    const Polylines unrestricted = fill_paths(false);
-    const Polylines limited = fill_paths(true);
-    const double fill_angle = longest_segment_angle(limited);
-    const double unrestricted_off_direction = off_direction_length(unrestricted, fill_angle);
-    const double limited_off_direction = off_direction_length(limited, fill_angle);
-
-    CAPTURE(unrestricted.size(), limited.size(), unrestricted_off_direction, limited_off_direction);
-    REQUIRE_FALSE(unrestricted.empty());
-    REQUIRE_FALSE(limited.empty());
-    REQUIRE(limited.size() > unrestricted.size());
-    REQUIRE(limited_off_direction < 0.5 * unrestricted_off_direction);
+    }
 }
 
 TEST_CASE("Three raft layers are created", "[SupportMaterial]")

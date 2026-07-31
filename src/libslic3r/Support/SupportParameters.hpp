@@ -52,13 +52,13 @@ inline InfillPattern support_body_fill_pattern(
     // The specialized sparse support planner adds long boundary arches, caps
     // and T-joints. Keep those structural connections for the default, grid,
     // raft and tree-support paths, while honoring an explicit rectilinear
-    // choice for normal support with the regular line planner.
+    // choice for normal support with short alternating end connections.
     return ! tree_support && pattern == smpRectilinear ?
         ipRectilinear :
         support_base_fill_pattern(pattern, density, with_sheath);
 }
 
-inline bool support_body_uses_short_boundary_links(
+inline bool support_body_uses_zigzag_connections(
     SupportMaterialPattern pattern,
     coordf_t density,
     bool tree_support)

@@ -95,7 +95,7 @@ void fill_expolygons_with_sheath_generate_paths(
     bool                  with_sheath,
     bool                  no_sort,
     bool                  fill_concentric_gaps = false,
-    bool                  short_boundary_links = false);
+    bool                  connect_support_zigzag = false);
 
 // returns sorted layers
 SupportGeneratorLayersPtr generate_support_layers(

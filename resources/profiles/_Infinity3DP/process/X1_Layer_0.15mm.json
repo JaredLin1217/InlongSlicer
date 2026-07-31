@@ -6,7 +6,7 @@
     "instantiation": "true",
     "inherits": "X1_common",
     "layer_height": "0.15",
-    "initial_layer_print_height": "0.2",
+    "initial_layer_print_height": "0.15",
     "top_shell_layers": "5",
     "bottom_shell_layers": "4",
     "brim_object_gap": "0.1",

@@ -1,0 +1,29 @@
+{
+    "type":  "machine",
+    "from":  "system",
+    "instantiation":  "true",
+    "setting_id":  "UCwFDiopx5Kwxk4m",
+    "default_print_profile":  "X600HD_Layer: 0.30mm",
+    "printer_model":  "Infinity3DP X600HD",
+    "inherits":  "Infinity3DP X600HD common",
+    "name":  "Infinity3DP X600HD 0.6mm nozzle",
+    "nozzle_diameter":  [
+                            "0.6",
+                            "0.6"
+                        ],
+    "max_layer_height":  [
+                             "0.45",
+                             "0.45"
+                         ],
+    "printer_variant":  "0.6",
+    "printable_area":  [
+                           "0x0",
+                           "605x0",
+                           "605x505",
+                           "0x505"
+                       ],
+    "default_filament_profile":  [
+                                     "Infinity3DP PET-CFGF",
+                                     "Infinity3DP PET-CFGF"
+                                 ]
+}

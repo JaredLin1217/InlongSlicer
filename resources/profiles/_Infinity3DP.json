@@ -1,6 +1,6 @@
 {
     "name":  "Infinity3DP",
-    "version":  "01.28.15.15",
+    "version":  "01.28.15.16",
     "force_update":  "1",
     "description":  "My configurations",
     "machine_model_list":  [
@@ -27,6 +27,10 @@
                                {
                                    "name":  "Infinity3DP X3",
                                    "sub_path":  "machine/Infinity3DP X3.json"
+                               },
+                               {
+                                   "name":  "Infinity3DP X600HD",
+                                   "sub_path":  "machine/Infinity3DP X600HD.json"
                                }
                            ],
     "process_list":  [
@@ -149,6 +153,30 @@
                          {
                              "name":  "X3_Layer: 0.20mm",
                              "sub_path":  "process/X3_Layer_0.20mm.json"
+                         },
+                         {
+                             "name":  "X600HD_common",
+                             "sub_path":  "process/X600HD_common.json"
+                         },
+                         {
+                             "name":  "X600HD_Layer: 0.15mm",
+                             "sub_path":  "process/X600HD_Layer_0.15mm.json"
+                         },
+                         {
+                             "name":  "X600HD_Layer: 0.20mm",
+                             "sub_path":  "process/X600HD_Layer_0.20mm.json"
+                         },
+                         {
+                             "name":  "X600HD_Layer: 0.25mm",
+                             "sub_path":  "process/X600HD_Layer_0.25mm.json"
+                         },
+                         {
+                             "name":  "X600HD_Layer: 0.30mm",
+                             "sub_path":  "process/X600HD_Layer_0.30mm.json"
+                         },
+                         {
+                             "name":  "X600HD_Layer: 0.35mm",
+                             "sub_path":  "process/X600HD_Layer_0.35mm.json"
                          }
                      ],
     "machine_list":  [
@@ -367,6 +395,26 @@
                          {
                              "name":  "Infinity3DP X3 1.2mm nozzle",
                              "sub_path":  "machine/Infinity3DP X3 1.2mm nozzle.json"
+                         },
+                         {
+                             "name":  "Infinity3DP X600HD common",
+                             "sub_path":  "machine/Infinity3DP X600HD common.json"
+                         },
+                         {
+                             "name":  "Infinity3DP X600HD 0.4mm nozzle",
+                             "sub_path":  "machine/Infinity3DP X600HD 0.4mm nozzle.json"
+                         },
+                         {
+                             "name":  "Infinity3DP X600HD 0.5mm nozzle",
+                             "sub_path":  "machine/Infinity3DP X600HD 0.5mm nozzle.json"
+                         },
+                         {
+                             "name":  "Infinity3DP X600HD 0.6mm nozzle",
+                             "sub_path":  "machine/Infinity3DP X600HD 0.6mm nozzle.json"
+                         },
+                         {
+                             "name":  "Infinity3DP X600HD 0.8mm nozzle",
+                             "sub_path":  "machine/Infinity3DP X600HD 0.8mm nozzle.json"
                          }
                      ],
     "filament_list":  [

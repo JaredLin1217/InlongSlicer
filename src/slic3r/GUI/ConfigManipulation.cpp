@@ -271,9 +271,9 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
         is_msg_dlg_already_exist = false;
     }
 
-    //BBS: limite the max layer_herght
+    // Keep the process layer height within the active nozzle's configured limit.
     auto max_lh = gpreset.config.opt_float("max_layer_height",0);
-    if (max_lh > 0.2 && layer_height > max_lh+ EPSILON)
+    if (max_lh > EPSILON && layer_height > max_lh + EPSILON)
     {
         const wxString msg_text = wxString::Format(L"Too large layer height.\nReset to %0.3f.", max_lh);
         MessageDialog dialog(nullptr, msg_text, "", wxICON_WARNING | wxOK);
@@ -309,7 +309,8 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
         is_msg_dlg_already_exist = false;
     }
 
-    if (config->option<ConfigOptionFloat>("initial_layer_print_height")->value < EPSILON)
+    const double initial_layer_height = config->option<ConfigOptionFloat>("initial_layer_print_height")->value;
+    if (initial_layer_height < EPSILON)
     {
         const wxString msg_text = _(L("Zero initial layer height is invalid.\n\nThe first layer height will be reset to 0.2."));
         MessageDialog dialog(m_msg_dlg_parent, msg_text, "", wxICON_WARNING | wxOK);
@@ -317,6 +318,17 @@ void ConfigManipulation::update_print_fff_config(DynamicPrintConfig* config, con
         is_msg_dlg_already_exist = true;
         dialog.ShowModal();
         new_conf.set_key_value("initial_layer_print_height", new ConfigOptionFloat(0.2));
+        apply(config, &new_conf);
+        is_msg_dlg_already_exist = false;
+    }
+    else if (max_lh > EPSILON && initial_layer_height > max_lh + EPSILON)
+    {
+        const wxString msg_text = wxString::Format(L"Too large layer height.\nReset to %0.3f.", max_lh);
+        MessageDialog dialog(m_msg_dlg_parent, msg_text, "", wxICON_WARNING | wxOK);
+        DynamicPrintConfig new_conf = *config;
+        is_msg_dlg_already_exist = true;
+        dialog.ShowModal();
+        new_conf.set_key_value("initial_layer_print_height", new ConfigOptionFloat(max_lh));
         apply(config, &new_conf);
         is_msg_dlg_already_exist = false;
     }

@@ -2833,8 +2833,14 @@ bool FillRectilinear::fill_surface_by_lines(const Surface *surface, const FillPa
     iRun ++;
 #endif /* SLIC3R_DEBUG */
     std::vector<SegmentedIntersectionLine> segs = slice_region_by_vertical_lines(poly_with_offset, n_vlines, x0, line_spacing);
+    Polylines support_native_paths;
+    Polylines &initial_paths = params.connect_support_zigzag ? support_native_paths : polylines_out;
+    const coord_t effective_link_max_length = params.connect_support_zigzag ?
+        coord_t(2. * double(line_spacing)) :
+        link_max_length;
+
     // Connect by horizontal / vertical links, classify the links based on link_max_length as too long.
-	connect_segment_intersections_by_contours(poly_with_offset, segs, params, link_max_length);
+	connect_segment_intersections_by_contours(poly_with_offset, segs, params, effective_link_max_length);
 
 #ifdef SLIC3R_DEBUG
     // Paint the segments and finalize the SVG file.
@@ -2874,10 +2880,27 @@ bool FillRectilinear::fill_surface_by_lines(const Surface *surface, const FillPa
         if (! regions.empty()) {
 		    std::mt19937_64 rng;
 		    std::vector<MonotonicRegionLink> path = chain_monotonic_regions(regions, poly_with_offset, segs, rng);
-		    polylines_from_paths(path, poly_with_offset, segs, polylines_out);
+		    polylines_from_paths(path, poly_with_offset, segs, initial_paths);
         }
 	} else {
-		traverse_graph_generate_polylines(poly_with_offset, params, segs, this->has_consistent_pattern(), polylines_out);
+		traverse_graph_generate_polylines(poly_with_offset, params, segs, this->has_consistent_pattern(), initial_paths);
+    }
+
+    if (! support_native_paths.empty()) {
+        // The native rectilinear graph chose the alternating paths through
+        // contours, holes and concave regions. Merge remaining chains only
+        // through short native boundary arcs, without structural arches.
+        FillParams boundary_params = params;
+        boundary_params.anchor_length = 0.f;
+        boundary_params.anchor_length_max = float(3. * unscale<double>(line_spacing));
+        boundary_params.dont_sort = false;
+        connect_infill(
+            std::move(support_native_paths),
+            poly_with_offset.polygons_outer,
+            poly_with_offset.bounding_box_outer(),
+            polylines_out,
+            this->spacing,
+            boundary_params);
     }
 
 #ifdef SLIC3R_DEBUG

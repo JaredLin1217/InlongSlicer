@@ -1,0 +1,12 @@
+{
+    "type":  "machine_model",
+    "name":  "Infinity3DP X600HD",
+    "model_id":  "X600HDmodel",
+    "nozzle_diameter":  "0.6;0.4;0.5;0.8",
+    "machine_tech":  "FFF",
+    "family":  "Infinity3DP",
+    "bed_model":  "",
+    "bed_texture":  "",
+    "hotend_model":  "",
+    "default_materials":  "Infinity3DP PET-CFGF;Infinity3DP PLA;Infinity3DP PETG-CFGF;Infinity3DP ABS;Infinity3DP PA6;Infinity3DP PC;Infinity3DP TPU;Infinity3DP PATH-CFGF;Infinity3DP PPA-CFGF;Infinity3DP PPS-CFGF;Infinity3DP PAEK;Infinity3DP PEEK;Infinity3DP HIPS;Infinity3DP VXL;"
+}

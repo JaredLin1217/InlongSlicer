@@ -8,6 +8,12 @@ endif ()
 
 if (SLIC3R_ENC_CHECK)
     add_executable(encoding-check encoding-check.cpp)
+    if (MSVC)
+        # Global /LTCG is needed by targets that link dependencies built with
+        # /GL. This standalone checker has no /GL inputs, so disable LTCG to
+        # avoid a linker warning and an unnecessary link-time codegen pass.
+        target_link_options(encoding-check PRIVATE /LTCG:OFF)
+    endif()
 
     # A global no-op target which depends on all encodings checks,
     # and on which in turn all checked targets depend.

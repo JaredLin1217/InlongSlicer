@@ -101,6 +101,9 @@ struct FillParams
     const           PrintRegionConfig* config{ nullptr };
     bool            dont_sort{ false }; // do not sort the lines, just simply connect them
     bool            can_reverse{true};
+    // Use the native rectilinear contour topology to connect sparse normal
+    // support lines into bounded alternating paths without structural arches.
+    bool            connect_support_zigzag{false};
 
     // Orca: forced print order of surface fill loops/fragments for center-based patterns
     // (Concentric, Archimedean Chords, Octagram Spiral). Default keeps shortest-path ordering.

@@ -211,6 +211,10 @@ if (WIN32)
     # Generate debug symbols even in release mode.
     if(MSVC)
         target_link_options(InlongSlicer_app_gui PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
+        # The launcher only loads the main DLL and does not compile /GL
+        # objects. Keep global LTCG for the DLL while avoiding a redundant
+        # LTCG pass and linker warning for this small shim executable.
+        target_link_options(InlongSlicer_app_gui PRIVATE /LTCG:OFF)
     endif()
     target_compile_definitions(InlongSlicer_app_gui PRIVATE "$<$<NOT:$<CONFIG:RelWithDebInfo>>:SLIC3R_WRAPPER_NOCONSOLE>")
     add_dependencies(InlongSlicer_app_gui InlongSlicer)
