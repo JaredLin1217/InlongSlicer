@@ -272,7 +272,7 @@ public:
     std::vector<std::string> renamed_from;
 
     // Orca: maintain a list of printer models that are excluded from this preset, designed for filaments without compatible_printer defined
-    // (hence they are visible to all printer models by default) in Orca Filament Library. However, we might have speciliazed filament for
+    // (hence they are visible to all printer models by default) in Inlong Filament Library. However, we might have specialized filament for
     // certain printer models defined in the vendor profile as well, in this case we want to hide this generic preset for these printer models.
     std::set<std::string> m_excluded_from;
 
