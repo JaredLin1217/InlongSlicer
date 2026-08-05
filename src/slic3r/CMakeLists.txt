@@ -965,7 +965,9 @@ if (ORCA_BUILD_PYTHON_STUBGEN_MODULE)
 
     if (MSVC)
         # The application and bundled Python use the dynamic MSVC runtime.
-        target_link_options(orca_stubgen PRIVATE /NODEFAULTLIB:LIBCMT)
+        # MODULE targets do not inherit CMAKE_SHARED_LINKER_FLAGS, so request
+        # LTCG explicitly for transitive dependencies built with /GL.
+        target_link_options(orca_stubgen PRIVATE /NODEFAULTLIB:LIBCMT /LTCG)
     endif()
 
     set_target_properties(orca_stubgen PROPERTIES

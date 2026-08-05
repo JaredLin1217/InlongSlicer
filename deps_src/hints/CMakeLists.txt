@@ -21,6 +21,12 @@ if(TARGET boost_libs)
     target_link_libraries(hintsToPot PRIVATE boost_libs)
 endif()
 
+if(MSVC)
+    # This standalone utility has no /GL inputs. Disable the global LTCG pass
+    # to avoid a redundant link and its corresponding linker warning.
+    target_link_options(hintsToPot PRIVATE /LTCG:OFF)
+endif()
+
 # Create an interface library for other projects to use
 add_library(hints INTERFACE)
 

@@ -26,6 +26,13 @@ add_library(test_common INTERFACE)
 target_compile_definitions(test_common INTERFACE TEST_DATA_DIR=R"\(${TEST_DATA_DIR}\)" PROFILES_DIR=R"\(${PROFILES_DIR}\)" CATCH_CONFIG_FAST_COMPILE)
 target_include_directories(test_common INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
+if (MSVC)
+    # The application and bundled dependencies use the dynamic MSVC runtime.
+    # Keep every test executable from pulling the static CRT through a
+    # transitive library and emitting LNK4098.
+    target_link_options(test_common INTERFACE /NODEFAULTLIB:LIBCMT)
+endif()
+
 if (APPLE)
     target_link_libraries(test_common INTERFACE "-liconv -framework IOKit" "-framework CoreFoundation" -lc++)
 endif()

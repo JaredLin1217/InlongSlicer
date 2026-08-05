@@ -535,7 +535,7 @@ TEST_CASE("Plugin capability override keys are scoped per preset type", "[Preset
 
 namespace {
 
-// A standalone filament collection that exposes the protected library masking builder, so the Orca
+// A standalone filament collection that exposes the protected library masking builder, so the Inlong
 // Filament Library scenario can be set up without the full system-profile load pipeline.
 struct LibraryFilamentTestCollection : public PresetCollection
 {
@@ -557,9 +557,9 @@ TEST_CASE("A printer specific filament supersedes the generic library filament w
     PresetCollection              printers(Preset::TYPE_PRINTER, Preset::printer_options(),
                                            static_cast<const PrintRegionConfig &>(FullPrintConfig::defaults()));
     // The masking keys off the vendor name, which VendorProfile's constructor does not derive from the id.
-    VendorProfile                 library(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    VendorProfile                 library(PresetBundle::INLONG_FILAMENT_LIBRARY);
     VendorProfile                 vendor("Vendor");
-    library.name = PresetBundle::ORCA_FILAMENT_LIBRARY;
+    library.name = PresetBundle::INLONG_FILAMENT_LIBRARY;
     vendor.name  = "Vendor";
 
     auto add_filament = [&filaments](const VendorProfile &owner, const std::string &name, std::vector<std::string> compatible_printers) {
