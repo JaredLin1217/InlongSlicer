@@ -12,6 +12,7 @@ startup:
     enterprise_dispatch: "Leaders only; org/model-policy/dispatch."
     workflow_artifact: "Artifact evidence; runtime local."
     context_compact: "latest request, route, changes, verify, risks, employees, next."
+    context_intelligence: "Resolve at most three authoritative files, impact paths, gaps, and verification level."
     collaborator_window: "Named sessions map to leader collaborators; thread ids runtime-local."
     core_system: "Boundary, canonical set, blocklist, deploy/release contract."
     runtime_execution: "Run, approval, tool/result, cleanup evidence."
@@ -26,6 +27,7 @@ startup:
     enterprise_dispatch: "Org dispatch, department command, delegation, tier binding."
     workflow_artifact: "Create/verify/collect/simulate/normalize artifacts."
     context_compact: "Compact/resume/handoff/closeout."
+    context_intelligence: "Task intent, minimal context, impact analysis, provenance, freshness, or validation recommendation."
     collaborator_window: "Named collaborators, windows, rename, recovery, archive, close."
     core_system: "Boundary, blocklist, release/deploy contract."
     runtime_execution: "Run evidence, approval, tool/result, cleanup proof."
@@ -37,12 +39,12 @@ startup:
     delegated_deployment: "deploy.yaml; one deployment_worker; exact target; deployed_file_set only."
   employee: "Read assignment/assigned paths/skill; run allowed verify; report completed/blocked/stopped."
 progress_updates:
-  cap: "No interim for answer-only; otherwise concise per phase/30-60s and before risky edit/block/verify/final."
-memory: "When relevant, read .agents/docs/memory/index.md first, open at most three matching active entries, reject overdue claims, and let current evidence win."
+  cap: "Answer-only: none; otherwise concise per phase/30-60s and before risk/edit/verify/final."
+memory: "Read .agents/docs/memory/index.md first; open at most three matching active entries; verify source_commit/content_hash/checked_at/update_trigger/supersedes/boundary; current evidence wins over stale/conflict."
 multi_agent_runtime:
   trigger_when: "explicit hire/spawn/delegate/parallel-agent request"
-  do_not_trigger_for: ["goal continuation","static audit without delegation","self-scoring unless requested"]
-  delegation_gate: "Delegate only when independent parallel work or specialist review outweighs added context, coordination, and integration cost; keep tightly coupled work with one controller."
+  do_not_trigger_for: ["goal continuation","static audit","self-scoring unless requested"]
+  delegation_gate: "Use independent parallel work only when value exceeds context/coordination/integration cost; keep one controller."
   modes: "sidecar; manual-detached default; cloud/automation by setup."
   roles: "explorer read-only; worker exclusive scoped edits."
   controller: "Assign, review, integrate, reconcile, report."
@@ -64,7 +66,7 @@ multi_agent_runtime:
   lifecycle_checks:
     before: ["confirm explicit employee use","define role/read/write/command/report/close","exclusive worker scopes","record batch expected ids/schema"]
     during: ["poll as needed","dedupe reports","track ids/formats/failures/unclosed","stop at convergence/cap"]
-    after: ["close runtimes","quiet cleanup parent/cwd residue","residue-zero proof: sqlite/unread/rollout/delayed","reconcile expected/received/completed/closed","reconcile git/owned scopes","keep ledger/runtime ignored"]
+    after: ["close runtimes","zero sqlite/unread/rollout/delayed residue","reconcile ids/git/scopes","keep ledger/runtime ignored"]
   ownership:
     required_for: "worker, 2 active employees, or controller edits near employee scope"
     normalize: "repo-relative, slash-normalized, containment-aware, case-insensitive when needed"
@@ -82,14 +84,15 @@ multi_agent_runtime:
     close: "Close exact runtime id before history cleanup."
     official_controls_first: "Use runtime close/status/archive/unsubscribe first; no hard-delete API assumed."
     claim_boundary: "Use close_requested/archived/verified_inactive unless exact runtime tools prove deletion; stale UI remains risk until delayed zero proof."
-    close_success: "Clean roster = inactive + official zero + sqlite edge/thread zero + session-index zero + unread-state zero + rollout zero + delayed zero verification."
-    residue_sources: "state_*.sqlite threads/thread_spawn_edges; session_index.jsonl child rows; global unread ids; sessions|archived_sessions rollouts."
-    cleanup_order: "close/prove inactive -> resolve runtime ids, not sidebar nicknames -> match parent/cwd/subagent -> delete edges/threads, session_index rows, unread ids/rollouts -> delay verify zero."
-    cleanup_helper: "Use scripts/agents-cleanup.ps1 for exact runtime id Verify/Cleanup evidence; cleanup is destructive no-backup and must never use sidebar nicknames."
-    quiet_cleanup: "Standing closeout cleanup: exact runtime ids; delete sqlite/session-index/unread/rollout residue without backup; delayed zero verification; summarize XR/XW."
-    history_cleanup: "Dispatch closeout uses quiet_cleanup after close; other cleanup needs exact no-backup auth."
-    sidebar_cleanup_success_path: "close proof -> official zero -> sqlite/session-index/unread/rollout zero -> delayed zero -> UI reload if stale"
-    history_cleanup_never: "Never delete nickname-only, parent/user threads, unrelated cwd, non-subagent rollouts, DB backups/copies, ledger-only ids, or unobserved UI refresh."
+    close_success: "Clean = inactive plus official/sqlite/index/unread/rollout/delayed zero."
+    residue_sources: "SQLite edges/threads; session index; unread ids; session rollouts."
+    cleanup_order: "close -> exact parent/cwd/subagent ids -> clear edges/index/unread/rollouts -> delayed zero."
+    cleanup_helper: "scripts/agents-cleanup.ps1 verifies/cleans an exact runtime id; destructive no-backup; never sidebar nicknames."
+    quiet_cleanup: "Closeout only: exact ids, no-backup residue removal, delayed zero, report XR/XW."
+    history_cleanup: "Dispatch closeout uses quiet_cleanup; otherwise require exact no-backup authorization."
+    standing_cleanup_contract: "Standing closeout cleanup: close exact ids; clear matching state_*.sqlite thread_spawn_edges, session_index.jsonl, unread, and rollout records; require session-index zero, unread-state zero, and delayed zero verification; use runtime ids, not sidebar nicknames."
+    sidebar_cleanup_success_path: "close -> official/sqlite/index/unread/rollout zero -> delayed zero -> UI reload if stale"
+    history_cleanup_never: "Never delete nickname-only, parent/user, unrelated cwd, non-subagent rollout, backups, ledger-only ids, or unverified UI."
   report_dedupe:
     dedupe_key: "agent + runtime id + event + roster snapshot version + report hash"
     duplicate_rule: "Record matching final report once; do not reprocess duplicates."
@@ -116,21 +119,22 @@ workflow_artifact_runtime:
   execution_rule: "Workflow artifacts reference runtime execution runs for approvals, tool evidence, results, and cleanup proof."
   cleanup_rule: "Close employees, record cleanup evidence, run history cleanup, leave artifacts local or delete by explicit request."
 context_compact_runtime:
-  source_of_truth: ".agents/docs/agents/context-compact.yaml owns compaction semantics."
+  source_of_truth: ".agents/docs/agents/context-compact.yaml owns semantics."
   trigger_when: "Manual/auto compact, resume, handoff, subagent closeout, pre-commit/deploy."
-  do_not_trigger_for: ["answer-only","ordinary scoped edit","plain deploy","enterprise dispatch without compact backing"]
-  summary_rule: "Preserve latest_user_request, route, files, pending, verification_state, open_risks, external, subagents, next_step."
-  raw_content_rule: "Do not preserve raw transcript, raw worker chatter, long output, or superseded instructions."
-  subagent_rule: "Closeout records requested, spawned, completed, closed, missing, duplicate, invalid_format, failed, risk."
-  risk_rule: "Unclosed employees, missing verification, unknown changes, or omitted external access must be open_risks."
-  runtime_rule: "Compact events stay local under .agents/runtime/compact-events.jsonl; never stage, deploy, release, or copy."
-  footprint_rule: "A compact event may promote only reusable verified lessons; stale memory cannot drive current action and current evidence wins."
+  summary_rule: "v3 preserves latest_user_request, context_evidence_ref, verification_state, open_risks, next_step; source owns all fields."
+  raw_content_rule: "Exclude raw transcript, raw worker chatter, long output, superseded instructions."
+  runtime_rule: ".agents/runtime/compact-events.jsonl is local; never stage/deploy/release. Promote reusable verified lessons only; stale memory cannot override current evidence."
+context_intelligence_runtime:
+  source_of_truth: ".agents/docs/agents/context-intelligence.yaml owns minimal-context/impact-evidence semantics."
+  resolver_rule: "scripts/resolve-agent-context.ps1 returns at most three files/8192 bytes; expand on gaps."
+  evidence_rule: "Record provenance/confidence/hash/freshness, dependency paths, affected tests, gaps, and verification recommendation; heuristics cannot alone authorize edits or skipped verification."
+  fallback_rule: "Dirty, stale, degraded, unsupported, parse-error, or conflicting evidence: expand reads + Full; never continue silently. Ignore .agents/runtime/context-intelligence/ Git state/content hashes; never stage/deploy/release it. Ledger keeps current route, verified assumptions, change boundary, remaining steps, recovery pointers; avoid full-repo rescan."
 collaborator_window_runtime: ".agents/docs/agents/collaborators.yaml; leader windows only; close_rule: archive/close; runtime_rule: live ids/evidence runtime-local."
 core_system_runtime: ".agents/docs/agents/core-system.yaml; boundary, canonical set, blocklist, deploy/release contract; runtime/API/provider state local."
 runtime_execution_runtime: ".agents/docs/agents/runtime-execution.yaml; run, approval, tool/result, escalation, cleanup evidence; no fully deleted claim without proof."
 provider_adapter_runtime: ".agents/docs/agents/provider-adapters.yaml; providers expose capabilities; departments request tiers; adapters map tiers to models."
 route_pack_runtime: ".agents/docs/agents/route-packs.yaml; deterministic route id, file hashes, cache key, compact manifest."
-knowledge_footprint_runtime: ".agents/docs/agents/knowledge-footprint.yaml; index-first retrieval, reusable verified promotion, freshness dates, evidence refs, gaps, and resume pointer."
+knowledge_footprint_runtime: ".agents/docs/agents/knowledge-footprint.yaml: index-first v3, provenance, freshness, gaps, resume pointer."
 scoring_batches:
   use_when: "explicit scoring or many-agent eval"
   default_size: 3
@@ -152,7 +156,7 @@ skill_authoring: "Create .agents/skills/<name>/SKILL.md only for repeatable repo
 maintenance:
   local_permission_boundary: "No OS permission/ownership/ACL/.git repair; report Git metadata blockers; resume after writable repo or clean clone."
   verification_profiles:
-    change_aware: "validate-changes.ps1 Auto selects Fast, Policy, or Full from changed-file risk"
+    change_aware: "validate-changes.ps1 uses ContextMode Auto; Required for release evidence; checkpoint gates never reduce."
     fast_turn: "answer-only/scoped work"
     policy_pack_edit: "changed files and mirror pairs"
     commit_tag_checkpoint: "ordinary commit/tag/version/branch-push checkpoint"

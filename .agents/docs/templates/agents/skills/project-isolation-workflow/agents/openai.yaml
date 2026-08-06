@@ -1,6 +1,0 @@
-﻿interface:
-  display_name: "Project Isolation Workflow"
-  short_description: "Keep Codex project knowledge repo-local."
-  default_prompt: "Use $project-isolation-workflow to audit this repo's isolated Codex rules and docs."
-policy:
-  allow_implicit_invocation: false

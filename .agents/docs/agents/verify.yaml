@@ -1,6 +1,6 @@
 ﻿schema: agents-verify/v2
 profile_selection:
-  order: ["answer","read-only","state/edit/git/deploy","policy pack","core system","foundation creation","runtime execution","provider_adapter","route pack","knowledge footprint","enterprise","artifact","compact","collaborator","commit/tag/push","deploy/release/protected","runtime/batch","hard isolation"]
+  order: ["answer/read-only","state/edit/git/deploy","policy/core/foundation/runtime/provider/route/knowledge","enterprise/artifact/compact/context/collaborator","checkpoint/release/runtime/isolation"]
   mixed_claim_rule: "Use highest-risk profile; do not upgrade unrelated facts."
   if_unclear: "State narrow claim."
 file_classes:
@@ -10,6 +10,7 @@ file_classes:
   enterprise_dispatch_canonical: [".agents/docs/agents/org.yaml",".agents/docs/agents/model-policy.yaml",".agents/docs/agents/dispatch.yaml"]
   workflow_artifact_canonical: [".agents/docs/agents/workflow-artifacts.yaml"]
   context_compact_canonical: [".agents/docs/agents/context-compact.yaml"]
+  context_intelligence_canonical: [".agents/docs/agents/context-intelligence.yaml"]
   collaborator_window_canonical: [".agents/docs/agents/collaborators.yaml"]
   core_system_canonical: [".agents/docs/agents/core-system.yaml"]
   foundation_creation_canonical: [".agents/docs/agents/openai-foundations.yaml"]
@@ -23,7 +24,7 @@ file_classes:
   runtime_local: [".agents/runtime/**",".agents/runtime/workflows/**",".workflow/**",".codex/**","docs/.agents runtime evidence dirs"]
   generated_or_cache: ["generated","cache","build","vendor"]
 gate_matrix:
-  changed_path_set: ["Auto selects Fast, Policy, or Full by highest-risk changed file","-Profile overrides when the claim needs stronger proof"]
+  changed_path_set: ["Auto uses highest-risk path","ContextMode raises, never lowers","Required fails without evidence","explicit profile may strengthen"]
   durable_prose_changed: ["English-only","placeholder"]
   exact_pair_member_changed: ["exact-pair"]
   deploy_template_changed: ["source-pollution"]
@@ -40,11 +41,12 @@ commands:
   changed_manifest: "unstaged + staged changed paths"
   checkpoint_bundle: "status, diff_check, manifest, pair/prose/EOL/size, no staged runtime"
   full_audit_bundle: ".\\scripts\\validate.ps1 -Full"
-  changed_validation: ".\\scripts\\validate-changes.ps1 -Profile Auto -Explain"
+  changed_validation: ".\\scripts\\validate-changes.ps1 -Profile Auto -ContextMode Auto -Explain"
   ai_runtime_compact: "ai-runtime/mirror <=4096; expand_only routes."
   enterprise_dispatch_integrity: "validate.ps1: department leader references, model tier references, escalation."
   workflow_artifact_integrity: "validate.ps1: workflow-artifacts route, approval gates, L1-6 simulations."
   context_compact_integrity: "validate.ps1: context-compact route, raw transcript, runtime event boundary."
+  context_intelligence_integrity: "validate-context-intelligence.ps1 + test-context-intelligence.ps1: context_intelligence_practice; bounded files/bytes, provenance/freshness, A/B metrics, fallback states."
   collaborator_window_integrity: "validate.ps1: collaborator route/schema/mirror, leader/tier map, runtime ids, close/archive evidence."
   core_system_integrity: "validate.ps1: core contract, blocklist, version."
   foundation_creation_integrity: "validate-foundation.ps1: official docs first, structured outputs, state owner, latency controls, evaluation gate."
@@ -54,7 +56,7 @@ commands:
   knowledge_footprint_integrity: "validate-knowledge.ps1: index schema, detail metadata, freshness, evidence refs, and no full transcript."
   legacy_residue_scan: "Reject retired compatibility positioning, removed external connector files, and stale helper version literals."
   release_package_export: ".\\scripts\\export-release-package.ps1 -Quiet"
-  runtime_release_evidence: ".\\scripts\\capture-runtime-evidence.ps1 -OutputPath docs/evidence/releases/v2.8.0-runtime-evidence.json -Full -Practice -Quiet"
+  runtime_release_evidence: ".\\scripts\\capture-runtime-evidence.ps1 -OutputPath docs/evidence/releases/v2.9.0-runtime-evidence.json -Full -Practice -Quiet"
   size_gate_helper: "scripts/validate-size-gates.ps1"
   release_evidence_helper: "scripts/validate-release-evidence.ps1"
   route_pack_validation_helper: "scripts/validate-route-pack.ps1"
@@ -63,6 +65,7 @@ commands:
   cross_project_runtime_validation_helper: "scripts/validate-cross-project-runtime.ps1"
   change_aware_validation_helper: "scripts/validate-changes.ps1"
   knowledge_validation_helper: "scripts/validate-knowledge.ps1"
+  context_intelligence_helper: "resolve-agent-context.ps1 -Task <text> -MaxFiles 3 -BudgetBytes 8192"
   score_validation_helper: "scripts/validate-score.ps1"
   runtime_helper: ".\\scripts\\agents-runtime.ps1"
   runtime_cleanup_helper: ".\\scripts\\agents-cleanup.ps1 -Action Verify"
@@ -89,24 +92,25 @@ commands:
   powershell_rg_glob_rule: "PowerShell rg: options before --, then pattern and paths."
   deployed_file_set_literal_scan: "Search only deployed_file_set for source literals."
 profiles:
-  change_aware: "Auto: Fast for low-risk code/docs, Policy for rules/templates/memory, Full for schemas/version/release/validation infrastructure."
+  change_aware: "Auto maps risk to Fast/Policy/Full; ContextMode only raises."
   read_only_audit: "Read assigned paths; run allowed commands; report findings/isolation."
   fast_turn: "answer-only no command; edits read target, status, scoped diff, focused verify."
-  policy_pack_edit: "Policy/docs/templates changed: status, targets, diff, pair/prose/size gates."
-  commit_tag_checkpoint: "commit/tag/version/branch-push: status_full, diff_check, manifest, pair/prose/EOL/size, no staged runtime."
+  policy_pack_edit: "Rules/templates: status, scoped diff, pair/prose/size gates."
+  commit_tag_checkpoint: "Commit/tag/branch-push: checkpoint_bundle, EOL, no staged runtime."
   release_deploy_push_audit:
     use: "release, deploy, protected/main push, broad/no-deduction/full verification"
     do:
-      baseline: ["status_full","diff_check","English/placeholder","EOL","ignored_runtime"]
-      deployment_integrity: ["source/unique/blocklist","targeted template pollution"]
-      deployment_script: ["path containment","self-write refusal","target creation","no permission/admin repair","self-test"]
-      template_integrity: ["exact-pair drift","template bundle coverage"]
-      schema_skill_integrity: ["schema coverage","multi-agent integrity","evidence template coverage","skill metadata"]
+      baseline: ["status/diff","English/placeholders/EOL","ignored runtime"]
+      deployment_integrity: ["source/unique/blocklist/template pollution"]
+      deployment_script: ["containment/self-write/target-create/no-repair/self-test"]
+      template_integrity: ["exact pairs","bundle coverage"]
+      schema_skill_integrity: ["schemas/multi-agent/evidence templates/skill metadata"]
       size: ["size gates"]
-      claim_specific: ["release appendix","runtime release evidence","runtime_multi_agent if claimed","hard_isolation if claimed"]
+      claim_specific: ["release appendix","runtime evidence","runtime_multi_agent/hard_isolation when claimed"]
   enterprise_dispatch: "Inspect org/model-policy/dispatch; verify leaders/workers/tiers/escalation; use L1-6; leader-only integration."
   workflow_artifact: "Inspect workflow-artifacts/schemas/verify; verify gates, packets, guardrails, collection."
   context_compact: "Inspect context-compact/schemas/verify; preserve latest request, changes, verify, risks; exclude transcript."
+  context_intelligence: "Use .agents/docs/agents/context-intelligence.yaml; max three files; check provenance/freshness/gaps/fallback."
   collaborator_window: "Inspect collaborators/verify; map objective to leader; runtime evidence only; verify archive/close."
   core_system: "Inspect core-system/verify/version/deploy; verify canonical set, route pack, foundation, blocklist, version, residue."
   foundation_creation: "Inspect openai-foundations/schemas/verify; schema-first outputs, state owner, tool boundary, latency control, evaluation gate."
@@ -119,12 +123,12 @@ profiles:
 size_gates:
   unit: "bytes; 1 KiB = 1024 bytes"
   targets:
-    AGENTS.md: 1900
+    AGENTS.md: 1848
     project_skill: 1592
-    canonical_agents_yaml: 16400
+    canonical_agents_yaml: 15684
     script_ps1: 129000
     validate_script_ps1_after_split: 110000
-    tracked_repo_kib: 512000
+    tracked_repo_kib: 896
   tracked_rule: "Ignored/untracked files excluded; intended new files count."
 evidence_tiers:
   current_release_max: "T2 current-repo practice"
@@ -140,33 +144,34 @@ minimum_evidence:
   static_policy_pack: ["changed files read","scoped diff reviewed","applicable gates passed"]
   branch_push: ["checkpoint gates","current branch/remote","push result"]
   deploy_clean: ["target authorization","target inspected","layout selected","deployed_file_set recorded","blocklist checks","handoff/skipped reason"]
-  runtime_multi_agent: ["real runtime id","assignment/report match","git status after employee work","close evidence","expected/received/closed reconciliation","history_cleanup_evidence"]
-  runtime_release_evidence: ["sanitized release evidence JSON","v3 schema","source_commit","validated_content_digest","working_tree_status_at_capture","practice suite","command durations","exit codes","retry counts","token usage unavailable reason","T2 current-repo practice boundary"]
-  workflow_artifact: ["workflow state verified","packet/result collection normalized","approval gate or escalation evidence"]
-  context_compact: ["latest_user_request preserved","changed_files known/unknown","verification_state","open_risks","subagents_open or closed counts"]
+  runtime_multi_agent: [".agents/docs/runtime-multi-agent-validation.template.md","real runtime id","assignment/report match","git status","expected/received/closed reconciliation"]
+  runtime_release_evidence: ["agents-runtime-evidence/v4","source_commit + validated_content_digest + working_tree status","context_intelligence_practice durations/exits/retries","token unavailable reason","T2 current-repo boundary"]
+  workflow_artifact: ["workflow state","normalized collection","approval/escalation"]
+  context_compact: [".agents/docs/agents/context-compact.yaml","agents-context-compact/v3","latest_user_request","open_risks"]
+  context_intelligence: [".agents/docs/agents/context-intelligence.yaml","agents-context-evidence/v1","three files/8192 bytes","safe fallback"]
   collaborator_window: ["thread capability discovered","leader mapping verified","runtime-local evidence","archive/close verified"]
   core_system: ["version aligned","canonical set verified","deploy/release checked","runtime blocklist checked","foundation route verified","residue scan passed"]
-  foundation_creation: ["official docs source checked","schema contract present","state owner named","tool boundary checked","latency control chosen","evaluation evidence planned"]
+  foundation_creation: [".agents/docs/agents/openai-foundations.yaml","official docs","schema/state/tool/latency/evaluation evidence"]
   runtime_execution: ["run state verified","gated action checked","tool/result evidence collected","cleanup evidence verified"]
   provider_adapter: ["tier mapping exists","capability boundary checked","no hard-bound workflow model id"]
   route_pack: ["route id checked","file hashes recorded","deterministic manifest verified","cache key fields present"]
-  knowledge_footprint: ["index schema valid","active entry not overdue","detail metadata matches index","source refs recorded","current evidence rechecked","full transcript excluded"]
+  knowledge_footprint: [".agents/docs/agents/knowledge-footprint.yaml","agents-knowledge-footprint/v3","not overdue","current evidence rechecked"]
   hard_isolation: ["current tool/runtime/OS/account/cloud enforcement evidence"]
 no_deduction_audit:
-  rule: "Claim no-deduction only with release_deploy_push_audit-level proof plus runtime/hard-isolation evidence when applicable."
-  always: ["repo state inspected","diffs reviewed","external access reported","GM/GS reported","templates source-neutral","deployed_file_set checks","scratch not staged","claim scope"]
+  rule: "No-deduction needs release_deploy_push_audit proof plus applicable runtime/hard-isolation evidence."
+  always: ["state/diff","external + GM/GS","source-neutral templates","deployed_file_set","scratch excluded","claim scope"]
   when_applicable: ["non-overlap ownership","ledger/roster/event evidence","cleanup has history_cleanup_evidence","hard-isolation no forbidden reads"]
 coverage_gates:
-  slim_policy_pack: ["no-command answer-only","compact profiles/claim bounds","enterprise/artifact/context compact/collaborator routes","source state excluded","assignment/report/runtime fields","lifecycle, recovery, scoring, deploy, verify"]
+  slim_policy_pack: ["no-command answer-only","compact profiles/claims","enterprise/artifact/context compact/context intelligence/collaborator","source state excluded","assignment/runtime/lifecycle/recovery/scoring/deploy/verify"]
 live_employee_validation:
-  required: ["explicit hire/spawn request","real runtime id/nickname/mode/role/task","roster/ledger","assignment fields","report matches runtime id","ledger/poll/report/close snapshot","git status proves scope","cleanup with history_cleanup_evidence"]
+  required: [".agents/docs/runtime-multi-agent-validation.template.md","explicit hire/spawn","real runtime id/role/task","roster/assignment/report","git scope","history_cleanup_evidence"]
 batch_employee_validation:
-  required: ["expected id set created before dispatch","assignment id + compact schema","missing/duplicate/invalid-format checks","failed/running/unclosed counted","close/list cleanup","history_cleanup_evidence zero residue/safe abort","protocol smoke success vs work success","project-local skill not GS"]
+  required: ["expected id set created before dispatch","assignment id/compact schema","missing/duplicate/invalid-format checks","failed/running/unclosed","close + zero residue","protocol smoke success vs work success","project-local skill not GS"]
   accepted_ack_formats: ["compact JSON object preferred","exact natural-language ack only when parser and normalization are stated"]
   invalid_outcomes: ["missing id","duplicate id","wrong id","parser-breaking fields","closed claim without close evidence"]
 drift_checks:
   exact_pairs: ["docs and docs/templates mirror: templates, AGENTS.md, project skill files, ai-runtime, agents yaml, runbooks"]
   template_specific_cleanliness_files: ["README","gitignore.fragment","project-memory","project-structure","memory-index"]
 release_appendix:
-  provider_repo_checks: ["template files paired or template-specific","memory starter has no rows/project names","schema coverage matches templates","project skill metadata valid"]
-  source_neutral_scan_literals: ["provider repo/path","usernames","repo refs/status rows","non-placeholder memory rows"]
+  provider_repo_checks: ["template pairs/exceptions","empty neutral memory","schema-template coverage","skill metadata"]
+  source_neutral_scan_literals: ["repo/path/usernames","repo status refs","non-placeholder memory"]

@@ -1,31 +1,30 @@
 ﻿---
 name: project-isolation-workflow
-description: Use for repo Agents workflow: routing, memory, deploy, multi-agent, skill, or maintenance.
+description: Route repo Agents work with bounded context, evidence, and isolation.
 ---
 
 # Project Workflow
-Read `.agents/docs/agents/ai-runtime.yaml`; expand only named canonical YAML. Durable rules/docs/skills/templates: English-only.
+Read `.agents/docs/agents/ai-runtime.yaml`; expand only named canonical YAML. Durable content is English-only.
 
-## Routes
-- `ai-runtime`: classify task, pick scope, stop unless another file is named.
-- `quick_memory`: read/update `.agents/docs/agents/memory.yaml`.
-- `workflows`: multi-agent modes, ownership, ledger, roster fallback, scoring, recovery.
-- `skills`: repo-local skill rules and hard/behavioral isolation evidence.
-- `deploy`: template provider, dry-run/copy, target state, rollback.
-- `verify`: smallest matching profile first; fast gates before commit/tag/branch-push.
-- `maintenance`: compaction, residue, old-layer cleanup, version alignment.
-- OpenAI/API/model/tool guidance: official docs first.
+## Loop
+1. Classify the route and scope.
+2. For repo work, run `resolve-agent-context.ps1`; cap output at three files and 8192 bytes.
+3. Confirm impact from files, Git, schemas, AST, mappings, and tests. Heuristics are discovery only.
+4. Dirty, stale, conflict, unsupported input, or parse failure expands reads and verification.
+5. Execute inside the authorized boundary and preserve unrelated work.
+6. Use the smallest safe verify profile; checkpoint operations use required gates.
+7. Close with evidence pointers. Durable knowledge requires v3 provenance and freshness metadata.
+
+Use canonical routes. OpenAI guidance uses official docs first.
 
 ## Guardrails
-- Treat `.agents/skills/**/SKILL.md` as project-local, not GS.
-- GM off unless explicitly requested.
-- External FS is XR/XW unless exact path/action is authorized; `%TEMP%/codex-agent-status/<project-id>/` is status scratch.
-- `.agents/runtime/agent-ledger.jsonl` is ignored advisory state, not official DB, deployable, or XR/XW.
-- Claim hard isolation only with verified tool/OS/account/cloud evidence.
-- Do not edit `.git/`, generated/cache/build/vendor output, runtime copies, or live Codex state unless targeted.
+- GM off unless requested. Project-local skills are not GS.
+- External FS needs exact authorization; `%TEMP%/codex-agent-status/<project-id>/` is scratch.
+- `.agents/runtime/**` is ignored advisory state and never deployable.
+- Hard-isolation claims need verified enforcement evidence.
+- Do not edit `.git/`, generated output, or live Codex state unless targeted.
 
 ## Closeout
-Always report:
 ```text
 Isolation: GM <used/not used> | GS <used/not used> | XR <none/paths> | XW <none/paths>
 ```

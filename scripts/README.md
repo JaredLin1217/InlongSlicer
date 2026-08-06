@@ -6,7 +6,11 @@ Current command:
 ```
 Change-aware default command:
 ```powershell
-.\scripts\validate-changes.ps1 -Profile Auto -Explain
+.\scripts\validate-changes.ps1 -Profile Auto -ContextMode Auto -Explain
+```
+Bounded context-resolution command:
+```powershell
+.\scripts\resolve-agent-context.ps1 -Task "update validation contracts" -MaxFiles 3 -BudgetBytes 8192 -Format Compact
 ```
 Public update document command:
 ```powershell
@@ -18,7 +22,7 @@ Release-audit command:
 ```
 Runtime release-evidence command:
 ```powershell
-.\scripts\capture-runtime-evidence.ps1 -OutputPath .\docs\evidence\releases\v2.8.0-runtime-evidence.json -Full -Practice -Quiet
+.\scripts\capture-runtime-evidence.ps1 -OutputPath .\docs\evidence\releases\v2.9.0-runtime-evidence.json -Full -Practice -Quiet
 ```
 Release-package export command:
 ```powershell
@@ -52,16 +56,18 @@ Deployment write command:
 ```powershell
 .\scripts\deploy-agents-workflow.ps1 -TargetPath "D:\target\repo" -Mode core_bootstrap -LayoutProfile auto
 ```
-The change-aware entry point maps the changed path set to the smallest safe
-`Fast`, `Policy`, or `Full` profile. Use the full validator for releases,
-deployment contracts, schemas, evidence, or explicit full-audit requests.
+The change-aware entry point combines changed-path risk with
+`agents-context-evidence/v1` and maps the result to the smallest safe `Fast`,
+`Policy`, or `Full` profile. Context evidence may raise but never lower the
+profile. Releases require `-ContextMode Required`.
 The validation orchestrator stays small and composable. It uses no external
 package dependencies and runs focused checks for lightweight YAML syntax,
 workflow YAML syntax, required file references, schema contracts, validation
 fixtures, placeholder scans, durable English-only rules, and
 runtime/source-state boundaries. Specialized helpers own knowledge freshness,
 quality scoring, size gates, release evidence, route-pack determinism, and
-runtime smoke checks.
+runtime smoke checks. The context resolver stores its incremental index and
+detailed practice report only in ignored `.agents/runtime/context-intelligence/`.
 The public update entry point writes `docs/github-updates.md` from recent git
 history. It is used by `.github/workflows/public-updates.yml` after branch
 pushes and escapes non-ASCII commit text as ASCII codepoint markers so durable

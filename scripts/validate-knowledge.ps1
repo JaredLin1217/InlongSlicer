@@ -22,12 +22,15 @@
 
     $canonical = Get-Content -LiteralPath (Get-RepoPath ".agents/docs/agents/knowledge-footprint.yaml") -Raw
     foreach ($marker in @(
-        "schema: agents-knowledge-footprint/v2",
+        "schema: agents-knowledge-footprint/v3",
         "durable_memory:",
         "index_first: true",
         "max_detail_entries: 3",
         "max_detail_bytes: 8192",
         "default_review_days: 90",
+        "source_commit",
+        "content_hash",
+        "conflict_rule:",
         "cannot directly drive"
     )) {
         if (-not $canonical.Contains($marker)) {
@@ -47,11 +50,11 @@
         }
     }
 
-    $expectedHeader = "| ID | Date | Title | Trigger | Keywords | Summary | Entry | Status | Confidence | Last Verified | Next Review Due | Source Refs |"
+    $expectedHeader = "| ID | Date | Title | Trigger | Keywords | Summary | Entry | Status | Confidence | Source Commit | Content Hash | Checked At | Last Verified | Next Review Due | Update Trigger | Supersedes | Boundary | Source Refs |"
     $indexPath = Get-RepoPath ".agents/docs/memory/index.md"
     $indexLines = @(Get-Content -LiteralPath $indexPath)
     if ($indexLines -notcontains $expectedHeader) {
-        Add-Failure "Memory index must use the canonical 12-column header."
+        Add-Failure "Memory index must use the canonical 18-column header."
     }
     $entryLines = @($indexLines | Where-Object { $_ -match '^\|\s*M[0-9]{3,}\s*\|' })
     $seenIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -59,8 +62,8 @@
     $today = (Get-Date).ToUniversalTime().Date
     foreach ($line in $entryLines) {
         $cells = @($line.Trim().Trim('|').Split('|') | ForEach-Object { $_.Trim() })
-        if ($cells.Count -ne 12) {
-            Add-Failure ("Memory index row must have 12 columns: {0}" -f $line)
+        if ($cells.Count -ne 18) {
+            Add-Failure ("Memory index row must have 18 columns: {0}" -f $line)
             continue
         }
         $id = $cells[0]
@@ -73,17 +76,32 @@
         if ($cells[8] -notin @("high", "medium", "low")) {
             Add-Failure ("Memory index confidence is invalid for {0}: {1}" -f $id, $cells[8])
         }
+        if ($cells[9] -notmatch '^[0-9a-f]{40}$') {
+            Add-Failure ("Memory index source commit is invalid for {0}." -f $id)
+        }
+        if ($cells[10] -notmatch '^[0-9a-f]{64}$') {
+            Add-Failure ("Memory index content hash is invalid for {0}." -f $id)
+        }
+        $checkedAt = [datetimeoffset]::MinValue
+        if (-not [datetimeoffset]::TryParse($cells[11], [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal, [ref] $checkedAt)) {
+            Add-Failure ("Memory index checked time is invalid for {0}." -f $id)
+        }
         $lastVerified = [datetime]::MinValue
         $nextReview = [datetime]::MinValue
-        $lastOk = [datetime]::TryParseExact($cells[9], "yyyy-MM-dd", [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal, [ref] $lastVerified)
-        $nextOk = [datetime]::TryParseExact($cells[10], "yyyy-MM-dd", [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal, [ref] $nextReview)
+        $lastOk = [datetime]::TryParseExact($cells[12], "yyyy-MM-dd", [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal, [ref] $lastVerified)
+        $nextOk = [datetime]::TryParseExact($cells[13], "yyyy-MM-dd", [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AssumeUniversal, [ref] $nextReview)
         if (-not $lastOk -or -not $nextOk -or $nextReview.Date -lt $lastVerified.Date) {
             Add-Failure ("Memory index freshness dates are invalid for {0}." -f $id)
         }
         elseif ($cells[7] -eq "active" -and $nextReview.Date -lt $today) {
             Add-Failure ("Active memory entry is overdue and must be reviewed or marked stale: {0}" -f $id)
         }
-        if ([string]::IsNullOrWhiteSpace($cells[11])) {
+        foreach ($fieldIndex in @(14, 15, 16, 17)) {
+            if ([string]::IsNullOrWhiteSpace($cells[$fieldIndex])) {
+                Add-Failure ("Memory index provenance field {0} is missing for {1}." -f $fieldIndex, $id)
+            }
+        }
+        if ([string]::IsNullOrWhiteSpace($cells[17])) {
             Add-Failure ("Memory index source refs are missing for {0}." -f $id)
         }
 
@@ -103,8 +121,14 @@
             "ID: $id",
             "Status: $($cells[7])",
             "Confidence: $($cells[8])",
-            "Last Verified: $($cells[9])",
-            "Next Review Due: $($cells[10])",
+            "Source Commit: $($cells[9])",
+            "Content Hash: $($cells[10])",
+            "Checked At: $($cells[11])",
+            "Last Verified: $($cells[12])",
+            "Next Review Due: $($cells[13])",
+            "Update Trigger: $($cells[14])",
+            "Supersedes: $($cells[15])",
+            "Boundary: $($cells[16])",
             "Source Refs:",
             "## Trigger",
             "## Evidence",

@@ -89,13 +89,18 @@ Add-Failure "Runtime execution smoke must end with cleaned status."
 if (@($run.cleanup_evidence).Count -lt 1) {
 Add-Failure "Runtime execution smoke must include cleanup evidence."
 }
-foreach ($requiredArray in @("event_summary", "verification_refs", "risks", "deployment_evidence")) {
+foreach ($requiredArray in @("verified_assumptions", "remaining_steps", "recovery_pointers", "event_summary", "verification_refs", "risks", "deployment_evidence")) {
 if ($null -eq $run.PSObject.Properties[$requiredArray]) {
 Add-Failure ("Runtime execution run is missing required array: {0}" -f $requiredArray)
 }
 }
 if ([string]::IsNullOrWhiteSpace([string] $run.resume_pointer)) {
 Add-Failure "Runtime execution run must include resume_pointer."
+}
+foreach ($requiredScalar in @("current_route", "change_boundary")) {
+if ([string]::IsNullOrWhiteSpace([string] $run.$requiredScalar)) {
+Add-Failure ("Runtime execution run must include {0}." -f $requiredScalar)
+}
 }
 if (@($run.deployment_evidence).Count -lt 1) {
 Add-Failure "Runtime execution smoke must include deployment evidence."

@@ -1,35 +1,41 @@
-# 2026-05-23 - Profile Validation And Documentation Map
+# Profile Validation And Documentation Map
+ID: M001
+Date: 2026-05-23
+Title: Profile validation and documentation map
+Status: active
+Confidence: high
+Source Commit: 48d061e9c54a79704079e2e20488e6c686c99145
+Content Hash: fe19cf4e3cd2eaaa33e98cbc504a0cdc6ef6360160caff1254e4bd992e6e2204
+Checked At: 2026-08-06T04:48:26Z
+Last Verified: 2026-08-06
+Next Review Due: 2026-11-04
+Update Trigger: Profile schema, vendor layout, validator name, or packaging entry point changes
+Supersedes: none
+Boundary: INLONG and _Infinity3DP profile maintenance in this checkout; not a guarantee for unrelated vendors
+Source Refs: scripts/inlong_extra_profile_check.py; build/src/Release/InlongSlicer_profile_validator.exe; resources/profiles/INLONG; resources/profiles/_Infinity3DP; CMakeLists.txt
 
-- Trigger: When importing or validating `INLONG` / `_Infinity3DP` profile resources, or when mapping InlongSlicer docs/build/branding guidance.
-- Context: Imported from authorized global Codex Memory for `D:\inlong\Slicer\GitHub\InlongSlicer`. The original work inventoried important docs, then validated and corrected `INLONG` and `_Infinity3DP` profile resources.
-- Cause: InlongSlicer build/profile/branding guidance is split across docs, scripts, CMake, and CI; profile correctness also depends on relationships across machine, material, process, vendor index, and file names.
-- Fix / Rule: For doc inventory, start from repo-owned docs and then verify against scripts/CMake/CI. For profile work, use validator-driven checks and include machine/material/process relationships instead of checking file presence only.
-- Verification: Source memory recorded successful vendor-scoped profile validation and extra checks with zero errors/warnings after fixes.
-- Reuse when: Adding vendor profiles, migrating `INLONG` / `_Infinity3DP`, fixing `compatible_printers`, checking default materials, correcting profile JSON encoding, or answering where build/branding/profile truth lives.
+## Trigger
+Use this lesson when adding, migrating, or validating INLONG or Infinity3DP profiles.
 
-## Documentation Map Notes
+## Context
+Profile truth is split across vendor indexes, machine, process, and filament JSON plus build and packaging contracts.
 
-- Practical build and packaging truth is split across `AGENTS.md`, top-level scripts, `CMakeLists.txt`, `src/CMakeLists.txt`, and `.github/workflows/`.
-- Windows build paths evidenced by repo files include `build_release_vs.bat`, `build_release_vs2022.bat`, and older `build_release.bat` guidance.
-- Branding/resource configuration is encoded in `version.inc`, CMake files, platform resource templates, and packaging metadata.
+## Cause
+File-presence checks miss broken inheritance, compatibility, default-material, and vendor-index relationships.
 
-## Profile Validation Notes
+## Fix / Rule
+Run the current Inlong checker and validator for every affected vendor. Verify cross-profile relationships and strict UTF-8 encoding; do not treat machine-model files as machine presets.
 
-- Useful validator calls recorded in memory:
+## Verification
+The current checkout contains `scripts/inlong_extra_profile_check.py`, the built `InlongSlicer_profile_validator.exe`, and both vendor roots. The validator help accepts `-p`, `-v`, and `-l`.
 
-```powershell
-build\src\Release\OrcaSlicer_profile_validator.exe -p resources\profiles -v INLONG -l 2
-build\src\Release\OrcaSlicer_profile_validator.exe -p resources\profiles -v _Infinity3DP -l 2
-python scripts\orca_extra_profile_check.py --vendor INLONG --check-materials --check-obsolete-keys
-python scripts\orca_extra_profile_check.py --vendor _Infinity3DP --check-materials --check-obsolete-keys
-```
+## Evidence
+Use `python scripts/inlong_extra_profile_check.py --vendor <vendor> --check-materials --check-obsolete-keys` and `build/src/Release/InlongSlicer_profile_validator.exe -p resources/profiles -v <vendor> -l 2`.
 
-- The extra checker reads strict UTF-8; imported JSON with UTF-8 BOM can fail and should be rewritten without BOM.
-- Vendor top-level JSON files are authoritative for `machine_model_list`, `process_list`, `machine_list`, and `filament_list`.
-- Recorded fixes included `_Infinity3DP.json` process name alignment and `resources/profiles/INLONG/machine/SC12060_common.json` `printer_variant` correction from `0.4` to `0.6`.
-- Do not treat machine-model files as machine presets when writing custom cross-file checks.
+## Reuse when
+Changing vendor indexes, compatibility rules, default materials, profile inheritance, or profile packaging.
 
-## Source
-
-- Imported from authorized global Codex Memory on 2026-05-29.
-- Source category: InlongSlicer profile validation and documentation-map rollout summary.
+## Index Row
+| ID | Date | Title | Trigger | Keywords | Summary | Entry | Status | Confidence | Source Commit | Content Hash | Checked At | Last Verified | Next Review Due | Update Trigger | Supersedes | Boundary | Source Refs |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M001 | 2026-05-23 | Profile validation and documentation map | Profile or vendor resource work | profiles, INLONG, Infinity3DP, validator | Validate relationships with current Inlong tools | `entries/2026-05-23-profile-validation-doc-map.md` | active | high | 48d061e9c54a79704079e2e20488e6c686c99145 | fe19cf4e3cd2eaaa33e98cbc504a0cdc6ef6360160caff1254e4bd992e6e2204 | 2026-08-06T04:48:26Z | 2026-08-06 | 2026-11-04 | Profile schema, vendor layout, validator name, or packaging entry point changes | none | INLONG and _Infinity3DP profile maintenance in this checkout; not a guarantee for unrelated vendors | scripts/inlong_extra_profile_check.py; build/src/Release/InlongSlicer_profile_validator.exe; resources/profiles/INLONG; resources/profiles/_Infinity3DP; CMakeLists.txt |

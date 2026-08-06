@@ -125,6 +125,7 @@ ForEach-Object { Convert-ToRepoRelative $_ } |
 Sort-Object -Unique
 $blocklistPolicy = @(
 ".agents/runtime/**",
+".agents/runtime/context-intelligence/**",
 ".workflow/**",
 ".codex/config.toml",
 ".codex/environments/environment.toml",

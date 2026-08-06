@@ -1,28 +1,41 @@
-# 2026-05-24 - Runtime Log Triage And Noise Reduction
+# Runtime Log Triage And Noise Reduction
+ID: M003
+Date: 2026-05-24
+Title: Runtime log triage and noise reduction
+Status: active
+Confidence: medium
+Source Commit: 48d061e9c54a79704079e2e20488e6c686c99145
+Content Hash: a8c82f1b79884586b168b1fcd68c1cccb9cb3a3ac238c44d2847e9aab90df4de
+Checked At: 2026-08-06T04:48:26Z
+Last Verified: 2026-08-06
+Next Review Due: 2026-11-04
+Update Trigger: Runtime data directory, logging format, or startup profile-loading path changes
+Supersedes: none
+Boundary: Windows Release logs in this checkout; historical warning fixes must be reverified before reuse
+Source Refs: build/src/Release/data_dir/log; src/slic3r/GUI/PartPlate.cpp; src/slic3r/GUI/WebGuideDialog.cpp; resources/profiles/INLONG
 
-- Trigger: When the user asks to inspect the latest InlongSlicer runtime log, trace warnings to source/profile files, or reduce startup log noise.
-- Context: Imported from authorized global Codex Memory for `D:\inlong\Slicer\GitHub\InlongSlicer`. The original work repeatedly inspected fresh logs under `build\src\Release\data_dir\log`, patched source/profile causes, rebuilt, relaunched, and checked newer logs.
-- Cause: Runtime logs can contain both real warnings and initialization noise. Old logs also keep old errors after fixes unless the app is relaunched with the new binary/resources.
-- Fix / Rule: Always pick the newest log, classify `[fatal]`, `[error]`, and `[warning]` separately from `info` text that merely contains words like `failed` or `invalid`, then trace high-signal warnings to source/profile load paths. Verify with both a successful rebuild and a fresh app launch that creates a newer log.
-- Verification: Source memory recorded successful Release builds and final newer logs with zero counts for `calc_exclude_triangles`, vendor update HTTP errors, and large JSON dump strings.
-- Reuse when: Reviewing `build\src\Release\data_dir\log`, debugging `calc_exclude_triangles`, `hints.cereal`, vendor profile update warnings, `get_version not supported`, or excessive `WebGuideDialog` JSON logging.
+## Trigger
+Use this lesson when inspecting the newest InlongSlicer runtime log or reducing startup noise.
 
-## Working Notes
+## Context
+The local Release runtime log directory exists, but older logs preserve failures from older binaries and resources.
 
-- Latest log selection pattern:
+## Cause
+Informational text can contain failure-like words, and a rebuild alone does not prove a fixed path was executed.
 
-```powershell
-Get-ChildItem "build\src\Release\data_dir\log" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-```
+## Fix / Rule
+Select the newest log, classify fatal, error, and warning records separately from informational text, trace high-signal records to source or profile loading, rebuild, relaunch, and inspect a newly created log.
 
-- High-signal search terms: `calc_exclude_triangles`, `vendor check HTTP error`, `hints.cereal`, `get_version not supported`, `select_preset_by_name_strict`.
-- `PartPlate.cpp` and INLONG profile data both mattered: `calc_exclude_triangles()` should return early for empty polygons, and `bed_exclude_area` should be empty when there is no excluded area instead of four `"0x0"` entries.
-- `AppConfig::profile_update_url()` returning empty disables the unsupported vendor profile-update path that produced 404s for `INLONG` / `_Infinity3DP`.
-- `WebGuideDialog.cpp` was the largest startup-log spam source; full JSON dumps should be summaries or debug-level details, not large info logs.
-- If validation still shows old warnings, launch the fresh build and inspect the next newest log instead of rereading an old file.
-- When validating multiple JSON files with `ConvertFrom-Json`, parse each file individually rather than piping multiple JSON documents into one parse.
+## Verification
+`build/src/Release/data_dir/log` exists in the current checkout. Historical fixes named in this entry remain context only until a new runtime log demonstrates their current behavior.
 
-## Source
+## Evidence
+Use `Get-ChildItem build/src/Release/data_dir/log | Sort-Object LastWriteTime -Descending | Select-Object -First 1`, then search structured severity and the specific subsystem markers.
 
-- Imported from authorized global Codex Memory on 2026-05-29.
-- Source category: summarized global memory plus an InlongSlicer runtime-log triage rollout summary.
+## Reuse when
+Triaging startup logs, profile update warnings, geometry warnings, or excessively large informational messages.
+
+## Index Row
+| ID | Date | Title | Trigger | Keywords | Summary | Entry | Status | Confidence | Source Commit | Content Hash | Checked At | Last Verified | Next Review Due | Update Trigger | Supersedes | Boundary | Source Refs |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M003 | 2026-05-24 | Runtime log triage and noise reduction | Runtime log or startup warning investigation | logs, warnings, startup, Release | Verify fixes in a newly generated structured log | `entries/2026-05-24-runtime-log-triage-noise-reduction.md` | active | medium | 48d061e9c54a79704079e2e20488e6c686c99145 | a8c82f1b79884586b168b1fcd68c1cccb9cb3a3ac238c44d2847e9aab90df4de | 2026-08-06T04:48:26Z | 2026-08-06 | 2026-11-04 | Runtime data directory, logging format, or startup profile-loading path changes | none | Windows Release logs in this checkout; historical warning fixes must be reverified before reuse | build/src/Release/data_dir/log; src/slic3r/GUI/PartPlate.cpp; src/slic3r/GUI/WebGuideDialog.cpp; resources/profiles/INLONG |

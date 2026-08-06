@@ -55,7 +55,7 @@ if (-not [bool] $manifest.blocklist_result.checked) {
 Add-Failure "Release package manifest blocklist_result.checked must be true."
 }
 $policy = @($manifest.blocklist_result.policy | ForEach-Object { [string] $_ })
-foreach ($requiredPolicy in @(".agents/runtime/**", ".workflow/**", ".agents/runtime/agent-ledger.jsonl", ".codex/config.toml", "API keys", "provider sessions")) {
+foreach ($requiredPolicy in @(".agents/runtime/**", ".agents/runtime/context-intelligence/**", ".workflow/**", ".agents/runtime/agent-ledger.jsonl", ".codex/config.toml", "API keys", "provider sessions")) {
 if ($policy -notcontains $requiredPolicy) {
 Add-Failure ("Release package manifest blocklist policy is missing: {0}" -f $requiredPolicy)
 }
@@ -67,6 +67,7 @@ $requiredFiles = @(
 ".agents/docs/agents/dispatch.yaml",
 ".agents/docs/agents/workflow-artifacts.yaml",
 ".agents/docs/agents/context-compact.yaml",
+".agents/docs/agents/context-intelligence.yaml",
 ".agents/docs/agents/collaborators.yaml",
 ".agents/docs/agents/core-system.yaml",
 ".agents/docs/agents/runtime-execution.yaml",
@@ -126,6 +127,7 @@ $blockedPhysical = @(
 ".agents/runtime/executions",
 ".agents/runtime/knowledge",
 ".agents/runtime/route-packs",
+".agents/runtime/context-intelligence",
 ".agents/runtime/tool-evidence",
 ".agents/runtime/deployments",
 ".workflow",
@@ -196,6 +198,7 @@ $requiredFields = @(
 "run_finished_utc",
 "duration_ms",
 "commands",
+"context_intelligence",
 "claims",
 "scope",
 "xr_xw",
@@ -211,7 +214,7 @@ Add-Failure ("Runtime evidence schema is missing required field contract: {0}" -
 }
 [void] (Test-ObjectField -Object $evidence -Field $field -Context "Runtime evidence")
 }
-if ([string] $evidence.schema_version -ne "agents-runtime-evidence/v3") {
+if ([string] $evidence.schema_version -ne "agents-runtime-evidence/v4") {
 Add-Failure "Runtime evidence schema_version mismatch."
 }
 if ([string] $evidence.workflow_version -ne $expectedVersion) {
@@ -280,6 +283,7 @@ $requiredCommandNames = @(
 "runtime_lifecycle_smoke",
 "release_package_export",
 "route_pack_deterministic",
+"context_intelligence_practice",
 "full_validation"
 )
 if ($commands.Count -ne $requiredCommandNames.Count) {
@@ -317,9 +321,126 @@ if ([string] $command.name -eq "full_validation") {
 if ($null -eq $command.PSObject.Properties["overall_score"] -or [decimal] $command.overall_score -ne [decimal] 100.0) {
 Add-Failure "Runtime evidence full_validation must record overall_score 100.0."
 }
+$fullCommand = [string] $command.command
+foreach ($marker in @("validate-changes.ps1", "-Profile Full", "-ContextMode Required")) {
+if (-not $fullCommand.Contains($marker)) {
+Add-Failure ("Runtime evidence full_validation command is missing required context gate: {0}" -f $marker)
 }
 }
-foreach ($field in @("static_validation", "runtime_evidence", "practice_evidence", "evidence_tier", "hard_isolation")) {
+}
+}
+$context = $evidence.context_intelligence
+foreach ($field in @("captured", "resolver_schema", "practice_report_schema", "runtime_report_ref", "result", "baseline", "candidate", "metrics", "thresholds", "fallback_tests", "scope")) {
+[void] (Test-ObjectField -Object $context -Field $field -Context "Runtime evidence context_intelligence")
+}
+if (-not [bool] $context.captured) {
+Add-Failure "Runtime evidence context intelligence practice must be captured."
+}
+if ([string] $context.resolver_schema -ne "agents-context-evidence/v1") {
+Add-Failure "Runtime evidence context resolver schema must be agents-context-evidence/v1."
+}
+if ([string] $context.practice_report_schema -ne "agents-context-practice-report/v1") {
+Add-Failure "Runtime evidence context practice report schema must be agents-context-practice-report/v1."
+}
+if ([string] $context.runtime_report_ref -ne ".agents/runtime/context-intelligence/practice-report.json") {
+Add-Failure "Runtime evidence context practice report must remain an ignored runtime pointer."
+}
+if ([string] $context.result -ne "pass") {
+Add-Failure "Runtime evidence context intelligence result must be pass."
+}
+foreach ($field in @("version", "source_commit", "method", "runs_per_task")) {
+[void] (Test-ObjectField -Object $context.baseline -Field $field -Context "Runtime evidence context baseline")
+}
+if ([string] $context.baseline.version -ne "2.8.0") {
+Add-Failure "Runtime evidence context baseline version must be 2.8.0."
+}
+if ([string] $context.baseline.source_commit -notmatch "^[a-f0-9]{40}$") {
+Add-Failure "Runtime evidence context baseline source_commit must be a full Git hash."
+}
+if ([int] $context.baseline.runs_per_task -ne 3) {
+Add-Failure "Runtime evidence context baseline must use three runs per task."
+}
+foreach ($field in @("version", "method", "runs_per_task")) {
+[void] (Test-ObjectField -Object $context.candidate -Field $field -Context "Runtime evidence context candidate")
+}
+if ([string] $context.candidate.version -ne "2.9.0") {
+Add-Failure "Runtime evidence context candidate version must be 2.9.0."
+}
+if ([int] $context.candidate.runs_per_task -ne 3) {
+Add-Failure "Runtime evidence context candidate must use three runs per task."
+}
+$metrics = $context.metrics
+$metricFields = @(
+"task_accuracy",
+"critical_impact_recall",
+"impact_precision",
+"baseline_context_median_bytes",
+"candidate_context_median_bytes",
+"context_median_reduction",
+"baseline_tool_calls_median",
+"candidate_tool_calls_median",
+"tool_call_reduction",
+"fallback_pass_rate"
+)
+foreach ($field in $metricFields) {
+[void] (Test-ObjectField -Object $metrics -Field $field -Context "Runtime evidence context metrics")
+}
+if ([decimal] $metrics.task_accuracy -ne [decimal] 1) {
+Add-Failure "Runtime evidence context task accuracy must be 100%."
+}
+if ([decimal] $metrics.critical_impact_recall -ne [decimal] 1) {
+Add-Failure "Runtime evidence critical impact recall must be 100%."
+}
+if ([decimal] $metrics.impact_precision -lt [decimal] 0.85) {
+Add-Failure "Runtime evidence impact precision must be at least 85%."
+}
+if ([decimal] $metrics.context_median_reduction -lt [decimal] 0.50) {
+Add-Failure "Runtime evidence median context reduction must be at least 50%."
+}
+if ([decimal] $metrics.tool_call_reduction -lt [decimal] 0.30) {
+Add-Failure "Runtime evidence median tool-call reduction must be at least 30%."
+}
+if ([decimal] $metrics.fallback_pass_rate -ne [decimal] 1) {
+Add-Failure "Runtime evidence fallback pass rate must be 100%."
+}
+if ([int64] $metrics.candidate_context_median_bytes -ge [int64] $metrics.baseline_context_median_bytes) {
+Add-Failure "Runtime evidence candidate context median must be lower than the v2.8 baseline."
+}
+if ([decimal] $metrics.candidate_tool_calls_median -ge [decimal] $metrics.baseline_tool_calls_median) {
+Add-Failure "Runtime evidence candidate tool-call median must be lower than the v2.8 baseline."
+}
+foreach ($field in @("task_accuracy", "critical_impact_recall", "impact_precision", "context_median_reduction", "tool_call_reduction", "fallback_pass_rate", "deterministic")) {
+if (-not (Test-ObjectField -Object $context.thresholds -Field $field -Context "Runtime evidence context thresholds")) {
+continue
+}
+if (-not [bool] $context.thresholds.$field) {
+Add-Failure ("Runtime evidence context threshold did not pass: {0}" -f $field)
+}
+}
+$fallbackTests = @($context.fallback_tests)
+$requiredFallbackStates = @("stale", "degraded", "unsupported", "parse_error", "conflict", "dirty")
+if ($fallbackTests.Count -ne $requiredFallbackStates.Count) {
+Add-Failure "Runtime evidence must include exactly six context fallback tests."
+}
+foreach ($state in $requiredFallbackStates) {
+$matches = @($fallbackTests | Where-Object { [string] $_.state -eq $state })
+if ($matches.Count -ne 1 -or [string] $matches[0].result -ne "pass") {
+Add-Failure ("Runtime evidence context fallback must pass exactly once: {0}" -f $state)
+}
+}
+foreach ($field in @("practice_level", "external_pilot", "codegraph_runtime")) {
+[void] (Test-ObjectField -Object $context.scope -Field $field -Context "Runtime evidence context scope")
+}
+if ([string] $context.scope.practice_level -ne "T2 current-repo practice") {
+Add-Failure "Runtime evidence context practice level must be T2 current-repo practice."
+}
+if ([string] $context.scope.external_pilot -ne "not executed") {
+Add-Failure "Runtime evidence context scope must not claim an external pilot."
+}
+if ([string] $context.scope.codegraph_runtime -ne "not installed or used") {
+Add-Failure "Runtime evidence must confirm that CodeGraph runtime was not installed or used."
+}
+foreach ($field in @("static_validation", "runtime_evidence", "practice_evidence", "context_intelligence", "evidence_tier", "hard_isolation", "external_pilot_boundary")) {
 [void] (Test-ObjectField -Object $evidence.claims -Field $field -Context "Runtime evidence claims")
 }
 if ([string] $evidence.claims.evidence_tier -ne "T2 current-repo practice") {
@@ -328,7 +449,7 @@ Add-Failure "Runtime evidence claims must be limited to T2 current-repo practice
 if ([string] $evidence.claims.hard_isolation -notmatch "No hard isolation claim") {
 Add-Failure "Runtime evidence must preserve the hard isolation boundary statement."
 }
-foreach ($field in @("target", "external_target_deployment", "raw_output_storage", "practice", "disposable_target")) {
+foreach ($field in @("target", "external_target_deployment", "external_pilot", "codegraph_runtime", "raw_output_storage", "practice", "disposable_target")) {
 [void] (Test-ObjectField -Object $evidence.scope -Field $field -Context "Runtime evidence scope")
 }
 if ([bool] $evidence.scope.external_target_deployment) {
@@ -336,6 +457,12 @@ Add-Failure "Runtime evidence must not claim external target deployment."
 }
 if (-not [bool] $evidence.scope.practice) {
 Add-Failure "Runtime evidence must be captured with the practice suite."
+}
+if ([string] $evidence.scope.external_pilot -ne "not executed") {
+Add-Failure "Runtime evidence scope must not claim an external project pilot."
+}
+if ([string] $evidence.scope.codegraph_runtime -ne "not installed or used") {
+Add-Failure "Runtime evidence scope must preserve the CodeGraph runtime boundary."
 }
 if ([string] $evidence.scope.raw_output_storage -ne "%TEMP%/codex-agent-status/<project-id>/<run-id>/") {
 Add-Failure "Runtime evidence raw output storage must be the sanitized status scratch reference."
@@ -383,6 +510,7 @@ if ([string] $evidence.result -ne "passed") {
 Add-Failure "Runtime evidence result must be passed."
 }
 $repoRootMarker = if ($null -ne $RepoRoot.PSObject.Properties["Path"]) { [string] $RepoRoot.Path } else { [string] $RepoRoot }
+$repoRootName = Split-Path -Path $repoRootMarker -Leaf
 $serialized = $evidence | ConvertTo-Json -Depth 20 -Compress
 if ($serialized -match "[A-Za-z]:\\") {
 Add-Failure "Runtime evidence leaks a local absolute path marker."
@@ -390,7 +518,7 @@ Add-Failure "Runtime evidence leaks a local absolute path marker."
 $dynamicMarkers = New-Object System.Collections.Generic.List[string]
 foreach ($marker in @(
     $repoRootMarker,
-    [string] $RepoRoot.Name,
+    $repoRootName,
     [string] (Split-Path -Path $repoRootMarker -Parent | Split-Path -Leaf),
     [string] $env:USERNAME,
     [string] $env:USERPROFILE

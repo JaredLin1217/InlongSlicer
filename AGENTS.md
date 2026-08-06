@@ -1,29 +1,28 @@
-# Project Operating Rules
-Repo rules for deployable Agents workflow. Durable rules/docs/skills/templates are English-only. Read `.agents/docs/agents/ai-runtime.yaml`; expand only named canonical YAML.
+﻿# Project Operating Rules
+Deployable Agents rules. Durable rules/docs/skills/templates are English-only.
 
 ## Prefix
 - Start visible responses with `$$`, unless higher-priority protocol conflicts.
 
-## Route
-- Classify with `.agents/docs/agents/ai-runtime.yaml`; read only route files.
-- Answer-only/no repo-state claim: no commands; compact closeout.
-- Before edits, git/deploy, or state claims: inspect needed state and protect existing changes.
-- Verify with the smallest `.agents/docs/agents/verify.yaml` profile; commit/tag/branch-push use fast checkpoint gates.
-- Use `.agents/skills/project-isolation-workflow/SKILL.md` for isolation, memory, deployment, multi-agent, skill, or maintenance work.
+## Work
+- Read `.agents/docs/agents/ai-runtime.yaml`; expand only its named canonical YAML.
+- Loop: route -> minimal context -> impact -> execute -> precise verify -> evidence -> durable knowledge.
+- Repo work uses `scripts/resolve-agent-context.ps1`; pointers are leads. Dirty, stale, conflicting, unsupported, or failed parsing expands reads and verification.
+- Answer-only/no state claim: no commands. Before changes or state claims, inspect needed state and preserve existing work.
+- Use the smallest `.agents/docs/agents/verify.yaml` profile. Commit, push, tag, deploy, and release use required checkpoint gates.
+- Use `.agents/skills/project-isolation-workflow/SKILL.md` for governed work.
 - OpenAI API/Apps SDK/Codex/Agents SDK/model/tool guidance: official docs first.
 
 ## Boundaries
-- GM off unless explicitly requested.
-- GS means intentional global/system `SKILL.md`; `.agents/skills/**/SKILL.md` is project-local, not GS.
-- External filesystem: no access outside repo unless exact path/action is authorized; `%TEMP%/codex-agent-status/<project-id>/` is status scratch. Report XR/XW.
-- `.agents/runtime/agent-ledger.jsonl` is ignored advisory state, not official DB, deployable, or XR/XW.
-- Rules are behavioral; claim hard isolation only with verified runtime/tool/OS/account/cloud evidence.
-- Do not hand-edit `.git/`, generated/cache/build/vendor output, runtime copies, or live Codex state unless targeted.
-- Multi-agent: use `.agents/docs/agents/workflows.yaml` for modes, ownership, ledger, roster fallback, scoring, recovery.
+- GM off unless requested. GS means intentional global/system `SKILL.md`; project skills are not GS.
+- External FS needs exact authorization; `%TEMP%/codex-agent-status/<project-id>/` is scratch. Report XR/XW.
+- `.agents/runtime/**` is ignored advisory state, not official DB or deployable source.
+- Claim hard isolation only with verified runtime/tool/OS/account/cloud evidence.
+- Do not hand-edit `.git/`, generated/cache/build/vendor output, or live Codex state unless targeted.
+- Multi-agent rules: `.agents/docs/agents/workflows.yaml`.
 
 ## Closeout
 Always include:
 ```text
 Isolation: GM <used/not used> | GS <used/not used> | XR <none/paths> | XW <none/paths>
 ```
-Add detail only for changes, verification, risks, external access, durable knowledge, or claim scope.

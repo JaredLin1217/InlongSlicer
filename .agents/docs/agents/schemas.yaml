@@ -61,13 +61,13 @@ workflow_security_check:
   required_fields: "[workflow_id, path_scope, blocked_path_result, approval_gate_result, model_tier_result, runtime_local_result]"
   path_rule: "Block outside repo, .git, .codex, unauthorized .agents/runtime/workflows, unauthorized .workflow."
 context_compact_summary:
-  required_fields: "[active_goal, latest_user_request, current_route, changed_files, pending_actions, verification_state, open_risks, external_access, subagents_open, next_step, do_not_forget, isolation, retained_facts, dropped_details, resume_pointer]"
+  required_fields: "[active_goal, latest_user_request, current_route, context_evidence_ref, validated_assumptions, change_boundary, changed_files, pending_actions, remaining_steps, verification_state, open_risks, external_access, subagents_open, next_step, do_not_forget, isolation, retained_facts, dropped_details, recovery_pointers, resume_pointer]"
   reject_when: "[missing latest_user_request, missing changed_files, unclosed subagents, raw transcript included, external access omitted]"
   raw_transcript_rule: "Do not store raw transcript, raw worker chatter, long output, superseded instructions."
   continuation_rule: "latest_user_request and next_step must make next action clear."
 context_compact_event:
   location: ".agents/runtime/compact-events.jsonl"
-  required_fields: "[event_id, trigger, thread_source, workflow_id, summary_path, created_at, verification, risks, retained_facts, dropped_details, resume_pointer]"
+  required_fields: "[event_id, trigger, thread_source, workflow_id, summary_path, created_at, context_evidence_ref, validated_assumptions, change_boundary, remaining_steps, recovery_pointers, verification, risks, retained_facts, dropped_details, resume_pointer]"
   trigger_values: "[manual, auto, handoff, subagent_closeout, pre_commit, pre_deploy, route_switch]"
   storage_rule: "Ignored runtime state; never stage, deploy, release, copy."
 collaborator_record:
@@ -92,16 +92,9 @@ core_system:
   release_contract: "Release manifest records version, commit, hash, file list, and blocklist result."
 foundation_creation:
   required_fields: "[feature_id, objective, official_docs_refs, output_schema, state_owner, tool_boundary, context_budget, latency_control, evaluation_gate, fallback, cleanup_rule]"
-  schema_rule: "Use Structured Outputs for machine-consumed objects; reject schema-free durable automation output."
-  state_rule: "Name exactly one model-side, repo-local, or external state owner before multi-turn behavior is claimed."
-  creation_rule: "Translate current official OpenAI documentation into scoped repo-local features through progressive disclosure, not broad context growth."
-  tool_boundary_rule: "Declare allowed tools, handoff boundary, and subagent write ownership before delegation."
-  context_rule: "Read the route index first, open only named canonical files, keep stable instructions before dynamic state, and compact long histories."
-  memory_rule: "Memory is recall, not policy; current repository and official evidence override stale or conflicting memory."
-  latency_rule: "Choose prompt_caching, predicted_outputs, or neither based on stable prefix and known-output fit."
-  evaluation_rule: "Each foundation feature includes pass/fail evidence, risk, and rollback note before release."
+  source: ".agents/docs/agents/openai-foundations.yaml; Structured Outputs + state owner; validate with scripts/validate-foundation.ps1."
 runtime_execution:
-  required_fields: "[run_id, status, objective, authority, steps, approvals, tool_evidence, results, escalations, cleanup_evidence, isolation]"
+  required_fields: "[run_id, status, objective, authority, current_route, verified_assumptions, change_boundary, remaining_steps, recovery_pointers, steps, approvals, tool_evidence, results, escalations, cleanup_evidence, isolation]"
   status_values: "[planned, approved, running, waiting_approval, completed, failed, blocked, cleaned]"
   cleanup_evidence: "verified evidence is required before cleanup claims."
 provider_adapter:
@@ -113,11 +106,17 @@ route_pack:
   determinism_rule: "Route pack export is deterministic; same route inputs produce the same hash."
   cache_key_fields: "[route_id, version, required_files, schema_hash, tool_surface]"
 knowledge_footprint:
-  required_fields: "[footprint_id, scope, opened_files, evidence_refs, retained_facts, dropped_details, gaps, conclusion, resume_pointer]"
+  required_fields: "[footprint_id, scope, opened_files, evidence_refs, retained_facts, dropped_details, gaps, conclusion, resume_pointer, source_commit, content_hash, checked_at, update_trigger, supersedes, boundary]"
   raw_transcript_rule: "No full transcript, raw worker chatter, live thread ids, or secrets."
   resume_rule: "Each footprint includes a resume pointer."
   durable_memory_rule: "Promote only reusable verified lessons; policy, secrets, volatile status, and raw output never become durable memory."
   retrieval_rule: "Read the index first, open at most three matching entries by default, and recheck current evidence before acting."
+  freshness_rule: "Stale, conflicting, superseded, or retired knowledge cannot support a modification, skipped verification, or current claim."
+context_intelligence:
+  source: ".agents/docs/agents/context-intelligence.yaml; validate with schemas/agents-context-intelligence.schema.json."
+context_evidence:
+  schema_version: "agents-context-evidence/v1"
+  source: "schemas/agents-context-evidence.schema.json; bounded resolver output with safe fallback."
 explorer_brief_assignment:
   preset_rule: "Default read-only/scoring explorers. Do not include ownership matrix."
 explorer_final_report:
@@ -154,18 +153,18 @@ controller_lease:
   location: "%TEMP%/codex-agent-status/<project-id>/controller-lease.md"
   required_fields: "[Controller id,Lease id,Status,Reviewed snapshot]"
 hard_isolation_evidence:
-  required_fields: ["Task","Agent/controller","Requested guarantee","Forbidden resources","Authorized external paths/actions","Evidence location","Date","Classification","Control owner/config/bypass","Allowed/forbidden read/write roots","Credential/account scope","Network/cloud scope","Verifier/method/log/result","Blocked-access behavior","No forbidden-content read or authorization","Expiry/cleanup/rollback","GM/GS/XR/XW","Remaining risk"]
+  source: ".agents/docs/hard-isolation-evidence.template.md; canonical fields are validated from the template contract."
   rule: "Missing required evidence means behavioral-only."
 runtime_multi_agent_validation:
-  required_fields: ["Validation id","Date","Controller","User request","Claim scope","Runtime enforcement","Runtime id/nickname/mode/role/task","Roster/ledger paths and snapshots","Assignment/prompt requirements","Owned/shared scope and matrix status","Report receipt and id match","Expected/spawned/completed/closed counts","Missing/duplicate/invalid/wrong/failed/running/unclosed ids","Ack/parser/protocol/task boundaries","Skills and external access","Files changed","Verification","Risks","Ledger/poll/report/close/reconciled evidence","Git status and out-of-scope changes","Runtime close/list/state cleanup evidence","History cleanup authorization/targets/result/evidence","UI refresh","Pass condition","Remaining runtime risk","Controller conclusion"]
-  storage_rule: "local scratch unless promoted."
+  source: ".agents/docs/runtime-multi-agent-validation.template.md; canonical fields are validated from the template contract."
+  storage_rule: "Local scratch unless promoted."
 runtime_release_evidence:
-  required_fields: "[schema_version, workflow_version, repo_commit, source_commit, validated_content_digest, content_digest_excluded_paths, working_tree_status_at_capture, run_started_utc, run_finished_utc, duration_ms, commands, claims, scope, xr_xw, evidence_tier]"
+  required_fields: "[schema_version, workflow_version, repo_commit, source_commit, validated_content_digest, content_digest_excluded_paths, working_tree_status_at_capture, run_started_utc, run_finished_utc, duration_ms, commands, claims, scope, xr_xw, evidence_tier, context_intelligence]"
   command_fields: "[name, command, result, exit_code, duration_ms, retry_count, raw_output_ref, overall_score]"
-  digest_rule: "Content digest excludes runtime scratch and evidence outputs; it binds validated content, not final commit hash."
-  performance_rule: "Token usage is unavailable; record reason, never estimating."
-  storage_rule: "Raw output stays in %TEMP%/codex-agent-status/<project-id>/<run-id>/; not tracked."
-  boundary_rule: "T2 current-repo practice is not live external deployment proof, T3 external pilot, or T4 enforced isolation."
+  digest_rule: "Digest excludes runtime scratch and binds validated content."
+  performance_rule: "Token usage unavailable; record reason, never estimating."
+  storage_rule: "%TEMP%/codex-agent-status scratch; not tracked."
+  boundary_rule: "T2 is not live external deployment proof."
 runtime_dry_run_evidence:
   required_fields: ["Evidence id","Date","Operator","Request","Claim scope","Static validation result","Target path","Dry-run command","Write mode","Expected no-write result","Output reference","Changed files","Cleanup","Result","Boundary statement","Isolation"]
   boundary_rule: "Static 100/100 validation is not runtime deployment proof."
@@ -175,11 +174,11 @@ history_cleanup_evidence:
   runtime_ids_resolved_from: "official runtime close/list evidence, not sidebar labels"
   script_result: "scripts/agents-cleanup.ps1 JSON evidence for Verify or Cleanup"
 memory_entry:
-  required_fields: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Status, Confidence, Last Verified, Next Review Due, Source Refs]"
-  index_columns: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Status, Confidence, Last Verified, Next Review Due, Source Refs]"
+  required_fields: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Status, Confidence, Source Commit, Content Hash, Checked At, Last Verified, Next Review Due, Update Trigger, Supersedes, Boundary, Source Refs]"
+  index_columns: "[ID, Date, Title, Trigger, Keywords, Summary, Entry, Status, Confidence, Source Commit, Content Hash, Checked At, Last Verified, Next Review Due, Update Trigger, Supersedes, Boundary, Source Refs]"
   status_values: "[active, stale, retired]"
   confidence_values: "[high, medium, low]"
-  freshness_rule: "Active entries require a parseable review date and become unusable for current claims after Next Review Due."
+  freshness_rule: "Active entries require provenance metadata and a parseable Next Review Due date; overdue, conflicting, or superseded entries become unusable for current claims."
   authority_rule: "Memory supports recall only; checked-in policy, current repository state, and current official sources win conflicts."
 skill:
   openai_yaml:

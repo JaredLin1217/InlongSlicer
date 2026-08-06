@@ -20,19 +20,7 @@ state:
     - "blocked"
     - "cleaned"
 run:
-  required_fields:
-    - "run_id"
-    - "objective"
-    - "scope"
-    - "authority"
-    - "owner"
-    - "model_tier"
-    - "status"
-    - "event_summary"
-    - "verification_refs"
-    - "risks"
-    - "deployment_evidence"
-    - "resume_pointer"
+  required_fields: ["run_id","objective","scope","authority","owner","model_tier","status","current_route","verified_assumptions","change_boundary","remaining_steps","recovery_pointers","event_summary","verification_refs","risks","deployment_evidence","resume_pointer"]
 step:
   required_fields:
     - "step_id"
@@ -92,14 +80,14 @@ deployment_evidence:
     - "cleanup"
     - "result_summary"
 cross_window_recovery:
-  resume_rule: "Resume from run_id, event_summary, verification_refs, risks, deployment_evidence, and resume_pointer instead of full transcript."
+  resume_rule: "Resume from run_id, current_route, verified_assumptions, change_boundary, remaining_steps, recovery_pointers, event_summary, verification_refs, risks, deployment_evidence, and resume_pointer instead of full transcript or a full repository scan."
   summary_rule: "Collect emits a minimal summary that excludes raw worker chatter and live thread ids."
   temp_root: "%TEMP%/codex-agent-status/<project-id>-<repo-path-hash>/<run-id>/"
 rules:
   - "High-risk steps require approval or escalation before execution."
   - "Worker raw chatter is never a controller result."
   - "Cleanup claims must match verified runtime capability."
-  - "Deployment runs record run_id, event_summary, verification_refs, risks, deployment_evidence, and resume_pointer."
+  - "Deployment runs record run_id, current_route, verified_assumptions, change_boundary, remaining_steps, recovery_pointers, event_summary, verification_refs, risks, deployment_evidence, and resume_pointer."
   - "Runtime evidence is local state and is not deployed, released, or committed."
 validation:
   profile: "runtime_execution"

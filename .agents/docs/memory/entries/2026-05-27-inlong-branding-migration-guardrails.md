@@ -1,20 +1,41 @@
-# 2026-05-27 - Inlong Branding Migration Guardrails
+# Inlong Branding Migration Guardrails
+ID: M005
+Date: 2026-05-27
+Title: Inlong branding migration guardrails
+Status: active
+Confidence: high
+Source Commit: 48d061e9c54a79704079e2e20488e6c686c99145
+Content Hash: a1ad9506783b6b193a9e0fe1b143bf96aa74abbbfdbf7d20361cc6941646a602
+Checked At: 2026-08-06T04:48:26Z
+Last Verified: 2026-08-06
+Next Review Due: 2026-11-04
+Update Trigger: Product identity, external service contracts, packaging names, or branding migration policy changes
+Supersedes: none
+Boundary: InlongSlicer branding and upstream migration surfaces; documented external Orca contracts remain exempt
+Source Refs: .agents/skills/inlong-branding-migration/SKILL.md; InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md; version.inc; CMakeLists.txt; src/CMakeLists.txt
 
-- Trigger: Before upstream syncs or branding edits that may reintroduce Orca naming.
-- Context: Imported from authorized global Codex Memory for `D:\inlong\Slicer\GitHub\InlongSlicer`. The original memory came from an ad-hoc request to remember the full OrcaSlicer-to-InlongSlicer migration process.
-- Cause: Branding cleanup can accidentally break external service contracts, package identity, profile inheritance, generated runtime resources, or upstream comparison references if every `Orca` string is treated as cosmetic.
-- Fix / Rule: Start from `InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md` and `.agents/skills/inlong-branding-migration/SKILL.md` before editing code, profiles, packaging, assets, colors, translations, web resources, or generated output. Preserve explicitly allowlisted Orca references such as Orca cloud/wiki URLs, `api.orcaslicer.com`, `auth.orcaslicer.com`, `cloud.orcaslicer.com`, `/orcaslicer-login`, `orca_state`, `inlong/orca-2.4-base`, and SoftFever/Orca dependency-source names unless there is an explicit product decision and replacement plan.
-- Verification: Source memory pointed to the repo migration record and local branding skill. The migration record is already referenced from `AGENTS.md` as the source of truth for Orca-to-Inlong work.
-- Reuse when: Handling upstream merges, branding scans, package identity edits, profile migration, generated runtime resources, icon/color changes, or any task where old Orca naming appears.
+## Trigger
+Use this lesson before upstream syncs or changes to branding, profiles, packaging, assets, translations, or runtime resources.
 
-## Working Notes
+## Context
+Inlong identity spans source, build targets, profiles, localization, packaging, and generated resources, while some Orca names are required external contracts or dependency references.
 
-- Canonical identity values recorded in memory: `InlongSlicer`, `Inlong Slicer`, `inlong-slicer`, `io.github.JaredLin1217.InlongSlicer`, `InlongSlicer_dep`, `inlong-slicer.exe`, `InlongSlicer.dll`, `InlongSlicer_profile_validator`, runtime config folder `InlongSlicer`, and accent `#D66C47`.
-- High-risk replacement surfaces: `version.inc`, top-level `CMakeLists.txt`, `src/CMakeLists.txt`, source filenames/symbols like `OrcaCloudServiceAgent` / `OrcaPrinterAgent`, hard-coded accent colors, icons/images, `resources/web/**`, profile JSON names and `inherits` chains, gettext names, platform packaging metadata, CI/release artifact names, and staged runtime resources under `build/src/<config>/resources`.
-- Scan with exclusions before editing: exclude `.git`, `build`, `deps/build`, and `resources/plugins`; classify remaining Orca hits as replacement, allowlisted, stale/generated, or false positive.
-- Profile validation should use `python scripts\inlong_extra_profile_check.py` and `build\src\Release\InlongSlicer_profile_validator.exe` when available. If the validator is missing, build the validator instead of trusting renamed JSON by inspection alone.
+## Cause
+Blind text replacement can break service endpoints, package identity, profile inheritance, generated resources, or upstream traceability.
 
-## Source
+## Fix / Rule
+Read the project-local branding skill and migration record before editing. Classify Orca occurrences as replacement, documented allowlist, generated state, or false positive. Preserve allowlisted external contracts unless a separate product change supplies a replacement plan.
 
-- Imported from authorized global Codex Memory on 2026-05-29.
-- Source category: summarized global memory plus an ad-hoc InlongSlicer branding migration note.
+## Verification
+The current checkout contains the branding skill and migration record. Current build contracts include `InlongSlicer`, `InlongSlicer_profile_validator`, and `install_only_inlong` targets.
+
+## Evidence
+Use the skill's scoped scan and validation sequence, including the Inlong profile checker and validator for profile edits and staged-runtime verification for packaging or resource changes.
+
+## Reuse when
+Merging upstream, auditing residual Orca names, changing product identity, packaging, profiles, translations, icons, colors, or web resources.
+
+## Index Row
+| ID | Date | Title | Trigger | Keywords | Summary | Entry | Status | Confidence | Source Commit | Content Hash | Checked At | Last Verified | Next Review Due | Update Trigger | Supersedes | Boundary | Source Refs |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M005 | 2026-05-27 | Inlong branding migration guardrails | Upstream sync or branding-sensitive edit | branding, upstream, packaging, identity | Use the project skill and preserve documented external contracts | `entries/2026-05-27-inlong-branding-migration-guardrails.md` | active | high | 48d061e9c54a79704079e2e20488e6c686c99145 | a1ad9506783b6b193a9e0fe1b143bf96aa74abbbfdbf7d20361cc6941646a602 | 2026-08-06T04:48:26Z | 2026-08-06 | 2026-11-04 | Product identity, external service contracts, packaging names, or branding migration policy changes | none | InlongSlicer branding and upstream migration surfaces; documented external Orca contracts remain exempt | .agents/skills/inlong-branding-migration/SKILL.md; InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md; version.inc; CMakeLists.txt; src/CMakeLists.txt |

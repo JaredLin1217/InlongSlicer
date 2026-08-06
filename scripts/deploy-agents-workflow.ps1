@@ -804,14 +804,7 @@ $currentFrom = $null
 }
 }
 if ($Groups -contains "template_provider_additions") {
-$templateRoot = Join-Path $RepoRoot ".agents/docs/templates/agents"
-if (-not (Test-Path -LiteralPath $templateRoot -PathType Container)) {
-$templateRoot = Join-Path $RepoRoot "docs/templates/agents"
-}
-if (-not (Test-Path -LiteralPath $templateRoot -PathType Container)) {
-throw "Template provider source is missing. Expected .agents/docs/templates/agents or docs/templates/agents."
-}
-$templateFiles = Get-ChildItem -LiteralPath $templateRoot -Recurse -File
+$templateFiles = Get-ChildItem -LiteralPath (Join-Path $RepoRoot "docs/templates/agents") -Recurse -File
 foreach ($file in $templateFiles) {
 $relative = Normalize-RepoPath ($file.FullName.Substring($RepoRoot.Path.Length).TrimStart("\", "/"))
 $entries.Add([pscustomobject]@{
@@ -1533,7 +1526,7 @@ $forcedDotTarget = Join-Path $selfTestRoot "forced-dot-layout"
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $forcedDotTarget; Mode = "core_bootstrap"; LayoutProfile = "dot-agents-layout"; CreateTarget = $true; Quiet = $true }
 Assert-SelfTestFile -Root $forcedDotTarget -RelativePath ".agents/docs/agents/ai-runtime.yaml"
 Assert-SelfTestFile -Root $forcedDotTarget -RelativePath ".agents/docs/agents-workflow-deployment.md"
-Assert-SelfTestMissing -Root $forcedDotTarget -RelativePath "docs/agents/ai-runtime.yaml"
+Assert-SelfTestMissing -Root $forcedDotTarget -RelativePath ".agents/docs/agents/ai-runtime.yaml"
 Assert-SelfTestContains -Path (Join-Path $forcedDotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "Layout profile: dot-agents-layout"
 $protectedTarget = Join-Path $selfTestRoot "protected-existing"
 New-Item -ItemType Directory -Path $protectedTarget | Out-Null
@@ -1599,7 +1592,7 @@ throw "Deployment self-test expected local dirty app file to remain dirty after 
 }
 Assert-SelfTestContains -Path (Join-Path $foreignTarget "docs/agents-workflow-deployment.md") -Expected "unexpected_changed_files:"
 Assert-SelfTestContains -Path (Join-Path $foreignTarget "docs/agents-workflow-deployment.md") -Expected "- none observed"
-Invoke-SelfTestGit -Root $foreignTarget -Arguments @("add", "--", "AGENTS.md", ".agents/docs/agents", ".agents/docs/runbooks", ".agents/skills", "docs/agents-workflow-deployment.md", ".gitignore") | Out-Null
+Invoke-SelfTestGit -Root $foreignTarget -Arguments @("add", "--", "AGENTS.md", "docs/agents", "docs/runbooks", ".agents/skills", "docs/agents-workflow-deployment.md", ".gitignore") | Out-Null
 Invoke-SelfTestGit -Root $foreignTarget -Arguments @("-c", "user.name=Agents Self Test", "-c", "user.email=agents-selftest@example.invalid", "commit", "-m", "Deploy agents workflow") | Out-Null
 $rollbackScope = Invoke-SelfTestGit -Root $foreignTarget -Arguments @("diff", "--name-only", "HEAD~1..HEAD", "--")
 $rollbackScopeText = ($rollbackScope -join [Environment]::NewLine)
@@ -1700,7 +1693,7 @@ Assert-SelfTestTextContains -Text $ownedPlan -Expected "[PROTECTED] .workflow/ex
 Assert-SelfTestTextContains -Text $ownedPlan -Expected "[PROTECTED] .git/HEAD"
 $mixedRouteTarget = Join-Path $selfTestRoot "mixed-route"
 New-Item -ItemType Directory -Path $mixedRouteTarget | Out-Null
-Set-Content -LiteralPath (Join-Path $mixedRouteTarget "AGENTS.md") -Value "Read docs/agents/ai-runtime.yaml and .agents/docs/agents/ai-runtime.yaml." -Encoding utf8
+Set-Content -LiteralPath (Join-Path $mixedRouteTarget "AGENTS.md") -Value "Read .agents/docs/agents/ai-runtime.yaml and .agents/docs/agents/ai-runtime.yaml." -Encoding utf8
 $mixedBlocked = $false
 try {
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $mixedRouteTarget; Mode = "core_bootstrap"; DryRun = $true; Quiet = $true }

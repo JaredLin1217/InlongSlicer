@@ -249,9 +249,10 @@ Add-EvidenceCommand -Commands $commands -Name "runtime_lifecycle_smoke" -Display
 $releaseOutput = Join-Path $scratchRoot "release-package"
 Add-EvidenceCommand -Commands $commands -Name "release_package_export" -DisplayCommand ".\scripts\export-release-package.ps1 -OutputPath %TEMP%/codex-agent-status/<project-id>/<run-id>/release-package -Quiet" -ScriptPath (Get-RepoPath "scripts/export-release-package.ps1") -Arguments @("-OutputPath", $releaseOutput, "-Quiet") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
 Add-EvidenceCommand -Commands $commands -Name "route_pack_deterministic" -DisplayCommand ".\scripts\validate-route-pack.ps1" -ScriptPath (Get-RepoPath "scripts/validate-route-pack.ps1") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "context_intelligence_practice" -DisplayCommand ".\scripts\test-context-intelligence.ps1 -Quiet" -ScriptPath (Get-RepoPath "scripts/test-context-intelligence.ps1") -Arguments @("-Quiet") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
 }
 if ($Full -or $Practice) {
-Add-EvidenceCommand -Commands $commands -Name "full_validation" -DisplayCommand ".\scripts\validate.ps1 -Full -Score" -ScriptPath (Get-RepoPath "scripts/validate.ps1") -Arguments @("-Full", "-Score") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot -Environment @{ "AGENTS_RUNTIME_EVIDENCE_CAPTURE_ACTIVE" = "1" }
+Add-EvidenceCommand -Commands $commands -Name "full_validation" -DisplayCommand ".\scripts\validate-changes.ps1 -Profile Full -ContextMode Required -Score" -ScriptPath (Get-RepoPath "scripts/validate-changes.ps1") -Arguments @("-Profile", "Full", "-ContextMode", "Required", "-Score") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot -Environment @{ "AGENTS_RUNTIME_EVIDENCE_CAPTURE_ACTIVE" = "1" }
 }
 }
 finally {
@@ -262,8 +263,36 @@ $runFinished = (Get-Date).ToUniversalTime()
 $duration = [int64] ($runFinished - $runStarted).TotalMilliseconds
 $commandArray = @($commands.ToArray())
 $failedCommands = @($commandArray | Where-Object { [string] $_.result -ne "passed" })
+$contextPracticeReportPath = Get-RepoPath ".agents/runtime/context-intelligence/practice-report.json"
+$contextIntelligence = [ordered]@{
+captured = [bool] $Practice
+resolver_schema = "agents-context-evidence/v1"
+practice_report_schema = $(if ($Practice) { "agents-context-practice-report/v1" } else { "not_run" })
+runtime_report_ref = ".agents/runtime/context-intelligence/practice-report.json"
+result = $(if ($Practice) { "failed" } else { "not_run" })
+}
+if ($Practice -and (Test-Path -LiteralPath $contextPracticeReportPath -PathType Leaf)) {
+try {
+$contextReport = Get-Content -LiteralPath $contextPracticeReportPath -Raw | ConvertFrom-Json
+$contextIntelligence["practice_report_schema"] = [string] $contextReport.schema_version
+$contextIntelligence["baseline"] = $contextReport.baseline
+$contextIntelligence["candidate"] = $contextReport.candidate
+$contextIntelligence["metrics"] = $contextReport.metrics
+$contextIntelligence["thresholds"] = $contextReport.thresholds
+$contextIntelligence["fallback_tests"] = @($contextReport.fallback_tests)
+$contextIntelligence["scope"] = $contextReport.scope
+$contextIntelligence["result"] = [string] $contextReport.result
+}
+catch {
+$contextIntelligence["error"] = "Practice report could not be parsed."
+}
+}
+elseif ($Practice) {
+$contextIntelligence["error"] = "Practice report was not produced."
+}
+$contextCapturePassed = (-not $Practice) -or ([string] $contextIntelligence.result -eq "pass")
 $evidence = [ordered]@{
-schema_version = "agents-runtime-evidence/v3"
+schema_version = "agents-runtime-evidence/v4"
 workflow_version = $workflowVersion
 repo_commit = $repoCommit
 source_commit = $sourceCommit
@@ -274,16 +303,21 @@ run_started_utc = $runStarted.ToString("o")
 run_finished_utc = $runFinished.ToString("o")
 duration_ms = $duration
 commands = $commandArray
+context_intelligence = $contextIntelligence
 claims = [ordered]@{
 static_validation = "Full validation covers repository contracts, schema checks, package checks, and release evidence."
 runtime_evidence = "Runtime evidence is captured from repeatable local commands."
 practice_evidence = $(if ($Practice) { "T2 current-repo practice suite captured." } else { "Practice suite was not requested." })
+context_intelligence = $(if ($Practice) { "Live v2.9 context resolver A/B and fallback practice passed." } else { "Context intelligence practice was not requested." })
 evidence_tier = $(if ($Practice) { "T2 current-repo practice" } else { "T1 dry-run" })
 hard_isolation = "No hard isolation claim is made without current runtime, tool, OS, account, or cloud enforcement evidence."
+external_pilot_boundary = "No external project pilot was executed for this release evidence."
 }
 scope = [ordered]@{
 target = "current repository and disposable self-test target"
 external_target_deployment = $false
+external_pilot = "not executed"
+codegraph_runtime = "not installed or used"
 raw_output_storage = "%TEMP%/codex-agent-status/<project-id>/<run-id>/"
 practice = [bool] $Practice
 disposable_target = "deployment self-test temporary targets only"
@@ -303,7 +337,7 @@ total_duration_ms = $duration
 token_usage = "unavailable"
 token_usage_reason = "Repository validation scripts do not receive Codex token accounting."
 }
-result = $(if ($failedCommands.Count -eq 0) { "passed" } else { "failed" })
+result = $(if ($failedCommands.Count -eq 0 -and $contextCapturePassed) { "passed" } else { "failed" })
 release = ("v{0}" -f $workflowVersion)
 }
 
@@ -317,10 +351,10 @@ $outputDir = Split-Path -Parent $resolvedOutputPath
 if (-not [string]::IsNullOrWhiteSpace($outputDir)) {
 New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
 }
-$json = ($evidence | ConvertTo-Json -Depth 20) -replace "`r`n", "`n"
+$json = ($evidence | ConvertTo-Json -Depth 20 -Compress) -replace "`r`n", "`n"
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($resolvedOutputPath, ($json + "`n"), $utf8NoBom)
 Write-Info ("Runtime evidence written: {0}" -f $OutputPath)
-if ($failedCommands.Count -gt 0) {
+if ($failedCommands.Count -gt 0 -or -not $contextCapturePassed) {
 exit 1
 }

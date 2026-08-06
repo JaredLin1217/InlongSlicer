@@ -1,23 +1,13 @@
-﻿schema: agents-knowledge-footprint/v2
+﻿schema: agents-knowledge-footprint/v3
 purpose: "Recoverable runtime footprints plus fresh, evidence-linked project memory for cross-window and cross-task continuity."
 storage:
   root: ".agents/runtime/knowledge/<footprint_id>.json"
   tracked: false
   deployable: false
 record:
-  required_fields:
-    - "footprint_id"
-    - "scope"
-    - "opened_files"
-    - "evidence_refs"
-    - "gaps"
-    - "conclusion"
-    - "resume_pointer"
+  required_fields: ["footprint_id","scope","opened_files","evidence_refs","gaps","conclusion","resume_pointer","source_commit","content_hash","checked_at","update_trigger","supersedes","boundary"]
 opened_files:
-  fields:
-    - "path"
-    - "reason"
-    - "hash"
+  fields: ["path","reason","hash","provenance","confidence","freshness"]
 retention:
   keep:
     - "facts needed to resume"
@@ -38,7 +28,7 @@ durable_memory:
   root: "docs/memory/"
   index: ".agents/docs/memory/index.md"
   authoritative: false
-  required_metadata: ["ID","Date","Title","Trigger","Keywords","Summary","Entry","Status","Confidence","Last Verified","Next Review Due","Source Refs"]
+  required_metadata: ["ID","Date","Title","Trigger","Keywords","Summary","Entry","Status","Confidence","Source Commit","Content Hash","Checked At","Last Verified","Next Review Due","Update Trigger","Supersedes","Boundary","Source Refs"]
   status_values: ["active","stale","retired"]
   confidence_values: ["high","medium","low"]
 retrieval:
@@ -54,7 +44,8 @@ promotion:
 freshness:
   default_review_days: 90
   active_rule: "Active entries must have Last Verified and a non-overdue Next Review Due date."
-  stale_rule: "Stale or retired entries may explain history but cannot directly drive an action or current claim."
+  stale_rule: "Stale, conflicting, superseded, or retired entries may explain history but cannot directly drive an action, modification, skipped verification, or current claim."
+  conflict_rule: "When hashes, source commits, or current evidence conflict, mark the knowledge stale and resolve against current repository or official-source evidence."
 rules:
   - "A runtime footprint summarizes resume evidence; it is not durable memory or a transcript."
   - "Every compaction must state retained facts, dropped details, risk, and resume pointer."

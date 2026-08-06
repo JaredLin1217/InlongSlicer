@@ -252,6 +252,10 @@ scope = "repo-local runtime evidence"
 authority = $Authority
 owner = "controller"
 model_tier = "code_standard"
+current_route = "runtime_execution"
+verified_assumptions = @()
+change_boundary = "repo-local runtime evidence"
+remaining_steps = @()
 created_at = $now
 updated_at = $now
 steps = @()
@@ -268,6 +272,7 @@ verification_refs = @()
 risks = @()
 deployment_evidence = @()
 resume_pointer = (".agents/runtime/executions/{0}/summary.json" -f $RunId)
+recovery_pointers = @((".agents/runtime/executions/{0}/run.json" -f $RunId), (".agents/runtime/executions/{0}/summary.json" -f $RunId))
 isolation = "GM not used | GS not used | XR none | XW none"
 }
 Write-Run -Run $run
@@ -374,6 +379,11 @@ schema = "agents-runtime-execution-summary/v1"
 run_id = $RunId
 version = [string] (Get-PropertyValue -Object $run -Name "version")
 status = [string] (Get-PropertyValue -Object $run -Name "status")
+current_route = [string] (Get-PropertyValue -Object $run -Name "current_route")
+verified_assumptions = @(Get-ArrayValue (Get-PropertyValue -Object $run -Name "verified_assumptions"))
+change_boundary = [string] (Get-PropertyValue -Object $run -Name "change_boundary")
+remaining_steps = @(Get-ArrayValue (Get-PropertyValue -Object $run -Name "remaining_steps"))
+recovery_pointers = @(Get-ArrayValue (Get-PropertyValue -Object $run -Name "recovery_pointers"))
 steps = @(Get-ArrayValue (Get-PropertyValue -Object $run -Name "steps")).Count
 approvals = @(Get-ArrayValue (Get-PropertyValue -Object $run -Name "approvals")).Count
 results = @(Get-ArrayValue (Get-PropertyValue -Object $run -Name "results")).Count
@@ -394,12 +404,12 @@ Write-RuntimeResult $summaryObject
 function Invoke-Verify {
 $run = Read-Run
 $issues = New-Object System.Collections.Generic.List[string]
-foreach ($field in @("schema", "run_id", "version", "status", "objective", "scope", "authority", "owner", "model_tier", "created_at", "updated_at", "resume_pointer", "isolation")) {
+foreach ($field in @("schema", "run_id", "version", "status", "objective", "scope", "authority", "owner", "model_tier", "current_route", "change_boundary", "created_at", "updated_at", "resume_pointer", "isolation")) {
 if ([string]::IsNullOrWhiteSpace([string] (Get-PropertyValue -Object $run -Name $field))) {
 $issues.Add("run.json missing required field: $field") | Out-Null
 }
 }
-foreach ($arrayField in @("steps", "approvals", "tool_evidence", "results", "escalations", "cleanup_evidence", "event_summary", "verification_refs", "risks", "deployment_evidence")) {
+foreach ($arrayField in @("verified_assumptions", "remaining_steps", "recovery_pointers", "steps", "approvals", "tool_evidence", "results", "escalations", "cleanup_evidence", "event_summary", "verification_refs", "risks", "deployment_evidence")) {
 if ($null -eq (Get-PropertyValue -Object $run -Name $arrayField)) {
 $issues.Add("run.json missing required array: $arrayField") | Out-Null
 }

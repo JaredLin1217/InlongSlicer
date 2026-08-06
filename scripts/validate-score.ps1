@@ -36,12 +36,16 @@ $runtimePath = Get-RepoPath ".agents/docs/agents/ai-runtime.yaml"
 $foundationPath = Get-RepoPath ".agents/docs/agents/openai-foundations.yaml"
 $knowledgePath = Get-RepoPath ".agents/docs/agents/knowledge-footprint.yaml"
 $contextPath = Get-RepoPath ".agents/docs/agents/context-compact.yaml"
+$contextIntelligencePath = Get-RepoPath ".agents/docs/agents/context-intelligence.yaml"
+$runtimeEvidenceSchemaPath = Get-RepoPath "schemas/agents-runtime-evidence.schema.json"
 $verifyPath = Get-RepoPath ".agents/docs/agents/verify.yaml"
 $deployPath = Get-RepoPath ".agents/docs/agents/deploy.yaml"
 $runtimeText = Get-Content -LiteralPath $runtimePath -Raw
 $foundationText = Get-Content -LiteralPath $foundationPath -Raw
 $knowledgeText = Get-Content -LiteralPath $knowledgePath -Raw
 $contextText = Get-Content -LiteralPath $contextPath -Raw
+$contextIntelligenceText = Get-Content -LiteralPath $contextIntelligencePath -Raw
+$runtimeEvidenceSchemaText = Get-Content -LiteralPath $runtimeEvidenceSchemaPath -Raw
 $verifyText = Get-Content -LiteralPath $verifyPath -Raw
 $deployText = Get-Content -LiteralPath $deployPath -Raw
 $runtimeBytes = (Get-Item -LiteralPath $runtimePath).Length
@@ -51,7 +55,7 @@ $repoLimitMatch = [regex]::Match($verifyText, "(?m)^\s*tracked_repo_kib:\s*(\d+)
 $repoLimitBytes = if ($repoLimitMatch.Success) { [int]$repoLimitMatch.Groups[1].Value * 1024 } else { 896 * 1024 }
 
 $routesReady = Test-ScoreMarkers -Text $runtimeText -Markers @(
-"enterprise_dispatch:", "workflow_artifact:", "context_compact:", "collaborator_window:",
+"enterprise_dispatch:", "workflow_artifact:", "context_compact:", "context_intelligence:", "collaborator_window:",
 "core_system:", "runtime_execution:", "provider_adapter:", "foundation_creation:",
 "route_pack:", "knowledge_footprint:", "expand_only", "canonical YAML wins"
 )
@@ -70,8 +74,8 @@ $accuracyReady = Test-ScoreMarkers -Text $foundationText -Markers @(
 )
 $memoryReady = (
 (Test-ScoreMarkers -Text $knowledgeText -Markers @(
-"schema: agents-knowledge-footprint/v2", "index_first: true", "max_detail_entries: 3",
-"max_detail_bytes: 8192", "Next Review Due", "current evidence"
+"schema: agents-knowledge-footprint/v3", "index_first: true", "max_detail_entries: 3",
+"max_detail_bytes: 8192", "source_commit", "content_hash", "checked_at", "update_trigger", "supersedes", "boundary", "Next Review Due", "current evidence"
 )) -and
 (Test-Path -LiteralPath (Get-RepoPath ".agents/docs/memory/index.md") -PathType Leaf) -and
 (Test-Path -LiteralPath (Get-RepoPath ".agents/docs/project-memory.md") -PathType Leaf)
@@ -80,17 +84,24 @@ $tokenReady = (
 $runtimeBytes -le 4096 -and
 (Test-ScoreMarkers -Text $contextText -Markers @(
 "progressive_disclosure_rule", "stable_prefix_rule", "tool_output_rule", "measurement_rule",
-"detail_file_default_max: 3"
-))
+"detail_file_default_max: 3", "context_evidence_ref", "recovery_pointers"
+)) -and
+(Test-ScoreMarkers -Text $contextIntelligenceText -Markers @(
+"schema: agents-context-intelligence/v1", "max_files: 3", "budget_bytes: 8192",
+"provenance", "confidence", "freshness", "verification recommendation", ".agents/runtime/context-intelligence/"
+)) -and
+(Test-Path -LiteralPath (Get-RepoPath "scripts/resolve-agent-context.ps1") -PathType Leaf)
 )
 $verificationReady = (
 $validateBytes -le 100000 -and
 (Test-Path -LiteralPath (Get-RepoPath "scripts/validate-changes.ps1") -PathType Leaf) -and
-(Test-ScoreMarkers -Text $verifyText -Markers @("changed_path_set", "validate-changes.ps1", "change_aware"))
+(Test-ScoreMarkers -Text $verifyText -Markers @("changed_path_set", "validate-changes.ps1", "ContextMode Auto", "context_intelligence_practice", "change_aware"))
 )
 $releaseReady = (
 $Full -and
 (Test-Path -LiteralPath (Get-RepoPath "scripts/export-release-package.ps1") -PathType Leaf) -and
+$runtimeEvidenceSchemaText -match "agents-runtime-evidence/v4" -and
+$runtimeEvidenceSchemaText -match '"context_intelligence"' -and
 $deployText -match "do_not_deploy" -and
 $deployText -match "validation_levels"
 )

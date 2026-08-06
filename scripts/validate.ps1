@@ -147,6 +147,16 @@ function Test-KnowledgeMemoryIntegrity {
 Add-Failure "Knowledge validation helper missing: scripts/validate-knowledge.ps1"
 }
 }
+$ContextIntelligenceValidationHelper = Join-Path $PSScriptRoot "validate-context-intelligence.ps1"
+if (Test-Path -LiteralPath $ContextIntelligenceValidationHelper -PathType Leaf) {
+. $ContextIntelligenceValidationHelper
+}
+else {
+function Test-ContextIntelligenceIntegrity {
+param([switch] $RunPractice)
+Add-Failure "Context intelligence validation helper missing: scripts/validate-context-intelligence.ps1"
+}
+}
 function Get-RepoPathHash {
 param([string] $Path)
 $normalized = [System.IO.Path]::GetFullPath($Path).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar).ToLowerInvariant()
@@ -432,7 +442,8 @@ $contracts = @(
 @{ Yaml = ".agents/docs/agents/runtime-execution.yaml"; Schema = "schemas/agents-runtime-execution.schema.json" },
 @{ Yaml = ".agents/docs/agents/provider-adapters.yaml"; Schema = "schemas/agents-provider-adapters.schema.json" },
 @{ Yaml = ".agents/docs/agents/route-packs.yaml"; Schema = "schemas/agents-route-packs.schema.json" },
-@{ Yaml = ".agents/docs/agents/knowledge-footprint.yaml"; Schema = "schemas/agents-knowledge-footprint.schema.json" }
+@{ Yaml = ".agents/docs/agents/knowledge-footprint.yaml"; Schema = "schemas/agents-knowledge-footprint.schema.json" },
+@{ Yaml = ".agents/docs/agents/context-intelligence.yaml"; Schema = "schemas/agents-context-intelligence.schema.json" }
 )
 foreach ($contract in $contracts) {
 $yamlPath = Get-RepoPath $contract.Yaml
@@ -485,7 +496,7 @@ $yamlLabel = Join-Path "tests/agents-governance-fixtures/schema-contracts" ([str
 $schemaLabel = [string] $case.schema
 $yamlPath = Get-RepoPath $yamlLabel
 $schemaPath = Get-RepoPath $schemaLabel
-$issues = Get-SchemaContractIssues -YamlPath $yamlPath -SchemaPath $schemaPath -YamlLabel $yamlLabel -SchemaLabel $schemaLabel
+$issues = @(Get-SchemaContractIssues -YamlPath $yamlPath -SchemaPath $schemaPath -YamlLabel $yamlLabel -SchemaLabel $schemaLabel)
 if ($case.expected -eq "pass") {
 if ($issues.Count -gt 0) {
 Add-Failure ("Fixture expected pass but failed: {0}" -f $case.name)
@@ -652,35 +663,15 @@ function Test-LineEndings {
 $startFailureCount = $Failures.Count
 $textFiles = @(Get-TextFiles -Roots @(
 "AGENTS.md",
-".agents/skills/project-isolation-workflow",
-".agents/docs",
+".agents/skills",
+"docs",
 "schemas",
-"scripts/agents-cleanup.ps1",
-"scripts/agents-runtime.ps1",
-"scripts/agents-workflow.ps1",
-"scripts/capture-runtime-evidence.ps1",
-"scripts/deploy-agents-workflow.ps1",
-"scripts/export-release-package.ps1",
-"scripts/export-route-pack.ps1",
-"scripts/validate.ps1",
-"scripts/validate-changes.ps1",
-"scripts/validate-evidence-templates.ps1",
-"scripts/validate-foundation.ps1",
-"scripts/validate-knowledge.ps1",
-"scripts/validate-readiness.ps1",
-"scripts/validate-release-evidence.ps1",
-"scripts/validate-required-files.ps1",
-"scripts/validate-residue.ps1",
-"scripts/validate-route-pack.ps1",
-"scripts/validate-runtime-execution.ps1",
-"scripts/validate-score.ps1",
-"scripts/validate-size-gates.ps1"
+"scripts",
+"tests",
+"artifacts",
+".github/workflows"
 ))
 foreach ($file in $textFiles) {
-$relativePath = ($file.FullName.Substring($RepoRoot.Path.Length).TrimStart("\", "/")).Replace("\", "/")
-if ($relativePath -eq ".agents/docs/agents-workflow-deployment.md") {
-continue
-}
 $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
 for ($i = 0; $i -lt ($bytes.Length - 1); $i++) {
 if ($bytes[$i] -eq 13 -and $bytes[$i + 1] -eq 10) {
@@ -691,23 +682,6 @@ break
 }
 if ($Failures.Count -eq $startFailureCount) {
 Add-Pass "Line-ending readiness checks passed."
-}
-}
-function Test-WorkflowYamlTabs {
-$startFailureCount = $Failures.Count
-$workflowFiles = @(Get-ChildItem -LiteralPath (Get-RepoPath ".github/workflows") -File -ErrorAction SilentlyContinue |
-Where-Object { $_.Extension.ToLowerInvariant() -in @(".yaml", ".yml") })
-foreach ($file in $workflowFiles) {
-$lineNumber = 0
-foreach ($line in Get-Content -LiteralPath $file.FullName) {
-$lineNumber++
-if ($line.Contains("`t")) {
-Add-Failure ("{0}:{1} contains a tab character; workflow YAML should use spaces." -f $file.FullName, $lineNumber)
-}
-}
-}
-if ($Failures.Count -eq $startFailureCount) {
-Add-Pass "Workflow YAML tab checks passed."
 }
 }
 function Test-ExactPairs {
@@ -736,7 +710,6 @@ $pairs = @(
 @(".agents/docs/agents/verify.yaml", ".agents/docs/templates/agents/agents/verify.yaml"),
 @(".agents/docs/agents/org.yaml", ".agents/docs/templates/agents/agents/org.yaml"),
 @(".agents/docs/agents/model-policy.yaml", ".agents/docs/templates/agents/agents/model-policy.yaml"),
-@(".agents/docs/agents/mcp.yaml", ".agents/docs/templates/agents/agents/mcp.yaml"),
 @(".agents/docs/agents/dispatch.yaml", ".agents/docs/templates/agents/agents/dispatch.yaml"),
 @(".agents/docs/agents/workflow-artifacts.yaml", ".agents/docs/templates/agents/agents/workflow-artifacts.yaml"),
 @(".agents/docs/agents/collaborators.yaml", ".agents/docs/templates/agents/agents/collaborators.yaml"),
@@ -746,6 +719,7 @@ $pairs = @(
 @(".agents/docs/agents/route-packs.yaml", ".agents/docs/templates/agents/agents/route-packs.yaml"),
 @(".agents/docs/agents/knowledge-footprint.yaml", ".agents/docs/templates/agents/agents/knowledge-footprint.yaml"),
 @(".agents/docs/agents/context-compact.yaml", ".agents/docs/templates/agents/agents/context-compact.yaml"),
+@(".agents/docs/agents/context-intelligence.yaml", ".agents/docs/templates/agents/agents/context-intelligence.yaml"),
 @(".agents/docs/runbooks/agents-deployment.md", ".agents/docs/templates/agents/agents-deployment.md"),
 @(".agents/docs/runbooks/agents-operator-guide.md", ".agents/docs/templates/agents/agents-operator-guide.md"),
 @(".agents/docs/runbooks/isolation-audit.md", ".agents/docs/templates/agents/isolation-audit.md"),
@@ -803,7 +777,6 @@ $allowedItems = @(
 ".agents/docs/templates/agents/agents/verify.yaml",
 ".agents/docs/templates/agents/agents/org.yaml",
 ".agents/docs/templates/agents/agents/model-policy.yaml",
-".agents/docs/templates/agents/agents/mcp.yaml",
 ".agents/docs/templates/agents/agents/dispatch.yaml",
 ".agents/docs/templates/agents/agents/workflow-artifacts.yaml",
 ".agents/docs/templates/agents/agents/collaborators.yaml",
@@ -813,6 +786,7 @@ $allowedItems = @(
 ".agents/docs/templates/agents/agents/route-packs.yaml",
 ".agents/docs/templates/agents/agents/knowledge-footprint.yaml",
 ".agents/docs/templates/agents/agents/context-compact.yaml",
+".agents/docs/templates/agents/agents/context-intelligence.yaml",
 ".agents/docs/templates/agents/agents-deployment.md",
 ".agents/docs/templates/agents/agents-operator-guide.md",
 ".agents/docs/templates/agents/isolation-audit.md",
@@ -1054,6 +1028,7 @@ $requiredNeedles = @(
 "enterprise_dispatch",
 "workflow_artifact",
 "context_compact",
+"context_intelligence",
 "collaborator_window",
 "core_system",
 "runtime_execution",
@@ -1066,6 +1041,7 @@ $requiredNeedles = @(
 ".agents/docs/agents/dispatch.yaml",
 ".agents/docs/agents/workflow-artifacts.yaml",
 ".agents/docs/agents/context-compact.yaml",
+".agents/docs/agents/context-intelligence.yaml",
 ".agents/docs/agents/collaborators.yaml",
 ".agents/docs/agents/core-system.yaml",
 ".agents/docs/agents/runtime-execution.yaml",
@@ -1104,6 +1080,9 @@ Add-Failure ("AI runtime workflow artifact route must load only workflow-artifac
 }
 if ($content -notmatch 'context_compact:\s*\{\s*f:\s*\[[^\]]*".agents/docs/agents/context-compact\.yaml"[^\]]*".agents/docs/agents/schemas\.yaml"[^\]]*".agents/docs/agents/verify\.yaml"[^\]]*\]' -or $content -match 'context_compact:\s*\{[^\r\n]*(org|model-policy|dispatch|workflows|deploy|workflow-artifacts)\.yaml') {
 Add-Failure ("AI runtime context compact route must load only context-compact, schemas, and verify: {0}" -f $path)
+}
+if ($content -notmatch 'context_intelligence:\s*\{\s*f:\s*\[[^\]]*".agents/docs/agents/context-intelligence\.yaml"[^\]]*".agents/docs/agents/context-compact\.yaml"[^\]]*".agents/docs/agents/schemas\.yaml"[^\]]*".agents/docs/agents/verify\.yaml"[^\]]*\]' -or $content -match 'context_intelligence:\s*\{[^\r\n]*(org|model-policy|dispatch|workflows|deploy|workflow-artifacts)\.yaml') {
+Add-Failure ("AI runtime context intelligence route must load only context-intelligence, context-compact, schemas, and verify: {0}" -f $path)
 }
 if ($content -notmatch 'collaborator_window:\s*\{\s*f:\s*\[[^\]]*".agents/docs/agents/collaborators\.yaml"[^\]]*".agents/docs/agents/verify\.yaml"[^\]]*\]' -or $content -match 'collaborator_window:\s*\{[^\r\n]*(org|model-policy|dispatch|workflows|deploy|schemas|workflow-artifacts|context-compact)\.yaml') {
 Add-Failure ("AI runtime collaborator window route must load only collaborators and verify: {0}" -f $path)
@@ -2043,12 +2022,7 @@ Add-Pass "Agent cleanup helper integrity checks passed."
 function Test-CIWorkflowStability {
 $startFailureCount = $Failures.Count
 $path = ".github/workflows/checkpoint.yml"
-$fullPath = Get-RepoPath $path
-if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
-Add-Pass "CI checkpoint workflow stability checks skipped; checkpoint.yml is not present."
-return
-}
-$content = Get-Content -LiteralPath $fullPath -Raw
+$content = Get-Content -LiteralPath (Get-RepoPath $path) -Raw
 if ($content -match "runs-on:\s*windows-latest") {
 Add-Failure "Checkpoint workflow must pin a Windows runner instead of using windows-latest."
 }
@@ -2106,6 +2080,7 @@ $mirrorPairs = @(
 @(".agents/docs/agents/provider-adapters.yaml", ".agents/docs/templates/agents/agents/provider-adapters.yaml"),
 @(".agents/docs/agents/route-packs.yaml", ".agents/docs/templates/agents/agents/route-packs.yaml"),
 @(".agents/docs/agents/knowledge-footprint.yaml", ".agents/docs/templates/agents/agents/knowledge-footprint.yaml"),
+@(".agents/docs/agents/context-intelligence.yaml", ".agents/docs/templates/agents/agents/context-intelligence.yaml"),
 @(".agents/docs/agents/openai-foundations.yaml", ".agents/docs/templates/agents/agents/openai-foundations.yaml")
 )
 foreach ($pair in $mirrorPairs) {
@@ -2122,13 +2097,13 @@ Add-Failure ("Core runtime template mirror drift: {0} <-> {1}" -f $pair[0], $pai
 }
 }
 $markerChecks = @(
-@(".agents/docs/agents/ai-runtime.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint", "foundation_creation")),
-@(".agents/docs/agents/workflows.yaml", @("core_system_runtime", "runtime_execution_runtime", "provider_adapter_runtime", "route_pack_runtime", "knowledge_footprint_runtime")),
-@(".agents/docs/agents/deploy.yaml", @(".agents/docs/agents/core-system.yaml", ".agents/docs/agents/runtime-execution.yaml", ".agents/docs/agents/provider-adapters.yaml", ".agents/docs/agents/route-packs.yaml", ".agents/docs/agents/knowledge-footprint.yaml", ".agents/docs/agents/openai-foundations.yaml", ".agents/runtime/executions/", ".agents/runtime/tool-evidence/", ".agents/runtime/deployments/", ".agents/runtime/route-packs/", ".agents/runtime/knowledge/")),
-@(".agents/docs/agents/verify.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint", "foundation_creation", "core_system_integrity", "runtime_execution_integrity", "provider_adapter_integrity", "route_pack_integrity", "knowledge_footprint_integrity", "foundation_creation_integrity", "route_pack_export", "runtime_helper")),
+@(".agents/docs/agents/ai-runtime.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint", "foundation_creation", "context_intelligence")),
+@(".agents/docs/agents/workflows.yaml", @("core_system_runtime", "runtime_execution_runtime", "provider_adapter_runtime", "route_pack_runtime", "knowledge_footprint_runtime", "context_intelligence_runtime")),
+@(".agents/docs/agents/deploy.yaml", @(".agents/docs/agents/core-system.yaml", ".agents/docs/agents/runtime-execution.yaml", ".agents/docs/agents/provider-adapters.yaml", ".agents/docs/agents/route-packs.yaml", ".agents/docs/agents/knowledge-footprint.yaml", ".agents/docs/agents/openai-foundations.yaml", ".agents/docs/agents/context-intelligence.yaml", ".agents/runtime/executions/", ".agents/runtime/tool-evidence/", ".agents/runtime/deployments/", ".agents/runtime/route-packs/", ".agents/runtime/knowledge/", ".agents/runtime/context-intelligence/")),
+@(".agents/docs/agents/verify.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint", "foundation_creation", "context_intelligence", "core_system_integrity", "runtime_execution_integrity", "provider_adapter_integrity", "route_pack_integrity", "knowledge_footprint_integrity", "foundation_creation_integrity", "context_intelligence_integrity", "route_pack_export", "runtime_helper", "context_intelligence_helper")),
 @(".agents/docs/agents/route-packs.yaml", @("answer_only", "no_read_default", "no_file_read", "manifest_hash")),
-@(".agents/docs/agents/version.yaml", @($expectedWorkflowVersion, "precision-efficiency", "core_contract_rule", "runtime_execution_rule", "knowledge_footprint_rule", "foundation_creation_rule")),
-@(".agents/docs/agents/schemas.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint", "foundation_creation")),
+@(".agents/docs/agents/version.yaml", @($expectedWorkflowVersion, "context-intelligence", "core_contract_rule", "runtime_execution_rule", "knowledge_footprint_rule", "foundation_creation_rule", "context_intelligence_rule")),
+@(".agents/docs/agents/schemas.yaml", @("core_system", "runtime_execution", "provider_adapter", "route_pack", "knowledge_footprint", "foundation_creation", "context_intelligence", "context_evidence")),
 @(".agents/docs/agents/collaborators.yaml", @("thread_operation_record", "execution_run_ref")),
 @(".agents/docs/agents/context-compact.yaml", @("retained_facts", "dropped_details", "resume_pointer")),
 @(".agents/docs/agents/dispatch.yaml", @("execution_run_ref")),
@@ -2168,6 +2143,7 @@ Test-MultiAgentWorkflowIntegrity
 Test-AgentCleanupHelperIntegrity
 Test-WorkflowArtifactIntegrity
 Test-ContextCompactIntegrity
+Test-ContextIntelligenceIntegrity -RunPractice
 Test-CollaboratorWindowIntegrity
 Test-CoreRuntimeSystemIntegrity
 Test-CrossProjectRuntimeResilienceIntegrity
@@ -2177,13 +2153,8 @@ Test-EvidenceTemplateSchemaCoverage
 Test-CIWorkflowStability
 Test-ReadinessLadderEvidence
 Test-SizeGates
-if ($env:AGENTS_RUNTIME_EVIDENCE_CAPTURE_ACTIVE -eq "1") {
-Add-Pass "Release package and runtime evidence gates skipped during runtime evidence capture."
-}
-else {
 Test-ReleasePackageExport
 Test-RuntimeReleaseEvidence
-}
 }
 Push-Location $RepoRoot
 try {
@@ -2198,7 +2169,14 @@ Add-Pass "Policy YAML files passed the lightweight syntax gate."
 else {
 Add-Warning "YAML gate found failures; later checks will still run."
 }
-Test-WorkflowYamlTabs
+$workflowFiles = @(Get-ChildItem -LiteralPath (Get-RepoPath ".github/workflows") -File -ErrorAction SilentlyContinue |
+Where-Object { $_.Extension.ToLowerInvariant() -in @(".yaml", ".yml") })
+foreach ($file in $workflowFiles) {
+Test-LightweightYaml -File $file
+}
+if ($Failures.Count -eq 0) {
+Add-Pass "Workflow YAML files passed the lightweight syntax gate."
+}
 Test-RequiredFiles
 if ($Failures.Count -eq 0) {
 Add-Pass "Required canonical files exist."
@@ -2211,6 +2189,7 @@ Add-Pass "Canonical YAML files match initial schema contracts."
 Test-EnterpriseDispatchIntegrity
 Test-WorkflowArtifactIntegrity
 Test-ContextCompactIntegrity
+Test-ContextIntelligenceIntegrity
 Test-CollaboratorWindowIntegrity
 Test-CoreRuntimeSystemIntegrity
 Test-FoundationCreationIntegrity

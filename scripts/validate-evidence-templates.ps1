@@ -201,6 +201,7 @@ param(
 [string] $Section,
 [string] $NextSection
 )
+$canonicalFields = @(Get-CanonicalEvidenceTemplateFields -Section $Section)
 $schemaContent = Get-Content -LiteralPath (Get-RepoPath ".agents/docs/agents/schemas.yaml") -Raw
 $sectionStart = $schemaContent.IndexOf(("{0}:" -f $Section))
 $sectionEnd = $schemaContent.IndexOf(("{0}:" -f $NextSection), $sectionStart + 1)
@@ -214,7 +215,6 @@ ForEach-Object { $_.Groups[1].Value })
 if ($bulletFields.Count -gt 0) {
 $fields = $bulletFields
 Test-CompactEvidenceGroups -Section $Section -Fields $fields
-$canonicalFields = Get-CanonicalEvidenceTemplateFields -Section $Section
 if ($canonicalFields.Count -gt 0) {
 return $canonicalFields
 }
@@ -224,11 +224,13 @@ $compactFields = [regex]::Match($sectionText, 'required_fields:\s*\[(.*?)\]', [S
 if ($compactFields.Success) {
 $fields = @([regex]::Matches($compactFields.Groups[1].Value, '"([^"]+)"') | ForEach-Object { $_.Groups[1].Value })
 Test-CompactEvidenceGroups -Section $Section -Fields $fields
-$canonicalFields = Get-CanonicalEvidenceTemplateFields -Section $Section
 if ($canonicalFields.Count -gt 0) {
 return $canonicalFields
 }
 return $fields
+}
+if ($canonicalFields.Count -gt 0 -and $sectionText -match 'source:\s*"docs/.+\.template\.md') {
+return $canonicalFields
 }
 return @()
 }

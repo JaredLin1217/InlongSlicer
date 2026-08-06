@@ -21,6 +21,7 @@ $required = @(
 ".agents/docs/agents/provider-adapters.yaml",
 ".agents/docs/agents/route-packs.yaml",
 ".agents/docs/agents/knowledge-footprint.yaml",
+".agents/docs/agents/context-intelligence.yaml",
 "schemas/agents-org.schema.json",
 "schemas/agents-model-policy.schema.json",
 "schemas/agents-dispatch.schema.json",
@@ -31,6 +32,8 @@ $required = @(
 "schemas/agents-provider-adapters.schema.json",
 "schemas/agents-route-packs.schema.json",
 "schemas/agents-knowledge-footprint.schema.json",
+"schemas/agents-context-intelligence.schema.json",
+"schemas/agents-context-evidence.schema.json",
 ".agents/docs/templates/agents/agents/workflow-artifacts.yaml",
 ".agents/docs/templates/agents/agents/collaborators.yaml",
 ".agents/docs/templates/agents/agents/core-system.yaml",
@@ -38,6 +41,7 @@ $required = @(
 ".agents/docs/templates/agents/agents/provider-adapters.yaml",
 ".agents/docs/templates/agents/agents/route-packs.yaml",
 ".agents/docs/templates/agents/agents/knowledge-footprint.yaml",
+".agents/docs/templates/agents/agents/context-intelligence.yaml",
 ".agents/docs/templates/agents/agents/openai-foundations.yaml",
 ".agents/docs/agents/context-compact.yaml",
 "schemas/agents-context-compact.schema.json",
@@ -64,8 +68,12 @@ $required = @(
 "scripts/validate-runtime-execution.ps1",
 "scripts/validate-readiness.ps1",
 "scripts/validate-cross-project-runtime.ps1",
+"scripts/resolve-agent-context.ps1",
+"scripts/validate-context-intelligence.ps1",
+"scripts/test-context-intelligence.ps1",
 "scripts/export-route-pack.ps1",
-"schemas/agents-runtime-evidence.schema.json"
+"schemas/agents-runtime-evidence.schema.json",
+"tests/context-intelligence/cases.json"
 )
 foreach ($path in $required) {
 if (-not (Test-Path -LiteralPath (Get-RepoPath $path) -PathType Leaf)) {
