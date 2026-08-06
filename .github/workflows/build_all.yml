@@ -13,9 +13,11 @@ on:
      - 'version.inc'
      - 'localization/**'
      - 'resources/**'
+     - 'build_release_vs.bat'
      - ".github/workflows/build_*.yml"
      - 'scripts/flatpak/**'
      - 'scripts/msix/**'
+     - 'scripts/windows/sign_windows_release.ps1'
      - 'tests/**'
 
   pull_request:
@@ -35,6 +37,7 @@ on:
      - 'build_release_macos.sh'
      - 'scripts/flatpak/**'
      - 'scripts/msix/**'
+     - 'scripts/windows/sign_windows_release.ps1'
      - 'tests/**'
 
 

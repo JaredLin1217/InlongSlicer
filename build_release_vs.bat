@@ -2,6 +2,7 @@
 @echo off
 set WP=%CD%
 set _START_TIME=%TIME%
+set "_BUILD_EXIT_CODE="
 
 @REM Default target architecture to the host CPU arch; override by passing
 @REM "x64" or "arm64" as an argument. PROCESSOR_ARCHITEW6432 covers a 32-bit
@@ -183,6 +184,32 @@ cd ..
 call scripts/run_gettext.bat
 cd %build_dir%
 cmake --build . --target install --config %build_type%
+if errorlevel 1 goto :build_failed
+
+if not defined INLONG_WINDOWS_CODESIGN_STORE set "INLONG_WINDOWS_CODESIGN_STORE=CurrentUser"
+if not defined INLONG_WINDOWS_TIMESTAMP_URL set "INLONG_WINDOWS_TIMESTAMP_URL=http://timestamp.digicert.com"
+
+if defined INLONG_WINDOWS_CODESIGN_THUMBPRINT (
+    powershell -NoProfile -File "%WP%\scripts\windows\sign_windows_release.ps1" -Path "%WP%\%build_dir%\src\%build_type%" -CertificateThumbprint "%INLONG_WINDOWS_CODESIGN_THUMBPRINT%" -CertificateStoreLocation "%INLONG_WINDOWS_CODESIGN_STORE%" -TimestampUrl "%INLONG_WINDOWS_TIMESTAMP_URL%"
+    if errorlevel 1 goto :build_failed
+
+    powershell -NoProfile -File "%WP%\scripts\windows\sign_windows_release.ps1" -Path "%WP%\%build_dir%\InlongSlicer" -CertificateThumbprint "%INLONG_WINDOWS_CODESIGN_THUMBPRINT%" -CertificateStoreLocation "%INLONG_WINDOWS_CODESIGN_STORE%" -TimestampUrl "%INLONG_WINDOWS_TIMESTAMP_URL%"
+    if errorlevel 1 goto :build_failed
+
+    if exist "%WP%\%build_dir%\InlongSlicer_InlongOnly" (
+        powershell -NoProfile -File "%WP%\scripts\windows\sign_windows_release.ps1" -Path "%WP%\%build_dir%\InlongSlicer_InlongOnly" -CertificateThumbprint "%INLONG_WINDOWS_CODESIGN_THUMBPRINT%" -CertificateStoreLocation "%INLONG_WINDOWS_CODESIGN_STORE%" -TimestampUrl "%INLONG_WINDOWS_TIMESTAMP_URL%"
+        if errorlevel 1 goto :build_failed
+    )
+) else (
+    echo Windows signing skipped: INLONG_WINDOWS_CODESIGN_THUMBPRINT is not set.
+)
+
+goto :done
+
+:build_failed
+set "_BUILD_EXIT_CODE=%ERRORLEVEL%"
+if "%_BUILD_EXIT_CODE%"=="0" set "_BUILD_EXIT_CODE=1"
+echo Build failed with exit code %_BUILD_EXIT_CODE%.
 
 :done
 @echo off
@@ -195,4 +222,8 @@ set /a "_remainder=_elapsed - _hours * 3600"
 set /a "_mins=_remainder / 60"
 set /a "_secs=_remainder - _mins * 60"
 echo.
+if defined _BUILD_EXIT_CODE (
+    echo Build failed after %_hours%h %_mins%m %_secs%s
+    exit /b %_BUILD_EXIT_CODE%
+)
 echo Build completed in %_hours%h %_mins%m %_secs%s

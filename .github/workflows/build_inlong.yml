@@ -390,6 +390,117 @@ jobs:
           if ($arch -eq "arm64") { .\build_release_vs.bat slicer arm64 tests } else { .\build_release_vs.bat slicer tests }
         shell: pwsh
 
+      # Published Windows binaries must be Authenticode signed before CPack or
+      # portable packaging. App Control validates every loaded EXE/DLL/PYD, not
+      # only the top-level executable.
+      - name: Configure Windows code-signing certificate
+        if: github.repository == 'JaredLin1217/InlongSlicer' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/belt-printer' || startsWith(github.ref, 'refs/heads/release/')) && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          WINDOWS_CERTIFICATE_THUMBPRINT: ${{ vars.WINDOWS_CODESIGN_THUMBPRINT }}
+          WINDOWS_CERTIFICATE_STORE: ${{ vars.WINDOWS_CODESIGN_STORE || 'CurrentUser' }}
+        run: |
+          if ($env:WINDOWS_CERTIFICATE_STORE -notin @('CurrentUser', 'LocalMachine')) {
+            throw 'WINDOWS_CODESIGN_STORE must be CurrentUser or LocalMachine.'
+          }
+
+          $codeSigningOid = '1.3.6.1.5.5.7.3.3'
+          if (-not [string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_THUMBPRINT)) {
+            $thumbprint = $env:WINDOWS_CERTIFICATE_THUMBPRINT -replace '\s', ''
+            $certificatePath = "Cert:\$env:WINDOWS_CERTIFICATE_STORE\My\$thumbprint"
+            $certificate = Get-Item -LiteralPath $certificatePath -ErrorAction SilentlyContinue
+            if (-not $certificate -or -not $certificate.HasPrivateKey -or
+                $certificate.EnhancedKeyUsageList.ObjectId.Value -notcontains $codeSigningOid) {
+              throw "WINDOWS_CODESIGN_THUMBPRINT does not identify an accessible code-signing certificate with a private key in '$env:WINDOWS_CERTIFICATE_STORE'."
+            }
+            "WINDOWS_CODESIGN_THUMBPRINT=$thumbprint" |
+              Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+            "WINDOWS_CODESIGN_STORE=$env:WINDOWS_CERTIFICATE_STORE" |
+              Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+            return
+          }
+
+          if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64) -or
+              [string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_PASSWORD)) {
+            throw 'Published Windows builds require either WINDOWS_CODESIGN_THUMBPRINT or the WINDOWS_CERTIFICATE_BASE64 and WINDOWS_CERTIFICATE_PASSWORD secrets.'
+          }
+
+          $certificatePath = Join-Path $env:RUNNER_TEMP 'inlong-windows-signing.pfx'
+          $existingThumbprints = @()
+          $imported = @()
+          $importCompleted = $false
+          try {
+            [System.IO.File]::WriteAllBytes(
+              $certificatePath,
+              [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64)
+            )
+            $password = ConvertTo-SecureString $env:WINDOWS_CERTIFICATE_PASSWORD -AsPlainText -Force
+            $pfxData = Get-PfxData -FilePath $certificatePath -Password $password
+            $pfxCertificate = @($pfxData.EndEntityCertificates) | Where-Object {
+              $_.EnhancedKeyUsageList.ObjectId.Value -contains $codeSigningOid
+            } | Select-Object -First 1
+            if (-not $pfxCertificate) {
+              throw 'The PFX does not contain a code-signing certificate.'
+            }
+
+            $existingCertificatePath = "Cert:\CurrentUser\My\$($pfxCertificate.Thumbprint)"
+            $existingCertificate = Get-Item -LiteralPath $existingCertificatePath -ErrorAction SilentlyContinue
+            if ($existingCertificate -and -not $existingCertificate.HasPrivateKey) {
+              throw "Certificate '$($pfxCertificate.Thumbprint)' already exists without its private key."
+            }
+            $existingThumbprints = @(Get-ChildItem Cert:\CurrentUser\My | ForEach-Object { $_.Thumbprint })
+            $imported = @(Import-PfxCertificate `
+              -FilePath $certificatePath `
+              -CertStoreLocation Cert:\CurrentUser\My `
+              -Password $password)
+            $certificate = Get-Item -LiteralPath $existingCertificatePath -ErrorAction SilentlyContinue
+            if (-not $certificate -or -not $certificate.HasPrivateKey) {
+              throw 'The imported PFX does not contain a code-signing certificate with a private key.'
+            }
+            $newThumbprints = @($imported | Where-Object {
+              $_.Thumbprint -notin $existingThumbprints
+            } | ForEach-Object { $_.Thumbprint })
+            "WINDOWS_CODESIGN_THUMBPRINT=$($certificate.Thumbprint)" |
+              Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+            'WINDOWS_CODESIGN_STORE=CurrentUser' |
+              Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+            "WINDOWS_CODESIGN_IMPORTED_THUMBPRINTS=$($newThumbprints -join ';')" |
+              Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+            $importCompleted = $true
+          }
+          finally {
+            Remove-Item -LiteralPath $certificatePath -Force -ErrorAction SilentlyContinue
+            if (-not $importCompleted) {
+              $imported | Where-Object { $_.Thumbprint -notin $existingThumbprints } | ForEach-Object {
+                Remove-Item -LiteralPath "Cert:\CurrentUser\My\$($_.Thumbprint)" `
+                  -Force -ErrorAction SilentlyContinue
+              }
+            }
+          }
+
+      - name: Sign and verify Windows runtime
+        if: github.repository == 'JaredLin1217/InlongSlicer' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/belt-printer' || startsWith(github.ref, 'refs/heads/release/')) && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          WINDOWS_TIMESTAMP_URL: ${{ vars.WINDOWS_TIMESTAMP_URL || 'http://timestamp.digicert.com' }}
+        run: |
+          $buildRoot = Join-Path '${{ github.workspace }}' '${{ env.BUILD_DIR }}'
+          $runtimePaths = @(
+            (Join-Path $buildRoot 'src/Release'),
+            (Join-Path $buildRoot 'InlongSlicer')
+          )
+          $inlongOnlyPath = Join-Path $buildRoot 'InlongSlicer_InlongOnly'
+          if (Test-Path -LiteralPath $inlongOnlyPath -PathType Container) {
+            $runtimePaths += $inlongOnlyPath
+          }
+          ./scripts/windows/sign_windows_release.ps1 `
+            -Path $runtimePaths `
+            -CertificateThumbprint $env:WINDOWS_CODESIGN_THUMBPRINT `
+            -CertificateStoreLocation $env:WINDOWS_CODESIGN_STORE `
+            -TimestampUrl $env:WINDOWS_TIMESTAMP_URL
+
       - name: Pack unit tests Win
         if: runner.os == 'Windows'
         working-directory: ${{ github.workspace }}
@@ -413,6 +524,29 @@ jobs:
         working-directory: ${{ github.workspace }}/${{ env.BUILD_DIR }}
         run: |
           cpack -G NSIS
+
+      - name: Sign and verify Windows installer
+        if: github.repository == 'JaredLin1217/InlongSlicer' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/belt-printer' || startsWith(github.ref, 'refs/heads/release/')) && runner.os == 'Windows' && !vars.SELF_HOSTED
+        shell: pwsh
+        env:
+          WINDOWS_TIMESTAMP_URL: ${{ vars.WINDOWS_TIMESTAMP_URL || 'http://timestamp.digicert.com' }}
+        run: |
+          $installer = Join-Path '${{ github.workspace }}' '${{ env.BUILD_DIR }}/InlongSlicer_Windows_Installer_${{ env.ver }}${{ env.ARCH_SUFFIX }}.exe'
+          ./scripts/windows/sign_windows_release.ps1 `
+            -Path $installer `
+            -CertificateThumbprint $env:WINDOWS_CODESIGN_THUMBPRINT `
+            -CertificateStoreLocation $env:WINDOWS_CODESIGN_STORE `
+            -TimestampUrl $env:WINDOWS_TIMESTAMP_URL
+
+      - name: Remove Windows code-signing certificate
+        if: always() && github.repository == 'JaredLin1217/InlongSlicer' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/belt-printer' || startsWith(github.ref, 'refs/heads/release/')) && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not [string]::IsNullOrWhiteSpace($env:WINDOWS_CODESIGN_IMPORTED_THUMBPRINTS)) {
+            $env:WINDOWS_CODESIGN_IMPORTED_THUMBPRINTS -split ';' | ForEach-Object {
+              Remove-Item -LiteralPath "Cert:\CurrentUser\My\$_" -Force -ErrorAction SilentlyContinue
+            }
+          }
 
       - name: Pack app
         if: runner.os == 'Windows'
