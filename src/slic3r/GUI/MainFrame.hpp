@@ -357,8 +357,8 @@ public:
     void        refresh_plugin_tips();
     void RunScript(wxString js);
 
-    //Inlong
-    void show_device(bool bBBLPrinter);
+    // INLONG
+    void show_device(bool should_use_native);
     void fit_tab_labels(); // INLONG
 
     PA_Calibration_Dlg* m_pa_calib_dlg{ nullptr };
@@ -385,7 +385,7 @@ public:
     CalibrationPanel*     m_calibration{ nullptr };
     WebViewPanel*         m_webview { nullptr };
     PrinterWebView*       m_printer_view{nullptr};
-    wxLogWindow*          m_log_window { nullptr };
+        wxLogWindow*          m_log_window { nullptr };
     // BBS
     //wxBookCtrlBase*       m_tabpanel { nullptr };
     Notebook*             m_tabpanel{ nullptr };
