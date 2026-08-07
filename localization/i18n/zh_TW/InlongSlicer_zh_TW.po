@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 06:51+0800\n"
+"POT-Creation-Date: 2026-08-07 17:23+0800\n"
 "PO-Revision-Date: 2025-11-28 13:48-0600\n"
 "Last-Translator: tntchn <15895303+tntchn@users.noreply.github.com>\n"
 "Language-Team: \n"
@@ -260,7 +260,7 @@ msgstr "%s 在使用 0.4、0.6、0.8mm 高流量噴嘴時有噴嘴阻塞的風�
 # AI Translated
 #, c-format, boost-format
 msgid "%s may fail to load or unload due to the Filament Track Switch. If you wish to continue."
-msgstr "%s 可能因 Filament Track Switch 而無法裝入或退出。若您希望繼續。"
+msgstr "%s 可能因 線材軌道切換器 而無法裝入或退出。若您希望繼續。"
 
 #, c-format, boost-format
 msgid "%s is not supported by %s extruder."
@@ -1043,7 +1043,7 @@ msgid ""
 "Objects(%1%) have duplicated connectors. Some connectors may be missing in slicing result.\n"
 "Please report to the InlongSlicer team and describe the scenario in which this issue happened.\n"
 "Thank you."
-msgstr ""
+msgstr "物件（%1%）具有重複的連接器。切片結果中可能會遺失某些連接器。\n請向InlongSlicer團隊回報並描述該問題發生的場景。\n謝謝。"
 
 msgid "Cut by Plane"
 msgstr "用平面分割"
@@ -1229,7 +1229,7 @@ msgid "MODERN"
 msgstr "MODERN"
 
 msgid "First font"
-msgstr "First font"
+msgstr "第一字型"
 
 msgid "Default font"
 msgstr "預設字型"
@@ -2115,7 +2115,7 @@ msgid ""
 "The Microsoft WebView2 Runtime could not be installed.\n"
 "Some features, including the setup wizard, may appear blank until it is installed.\n"
 "Please install it manually from https://developer.microsoft.com/microsoft-edge/webview2/ and restart Inlong Slicer."
-msgstr ""
+msgstr "無法安裝 Microsoft WebView2 Runtime。\n某些功能（包括設定精靈）在安裝之前可能會顯示為空白。\n請從 https://developer.microsoft.com/microsoft-edge/webview2/ 手動安裝並重新啟動 Inlong Slicer。"
 
 #, c-format, boost-format
 msgid "Resources path does not exist or is not a directory: %s"
@@ -2249,16 +2249,16 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"此預設在 OrcaCloud 中有較新的版本。\n"
-"拉取會下載雲端副本。強制推送會以您的本機預設覆寫它。"
+"此預設在 Inlong Cloud 中有較新的版本。\n"
+"拉取會下載雲端副本，強制推送會使用本機預設覆寫它。"
 
 # AI Translated
 msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"OrcaCloud 中已存在同名的預設。\n"
-"拉取會下載雲端副本。強制推送會以您的本機預設覆寫它。"
+"Inlong Cloud 中已存在同名預設。\n"
+"拉取會下載雲端副本，強制推送會使用本機預設覆寫它。"
 
 # AI Translated
 msgid ""
@@ -2351,7 +2351,7 @@ msgstr "隱私協議更新"
 
 #, c-format, boost-format
 msgid "your Inlong Cloud profile (user ID: \"%s\")"
-msgstr ""
+msgstr "您的 Inlong Cloud 個人資料（使用者 ID：「%s」）"
 
 msgid "your default profile"
 msgstr "您的預設設定檔"
@@ -2431,7 +2431,7 @@ msgstr "語言"
 # AI Translated
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
-msgstr ""
+msgstr "將 Inlong Slicer 切換到語言 %s 失敗。"
 
 # AI Translated
 msgid ""
@@ -2442,7 +2442,7 @@ msgstr ""
 "您可能需要重新設定缺少的地區設定，通常是執行「locale-gen」和「dpkg-reconfigure locales」命令。\n"
 
 msgid "Inlong Slicer - Switching language failed"
-msgstr ""
+msgstr "Inlong Slicer - 切換語言失敗"
 
 msgid "*"
 msgstr "*"
@@ -2645,7 +2645,7 @@ msgid "Inlong Cube"
 msgstr "Inlong 立方體"
 
 msgid "InlongSliced Combo"
-msgstr ""
+msgstr "InlongSliced 組合"
 
 msgid "Inlong Tolerance Test"
 msgstr "Inlong 誤差測試"
@@ -3643,15 +3643,15 @@ msgstr "等待 AMS 冷卻"
 
 # AI Translated
 msgid "Switch current filament at Filament Track Switch"
-msgstr "在 Filament Track Switch 切換目前線材"
+msgstr "在 線材軌道切換器 切換目前線材"
 
 # AI Translated
 msgid "Pull back current filament at Filament Track Switch"
-msgstr "在 Filament Track Switch 退回目前線材"
+msgstr "在 線材軌道切換器 退回目前線材"
 
 # AI Translated
 msgid "Switch track at Filament Track Switch"
-msgstr "在 Filament Track Switch 切換軌道"
+msgstr "在 線材軌道切換器 切換軌道"
 
 msgid "The maximum temperature cannot exceed "
 msgstr "最高溫度不能超過 "
@@ -4085,10 +4085,10 @@ msgid "Open-source slicing stands on a tradition of collaboration and attributio
 msgstr "開源切片建立在協作與署名的傳統之上。由 Alessandro Ranellucci 與 RepRap 社群打造的 Slic3r 奠定了基礎。Prusa Research 的 PrusaSlicer 在此基礎上持續發展，Bambu Studio 由 PrusaSlicer 分支而來，SuperSlicer 則以社群驅動的增強功能加以擴充。每個專案都延續了前人的成果，並向先行者致謝。"
 
 msgid "InlongSlicer is based on OrcaSlicer and is maintained for Inlong-specific bug fixes, printer profiles, workflow integration, and further development."
-msgstr ""
+msgstr "InlongSlicer 基於 OrcaSlicer，並針對 Inlong 特定的錯誤修復、印表機設定檔、工作流程整合和進一步開發進行維護。"
 
 msgid "InlongSlicer is free software licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). The software is provided without warranty; users are responsible for evaluating suitability, print results, and related risks."
-msgstr ""
+msgstr "InlongSlicer 是根據 GNU Affero 通用公共授權 v3.0 (AGPL-3.0) 授權的自由軟體。軟體不提供保固；使用者負責評估適用性、列印結果和相關風險。"
 
 msgid "AMS Materials Setting"
 msgstr "AMS 線材設定"
@@ -4460,7 +4460,7 @@ msgid "Failed to download the plug-in. Please check your firewall settings and V
 msgstr "外掛程式下載失敗。請檢查您的防火牆設定和 VPN 軟體，檢查後重試。"
 
 msgid "Failed to install the plug-in. The plug-in file may be in use. Please restart InlongSlicer and try again. Also check whether it is blocked or has been deleted by anti-virus software."
-msgstr ""
+msgstr "安裝外掛程式失敗。外掛程式檔案可能正在使用中。請重新啟動InlongSlicer並重試。也要檢查是否被防毒軟體攔截或刪除。"
 
 msgid "Click here to see more info"
 msgstr "點擊這裡查看更多資訊"
@@ -4533,24 +4533,23 @@ msgid ""
 "Error message: %1%"
 msgstr ""
 "將臨時的 G-code 複製到輸出的 G-code 失敗 ，也許 SD 卡寫入被鎖定？\n"
-"錯誤訊息：%1%將臨時的 G-code 複製到輸出的 G-code 失敗 ，也許 SD 卡寫入被鎖定？\n"
 "錯誤訊息：%1%"
 
 #, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
-msgstr "將臨時 G-code 複製到輸出 G-code 時失敗。目標設備可能存在問題，請嘗試再次匯出或使用不同的設備。損壞的 G-code 已輸出為 %1%.tmp。將臨時 G-code 複製到輸出 G-code 時失敗。目標設備可能存在問題，請嘗試再次匯出或使用不同的設備。損壞的 G-code 已輸出為 %1%.tmp。"
+msgstr "將臨時 G-code 複製到輸出 G-code 時失敗。目標設備可能存在問題，請嘗試再次匯出或使用不同的設備。損壞的 G-code 已輸出為 %1%.tmp。"
 
 #, boost-format
 msgid "Renaming of the G-code after copying to the selected destination folder has failed. Current path is %1%.tmp. Please try exporting again."
-msgstr "複製到選取之目標檔案夾的 G-code 重命名失敗。目前路徑為 %1%.tmp。請再試看看匯出。複製到選取之目標檔案夾的 G-code 重命名失敗。目前路徑為 %1%.tmp。請再試看看匯出。"
+msgstr "複製到選取之目標資料夾的 G-code 重新命名失敗。目前路徑為 %1%.tmp。請再次嘗試匯出。"
 
 #, boost-format
 msgid "Copying of the temporary G-code has finished but the original code at %1% couldn't be opened during copy check. The output G-code is at %2%.tmp."
-msgstr "臨時 G-code 的複製已完成，但原始 G-code 因 %1% 在複製檢查期間無法打開。輸出 G-code 為%2%.tmp。臨時 G-code 的複製已完成，但原始 G-code 因 %1% 在複製檢查期間無法打開。輸出 G-code 為%2%.tmp。"
+msgstr "臨時 G-code 複製完成，但複製檢查時無法開啟位於 %1% 的原始 G-code。輸出 G-code 位於 %2%.tmp。"
 
 #, boost-format
 msgid "Copying of the temporary G-code has finished but the exported code couldn't be opened during copy check. The output G-code is at %1%.tmp."
-msgstr "臨時 G-code 的複製已完成，但匯出的 G-code 無法在複製檢查過程中打開。輸出 G-code 為 %1%.tmp。臨時 G-code 的複製已完成，但匯出的 G-code 無法在複製檢查過程中打開。輸出 G-code 為 %1%.tmp。"
+msgstr "臨時 G-code 複製完成，但複製檢查時無法開啟匯出的 G-code。輸出 G-code 位於 %1%.tmp。"
 
 #, boost-format
 msgid "G-code file exported to %1%"
@@ -4566,8 +4565,6 @@ msgid ""
 "Source file %2%."
 msgstr ""
 "無法儲存 G-code 檔案。\n"
-"錯誤資訊：%1%。\n"
-"原始檔 %2%。無法儲存 G-code 檔案。\n"
 "錯誤資訊：%1%。\n"
 "原始檔 %2%。"
 
@@ -4816,6 +4813,12 @@ msgstr ""
 "要自動調整這些設定嗎？\n"
 "是 - 啟用 Arachne Wall 產生器\n"
 "否 - 停用 Arachne Wall 產生器，並將 Fuzzy Skin 設定為 [位移] 模式"
+
+msgid "Brim ear radius"
+msgstr "帽子沿耳半徑"
+
+msgid "Brim width"
+msgstr "邊緣寬度"
 
 msgid "Spiral mode only works when wall loops is 1, support is disabled, clumping detection by probing is disabled, top shell layers is 0, sparse infill density is 0 and timelapse type is traditional."
 msgstr "花瓶模式僅適用於牆體圈數為 1、停用支撐、停用偵測堵塞、頂部外殼層數為 0、稀疏填充密度為 0，且延時攝影類型為傳統模式時。"
@@ -5070,6 +5073,12 @@ msgstr "產生校正代碼失敗"
 
 msgid "Calibration error"
 msgstr "校正錯誤"
+
+msgid "This printer is not configured with the hardware this control needs."
+msgstr "此印表機未配置此控制所需的硬體。"
+
+msgid "This control is not supported on this printer."
+msgstr "此印表機不支援該控制項。"
 
 # AI Translated
 msgid "Network unavailable"
@@ -6110,6 +6119,9 @@ msgstr "多臺設備"
 msgid "Project"
 msgstr "專案"
 
+msgid "Device (legacy)"
+msgstr "設備（舊版）"
+
 msgid "Yes"
 msgstr "是"
 
@@ -6548,7 +6560,7 @@ msgid "Select profile to load:"
 msgstr "選擇要載入的設定檔："
 
 msgid "Config files (*.json;*.zip;*.inlong_printer;*.inlong_bundle;*.inlong_filament;*.orca_printer;*.orca_bundle;*.orca_filament)|*.json;*.zip;*.inlong_printer;*.inlong_bundle;*.inlong_filament;*.orca_printer;*.orca_bundle;*.orca_filament"
-msgstr ""
+msgstr "設定檔 (*.json;*.zip;*.inlong_printer;*.inlong_bundle;*.inlong_filament;*.orca_printer;*.orca_bundle;*.orca_filament)|*.json;*.zip;*.inlong_printer;*.inlong_bundle;*.inlong_filament;*.orca_printer;*.orca_bundle;*.orca_filament"
 
 #, c-format, boost-format
 msgid "There is %d config imported. (Only non-system and compatible configs)"
@@ -7062,11 +7074,11 @@ msgstr "擠出機正在進行換料操作。"
 
 # AI Translated
 msgid "\"Load\" or \"Unload\" is not supported for external spool while using Filament Track Switch."
-msgstr "使用 Filament Track Switch 時，外部料盤不支援「裝入」或「退出」。"
+msgstr "使用 線材軌道切換器 時，外部料盤不支援「裝入」或「退出」。"
 
 # AI Translated
 msgid "The Filament Track Switch has not been setup. Please setup on printer."
-msgstr "Filament Track Switch 尚未設定。請在印表機上進行設定。"
+msgstr "線材軌道切換器 尚未設定。請在印表機上進行設定。"
 
 msgid "Current slot has already been loaded."
 msgstr "目前槽位已載入線材。"
@@ -7667,9 +7679,6 @@ msgstr "提高熱床溫度"
 
 msgid "A warmer bed reduces the early-layer thermal drop and improves adhesion while the bottom layers shrink."
 msgstr "較高熱床可降低早期層的溫降，並在底層收縮時改善附著。"
-
-msgid "Brim width"
-msgstr "邊緣寬度"
 
 msgid "Inner and outer brim"
 msgstr "內側和外側裙邊"
@@ -8851,7 +8860,7 @@ msgid "Synchronize AMS Filament Information"
 msgstr "同步 AMS 線材資訊"
 
 msgid "Inlong Cloud plugins required by the current preset are not installed:"
-msgstr ""
+msgstr "尚未安裝目前預設所需的 Inlong Cloud 外掛程式："
 
 # AI Translated
 msgid "Install Plugins"
@@ -8862,7 +8871,7 @@ msgid "Local plugins required by the current preset are missing:"
 msgstr "目前預設所需的本機外掛遺失："
 
 msgid "Find on Inlong Cloud"
-msgstr ""
+msgstr "在 Inlong Cloud 上尋找"
 
 # AI Translated
 msgid "Plugins required by the current preset are not activated:"
@@ -9065,7 +9074,7 @@ msgid "Associate"
 msgstr "關聯"
 
 msgid "with InlongSlicer so that Orca can open models from"
-msgstr ""
+msgstr "與 InlongSlicer 以便 Orca 可以開啟模型"
 
 msgid "Current Association: "
 msgstr "目前關聯："
@@ -9602,7 +9611,7 @@ msgid "Associate 3MF files to InlongSlicer"
 msgstr "將 3MF 檔案關聯到 InlongSlicer"
 
 msgid "If enabled, this sets InlongSlicer as the default application to open 3MF files."
-msgstr ""
+msgstr "如果啟用，這會將 InlongSlicer 設定為開啟 3MF 檔案的預設應用程式。"
 
 msgid "Associate DRC files to InlongSlicer"
 msgstr "將 DRC 檔案關聯到 InlongSlicer"
@@ -9614,13 +9623,13 @@ msgid "Associate STL files to InlongSlicer"
 msgstr "將 STL 檔案關聯到 InlongSlicer"
 
 msgid "If enabled, this sets InlongSlicer as the default application to open STL files."
-msgstr ""
+msgstr "如果啟用，這會將 InlongSlicer 設定為開啟 STL 檔案的預設應用程式。"
 
 msgid "Associate STEP files to InlongSlicer"
 msgstr "將 STEP 檔案關聯到 InlongSlicer"
 
 msgid "If enabled, this sets InlongSlicer as the default application to open STEP files."
-msgstr ""
+msgstr "如果啟用，這會將 InlongSlicer 設定為開啟 STEP 檔案的預設應用程式。"
 
 msgid "Associate web links to InlongSlicer"
 msgstr "將網頁連結關聯到 InlongSlicer"
@@ -9636,6 +9645,14 @@ msgstr "顯示不支援的預設"
 
 msgid "Show incompatible/unsupported presets in the printer and filament dropdown lists. These presets cannot be selected."
 msgstr "在列印設備和線材下拉選單中顯示不相容/不支援的預設。這些預設無法選取。"
+
+msgid "(Experimental) Use printer agents instead of print hosts"
+msgstr "（實驗）使用印表機代理程式而不是列印主機"
+
+msgid ""
+"Route print jobs for non-Bambu printers through printer plug-in agents instead of the classic print-host upload flow.\n"
+"When disabled, InlongSlicer uses the legacy print-host behavior."
+msgstr "透過印表機外掛程式代理程式而非傳統的列印主機上傳流程路由非 Bambu 印表機的列印作業。\n停用後，InlongSlicer 使用舊版列印主機行為。"
 
 # AI Translated
 msgid "Experimental Features"
@@ -9901,8 +9918,14 @@ msgstr "使用者預設"
 msgid "Preset Inside Project"
 msgstr "項目預設"
 
+msgid "Copies all inherited values from the parent preset into this preset and removes the connection with the parent preset."
+msgstr "將父預設中的所有繼承值複製到此預設中，並刪除與父預設的連線。"
+
 msgid "Detach from parent"
 msgstr "從父預設分離"
+
+msgid "Parent preset"
+msgstr "父預設"
 
 msgid "Name is unavailable."
 msgstr "名稱不可用。"
@@ -10050,15 +10073,15 @@ msgstr "額外資訊"
 
 # AI Translated
 msgid "The Filament Track Switch installed on the printer does not match the slicing file. Please re-slice to avoid print quality issues."
-msgstr "印表機上安裝的 Filament Track Switch 與切片檔案不符。請重新切片以避免列印品質問題。"
+msgstr "印表機上安裝的 線材軌道切換器 與切片檔案不符。請重新切片以避免列印品質問題。"
 
 # AI Translated
 msgid "This print requires a Filament Track Switch. Please install it first."
-msgstr "此列印需要 Filament Track Switch。請先安裝它。"
+msgstr "此列印需要 線材軌道切換器。請先安裝它。"
 
 # AI Translated
 msgid "The Filament Track Switch has not been setup. Please setup it first."
-msgstr "Filament Track Switch 尚未設定。請先進行設定。"
+msgstr "線材軌道切換器 尚未設定。請先進行設定。"
 
 # AI Translated
 #, c-format, boost-format
@@ -10431,7 +10454,7 @@ msgid "Storage needs to be inserted before send to printer."
 msgstr "傳送至列印設備前需要插入儲存空間。"
 
 msgid "The printer is required to be on the same LAN as Inlong Slicer."
-msgstr ""
+msgstr "印表機需要與 Inlong Slicer 位於同一 LAN 上。"
 
 msgid "The printer does not support sending to printer storage."
 msgstr "列印設備不支援傳送至列印設備儲存空間。"
@@ -10853,6 +10876,9 @@ msgstr "偵測到保留的關鍵字"
 msgid "Setting Overrides"
 msgstr "參數覆蓋"
 
+msgid "Retraction when switching material"
+msgstr "切換線材時的回抽量"
+
 msgid "Basic information"
 msgstr "基本資訊"
 
@@ -10983,6 +11009,12 @@ msgstr "相容的切片設定"
 msgid "Printable space"
 msgstr "可列印區域"
 
+msgid "Printer Agent"
+msgstr "列印設備代理"
+
+msgid "Select the network agent implementation for printer communication. Available agents are registered at startup."
+msgstr "選擇列印設備通訊的網路代理實施。可用代理在啟動時註冊。"
+
 #. TRN: The first argument is the parameter's name; the second argument is its value.
 #, boost-format
 msgid "Invalid value provided for parameter %1%: %2%"
@@ -11107,9 +11139,6 @@ msgstr "層高限制"
 
 msgid "Z-Hop"
 msgstr "Z 軸抬升"
-
-msgid "Retraction when switching material"
-msgstr "切換線材時的回抽量"
 
 msgid ""
 "The Retract before wipe option could be only 100% when using the Firmware Retraction mode.\n"
@@ -11866,7 +11895,7 @@ msgstr "框選多個零件"
 # AI Translated
 msgctxt "Keyboard Shortcut"
 msgid "Arrow Up"
-msgstr "Arrow Up"
+msgstr "上箭頭"
 
 # AI Translated
 msgid "Move selection 10mm in positive Y direction"
@@ -11875,7 +11904,7 @@ msgstr "將選取物件沿 Y 軸正方向移動 10mm"
 # AI Translated
 msgctxt "Keyboard Shortcut"
 msgid "Arrow Down"
-msgstr "Arrow Down"
+msgstr "下箭頭"
 
 # AI Translated
 msgid "Move selection 10mm in negative Y direction"
@@ -11884,7 +11913,7 @@ msgstr "將選取物件沿 Y 軸負方向移動 10mm"
 # AI Translated
 msgctxt "Keyboard Shortcut"
 msgid "Arrow Left"
-msgstr "Arrow Left"
+msgstr "左箭頭"
 
 # AI Translated
 msgid "Move selection 10mm in negative X direction"
@@ -11893,7 +11922,7 @@ msgstr "將選取物件沿 X 軸負方向移動 10mm"
 # AI Translated
 msgctxt "Keyboard Shortcut"
 msgid "Arrow Right"
-msgstr "Arrow Right"
+msgstr "右箭頭"
 
 # AI Translated
 msgid "Move selection 10mm in positive X direction"
@@ -12075,7 +12104,7 @@ msgid "Network plug-in update"
 msgstr "網路外掛程式升級"
 
 msgid "Click OK to update the Network plug-in now. If a file is in use, the update will be applied the next time Inlong Slicer launches."
-msgstr ""
+msgstr "按一下「確定」立即更新網頁外掛程式。如果檔案正在使用，下次 Inlong Slicer 啟動時將會套用更新。"
 
 # AI Translated
 msgid "A new Network plug-in is available. Do you want to install it?"
@@ -12102,7 +12131,7 @@ msgstr "跳過這個版本"
 
 #, c-format, boost-format
 msgid "New version available: %s. Please update InlongSlicer from the Microsoft Store."
-msgstr ""
+msgstr "新版本可用：%s。請從 Microsoft Store 更新 InlongSlicer。"
 
 msgid "Confirm and Update Nozzle"
 msgstr "確認並更新噴嘴"
@@ -12207,7 +12236,7 @@ msgstr "自動滅火系統"
 
 # AI Translated
 msgid "Filament Track Switch"
-msgstr "Filament Track Switch"
+msgstr "線材軌道切換器"
 
 msgid "Beta"
 msgstr "Beta"
@@ -12237,7 +12266,7 @@ msgid "An important update was detected and needs to be run before printing can 
 msgstr "偵測到重要更新，必須執行後才能繼續列印。您要現在更新嗎？或者稍後可在『升級韌體』中完成更新。"
 
 msgid "The firmware version is abnormal. Repairing and updating are required before printing. Do you want to update now? You can also update later on the printer or update next time you start Inlong Slicer."
-msgstr ""
+msgstr "韌體版本異常。列印前需要修復和更新。您想現在更新嗎？您也可以稍後在印表機上更新或下次啟動 Inlong Slicer 時更新。"
 
 msgid "Extension Board"
 msgstr "擴展板"
@@ -12462,6 +12491,9 @@ msgstr "離淨空區域太近，會發生碰撞。\n"
 
 msgid " is too close to clumping detection area, and collisions will be caused.\n"
 msgstr "離堵塞偵測區域太近，會發生碰撞。\n"
+
+msgid " is partially outside the printable area, and it cannot be printed.\n"
+msgstr "部分超出可列印區域，無法列印。\n"
 
 msgid "Selected nozzle temperatures are incompatible. Each filament's nozzle temperature must fall within the recommended nozzle temperature range of the other filaments. Otherwise, nozzle clogging or printer damage may occur."
 msgstr "所選的噴嘴溫度不相容。每種線材的噴嘴溫度都必須落在其他線材的建議噴嘴溫度範圍內。否則可能會發生噴嘴堵塞或列印設備損壞。"
@@ -12774,10 +12806,7 @@ msgid "Use 3MF instead of G-code"
 msgstr "使用 3MF 而不是 G-code"
 
 msgid "Enable this if the printer accepts a 3MF file as the print job. When enabled, Inlong Slicer sends the sliced file as a .gcode.3mf, instead of a plain .gcode file."
-msgstr ""
-
-msgid "Printer Agent"
-msgstr "列印設備代理"
+msgstr "如果列印設備接受 3MF 檔案作為列印工作，請啟用此選項。啟用後，Inlong Slicer 會將切片檔案以 .gcode.3mf 傳送，而不是一般的 .gcode 檔案。"
 
 msgid "Select the network agent implementation for printer communication."
 msgstr "選擇用於列印設備通訊的網路代理實作。"
@@ -13468,70 +13497,70 @@ msgstr ""
 "如果您目前的設定已經運作良好，則不一定需要啟用此選項，因為它可能導致邊緣與上方層黏合在一起。"
 
 msgid "Enable warp prevention. When enabled, high-risk early-layer walls and bottom paths are slowed locally in generated G-code."
-msgstr ""
+msgstr "啟用翹曲預防。啟用後，產生的 G-code 會對高風險的前期層牆體路徑和底部路徑進行局部減速。"
 
 msgid "Preset template for warp prevention. Changing this fills default values; the detailed parameters remain editable."
-msgstr ""
+msgstr "翹曲預防的預設範本。變更此項會填入預設值；詳細參數仍可編輯。"
 
 msgid "Conservative"
-msgstr ""
+msgstr "保守"
 
 msgid "Balanced"
-msgstr ""
+msgstr "均衡"
 
 msgid "Aggressive"
-msgstr ""
+msgstr "積極"
 
 msgid "Controls the local thermal-history model resolution used by warp prevention. Auto is suitable for daily slicing; High uses a finer real-coordinate grid for high-temperature materials and may take much longer."
-msgstr ""
+msgstr "控制翹曲預防所使用的局部熱歷程模型解析度。自動適合日常切片；高解析度會針對高溫材料使用更精細的實際座標網格，耗時可能顯著增加。"
 
 msgid "Warp prevention max slowdown"
-msgstr ""
+msgstr "翹曲預防最大減速比例"
 
 msgid "Maximum local slowdown applied by warp prevention."
-msgstr ""
+msgstr "翹曲預防允許套用的最大局部減速比例。"
 
 msgid "Warp prevention minimum wall speed"
-msgstr ""
+msgstr "翹曲預防最低牆體速度"
 
 msgid "Minimum inner/outer wall speed preserved when warp prevention slows risky walls. This is a lower bound, not a target speed."
-msgstr ""
+msgstr "翹曲預防對高風險牆體路徑減速時保留的最低內牆和外牆速度。這是下限，而不是目標速度。"
 
 msgid "Warp prevention minimum bottom speed"
-msgstr ""
+msgstr "翹曲預防最低底部速度"
 
 msgid "Minimum bottom solid infill speed preserved when warp prevention slows risky bottom paths. This is a lower bound, not a target speed."
-msgstr ""
+msgstr "翹曲預防對高風險底部路徑減速時保留的最低底部實心填充速度。這是下限，而不是目標速度。"
 
 msgid "Warp prevention max active layers"
-msgstr ""
+msgstr "翹曲預防最大生效層數"
 
 msgid "Maximum number of layers where warp prevention may reduce speed, fan, or acceleration. The actual active layer range is calculated from object simulation analysis. Set to 0 to keep object simulation analysis enabled but disable warp-prevention speed, fan, and acceleration changes."
-msgstr ""
+msgstr "翹曲預防可以降低速度、風扇或加速度的最大層數。實際生效層範圍由物件模擬分析計算。設為 0 可保留物件模擬分析，但停用翹曲預防對速度、風扇和加速度的調整。"
 
 msgid "Warp prevention adjusts acceleration"
-msgstr ""
+msgstr "翹曲預防調整加速度"
 
 msgid "Allow warp prevention to reduce local acceleration on high-risk early-layer paths. This is applied locally and recovers with the protection envelope."
-msgstr ""
+msgstr "允許翹曲預防降低高風險前期層路徑的局部加速度。調整只在局部生效，並會隨保護包絡恢復。"
 
 msgid "Warp prevention max acceleration reduction"
-msgstr ""
+msgstr "翹曲預防最大加速度降低比例"
 
 msgid "Maximum local acceleration reduction applied by warp prevention."
-msgstr ""
+msgstr "翹曲預防允許套用的最大局部加速度降低比例。"
 
 msgid "Warp prevention minimum wall acceleration"
-msgstr ""
+msgstr "翹曲預防最低牆體加速度"
 
 msgid "Minimum inner/outer wall acceleration preserved when warp prevention reduces risky wall acceleration. This is a lower bound, not a target acceleration."
-msgstr ""
+msgstr "翹曲預防降低高風險牆體路徑加速度時保留的最低內牆和外牆加速度。這是下限，而不是目標加速度。"
 
 msgid "Warp prevention minimum bottom acceleration"
-msgstr ""
+msgstr "翹曲預防最低底部加速度"
 
 msgid "Minimum bottom solid infill acceleration preserved when warp prevention reduces risky bottom acceleration. This is a lower bound, not a target acceleration."
-msgstr ""
+msgstr "翹曲預防降低高風險底部路徑加速度時保留的最低底部實心填充加速度。這是下限，而不是目標加速度。"
 
 msgid "Combine brims"
 msgstr "合併邊緣"
@@ -13566,6 +13595,12 @@ msgid ""
 msgstr ""
 "在偵測尖銳角度之前，幾何形狀將被簡化。此參數表示簡化的最小偏差長度。\n"
 "設為 0 以停用"
+
+msgid "Brim ears outer only"
+msgstr "僅外輪廓圓盤"
+
+msgid "Generate mouse ears only on the outer contour of the model, excluding holes and enclosed sections."
+msgstr "僅在模型外輪廓產生圓盤，不在孔洞和封閉區域產生。"
 
 msgid "upward compatible machine"
 msgstr "向上相容的設備"
@@ -14480,7 +14515,7 @@ msgid "Minimal purge on wipe tower"
 msgstr "換料塔上的最小清理量"
 
 msgid "After a tool change, the exact position of the newly loaded filament inside the nozzle may not be known, and the filament pressure is likely not yet stable. Before purging the print head into an infill or a sacrificial object, Inlong Slicer will always prime this amount of material into the wipe tower to produce successive infill or sacrificial object extrusions reliably."
-msgstr "換色後，新載入的線材在噴嘴內的確切位置可能未知，線材壓力可能還不穩定。在沖刷列印頭到填充或作為擠出廢料之前，將始終將這些的線材沖刷到換料塔中以產生連續的填充或穩定的擠出廢料。"
+msgstr "換工具後，新載入的線材在噴嘴內的確切位置可能未知，線材壓力也可能尚未穩定。在將列印頭清洗到填充或犧牲物件之前，Inlong Slicer 會先把這些線材擠入換料塔，以確保後續填充或犧牲物件能穩定擠出。"
 
 msgid "Wipe tower cooling"
 msgstr "擦拭塔冷卻"
@@ -14755,6 +14790,12 @@ msgstr "TPMS-FK結構"
 
 msgid "Gyroid"
 msgstr "螺旋體"
+
+msgid "Sparse infill smooth factor"
+msgstr "稀疏填充平滑係數"
+
+msgid "Controls how strongly sparse infill corners are rounded. 0% keeps the original right-angle path, while 100% produces the largest possible curves between adjacent infill lines. Currently applies only to the Hilbert Curve."
+msgstr "控制稀疏填充轉角的圓滑程度。0% 保留原始直角路徑，100% 在相鄰填充線之間產生盡可能大的曲線。目前僅適用於希爾伯特曲線。"
 
 msgid "This is the acceleration of top surface infill. Using a lower value may improve top surface quality."
 msgstr "頂面填充的加速度。使用較低值可能會改善頂面列印品質"
@@ -15321,6 +15362,12 @@ msgstr "列印設備相容的 G-code 樣式"
 
 msgid "Klipper"
 msgstr "Klipper"
+
+msgid "Skip G-code config block"
+msgstr "略過 G-code 設定區塊"
+
+msgid "Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. This can help with printers whose firmware crashes when parsing these comment lines (e.g. Anycubic go-klipper). Note: the G-code file will no longer contain slicer settings, so importing it back into InlongSlicer will not restore the configuration."
+msgstr "不將 CONFIG_BLOCK（切片設定鍵值對）寫入 G-code 檔案。這可避免某些列印設備韌體在解析這些註解行時當機（例如 Anycubic go-klipper）。注意：G-code 檔案將不再包含切片設定，因此重新匯入 InlongSlicer 時無法還原設定。"
 
 msgid "Pellet Modded Printer"
 msgstr "顆粒改裝列印設備"
@@ -16291,7 +16338,7 @@ msgid "Raft contact Z distance"
 msgstr "筏層 Z 間距"
 
 msgid "Z gap between raft and object. Set to 0 for direct contact. When independent support layer height is disabled, the value is rounded to the nearest object layer height. The prime tower may disable independent support layer heights."
-msgstr ""
+msgstr "筏層與物件之間的 Z 間隙。設為 0 表示直接接觸。停用獨立支撐層高時，此值會取整到最接近的物件層高。換料塔可能會停用獨立支撐層高。"
 
 msgid "Raft expansion"
 msgstr "筏層擴展"
@@ -16300,25 +16347,25 @@ msgid "This expands all raft layers in XY plane."
 msgstr "在 XY 平面擴展所有筏層"
 
 msgid "Raft layer expansion step"
-msgstr ""
+msgstr "筏層逐層擴展步距"
 
 msgid "Additional XY expansion applied cumulatively to each raft layer below the top contact layer. The top contact layer receives no additional expansion, the layer below expands by one step, and the bottom layer expands by (raft layers - 1) steps. Set to 0 to disable stepped expansion. Raft expansion and first layer expansion are still applied separately."
-msgstr ""
+msgstr "從頂部接觸層往下，對每一筏層累計套用額外的 XY 擴展。頂部接觸層不額外擴展，其下一層擴展一個步距，最底層擴展（筏層數 - 1）個步距。設為 0 可停用逐層擴展。筏層擴展和首層擴展仍會分別套用。"
 
 msgid "Raft support pattern"
-msgstr ""
+msgstr "筏層支撐圖案"
 
 msgid "Line pattern for raft support layers."
-msgstr ""
+msgstr "筏層支撐層所使用的線條圖案。"
 
 msgid "Rectilinear grid"
-msgstr ""
+msgstr "直線網格"
 
 msgid "Raft line spacing"
-msgstr ""
+msgstr "筏層線距"
 
 msgid "Spacing between raft support lines."
-msgstr ""
+msgstr "筏層支撐線之間的間距。"
 
 msgid "First layer density"
 msgstr "首層密度"
@@ -16407,6 +16454,9 @@ msgstr "更換擠出機時的回抽距離"
 
 msgid "Retraction Length (Toolchange)"
 msgstr "回抽長度（換工具）"
+
+msgid "When retraction is triggered before changing tool, filament is pulled back by the specified amount (the length is measured on raw filament, before it enters the extruder)."
+msgstr "換工具前觸發回抽時，線材會按指定長度拉回（長度以線材進入擠出機之前的原始長度計量）。"
 
 msgid "Z-hop height"
 msgstr "Z 抬升高度"
@@ -16569,6 +16619,9 @@ msgstr "額外回填長度"
 
 msgid "When the retraction is compensated after the travel move, the extruder will push this additional amount of filament. This setting is rarely needed."
 msgstr "每當空駛後回抽被補償時，擠出機將推入額外長度的線材。很少需要此設定。"
+
+msgid "Extra length on restart (Toolchange)"
+msgstr "換工具重啟額外長度"
 
 msgid "When the retraction is compensated after changing tool, the extruder will push this additional amount of filament."
 msgstr "當換色後回抽被補償時，擠出機將推入額外長度的線材。"
@@ -16973,6 +17026,12 @@ msgstr "在擦拭塔換工具"
 msgid "Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx). Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. By default Inlong skips the travel on multi-toolhead machines because the firmware handles the head swap, which can result in the Tx command being issued above the printed part. Enable this option if you want the tool change to always be issued above the wipe tower instead."
 msgstr "在發出換刀命令（Tx）前，強制工具頭移動到擦料塔。僅適用於使用 2 型擦料塔的多擠出機（多工具頭）印表機。預設情況下，Inlong 會在多工具頭設備上略過此移動，因為韌體負責切換工具頭，這可能使 Tx 命令在列印件上方發出。若希望換刀命令始終在擦料塔上方發出，請啟用此選項。"
 
+msgid "Wait for temperature on wipe tower"
+msgstr "在換料塔等待溫度"
+
+msgid "Pick up the new tool without waiting for it to reach printing temperature, travel to the wipe tower, and wait for the temperature there, right before purging. Ooze from the heat-up lands on the tower instead of the model, and the travel overlaps with the heating. Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. The firmware or tool change macro must not wait for the temperature itself. When disabled, the temperature wait is issued right after the tool change command."
+msgstr "拾取新工具時不等待其達到列印溫度，先移動到換料塔，再在清洗前於塔上等待溫度。升溫時滲出的材料會落在換料塔而不是模型上，移動過程也可與加熱重疊。僅適用於使用第 2 類換料塔的多擠出機（多工具頭）列印設備。韌體或換工具巨集本身不得等待溫度。停用時，會在換工具命令後立即等待溫度。"
+
 msgid "No sparse layers (beta)"
 msgstr "取消稀疏層（Beta）"
 
@@ -17184,7 +17243,7 @@ msgid "Bottom contact spacing"
 msgstr "底部接觸面間距"
 
 msgid "Spacing of the first support interface layer directly above the object. Set to -1 to use the bottom interface spacing. Zero means solid contact."
-msgstr ""
+msgstr "物件正上方第一層支撐接觸面的間距。設為 -1 使用底部接觸面間距；設為 0 表示實心接觸。"
 
 msgid "This is the speed for support interfaces."
 msgstr "支撐面速度"
@@ -17304,7 +17363,7 @@ msgstr "此設定決定樹狀支撐的最大分支角度。如果角度增加，
 msgid "Preferred Branch Angle"
 msgstr "偏好樹狀分支角度"
 
-#. TRN PrintSettings: "Organic supports" > "Preferred Branch Angle"
+#. TRN PrintSettings: "Organic supports" / "Tree Strong" > "Preferred Branch Angle"
 msgid "The preferred angle of the branches, when they do not have to avoid the model. Use a lower angle to make them more vertical and more stable. Use a higher angle for branches to merge faster."
 msgstr "當樹狀分支不必避開模型時的偏好角度。使用較低的角度使它們更垂直且更穩定。使用更高的角度使分支合併得更快。"
 
@@ -17458,7 +17517,7 @@ msgid "Top shell layers"
 msgstr "頂部外殼層數"
 
 msgid "This is the number of solid layers of top shell, including the top surface layer. When the thickness calculated by this value is thinner than top shell thickness, the top shell layers will be increased."
-msgstr ""
+msgstr "頂部外殼的實心層數，包括頂面層。當依此數值計算的厚度小於頂部外殼厚度時，將增加頂部外殼層數。"
 
 msgid "Top shell thickness"
 msgstr "頂部外殼厚度"
@@ -17745,7 +17804,7 @@ msgid ""
 "See http://hydraraptor.blogspot.com/2011/02/polyholes.html"
 msgstr ""
 "尋找橫跨多層的近似圓形孔洞，並將其幾何形狀轉換為多邊形孔。多邊形孔的計算將根據噴嘴尺寸及最大直徑進行。\n"
-"更多的說明請參閱：https://hydraraptor.blogspot.com/2011/02/polyholes.html"
+"更多說明請參閱：http://hydraraptor.blogspot.com/2011/02/polyholes.html"
 
 msgid "Polyhole detection margin"
 msgstr "偵測多邊形孔邊緣"
@@ -19986,7 +20045,7 @@ msgid ""
 "\n"
 "InlongSlicer has detected that your user presets synchronization function is not enabled, which may result in unsuccessful Filament settings on the Device page.\n"
 "Click \"Sync user presets\" to enable the synchronization function."
-msgstr ""
+msgstr "\n\nInlongSlicer 偵測到您的使用者預設同步功能未開啟，可能會導致裝置頁面的線材設定失敗。\n點選「同步使用者預設」即可啟用同步功能。"
 
 msgid "Printer Setting"
 msgstr "列印設備設定"
@@ -20172,7 +20231,7 @@ msgstr ""
 
 #, c-format, boost-format
 msgid "Printing %1s material with %2s nozzle may cause nozzle damage."
-msgstr "Printing %1s material with %2s nozzle may cause nozzle damage."
+msgstr "使用 %2s 噴嘴列印 %1s 材料可能會損壞噴嘴。"
 
 msgid "Need select printer"
 msgstr "需要選擇列印設備"
@@ -20218,9 +20277,6 @@ msgstr "實體列印設備"
 
 msgid "Print Host upload"
 msgstr "列印主機上傳"
-
-msgid "Select the network agent implementation for printer communication. Available agents are registered at startup."
-msgstr "選擇列印設備通訊的網路代理實施。可用代理在啟動時註冊。"
 
 msgid "Select a Flashforge printer"
 msgstr "選取 Flashforge 列印設備"
@@ -20390,7 +20446,7 @@ msgid "No project file on current session. Only logs will be included to package
 msgstr "目前工作階段沒有專案檔案。套件中將僅包含記錄"
 
 msgid "Please make sure any instances of InlongSlicer are not running"
-msgstr ""
+msgstr "請確保 InlongSlicer 的任何實例未運行"
 
 # AI Translated
 msgid "System folder cannot be deleted because some files are in use by another application. Please close any applications using these files and try again."
@@ -21112,9 +21168,6 @@ msgstr "嘗試登入時發生了意外錯誤，請再試一次。"
 msgid "User canceled."
 msgstr "使用者取消。"
 
-msgid "Head diameter"
-msgstr "頭直徑"
-
 msgid "Max angle"
 msgstr "最大角度"
 
@@ -21597,6 +21650,962 @@ msgstr "線材可能與目前的列印設備設定不相容，將使用隨機線
 
 msgid "The filament model is unknown. A random filament preset will be used."
 msgstr "線材型號未知，將使用隨機線材預設。"
+
+#, boost-format
+msgid "The selected 3mf file has been saved with a newer version of %1% and is not compatible."
+msgstr "所選的3mf檔案已使用較新版本的%1%保存，不相容。"
+
+msgid "The selected 3MF contains FDM supports painted object using a newer version of PrusaSlicer and is not compatible."
+msgstr "所選的 3MF 包含 FDM 支援使用較新版本的 PrusaSlicer 繪製的對象，且不相容。"
+
+msgid "The selected 3MF contains seam painted object using a newer version of PrusaSlicer and is not compatible."
+msgstr "所選的 3MF 包含使用較新版本的 PrusaSlicer 的接縫繪製對象，且不相容。"
+
+msgid "The selected 3MF contains multi-material painted object using a newer version of PrusaSlicer and is not compatible."
+msgstr "所選的 3MF 包含使用較新版本的 PrusaSlicer 的多材質繪製對象，且不相容。"
+
+msgid "Hollowing"
+msgstr "鏤空"
+
+msgid "Pad brim size is too small for the current configuration."
+msgstr "對於目前配置而言，襯墊邊緣尺寸太小。"
+
+msgid "Cannot proceed without support points! Add support points or disable support generation."
+msgstr "沒有支撐點就無法繼續！添加支撐點或禁用支撐生成。"
+
+msgid "Elevation is too low for object. Use the \"Pad around object\" feature to print the object without elevation."
+msgstr "對於物件來說海拔太低。使用「圍繞物件填滿」功能可列印不含標高的物件。"
+
+msgid "The endings of the support pillars will be deployed on the gap between the object and the pad. 'Support base safety distance' has to be greater than the 'Pad object gap' parameter to avoid this."
+msgstr "支撐柱的末端將部署在物體和墊之間的間隙上。 「支撐底座安全距離」必須大於「墊物件間隙」參數以避免這種情況。"
+
+msgid "Exposition time is out of printer profile bounds."
+msgstr "展示時間超出了印表機設定檔的範圍。"
+
+msgid "Initial exposition time is out of printer profile bounds."
+msgstr "初始顯示時間超出印表機設定檔範圍。"
+
+msgid "Slicing done"
+msgstr "切片完成"
+
+msgid "Hollowing model"
+msgstr "鏤空模型"
+
+msgid "Drilling holes into model."
+msgstr "在模型上鑽孔。"
+
+msgid "Slicing model"
+msgstr "切片模型"
+
+msgid "Generating support points"
+msgstr "生成支撐點"
+
+msgid "Generating support tree"
+msgstr "生成支援樹"
+
+msgid "Generating pad"
+msgstr "發電墊"
+
+msgid "Slicing supports"
+msgstr "切片支撐"
+
+msgid "Merging slices and calculating statistics"
+msgstr "合併切片併計算統計數據"
+
+msgid "Rasterizing layers"
+msgstr "柵格化圖層"
+
+msgid "Slicing had to be stopped due to an internal error: Inconsistent slice index."
+msgstr "由於內部錯誤，切片必須停止：切片索引不一致。"
+
+msgid "Visualizing supports"
+msgstr "可視化支持"
+
+msgid "No pad can be generated for this model with the current configuration"
+msgstr "目前配置無法為此模型產生焊盤"
+
+msgid "There are unprintable objects. Try to adjust support settings to make the objects printable."
+msgstr "有無法列印的物件。嘗試調整支援設定以使物件可列印。"
+
+msgid "Taking a configuration snapshot failed."
+msgstr "拍攝配置快照失敗。"
+
+#, c-format, boost-format
+msgid "%s has encountered an error while taking a configuration snapshot."
+msgstr "%s 在拍攝配置快照時遇到錯誤。"
+
+msgid "Script plugin skipped."
+msgstr "腳本外掛程式已跳過。"
+
+msgid "Script plugin finished."
+msgstr "腳本外掛程式完成。"
+
+#, c-format, boost-format
+msgid "Please select the filament installed on the %s."
+msgstr "請選擇%s上安裝的線材。"
+
+msgid "Please select the filament."
+msgstr "請選擇線材。"
+
+msgid "To learn about the filaments matching rules."
+msgstr "了解線材匹配規則。"
+
+msgid "External spools is not supported since Filament Track Switch has been installed. If you want to use external spool, please uninstall it."
+msgstr "由於已安裝 線材軌道切換器，因此不支援外部線軸。如果您想使用外部線軸，請卸載它。"
+
+msgid "Select Filament && Hotends"
+msgstr "選擇長絲和熱端"
+
+msgid "Model Pictures"
+msgstr "模特兒圖片"
+
+msgid "Auxiliaryies"
+msgstr "輔助設備"
+
+msgid "Alternate nozzles:"
+msgstr "備用噴嘴："
+
+msgid "All standard"
+msgstr "全部標準"
+
+#, c-format, boost-format
+msgid "Welcome to the %s Configuration Assistant"
+msgstr "歡迎使用%s配置助手"
+
+#, c-format, boost-format
+msgid "Welcome to the %s Configuration Wizard"
+msgstr "歡迎使用 %s 設定精靈"
+
+msgid "Welcome"
+msgstr "歡迎"
+
+#, c-format, boost-format
+msgid "Hello, welcome to %s! This %s helps you with the initial configuration; just a few settings and you will be ready to print."
+msgstr "您好，歡迎來到%s！此%s可幫助您進行初始配置；只需進行一些設定即可開始列印。"
+
+msgid "Remove user profiles (a snapshot will be taken beforehand)"
+msgstr "刪除使用者設定檔（將預先拍攝快照）"
+
+msgid "Perform desktop integration (Sets this binary to be searchable by the system)."
+msgstr "執行桌面整合（將此二進位檔案設定為可由系統搜尋）。"
+
+#, c-format, boost-format
+msgid "%s Family"
+msgstr "%s家族"
+
+msgid "Printer:"
+msgstr "印表機:"
+
+msgid "Vendor:"
+msgstr "小販："
+
+msgid "Profile:"
+msgstr "輪廓："
+
+msgid "(All)"
+msgstr "（全部）"
+
+#, boost-format
+msgid "%1% marked with <b>*</b> are <b>not</b> compatible with some installed printers."
+msgstr "標示 <b>*</b> 的 %1% 是 <b> 與某些已安裝的印表機相容的 </b>。"
+
+msgid "SLA materials"
+msgstr "SLA材料"
+
+#, boost-format
+msgid "All installed printers are compatible with the selected %1%."
+msgstr "所有安裝的印表機都與所選的 %1% 相容。"
+
+msgid "filament"
+msgstr "線材"
+
+msgid "SLA material"
+msgstr "SLA材質"
+
+msgid "Only the following installed printers are compatible with the selected filaments"
+msgstr "僅以下已安裝的印表機與所選耗材相容"
+
+msgid "Only the following installed printers are compatible with the selected SLA materials"
+msgstr "僅以下安裝的印表機與所選 SLA 材料相容"
+
+msgid "Custom Printer Setup"
+msgstr "自訂印表機設定"
+
+msgid "Custom Printer"
+msgstr "客製化印表機"
+
+msgid "Define a custom printer profile"
+msgstr "定義自訂印表機設定檔"
+
+msgid "Custom profile name:"
+msgstr "自訂設定檔名稱："
+
+msgid "Firmware Type"
+msgstr "韌體類型"
+
+msgid "Firmware"
+msgstr "韌體"
+
+msgid "Choose the type of firmware used by your printer."
+msgstr "選擇您的印表機使用的韌體類型。"
+
+msgid "Bed Shape and Size"
+msgstr "床的形狀和尺寸"
+
+msgid "Set the shape of your printer's bed."
+msgstr "設定印表機床的形狀。"
+
+msgid "Invalid numeric input."
+msgstr "數字輸入無效。"
+
+msgid "Filament and Nozzle Diameters"
+msgstr "線材和噴嘴直徑"
+
+msgid "Print Diameters"
+msgstr "列印直徑"
+
+msgid "Enter the diameter of your printer's hot end nozzle."
+msgstr "輸入印表機熱端噴嘴的直徑。"
+
+msgid "Nozzle Diameter:"
+msgstr "噴嘴直徑："
+
+msgid "Enter the diameter of your filament."
+msgstr "輸入線材的直徑。"
+
+msgid "Good precision is required, so use a caliper and do multiple measurements along the filament, then compute the average."
+msgstr "需要良好的精度，因此請使用卡尺沿線材進行多次測量，然後計算平均值。"
+
+msgid "Filament Diameter:"
+msgstr "線材直徑："
+
+msgid "Nozzle and Bed Temperatures"
+msgstr "噴嘴和床溫度"
+
+msgid "Enter the nozzle_temperature needed for extruding your filament."
+msgstr "輸入擠出細絲所需的噴嘴溫度。"
+
+msgid "A rule of thumb is 160 to 230℃ for PLA, and 215 to 250℃ for ABS."
+msgstr "根據經驗，PLA 為 160 至 230℃，ABS 為 215 至 250℃。"
+
+msgid "Extrusion Temperature:"
+msgstr "擠出溫度："
+
+msgid "Enter the bed temperature needed for getting your filament to stick to your heated bed."
+msgstr "輸入使線材黏在加熱床上所需的床溫度。"
+
+msgid "A rule of thumb is 60℃ for PLA and 110℃ for ABS. Leave zero if you have no heated bed."
+msgstr "根據經驗，PLA 為 60℃，ABS 為 110℃。如果您沒有加熱床，請保留零。"
+
+msgid "Bed Temperature:"
+msgstr "床溫："
+
+msgid "SLA Materials"
+msgstr "SLA材料"
+
+msgid "FFF Technology Printers"
+msgstr "FFF 技術印表機"
+
+msgid "SLA Technology Printers"
+msgstr "SLA 技術印表機"
+
+#, boost-format
+msgid "Following printer profiles has no default filament: %1%Please select one manually."
+msgstr "以下印表機設定檔沒有預設耗材：%1%請手動選擇一項。"
+
+#, boost-format
+msgid "Following printer profiles has no default material: %1%Please select one manually."
+msgstr "以下印表機設定檔沒有預設材質：%1%請手動選擇一項。"
+
+msgid "The following FFF printer models have no filament selected:"
+msgstr "以下 FFF 印表機型號未選擇耗材："
+
+msgid "Do you want to select default filaments for these FFF printer models?"
+msgstr "您想為這些 FFF 印表機型號選擇預設耗材嗎？"
+
+msgid "Configuration is edited in ConfigWizard"
+msgstr "在 ConfigWizard 中編輯配置"
+
+msgid "All user presets will be deleted."
+msgstr "所有用戶預設都將被刪除。"
+
+msgid "A new vendor was installed and one of its printers will be activated"
+msgid_plural "New vendors were installed and one of theirs printers will be activated"
+msgstr[0] "已安裝新的供應商，並將啟用其中一台列印設備"
+
+msgid "A new Printer was installed and it will be activated."
+msgstr "已安裝新印表機並將其啟動。"
+
+msgid "Some Printers were uninstalled."
+msgstr "一些印表機被卸載。"
+
+msgid "A new filament was installed and it will be activated."
+msgstr "新線材已安裝並將啟動。"
+
+msgid "A new SLA material was installed and it will be activated."
+msgstr "新的 SLA 材質已安裝並將啟動。"
+
+msgid "Some filaments were uninstalled."
+msgstr "一些線材被卸載。"
+
+msgid "Custom printer was installed and it will be activated."
+msgstr "自訂印表機已安裝並將啟動。"
+
+msgid "<Back"
+msgstr "<返回"
+
+msgid "Next>"
+msgstr "下一篇>"
+
+msgid "Filament Profiles Selection"
+msgstr "線材型材選擇"
+
+msgid "Configuration Assistant"
+msgstr "配置助手"
+
+msgid "Configuration &Assistant"
+msgstr "配置&助手"
+
+msgid "Configuration Wizard"
+msgstr "配置精靈"
+
+msgid "Configuration &Wizard"
+msgstr "配置與嚮導"
+
+msgid "Failed to generate cali gcode"
+msgstr "產生校準代碼失敗"
+
+msgid "Filament Inlet A"
+msgstr "線材入口 A"
+
+msgid "Filament Inlet B"
+msgstr "線材入口 B"
+
+msgid "Suggested rearrangement"
+msgstr "建議重新安排"
+
+msgid "How to save time?→"
+msgstr "如何節省時間？ →"
+
+msgid "Filament Status:"
+msgstr "線材狀態："
+
+msgid "Position adjustment required"
+msgstr "需要調整位置"
+
+msgctxt "FilamentTrack"
+msgid "OK"
+msgstr "確定"
+
+msgid "Unused"
+msgstr "未使用"
+
+#, c-format, boost-format
+msgid "Based on the diagram below, rearrange the filaments on the printer for optimal results to save approximately %s."
+msgstr "根據下圖，重新排列印表機上的耗材以獲得最佳效果，大約可節省 %s。"
+
+msgid "Summary:"
+msgstr "概括："
+
+msgid "AMS on Filament Inlet A"
+msgstr "線材入口 A 上的 AMS"
+
+msgid "AMS on Filament Inlet B"
+msgstr "線材入口 B 上的 AMS"
+
+#, c-format, boost-format
+msgid "The No.%d slicing filament is matched to '%s'. Assigning it to '%s' can save printing time."
+msgstr "No.%d 切片絲與「%s」相符。將其分配給“%s”可以節省列印時間。"
+
+msgid "*Tips: If you have moved the spool position on the machine, please close this page and re‑match the filament."
+msgstr "*提示：如果您移動了機器上的線軸位置，請關閉此頁面並重新配對線材。"
+
+msgid "Summary: This is currently the most suitable position for placement."
+msgstr "總結：這是目前最適合放置的位置。"
+
+msgid "?"
+msgstr "?"
+
+msgid "Note:"
+msgstr "筆記："
+
+msgid "Left click"
+msgstr "滑鼠左鍵"
+
+msgid "Right click"
+msgstr "滑鼠右鍵"
+
+msgid "Movement:"
+msgstr "移動："
+
+msgid "Movement"
+msgstr "移動"
+
+msgid "Auto Segment"
+msgstr "自動分段"
+
+msgid "Depth ratio"
+msgstr "深度比"
+
+msgid "Prizm"
+msgstr "Prizm"
+
+msgid "connector is out of cut contour"
+msgstr "連接器超出切割輪廓"
+
+msgid "connectors are out of cut contour"
+msgstr "連接器超出切割輪廓"
+
+msgid "connector is out of object"
+msgstr "連接器不在物件範圍內"
+
+msgid "connectors is out of object"
+msgstr "連接器不在物件範圍內"
+
+msgid ""
+"Invalid state. \n"
+"No one part is selected for keep after cut"
+msgstr "無效狀態。 \n切割後沒有選擇保留任何一個部分"
+
+msgid "Hollow this object"
+msgstr "將這個物體挖空"
+
+msgid "Preview hollowed and drilled model"
+msgstr "預覽鏤空和鑽孔模型"
+
+msgid "Offset"
+msgstr "抵銷"
+
+msgid "Closing distance"
+msgstr "關閉距離"
+
+msgid "Hole diameter"
+msgstr "孔徑"
+
+msgid "Hole depth"
+msgstr "孔深"
+
+msgid "Remove selected holes"
+msgstr "刪除選定的孔"
+
+msgid "Remove all holes"
+msgstr "移除所有孔"
+
+msgid "Clipping of view"
+msgstr "視野剪裁"
+
+msgid "Show supports"
+msgstr "顯示支援"
+
+msgid "Hollow and drill"
+msgstr "空心和鑽"
+
+msgid "Model simplification has been canceled"
+msgstr "模型簡化已取消"
+
+msgid "Head diameter"
+msgstr "頭直徑"
+
+msgid "Lock supports under new islands"
+msgstr "新島嶼下方鎖定支撐"
+
+msgid "Remove selected points"
+msgstr "移除選定的點"
+
+msgid "Remove all points"
+msgstr "刪除所有點"
+
+msgid "Apply changes"
+msgstr "應用程式變更"
+
+msgid "Discard changes"
+msgstr "放棄更改"
+
+msgid "Minimal points distance"
+msgstr "最小點距離"
+
+msgid "Support points density"
+msgstr "支撐點密度"
+
+msgid "Auto-generate points"
+msgstr "自動產生點"
+
+msgid "Manual editing"
+msgstr "手動編輯"
+
+msgid "SLA Support Points"
+msgstr "SLA 支撐點"
+
+msgid "Do you want to save your manually edited support points?"
+msgstr "您想儲存手動編輯的支撐點嗎？"
+
+msgid "Save support points?"
+msgstr "保存支援點？"
+
+msgid "Autogeneration will erase all manually edited points."
+msgstr "自動產生將刪除所有手動編輯的點。"
+
+msgid "Are you sure you want to do it?"
+msgstr "您確定要這樣做嗎？"
+
+msgid "SLA gizmo keyboard shortcuts"
+msgstr "SLA 小工具鍵盤快速鍵"
+
+msgid "Note: some shortcuts work in (non)editing mode only."
+msgstr "注意：某些快捷方式僅在（非）編輯模式下有效。"
+
+msgid "Add point"
+msgstr "添加點"
+
+msgid "Remove point"
+msgstr "刪除點"
+
+msgid "Move point"
+msgstr "移動點"
+
+msgid "Add point to selection"
+msgstr "將點加入選擇"
+
+msgid "Remove point from selection"
+msgstr "從選擇中刪除點"
+
+msgid "Select by rectangle"
+msgstr "按矩形選擇"
+
+msgid "Deselect by rectangle"
+msgstr "按矩形取消選擇"
+
+msgid "Select all points"
+msgstr "選擇所有點"
+
+msgid "Move clipping plane"
+msgstr "移動剪裁平面"
+
+msgid "Reset clipping plane"
+msgstr "重置剪切平面"
+
+msgid "Switch to editing mode"
+msgstr "切換到編輯模式"
+
+msgid "Best surface quality"
+msgstr "最佳表面質量"
+
+msgid "Optimize object rotation for best surface quality."
+msgstr "優化物件旋轉以獲得最佳表面品質。"
+
+msgid "Reduced overhang slopes"
+msgstr "減少懸垂坡度"
+
+msgid ""
+"Optimize object rotation to have minimum amount of overhangs needing support structures.\n"
+"Note that this method will try to find the best surface of the object for touching the print bed if no elevation is set."
+msgstr "最佳化物件旋轉，以最小化需要支撐結構的懸垂量。\n請注意，如果未設定標高，此方法將嘗試找到接觸列印床的最佳物體表面。"
+
+msgid "Lowest Z height"
+msgstr "最低 Z 高度"
+
+msgid "Rotate the model to have the lowest z height for faster print time."
+msgstr "旋轉模型以獲得最低的 z 高度，以加快列印時間。"
+
+msgid "Choose SLA archive:"
+msgstr "選擇SLA存檔："
+
+msgid "Import file"
+msgstr "導入文件"
+
+msgid "Import model and profile"
+msgstr "導入模型和設定檔"
+
+msgid "Import profile only"
+msgstr "僅導入設定檔"
+
+msgid "Import model only"
+msgstr "僅導入模型"
+
+msgid "Accurate"
+msgstr "準確的"
+
+msgid "Quick"
+msgstr "快的"
+
+msgid "3D Models"
+msgstr "3D模型"
+
+msgid "Click to return"
+msgstr "點擊返回"
+
+msgid "Left Arrow"
+msgstr "向左箭頭"
+
+msgid "Click to continue"
+msgstr "點擊繼續"
+
+msgid "Right Arrow"
+msgstr "右箭頭"
+
+#, c-format, boost-format
+msgid "Select %s Plugin"
+msgstr "選擇%s外掛程式"
+
+#, c-format, boost-format
+msgid "Choose a %s plugin from the list below."
+msgstr "從下面的清單中選擇 %s 外掛程式。"
+
+msgid "No plugins found for this type."
+msgstr "沒有找到該類型的外掛程式。"
+
+#, c-format, boost-format
+msgid "Plugin file: %s"
+msgstr "外掛程式檔：%s"
+
+msgid "Process plugins"
+msgstr "流程外掛程式"
+
+msgid "Filament plugins"
+msgstr "線材外掛程式"
+
+msgid "Printer plugins"
+msgstr "印表機外掛程式"
+
+msgid "The configuration is not valid JSON. Your changes were not saved."
+msgstr "JSON 配置無效。您的變更未儲存。"
+
+msgid "Configuration updated. Save the preset to persist it."
+msgstr "配置已更新。保存預設以保留它。"
+
+#, c-format, boost-format
+msgid ""
+"Restore the default configuration for \"%s\"?\n"
+"\n"
+"This discards the preset's override and uses the global configuration."
+msgstr "恢復“%s”的預設配置？\n\n這將放棄預設的覆蓋並使用全域配置。"
+
+msgid "Restore defaults"
+msgstr "恢復預設設定"
+
+msgid "Using global configuration. Save the preset to persist it."
+msgstr "使用全域配置。保存預設以保留它。"
+
+msgid "This capability is no longer available."
+msgstr "此功能不再可用。"
+
+#, boost-format
+msgid "The plugin's configuration UI failed to load (%1%). Showing the default editor."
+msgstr "外掛程式的配置 UI 無法載入 (%1%)。顯示預設編輯器。"
+
+msgid "Delete Plugin"
+msgstr "刪除外掛程式"
+
+msgid "Unsubscribe"
+msgstr "退訂"
+
+msgid "Overwrite Plugin"
+msgstr "覆蓋外掛程式"
+
+#, c-format, boost-format
+msgid "Failed to activate \"%s\"."
+msgstr "無法啟動“%s”。"
+
+#, c-format, boost-format
+msgid "Activated \"%s\"."
+msgstr "啟動“%s”。"
+
+#, c-format, boost-format
+msgid ""
+"The following installed plugins were not found on disk:\n"
+"%s\n"
+"\n"
+"Remove them from InlongSlicer?"
+msgstr "在磁碟上找不到以下已安裝的外掛程式：\n%s\n\n將它們從 InlongSlicer 中刪除嗎？"
+
+msgid "Missing Plugins"
+msgstr "缺少外掛程式"
+
+msgid "Refreshing plugins data"
+msgstr "刷新外掛程式數據"
+
+msgid "Failed to unload plugin."
+msgstr "卸載外掛程式失敗。"
+
+#, c-format, boost-format
+msgid "Deactivated \"%s\"."
+msgstr "停用“%s”。"
+
+msgid "Plugin manifest was not found."
+msgstr "未找到外掛程式清單。"
+
+#, c-format, boost-format
+msgid "Activating \"%s\"..."
+msgstr "正在啟動“%s”..."
+
+#, c-format, boost-format
+msgid "Enabled \"%s\"."
+msgstr "啟用“%s”。"
+
+#, c-format, boost-format
+msgid "Disabled \"%s\"."
+msgstr "禁用“%s”。"
+
+msgid "Select plugin package"
+msgstr "選擇外掛程式包"
+
+msgid "Plugin files (*.py;*.whl)|*.py;*.whl"
+msgstr "外掛程式檔 (*.py;*.whl)|*.py;*.whl"
+
+msgid "Select a .py or .whl plugin package."
+msgstr "選擇 .py 或 .whl 外掛程式包。"
+
+msgid "Failed to install plugin package. See the log for details."
+msgstr "外掛程式包安裝失敗。詳細資訊請參閱日誌。"
+
+#, c-format, boost-format
+msgid ""
+"Plugin \"%s\" is already installed.\n"
+"\n"
+"Installing this package will overwrite the existing plugin."
+msgstr "外掛程式“%s”已安裝。\n\n安裝此套件將覆蓋現有外掛程式。"
+
+msgid "Overwrite"
+msgstr "覆蓋"
+
+msgid "Installing plugin"
+msgstr "安裝外掛程式"
+
+#, c-format, boost-format
+msgid "Installed \"%s\"."
+msgstr "安裝“%s”。"
+
+msgid "Downloading plugin"
+msgstr "正在下載外掛程式"
+
+msgid "Plugin download failed."
+msgstr "外掛程式下載失敗。"
+
+msgid "Configuration saved."
+msgstr "配置已儲存。"
+
+#, c-format, boost-format
+msgid ""
+"Restore the default configuration for \"%s\"?\n"
+"\n"
+"This discards the settings currently saved for this capability."
+msgstr "恢復“%s”的預設配置？\n\n這將放棄當前為此功能保存的設定。"
+
+msgid "Default configuration restored."
+msgstr "恢復預設配置。"
+
+msgid "Updating plugin"
+msgstr "更新外掛程式"
+
+msgid "Failed to update plugin."
+msgstr "更新外掛程式失敗。"
+
+#, c-format, boost-format
+msgid "Updated \"%s\"."
+msgstr "更新了「%s」。"
+
+msgid "Plugin folder could not be determined."
+msgstr "無法確定外掛程式資料夾。"
+
+#, c-format, boost-format
+msgid ""
+"Delete plugin \"%s\"?\n"
+"\n"
+"This removes the local plugin files. The plugin stays in the cloud and can be reinstalled."
+msgstr "刪除外掛程式“%s”？\n\n這將刪除本地外掛程式檔案。該外掛程式保留在雲端並且可以重新安裝。"
+
+#, c-format, boost-format
+msgid ""
+"Delete plugin \"%s\"?\n"
+"\n"
+"This permanently removes the plugin folder."
+msgstr "刪除外掛程式“%s”？\n\n這將永久刪除外掛程式資料夾。"
+
+msgid "Failed to delete plugin."
+msgstr "刪除外掛程式失敗。"
+
+#, c-format, boost-format
+msgid "Deleted \"%s\"."
+msgstr "刪除了“%s”。"
+
+msgid "Deleting plugin"
+msgstr "刪除外掛程式"
+
+msgid "Deleting plugin..."
+msgstr "正在刪除外掛程式..."
+
+#, c-format, boost-format
+msgid ""
+"Unsubscribe plugin \"%s\"?\n"
+"\n"
+"This will stop tracking the plugin and delete any local plugin files."
+msgstr "取消訂閱外掛程式“%s”？\n\n這將停止追蹤外掛程式並刪除所有本地外掛程式檔案。"
+
+msgid "Failed to unsubscribe plugin."
+msgstr "取消訂閱外掛程式失敗。"
+
+#, c-format, boost-format
+msgid "Unsubscribed \"%s\"."
+msgstr "取消訂閱“%s”。"
+
+msgid "Unsubscribing plugin"
+msgstr "取消訂閱外掛程式"
+
+msgid "Deleting local files and unsubscribing plugin..."
+msgstr "正在刪除本地檔案並取消訂閱外掛程式..."
+
+msgid "Reloading plugin"
+msgstr "重新載入外掛程式"
+
+msgid "Failed to reload plugin."
+msgstr "無法重新載入外掛程式。"
+
+#, c-format, boost-format
+msgid "Reloaded \"%s\"."
+msgstr "重新載入“%s”。"
+
+#, boost-format
+msgid ""
+"Post-processing plugin %1% failed.\n"
+"\n"
+"The post-processing plugin is expected to modify the G-code file %2% in place, but the G-code file was deleted.\n"
+"Please check the plugin implementation.\n"
+msgstr "後處理外掛程式 %1% 失敗。\n\n後處理外掛程式預計會就地修改 G-code 檔案 %2%，但 G-code 檔案被刪除了。\n請檢查外掛程式的實作。\n"
+
+#, boost-format
+msgid ""
+"Post-processing script %1% failed.\n"
+"\n"
+"The post-processing script is expected to change the G-code file %2% in place, but the G-code file was deleted and likely saved under a new name.\n"
+"Please adjust the post-processing script to change the G-code in place and consult the manual on how to optionally rename the post-processed G-code file.\n"
+msgstr "後處理腳本 %1% 失敗。\n\n後處理腳本預計會就地更改 G-code 檔案 %2%，但 G-code 檔案已被刪除並可能以新名稱儲存。\n請調整後處理腳本以就地更改 G-code，並查閱手冊了解如何選擇性地重新命名後處理的 G-code 檔案。\n"
+
+msgid "Purge Mode Settings"
+msgstr "清除模式設定"
+
+msgid "Perform full purging with speed and temperature transition for the best print quality."
+msgstr "透過速度和溫度轉換執行全面清洗，以獲得最佳列印品質。"
+
+msgid "Uses optimized purge temperature, multiplier and stronger extrusion for faster purging. May cause slight color mixing in some extreme cases."
+msgstr "使用優化的吹掃溫度、倍增器和更強的擠出來實現更快的吹掃。在某些極端情況下可能會導致輕微的混色。"
+
+msgid "Prime Saving"
+msgstr "優惠儲蓄"
+
+msgid "Reduces prime waste and prints faster. May cause slight color mixing or small surface defects."
+msgstr "减少底材浪费并加快列印速度。可能會導致輕微的混色或小表面缺陷。"
+
+#, c-format, boost-format
+msgid "Run \"%s\"?"
+msgstr "運行“%s”？"
+
+msgid "Run plugin"
+msgstr "運行外掛程式"
+
+msgid "Don't ask again for this action"
+msgstr "不再要求執行此操作"
+
+msgid "Move over surface"
+msgstr "在表面上移動"
+
+msgid "System Information"
+msgstr "系統資訊"
+
+#, c-format, boost-format
+msgid "Blacklisted libraries loaded into %s process:"
+msgstr "黑名單庫載入到 %s 進程中："
+
+msgid "SIMD is supported:"
+msgstr "支援SIMD："
+
+msgid "Copy to Clipboard"
+msgstr "複製到剪貼簿"
+
+msgid "Terminal"
+msgstr "終端"
+
+msgid "Forward"
+msgstr "向前"
+
+msgid "Tools"
+msgstr "工具"
+
+msgid "View Source"
+msgstr "查看原始碼"
+
+msgid "View Text"
+msgstr "看文字"
+
+msgid "Handle Navigation"
+msgstr "手把導航"
+
+msgid "Handle New Windows"
+msgstr "處理新視窗"
+
+msgid "Edit Mode"
+msgstr "編輯模式"
+
+msgid "Run Script"
+msgstr "運行腳本"
+
+msgid "Add user script"
+msgstr "新增使用者腳本"
+
+msgid "Set custom user agent"
+msgstr "設定自訂用戶代理"
+
+msgid "Clear Selection"
+msgstr "清除選擇"
+
+msgid "Delete Selection"
+msgstr "刪除選擇"
+
+msgid "Custom Scheme Example"
+msgstr "自訂方案範例"
+
+msgid "Memory File System Example"
+msgstr "記憶體檔案系統範例"
+
+msgid "Enable Context Menu"
+msgstr "啟用內容選單"
+
+msgid "Enable Dev Tools"
+msgstr "啟用開發工具"
+
+msgid "An error occurred loading "
+msgstr "載入時發生錯誤"
+
+msgid "/"
+msgstr "/"
+
+#, c-format, boost-format
+msgid "Load %s to "
+msgstr "加載%s到"
+
+msgid "Connection to ESP3D is working correctly."
+msgstr "與 ESP3D 的連接工作正常。"
+
+msgid "Could not connect to ESP3D"
+msgstr "無法連接到ESP3D"
+
+msgid "The plugin's configuration UI was empty. Showing the default editor."
+msgstr "該外掛程式的配置 UI 為空。顯示預設編輯器。"
+
+msgid "This capability is no longer available. Your changes were not saved."
+msgstr "此功能不再可用。您的變更未儲存。"
+
+msgid "The configuration could not be written to disk. Your changes were not saved."
+msgstr "無法將配置寫入磁碟。您的變更未儲存。"
+
+#, boost-format
+msgid "The plugin could not supply a default configuration (%1%). Nothing was changed."
+msgstr "該外掛程式無法提供預設配置（%1%）。一切都沒有改變。"
+
+msgid "The configuration could not be written to disk. Nothing was changed."
+msgstr "無法將配置寫入磁碟。一切都沒有改變。"
+
+msgid "Plugin installation failed"
+msgstr "外掛程式安裝失敗"
 
 #: resources/data/hints.ini: [hint:Precise wall]
 msgid ""
@@ -24404,14 +25413,8 @@ msgstr ""
 #~ msgid "Your nozzle type in preset is not consistent with memorized nozzle. Did you change your nozzle lately?"
 #~ msgstr "您預設的噴嘴類型與記憶的噴嘴不一致。您最近更換噴嘴了嗎？"
 
-#~ msgid "Remove selected points"
-#~ msgstr "移除選定的點"
-
 #~ msgid "Remove all"
 #~ msgstr "刪除全部"
-
-#~ msgid "Auto-generate points"
-#~ msgstr "自動產生點"
 
 #~ msgid "Add a brim ear"
 #~ msgstr "新增邊緣支撐 (Brim)"
@@ -24443,12 +25446,6 @@ msgstr ""
 
 #~ msgid "Key 1~9"
 #~ msgstr "按鍵 1～9"
-
-#~ msgid "Left click"
-#~ msgstr "滑鼠左鍵"
-
-#~ msgid "Right click"
-#~ msgstr "滑鼠右鍵"
 
 #~ msgid "Select feature"
 #~ msgstr "選擇特徵"
