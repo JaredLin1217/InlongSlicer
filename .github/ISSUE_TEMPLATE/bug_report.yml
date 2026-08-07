@@ -21,9 +21,17 @@ body:
     attributes:
       label: InlongSlicer Version
       description: Which version or commit are you running?
-      placeholder: e.g. 1.9.0 or commit SHA
+      placeholder: e.g. 2.5.0 or commit SHA
     validations:
       required: true
+  - type: input
+    id: working_version
+    attributes:
+      label: Regression compared to a previous version
+      description: Did it work in a previous version?
+      placeholder: e.g. 2.3.2
+    validations:
+      required: false
   - type: dropdown
     id: os_type
     attributes:
