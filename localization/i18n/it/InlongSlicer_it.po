@@ -2286,7 +2286,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Questo profilo ha una versione più recente in OrcaCloud.\n"
+"Questo profilo ha una versione più recente in Inlong Cloud.\n"
 "Pull scarica la copia cloud. Force push la sovrascrive con il tuo profilo locale."
 
 # AI Translated
@@ -2294,7 +2294,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Esiste già un profilo con questo nome in OrcaCloud.\n"
+"Esiste già un profilo con questo nome in Inlong Cloud.\n"
 "Pull scarica la copia cloud. Force push la sovrascrive con il tuo profilo locale."
 
 # AI Translated
@@ -8576,21 +8576,21 @@ msgstr "La directory per la sostituzione non è stata selezionata"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Sostituito con file 3D dalla directory:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Saltato %1%: stesso file.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Saltato %s: stesso file.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Saltato %1%: il file non esiste.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Saltato %s: il file non esiste.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Saltato %1%: sostituzione fallita.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Saltato %s: sostituzione fallita.\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Sostituito %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Sostituito %s.\n"
 
 msgid "Replaced volumes"
 msgstr "Volumi sostituiti"
@@ -9587,8 +9587,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Questo disabilita tutte le funzionalità cloud, inclusa la sincronizzazione dei profili di Orca Cloud. Gli utenti che preferiscono lavorare completamente offline possono abilitare questa opzione.\n"
-"Nota: quando la Modalità Stealth è abilitata, i tuoi profili utente non verranno salvati come backup su Orca Cloud."
+"Questo disabilita tutte le funzionalità cloud, inclusa la sincronizzazione dei profili di Inlong Cloud. Gli utenti che preferiscono lavorare completamente offline possono abilitare questa opzione.\n"
+"Nota: quando la Modalità Stealth è abilitata, i tuoi profili utente non verranno salvati come backup su Inlong Cloud."
 
 # AI Translated
 msgid "Hide login side panel"

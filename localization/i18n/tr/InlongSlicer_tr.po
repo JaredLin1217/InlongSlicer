@@ -2317,7 +2317,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Bu ön ayarın OrcaCloud'da daha yeni bir sürümü var.\n"
+"Bu ön ayarın Inlong Cloud'da daha yeni bir sürümü var.\n"
 "Çek, bulut kopyasını indirir. Zorla gönder, bulut kopyasının üzerine yerel ön ayarınızı yazar."
 
 # AI Translated
@@ -2325,7 +2325,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"OrcaCloud'da bu ada sahip bir ön ayar zaten var.\n"
+"Inlong Cloud'da bu ada sahip bir ön ayar zaten var.\n"
 "Çek, bulut kopyasını indirir. Zorla gönder, bulut kopyasının üzerine yerel ön ayarınızı yazar."
 
 # AI Translated
@@ -2441,7 +2441,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "%s içinde mevcut kullanıcı ön ayarları bulundu.\n"
-"Bunları OrcaCloud profilinize taşımak istiyor musunuz?\n"
+"Bunları Inlong Cloud profilinize taşımak istiyor musunuz?\n"
 "Bu işlem, yeni hesabınız altında kullanılabilmeleri için ön ayarlarınızı kopyalar."
 
 # AI Translated
@@ -6696,7 +6696,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Kişisel verilerinizi Orca Cloud'dan eşitlemek istiyor musunuz?\n"
+"Kişisel verilerinizi Inlong Cloud'dan eşitlemek istiyor musunuz?\n"
 "Aşağıdaki bilgileri içerir:\n"
 "1. İşlem ön ayarları\n"
 "2. Filament ön ayarları\n"
@@ -8671,21 +8671,21 @@ msgstr "Değiştirme için dizin seçilmedi"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Dizindeki 3D dosyalarla değiştirildi:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ %1% atlandı: aynı dosya.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ %s atlandı: aynı dosya.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ %1% atlandı: dosya mevcut değil.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ %s atlandı: dosya mevcut değil.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ %1% atlandı: değiştirilemedi.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ %s atlandı: değiştirilemedi.\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ %1% değiştirildi.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ %s değiştirildi.\n"
 
 msgid "Replaced volumes"
 msgstr "Değiştirilen birimler"
@@ -9683,8 +9683,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Bu, Orca Cloud profil eşitlemesi dahil tüm bulut özelliklerini devre dışı bırakır. Tamamen çevrimdışı çalışmayı tercih eden kullanıcılar bu seçeneği etkinleştirebilir.\n"
-"Not: Gizli Mod etkinken kullanıcı profilleriniz Orca Cloud'a yedeklenmez."
+"Bu, Inlong Cloud profil eşitlemesi dahil tüm bulut özelliklerini devre dışı bırakır. Tamamen çevrimdışı çalışmayı tercih eden kullanıcılar bu seçeneği etkinleştirebilir.\n"
+"Not: Gizli Mod etkinken kullanıcı profilleriniz Inlong Cloud'a yedeklenmez."
 
 # AI Translated
 msgid "Hide login side panel"

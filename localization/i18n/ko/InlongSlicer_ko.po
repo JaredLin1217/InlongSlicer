@@ -2291,7 +2291,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"이 사전 설정은 OrcaCloud에 더 최신 버전이 있습니다.\n"
+"이 사전 설정은 Inlong Cloud에 더 최신 버전이 있습니다.\n"
 "가져오기는 클라우드 사본을 다운로드합니다. 강제 푸시는 로컬 사전 설정으로 클라우드 사본을 덮어씁니다."
 
 # AI Translated
@@ -2299,7 +2299,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"같은 이름의 사전 설정이 이미 OrcaCloud에 있습니다.\n"
+"같은 이름의 사전 설정이 이미 Inlong Cloud에 있습니다.\n"
 "가져오기는 클라우드 사본을 다운로드합니다. 강제 푸시는 로컬 사전 설정으로 클라우드 사본을 덮어씁니다."
 
 # AI Translated
@@ -2415,7 +2415,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "%s에서 기존 사용자 사전 설정을 찾았습니다.\n"
-"OrcaCloud 프로필로 이전하시겠습니까?\n"
+"Inlong Cloud 프로필로 이전하시겠습니까?\n"
 "사전 설정이 복사되어 새 계정에서도 사용할 수 있게 됩니다."
 
 # AI Translated
@@ -6640,7 +6640,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Orca Cloud에서 개인 데이터를 동기화하시겠습니까?\n"
+"Inlong Cloud에서 개인 데이터를 동기화하시겠습니까?\n"
 "다음 정보가 포함됩니다:\n"
 "1. 프로세스 사전 설정\n"
 "2. 필라멘트 사전 설정\n"
@@ -8624,24 +8624,24 @@ msgid "Replaced with 3D files from directory:\n"
 msgstr "다음 디렉터리의 3D 파일로 교체했습니다:\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ 건너뜀 %1%: 동일한 파일입니다.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ 건너뜀 %s: 동일한 파일입니다.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ 건너뜀 %1%: 파일이 존재하지 않습니다.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ 건너뜀 %s: 파일이 존재하지 않습니다.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ 건너뜀 %1%: 교체하지 못했습니다.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ 건너뜀 %s: 교체하지 못했습니다.\n"
 
 # AI Translated
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ %1%을(를) 교체했습니다.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ %s을(를) 교체했습니다.\n"
 
 # AI Translated
 msgid "Replaced volumes"
@@ -9685,8 +9685,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"이 옵션은 Orca Cloud 프로필 동기화를 포함한 모든 클라우드 기능을 비활성화합니다. 완전히 오프라인으로 작업하려는 사용자는 이 옵션을 활성화할 수 있습니다.\n"
-"참고: 스텔스 모드를 활성화하면 사용자 프로필이 Orca Cloud에 백업되지 않습니다."
+"이 옵션은 Inlong Cloud 프로필 동기화를 포함한 모든 클라우드 기능을 비활성화합니다. 완전히 오프라인으로 작업하려는 사용자는 이 옵션을 활성화할 수 있습니다.\n"
+"참고: 스텔스 모드를 활성화하면 사용자 프로필이 Inlong Cloud에 백업되지 않습니다."
 
 # AI Translated
 msgid "Hide login side panel"

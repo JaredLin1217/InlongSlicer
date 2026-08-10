@@ -2481,7 +2481,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Van deze voorinstelling bestaat een nieuwere versie in OrcaCloud.\n"
+"Van deze voorinstelling bestaat een nieuwere versie in Inlong Cloud.\n"
 "Met Ophalen downloadt u de cloudversie. Met Push forceren overschrijft u die met uw lokale voorinstelling."
 
 # AI Translated
@@ -2489,7 +2489,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Er bestaat al een voorinstelling met deze naam in OrcaCloud.\n"
+"Er bestaat al een voorinstelling met deze naam in Inlong Cloud.\n"
 "Met Ophalen downloadt u de cloudversie. Met Push forceren overschrijft u die met uw lokale voorinstelling."
 
 # AI Translated
@@ -2610,7 +2610,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "Er zijn bestaande gebruikersvoorinstellingen gevonden in %s.\n"
-"Wilt u deze migreren naar uw OrcaCloud-profiel?\n"
+"Wilt u deze migreren naar uw Inlong Cloud-profiel?\n"
 "Hiermee worden uw voorinstellingen gekopieerd zodat ze beschikbaar zijn onder uw nieuwe account."
 
 # AI Translated
@@ -7204,7 +7204,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Wilt u uw persoonlijke gegevens synchroniseren vanuit Orca Cloud?\n"
+"Wilt u uw persoonlijke gegevens synchroniseren vanuit Inlong Cloud?\n"
 "Deze bevatten de volgende informatie:\n"
 "1. De procesvoorinstellingen\n"
 "2. De filamentvoorinstellingen\n"
@@ -9322,24 +9322,24 @@ msgid "Replaced with 3D files from directory:\n"
 msgstr "Vervangen door 3D-bestanden uit de map:\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Overgeslagen %1%: hetzelfde bestand.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Overgeslagen %s: hetzelfde bestand.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Overgeslagen %1%: bestand bestaat niet.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Overgeslagen %s: bestand bestaat niet.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Overgeslagen %1%: vervangen is mislukt.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Overgeslagen %s: vervangen is mislukt.\n"
 
 # AI Translated
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Vervangen %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Vervangen %s.\n"
 
 # AI Translated
 msgid "Replaced volumes"
@@ -10423,8 +10423,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Hiermee worden alle cloudfuncties uitgeschakeld, inclusief het synchroniseren van Orca Cloud-profielen. Gebruikers die volledig offline willen werken, kunnen deze optie inschakelen.\n"
-"Let op: wanneer de Stealth-modus is ingeschakeld, worden uw gebruikersprofielen niet geback-upt naar Orca Cloud."
+"Hiermee worden alle cloudfuncties uitgeschakeld, inclusief het synchroniseren van Inlong Cloud-profielen. Gebruikers die volledig offline willen werken, kunnen deze optie inschakelen.\n"
+"Let op: wanneer de Stealth-modus is ingeschakeld, worden uw gebruikersprofielen niet geback-upt naar Inlong Cloud."
 
 # AI Translated
 msgid "Hide login side panel"

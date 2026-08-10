@@ -2371,7 +2371,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Cài đặt sẵn này có phiên bản mới hơn trên OrcaCloud.\n"
+"Cài đặt sẵn này có phiên bản mới hơn trên Inlong Cloud.\n"
 "Kéo về sẽ tải bản trên cloud. Đẩy ép buộc sẽ ghi đè bản đó bằng cài đặt sẵn cục bộ của bạn."
 
 # AI Translated
@@ -2379,7 +2379,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Đã có một cài đặt sẵn trùng tên trên OrcaCloud.\n"
+"Đã có một cài đặt sẵn trùng tên trên Inlong Cloud.\n"
 "Kéo về sẽ tải bản trên cloud. Đẩy ép buộc sẽ ghi đè bản đó bằng cài đặt sẵn cục bộ của bạn."
 
 # AI Translated
@@ -2499,7 +2499,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "Đã tìm thấy cài đặt sẵn người dùng trong %s.\n"
-"Bạn có muốn di chuyển chúng sang hồ sơ OrcaCloud của mình không?\n"
+"Bạn có muốn di chuyển chúng sang hồ sơ Inlong Cloud của mình không?\n"
 "Thao tác này sẽ sao chép các cài đặt sẵn của bạn để chúng khả dụng dưới tài khoản mới."
 
 # AI Translated
@@ -6980,7 +6980,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Bạn có muốn đồng bộ dữ liệu cá nhân từ Orca Cloud không?\n"
+"Bạn có muốn đồng bộ dữ liệu cá nhân từ Inlong Cloud không?\n"
 "Dữ liệu bao gồm các thông tin sau:\n"
 "1. Cài đặt sẵn Process\n"
 "2. Cài đặt sẵn Filament\n"
@@ -9052,24 +9052,24 @@ msgid "Replaced with 3D files from directory:\n"
 msgstr "Đã thay thế bằng file 3D từ thư mục:\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Đã bỏ qua %1%: cùng một file.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Đã bỏ qua %s: cùng một file.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Đã bỏ qua %1%: file không tồn tại.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Đã bỏ qua %s: file không tồn tại.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Đã bỏ qua %1%: thay thế thất bại.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Đã bỏ qua %s: thay thế thất bại.\n"
 
 # AI Translated
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Đã thay thế %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Đã thay thế %s.\n"
 
 # AI Translated
 msgid "Replaced volumes"
@@ -10137,8 +10137,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Tùy chọn này tắt toàn bộ tính năng cloud, bao gồm cả đồng bộ hồ sơ Orca Cloud. Người dùng muốn làm việc hoàn toàn ngoại tuyến có thể bật tùy chọn này.\n"
-"Lưu ý: Khi Chế độ ẩn danh được bật, hồ sơ người dùng của bạn sẽ không được sao lưu lên Orca Cloud."
+"Tùy chọn này tắt toàn bộ tính năng cloud, bao gồm cả đồng bộ hồ sơ Inlong Cloud. Người dùng muốn làm việc hoàn toàn ngoại tuyến có thể bật tùy chọn này.\n"
+"Lưu ý: Khi Chế độ ẩn danh được bật, hồ sơ người dùng của bạn sẽ không được sao lưu lên Inlong Cloud."
 
 # AI Translated
 msgid "Hide login side panel"

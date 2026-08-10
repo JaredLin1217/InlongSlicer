@@ -2567,7 +2567,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Den här förinställningen har en nyare version i OrcaCloud.\n"
+"Den här förinställningen har en nyare version i Inlong Cloud.\n"
 "Hämta laddar ner molnkopian. Tvinga push skriver över den med din lokala förinställning."
 
 # AI Translated
@@ -2575,7 +2575,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Det finns redan en förinställning med det här namnet i OrcaCloud.\n"
+"Det finns redan en förinställning med det här namnet i Inlong Cloud.\n"
 "Hämta laddar ner molnkopian. Tvinga push skriver över den med din lokala förinställning."
 
 # AI Translated
@@ -2695,7 +2695,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "Befintliga användarförinställningar hittades i %s.\n"
-"Vill du migrera dem till din OrcaCloud-profil?\n"
+"Vill du migrera dem till din Inlong Cloud-profil?\n"
 "Dina förinställningar kopieras så att de blir tillgängliga under ditt nya konto."
 
 # AI Translated
@@ -7280,7 +7280,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Vill du synkronisera dina personliga data från Orca Cloud?\n"
+"Vill du synkronisera dina personliga data från Inlong Cloud?\n"
 "De innehåller följande information:\n"
 "1. Processförinställningarna\n"
 "2. Filamentförinställningarna\n"
@@ -9407,24 +9407,24 @@ msgid "Replaced with 3D files from directory:\n"
 msgstr "Ersatt med 3D-filer från mappen:\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Hoppade över %1%: samma fil.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Hoppade över %s: samma fil.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Hoppade över %1%: filen finns inte.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Hoppade över %s: filen finns inte.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Hoppade över %1%: det gick inte att ersätta.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Hoppade över %s: det gick inte att ersätta.\n"
 
 # AI Translated
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Ersatte %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Ersatte %s.\n"
 
 # AI Translated
 msgid "Replaced volumes"
@@ -10527,8 +10527,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Detta stänger av alla molnfunktioner, inklusive profilsynkronisering med Orca Cloud. Användare som föredrar att arbeta helt offline kan aktivera det här alternativet.\n"
-"Obs! När Stealth-läget är aktiverat säkerhetskopieras inte dina användarprofiler till Orca Cloud."
+"Detta stänger av alla molnfunktioner, inklusive profilsynkronisering med Inlong Cloud. Användare som föredrar att arbeta helt offline kan aktivera det här alternativet.\n"
+"Obs! När Stealth-läget är aktiverat säkerhetskopieras inte dina användarprofiler till Inlong Cloud."
 
 # AI Translated
 msgid "Hide login side panel"

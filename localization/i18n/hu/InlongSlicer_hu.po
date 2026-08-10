@@ -2280,7 +2280,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Ennek a beállításnak újabb változata van az OrcaCloudban.\n"
+"Ennek a beállításnak újabb változata van az Inlong Cloudban.\n"
 "A Lehívás letölti a felhőbeli másolatot. A Feltöltés kényszerítése felülírja azt a helyi beállításoddal."
 
 # AI Translated
@@ -2288,7 +2288,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Ilyen nevű beállítás már létezik az OrcaCloudban.\n"
+"Ilyen nevű beállítás már létezik az Inlong Cloudban.\n"
 "A Lehívás letölti a felhőbeli másolatot. A Feltöltés kényszerítése felülírja azt a helyi beállításoddal."
 
 # AI Translated
@@ -8579,21 +8579,21 @@ msgstr "A cseréhez nem lett mappa kiválasztva"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Cserélve a mappából származó 3D fájlokra:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Kihagyva %1%: azonos fájl.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ %s kihagyva: azonos fájl.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Kihagyva %1%: a fájl nem létezik.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ %s kihagyva: a fájl nem létezik.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Kihagyva %1%: a csere sikertelen.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ %s kihagyva: a csere sikertelen.\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Lecserélve: %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔%s lecserélve.\n"
 
 msgid "Replaced volumes"
 msgstr "Lecserélt térfogatok"
@@ -9571,8 +9571,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Ez kikapcsolja az összes felhőfunkciót, beleértve az Orca Cloud profilszinkronizálást is. Azok a felhasználók kapcsolhatják be, akik teljesen offline szeretnének dolgozni.\n"
-"Megjegyzés: ha a lopakodó mód be van kapcsolva, a felhasználói profiljaidról nem készül biztonsági mentés az Orca Cloudba."
+"Ez kikapcsolja az összes felhőfunkciót, beleértve az Inlong Cloud profilszinkronizálást is. Azok a felhasználók kapcsolhatják be, akik teljesen offline szeretnének dolgozni.\n"
+"Megjegyzés: ha a lopakodó mód be van kapcsolva, a felhasználói profiljaidról nem készül biztonsági mentés az Inlong Cloudba."
 
 # AI Translated
 msgid "Hide login side panel"
@@ -16405,7 +16405,7 @@ msgid "Change extrusion role G-code (process)"
 msgstr "Extrudálási szerepkör G-kód módosítása (folyamat)"
 
 msgid "This G-code is inserted when the extrusion role is changed. It runs after the machine and filament extrusion role G-code."
-msgstr "Az Orca Slicer az extrudálási szerep megváltozásakor illeszti be ezt a G-kódot. A gép és a filament extrudálási szerepéhez tartozó G-kód után fut le."
+msgstr "Az Inlong Slicer az extrudálási szerep megváltozásakor illeszti be ezt a G-kódot. A gép és a filament extrudálási szerepéhez tartozó G-kód után fut le."
 
 # AI Translated
 msgid "Plugins Used"
@@ -17604,16 +17604,16 @@ msgid "This detects thin walls which can’t contain two lines and uses a single
 msgstr "Felismeri azokat a vékony falakat, amelyekben nem fér el két vonal, és egyetlen vonallal nyomtatja ki őket. A nyomtatási minőség gyengébb lehet, mert ez a vonal nem alkot zárt hurkot."
 
 msgid "This G-code is inserted when filament is changed, including T commands to trigger tool change."
-msgstr "Az Orca Slicer filamentcserekor illeszti be ezt a G-kódot, beleértve a szerszámváltást indító T parancsokat is."
+msgstr "Az Inlong Slicer filamentcserekor illeszti be ezt a G-kódot, beleértve a szerszámváltást indító T parancsokat is."
 
 msgid "This G-code is inserted when the extrusion role is changed."
-msgstr "Az Orca Slicer az extrudálási szerep megváltozásakor illeszti be ezt a G-kódot."
+msgstr "Az Inlong Slicer az extrudálási szerep megváltozásakor illeszti be ezt a G-kódot."
 
 msgid "Change extrusion role G-code (filament)"
 msgstr "Az extrudálási szerep G-kódjának módosítása (szál)"
 
 msgid "This G-code is inserted when the extrusion role is changed for the active filament."
-msgstr "Az Orca Slicer akkor illeszti be ezt a G-kódot, amikor megváltozik az aktív filament extrudálási szerepe."
+msgstr "Az Inlong Slicer akkor illeszti be ezt a G-kódot, amikor megváltozik az aktív filament extrudálási szerepe."
 
 msgid "Line width for top surfaces. If expressed as a %, it will be computed over the nozzle diameter."
 msgstr "A felső felületek vonalszélessége. Ha %-ban van megadva, a rendszer a fúvóka átmérője alapján számítja ki."

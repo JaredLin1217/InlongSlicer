@@ -2246,7 +2246,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Цей пресет має новішу версію в OrcaCloud.\n"
+"Цей пресет має новішу версію в Inlong Cloud.\n"
 "«Отримати» завантажує хмарну копію. «Примусово надіслати» перезаписує її вашим локальним пресетом."
 
 # AI Translated
@@ -2254,7 +2254,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Пресет із такою назвою вже існує в OrcaCloud.\n"
+"Пресет із такою назвою вже існує в Inlong Cloud.\n"
 "«Отримати» завантажує хмарну копію. «Примусово надіслати» перезаписує її вашим локальним пресетом."
 
 # AI Translated
@@ -2359,7 +2359,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "У %s знайдено наявні пресети користувача.\n"
-"Бажаєте перенести їх до вашого профілю OrcaCloud?\n"
+"Бажаєте перенести їх до вашого профілю Inlong Cloud?\n"
 "Це скопіює ваші пресети, щоб вони були доступні під вашим новим обліковим записом."
 
 msgid "Migrate User Presets"
@@ -8632,21 +8632,21 @@ msgstr "Каталог для заміни не вибрано"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Замінено 3D-файлами з каталогу:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Пропущено %1%: той самий файл.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Пропущено %s: той самий файл.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Пропущено %1%: файл не існує.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Пропущено %s: файл не існує.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Пропущено %1%: не вдалося замінити.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Пропущено %s: не вдалося замінити.\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Замінено %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Замінено %s.\n"
 
 msgid "Replaced volumes"
 msgstr "Замінені обʼєми"
@@ -9648,8 +9648,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Це вимикає всі хмарні функції, зокрема синхронізацію профілів Orca Cloud. Користувачі, які надають перевагу повністю автономній роботі, можуть увімкнути цю опцію.\n"
-"Примітка: коли увімкнено прихований режим, ваші профілі користувача не резервуватимуться в Orca Cloud."
+"Це вимикає всі хмарні функції, зокрема синхронізацію профілів Inlong Cloud. Користувачі, які надають перевагу повністю автономній роботі, можуть увімкнути цю опцію.\n"
+"Примітка: коли увімкнено прихований режим, ваші профілі користувача не резервуватимуться в Inlong Cloud."
 
 msgid "Hide login side panel"
 msgstr "Сховати логін на бічній панелі"

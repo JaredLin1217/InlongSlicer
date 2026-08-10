@@ -2298,7 +2298,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Tato předvolba má v OrcaCloud novější verzi.\n"
+"Tato předvolba má v Inlong Cloud novější verzi.\n"
 "Stáhnout načte kopii z cloudu. Vynutit odeslání ji přepíše vaší místní předvolbou."
 
 # AI Translated
@@ -2306,7 +2306,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Předvolba s tímto názvem již v OrcaCloud existuje.\n"
+"Předvolba s tímto názvem již v Inlong Cloud existuje.\n"
 "Stáhnout načte kopii z cloudu. Vynutit odeslání ji přepíše vaší místní předvolbou."
 
 # AI Translated
@@ -8646,21 +8646,21 @@ msgstr "Directory for the replace wasn't selected"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Replaced with 3D files from directory:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Skipped %1%: same file.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Přeskočeno %s: stejný soubor.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Skipped %1%: file does not exist.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Přeskočeno %s: soubor neexistuje.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Skipped %1%: failed to replace.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Přeskočeno %s: nahrazení se nezdařilo.\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Replaced %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Nahrazeno %s.\n"
 
 msgid "Replaced volumes"
 msgstr "Replaced volumes"
@@ -9656,15 +9656,15 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Tím se vypnou všechny cloudové funkce včetně synchronizace profilů s Orca Cloud. Uživatelé, kteří chtějí pracovat zcela offline, mohou tuto možnost zapnout.\n"
-"Poznámka: Je-li Stealth režim zapnut, nebudou vaše uživatelské profily zálohovány do Orca Cloud."
+"Tím se vypnou všechny cloudové funkce včetně synchronizace profilů s Inlong Cloud. Uživatelé, kteří chtějí pracovat zcela offline, mohou tuto možnost zapnout.\n"
+"Poznámka: Je-li Stealth režim zapnut, nebudou vaše uživatelské profily zálohovány do Inlong Cloud."
 
 # AI Translated
 msgid "Hide login side panel"
 msgstr "Skrýt boční panel přihlášení"
 
 msgid "Hide the login side panel on the home page."
-msgstr "Tímto zakážete všechny cloudové služby, například Orca Cloud a Bambu Cloud. Zároveň se zastaví i přenos dat do cloudových služeb Bambu. Uživatelé, kteří nepoužívají tiskárny BBL nebo používají pouze režim LAN, mohou tuto funkci bez obav zapnout."
+msgstr "Tímto zakážete všechny cloudové služby, například Inlong Cloud a Bambu Cloud. Zároveň se zastaví i přenos dat do cloudových služeb Bambu. Uživatelé, kteří nepoužívají tiskárny BBL nebo používají pouze režim LAN, mohou tuto funkci bez obav zapnout."
 
 msgid "Network test"
 msgstr "Network test"

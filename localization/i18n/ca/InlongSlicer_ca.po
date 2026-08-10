@@ -2332,7 +2332,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Aquest perfil té una versió més recent a OrcaCloud.\n"
+"Aquest perfil té una versió més recent a Inlong Cloud.\n"
 "Baixar descarrega la còpia del núvol. La pujada forçada la sobreescriu amb el vostre perfil local."
 
 # AI Translated
@@ -2340,7 +2340,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Ja existeix un perfil amb aquest nom a OrcaCloud.\n"
+"Ja existeix un perfil amb aquest nom a Inlong Cloud.\n"
 "Baixar descarrega la còpia del núvol. La pujada forçada la sobreescriu amb el vostre perfil local."
 
 # AI Translated
@@ -2456,7 +2456,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "S'han trobat perfils d'usuari existents a %s.\n"
-"Voleu migrar-los al vostre perfil d'OrcaCloud?\n"
+"Voleu migrar-los al vostre perfil d'Inlong Cloud?\n"
 "Això copiarà els vostres perfils perquè estiguin disponibles amb el vostre compte nou."
 
 # AI Translated
@@ -6714,7 +6714,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Voleu sincronitzar les vostres dades personals des d'Orca Cloud?\n"
+"Voleu sincronitzar les vostres dades personals des d'Inlong Cloud?\n"
 "Conté la informació següent:\n"
 "1. Els perfils de procés\n"
 "2. Els perfils de filament\n"
@@ -8698,21 +8698,21 @@ msgstr "No s'ha seleccionat el directori per a la substitució"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Substituït amb fitxers 3D del directori:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Omès %1%: mateix fitxer.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Omès %s: mateix fitxer.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Omès %1%: el fitxer no existeix.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Omès %s: el fitxer no existeix.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Omès %1%: la substitució ha fallat.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Omès %s: la substitució ha fallat.\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Substituït %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Substituït %s.\n"
 
 msgid "Replaced volumes"
 msgstr "Volums substituïts"
@@ -9713,8 +9713,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Això desactiva totes les funcions al núvol, inclosa la sincronització de perfils amb Orca Cloud. Els usuaris que prefereixin treballar completament fora de línia poden activar aquesta opció.\n"
-"Nota: quan el Mode Sigil·lós està activat, no es farà cap còpia de seguretat dels vostres perfils d'usuari a Orca Cloud."
+"Això desactiva totes les funcions al núvol, inclosa la sincronització de perfils amb Inlong Cloud. Els usuaris que prefereixin treballar completament fora de línia poden activar aquesta opció.\n"
+"Nota: quan el Mode Sigil·lós està activat, no es farà cap còpia de seguretat dels vostres perfils d'usuari a Inlong Cloud."
 
 # AI Translated
 msgid "Hide login side panel"

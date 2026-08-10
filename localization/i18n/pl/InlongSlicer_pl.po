@@ -2316,7 +2316,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Ten profil ma nowszą wersję w OrcaCloud.\n"
+"Ten profil ma nowszą wersję w Inlong Cloud.\n"
 "Pobranie ściąga kopię z chmury. Wymuszone wysłanie nadpisuje ją Twoim profilem lokalnym."
 
 # AI Translated
@@ -2324,7 +2324,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"Profil o tej nazwie już istnieje w OrcaCloud.\n"
+"Profil o tej nazwie już istnieje w Inlong Cloud.\n"
 "Pobranie ściąga kopię z chmury. Wymuszone wysłanie nadpisuje ją Twoim profilem lokalnym."
 
 # AI Translated
@@ -2443,7 +2443,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "W %s znaleziono istniejące profile użytkownika.\n"
-"Czy chcesz przenieść je do swojego profilu OrcaCloud?\n"
+"Czy chcesz przenieść je do swojego profilu Inlong Cloud?\n"
 "Spowoduje to skopiowanie profili, aby były dostępne na Twoim nowym koncie."
 
 # AI Translated
@@ -6769,7 +6769,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Czy chcesz zsynchronizować swoje dane osobiste z Orca Cloud?\n"
+"Czy chcesz zsynchronizować swoje dane osobiste z Inlong Cloud?\n"
 "Zawierają one następujące informacje:\n"
 "1. Profile procesu\n"
 "2. Profile filamentu\n"
@@ -8777,24 +8777,24 @@ msgid "Replaced with 3D files from directory:\n"
 msgstr "Zastąpiono plikami 3D z katalogu:\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Pominięto %1%: ten sam plik.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Pominięto %s: ten sam plik.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Pominięto %1%: plik nie istnieje.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Pominięto %s: plik nie istnieje.\n"
 
 # AI Translated
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Pominięto %1%: nie udało się zastąpić.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Pominięto %s: nie udało się zastąpić.\n"
 
 # AI Translated
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Zastąpiono %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Zastąpiono %s.\n"
 
 # AI Translated
 msgid "Replaced volumes"
@@ -9837,8 +9837,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"Wyłącza wszystkie funkcje chmurowe, w tym synchronizację profili Orca Cloud. Użytkownicy, którzy wolą pracować całkowicie offline, mogą włączyć tę opcję.\n"
-"Uwaga: gdy tryb Stealth jest włączony, Twoje profile użytkownika nie będą kopiowane do Orca Cloud."
+"Wyłącza wszystkie funkcje chmurowe, w tym synchronizację profili Inlong Cloud. Użytkownicy, którzy wolą pracować całkowicie offline, mogą włączyć tę opcję.\n"
+"Uwaga: gdy tryb Stealth jest włączony, Twoje profile użytkownika nie będą kopiowane do Inlong Cloud."
 
 # AI Translated
 msgid "Hide login side panel"

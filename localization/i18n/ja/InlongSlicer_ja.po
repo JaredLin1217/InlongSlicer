@@ -2283,7 +2283,7 @@ msgid ""
 "This preset has a newer version in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"このプリセットはOrcaCloudにより新しいバージョンがあります。\n"
+"このプリセットはInlong Cloudにより新しいバージョンがあります。\n"
 "「プル」はクラウドのコピーをダウンロードします。「強制プッシュ」はローカルのプリセットで上書きします。"
 
 # AI Translated
@@ -2291,7 +2291,7 @@ msgid ""
 "A preset with this name already exists in Inlong Cloud.\n"
 "Pull downloads the cloud copy. Force push overwrites it with your local preset."
 msgstr ""
-"同じ名前のプリセットがOrcaCloudにすでに存在します。\n"
+"同じ名前のプリセットがInlong Cloudにすでに存在します。\n"
 "「プル」はクラウドのコピーをダウンロードします。「強制プッシュ」はローカルのプリセットで上書きします。"
 
 # AI Translated
@@ -2407,7 +2407,7 @@ msgid ""
 "This will copy your presets so they are available under your new account."
 msgstr ""
 "%sに既存のユーザープリセットが見つかりました。\n"
-"OrcaCloudプロファイルに移行しますか？\n"
+"Inlong Cloudプロファイルに移行しますか？\n"
 "プリセットがコピーされ、新しいアカウントで利用できるようになります。"
 
 # AI Translated
@@ -6628,7 +6628,7 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
-"Orca Cloudから個人データを同期しますか？\n"
+"Inlong Cloudから個人データを同期しますか？\n"
 "次の情報が含まれます:\n"
 "1. プロセスプリセット\n"
 "2. フィラメントプリセット\n"
@@ -8599,21 +8599,21 @@ msgstr "置換用のディレクトリが選択されていません"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "ディレクトリの3Dファイルで置換しました:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ スキップ %1%: 同一ファイル。\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ スキップ %s: 同一ファイル。\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ スキップ %1%: ファイルが存在しません。\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ スキップ %s: ファイルが存在しません。\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ スキップ %1%: 置換に失敗しました。\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ スキップ %s: 置換に失敗しました。\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ 置換しました %1%。\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ 置換しました %s。\n"
 
 msgid "Replaced volumes"
 msgstr "置換されたボリューム"
@@ -9612,8 +9612,8 @@ msgid ""
 "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n"
 "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
-"クラウド機能をすべて無効にします (Orca Cloudのプロファイル同期を含む)。完全にオフラインで作業したいユーザーはこのオプションを有効にできます。\n"
-"注意: ステルスモードを有効にすると、ユーザープロファイルはOrca Cloudにバックアップされません。"
+"クラウド機能をすべて無効にします (Inlong Cloudのプロファイル同期を含む)。完全にオフラインで作業したいユーザーはこのオプションを有効にできます。\n"
+"注意: ステルスモードを有効にすると、ユーザープロファイルはInlong Cloudにバックアップされません。"
 
 # AI Translated
 msgid "Hide login side panel"
@@ -20727,7 +20727,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"ユーザープリセットの同期機能が有効になっていないことをOrcaが検出しました。そのため、デバイスページでのフィラメント設定が反映されない場合があります。\n"
+"ユーザープリセットの同期機能が有効になっていないことをInlongSlicerが検出しました。そのため、デバイスページでのフィラメント設定が反映されない場合があります。\n"
 "「ユーザープリセットを同期」をクリックして同期機能を有効にしてください。"
 
 msgid "Printer Setting"

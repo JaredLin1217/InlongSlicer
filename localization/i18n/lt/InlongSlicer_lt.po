@@ -8550,21 +8550,21 @@ msgstr "Directory for the replace wasn't selected"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Replaced with 3D files from directory:\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: same file.\n"
-msgstr "✖ Skipped %1%: same file.\n"
+#, c-format
+msgid "✖ Skipped %s: same file.\n"
+msgstr "✖ Praleistas %s: tas pats failas.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: file does not exist.\n"
-msgstr "✖ Skipped %1%: file does not exist.\n"
+#, c-format
+msgid "✖ Skipped %s: file does not exist.\n"
+msgstr "✖ Praleistas %s: failas neegzistuoja.\n"
 
-#, boost-format
-msgid "✖ Skipped %1%: failed to replace.\n"
-msgstr "✖ Skipped %1%: failed to replace.\n"
+#, c-format
+msgid "✖ Skipped %s: failed to replace.\n"
+msgstr "✖ Praleistas %s: nepavyko pakeisti.\n"
 
-#, boost-format
-msgid "✔ Replaced %1%.\n"
-msgstr "✔ Replaced %1%.\n"
+#, c-format
+msgid "✔ Replaced %s.\n"
+msgstr "✔ Pakeistas %s.\n"
 
 msgid "Replaced volumes"
 msgstr "Replaced volumes"
