@@ -1569,12 +1569,12 @@ void PerimeterGenerator::process_classic()
                 }
             }
 
-            // INLONG: only_one_wall_top reduction - drop the inner walls (depth > 0) running over the top surface and
-            // take that space back from the gaps, leaving the top with the outer wall and the top infill. Classic
-            // perimeters are closed loops, so a wall can only be kept or dropped whole; one that merely grazes the
-            // top (same tolerance as the Arachne clip) is kept and withheld from the top fill instead.
+            // INLONG: only_one_wall_top reduction - drop an inner wall (depth > 0) only when the top fill covers the
+            // complete closed loop and its extrusion band. Classic perimeters cannot be cut into partial open paths,
+            // so any meaningful uncovered section keeps the whole loop and withholds its band from the top fill.
+            // Testing the actual clipped centerline and band is important here: vertex-only classification can label
+            // a long curved edge as fully covered even though it leaves the top region between its sparse vertices.
             if (apply_one_wall_top) {
-                const BoundingBox top_region_bbox   = get_extents(one_wall_top_region).inflated(SCALED_EPSILON);
                 const double      grazing_tolerance = 2. * double(perimeter_width);
                 // The band a wall covers, taken around its centerline so the orientation of holes does not matter.
                 auto wall_band = [perimeter_spacing](const Polygon &poly) {
@@ -1586,16 +1586,20 @@ void PerimeterGenerator::process_classic()
                 Polygons dropped_wall_bands;
                 auto reduce_over_top = [&](PerimeterGeneratorLoops &loops) {
                     loops.erase(std::remove_if(loops.begin(), loops.end(), [&](const PerimeterGeneratorLoop &loop) {
-                        const TopOverlap overlap = classify_over_top(loop.polygon.points, one_wall_top_region, top_region_bbox);
-                        if (overlap == TopOverlap::None)
-                            return false;
-                        // Only a wall straddling the boundary is worth measuring; a wall wholly over the top goes.
-                        if (overlap == TopOverlap::Partial &&
-                            total_length(intersection_pl(Polylines{ loop.polygon.split_at_first_point() }, one_wall_top_region)) < grazing_tolerance) {
-                            append(one_wall_top_kept_bands, wall_band(loop.polygon));
+                        const Polyline centerline           = loop.polygon.split_at_first_point();
+                        const Polygons band                 = wall_band(loop.polygon);
+                        const double   uncovered_centerline = total_length(diff_pl(Polylines{ centerline }, one_wall_top_region));
+                        if (uncovered_centerline >= grazing_tolerance) {
+                            append(one_wall_top_kept_bands, band);
                             return false;
                         }
-                        append(dropped_wall_bands, wall_band(loop.polygon));
+                        const double uncovered_band_length = std::abs(area(diff_ex(band, one_wall_top_region))) /
+                                                             std::max(1., double(perimeter_spacing));
+                        if (uncovered_band_length >= grazing_tolerance) {
+                            append(one_wall_top_kept_bands, band);
+                            return false;
+                        }
+                        append(dropped_wall_bands, band);
                         return true;
                     }), loops.end());
                 };
@@ -1900,6 +1904,11 @@ void PerimeterGenerator::process_classic()
         // INLONG: only_one_wall_top - what the top fill does not cover of the dropped walls goes to infill.
         if (!one_wall_top_reclaimed.empty())
             infill_exp = union_ex(infill_exp, one_wall_top_reclaimed);
+        // The overlap expansion and the union with the regular infill may reconnect the two sides of a wall band
+        // removed from top_infill_exp above. Reapply the keep-out to the final fill area so a monotonic line cannot
+        // cross a retained Classic wall while still allowing the extrusion widths to provide the intended overlap.
+        if (!one_wall_top_kept_bands.empty())
+            infill_exp = diff_ex(infill_exp, one_wall_top_kept_bands);
         this->fill_surfaces->append(infill_exp, stInternal);
 
         apply_extra_perimeters(infill_exp);
@@ -1920,6 +1929,8 @@ void PerimeterGenerator::process_classic()
                 polyWithoutOverlap = union_ex(polyWithoutOverlap, top_infill_exp);
             if (!one_wall_top_reclaimed.empty())
                 polyWithoutOverlap = union_ex(polyWithoutOverlap, one_wall_top_reclaimed);
+            if (!one_wall_top_kept_bands.empty())
+                polyWithoutOverlap = diff_ex(polyWithoutOverlap, one_wall_top_kept_bands);
             this->fill_no_overlap->insert(this->fill_no_overlap->end(), polyWithoutOverlap.begin(), polyWithoutOverlap.end());
         }
 

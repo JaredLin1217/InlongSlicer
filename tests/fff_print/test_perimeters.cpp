@@ -33,6 +33,18 @@ TriangleMesh step_with_ledge()
     return m;
 }
 
+// A 60x60x5 base with a 30x60x5 continuation over its right half. At z=5 the exposed top covers
+// only part of each closed Classic perimeter: dropping the whole loop would remove walls below the
+// part that continues upward.
+TriangleMesh step_with_partial_top()
+{
+    TriangleMesh base = make_cube(60., 60., 5.);
+    TriangleMesh upper = make_cube(30., 60., 5.);
+    upper.translate(30., 0., 5.);
+    base.merge(upper);
+    return base;
+}
+
 // Every setting the assertions depend on, so none of them rests on a default.
 DynamicPrintConfig base_config(const char *wall_generator)
 {
@@ -96,6 +108,59 @@ double perimeter_length_at(const Print &print, double print_z)
             return len;
         }
     return 0.;
+}
+
+double perimeter_role_length_at(const Print &print, double print_z, ExtrusionRole role)
+{
+    for (const Layer *layer : print.objects().front()->layers())
+        if (std::abs(layer->print_z - print_z) < 1e-4) {
+            double len = 0.;
+            for (const LayerRegion *region : layer->regions())
+                for (const ExtrusionEntity *entity : region->perimeters.flatten().entities)
+                    if (! entity->is_collection() && entity->role() == role)
+                        len += entity->length();
+            return len;
+        }
+    return 0.;
+}
+
+size_t proper_role_crossings_at(const Print &print, double print_z, ExtrusionRole fill_role, ExtrusionRole wall_role)
+{
+    Polylines fill_paths;
+    Polylines wall_paths;
+    for (const Layer *layer : print.objects().front()->layers())
+        if (std::abs(layer->print_z - print_z) < 1e-4) {
+            for (const LayerRegion *region : layer->regions()) {
+                for (const ExtrusionEntity *entity : region->fills.flatten().entities)
+                    if (! entity->is_collection() && entity->role() == fill_role)
+                        entity->collect_polylines(fill_paths);
+                for (const ExtrusionEntity *entity : region->perimeters.flatten().entities)
+                    if (! entity->is_collection() && entity->role() == wall_role)
+                        entity->collect_polylines(wall_paths);
+            }
+            break;
+    }
+
+    const double endpoint_clearance = scale_(0.5);
+    auto crosses_wall = [endpoint_clearance, &wall_paths](const Polyline &fill_path) {
+        for (const Line &fill_line : fill_path.lines()) {
+            for (const Polyline &wall_path : wall_paths) {
+                for (const Line &wall_line : wall_path.lines()) {
+                    Point intersection;
+                    if (fill_line.intersection(wall_line, &intersection) &&
+                        (intersection - fill_path.first_point()).cast<double>().norm() > endpoint_clearance &&
+                        (intersection - fill_path.last_point()).cast<double>().norm() > endpoint_clearance)
+                        return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    size_t crossings = 0;
+    for (const Polyline &fill_path : fill_paths)
+        crossings += crosses_wall(fill_path) ? 1 : 0;
+    return crossings;
 }
 
 // Largest per-layer difference between two series; a negative result means they are not comparable.
@@ -221,6 +286,39 @@ TEST_CASE("Only one wall on top surfaces drops inner walls only where a top fill
     CHECK(one_wall_no_fill < plain);
     CHECK(one_wall_no_expand > one_wall);
     CHECK(one_wall_no_expand < plain);
+}
+
+TEST_CASE("Classic top expansion preserves inner walls that are only partly under a top surface", "[Perimeters]")
+{
+    struct Metrics {
+        double outer_wall_length;
+        double inner_wall_length;
+        size_t top_fill_inner_wall_crossings;
+    };
+    auto metrics_for = [](double expansion) {
+        DynamicPrintConfig config = base_config("classic");
+        config.set_deserialize_strict({
+            { "only_one_wall_top",              true },
+            { "top_surface_expansion",          expansion },
+            { "top_bottom_infill_wall_overlap", "20%" },
+            { "min_width_top_surface",          0.0 },
+        });
+        Print print;
+        init_and_process_print({ step_with_partial_top() }, print, config);
+        REQUIRE_FALSE(print.objects().empty());
+        return Metrics{ perimeter_role_length_at(print, ledge_z, erExternalPerimeter),
+                        perimeter_role_length_at(print, ledge_z, erPerimeter),
+                        proper_role_crossings_at(print, ledge_z, erTopSolidInfill, erPerimeter) };
+    };
+
+    const Metrics no_expansion = metrics_for(0.0);
+    const Metrics expanded     = metrics_for(2.0);
+
+    REQUIRE(no_expansion.outer_wall_length > 0.);
+    REQUIRE(no_expansion.inner_wall_length > scale_(10.));
+    CHECK_THAT(expanded.outer_wall_length, Catch::Matchers::WithinAbs(no_expansion.outer_wall_length, 1.0));
+    CHECK(expanded.inner_wall_length > 0.5 * no_expansion.inner_wall_length);
+    CHECK(expanded.top_fill_inner_wall_crossings == 0);
 }
 
 // The bottom counterpart: the first layer is thinned to a single wall only where a bottom shell fills the
