@@ -6313,7 +6313,8 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("In order to reduce the visibility of the seam in a closed loop extrusion, the loop is interrupted and shortened by a specified amount.\n"
                      "This amount can be specified in millimeters or as a percentage of the current extruder diameter. The default value for this parameter is 10%.");
     def->sidetext = L("mm or %");
-    def->min = 0;
+    // Negative values intentionally create an overlap at the end of a traditional closed loop.
+    def->min = -100;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloatOrPercent(10,true));
 

@@ -84,3 +84,44 @@ SCENARIO("Polygon flattening", "[ExtrusionEntity]") {
         }
     }
 }
+
+SCENARIO("Loop clipping supports a negative seam overlap", "[ExtrusionEntity][SeamGap]") {
+    ExtrusionPath path{erExternalPerimeter, 1.0, 0.4, 0.2};
+    path.polyline = Polyline3(Points3{
+        Point3(scale_(0.0),  scale_(0.0),  scale_(0.0)),
+        Point3(scale_(10.0), scale_(0.0),  scale_(0.0)),
+        Point3(scale_(10.0), scale_(10.0), scale_(0.0)),
+        Point3(scale_(0.0),  scale_(10.0), scale_(0.0)),
+        Point3(scale_(0.0),  scale_(0.0),  scale_(0.0)),
+    });
+    const ExtrusionLoop loop(path);
+    const double        adjustment = scale_(2.0);
+
+    SECTION("A positive distance still shortens the loop") {
+        ExtrusionPaths clipped;
+        loop.clip_end(adjustment, &clipped);
+
+        REQUIRE(clipped.size() == 1);
+        CHECK(clipped.front().length() == Catch::Approx(loop.length() - adjustment));
+        CHECK(clipped.back().last_point3() == Point3(scale_(0.0), scale_(2.0), scale_(0.0)));
+    }
+
+    SECTION("A negative distance appends the beginning of the loop") {
+        ExtrusionPaths overlapped;
+        loop.clip_end(-adjustment, &overlapped);
+
+        REQUIRE(overlapped.size() == 2);
+        CHECK(overlapped.front().length() == Catch::Approx(loop.length()));
+        CHECK(overlapped.back().length() == Catch::Approx(adjustment));
+        CHECK(overlapped.front().last_point3() == overlapped.back().first_point3());
+        CHECK(overlapped.back().last_point3() == Point3(scale_(2.0), scale_(0.0), scale_(0.0)));
+    }
+
+    SECTION("An excessive negative distance is limited to one extra loop") {
+        ExtrusionPaths overlapped;
+        loop.clip_end(-2.0 * loop.length(), &overlapped);
+
+        REQUIRE(overlapped.size() == 2);
+        CHECK(overlapped.front().length() + overlapped.back().length() == Catch::Approx(2.0 * loop.length()));
+    }
+}

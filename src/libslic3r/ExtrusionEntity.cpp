@@ -318,17 +318,31 @@ void ExtrusionLoop::clip_end(double distance, ExtrusionPaths* paths) const
 {
     *paths = this->paths;
 
-    while (distance > 0 && !paths->empty()) {
-        ExtrusionPath &last = paths->back();
-        double len = last.length();
-        if (len <= distance) {
-            paths->pop_back();
-            distance -= len;
-        } else {
-            last.polyline.clip_end(distance);
-            break;
+    const auto clip_paths_end = [](double clip_distance, ExtrusionPaths &target) {
+        while (clip_distance > 0 && !target.empty()) {
+            ExtrusionPath &last = target.back();
+            const double   len  = last.length();
+            if (len <= clip_distance) {
+                target.pop_back();
+                clip_distance -= len;
+            } else {
+                last.polyline.clip_end(clip_distance);
+                break;
+            }
         }
+    };
+
+    if (distance >= 0.) {
+        clip_paths_end(distance, *paths);
+        return;
     }
+
+    // A negative gap means that the extrusion shall continue past the seam. As a closed loop has
+    // no geometry past its end, copy a prefix of the loop and append it to the generated paths.
+    // Clamp the overlap to one full loop so malformed profiles cannot duplicate unbounded geometry.
+    ExtrusionPaths overlap_paths = this->paths;
+    clip_paths_end(std::max(0., this->length() + distance), overlap_paths);
+    paths->insert(paths->end(), overlap_paths.begin(), overlap_paths.end());
 }
 
 bool ExtrusionLoop::has_overhang_point(const Point &point) const

@@ -487,6 +487,8 @@ public:
         Point  foot_pt;
     };
     ClosestPathPoint         get_closest_path_and_point(const Point &point, bool prefer_non_overhang) const;
+    // Positive distances shorten the loop. Negative distances append the beginning of the loop,
+    // creating an overlap across the seam (clamped to at most one complete loop).
     void clip_end(double distance, ExtrusionPaths* paths) const;
     // Test, whether the point is extruded by a bridging flow.
     // This used to be used to avoid placing seams on overhangs, but now the EdgeGrid is used instead.

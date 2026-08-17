@@ -7037,8 +7037,8 @@ std::string GCode::extrude_loop(const ExtrusionLoop&        loop_ref,
     // if polyline was shorter than the clipping distance we'd get a null polyline, so
     // we discard it in that case
     const double seam_gap = scale_(m_config.seam_gap.get_abs_value(nozzle_diameter));
-    const bool seam_gap_applied = enable_seam_slope || m_enable_loop_clipping;
-    const double seam_gap_distance_mm = seam_gap_applied ? unscale_(seam_gap) : 0.0;
+    const bool seam_gap_applied = enable_seam_slope ? seam_gap > 0. : m_enable_loop_clipping;
+    const double seam_gap_distance_mm = seam_gap_applied ? std::abs(unscale_(seam_gap)) : 0.0;
     double seam_scarf_distance_mm = 0.0;
     const double clip_length = m_enable_loop_clipping && !enable_seam_slope ? seam_gap : 0;
 
@@ -7072,7 +7072,15 @@ std::string GCode::extrude_loop(const ExtrusionLoop&        loop_ref,
         // note: previous & next are inverted to extrude "in the opposite direction, and we are "rewinding"
         Point previous_point = Point(paths.front().polyline.points[1].x(), paths.front().polyline.points[1].y());
         Point current_point = Point(paths.front().polyline.points.front().x(), paths.front().polyline.points.front().y());
-        Point next_point = Point(paths.back().polyline.points.back().x(), paths.back().polyline.points.back().y());
+        Point next_point;
+        if (seam_gap < 0.) {
+            // The last generated path is the overlap prefix. Use the original closing segment to
+            // calculate the inward move around the actual seam rather than along the overlap.
+            const Point3 &p3 = loop.paths.back().polyline.points[loop.paths.back().polyline.points.size() - 2];
+            next_point = Point(p3.x(), p3.y());
+        } else {
+            next_point = Point(paths.back().polyline.points.back().x(), paths.back().polyline.points.back().y());
+        }
 
         // can happen if seam_gap is null
         if (next_point == current_point) {

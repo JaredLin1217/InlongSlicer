@@ -42,6 +42,36 @@ SCENARIO("Generic config validation performs as expected.", "[Config]") {
     }
 }
 
+SCENARIO("Seam gap accepts negative absolute and percentage values", "[Config][SeamGap]") {
+    GIVEN("A config generated from default options") {
+        Slic3r::DynamicPrintConfig config = Slic3r::DynamicPrintConfig::full_print_config();
+
+        WHEN("The seam gap is a negative absolute distance") {
+            config.set_deserialize_strict("seam_gap", "-0.1");
+
+            THEN("The value is accepted and remains absolute") {
+                const auto *seam_gap = config.opt<ConfigOptionFloatOrPercent>("seam_gap");
+                REQUIRE(config.validate().empty());
+                REQUIRE(seam_gap != nullptr);
+                CHECK_FALSE(seam_gap->percent);
+                CHECK(seam_gap->value == Catch::Approx(-0.1));
+            }
+        }
+
+        WHEN("The seam gap is a negative percentage") {
+            config.set_deserialize_strict("seam_gap", "-25%");
+
+            THEN("The value is accepted and remains a percentage") {
+                const auto *seam_gap = config.opt<ConfigOptionFloatOrPercent>("seam_gap");
+                REQUIRE(config.validate().empty());
+                REQUIRE(seam_gap != nullptr);
+                CHECK(seam_gap->percent);
+                CHECK(seam_gap->value == Catch::Approx(-25.0));
+            }
+        }
+    }
+}
+
 SCENARIO("Config accessor functions perform as expected.", "[Config]") {
     GIVEN("A config generated from default options") {
         Slic3r::DynamicPrintConfig config = Slic3r::DynamicPrintConfig::full_print_config();
