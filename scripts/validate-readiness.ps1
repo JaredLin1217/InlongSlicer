@@ -1,4 +1,4 @@
-﻿function Test-ReadinessLadderEvidence {
+function Test-ReadinessLadderEvidence {
 $startFailureCount = $Failures.Count
 $checks = @(
 @{
@@ -28,7 +28,7 @@ Evidence = @(
 @(".agents/docs/agents/version.yaml", "P2:"),
 @(".agents/docs/agents/version.yaml", "root_principle"),
 @("scripts/validate.ps1", "Test-TemplateSourceNeutrality"),
-@("scripts/validate.ps1", "Test-ExactPairs"),
+@("scripts/validate.ps1", "Test-CanonicalSourceUniqueness"),
 @("scripts/validate.ps1", "Test-TemplateCoverage")
 )
 },

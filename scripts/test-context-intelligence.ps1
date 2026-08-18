@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [string]$OutputPath = ".agents/runtime/context-intelligence/practice-report.json",
     [switch]$Quiet
@@ -184,15 +184,15 @@ $overallPass = @($thresholds.Values | Where-Object { -not $_ }).Count -eq 0
 
 $report = [ordered]@{
     schema_version = "agents-context-practice-report/v1"
-    workflow_version = "2.9.0"
+    workflow_version = "2.9.1"
     baseline = [ordered]@{
         version       = "2.8.0"
         source_commit = $baselineCommit
-        method        = "Replay canonical v2.8 route-expansion files without reading v2.9 context evidence."
+        method        = "Replay canonical v2.8 route-expansion files without reading current context evidence."
         runs_per_task = $runsPerGroup
     }
     candidate = [ordered]@{
-        version       = "2.9.0"
+        version       = "2.9.1"
         method        = "Live agents-context-evidence/v1 resolver execution."
         runs_per_task = $runsPerGroup
     }

@@ -1,4 +1,4 @@
-﻿function Test-ReleasePackageExport {
+function Test-ReleasePackageExport {
 $startFailureCount = $Failures.Count
 $validationRoot = Get-ValidationTempRoot -Purpose "release-export-validation"
 $previousErrorActionPreference = $ErrorActionPreference
@@ -363,8 +363,8 @@ Add-Failure "Runtime evidence context baseline must use three runs per task."
 foreach ($field in @("version", "method", "runs_per_task")) {
 [void] (Test-ObjectField -Object $context.candidate -Field $field -Context "Runtime evidence context candidate")
 }
-if ([string] $context.candidate.version -ne "2.9.0") {
-Add-Failure "Runtime evidence context candidate version must be 2.9.0."
+if ([string] $context.candidate.version -ne "2.9.1") {
+Add-Failure "Runtime evidence context candidate version must be 2.9.1."
 }
 if ([int] $context.candidate.runs_per_task -ne 3) {
 Add-Failure "Runtime evidence context candidate must use three runs per task."

@@ -1,4 +1,4 @@
-﻿schema: agents-workflows/v2
+schema: agents-workflows/v2
 purpose: "Core route, employee, deploy, runtime evidence, scoring, handoff."
 owns: "Workflow behavior and closeout."
 read_first: ["ai-runtime","policy","verify","schemas","deploy when target writes"]
@@ -158,7 +158,7 @@ maintenance:
   verification_profiles:
     change_aware: "validate-changes.ps1 uses ContextMode Auto; Required for release evidence; checkpoint gates never reduce."
     fast_turn: "answer-only/scoped work"
-    policy_pack_edit: "changed files and mirror pairs"
+    policy_pack_edit: "changed files, canonical sources, and starter uniqueness"
     commit_tag_checkpoint: "ordinary commit/tag/version/branch-push checkpoint"
     release_deploy_push_audit: "release/deploy/protected push/broad audit/no-deduction"
     runtime_multi_agent: "real employee runtime evidence"

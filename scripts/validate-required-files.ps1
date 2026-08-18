@@ -1,4 +1,4 @@
-﻿function Test-RequiredFiles {
+function Test-RequiredFiles {
 $required = @(
 "AGENTS.md",
 ".agents/docs/agents/ai-runtime.yaml",
@@ -34,18 +34,8 @@ $required = @(
 "schemas/agents-knowledge-footprint.schema.json",
 "schemas/agents-context-intelligence.schema.json",
 "schemas/agents-context-evidence.schema.json",
-".agents/docs/templates/agents/agents/workflow-artifacts.yaml",
-".agents/docs/templates/agents/agents/collaborators.yaml",
-".agents/docs/templates/agents/agents/core-system.yaml",
-".agents/docs/templates/agents/agents/runtime-execution.yaml",
-".agents/docs/templates/agents/agents/provider-adapters.yaml",
-".agents/docs/templates/agents/agents/route-packs.yaml",
-".agents/docs/templates/agents/agents/knowledge-footprint.yaml",
-".agents/docs/templates/agents/agents/context-intelligence.yaml",
-".agents/docs/templates/agents/agents/openai-foundations.yaml",
 ".agents/docs/agents/context-compact.yaml",
 "schemas/agents-context-compact.schema.json",
-".agents/docs/templates/agents/agents/context-compact.yaml",
 ".agents/skills/project-isolation-workflow/SKILL.md",
 ".agents/docs/project-structure.md",
 ".agents/docs/runbooks/agents-operator-guide.md",
@@ -68,12 +58,15 @@ $required = @(
 "scripts/validate-runtime-execution.ps1",
 "scripts/validate-readiness.ps1",
 "scripts/validate-cross-project-runtime.ps1",
+"scripts/agent-toml.ps1",
 "scripts/resolve-agent-context.ps1",
 "scripts/validate-context-intelligence.ps1",
 "scripts/test-context-intelligence.ps1",
 "scripts/export-route-pack.ps1",
 "schemas/agents-runtime-evidence.schema.json",
-"tests/context-intelligence/cases.json"
+"tests/context-intelligence/cases.json",
+"tests/context-intelligence/fixtures/codex-config.valid.toml",
+"tests/context-intelligence/fixtures/codex-config.invalid.toml"
 )
 foreach ($path in $required) {
 if (-not (Test-Path -LiteralPath (Get-RepoPath $path) -PathType Leaf)) {

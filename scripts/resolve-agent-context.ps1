@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
     [string]$Task,
@@ -24,6 +24,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
+$tomlHelperPath = Join-Path $PSScriptRoot "agent-toml.ps1"
+$tomlHelperAvailable = Test-Path -LiteralPath $tomlHelperPath -PathType Leaf
+if ($tomlHelperAvailable) {
+    . $tomlHelperPath
+}
 
 function ConvertTo-AgentPath {
     param([string]$PathValue)
@@ -124,6 +130,7 @@ function Get-AgentLanguage {
         ".ps1" { return "powershell" }
         ".psm1" { return "powershell" }
         ".json" { return "json" }
+        ".toml" { return "toml" }
         ".yaml" { return "yaml" }
         ".yml" { return "yaml" }
         ".md" { return "markdown" }
@@ -152,7 +159,7 @@ function Get-TextDependencies {
 
     $found = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     $searchText = $Text.Replace("\", "/")
-    $pathPattern = '(?i)(?<![A-Za-z0-9_.-])(?:\.{0,2}/)?(?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.(?:ps1|psm1|yaml|yml|json|md|py|js|jsx|ts|tsx|c|cc|cpp|cxx|h|hpp)'
+    $pathPattern = '(?i)(?<![A-Za-z0-9_.-])(?:\.{0,2}/)?(?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.(?:ps1|psm1|yaml|yml|json|toml|md|py|js|jsx|ts|tsx|c|cc|cpp|cxx|h|hpp)'
     foreach ($match in [regex]::Matches($searchText, $pathPattern)) {
         $candidate = ConvertTo-AgentPath $match.Value
         while ($candidate.StartsWith("../", [System.StringComparison]::Ordinal)) {
@@ -217,25 +224,38 @@ if ([string]::IsNullOrWhiteSpace($repoRoot)) {
     $repoRoot = Split-Path -Parent $PSScriptRoot
 }
 $repoRoot = [System.IO.Path]::GetFullPath($repoRoot)
+$repoPrefix = $repoRoot.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
 
+$gaps = [System.Collections.Generic.List[string]]::new()
 $rawChangedPaths = @($ChangedPath)
 $normalizedChangedPaths = @()
 foreach ($rawPath in $rawChangedPaths) {
     if ([string]::IsNullOrWhiteSpace($rawPath)) {
         continue
     }
-    $candidate = [string]$rawPath
-    if ([System.IO.Path]::IsPathRooted($candidate)) {
-        $fullCandidate = [System.IO.Path]::GetFullPath($candidate)
-        if ($fullCandidate.StartsWith($repoRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-            $candidate = $fullCandidate.Substring($repoRoot.Length).TrimStart("\", "/")
+    try {
+        $candidate = [string]$rawPath
+        $fullCandidate = if ([System.IO.Path]::IsPathRooted($candidate)) {
+            [System.IO.Path]::GetFullPath($candidate)
+        }
+        else {
+            [System.IO.Path]::GetFullPath((Join-Path $repoRoot $candidate))
+        }
+        if ($fullCandidate -ne $repoRoot -and -not $fullCandidate.StartsWith($repoPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            [void]$gaps.Add("conflict:external-path:$rawPath")
+            continue
+        }
+        $candidate = $fullCandidate.Substring($repoRoot.Length).TrimStart("\", "/")
+        if (-not [string]::IsNullOrWhiteSpace($candidate)) {
+            $normalizedChangedPaths += ConvertTo-AgentPath $candidate
         }
     }
-    $normalizedChangedPaths += ConvertTo-AgentPath $candidate
+    catch {
+        [void]$gaps.Add("conflict:invalid-path:$rawPath")
+    }
 }
 $normalizedChangedPaths = @($normalizedChangedPaths | Sort-Object -Unique)
 
-$gaps = [System.Collections.Generic.List[string]]::new()
 $trackedFiles = @()
 $sourceCommit = "unavailable"
 $workingTreeStatus = @()
@@ -257,7 +277,7 @@ catch {
 }
 
 $supportedExtensions = @(
-    ".ps1", ".psm1", ".json", ".yaml", ".yml", ".md", ".py", ".js", ".jsx", ".ts", ".tsx",
+    ".ps1", ".psm1", ".json", ".toml", ".yaml", ".yml", ".md", ".py", ".js", ".jsx", ".ts", ".tsx",
     ".c", ".cc", ".cpp", ".cxx", ".h", ".hpp"
 )
 $ignoredPrefixes = @(".agents/runtime/", ".git/", "node_modules/", "vendor/", "build/", "dist/", "out/")
@@ -279,7 +299,31 @@ foreach ($file in @($trackedFiles)) {
     if ($supportedExtensions -notcontains $extension) {
         continue
     }
-    $trackedMap[$pathValue] = $true
+    $trackedMap[$pathValue] = "git-inventory"
+    $leaf = [System.IO.Path]::GetFileName($pathValue)
+    if (-not $baseNameMap.ContainsKey($leaf)) {
+        $baseNameMap[$leaf] = @()
+    }
+    $baseNameMap[$leaf] = @($baseNameMap[$leaf]) + $pathValue
+}
+
+foreach ($pathValue in $normalizedChangedPaths) {
+    $extension = [System.IO.Path]::GetExtension($pathValue).ToLowerInvariant()
+    if ($supportedExtensions -notcontains $extension -or $trackedMap.ContainsKey($pathValue)) {
+        continue
+    }
+    $ignore = $false
+    foreach ($prefix in $ignoredPrefixes) {
+        if ($pathValue.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            $ignore = $true
+            break
+        }
+    }
+    $fullPath = Join-Path $repoRoot ($pathValue.Replace("/", [System.IO.Path]::DirectorySeparatorChar))
+    if ($ignore -or -not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
+        continue
+    }
+    $trackedMap[$pathValue] = "declared-local"
     $leaf = [System.IO.Path]::GetFileName($pathValue)
     if (-not $baseNameMap.ContainsKey($leaf)) {
         $baseNameMap[$leaf] = @()
@@ -293,8 +337,13 @@ $oldIndexByPath = @{}
 if (Test-Path -LiteralPath $indexPath -PathType Leaf) {
     try {
         $oldIndex = Get-Content -LiteralPath $indexPath -Raw | ConvertFrom-Json
-        foreach ($entry in @($oldIndex.files)) {
-            $oldIndexByPath[[string]$entry.path] = $entry
+        if ([string]$oldIndex.schema_version -eq "agents-context-index/v2") {
+            foreach ($entry in @($oldIndex.files)) {
+                $oldIndexByPath[[string]$entry.path] = $entry
+            }
+        }
+        else {
+            [void]$gaps.Add("stale:index-version")
         }
     }
     catch {
@@ -321,12 +370,17 @@ foreach ($pathValue in @($trackedMap.Keys | Sort-Object)) {
         $oldEntry = $oldIndexByPath[$pathValue]
     }
 
-    if ($null -ne $oldEntry -and [string]$oldEntry.sha256 -eq $hash) {
+    $inventorySource = [string]$trackedMap[$pathValue]
+    if ($null -ne $oldEntry -and [string]$oldEntry.sha256 -eq $hash -and
+        [string]$oldEntry.inventory_source -eq $inventorySource -and [bool]$oldEntry.parser_available) {
         $entry = [ordered]@{
             path             = $pathValue
             sha256           = $hash
             size_bytes       = [int64]$fileInfo.Length
             language         = [string]$oldEntry.language
+            inventory_source = $inventorySource
+            parser           = [string]$oldEntry.parser
+            parser_available = [bool]$oldEntry.parser_available
             dependency_paths = @($oldEntry.dependency_paths)
             parse_errors     = @($oldEntry.parse_errors)
         }
@@ -335,10 +389,13 @@ foreach ($pathValue in @($trackedMap.Keys | Sort-Object)) {
     else {
         $language = Get-AgentLanguage $pathValue
         $parseErrors = [System.Collections.Generic.List[string]]::new()
+        $parser = "bounded-reference-scan"
+        $parserAvailable = $true
         $text = ""
         try {
             $text = Get-Content -LiteralPath $fullPath -Raw
             if ($language -eq "powershell") {
+                $parser = "powershell-ast"
                 $tokens = $null
                 $errors = $null
                 [void][System.Management.Automation.Language.Parser]::ParseFile($fullPath, [ref]$tokens, [ref]$errors)
@@ -347,7 +404,23 @@ foreach ($pathValue in @($trackedMap.Keys | Sort-Object)) {
                 }
             }
             elseif ($language -eq "json") {
+                $parser = "powershell-json"
                 [void]($text | ConvertFrom-Json)
+            }
+            elseif ($language -eq "toml") {
+                if (-not $tomlHelperAvailable) {
+                    $parser = "unavailable"
+                    $parserAvailable = $false
+                    [void]$parseErrors.Add("TOML validator helper is unavailable.")
+                }
+                else {
+                    $tomlResult = Test-AgentTomlFile -Path $fullPath
+                    $parser = [string]$tomlResult.parser
+                    $parserAvailable = [bool]$tomlResult.available
+                    foreach ($parseError in @($tomlResult.errors)) {
+                        [void]$parseErrors.Add([string]$parseError)
+                    }
+                }
             }
         }
         catch {
@@ -363,6 +436,9 @@ foreach ($pathValue in @($trackedMap.Keys | Sort-Object)) {
             sha256           = $hash
             size_bytes       = [int64]$fileInfo.Length
             language         = $language
+            inventory_source = $inventorySource
+            parser           = $parser
+            parser_available = $parserAvailable
             dependency_paths = @($dependencies)
             parse_errors     = @($parseErrors)
         }
@@ -376,7 +452,7 @@ $statusFingerprint = Get-StringDigest ((@($workingTreeStatus) -join "`n"))
 $indexState = if ($reusedPaths.Count -gt 0) { "incremental" } else { "rebuilt" }
 $generatedUtc = [DateTime]::UtcNow.ToString("o")
 $indexObject = [ordered]@{
-    schema_version          = "agents-context-index/v1"
+    schema_version          = "agents-context-index/v2"
     source_commit           = $sourceCommit
     working_tree_fingerprint = $statusFingerprint
     generated_utc           = $generatedUtc
@@ -400,6 +476,15 @@ foreach ($pathValue in $normalizedChangedPaths) {
     }
     if (-not $trackedMap.ContainsKey($pathValue) -and -not (Test-Path -LiteralPath (Join-Path $repoRoot $pathValue))) {
         [void]$gaps.Add("conflict:missing-path:$pathValue")
+    }
+    if ($entryByPath.ContainsKey($pathValue)) {
+        $changedEntry = $entryByPath[$pathValue]
+        if (-not [bool]$changedEntry.parser_available) {
+            [void]$gaps.Add("degraded:parser-unavailable:$pathValue")
+        }
+        if (@($changedEntry.parse_errors).Count -gt 0) {
+            [void]$gaps.Add("parse_error:$pathValue")
+        }
     }
 }
 
@@ -480,13 +565,14 @@ foreach ($candidate in @($rankedCandidates)) {
     if (@($entry.parse_errors).Count -gt 0) {
         [void]$gaps.Add("parse_error:$($entry.path)")
     }
+    $inventoryDescription = if ([string]$entry.inventory_source -eq "declared-local") { "declared local path" } else { "Git inventory" }
     [void]$relevantFiles.Add([pscustomobject][ordered]@{
         path          = [string]$entry.path
         line          = [int]$line
         reason        = (@($candidateReasons[[string]$entry.path]) -join "; ")
         sha256        = [string]$entry.sha256
         freshness     = $freshness
-        provenance    = "git-tracked content plus structured parser or bounded reference scan"
+        provenance    = "$inventoryDescription; parser=$($entry.parser)"
         confidence    = $confidence
         context_bytes = [int64]$contextBytes
     })
@@ -574,9 +660,9 @@ $evidence = [ordered]@{
         content_digest           = Get-StringDigest $allHashes
     }
     provenance                  = @(
-        [ordered]@{ method = "git inventory"; authority = "primary"; detail = "tracked paths and repository state" },
-        [ordered]@{ method = "structured parsing"; authority = "primary"; detail = "PowerShell AST and JSON parsing" },
-        [ordered]@{ method = "bounded reference scan"; authority = "discovery-only"; detail = "heuristics cannot authorize edits or skipped verification" }
+        [ordered]@{ method = "repository inventory"; authority = "primary"; detail = "Git plus declared local paths and state" },
+        [ordered]@{ method = "structured parsing"; authority = "primary"; detail = "PowerShell AST, JSON, and TOML" },
+        [ordered]@{ method = "bounded reference scan"; authority = "discovery-only"; detail = "cannot authorize edits or skipped verification" }
     )
     confidence                  = $overallConfidence
     gaps                        = @($gapList)

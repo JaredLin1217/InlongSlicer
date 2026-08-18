@@ -1,16 +1,18 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 
 function Test-ContextIntelligenceIntegrity {
     param([switch]$RunPractice)
 
     $requiredPaths = @(
         ".agents/docs/agents/context-intelligence.yaml",
-        ".agents/docs/templates/agents/agents/context-intelligence.yaml",
         "schemas/agents-context-intelligence.schema.json",
         "schemas/agents-context-evidence.schema.json",
+        "scripts/agent-toml.ps1",
         "scripts/resolve-agent-context.ps1",
         "scripts/test-context-intelligence.ps1",
-        "tests/context-intelligence/cases.json"
+        "tests/context-intelligence/cases.json",
+        "tests/context-intelligence/fixtures/codex-config.valid.toml",
+        "tests/context-intelligence/fixtures/codex-config.invalid.toml"
     )
     $missing = $false
     foreach ($relativePath in $requiredPaths) {
@@ -25,12 +27,7 @@ function Test-ContextIntelligenceIntegrity {
     }
 
     $canonicalPath = Get-RepoPath ".agents/docs/agents/context-intelligence.yaml"
-    $mirrorPath = Get-RepoPath ".agents/docs/templates/agents/agents/context-intelligence.yaml"
     $canonical = Get-Content -LiteralPath $canonicalPath -Raw
-    $mirror = Get-Content -LiteralPath $mirrorPath -Raw
-    if ($canonical -cne $mirror) {
-        Add-Failure "Context intelligence canonical/template mirror drifted."
-    }
 
     $requiredMarkers = @(
         "schema: agents-context-intelligence/v1",
@@ -38,6 +35,8 @@ function Test-ContextIntelligenceIntegrity {
         ".agents/runtime/context-intelligence/",
         "heuristic_limit: discovery only",
         "dirty working tree",
+        "TOML",
+        "declared local",
         "scripts/test-context-intelligence.ps1",
         "task_accuracy: 1.0",
         "critical_impact_recall: 1.0",
@@ -60,6 +59,21 @@ function Test-ContextIntelligenceIntegrity {
         catch {
             Add-Failure "Context intelligence schema is invalid JSON: $schemaRelativePath"
         }
+    }
+
+    $tomlHelperPath = Get-RepoPath "scripts/agent-toml.ps1"
+    $tomlFixtureRelativePath = "tests/context-intelligence/fixtures/codex-config.valid.toml"
+    $tomlFixturePath = Get-RepoPath $tomlFixtureRelativePath
+    $invalidTomlFixturePath = Get-RepoPath "tests/context-intelligence/fixtures/codex-config.invalid.toml"
+    try {
+        . $tomlHelperPath
+        $invalidToml = Test-AgentTomlFile -Path $invalidTomlFixturePath
+        if (-not [bool]$invalidToml.available -or [bool]$invalidToml.success) {
+            Add-Failure "Invalid TOML was not rejected by parser $($invalidToml.parser)."
+        }
+    }
+    catch {
+        Add-Failure "TOML rejection smoke failed: $($_.Exception.Message)"
     }
 
     $resolverPath = Get-RepoPath "scripts/resolve-agent-context.ps1"
@@ -92,6 +106,20 @@ function Test-ContextIntelligenceIntegrity {
     }
     catch {
         Add-Failure "Context resolver smoke failed: $($_.Exception.Message)"
+    }
+
+    try {
+        $tomlEvidence = (& $resolverPath -Task "validate Codex TOML context" -ChangedPath $tomlFixtureRelativePath -Format Json) | ConvertFrom-Json
+        $tomlRelevant = @($tomlEvidence.relevant_files | Where-Object path -eq $tomlFixtureRelativePath)
+        $forbiddenGaps = @("unsupported:$tomlFixtureRelativePath", "parse_error:$tomlFixtureRelativePath", "degraded:parser-unavailable:$tomlFixtureRelativePath")
+        if ($tomlRelevant.Count -ne 1 -or
+            [string]$tomlRelevant[0].provenance -notmatch "parser=(python-toml|powershell-convertfrom-toml)" -or
+            @($tomlEvidence.gaps | Where-Object { $forbiddenGaps -contains [string]$_ }).Count -gt 0) {
+            Add-Failure "Context resolver did not produce complete TOML evidence."
+        }
+    }
+    catch {
+        Add-Failure "TOML context resolver smoke failed: $($_.Exception.Message)"
     }
 
     if ($RunPractice) {

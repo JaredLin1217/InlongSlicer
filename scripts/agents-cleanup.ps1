@@ -1,4 +1,4 @@
-﻿param(
+param(
     [ValidateSet("Verify", "Cleanup")]
     [string] $Action = "Verify",
     [string[]] $RuntimeIds = @(),
@@ -417,7 +417,7 @@ function Invoke-GlobalStateCleanup {
         [string] $CodexRoot
     )
     $results = @()
-    if (-not (Test-Path -LiteralPath $CodexRoot -PathType Container)) {
+    if ($Ids.Count -eq 0 -or -not (Test-Path -LiteralPath $CodexRoot -PathType Container)) {
         return $results
     }
     $files = @(Get-ChildItem -LiteralPath $CodexRoot -Filter ".codex-global-state*.json" -File -ErrorAction SilentlyContinue)
@@ -467,6 +467,15 @@ function Invoke-RolloutCleanup {
         [string] $RepoPath,
         [string] $CodexRoot
     )
+    if ($Ids.Count -eq 0) {
+        return [pscustomobject]@{
+            before = 0
+            deleted = 0
+            blocked = 0
+            after = 0
+            ignored_parent_refs = 0
+        }
+    }
     $roots = @(
         (Join-Path $CodexRoot "sessions"),
         (Join-Path $CodexRoot "archived_sessions")
@@ -569,6 +578,12 @@ if ($Action -eq "Cleanup" -and $DelaySeconds -gt 0) {
     Start-Sleep -Seconds $DelaySeconds
     $delayed = Invoke-AllChecks -Mode "Verify"
 }
+$globalDeleted = 0
+$globalRemaining = 0
+foreach ($state in @($result.global_unread_state_result)) {
+    $globalDeleted += [int] $state.deleted
+    $globalRemaining += [int] $state.after
+}
 
 $summary = [pscustomobject]@{
     action = $Action
@@ -580,13 +595,13 @@ $summary = [pscustomobject]@{
     deleted_counts = @{
         sqlite_rows = [int] $result.sqlite_thread_state_result.rows_deleted
         session_index_rows = [int] $result.session_index_result.deleted
-        global_unread_entries = [int] (@($result.global_unread_state_result) | Measure-Object -Property deleted -Sum).Sum
+        global_unread_entries = $globalDeleted
         rollout_files = [int] $result.rollout_residue_result.deleted
     }
     target_counts = @{
         sqlite_thread_or_edge_rows = ([int] $result.sqlite_thread_state_result.thread_rows_remaining + [int] $result.sqlite_thread_state_result.edge_rows_remaining)
         session_index_rows = [int] $result.session_index_result.after
-        global_unread_entries = [int] (@($result.global_unread_state_result) | Measure-Object -Property after -Sum).Sum
+        global_unread_entries = $globalRemaining
         rollout_files = [int] $result.rollout_residue_result.after
     }
     sqlite_thread_state_result = $result.sqlite_thread_state_result

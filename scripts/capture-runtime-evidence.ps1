@@ -1,4 +1,4 @@
-﻿param(
+param(
 [Parameter(Mandatory = $true)]
 [string] $OutputPath,
 [switch] $Full,
@@ -133,15 +133,6 @@ return $pwsh.Source
 return "powershell.exe"
 }
 
-function Get-SafeRawOutputRef {
-param(
-[string] $ProjectKey,
-[string] $RunId,
-[string] $Name
-)
-return ("%TEMP%/codex-agent-status/{0}/{1}/{2}.log" -f $ProjectKey, $RunId, $Name)
-}
-
 function Invoke-EvidenceCommand {
 param(
 [string] $Name,
@@ -201,21 +192,23 @@ function Add-EvidenceCommand {
 param(
 [System.Collections.Generic.List[object]] $Commands,
 [string] $Name,
+[string] $ScriptName,
 [string] $DisplayCommand,
-[string] $ScriptPath,
 [string[]] $Arguments = @(),
-[string] $ProjectKey,
-[string] $RunId,
 [string] $ScratchRoot,
 [hashtable] $Environment
 )
+if ([string]::IsNullOrWhiteSpace($DisplayCommand)) {
+$DisplayCommand = ".\scripts\$ScriptName"
+if ($Arguments.Count -gt 0) { $DisplayCommand += " " + ($Arguments -join " ") }
+}
 $commands.Add((Invoke-EvidenceCommand `
 -Name $Name `
 -DisplayCommand $DisplayCommand `
--ScriptPath $ScriptPath `
+-ScriptPath (Get-RepoPath "scripts/$ScriptName") `
 -Arguments $Arguments `
 -RawLogPath (Join-Path $ScratchRoot ("{0}.log" -f $Name)) `
--RawOutputRef (Get-SafeRawOutputRef -ProjectKey $ProjectKey -RunId $RunId -Name $Name) `
+-RawOutputRef ("%TEMP%/codex-agent-status/<project-id>/<run-id>/{0}.log" -f $Name) `
 -Environment $Environment)) | Out-Null
 }
 
@@ -241,18 +234,18 @@ $commands = New-Object System.Collections.Generic.List[object]
 
 Push-Location $RepoRoot
 try {
-Add-EvidenceCommand -Commands $commands -Name "deployment_self_test" -DisplayCommand ".\scripts\deploy-agents-workflow.ps1 -SelfTest -Quiet" -ScriptPath (Get-RepoPath "scripts/deploy-agents-workflow.ps1") -Arguments @("-SelfTest", "-Quiet") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
-Add-EvidenceCommand -Commands $commands -Name "current_project_dry_run" -DisplayCommand ".\scripts\deploy-agents-workflow.ps1 -TargetPath . -Mode template_provider_mode -LayoutProfile auto -DryRun -Quiet" -ScriptPath (Get-RepoPath "scripts/deploy-agents-workflow.ps1") -Arguments @("-TargetPath", ".", "-Mode", "template_provider_mode", "-LayoutProfile", "auto", "-DryRun", "-Quiet") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "deployment_self_test" -ScriptName "deploy-agents-workflow.ps1" -Arguments @("-SelfTest", "-Quiet") -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "current_project_dry_run" -ScriptName "deploy-agents-workflow.ps1" -Arguments @("-TargetPath", ".", "-Mode", "template_provider_mode", "-LayoutProfile", "auto", "-DryRun", "-Quiet") -ScratchRoot $scratchRoot
 if ($Practice) {
-Add-EvidenceCommand -Commands $commands -Name "disposable_target_rollback_drill" -DisplayCommand ".\scripts\deploy-agents-workflow.ps1 -SelfTest -Quiet" -ScriptPath (Get-RepoPath "scripts/deploy-agents-workflow.ps1") -Arguments @("-SelfTest", "-Quiet") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
-Add-EvidenceCommand -Commands $commands -Name "runtime_lifecycle_smoke" -DisplayCommand ".\scripts\validate-runtime-execution.ps1" -ScriptPath (Get-RepoPath "scripts/validate-runtime-execution.ps1") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "disposable_target_rollback_drill" -ScriptName "deploy-agents-workflow.ps1" -Arguments @("-SelfTest", "-Quiet") -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "runtime_lifecycle_smoke" -ScriptName "validate-runtime-execution.ps1" -ScratchRoot $scratchRoot
 $releaseOutput = Join-Path $scratchRoot "release-package"
-Add-EvidenceCommand -Commands $commands -Name "release_package_export" -DisplayCommand ".\scripts\export-release-package.ps1 -OutputPath %TEMP%/codex-agent-status/<project-id>/<run-id>/release-package -Quiet" -ScriptPath (Get-RepoPath "scripts/export-release-package.ps1") -Arguments @("-OutputPath", $releaseOutput, "-Quiet") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
-Add-EvidenceCommand -Commands $commands -Name "route_pack_deterministic" -DisplayCommand ".\scripts\validate-route-pack.ps1" -ScriptPath (Get-RepoPath "scripts/validate-route-pack.ps1") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
-Add-EvidenceCommand -Commands $commands -Name "context_intelligence_practice" -DisplayCommand ".\scripts\test-context-intelligence.ps1 -Quiet" -ScriptPath (Get-RepoPath "scripts/test-context-intelligence.ps1") -Arguments @("-Quiet") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "release_package_export" -ScriptName "export-release-package.ps1" -DisplayCommand ".\scripts\export-release-package.ps1 -OutputPath %TEMP%/codex-agent-status/<project-id>/<run-id>/release-package -Quiet" -Arguments @("-OutputPath", $releaseOutput, "-Quiet") -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "route_pack_deterministic" -ScriptName "validate-route-pack.ps1" -ScratchRoot $scratchRoot
+Add-EvidenceCommand -Commands $commands -Name "context_intelligence_practice" -ScriptName "test-context-intelligence.ps1" -Arguments @("-Quiet") -ScratchRoot $scratchRoot
 }
 if ($Full -or $Practice) {
-Add-EvidenceCommand -Commands $commands -Name "full_validation" -DisplayCommand ".\scripts\validate-changes.ps1 -Profile Full -ContextMode Required -Score" -ScriptPath (Get-RepoPath "scripts/validate-changes.ps1") -Arguments @("-Profile", "Full", "-ContextMode", "Required", "-Score") -ProjectKey $projectKey -RunId $runId -ScratchRoot $scratchRoot -Environment @{ "AGENTS_RUNTIME_EVIDENCE_CAPTURE_ACTIVE" = "1" }
+Add-EvidenceCommand -Commands $commands -Name "full_validation" -ScriptName "validate-changes.ps1" -Arguments @("-Profile", "Full", "-ContextMode", "Required", "-Score") -ScratchRoot $scratchRoot -Environment @{ "AGENTS_RUNTIME_EVIDENCE_CAPTURE_ACTIVE" = "1" }
 }
 }
 finally {
@@ -308,7 +301,7 @@ claims = [ordered]@{
 static_validation = "Full validation covers repository contracts, schema checks, package checks, and release evidence."
 runtime_evidence = "Runtime evidence is captured from repeatable local commands."
 practice_evidence = $(if ($Practice) { "T2 current-repo practice suite captured." } else { "Practice suite was not requested." })
-context_intelligence = $(if ($Practice) { "Live v2.9 context resolver A/B and fallback practice passed." } else { "Context intelligence practice was not requested." })
+context_intelligence = $(if ($Practice) { "Live v2.9.1 context resolver A/B and fallback practice passed." } else { "Context intelligence practice was not requested." })
 evidence_tier = $(if ($Practice) { "T2 current-repo practice" } else { "T1 dry-run" })
 hard_isolation = "No hard isolation claim is made without current runtime, tool, OS, account, or cloud enforcement evidence."
 external_pilot_boundary = "No external project pilot was executed for this release evidence."
@@ -354,6 +347,17 @@ New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
 $json = ($evidence | ConvertTo-Json -Depth 20 -Compress) -replace "`r`n", "`n"
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($resolvedOutputPath, ($json + "`n"), $utf8NoBom)
+. (Get-RepoPath "scripts/validate-score.ps1")
+$verifyText = Get-Content -LiteralPath (Get-RepoPath ".agents/docs/agents/verify.yaml") -Raw
+$repoLimitMatch = [regex]::Match($verifyText, "(?m)^\s*tracked_repo_kib:\s*(\d+)\s*$")
+if (-not $repoLimitMatch.Success) {
+throw "Repository size limit is unavailable after evidence capture."
+}
+$intendedBytes = Get-RepoFilesSize -Paths (Get-IntendedRepoFiles)
+$repoLimitBytes = [int64]$repoLimitMatch.Groups[1].Value * 1024
+if ($intendedBytes -gt $repoLimitBytes) {
+throw "Runtime evidence exceeds the intended repository size gate: $intendedBytes > $repoLimitBytes bytes."
+}
 Write-Info ("Runtime evidence written: {0}" -f $OutputPath)
 if ($failedCommands.Count -gt 0 -or -not $contextCapturePassed) {
 exit 1

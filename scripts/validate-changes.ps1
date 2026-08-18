@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [ValidateSet("Auto", "Fast", "Policy", "Full")]
     [string] $Profile = "Auto",
@@ -28,10 +28,11 @@ function Get-PathProfile {
     param([string] $Value)
     $normalized = ConvertTo-RepoPath $Value
     if ($normalized -match '^(schemas/|(?:\.agents/)?docs/(?:templates/agents/schemas/))' -or
+        $normalized -eq '.codex/config.toml' -or
         $normalized -match '^(?:\.agents/)?docs/(?:agents/version\.yaml)$' -or
         $normalized -match '^(?:\.agents/)?docs/(?:evidence/releases/)' -or
         $normalized -match '^\.github/workflows/' -or
-        $normalized -match '^scripts/(validate[^/]*|deploy-agents-workflow|capture-runtime-evidence|export-release-package|invoke-agent-runtime|agents-cleanup)\.ps1$') {
+        $normalized -match '^scripts/(validate[^/]*|agent-toml|resolve-agent-context|test-context-intelligence|deploy-agents-workflow|capture-runtime-evidence|export-release-package|invoke-agent-runtime|agents-cleanup)\.ps1$') {
         return "Full"
     }
     if ($normalized -eq "AGENTS.md" -or
@@ -225,6 +226,18 @@ function Invoke-FastChecks {
                     $failures.Add(("JSON parse failed for {0}: {1}" -f $repoPath, $_.Exception.Message)) | Out-Null
                 }
             }
+            ".toml" {
+                try {
+                    . (Join-Path $PSScriptRoot "agent-toml.ps1")
+                    $tomlResult = Test-AgentTomlFile -Path $fullPath
+                    if (-not [bool]$tomlResult.available -or -not [bool]$tomlResult.success) {
+                        throw "$($tomlResult.parser): $(@($tomlResult.errors) -join '; ')"
+                    }
+                }
+                catch {
+                    $failures.Add(("TOML parse failed for {0}: {1}" -f $repoPath, $_.Exception.Message)) | Out-Null
+                }
+            }
             ".ps1" {
                 $tokens = $null
                 $errors = $null
@@ -256,8 +269,10 @@ function Test-ProfileSelection {
         @{ Paths = @("schemas/example.schema.json"); Expected = "Full" },
         @{ Paths = @("src/app.ts", ".agents/docs/agents/version.yaml"); Expected = "Full" },
         @{ Paths = @(".agents/docs/agents/version.yaml"); Expected = "Full" },
-        @{ Paths = @(".agents/docs/templates/agents/schemas/agents-version.schema.json"); Expected = "Full" },
-        @{ Paths = @("scripts/validate-foundation.ps1"); Expected = "Full" }
+        @{ Paths = @("scripts/validate-foundation.ps1"); Expected = "Full" },
+        @{ Paths = @("scripts/resolve-agent-context.ps1"); Expected = "Full" },
+        @{ Paths = @("scripts/agent-toml.ps1"); Expected = "Full" },
+        @{ Paths = @(".codex/config.toml"); Expected = "Full" }
     )
     foreach ($case in $cases) {
         $actual = Select-AutoProfile $case.Paths

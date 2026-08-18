@@ -1,8 +1,7 @@
-﻿function Test-FoundationCreationIntegrity {
+function Test-FoundationCreationIntegrity {
 $startFailureCount = $Failures.Count
 $requiredFiles = @(
 ".agents/docs/agents/openai-foundations.yaml",
-".agents/docs/templates/agents/agents/openai-foundations.yaml",
 "schemas/agents-openai-foundations.schema.json"
 )
 $allRequiredFilesExist = $true
@@ -16,10 +15,6 @@ if (-not $allRequiredFilesExist) {
 return
 }
 $canonicalFile = Get-Item -LiteralPath (Get-RepoPath ".agents/docs/agents/openai-foundations.yaml")
-$templateFile = Get-Item -LiteralPath (Get-RepoPath ".agents/docs/templates/agents/agents/openai-foundations.yaml")
-if ((Get-FileHash -LiteralPath $canonicalFile.FullName -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $templateFile.FullName -Algorithm SHA256).Hash) {
-Add-Failure "Foundation creation canonical and template mirror must be identical."
-}
 $foundationText = Get-Content -LiteralPath $canonicalFile.FullName -Raw
 $aiRuntimeText = Get-Content -LiteralPath (Get-RepoPath ".agents/docs/agents/ai-runtime.yaml") -Raw
 $schemasText = Get-Content -LiteralPath (Get-RepoPath ".agents/docs/agents/schemas.yaml") -Raw
@@ -124,7 +119,7 @@ if (-not $verifyText.Contains($marker)) {
 Add-Failure ("Foundation creation verify profile is missing marker: {0}" -f $marker)
 }
 }
-if (-not $deployText.Contains(".agents/docs/templates/agents/agents/openai-foundations.yaml")) {
+if (-not $deployText.Contains('from: ".agents/docs/agents/openai-foundations.yaml"')) {
 Add-Failure "Foundation creation deploy source is missing."
 }
 if ($Failures.Count -eq $startFailureCount) {

@@ -1,4 +1,4 @@
-﻿param(
+param(
 [string] $TargetPath,
 [ValidateSet("core_bootstrap", "full_workflow", "template_provider_mode")]
 [string] $Mode = "core_bootstrap",
@@ -1161,7 +1161,7 @@ $reportLines += @(
 "- Provider environment templates are never deployed; target environments stay local.",
 "- Target-owned historical Agents files are reported separately and remain target-owned."
 )
-$reportContent = ($reportLines -join [System.Environment]::NewLine) + [System.Environment]::NewLine
+$reportContent = ($reportLines -join "`n") + "`n"
 $state = Get-DeployWriteState -Path $reportPath -Content $reportContent
 if ($state -eq "create" -or $state -eq "upgrade_required") {
 $PlannedWrites.Add($reportRelative) | Out-Null
@@ -1438,6 +1438,7 @@ Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/agents/context
 Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/agents/collaborators.yaml"
 Assert-SelfTestFile -Root $rootTarget -RelativePath ".agents/docs/deployment-feedback.template.md"
 Assert-SelfTestFile -Root $rootTarget -RelativePath "docs/agents-workflow-deployment.md"
+if ([System.IO.File]::ReadAllBytes((Join-Path $rootTarget "docs/agents-workflow-deployment.md")) -contains 13) { throw "Deployment report must use LF line endings." }
 Assert-SelfTestFile -Root $rootTarget -RelativePath ".codex/environments/root-docs.toml"
 Assert-SelfTestContains -Path (Join-Path $rootTarget "docs/agents-workflow-deployment.md") -Expected "- .agents/docs/agents/workflows.yaml"
 Assert-SelfTestContains -Path (Join-Path $rootTarget "docs/agents-workflow-deployment.md") -Expected "## What Changed"
@@ -1474,12 +1475,18 @@ Assert-SelfTestTextContains -Text $currentPlan -Expected "Target-local Codex env
 Assert-SelfTestTextContains -Text $currentPlan -Expected "[ENV] preserve: .codex/environments/root-docs.toml"
 $templateProviderTarget = Join-Path $selfTestRoot "template-provider"
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $templateProviderTarget; Mode = "template_provider_mode"; CreateTarget = $true; Quiet = $true }
-Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/AGENTS.md"
-Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/agents/deploy.yaml"
-Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/agents/workflow-artifacts.yaml"
-Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/agents/context-compact.yaml"
-Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/agents/collaborators.yaml"
-Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/deployment-feedback.template.md"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath "AGENTS.md"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/agents/deploy.yaml"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/agents/workflow-artifacts.yaml"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/agents/context-compact.yaml"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/agents/collaborators.yaml"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/deployment-feedback.template.md"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/README.md"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/gitignore.fragment"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/project-memory.md"
+Assert-SelfTestFile -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/memory-index.md"
+Assert-SelfTestMissing -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/AGENTS.md"
+Assert-SelfTestMissing -Root $templateProviderTarget -RelativePath ".agents/docs/templates/agents/agents/deploy.yaml"
 Assert-NoSourceLiteral -Root $templateProviderTarget
 $dotTarget = Join-Path $selfTestRoot "dot-agents-docs"
 New-Item -ItemType Directory -Path $dotTarget | Out-Null
@@ -1500,22 +1507,27 @@ Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/memory/index.md
 Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/project-structure.md"
 Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/runbooks/session-handoff.md"
 Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agent-status.template.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agent-assignment.template.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/memory-entry.template.md"
 Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/deployment-feedback.template.md"
 Invoke-ChildDeployment -CommandArgs @{ TargetPath = $dotTarget; Mode = "template_provider_mode"; Upgrade = $true; Quiet = $true }
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/AGENTS.md"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/deploy.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/workflow-artifacts.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/context-compact.yaml"
-Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/collaborators.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/deploy.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/workflow-artifacts.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/context-compact.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/agents/collaborators.yaml"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/README.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/gitignore.fragment"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/project-memory.md"
+Assert-SelfTestFile -Root $dotTarget -RelativePath ".agents/docs/templates/agents/memory-index.md"
+Assert-SelfTestMissing -Root $dotTarget -RelativePath ".agents/docs/templates/agents/AGENTS.md"
+Assert-SelfTestMissing -Root $dotTarget -RelativePath ".agents/docs/templates/agents/agents/deploy.yaml"
 Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate.ps1") -Expected 'Get-RepoPath ".agents/docs/agents/"'
 Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate-size-gates.ps1") -Expected 'Get-RepoPath ".agents/docs/agents/"'
 Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate-residue.ps1") -Expected '".agents/docs/agents/"'
-Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate.ps1") -Expected '".agents/docs/agent-assignment.template.md"'
-Assert-SelfTestContains -Path (Join-Path $dotTarget "scripts/validate.ps1") -Expected '".agents/docs/memory-entry.template.md"'
 $doubleDotDocsPrefix = ".agents/" + ".agents/docs/"
 Assert-SelfTestNotContains -Path (Join-Path $dotTarget "scripts/deploy-agents-workflow.ps1") -Unexpected $doubleDotDocsPrefix
 Assert-SelfTestNotContains -Path (Join-Path $dotTarget "scripts/validate-changes.ps1") -Unexpected $doubleDotDocsPrefix
-Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- .agents/docs/templates/agents/agents/deploy.yaml"
+Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- .agents/docs/agents/deploy.yaml"
 Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "- Deployed version file: .agents/docs/agents/version.yaml"
 Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "Layout profile: dot-agents-layout"
 Assert-SelfTestContains -Path (Join-Path $dotTarget ".agents/docs/agents-workflow-deployment.md") -Expected "layout_profile: dot-agents-layout"

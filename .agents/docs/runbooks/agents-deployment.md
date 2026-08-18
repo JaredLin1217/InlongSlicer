@@ -1,4 +1,4 @@
-﻿# Agents Deployment
+# Agents Deployment
 Use when copying this workflow into an explicitly authorized target repo.
 ## Fast Path
 1. Confirm exact target path and write action.
@@ -35,8 +35,8 @@ The worker runs dry-run first unless the assignment explicitly authorizes immedi
 ## Modes
 Mode bullets are summaries only; exact groups, file sets, and target-layout rewrites come from `.agents/docs/agents/deploy.yaml`.
 - `core_bootstrap`: `AGENTS.md`, Agents governance rules, project skill, gitignore fragment, deployment and closeout runbooks.
-- `full_workflow`: `core_bootstrap` plus memory starters, runtime/evidence/feedback templates, and remaining runbooks. It is the operational workflow, not the recursive template-provider bundle.
-- `template_provider_mode`: `full_workflow` plus recursive `.agents/docs/templates/agents/**` so the target can redeploy this workflow.
+- `full_workflow`: `core_bootstrap` plus memory starters, runtime/evidence/feedback templates, and remaining runbooks. It is the operational workflow, not the starter-provider bundle.
+- `template_provider_mode`: `full_workflow` plus target-specific `.agents/docs/templates/agents/**` starters so the target can redeploy this workflow from canonical files.
 ## Target Handoff
 Every write deployment report must make these items easy to review:
 - What changed: deployed file set and files created or updated by this run.
@@ -45,7 +45,7 @@ Every write deployment report must make these items easy to review:
 The target handoff check is read-only unless the user separately authorizes follow-up writes. Check `AGENTS.md` routing, selected project skill path, runbook links, deployed feedback template when the mode includes it, protected runtime/local paths, and target git status summary.
 ## Feedback Loop
 For `full_workflow` and `template_provider_mode`, the deployment includes `.agents/docs/deployment-feedback.template.md` or its layout-adjusted `.agents/docs` equivalent. Fill it only in the target repo, or use a target-owned issue tracker. The provider repo must not store target-specific deployment history, validation results, commits, remotes, or user feedback.
-Hard fail on missing exact authorization, blocklisted copy, uninspected target-specific claim, or provider state in deployable templates.
+Hard fail on missing exact authorization, blocklisted copy, uninspected target-specific claim, or provider state in deployable starters.
 Keep target state target-owned. Do not copy source status, employee history, memory entries, commits, remotes, tags, or runtime files.
 PowerShell note: with `rg`, put options before `--`, then pattern and paths, for example `rg -n --fixed-strings --glob '!historical/**' -- <pattern> <paths>`.
 Runbook references use provider canonical paths; deployed target paths are layout-adjusted by `.agents/docs/agents/deploy.yaml`.

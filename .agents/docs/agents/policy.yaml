@@ -1,6 +1,6 @@
 schema: agents-policy/v2
 purpose: "Compact repo-local operating policy for the isolated Agents workflow."
-owns: "Authority, isolation, editing boundaries, knowledge layers, template cleanliness, closeout, and hard fail gates."
+owns: "Authority, isolation, editing boundaries, knowledge layers, starter cleanliness, closeout, and hard fail gates."
 authority:
   repo_reality: "When current repo state matters, trust files, scripts, git state, diffs, logs, tests, and observed behavior over prior chat or memory."
   memory: "Hint only; verify before acting."
@@ -62,16 +62,16 @@ knowledge_layers:
   docs/memory/entries: "Verified reusable lessons."
   docs/decisions: "Durable decisions."
   docs/runbooks: "Short procedure routers."
-  docs/templates/agents: "Source-neutral deployment bundle."
+  docs/templates/agents: "Target-specific deployment starters."
   .agents/skills: "Project-local skills."
 placement:
-  deploy_templates: ".agents/docs/templates/agents/"
+  deploy_starters: ".agents/docs/templates/agents/"
   project_local_agent_ledger: ".agents/runtime/agent-ledger.jsonl"
   volatile_agent_status: "%TEMP%/codex-agent-status/<project-id>/"
   ignored_local_scratch: ".agents/runtime/, docs/agent-status.md, docs/agent-events/, docs/tmp-approval-*/, docs/hard-isolation-evidence/, docs/runtime-multi-agent-validation/, .agents/docs/<same local-only state>"
   rule: "Volatile status, ledger, and validation records are coordination aids, not deployable project knowledge."
-template_cleanliness:
-  deployable_templates_must_not_contain:
+starter_cleanliness:
+  deployable_starters_must_not_contain:
     - "source project name/path/commit/tag/remote/branch/push status"
     - "source employee history/status/validation/deployment results"
     - "source memory rows or entries"
@@ -96,7 +96,7 @@ hard_fail_gates:
   - "No global Memory without explicit user approval."
   - "No intentional global/system skill use for normal work."
   - "No external filesystem access without exact authorization or temp-cache exception."
-  - "No source-specific state in deployable templates."
+  - "No source-specific state in deployable starters."
   - "No overlapping active worker write scopes."
   - "No compact-risk/concurrent/editing employee without project-local ledger or temp roster evidence."
   - "No Codex App sidebar/history/cache cleanup without runtime close first, exact current-project runtime ids, schema/source check, and explicit cleanup wording or standalone exact cleanup authorization."

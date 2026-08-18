@@ -1,15 +1,13 @@
-﻿function Test-KnowledgeMemoryIntegrity {
+function Test-KnowledgeMemoryIntegrity {
     $startFailureCount = $Failures.Count
     $requiredFiles = @(
         ".agents/docs/agents/knowledge-footprint.yaml",
-        ".agents/docs/templates/agents/agents/knowledge-footprint.yaml",
         "schemas/agents-knowledge-footprint.schema.json",
         ".agents/docs/project-memory.md",
         ".agents/docs/memory/index.md",
         ".agents/docs/memory-entry.template.md",
         ".agents/docs/templates/agents/project-memory.md",
-        ".agents/docs/templates/agents/memory-index.md",
-        ".agents/docs/templates/agents/memory-entry.template.md"
+        ".agents/docs/templates/agents/memory-index.md"
     )
     foreach ($path in $requiredFiles) {
         if (-not (Test-Path -LiteralPath (Get-RepoPath $path) -PathType Leaf)) {
@@ -35,18 +33,6 @@
     )) {
         if (-not $canonical.Contains($marker)) {
             Add-Failure ("Knowledge footprint marker is missing: {0}" -f $marker)
-        }
-    }
-
-    $pairs = @(
-        @(".agents/docs/agents/knowledge-footprint.yaml", ".agents/docs/templates/agents/agents/knowledge-footprint.yaml"),
-        @(".agents/docs/memory-entry.template.md", ".agents/docs/templates/agents/memory-entry.template.md")
-    )
-    foreach ($pair in $pairs) {
-        $leftHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Get-RepoPath $pair[0])).Hash
-        $rightHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Get-RepoPath $pair[1])).Hash
-        if ($leftHash -ne $rightHash) {
-            Add-Failure ("Knowledge memory exact pair drift: {0} != {1}" -f $pair[0], $pair[1])
         }
     }
 

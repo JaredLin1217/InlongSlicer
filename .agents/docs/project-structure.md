@@ -11,8 +11,8 @@ provider.
 - `.agents/skills/` contains project-local skills, including the Inlong
   branding migration guardrails.
 - `.agents/docs/runbooks/` contains operator procedures.
-- `.agents/docs/memory/index.md` and `.agents/docs/memory/entries/` contain
-  target-owned, evidence-linked project memory.
+- `.agents/docs/memory/index.md` and `docs/memory/entries/` contain target-owned,
+  evidence-linked project memory.
 - `tests/AGENTS.md` adds valid test-scope rules and is not a competing root
   layout.
 - `.agents/docs/templates/agents/` is provider-only and must not contain a

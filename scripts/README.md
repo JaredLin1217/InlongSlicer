@@ -1,4 +1,4 @@
-﻿# Scripts
+# Scripts
 This directory owns repo-local executable checks and maintenance entry points.
 Current command:
 ```powershell
@@ -22,7 +22,7 @@ Release-audit command:
 ```
 Runtime release-evidence command:
 ```powershell
-.\scripts\capture-runtime-evidence.ps1 -OutputPath .\docs\evidence\releases\v2.9.0-runtime-evidence.json -Full -Practice -Quiet
+.\scripts\capture-runtime-evidence.ps1 -OutputPath .\docs\evidence\releases\v2.9.1-runtime-evidence.json -Full -Practice -Quiet
 ```
 Release-package export command:
 ```powershell
@@ -68,6 +68,8 @@ runtime/source-state boundaries. Specialized helpers own knowledge freshness,
 quality scoring, size gates, release evidence, route-pack determinism, and
 runtime smoke checks. The context resolver stores its incremental index and
 detailed practice report only in ignored `.agents/runtime/context-intelligence/`.
+`agent-toml.ps1` uses standard Python TOML or `ConvertFrom-Toml` parsers;
+unavailable parsers expand validation instead of trusting unparsed input.
 The public update entry point writes `docs/github-updates.md` from recent git
 history. It is used by `.github/workflows/public-updates.yml` after branch
 pushes and escapes non-ASCII commit text as ASCII codepoint markers so durable

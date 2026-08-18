@@ -1,4 +1,4 @@
-﻿schema: agents-context-intelligence/v1
+schema: agents-context-intelligence/v1
 purpose: "Resolve the smallest authoritative context for an AI Agents task, expose impact evidence, and expand safely when evidence is incomplete."
 owns:
   - task intent and canonical route decision
@@ -43,8 +43,10 @@ resolver:
 impact_sources:
   authoritative:
     - git tracked paths and working-tree state
+    - declared local in-repository changed paths, including ignored target-owned TOML configuration
     - canonical YAML and JSON contracts
     - PowerShell AST parse results
+    - TOML parse results from Python tomllib or tomli, or ConvertFrom-Toml when available
     - explicit script calls and template mappings
     - test ownership and import or include references
   heuristic:
@@ -59,13 +61,14 @@ freshness:
     - source commit
     - working-tree fingerprint
     - file SHA-256
+    - inventory source
   update: incrementally reuse unchanged entries and reparse changed content
   deployable: false
   durable: false
 
 fallback:
   triggers:
-    - parsing failure
+    - parsing failure or parser unavailable
     - conflicting evidence
     - unsupported changed language
     - dirty working tree
@@ -107,4 +110,4 @@ boundaries:
   - CodeGraph ideas are research input only; no CodeGraph runtime or dependency is installed.
   - No SQLite, tree-sitter, watcher, or standalone MCP service is part of this contract.
   - Runtime context intelligence never enters deployment or release packages.
-  - External project pilots remain outside the v2.9.0 claim boundary.
+  - External project pilots remain outside the v2.9.1 claim boundary.

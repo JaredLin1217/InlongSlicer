@@ -1,22 +1,5 @@
-﻿function Test-CrossProjectRuntimeResilienceIntegrity {
+function Test-CrossProjectRuntimeResilienceIntegrity {
 $startFailureCount = $Failures.Count
-$mirrorPairs = @(
-@(".agents/docs/agents/deploy.yaml", ".agents/docs/templates/agents/agents/deploy.yaml"),
-@(".agents/docs/agents/runtime-execution.yaml", ".agents/docs/templates/agents/agents/runtime-execution.yaml")
-)
-foreach ($pair in $mirrorPairs) {
-$source = Get-RepoPath $pair[0]
-$mirror = Get-RepoPath $pair[1]
-if (-not (Test-Path -LiteralPath $source -PathType Leaf) -or -not (Test-Path -LiteralPath $mirror -PathType Leaf)) {
-Add-Failure ("Cross-project mirror missing: {0} <-> {1}" -f $pair[0], $pair[1])
-continue
-}
-$sourceHash = (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash
-$mirrorHash = (Get-FileHash -LiteralPath $mirror -Algorithm SHA256).Hash
-if ($sourceHash -ne $mirrorHash) {
-Add-Failure ("Cross-project mirror drift: {0} <-> {1}" -f $pair[0], $pair[1])
-}
-}
 $markerChecks = @(
 @(".agents/docs/agents/deploy.yaml", @("root-layout", "dot-agents-layout", "pre_dirty_snapshot", "post_dirty_snapshot", "changed_by_deploy", "unexpected_changed_files", "cleanup_capability", "dirty_snapshot_guard", "scripts/agents-cleanup.ps1", "%TEMP%/codex-agent-status/<project-id>-<repo-path-hash>/<run-id>/")),
 @("scripts/deploy-agents-workflow.ps1", @("LayoutProfile", "Get-TargetDirtySnapshot", "Test-AgentsRoutePathConsistency", "Assert-NoUnexpectedTargetChanges", "cleanup_capability", "run_id", "Get-StatusProjectKey")),
