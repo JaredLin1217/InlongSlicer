@@ -28,6 +28,18 @@ for %%a in (%*) do (
     )
 )
 
+@REM Check for clang-cl option (-l). Combined with -x it also builds the deps with
+@REM clang-cl; on the Visual Studio generator it applies to the slicer only, because
+@REM the dependency sub-builds have no toolset to inherit and stay on MSVC.
+set CLANG_ARG=
+set TOOLSET_ARG=
+for %%a in (%*) do (
+    if "%%a"=="-l" (
+        set CLANG_ARG=-DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
+        set TOOLSET_ARG=-T ClangCL
+    )
+)
+
 @REM Check for unit-tests option ("tests")
 set BUILD_TESTS=OFF
 for %%a in (%*) do (
@@ -143,12 +155,13 @@ if "%FAST_BUILD%"=="1" (
     GOTO :slicer
 )
 echo "building deps.."
+if defined CLANG_ARG if "%USE_NINJA%"=="0" echo Note: -l needs -x for the dependencies; building them with MSVC.
 
 echo on
 REM Set minimum CMake policy to avoid <3.5 errors
 set CMAKE_POLICY_VERSION_MINIMUM=3.5
 if "%USE_NINJA%"=="1" (
-    cmake ../ -G %CMAKE_GENERATOR% -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
+    cmake ../ -G %CMAKE_GENERATOR% %CLANG_ARG% -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target deps
 ) else (
     cmake ../ -G %CMAKE_GENERATOR% -A %arch% -Wno-dev -DCMAKE_BUILD_TYPE=%build_type%
@@ -168,10 +181,10 @@ echo Build target set to %BUILD_TARGET%
 echo on
 set CMAKE_POLICY_VERSION_MINIMUM=3.5
 if "%USE_NINJA%"=="1" (
-    cmake .. -G %CMAKE_GENERATOR% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DBUILD_TESTS=%BUILD_TESTS% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake .. -G %CMAKE_GENERATOR% %CLANG_ARG% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DBUILD_TESTS=%BUILD_TESTS% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET%
 ) else (
-    cmake .. -G %CMAKE_GENERATOR% -A %arch% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DBUILD_TESTS=%BUILD_TESTS% -DCMAKE_BUILD_TYPE=%build_type%
+    cmake .. -G %CMAKE_GENERATOR% -A %arch% %TOOLSET_ARG% -Wno-dev -DINLONG_TOOLS=ON %SIG_FLAG% -DBUILD_TESTS=%BUILD_TESTS% -DCMAKE_BUILD_TYPE=%build_type%
     cmake --build . --config %build_type% --target %BUILD_TARGET% -- /m /nr:false
 )
 @echo off

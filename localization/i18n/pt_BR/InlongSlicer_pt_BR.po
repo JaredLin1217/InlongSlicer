@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 06:51+0800\n"
+"POT-Creation-Date: 2026-08-30 20:36+0800\n"
 "PO-Revision-Date: 2026-07-26 11:14-0300\n"
 "Last-Translator: Alexandre Folle de Menezes\n"
 "Language-Team: Portuguese, Brazilian\n"
@@ -2814,6 +2814,9 @@ msgstr "Editar"
 msgid "Merge with"
 msgstr "Mesclar com"
 
+msgid "Decompose Color"
+msgstr ""
+
 msgid "Delete this filament"
 msgstr "Apagar este filamento"
 
@@ -3096,6 +3099,9 @@ msgstr "Montagem"
 msgid "Merge parts to an object"
 msgstr "Mesclar peças com um objeto"
 
+msgid "Using variable layer height together with mixed color sublayer may result in poor color mixing quality."
+msgstr ""
+
 msgid "Add layers"
 msgstr "Adicionar camadas"
 
@@ -3377,8 +3383,8 @@ msgstr "Falha ao conectar à impressora"
 msgid "Connection to printer failed"
 msgstr "Falha na conexão com a impressora"
 
-msgid "Please check the network connection of the printer and Orca."
-msgstr "Por favor, verifique a conexão de rede da impressora e do Inlong."
+msgid "Please check the network connection of the printer and InlongSlicer."
+msgstr ""
 
 msgid "Connecting..."
 msgstr "Conectando…"
@@ -4558,6 +4564,23 @@ msgstr "A temperatura da câmara atual está mais alta do que a temperatura segu
 msgid "The minimal chamber temperature (%d℃) is higher than the target chamber temperature (%d℃). The minimal value is the threshold at which printing starts while the chamber keeps heating toward the target, so it should not exceed it. It will be clamped to the target."
 msgstr "A temperatura mínima da câmara (%d℃) é superior à temperatura alvo da câmara (%d℃). O valor mínimo é o limite no qual a impressão começa enquanto a câmara continua aquecendo em direção ao alvo; portanto, não deve execedê-lo. O valor será limitado ao alvo."
 
+# AI Translated
+#, c-format, boost-format
+msgid "Layer height is too small. It will be set to the minimum (%g mm)."
+msgstr "A altura da camada é muito pequena. Ela será definida para o mínimo (%g mm)."
+
+# AI Translated
+msgid "Layer height is outside the limits set in Printer Settings -> Extruder -> Layer height limits, this may cause printing quality issues."
+msgstr "A altura da camada está fora dos limites definidos em Configurações da Impressora -> Extrusora -> Limites de altura da camada, isso pode causar problemas de qualidade de impressão."
+
+# AI Translated
+#, c-format, boost-format
+msgid "Adjust it to the limit (%g mm) automatically?"
+msgstr "Ajustar automaticamente para o limite (%g mm)?"
+
+msgid "Adjust"
+msgstr "Ajustar"
+
 msgid ""
 "Layer height too small\n"
 "It has been reset to 0.2"
@@ -4676,6 +4699,13 @@ msgstr ""
 "Alterar essas configurações automaticamente?\n"
 "Sim - Habilitar Gerador de Parede Arachne\n"
 "Não - Desabilitar Gerador de Parede Arachne e setar o modo [Deslocamento] da Textura Difusa"
+
+# AI Translated
+msgid "Brim ear radius"
+msgstr "Raio da orelha da borda"
+
+msgid "Brim width"
+msgstr "Largura da borda"
 
 msgid "Spiral mode only works when wall loops is 1, support is disabled, clumping detection by probing is disabled, top shell layers is 0, sparse infill density is 0 and timelapse type is traditional."
 msgstr "O modo espiral só funciona quando as voltas da parede são 1, o suporte está desativado, a detecção de aglomeração por sondagem está desativada, as camadas da casca de topo são 0, a densidade de preenchimento esparso é 0 e o tipo de timelapse é tradicional."
@@ -4930,6 +4960,14 @@ msgstr "Falha ao gerar o G-code de calibração"
 
 msgid "Calibration error"
 msgstr "Erro de calibração"
+
+# AI Translated
+msgid "This printer is not configured with the hardware this control needs."
+msgstr "Esta impressora não está configurada com o hardware que este controle requer."
+
+# AI Translated
+msgid "This control is not supported on this printer."
+msgstr "Este controle não é suportado nesta impressora."
 
 msgid "Network unavailable"
 msgstr "Rede indisponível"
@@ -5954,6 +5992,10 @@ msgstr "Multi-dispositivo"
 
 msgid "Project"
 msgstr "Projeto"
+
+# AI Translated
+msgid "Device (Web)"
+msgstr "Dispositivo (Web)"
 
 msgid "Yes"
 msgstr "Sim"
@@ -7506,9 +7548,6 @@ msgstr ""
 msgid "A warmer bed reduces the early-layer thermal drop and improves adhesion while the bottom layers shrink."
 msgstr ""
 
-msgid "Brim width"
-msgstr "Largura da borda"
-
 msgid "Inner and outer brim"
 msgstr ""
 
@@ -7594,7 +7633,7 @@ msgid "Object simulation recommendation applied."
 msgstr ""
 
 msgid "Fast"
-msgstr ""
+msgstr "Rápido"
 
 msgid "First-layer fan"
 msgstr ""
@@ -7931,6 +7970,9 @@ msgstr "Personalizar a placa atual"
 msgid "The %s nozzle can not print %s."
 msgstr "O bico %s não pode imprimir %s."
 
+msgid "Printing mixed-color filament on a single-extruder printer requires frequent filament changes and flushing, which may significantly increase waste and the risk of nozzle / waste-chute clogging."
+msgstr ""
+
 #, boost-format
 msgid "Mixing %1% with %2% in printing is not recommended.\n"
 msgstr "Misturar %1% com %2% na impressão não é recomendado.\n"
@@ -8049,11 +8091,35 @@ msgstr "Sincronizar lista de filamentos do AMS"
 msgid "Set filaments to use"
 msgstr "Definir filamentos para usar"
 
+msgid "Add Mixed Filament"
+msgstr ""
+
+msgid "Mixed Filament"
+msgstr ""
+
+msgid "Remove last mixed filament"
+msgstr ""
+
+msgid "Add mixed filament"
+msgstr ""
+
+msgid "Mixed filament has invalid or mismatched components. Please re-edit affected entries."
+msgstr ""
+
 msgid "Search plate, object and part."
 msgstr "Pesquisar placa, objeto e peça."
 
 msgid "Pellets"
 msgstr "Pellets"
+
+msgid "Mixed filament has broken component references"
+msgstr ""
+
+msgid "Edit / Delete / Merge"
+msgstr ""
+
+msgid "The target mixed filament uses this physical filament as a component. Merging will remove this physical filament and may invalidate the mixed filament. Continue?"
+msgstr ""
 
 #, c-format, boost-format
 msgid "After completing your operation, %s project will be closed and create a new project."
@@ -8232,6 +8298,12 @@ msgstr ""
 msgid "Multi-part object detected"
 msgstr "Objeto multi-peça detectado"
 
+msgid "Matching textures to filaments"
+msgstr ""
+
+msgid "Texture Import Warning"
+msgstr ""
+
 msgid "Load these files as a single object with multiple parts?\n"
 msgstr "Carregar esses arquivos como um único objeto com múltiplas peças?\n"
 
@@ -8349,19 +8421,19 @@ msgstr "Diretório para substituição não foi selecionado"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "Substituído por arquivos 3D do diretório:\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✖ Skipped %s: same file.\n"
 msgstr "✖ %s Ignorados: mesmo arquivo.\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✖ Skipped %s: file does not exist.\n"
 msgstr "✖ %s Ignorados: arquivo não existe.\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✖ Skipped %s: failed to replace.\n"
 msgstr "✖ %s Ignorados: falha ao substituir.\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✔ Replaced %s.\n"
 msgstr "✔ %s Substituídos.\n"
 
@@ -8438,6 +8510,18 @@ msgstr ""
 
 msgid "Sync now"
 msgstr "Sincronizar agora"
+
+msgid "Texture import failed. The model appears to contain texture data, but the texture import process could not be completed. The model will be imported as geometry only."
+msgstr ""
+
+msgid "Applying texture colors..."
+msgstr ""
+
+msgid "Updating 3D view..."
+msgstr ""
+
+msgid "Texture colors applied."
+msgstr ""
 
 msgid "You can keep the modified presets for the new project or discard them"
 msgstr "Você pode manter as predefinições modificadas no novo projeto ou descartá-las"
@@ -8866,7 +8950,7 @@ msgstr "Falha ao Recarregar"
 msgid "Associate"
 msgstr "Associar"
 
-msgid "with InlongSlicer so that Orca can open models from"
+msgid "with InlongSlicer so that InlongSlicer can open models from"
 msgstr ""
 
 msgid "Current Association: "
@@ -9046,8 +9130,8 @@ msgstr "Predefinição"
 msgid "Remember printer configuration"
 msgstr "Lembrar configuração da impressora"
 
-msgid "If enabled, Orca will remember and switch filament/process configuration for each printer automatically."
-msgstr "Se ativo, Inlong vai lembrar e alternar a configuração de filamento/processo para cada impressora automaticamente."
+msgid "If enabled, InlongSlicer will remember and switch filament/process configuration for each printer automatically."
+msgstr ""
 
 msgid "Group user filament presets"
 msgstr "Agrupar predefinições de filamento do usuário"
@@ -9087,6 +9171,18 @@ msgstr "Com esta opção habilitada, você pode enviar uma tarefa para vários d
 
 msgid "Pop up to select filament grouping mode"
 msgstr "Abrir seleção do modo de agrupamento de filamento"
+
+# AI Translated
+msgid "Visible plugin pages"
+msgstr "Páginas de plugin visíveis"
+
+# AI Translated
+msgid "pages"
+msgstr "páginas"
+
+# AI Translated
+msgid "Number of plugin pages shown as fixed tabs before the remaining pages collapse into a dropdown on the last tab."
+msgstr "Número de páginas de plugin exibidas como abas fixas antes que as páginas restantes sejam agrupadas em um menu suspenso na última aba."
 
 msgid "Behaviour"
 msgstr "Comportamento"
@@ -9437,6 +9533,15 @@ msgstr "Mostrar predefinições não suportadas"
 msgid "Show incompatible/unsupported presets in the printer and filament dropdown lists. These presets cannot be selected."
 msgstr "Exibir predefinições incompatíveis e não suportadas nas listas de impressora e filamento. Essas predefinições não podem ser selecionadas."
 
+# AI Translated
+msgid "(Experimental) Use printer agents instead of print hosts"
+msgstr "(Experimental) Usar agentes de impressora em vez de hosts de impressão"
+
+msgid ""
+"Route print jobs for non-Bambu printers through printer plug-in agents instead of the classic print-host upload flow.\n"
+"When disabled, InlongSlicer uses the legacy print-host behavior."
+msgstr ""
+
 msgid "Experimental Features"
 msgstr "Recursos Experimentais"
 
@@ -9643,6 +9748,9 @@ msgstr "Vaso espiral"
 msgid "First layer filament sequence"
 msgstr "Sequência de filamento da primeira camada"
 
+msgid "The filament list contains mixed filaments. Custom filament sequence will not take effect."
+msgstr ""
+
 msgid "By Layer"
 msgstr "Por Camada"
 
@@ -9698,8 +9806,24 @@ msgstr "Predefinição do Usuário"
 msgid "Preset Inside Project"
 msgstr "Predefinição Dentro do Projeto"
 
+# AI Translated
+msgid "Copies all inherited values from the parent into this preset and removes the parent relationship. Presets compatible only with the parent may become unsupported."
+msgstr "Copia para esta predefinição todos os valores herdados da predefinição pai e remove a relação de herança. Predefinições compatíveis apenas com a predefinição pai podem deixar de ser suportadas."
+
 msgid "Detach from parent"
 msgstr "Separar do pai"
+
+# AI Translated
+msgid "Unique preset"
+msgstr "Predefinição única"
+
+# AI Translated
+msgid "Parent preset"
+msgstr "Predefinição pai"
+
+# AI Translated
+msgid "This preset does not inherit from another preset."
+msgstr "Esta predefinição não herda de outra predefinição."
 
 msgid "Name is unavailable."
 msgstr "O nome não está disponível."
@@ -10420,24 +10544,6 @@ msgstr "Tem certeza de que deseja habilitar esta opção?"
 msgid "Infill patterns are typically designed to handle rotation automatically to ensure proper printing and achieve their intended effects (e.g., Gyroid, Cubic). Rotating the current sparse infill pattern may lead to insufficient support. Please proceed with caution and thoroughly check for any potential printing issues. Are you sure you want to enable this option?"
 msgstr "Padrões de preenchimento são projetados para lidar com a rotação automaticamente para garantir a impressão adequada e atingir os efeitos pretendidos (Ex. Giroide, Cúbico). Girar o padrão de preenchimento esparso atual pode causar suporte insuficiente. Prossiga com cautela e verifique cuidadosamente se há possíveis problemas de impressão. Tem certeza de que deseja habilitar esta opção?"
 
-msgid ""
-"Layer height is too small.\n"
-"It will set to min_layer_height\n"
-msgstr ""
-"A altura da camada é muito pequena.\n"
-"Ela será definida como altura mínima da camada\n"
-"A altura da camada é muito pequena.\n"
-"Ela será definida como altura mínima da camada\n"
-
-msgid "Layer height exceeds the limit in Printer Settings -> Extruder -> Layer height limits, this may cause printing quality issues."
-msgstr "A altura da camada excede o limite em Configurações da Impressora -> Extrusora -> Limites de altura da camada, isso pode causar problemas de qualidade de impressão."
-
-msgid "Adjust to the set range automatically?\n"
-msgstr "Ajustar automaticamente à faixa definida?\n"
-
-msgid "Adjust"
-msgstr "Ajustar"
-
 msgid "Experimental feature: Retracting and cutting off the filament at a greater distance during filament changes to minimize flush. Although it can notably reduce flush, it may also elevate the risk of nozzle clogs or other printing complications."
 msgstr "Funcionalidade experimental: Retrair e cortar o filamento a uma distância maior durante mudanças de filamento para minimizar a purga. Embora possa reduzir notavelmente a purga, ele também pode elevar o risco de bolhas no bico ou outras complicações de impressão."
 
@@ -10631,6 +10737,9 @@ msgstr "Palavras-chave reservadas encontradas"
 msgid "Setting Overrides"
 msgstr "Sobrescrever configurações"
 
+msgid "Retraction when switching material"
+msgstr "Retração ao trocar material"
+
 msgid "Basic information"
 msgstr "Informações básicas"
 
@@ -10758,6 +10867,12 @@ msgstr "Perfis de processo compatíveis"
 msgid "Printable space"
 msgstr "Espaço de impressão"
 
+msgid "Printer Agent"
+msgstr "Agente de Impressora"
+
+msgid "Select the network agent implementation for printer communication. Available agents are registered at startup."
+msgstr "Selecione a implementação do agente de rede para comunicação com a impressora. Os agentes disponíveis são registrados na inicialização."
+
 #. TRN: The first argument is the parameter's name; the second argument is its value.
 #, boost-format
 msgid "Invalid value provided for parameter %1%: %2%"
@@ -10882,9 +10997,6 @@ msgstr "Limites de altura da camada"
 
 msgid "Z-Hop"
 msgstr "Z-Hop"
-
-msgid "Retraction when switching material"
-msgstr "Retração ao trocar material"
 
 # AI Translated
 msgid ""
@@ -11514,30 +11626,6 @@ msgstr "Volumes de purga para troca de filamento"
 
 msgid "Please choose the filament colour"
 msgstr "Escolha a cor do filamento"
-
-#, c-format, boost-format
-msgid "Native Wayland liveview requires the GStreamer GTK video sink. Please install the gtksink plugin for GStreamer, then restart %s."
-msgstr ""
-
-msgid "Failed to initialize the native Wayland GStreamer video sink. Please check your GStreamer GTK plugin installation."
-msgstr "Falha ao inicializar o receptor de vídeo nativo do Wayland GStreamer. Verifique a instalação do plugin GStreamer GTK."
-
-msgid "Windows Media Player is required for this task! Do you want to enable 'Windows Media Player' for your operation system?"
-msgstr "O Windows Media Player é necessário para esta tarefa! Você quer habilitar o 'Windows Media Player' para seu sistema operacional?"
-
-msgid "BambuSource has not correctly been registered for media playing! Press Yes to re-register it. You will be promoted twice"
-msgstr "BambuSource não foi registrado corretamente para reprodução de mídia! Pressione Sim para registrá-lo novamente. Você será promovido duas vezes"
-
-#, c-format, boost-format
-msgid "Missing BambuSource component registered for media playing! Please re-install %s or seek community help."
-msgstr ""
-
-msgid "Using a BambuSource from a different install, video play may not work correctly! Press Yes to fix it."
-msgstr "Usando um BambuSource de uma instalação diferente, a reprodução de vídeo pode não funcionar corretamente! Pressione Sim para consertar."
-
-#, c-format, boost-format
-msgid "Your system is missing H.264 codecs for GStreamer, which are required to play video. (Try installing the gstreamer1.0-plugins-bad or gstreamer1.0-libav packages, then restart %s?)"
-msgstr ""
 
 #, c-format, boost-format
 msgid "Cloud agent is not available. Please restart %s and try again."
@@ -12220,6 +12308,10 @@ msgstr " está muito perto de uma área de exclusão, e colisões vão ocorrer.\
 msgid " is too close to clumping detection area, and collisions will be caused.\n"
 msgstr " está muito perto da área de detecção de aglomeração, e ocorrerão colisões.\n"
 
+# AI Translated
+msgid " is partially outside the printable area, and it cannot be printed.\n"
+msgstr " está parcialmente fora da área imprimível, e não pode ser impresso.\n"
+
 msgid "Selected nozzle temperatures are incompatible. Each filament's nozzle temperature must fall within the recommended nozzle temperature range of the other filaments. Otherwise, nozzle clogging or printer damage may occur."
 msgstr "As temperaturas dos bicos selecionadas são incompatíveis. A temperatura do bico de cada filamento deve estar dentro da faixa de temperatura recomendada para os demais filamentos. Caso contrário, pode ocorrer entupimento do bico ou danos à impressora."
 
@@ -12231,6 +12323,9 @@ msgstr "Se ainda assim desejar imprimir, você pode ativar a opção em Preferê
 
 msgid "No extrusions under current settings."
 msgstr "Nenhuma extrusão com as configurações atuais."
+
+msgid "A gradient mixed filament is used, but 'Mixed color sublayer' is disabled. The gradient will not be printed."
+msgstr ""
 
 msgid "Smooth mode of timelapse is not supported when \"by object\" sequence is enabled."
 msgstr "O modo suave do timelapse não é suportado quando a sequência \"por objeto\" está ativada."
@@ -12267,6 +12362,9 @@ msgstr "Você pode querer reduzir o tamanho do seu modelo ou alterar as configur
 
 msgid "Variable layer height is not supported with Organic supports."
 msgstr "A altura de camada variável não é suportada com suportes Orgânicos."
+
+msgid "The wipe tower filament cannot be a mixed filament."
+msgstr ""
 
 msgid "Different nozzle diameters and different filament diameters may not work well when the prime tower is enabled. It's very experimental, so please proceed with caution."
 msgstr "Diferentes diâmetros de bico e diferentes diâmetros de filamento podem não funcionar bem quando a torre de preparo estiver habilitada. É muito experimental, então prossiga com cautela."
@@ -12370,39 +12468,27 @@ msgstr "Definir a velocidade de jerk muito baixa pode levar a artefatos em super
 
 msgid ""
 "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\n"
-"Orca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the maximum jerk setting in your printer's configuration to get higher speeds."
 msgstr ""
-"A configuração de jerk excede o jerk máximo da impressora (machine_max_jerk_x/machine_max_jerk_y).\n"
-"Inlong automaticamente limitará a velocidade do jerk para garantir que não ultrapasse as capacidades da impressora.\n"
-"Você pode ajustar a configuração de jerk máximo na configuração da sua impressora para obter velocidades mais altas."
 
 msgid ""
 "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\n"
-"Orca will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits."
 msgstr ""
-"A configuração de desvio de junção excede o valor máximo da impressora (machine_max_junction_deviation).\n"
-"O Inlong limitará automaticamente o desvio de junção para garantir que ele não ultrapasse as capacidades da impressora.\n"
-"Você pode ajustar o valor do machine_max_junction_deviation na configuração da sua impressora para obter limites mais altos."
 
 msgid ""
 "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\n"
-"Orca will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds."
 msgstr ""
-"A configuração de aceleração excede a aceleração máxima da impressora (machine_max_acceleration_extruding).\n"
-"Inlong automaticamente limitará a velocidade de aceleração para garantir que não ultrapasse as capacidades da impressora.\n"
-"Você pode ajustar o valor de machine_max_acceleration_extruding na configuração da sua impressora para obter velocidades mais altas."
 
 msgid ""
 "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\n"
-"Orca will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds."
 msgstr ""
-"A configuração de aceleração de deslocamento excede a aceleração máxima de deslocamento da impressora (machine_max_acceleration_travel).\n"
-"O Inlong irá automaticamente limitar a velocidade de aceleração de deslocamento para garantir que não ultrapasse as capacidades da impressora.\n"
-"Você pode ajustar o valor de machine_max_acceleration_travel na configuração da sua impressora para obter velocidades mais altas."
 
 msgid "The precise wall option will be ignored for outer-inner or inner-outer-inner wall sequences."
 msgstr "A opção de parede precisa será ignorada para sequências externa-interna ou interna-externa-interna."
@@ -12532,9 +12618,6 @@ msgstr "Usar 3MF em vez de G-code"
 
 msgid "Enable this if the printer accepts a 3MF file as the print job. When enabled, Inlong Slicer sends the sliced file as a .gcode.3mf, instead of a plain .gcode file."
 msgstr ""
-
-msgid "Printer Agent"
-msgstr "Agente de Impressora"
 
 msgid "Select the network agent implementation for printer communication."
 msgstr "Selecione a implementação do agente de rede para comunicação com a impressora."
@@ -13356,6 +13439,14 @@ msgid ""
 msgstr ""
 "A geometria será decimada antes de detectar ângulos agudos. Este parâmetro indica o comprimento mínimo da divergência para a decimação.\n"
 "0 para desativar."
+
+# AI Translated
+msgid "Brim ears outer only"
+msgstr "Orelhas da borda apenas externas"
+
+# AI Translated
+msgid "Generate mouse ears only on the outer contour of the model, excluding holes and enclosed sections."
+msgstr "Gera orelhas de rato apenas no contorno externo do modelo, excluindo furos e seções fechadas."
 
 msgid "upward compatible machine"
 msgstr "uáquina compatível ascendente"
@@ -14354,6 +14445,48 @@ msgstr "Material de suporte"
 msgid "Support material is commonly used to print supports and support interfaces."
 msgstr "O material de suporte é comumente usado para imprimir suportes e interfaces de suporte."
 
+msgid "Is mixed filament"
+msgstr ""
+
+msgid "Whether this filament slot is a mixed filament composed of multiple physical filaments"
+msgstr ""
+
+msgid "Mixed filament components"
+msgstr ""
+
+msgid "Comma-separated 1-based indices of component filaments, e.g. \"1,3\""
+msgstr ""
+
+msgid "Mixed filament sublayer ratios"
+msgstr ""
+
+msgid "Comma-separated ratio values summing to 1.0, e.g. \"0.7,0.3\""
+msgstr ""
+
+msgid "Mixed filament gradient"
+msgstr ""
+
+msgid "Enable Z-direction gradient mode for mixed filament sub-layers. When enabled, the sub-layer ratios vary linearly across layers."
+msgstr ""
+
+msgid "Mixed filament gradient range"
+msgstr ""
+
+msgid "Start and end ratios for the first component in gradient mode. Comma-separated pair, e.g. \"0.10,0.90\" means 10% to 90%."
+msgstr ""
+
+msgid "Mixed filament gradient curve"
+msgstr ""
+
+msgid "Optional Photoshop-style custom curve mapping Z progress to the first component ratio. Encoded as pipe-separated control points, either \"x,y\" (legacy) or \"x,y,m_in,m_out\" when a tangent override is needed (empty token or \"nan\" means use PCHIP default). x in [0,1]; y is clamped to the configured ratio range, e.g. \"0,0.15|0.5,0.50|1,0.85\". When empty, the linear gradient_range is used instead."
+msgstr ""
+
+msgid "Mixed filament per-part gradient"
+msgstr ""
+
+msgid "When gradient mode is enabled, apply the gradient to each part of an assembly independently rather than treating the whole assembly as one Z range."
+msgstr ""
+
 msgid "Filament printable"
 msgstr "Filamento imprimível"
 
@@ -14520,6 +14653,14 @@ msgstr "TPMS-FK"
 
 msgid "Gyroid"
 msgstr "Giroide"
+
+# AI Translated
+msgid "Sparse infill smooth factor"
+msgstr "Fator de suavização do preenchimento esparso"
+
+# AI Translated
+msgid "Controls how strongly sparse infill corners are rounded. 0% keeps the original sharp path, while 100% produces the largest possible curves between adjacent infill lines."
+msgstr "Controla o quanto os cantos do preenchimento esparso são arredondados. 0% mantém o trajeto original com cantos vivos, enquanto 100% produz as maiores curvas possíveis entre linhas de preenchimento adjacentes."
 
 msgid "This is the acceleration of top surface infill. Using a lower value may improve top surface quality."
 msgstr "Esta é a aceleração do preenchimento da superfície superior. Usar um valor menor pode melhorar a qualidade da superfície superior."
@@ -15073,6 +15214,13 @@ msgstr "Com que tipo de G-code a impressora é compatível."
 
 msgid "Klipper"
 msgstr "Klipper"
+
+# AI Translated
+msgid "Skip G-code config block"
+msgstr "Omitir o bloco de configuração do G-code"
+
+msgid "Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. This can help with printers whose firmware crashes when parsing these comment lines (e.g. Anycubic go-klipper). Note: the G-code file will no longer contain slicer settings, so importing it back into InlongSlicer will not restore the configuration."
+msgstr ""
 
 msgid "Pellet Modded Printer"
 msgstr "Impressora Modificada para Pellets"
@@ -16055,7 +16203,7 @@ msgid "Line pattern for raft support layers."
 msgstr ""
 
 msgid "Rectilinear grid"
-msgstr ""
+msgstr "Grade reticulada"
 
 msgid "Raft line spacing"
 msgstr ""
@@ -16146,8 +16294,13 @@ msgstr "Retração longa na troca de extrusora"
 msgid "Retraction distance when extruder change"
 msgstr "Distância de retração na troca de extrusora"
 
+# AI Translated
 msgid "Retraction Length (Toolchange)"
-msgstr ""
+msgstr "Comprimento da retração (Troca de ferramenta)"
+
+# AI Translated
+msgid "When retraction is triggered before changing tool, filament is pulled back by the specified amount (the length is measured on raw filament, before it enters the extruder)."
+msgstr "Quando a retração é acionada antes da troca de ferramenta, o filamento é puxado de volta na quantidade especificada (o comprimento é medido no filamento bruto, antes de entrar na extrusora)."
 
 msgid "Z-hop height"
 msgstr "Altura de Z-hop"
@@ -16310,6 +16463,10 @@ msgstr "Comprimento extra na retração"
 
 msgid "When the retraction is compensated after the travel move, the extruder will push this additional amount of filament. This setting is rarely needed."
 msgstr "Quando a retração é compensada após o movimento de deslocamento, a extrusora empurrará essa quantidade adicional de filamento. Esta configuração é raramente necessária."
+
+# AI Translated
+msgid "Extra length on restart (Toolchange)"
+msgstr "Comprimento extra na retração (Troca de ferramenta)"
 
 msgid "When the retraction is compensated after changing tool, the extruder will push this additional amount of filament."
 msgstr "Quando a retração é compensada após a troca de ferramenta, a extrusora empurrará essa quantidade adicional de filamento."
@@ -16719,6 +16876,14 @@ msgstr "Troca de ferramenta na torre de purga"
 msgid "Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx). Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. By default Inlong skips the travel on multi-toolhead machines because the firmware handles the head swap, which can result in the Tx command being issued above the printed part. Enable this option if you want the tool change to always be issued above the wipe tower instead."
 msgstr ""
 
+# AI Translated
+msgid "Wait for temperature on wipe tower"
+msgstr "Aguardar a temperatura na torre de purga"
+
+# AI Translated
+msgid "Pick up the new tool without waiting for it to reach printing temperature, travel to the wipe tower, and wait for the temperature there, right before purging. Ooze from the heat-up lands on the tower instead of the model, and the travel overlaps with the heating. Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. The firmware or tool change macro must not wait for the temperature itself. When disabled, the temperature wait is issued right after the tool change command."
+msgstr "Pega a nova ferramenta sem esperar que ela atinja a temperatura de impressão, desloca-se até a torre de purga e aguarda a temperatura ali, logo antes de purgar. O vazamento causado pelo aquecimento cai na torre em vez do modelo, e o deslocamento acontece durante o aquecimento. Relevante apenas para impressoras multiextrusora (multicabeça) que usam uma torre de purga do tipo 2. O firmware ou a macro de troca de ferramenta não devem aguardar a temperatura por conta própria. Quando desativado, a espera de temperatura é emitida logo após o comando de troca de ferramenta."
+
 msgid "No sparse layers (beta)"
 msgstr "Sem camadas esparsas (beta)"
 
@@ -17045,7 +17210,7 @@ msgstr "Esta configuração determina o ângulo máximo de saliência que as ram
 msgid "Preferred Branch Angle"
 msgstr "Ângulo preferido da ramificação"
 
-#. TRN PrintSettings: "Organic supports" > "Preferred Branch Angle"
+#. TRN PrintSettings: "Organic supports" / "Tree Strong" > "Preferred Branch Angle"
 msgid "The preferred angle of the branches, when they do not have to avoid the model. Use a lower angle to make them more vertical and more stable. Use a higher angle for branches to merge faster."
 msgstr "O ângulo preferido das ramificações, quando eles não precisam evitar o modelo. Use um ângulo mais baixo para torná-los mais verticais e mais estáveis. Use um ângulo mais alto para que as ramificações se fundam mais rápido."
 
@@ -17272,6 +17437,12 @@ msgstr ""
 "\n"
 "Definir um valor na configuração de quantidade de retração antes da limpeza abaixo executará qualquer retração em excesso antes da limpeza, caso contrário, será realizada após."
 
+msgid "Mixed color sublayer"
+msgstr ""
+
+msgid "Enable mixed color sublayer splitting. When enabled, layers containing mixed color filaments will be split into sub-layers to achieve color mixing effects."
+msgstr ""
+
 msgid "The wiping tower can be used to clean up residue on the nozzle and stabilize the chamber pressure inside the nozzle in order to avoid appearance defects when printing objects."
 msgstr "A torre de purga pode ser usada para limpar o resíduo no bico e estabilizar a pressão na câmara dentro do bico, a fim de evitar defeitos de aparência ao imprimir objetos."
 
@@ -17302,7 +17473,7 @@ msgstr "Volume de preparo"
 msgid "This is the volume of material to prime the extruder with on the tower."
 msgstr "Este é o volume de material para preparar a extrusora na torre."
 
-#,fuzzy
+#, fuzzy
 msgid "Prime volume mode"
 msgstr "Modo de volume de preparação"
 
@@ -18331,6 +18502,9 @@ msgstr "A geração da malha do arquivo do modelo falhou ou não há forma váli
 
 msgid "The supplied file couldn't be read because it's empty."
 msgstr "O arquivo fornecido não pôde ser lido porque está vazio."
+
+msgid "The file format is incompatible and cannot be parsed."
+msgstr ""
 
 msgid "Unknown file format: input file must have .stl, .obj, or .amf(.xml) extension."
 msgstr "Formato de arquivo desconhecido: o arquivo de entrada deve ter extensão .stl, .obj, .amf(.xml)."
@@ -19934,9 +20108,6 @@ msgstr "Impressora Física"
 msgid "Print Host upload"
 msgstr "Upload do Host de Impressão"
 
-msgid "Select the network agent implementation for printer communication. Available agents are registered at startup."
-msgstr "Selecione a implementação do agente de rede para comunicação com a impressora. Os agentes disponíveis são registrados na inicialização."
-
 msgid "Select a Flashforge printer"
 msgstr "Selecione uma impressora Flashforge"
 
@@ -20778,9 +20949,6 @@ msgstr "Algo inesperado aconteceu ao tentar conectar, por favor tente novamente.
 msgid "User canceled."
 msgstr "Cancelado pelo usuário."
 
-msgid "Head diameter"
-msgstr "Diâmetro da cabeça"
-
 msgid "Max angle"
 msgstr "Ângulo máx"
 
@@ -21214,6 +21382,963 @@ msgstr "O filamento pode não ser compatível com as configurações atuais da m
 msgid "The filament model is unknown. A random filament preset will be used."
 msgstr "O modelo do filamento é desconhecido. Uma predefinição de filamento aleatória será usada."
 
+#, boost-format
+msgid "The selected 3mf file has been saved with a newer version of %1% and is not compatible."
+msgstr ""
+
+msgid "The selected 3MF contains FDM supports painted object using a newer version of PrusaSlicer and is not compatible."
+msgstr ""
+
+msgid "The selected 3MF contains seam painted object using a newer version of PrusaSlicer and is not compatible."
+msgstr ""
+
+msgid "The selected 3MF contains multi-material painted object using a newer version of PrusaSlicer and is not compatible."
+msgstr ""
+
+msgid "Hollowing"
+msgstr ""
+
+msgid "Pad brim size is too small for the current configuration."
+msgstr ""
+
+msgid "Cannot proceed without support points! Add support points or disable support generation."
+msgstr ""
+
+msgid "Elevation is too low for object. Use the \"Pad around object\" feature to print the object without elevation."
+msgstr ""
+
+msgid "The endings of the support pillars will be deployed on the gap between the object and the pad. 'Support base safety distance' has to be greater than the 'Pad object gap' parameter to avoid this."
+msgstr ""
+
+msgid "Exposition time is out of printer profile bounds."
+msgstr ""
+
+msgid "Initial exposition time is out of printer profile bounds."
+msgstr ""
+
+msgid "Slicing done"
+msgstr ""
+
+msgid "Hollowing model"
+msgstr ""
+
+msgid "Drilling holes into model."
+msgstr ""
+
+msgid "Slicing model"
+msgstr ""
+
+msgid "Generating support points"
+msgstr ""
+
+msgid "Generating support tree"
+msgstr ""
+
+msgid "Generating pad"
+msgstr ""
+
+msgid "Slicing supports"
+msgstr ""
+
+msgid "Merging slices and calculating statistics"
+msgstr ""
+
+msgid "Rasterizing layers"
+msgstr ""
+
+msgid "Slicing had to be stopped due to an internal error: Inconsistent slice index."
+msgstr ""
+
+msgid "Visualizing supports"
+msgstr ""
+
+msgid "No pad can be generated for this model with the current configuration"
+msgstr ""
+
+msgid "There are unprintable objects. Try to adjust support settings to make the objects printable."
+msgstr ""
+
+msgid "Taking a configuration snapshot failed."
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s has encountered an error while taking a configuration snapshot."
+msgstr ""
+
+msgid "Script plugin skipped."
+msgstr ""
+
+msgid "Script plugin finished."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Please select the filament installed on the %s."
+msgstr ""
+
+msgid "Please select the filament."
+msgstr ""
+
+msgid "To learn about the filaments matching rules."
+msgstr ""
+
+msgid "External spools is not supported since Filament Track Switch has been installed. If you want to use external spool, please uninstall it."
+msgstr ""
+
+msgid "Select Filament && Hotends"
+msgstr ""
+
+msgid "Model Pictures"
+msgstr ""
+
+msgid "Auxiliaryies"
+msgstr ""
+
+msgid "Alternate nozzles:"
+msgstr ""
+
+msgid "All standard"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Welcome to the %s Configuration Assistant"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Welcome to the %s Configuration Wizard"
+msgstr ""
+
+msgid "Welcome"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Hello, welcome to %s! This %s helps you with the initial configuration; just a few settings and you will be ready to print."
+msgstr ""
+
+msgid "Remove user profiles (a snapshot will be taken beforehand)"
+msgstr ""
+
+msgid "Perform desktop integration (Sets this binary to be searchable by the system)."
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s Family"
+msgstr ""
+
+msgid "Printer:"
+msgstr ""
+
+msgid "Vendor:"
+msgstr ""
+
+msgid "Profile:"
+msgstr ""
+
+msgid "(All)"
+msgstr ""
+
+#, boost-format
+msgid "%1% marked with <b>*</b> are <b>not</b> compatible with some installed printers."
+msgstr ""
+
+msgid "SLA materials"
+msgstr ""
+
+#, boost-format
+msgid "All installed printers are compatible with the selected %1%."
+msgstr ""
+
+msgid "filament"
+msgstr ""
+
+msgid "SLA material"
+msgstr ""
+
+msgid "Only the following installed printers are compatible with the selected filaments"
+msgstr ""
+
+msgid "Only the following installed printers are compatible with the selected SLA materials"
+msgstr ""
+
+msgid "Custom Printer Setup"
+msgstr ""
+
+msgid "Custom Printer"
+msgstr ""
+
+msgid "Define a custom printer profile"
+msgstr ""
+
+msgid "Custom profile name:"
+msgstr ""
+
+msgid "Firmware Type"
+msgstr ""
+
+msgid "Firmware"
+msgstr ""
+
+msgid "Choose the type of firmware used by your printer."
+msgstr ""
+
+msgid "Bed Shape and Size"
+msgstr ""
+
+msgid "Set the shape of your printer's bed."
+msgstr ""
+
+msgid "Invalid numeric input."
+msgstr ""
+
+msgid "Filament and Nozzle Diameters"
+msgstr ""
+
+msgid "Print Diameters"
+msgstr ""
+
+msgid "Enter the diameter of your printer's hot end nozzle."
+msgstr ""
+
+msgid "Nozzle Diameter:"
+msgstr ""
+
+msgid "Enter the diameter of your filament."
+msgstr ""
+
+msgid "Good precision is required, so use a caliper and do multiple measurements along the filament, then compute the average."
+msgstr ""
+
+msgid "Filament Diameter:"
+msgstr ""
+
+msgid "Nozzle and Bed Temperatures"
+msgstr ""
+
+msgid "Enter the nozzle_temperature needed for extruding your filament."
+msgstr ""
+
+msgid "A rule of thumb is 160 to 230℃ for PLA, and 215 to 250℃ for ABS."
+msgstr ""
+
+msgid "Extrusion Temperature:"
+msgstr ""
+
+msgid "Enter the bed temperature needed for getting your filament to stick to your heated bed."
+msgstr ""
+
+msgid "A rule of thumb is 60℃ for PLA and 110℃ for ABS. Leave zero if you have no heated bed."
+msgstr ""
+
+msgid "Bed Temperature:"
+msgstr ""
+
+msgid "SLA Materials"
+msgstr ""
+
+msgid "FFF Technology Printers"
+msgstr ""
+
+msgid "SLA Technology Printers"
+msgstr ""
+
+#, boost-format
+msgid "Following printer profiles has no default filament: %1%Please select one manually."
+msgstr ""
+
+#, boost-format
+msgid "Following printer profiles has no default material: %1%Please select one manually."
+msgstr ""
+
+msgid "The following FFF printer models have no filament selected:"
+msgstr ""
+
+msgid "Do you want to select default filaments for these FFF printer models?"
+msgstr ""
+
+msgid "Configuration is edited in ConfigWizard"
+msgstr ""
+
+msgid "All user presets will be deleted."
+msgstr ""
+
+msgid "A new vendor was installed and one of its printers will be activated"
+msgid_plural "New vendors were installed and one of theirs printers will be activated"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "A new Printer was installed and it will be activated."
+msgstr ""
+
+msgid "Some Printers were uninstalled."
+msgstr ""
+
+msgid "A new filament was installed and it will be activated."
+msgstr ""
+
+msgid "A new SLA material was installed and it will be activated."
+msgstr ""
+
+msgid "Some filaments were uninstalled."
+msgstr ""
+
+msgid "Custom printer was installed and it will be activated."
+msgstr ""
+
+msgid "<Back"
+msgstr ""
+
+msgid "Next>"
+msgstr ""
+
+msgid "Filament Profiles Selection"
+msgstr ""
+
+msgid "Configuration Assistant"
+msgstr ""
+
+msgid "Configuration &Assistant"
+msgstr ""
+
+msgid "Configuration Wizard"
+msgstr ""
+
+msgid "Configuration &Wizard"
+msgstr ""
+
+msgid "Failed to generate cali gcode"
+msgstr ""
+
+msgid "Filament Inlet A"
+msgstr ""
+
+msgid "Filament Inlet B"
+msgstr ""
+
+msgid "Suggested rearrangement"
+msgstr ""
+
+msgid "How to save time?→"
+msgstr ""
+
+msgid "Filament Status:"
+msgstr ""
+
+msgid "Position adjustment required"
+msgstr ""
+
+msgctxt "FilamentTrack"
+msgid "OK"
+msgstr ""
+
+msgid "Unused"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Based on the diagram below, rearrange the filaments on the printer for optimal results to save approximately %s."
+msgstr ""
+
+msgid "Summary:"
+msgstr ""
+
+msgid "AMS on Filament Inlet A"
+msgstr ""
+
+msgid "AMS on Filament Inlet B"
+msgstr ""
+
+#, c-format, boost-format
+msgid "The No.%d slicing filament is matched to '%s'. Assigning it to '%s' can save printing time."
+msgstr ""
+
+msgid "*Tips: If you have moved the spool position on the machine, please close this page and re‑match the filament."
+msgstr ""
+
+msgid "Summary: This is currently the most suitable position for placement."
+msgstr ""
+
+msgid "?"
+msgstr ""
+
+msgid "Note:"
+msgstr ""
+
+msgid "Left click"
+msgstr "Clique esquerdo"
+
+msgid "Right click"
+msgstr "Clique direito"
+
+msgid "Movement:"
+msgstr ""
+
+msgid "Movement"
+msgstr ""
+
+msgid "Auto Segment"
+msgstr ""
+
+msgid "Depth ratio"
+msgstr ""
+
+msgid "Prizm"
+msgstr ""
+
+msgid "connector is out of cut contour"
+msgstr ""
+
+msgid "connectors are out of cut contour"
+msgstr ""
+
+msgid "connector is out of object"
+msgstr ""
+
+msgid "connectors is out of object"
+msgstr ""
+
+msgid ""
+"Invalid state. \n"
+"No one part is selected for keep after cut"
+msgstr ""
+
+msgid "Hollow this object"
+msgstr ""
+
+msgid "Preview hollowed and drilled model"
+msgstr ""
+
+msgid "Offset"
+msgstr ""
+
+msgid "Closing distance"
+msgstr ""
+
+msgid "Hole diameter"
+msgstr ""
+
+msgid "Hole depth"
+msgstr ""
+
+msgid "Remove selected holes"
+msgstr ""
+
+msgid "Remove all holes"
+msgstr ""
+
+msgid "Clipping of view"
+msgstr ""
+
+msgid "Show supports"
+msgstr ""
+
+msgid "Hollow and drill"
+msgstr ""
+
+msgid "Model simplification has been canceled"
+msgstr ""
+
+msgid "Head diameter"
+msgstr "Diâmetro da cabeça"
+
+msgid "Lock supports under new islands"
+msgstr ""
+
+msgid "Remove selected points"
+msgstr "Remover pontos selecionados"
+
+msgid "Remove all points"
+msgstr ""
+
+msgid "Apply changes"
+msgstr ""
+
+msgid "Discard changes"
+msgstr ""
+
+msgid "Minimal points distance"
+msgstr ""
+
+msgid "Support points density"
+msgstr ""
+
+msgid "Auto-generate points"
+msgstr "Pontos gerados automaticamente"
+
+msgid "Manual editing"
+msgstr ""
+
+msgid "SLA Support Points"
+msgstr ""
+
+msgid "Do you want to save your manually edited support points?"
+msgstr ""
+
+msgid "Save support points?"
+msgstr ""
+
+msgid "Autogeneration will erase all manually edited points."
+msgstr ""
+
+msgid "Are you sure you want to do it?"
+msgstr ""
+
+msgid "SLA gizmo keyboard shortcuts"
+msgstr ""
+
+msgid "Note: some shortcuts work in (non)editing mode only."
+msgstr ""
+
+msgid "Add point"
+msgstr ""
+
+msgid "Remove point"
+msgstr ""
+
+msgid "Move point"
+msgstr ""
+
+msgid "Add point to selection"
+msgstr ""
+
+msgid "Remove point from selection"
+msgstr ""
+
+msgid "Select by rectangle"
+msgstr ""
+
+msgid "Deselect by rectangle"
+msgstr ""
+
+msgid "Select all points"
+msgstr ""
+
+msgid "Move clipping plane"
+msgstr ""
+
+msgid "Reset clipping plane"
+msgstr ""
+
+msgid "Switch to editing mode"
+msgstr ""
+
+msgid "Best surface quality"
+msgstr ""
+
+msgid "Optimize object rotation for best surface quality."
+msgstr ""
+
+msgid "Reduced overhang slopes"
+msgstr ""
+
+msgid ""
+"Optimize object rotation to have minimum amount of overhangs needing support structures.\n"
+"Note that this method will try to find the best surface of the object for touching the print bed if no elevation is set."
+msgstr ""
+
+msgid "Lowest Z height"
+msgstr ""
+
+msgid "Rotate the model to have the lowest z height for faster print time."
+msgstr ""
+
+msgid "Choose SLA archive:"
+msgstr ""
+
+msgid "Import file"
+msgstr ""
+
+msgid "Import model and profile"
+msgstr ""
+
+msgid "Import profile only"
+msgstr ""
+
+msgid "Import model only"
+msgstr ""
+
+msgid "Accurate"
+msgstr ""
+
+msgid "Quick"
+msgstr ""
+
+msgid "3D Models"
+msgstr ""
+
+msgid "Click to return"
+msgstr ""
+
+msgid "Left Arrow"
+msgstr ""
+
+msgid "Click to continue"
+msgstr ""
+
+msgid "Right Arrow"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Select %s Plugin"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Choose a %s plugin from the list below."
+msgstr ""
+
+msgid "No plugins found for this type."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Plugin file: %s"
+msgstr ""
+
+msgid "Process plugins"
+msgstr ""
+
+msgid "Filament plugins"
+msgstr ""
+
+msgid "Printer plugins"
+msgstr ""
+
+msgid "The configuration is not valid JSON. Your changes were not saved."
+msgstr ""
+
+msgid "Configuration updated. Save the preset to persist it."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Restore the default configuration for \"%s\"?\n"
+"\n"
+"This discards the preset's override and uses the global configuration."
+msgstr ""
+
+msgid "Restore defaults"
+msgstr ""
+
+msgid "Using global configuration. Save the preset to persist it."
+msgstr ""
+
+msgid "This capability is no longer available."
+msgstr ""
+
+#, boost-format
+msgid "The plugin's configuration UI failed to load (%1%). Showing the default editor."
+msgstr ""
+
+msgid "Delete Plugin"
+msgstr ""
+
+msgid "Unsubscribe"
+msgstr ""
+
+msgid "Overwrite Plugin"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Failed to activate \"%s\"."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Activated \"%s\"."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"The following installed plugins were not found on disk:\n"
+"%s\n"
+"\n"
+"Remove them from InlongSlicer?"
+msgstr ""
+
+msgid "Missing Plugins"
+msgstr ""
+
+msgid "Refreshing plugins data"
+msgstr ""
+
+msgid "Failed to unload plugin."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Deactivated \"%s\"."
+msgstr ""
+
+msgid "Plugin manifest was not found."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Activating \"%s\"..."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Enabled \"%s\"."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Disabled \"%s\"."
+msgstr ""
+
+msgid "Select plugin package"
+msgstr ""
+
+msgid "Plugin files (*.py;*.whl)|*.py;*.whl"
+msgstr ""
+
+msgid "Select a .py or .whl plugin package."
+msgstr ""
+
+msgid "Failed to install plugin package. See the log for details."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Plugin \"%s\" is already installed.\n"
+"\n"
+"Installing this package will overwrite the existing plugin."
+msgstr ""
+
+msgid "Overwrite"
+msgstr ""
+
+msgid "Installing plugin"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Installed \"%s\"."
+msgstr ""
+
+msgid "Downloading plugin"
+msgstr ""
+
+msgid "Plugin download failed."
+msgstr ""
+
+msgid "Configuration saved."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Restore the default configuration for \"%s\"?\n"
+"\n"
+"This discards the settings currently saved for this capability."
+msgstr ""
+
+msgid "Default configuration restored."
+msgstr ""
+
+msgid "Updating plugin"
+msgstr ""
+
+msgid "Failed to update plugin."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Updated \"%s\"."
+msgstr ""
+
+msgid "Plugin folder could not be determined."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Delete plugin \"%s\"?\n"
+"\n"
+"This removes the local plugin files. The plugin stays in the cloud and can be reinstalled."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Delete plugin \"%s\"?\n"
+"\n"
+"This permanently removes the plugin folder."
+msgstr ""
+
+msgid "Failed to delete plugin."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Deleted \"%s\"."
+msgstr ""
+
+msgid "Deleting plugin"
+msgstr ""
+
+msgid "Deleting plugin..."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Unsubscribe plugin \"%s\"?\n"
+"\n"
+"This will stop tracking the plugin and delete any local plugin files."
+msgstr ""
+
+msgid "Failed to unsubscribe plugin."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Unsubscribed \"%s\"."
+msgstr ""
+
+msgid "Unsubscribing plugin"
+msgstr ""
+
+msgid "Deleting local files and unsubscribing plugin..."
+msgstr ""
+
+msgid "Reloading plugin"
+msgstr ""
+
+msgid "Failed to reload plugin."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Reloaded \"%s\"."
+msgstr ""
+
+#, boost-format
+msgid ""
+"Post-processing plugin %1% failed.\n"
+"\n"
+"The post-processing plugin is expected to modify the G-code file %2% in place, but the G-code file was deleted.\n"
+"Please check the plugin implementation.\n"
+msgstr ""
+
+#, boost-format
+msgid ""
+"Post-processing script %1% failed.\n"
+"\n"
+"The post-processing script is expected to change the G-code file %2% in place, but the G-code file was deleted and likely saved under a new name.\n"
+"Please adjust the post-processing script to change the G-code in place and consult the manual on how to optionally rename the post-processed G-code file.\n"
+msgstr ""
+
+msgid "Purge Mode Settings"
+msgstr ""
+
+msgid "Perform full purging with speed and temperature transition for the best print quality."
+msgstr ""
+
+msgid "Uses optimized purge temperature, multiplier and stronger extrusion for faster purging. May cause slight color mixing in some extreme cases."
+msgstr ""
+
+msgid "Prime Saving"
+msgstr ""
+
+msgid "Reduces prime waste and prints faster. May cause slight color mixing or small surface defects."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Run \"%s\"?"
+msgstr ""
+
+msgid "Run plugin"
+msgstr ""
+
+msgid "Don't ask again for this action"
+msgstr ""
+
+msgid "Move over surface"
+msgstr ""
+
+msgid "System Information"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Blacklisted libraries loaded into %s process:"
+msgstr ""
+
+msgid "SIMD is supported:"
+msgstr ""
+
+msgid "Copy to Clipboard"
+msgstr ""
+
+msgid "Terminal"
+msgstr ""
+
+msgid "Forward"
+msgstr ""
+
+msgid "Tools"
+msgstr ""
+
+msgid "View Source"
+msgstr ""
+
+msgid "View Text"
+msgstr ""
+
+msgid "Handle Navigation"
+msgstr ""
+
+msgid "Handle New Windows"
+msgstr ""
+
+msgid "Edit Mode"
+msgstr ""
+
+msgid "Run Script"
+msgstr ""
+
+msgid "Add user script"
+msgstr ""
+
+msgid "Set custom user agent"
+msgstr ""
+
+msgid "Clear Selection"
+msgstr ""
+
+msgid "Delete Selection"
+msgstr ""
+
+msgid "Custom Scheme Example"
+msgstr ""
+
+msgid "Memory File System Example"
+msgstr ""
+
+msgid "Enable Context Menu"
+msgstr ""
+
+msgid "Enable Dev Tools"
+msgstr ""
+
+msgid "An error occurred loading "
+msgstr ""
+
+msgid "/"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Load %s to "
+msgstr ""
+
+msgid "Connection to ESP3D is working correctly."
+msgstr ""
+
+msgid "Could not connect to ESP3D"
+msgstr ""
+
+msgid "The plugin's configuration UI was empty. Showing the default editor."
+msgstr ""
+
+msgid "This capability is no longer available. Your changes were not saved."
+msgstr ""
+
+msgid "The configuration could not be written to disk. Your changes were not saved."
+msgstr ""
+
+#, boost-format
+msgid "The plugin could not supply a default configuration (%1%). Nothing was changed."
+msgstr ""
+
+msgid "The configuration could not be written to disk. Nothing was changed."
+msgstr ""
+
+msgid "Plugin installation failed"
+msgstr ""
+
 #: resources/data/hints.ini: [hint:Precise wall]
 msgid ""
 "Precise wall\n"
@@ -21507,6 +22632,75 @@ msgid ""
 msgstr ""
 "Evitar empenamento\n"
 "Você sabia que ao imprimir materiais propensos ao empenamento, como ABS, aumentar adequadamente a temperatura da mesa aquecida pode reduzir a probabilidade de empenamento?"
+
+#~ msgid "Please check the network connection of the printer and Orca."
+#~ msgstr "Por favor, verifique a conexão de rede da impressora e do Inlong."
+
+#~ msgid "If enabled, Orca will remember and switch filament/process configuration for each printer automatically."
+#~ msgstr "Se ativo, Inlong vai lembrar e alternar a configuração de filamento/processo para cada impressora automaticamente."
+
+#~ msgid ""
+#~ "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\n"
+#~ "Orca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the maximum jerk setting in your printer's configuration to get higher speeds."
+#~ msgstr ""
+#~ "A configuração de jerk excede o jerk máximo da impressora (machine_max_jerk_x/machine_max_jerk_y).\n"
+#~ "Inlong automaticamente limitará a velocidade do jerk para garantir que não ultrapasse as capacidades da impressora.\n"
+#~ "Você pode ajustar a configuração de jerk máximo na configuração da sua impressora para obter velocidades mais altas."
+
+#~ msgid ""
+#~ "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\n"
+#~ "Orca will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits."
+#~ msgstr ""
+#~ "A configuração de desvio de junção excede o valor máximo da impressora (machine_max_junction_deviation).\n"
+#~ "O Inlong limitará automaticamente o desvio de junção para garantir que ele não ultrapasse as capacidades da impressora.\n"
+#~ "Você pode ajustar o valor do machine_max_junction_deviation na configuração da sua impressora para obter limites mais altos."
+
+#~ msgid ""
+#~ "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\n"
+#~ "Orca will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds."
+#~ msgstr ""
+#~ "A configuração de aceleração excede a aceleração máxima da impressora (machine_max_acceleration_extruding).\n"
+#~ "Inlong automaticamente limitará a velocidade de aceleração para garantir que não ultrapasse as capacidades da impressora.\n"
+#~ "Você pode ajustar o valor de machine_max_acceleration_extruding na configuração da sua impressora para obter velocidades mais altas."
+
+#~ msgid ""
+#~ "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\n"
+#~ "Orca will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds."
+#~ msgstr ""
+#~ "A configuração de aceleração de deslocamento excede a aceleração máxima de deslocamento da impressora (machine_max_acceleration_travel).\n"
+#~ "O Inlong irá automaticamente limitar a velocidade de aceleração de deslocamento para garantir que não ultrapasse as capacidades da impressora.\n"
+#~ "Você pode ajustar o valor de machine_max_acceleration_travel na configuração da sua impressora para obter velocidades mais altas."
+
+#~ msgid ""
+#~ "Layer height is too small.\n"
+#~ "It will set to min_layer_height\n"
+#~ msgstr ""
+#~ "A altura da camada é muito pequena.\n"
+#~ "Ela será definida como altura mínima da camada\n"
+#~ "A altura da camada é muito pequena.\n"
+#~ "Ela será definida como altura mínima da camada\n"
+
+#~ msgid "Layer height exceeds the limit in Printer Settings -> Extruder -> Layer height limits, this may cause printing quality issues."
+#~ msgstr "A altura da camada excede o limite em Configurações da Impressora -> Extrusora -> Limites de altura da camada, isso pode causar problemas de qualidade de impressão."
+
+#~ msgid "Adjust to the set range automatically?\n"
+#~ msgstr "Ajustar automaticamente à faixa definida?\n"
+
+#~ msgid "Failed to initialize the native Wayland GStreamer video sink. Please check your GStreamer GTK plugin installation."
+#~ msgstr "Falha ao inicializar o receptor de vídeo nativo do Wayland GStreamer. Verifique a instalação do plugin GStreamer GTK."
+
+#~ msgid "Windows Media Player is required for this task! Do you want to enable 'Windows Media Player' for your operation system?"
+#~ msgstr "O Windows Media Player é necessário para esta tarefa! Você quer habilitar o 'Windows Media Player' para seu sistema operacional?"
+
+#~ msgid "BambuSource has not correctly been registered for media playing! Press Yes to re-register it. You will be promoted twice"
+#~ msgstr "BambuSource não foi registrado corretamente para reprodução de mídia! Pressione Sim para registrá-lo novamente. Você será promovido duas vezes"
+
+#~ msgid "Using a BambuSource from a different install, video play may not work correctly! Press Yes to fix it."
+#~ msgstr "Usando um BambuSource de uma instalação diferente, a reprodução de vídeo pode não funcionar corretamente! Pressione Sim para consertar."
 
 #~ msgid "Print order within a single layer."
 #~ msgstr "Ordem de impressão dentro de uma única camada."
@@ -23467,14 +24661,8 @@ msgstr ""
 #~ msgid "Your nozzle type in preset is not consistent with memorized nozzle. Did you change your nozzle lately?"
 #~ msgstr "O tipo de bico predefinido não corresponde ao bico memorizado. Você trocou o bico recentemente?"
 
-#~ msgid "Remove selected points"
-#~ msgstr "Remover pontos selecionados"
-
 #~ msgid "Remove all"
 #~ msgstr "Remover tudo"
-
-#~ msgid "Auto-generate points"
-#~ msgstr "Pontos gerados automaticamente"
 
 #~ msgid "Add a brim ear"
 #~ msgstr "Adicionar orelha da borda"
@@ -23506,12 +24694,6 @@ msgstr ""
 
 #~ msgid "Key 1~9"
 #~ msgstr "Tecla 1~9"
-
-#~ msgid "Left click"
-#~ msgstr "Clique esquerdo"
-
-#~ msgid "Right click"
-#~ msgstr "Clique direito"
 
 #~ msgid "Select feature"
 #~ msgstr "Selecionar recurso"

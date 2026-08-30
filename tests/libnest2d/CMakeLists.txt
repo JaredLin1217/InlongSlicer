@@ -14,4 +14,4 @@ set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 
 inlongslicer_copy_test_dlls()
 
-orcaslicer_discover_tests(${_TEST_NAME}_tests)
+inlongslicer_discover_tests(${_TEST_NAME}_tests)

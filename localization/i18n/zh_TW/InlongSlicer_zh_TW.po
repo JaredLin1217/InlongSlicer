@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 17:23+0800\n"
+"POT-Creation-Date: 2026-08-30 20:36+0800\n"
 "PO-Revision-Date: 2025-11-28 13:48-0600\n"
 "Last-Translator: tntchn <15895303+tntchn@users.noreply.github.com>\n"
 "Language-Team: \n"
@@ -1043,7 +1043,10 @@ msgid ""
 "Objects(%1%) have duplicated connectors. Some connectors may be missing in slicing result.\n"
 "Please report to the InlongSlicer team and describe the scenario in which this issue happened.\n"
 "Thank you."
-msgstr "物件（%1%）具有重複的連接器。切片結果中可能會遺失某些連接器。\n請向InlongSlicer團隊回報並描述該問題發生的場景。\n謝謝。"
+msgstr ""
+"物件（%1%）具有重複的連接器。切片結果中可能會遺失某些連接器。\n"
+"請向InlongSlicer團隊回報並描述該問題發生的場景。\n"
+"謝謝。"
 
 msgid "Cut by Plane"
 msgstr "用平面分割"
@@ -2115,7 +2118,10 @@ msgid ""
 "The Microsoft WebView2 Runtime could not be installed.\n"
 "Some features, including the setup wizard, may appear blank until it is installed.\n"
 "Please install it manually from https://developer.microsoft.com/microsoft-edge/webview2/ and restart Inlong Slicer."
-msgstr "無法安裝 Microsoft WebView2 Runtime。\n某些功能（包括設定精靈）在安裝之前可能會顯示為空白。\n請從 https://developer.microsoft.com/microsoft-edge/webview2/ 手動安裝並重新啟動 Inlong Slicer。"
+msgstr ""
+"無法安裝 Microsoft WebView2 Runtime。\n"
+"某些功能（包括設定精靈）在安裝之前可能會顯示為空白。\n"
+"請從 https://developer.microsoft.com/microsoft-edge/webview2/ 手動安裝並重新啟動 Inlong Slicer。"
 
 #, c-format, boost-format
 msgid "Resources path does not exist or is not a directory: %s"
@@ -2902,6 +2908,9 @@ msgstr "編輯"
 msgid "Merge with"
 msgstr "合併到"
 
+msgid "Decompose Color"
+msgstr ""
+
 msgid "Delete this filament"
 msgstr "刪除此線材"
 
@@ -3198,6 +3207,9 @@ msgstr "組合體"
 msgid "Merge parts to an object"
 msgstr "合併零件為物件"
 
+msgid "Using variable layer height together with mixed color sublayer may result in poor color mixing quality."
+msgstr ""
+
 # AI Translated
 msgid "Add layers"
 msgstr "新增層"
@@ -3482,8 +3494,8 @@ msgstr "無法連接列印設備"
 msgid "Connection to printer failed"
 msgstr "連接列印設備失敗"
 
-msgid "Please check the network connection of the printer and Orca."
-msgstr "請檢查列印裝置與 Inlong Slicer 的網路連線。"
+msgid "Please check the network connection of the printer and InlongSlicer."
+msgstr ""
 
 msgid "Connecting..."
 msgstr "連接中..."
@@ -4679,6 +4691,23 @@ msgstr "目前列印裝置內部溫度高於線材的安全溫度，可能會導
 #, c-format, boost-format
 msgid "The minimal chamber temperature (%d℃) is higher than the target chamber temperature (%d℃). The minimal value is the threshold at which printing starts while the chamber keeps heating toward the target, so it should not exceed it. It will be clamped to the target."
 msgstr "最低倉室溫度（%d℃）高於目標倉室溫度（%d℃）。最低值是列印開始的門檻，此時倉室會持續朝目標溫度加熱，因此不應超過目標值。系統會將其限制在目標值。"
+
+# AI Translated
+#, c-format, boost-format
+msgid "Layer height is too small. It will be set to the minimum (%g mm)."
+msgstr "層高過小，將設定為最小值（%g mm）。"
+
+# AI Translated
+msgid "Layer height is outside the limits set in Printer Settings -> Extruder -> Layer height limits, this may cause printing quality issues."
+msgstr "層高超出了印表裝置設定 -> 擠出機 -> 層高限制中設定的範圍，這可能會導致列印品質問題。"
+
+# AI Translated
+#, c-format, boost-format
+msgid "Adjust it to the limit (%g mm) automatically?"
+msgstr "是否自動調整至限制值（%g mm）？"
+
+msgid "Adjust"
+msgstr "調整"
 
 msgid ""
 "Layer height too small\n"
@@ -6119,8 +6148,9 @@ msgstr "多臺設備"
 msgid "Project"
 msgstr "專案"
 
-msgid "Device (legacy)"
-msgstr "設備（舊版）"
+# AI Translated
+msgid "Device (Web)"
+msgstr "裝置（網頁）"
 
 msgid "Yes"
 msgstr "是"
@@ -8124,6 +8154,9 @@ msgstr "自訂列印板參數"
 msgid "The %s nozzle can not print %s."
 msgstr "%s 噴嘴無法列印 %s。"
 
+msgid "Printing mixed-color filament on a single-extruder printer requires frequent filament changes and flushing, which may significantly increase waste and the risk of nozzle / waste-chute clogging."
+msgstr ""
+
 #, boost-format
 msgid "Mixing %1% with %2% in printing is not recommended.\n"
 msgstr "不建議在列印時混用 %1% 和 %2%。\n"
@@ -8243,11 +8276,35 @@ msgstr "從 AMS 同步線材清單"
 msgid "Set filaments to use"
 msgstr "設定可選擇的線材"
 
+msgid "Add Mixed Filament"
+msgstr ""
+
+msgid "Mixed Filament"
+msgstr ""
+
+msgid "Remove last mixed filament"
+msgstr ""
+
+msgid "Add mixed filament"
+msgstr ""
+
+msgid "Mixed filament has invalid or mismatched components. Please re-edit affected entries."
+msgstr ""
+
 msgid "Search plate, object and part."
 msgstr "搜尋列印板、物件和零件。"
 
 msgid "Pellets"
 msgstr "顆粒"
+
+msgid "Mixed filament has broken component references"
+msgstr ""
+
+msgid "Edit / Delete / Merge"
+msgstr ""
+
+msgid "The target mixed filament uses this physical filament as a component. Merging will remove this physical filament and may invalidate the mixed filament. Continue?"
+msgstr ""
 
 #, c-format, boost-format
 msgid "After completing your operation, %s project will be closed and create a new project."
@@ -8430,6 +8487,12 @@ msgstr ""
 msgid "Multi-part object detected"
 msgstr "偵測到多部分物件"
 
+msgid "Matching textures to filaments"
+msgstr ""
+
+msgid "Texture Import Warning"
+msgstr ""
+
 msgid "Load these files as a single object with multiple parts?\n"
 msgstr "將這些檔案載入為一個多零件物件？\n"
 
@@ -8549,19 +8612,19 @@ msgstr "未選擇替換的目錄"
 msgid "Replaced with 3D files from directory:\n"
 msgstr "已從目錄替換為 3D 檔案：\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✖ Skipped %s: same file.\n"
 msgstr "✖ 已跳過 %s：相同檔案。\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✖ Skipped %s: file does not exist.\n"
 msgstr "✖ 已跳過 %s：檔案不存在。\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✖ Skipped %s: failed to replace.\n"
 msgstr "✖ 已跳過 %s：無法替換。\n"
 
-#, c-format
+#, c-format, boost-format
 msgid "✔ Replaced %s.\n"
 msgstr "✔ 已替換 %s。\n"
 
@@ -8639,6 +8702,18 @@ msgstr ""
 
 msgid "Sync now"
 msgstr "立即同步"
+
+msgid "Texture import failed. The model appears to contain texture data, but the texture import process could not be completed. The model will be imported as geometry only."
+msgstr ""
+
+msgid "Applying texture colors..."
+msgstr ""
+
+msgid "Updating 3D view..."
+msgstr ""
+
+msgid "Texture colors applied."
+msgstr ""
 
 msgid "You can keep the modified presets for the new project or discard them"
 msgstr "您可以將修改後的預設檔保留到新專案中或者忽略這些修改"
@@ -9073,8 +9148,8 @@ msgstr "重新載入失敗"
 msgid "Associate"
 msgstr "關聯"
 
-msgid "with InlongSlicer so that Orca can open models from"
-msgstr "與 InlongSlicer 以便 Orca 可以開啟模型"
+msgid "with InlongSlicer so that InlongSlicer can open models from"
+msgstr ""
 
 msgid "Current Association: "
 msgstr "目前關聯："
@@ -9253,8 +9328,8 @@ msgstr "預設"
 msgid "Remember printer configuration"
 msgstr "記住機臺設定"
 
-msgid "If enabled, Orca will remember and switch filament/process configuration for each printer automatically."
-msgstr "啟用後，Inlong 會記住且自動切換各機臺線材與列印設定。"
+msgid "If enabled, InlongSlicer will remember and switch filament/process configuration for each printer automatically."
+msgstr ""
 
 msgid "Group user filament presets"
 msgstr "將使用者線材預設分組"
@@ -9294,6 +9369,18 @@ msgstr "啟用時可以同時傳送到並管理多個機臺。"
 
 msgid "Pop up to select filament grouping mode"
 msgstr "彈出視窗選擇線材分組模式"
+
+# AI Translated
+msgid "Visible plugin pages"
+msgstr "可見的外掛頁面數"
+
+# AI Translated
+msgid "pages"
+msgstr "頁"
+
+# AI Translated
+msgid "Number of plugin pages shown as fixed tabs before the remaining pages collapse into a dropdown on the last tab."
+msgstr "以固定分頁顯示的外掛頁面數量，其餘頁面會收合至最後一個分頁的下拉選單中。"
 
 msgid "Behaviour"
 msgstr "行為"
@@ -9652,7 +9739,9 @@ msgstr "（實驗）使用印表機代理程式而不是列印主機"
 msgid ""
 "Route print jobs for non-Bambu printers through printer plug-in agents instead of the classic print-host upload flow.\n"
 "When disabled, InlongSlicer uses the legacy print-host behavior."
-msgstr "透過印表機外掛程式代理程式而非傳統的列印主機上傳流程路由非 Bambu 印表機的列印作業。\n停用後，InlongSlicer 使用舊版列印主機行為。"
+msgstr ""
+"透過印表機外掛程式代理程式而非傳統的列印主機上傳流程路由非 Bambu 印表機的列印作業。\n"
+"停用後，InlongSlicer 使用舊版列印主機行為。"
 
 # AI Translated
 msgid "Experimental Features"
@@ -9863,6 +9952,9 @@ msgstr "螺旋花瓶模式"
 msgid "First layer filament sequence"
 msgstr "首層線材列印順序"
 
+msgid "The filament list contains mixed filaments. Custom filament sequence will not take effect."
+msgstr ""
+
 msgid "By Layer"
 msgstr "逐層"
 
@@ -9918,14 +10010,23 @@ msgstr "使用者預設"
 msgid "Preset Inside Project"
 msgstr "項目預設"
 
-msgid "Copies all inherited values from the parent preset into this preset and removes the connection with the parent preset."
-msgstr "將父預設中的所有繼承值複製到此預設中，並刪除與父預設的連線。"
+# AI Translated
+msgid "Copies all inherited values from the parent into this preset and removes the parent relationship. Presets compatible only with the parent may become unsupported."
+msgstr "將父配置繼承的所有數值複製到目前的配置，並解除繼承關係。僅與父配置相容的配置可能會變成不受支援。"
 
 msgid "Detach from parent"
 msgstr "從父預設分離"
 
+# AI Translated
+msgid "Unique preset"
+msgstr "獨立配置"
+
 msgid "Parent preset"
 msgstr "父預設"
+
+# AI Translated
+msgid "This preset does not inherit from another preset."
+msgstr "此配置未繼承自其他配置。"
 
 msgid "Name is unavailable."
 msgstr "名稱不可用。"
@@ -10664,22 +10765,6 @@ msgstr "您確認要啟用此選項嗎？"
 
 msgid "Infill patterns are typically designed to handle rotation automatically to ensure proper printing and achieve their intended effects (e.g., Gyroid, Cubic). Rotating the current sparse infill pattern may lead to insufficient support. Please proceed with caution and thoroughly check for any potential printing issues. Are you sure you want to enable this option?"
 msgstr "填充模式通常設計為自動處理旋轉，以確保正確列印並實現其預期效果（例如：Gyroid、Cubic）。旋轉目前的稀疏填充模式可能會導致支撐不足。請謹慎操作，並仔細檢查任何潛在的列印問題。您確定要啟用此選項嗎？"
-
-msgid ""
-"Layer height is too small.\n"
-"It will set to min_layer_height\n"
-msgstr ""
-"層高過薄\n"
-"將改為 min_layer_height\n"
-
-msgid "Layer height exceeds the limit in Printer Settings -> Extruder -> Layer height limits, this may cause printing quality issues."
-msgstr "層高超過了印表設備設定 -> 擠出機 -> 層高限制，這可能會導致列印品質問題。"
-
-msgid "Adjust to the set range automatically?\n"
-msgstr "是否自動調整至設定範圍？\n"
-
-msgid "Adjust"
-msgstr "調整"
 
 msgid "Experimental feature: Retracting and cutting off the filament at a greater distance during filament changes to minimize flush. Although it can notably reduce flush, it may also elevate the risk of nozzle clogs or other printing complications."
 msgstr "實驗性功能：在換線過程中以更大的距離收回並切斷線材，以減少沖洗量。儘管這可以顯著減少沖洗，但也可能增加噴嘴堵塞或其他列印問題的風險。"
@@ -11777,30 +11862,6 @@ msgid "Please choose the filament colour"
 msgstr "請選擇線材顏色"
 
 #, c-format, boost-format
-msgid "Native Wayland liveview requires the GStreamer GTK video sink. Please install the gtksink plugin for GStreamer, then restart %s."
-msgstr "原生 Wayland 即時畫面需要 GStreamer GTK 影片接收器。請安裝 GStreamer 的 gtksink 外掛程式，然後重新啟動 %s。"
-
-msgid "Failed to initialize the native Wayland GStreamer video sink. Please check your GStreamer GTK plugin installation."
-msgstr "無法初始化原生 Wayland GStreamer 視訊接收器。請檢查您的 GStreamer GTK 外掛程式安裝。"
-
-msgid "Windows Media Player is required for this task! Do you want to enable 'Windows Media Player' for your operation system?"
-msgstr "執行此設置需要 Windows Media Player！您是否要啟用 Windows Media Player？"
-
-msgid "BambuSource has not correctly been registered for media playing! Press Yes to re-register it. You will be promoted twice"
-msgstr "「BambuSource 未正確註冊為媒體播放模組！請點擊『是』進行重新註冊，過程中會有兩次提示"
-
-#, c-format, boost-format
-msgid "Missing BambuSource component registered for media playing! Please re-install %s or seek community help."
-msgstr "找不到為媒體播放註冊的 BambuSource 元件！請重新安裝 %s 或尋求社群協助。"
-
-msgid "Using a BambuSource from a different install, video play may not work correctly! Press Yes to fix it."
-msgstr "BambuSource 來自其他安裝版本，可能導致影片播放異常！請點擊『是』進行修復。"
-
-#, c-format, boost-format
-msgid "Your system is missing H.264 codecs for GStreamer, which are required to play video. (Try installing the gstreamer1.0-plugins-bad or gstreamer1.0-libav packages, then restart %s?)"
-msgstr "系統缺少播放影片所需的 GStreamer H.264 編解碼器。（請嘗試安裝 gstreamer1.0-plugins-bad 或 gstreamer1.0-libav 套件，然後重新啟動 %s。）"
-
-#, c-format, boost-format
 msgid "Cloud agent is not available. Please restart %s and try again."
 msgstr "雲端代理程式無法使用。請重新啟動 %s 後再試一次。"
 
@@ -12507,6 +12568,9 @@ msgstr "如果您仍想列印，可以在「偏好設定 / 控制 / 切片 / 移
 msgid "No extrusions under current settings."
 msgstr "根據目前設定，不會進行任何列印。"
 
+msgid "A gradient mixed filament is used, but 'Mixed color sublayer' is disabled. The gradient will not be printed."
+msgstr ""
+
 msgid "Smooth mode of timelapse is not supported when \"by object\" sequence is enabled."
 msgstr "逐件列印模式下不支援使用平滑模式的縮時錄影。"
 
@@ -12542,6 +12606,9 @@ msgstr "您可能想要減小模型的尺寸或更改目前的列印設定並重
 
 msgid "Variable layer height is not supported with Organic supports."
 msgstr "有機樹支撐不支持可變層高。"
+
+msgid "The wipe tower filament cannot be a mixed filament."
+msgstr ""
 
 msgid "Different nozzle diameters and different filament diameters may not work well when the prime tower is enabled. It's very experimental, so please proceed with caution."
 msgstr "當啟用換料時，不同的噴嘴直徑和線材直徑可能無法正常配合。此功能屬於實驗性階段，請小心使用。"
@@ -12645,39 +12712,27 @@ msgstr "抖動速度設置過低可能會在曲面上產生缺陷"
 
 msgid ""
 "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\n"
-"Orca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the maximum jerk setting in your printer's configuration to get higher speeds."
 msgstr ""
-"抖動設定已超過列印裝置的最大急動值（machine_max_jerk_x/machine_max_jerk_y）。\n"
-"Inlong 將自動限制急動速度，以確保不超出列印裝置的性能範圍。\n"
-"如需更高速度，您可以在列印裝置配置中調整最大急動值。"
 
 msgid ""
 "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\n"
-"Orca will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits."
 msgstr ""
-"轉角偏差設定超出列印裝置的最大值 (machine_max_junction_deviation)。\n"
-"Inlong 將自動限制轉角偏差，以確保其不會超出列印裝置的能力。\n"
-"您可以調整列印裝置配置中的 machine_max_junction_deviation 值以獲得更高的限制。"
 
 msgid ""
 "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\n"
-"Orca will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds."
 msgstr ""
-"加速度設定已超過列印裝置的最大加速度值 (machine_max_acceleration_travel)。\n"
-"Inlong 將自動限制加速度，以確保不超出列印裝置的性能範圍。\n"
-"如需更高速度，您可以在列印裝置配置中調整 machine_max_acceleration_extruding 值。"
 
 msgid ""
 "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\n"
-"Orca will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+"InlongSlicer will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
 "You can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds."
 msgstr ""
-"移動加速度設定已超過列印裝置的最大移動加速度值（machine_max_acceleration_travel）。\n"
-"Inlong 將自動限制移動加速度，以確保不超出列印裝置的性能範圍。\n"
-"如需更高速度，您可以在列印裝置配置中調整 machine_max_acceleration_travel 值。"
 
 msgid "The precise wall option will be ignored for outer-inner or inner-outer-inner wall sequences."
 msgstr "當壁序列為外內或內外內時，精確牆壁選項將被忽略。"
@@ -14616,6 +14671,48 @@ msgstr "支撐材料"
 msgid "Support material is commonly used to print supports and support interfaces."
 msgstr "支撐材料通常用於列印支撐體和支撐接觸面"
 
+msgid "Is mixed filament"
+msgstr ""
+
+msgid "Whether this filament slot is a mixed filament composed of multiple physical filaments"
+msgstr ""
+
+msgid "Mixed filament components"
+msgstr ""
+
+msgid "Comma-separated 1-based indices of component filaments, e.g. \"1,3\""
+msgstr ""
+
+msgid "Mixed filament sublayer ratios"
+msgstr ""
+
+msgid "Comma-separated ratio values summing to 1.0, e.g. \"0.7,0.3\""
+msgstr ""
+
+msgid "Mixed filament gradient"
+msgstr ""
+
+msgid "Enable Z-direction gradient mode for mixed filament sub-layers. When enabled, the sub-layer ratios vary linearly across layers."
+msgstr ""
+
+msgid "Mixed filament gradient range"
+msgstr ""
+
+msgid "Start and end ratios for the first component in gradient mode. Comma-separated pair, e.g. \"0.10,0.90\" means 10% to 90%."
+msgstr ""
+
+msgid "Mixed filament gradient curve"
+msgstr ""
+
+msgid "Optional Photoshop-style custom curve mapping Z progress to the first component ratio. Encoded as pipe-separated control points, either \"x,y\" (legacy) or \"x,y,m_in,m_out\" when a tangent override is needed (empty token or \"nan\" means use PCHIP default). x in [0,1]; y is clamped to the configured ratio range, e.g. \"0,0.15|0.5,0.50|1,0.85\". When empty, the linear gradient_range is used instead."
+msgstr ""
+
+msgid "Mixed filament per-part gradient"
+msgstr ""
+
+msgid "When gradient mode is enabled, apply the gradient to each part of an assembly independently rather than treating the whole assembly as one Z range."
+msgstr ""
+
 msgid "Filament printable"
 msgstr "線材可列印"
 
@@ -14794,8 +14891,9 @@ msgstr "螺旋體"
 msgid "Sparse infill smooth factor"
 msgstr "稀疏填充平滑係數"
 
-msgid "Controls how strongly sparse infill corners are rounded. 0% keeps the original right-angle path, while 100% produces the largest possible curves between adjacent infill lines. Currently applies only to the Hilbert Curve."
-msgstr "控制稀疏填充轉角的圓滑程度。0% 保留原始直角路徑，100% 在相鄰填充線之間產生盡可能大的曲線。目前僅適用於希爾伯特曲線。"
+# AI Translated
+msgid "Controls how strongly sparse infill corners are rounded. 0% keeps the original sharp path, while 100% produces the largest possible curves between adjacent infill lines."
+msgstr "控制稀疏填充轉角的圓滑程度。0% 保持原有的銳利路徑，100% 則在相鄰填充線之間產生盡可能大的圓弧。"
 
 msgid "This is the acceleration of top surface infill. Using a lower value may improve top surface quality."
 msgstr "頂面填充的加速度。使用較低值可能會改善頂面列印品質"
@@ -17594,6 +17692,12 @@ msgstr ""
 "\n"
 "在以下的『擦拭前的回抽量』設定中設置一個值，將在擦拭之前執行任何額外的回抽操作；否則，將在擦拭之後執行。"
 
+msgid "Mixed color sublayer"
+msgstr ""
+
+msgid "Enable mixed color sublayer splitting. When enabled, layers containing mixed color filaments will be split into sub-layers to achieve color mixing effects."
+msgstr ""
+
 msgid "The wiping tower can be used to clean up residue on the nozzle and stabilize the chamber pressure inside the nozzle in order to avoid appearance defects when printing objects."
 msgstr "換料塔的功能是用於清除噴嘴上的殘留物，同時穩定噴嘴內的壓力，從而避免列印物件時出現外觀瑕疵。"
 
@@ -18664,6 +18768,9 @@ msgstr "模型檔案網格化失敗或沒有有效形狀"
 
 msgid "The supplied file couldn't be read because it's empty."
 msgstr "無法讀取提供的檔案，因為該檔案為空"
+
+msgid "The file format is incompatible and cannot be parsed."
+msgstr ""
 
 msgid "Unknown file format: input file must have .stl, .obj, or .amf(.xml) extension."
 msgstr "檔案格式未知。輸入的檔案必須是 .stl、.obj 或 .amf(.xml) 格式。"
@@ -20045,7 +20152,11 @@ msgid ""
 "\n"
 "InlongSlicer has detected that your user presets synchronization function is not enabled, which may result in unsuccessful Filament settings on the Device page.\n"
 "Click \"Sync user presets\" to enable the synchronization function."
-msgstr "\n\nInlongSlicer 偵測到您的使用者預設同步功能未開啟，可能會導致裝置頁面的線材設定失敗。\n點選「同步使用者預設」即可啟用同步功能。"
+msgstr ""
+"\n"
+"\n"
+"InlongSlicer 偵測到您的使用者預設同步功能未開啟，可能會導致裝置頁面的線材設定失敗。\n"
+"點選「同步使用者預設」即可啟用同步功能。"
 
 msgid "Printer Setting"
 msgstr "列印設備設定"
@@ -22065,7 +22176,9 @@ msgstr "連接器不在物件範圍內"
 msgid ""
 "Invalid state. \n"
 "No one part is selected for keep after cut"
-msgstr "無效狀態。 \n切割後沒有選擇保留任何一個部分"
+msgstr ""
+"無效狀態。 \n"
+"切割後沒有選擇保留任何一個部分"
 
 msgid "Hollow this object"
 msgstr "將這個物體挖空"
@@ -22199,7 +22312,9 @@ msgstr "減少懸垂坡度"
 msgid ""
 "Optimize object rotation to have minimum amount of overhangs needing support structures.\n"
 "Note that this method will try to find the best surface of the object for touching the print bed if no elevation is set."
-msgstr "最佳化物件旋轉，以最小化需要支撐結構的懸垂量。\n請注意，如果未設定標高，此方法將嘗試找到接觸列印床的最佳物體表面。"
+msgstr ""
+"最佳化物件旋轉，以最小化需要支撐結構的懸垂量。\n"
+"請注意，如果未設定標高，此方法將嘗試找到接觸列印床的最佳物體表面。"
 
 msgid "Lowest Z height"
 msgstr "最低 Z 高度"
@@ -22278,7 +22393,10 @@ msgid ""
 "Restore the default configuration for \"%s\"?\n"
 "\n"
 "This discards the preset's override and uses the global configuration."
-msgstr "恢復“%s”的預設配置？\n\n這將放棄預設的覆蓋並使用全域配置。"
+msgstr ""
+"恢復“%s”的預設配置？\n"
+"\n"
+"這將放棄預設的覆蓋並使用全域配置。"
 
 msgid "Restore defaults"
 msgstr "恢復預設設定"
@@ -22316,7 +22434,11 @@ msgid ""
 "%s\n"
 "\n"
 "Remove them from InlongSlicer?"
-msgstr "在磁碟上找不到以下已安裝的外掛程式：\n%s\n\n將它們從 InlongSlicer 中刪除嗎？"
+msgstr ""
+"在磁碟上找不到以下已安裝的外掛程式：\n"
+"%s\n"
+"\n"
+"將它們從 InlongSlicer 中刪除嗎？"
 
 msgid "Missing Plugins"
 msgstr "缺少外掛程式"
@@ -22363,7 +22485,10 @@ msgid ""
 "Plugin \"%s\" is already installed.\n"
 "\n"
 "Installing this package will overwrite the existing plugin."
-msgstr "外掛程式“%s”已安裝。\n\n安裝此套件將覆蓋現有外掛程式。"
+msgstr ""
+"外掛程式“%s”已安裝。\n"
+"\n"
+"安裝此套件將覆蓋現有外掛程式。"
 
 msgid "Overwrite"
 msgstr "覆蓋"
@@ -22389,7 +22514,10 @@ msgid ""
 "Restore the default configuration for \"%s\"?\n"
 "\n"
 "This discards the settings currently saved for this capability."
-msgstr "恢復“%s”的預設配置？\n\n這將放棄當前為此功能保存的設定。"
+msgstr ""
+"恢復“%s”的預設配置？\n"
+"\n"
+"這將放棄當前為此功能保存的設定。"
 
 msgid "Default configuration restored."
 msgstr "恢復預設配置。"
@@ -22412,14 +22540,20 @@ msgid ""
 "Delete plugin \"%s\"?\n"
 "\n"
 "This removes the local plugin files. The plugin stays in the cloud and can be reinstalled."
-msgstr "刪除外掛程式“%s”？\n\n這將刪除本地外掛程式檔案。該外掛程式保留在雲端並且可以重新安裝。"
+msgstr ""
+"刪除外掛程式“%s”？\n"
+"\n"
+"這將刪除本地外掛程式檔案。該外掛程式保留在雲端並且可以重新安裝。"
 
 #, c-format, boost-format
 msgid ""
 "Delete plugin \"%s\"?\n"
 "\n"
 "This permanently removes the plugin folder."
-msgstr "刪除外掛程式“%s”？\n\n這將永久刪除外掛程式資料夾。"
+msgstr ""
+"刪除外掛程式“%s”？\n"
+"\n"
+"這將永久刪除外掛程式資料夾。"
 
 msgid "Failed to delete plugin."
 msgstr "刪除外掛程式失敗。"
@@ -22439,7 +22573,10 @@ msgid ""
 "Unsubscribe plugin \"%s\"?\n"
 "\n"
 "This will stop tracking the plugin and delete any local plugin files."
-msgstr "取消訂閱外掛程式“%s”？\n\n這將停止追蹤外掛程式並刪除所有本地外掛程式檔案。"
+msgstr ""
+"取消訂閱外掛程式“%s”？\n"
+"\n"
+"這將停止追蹤外掛程式並刪除所有本地外掛程式檔案。"
 
 msgid "Failed to unsubscribe plugin."
 msgstr "取消訂閱外掛程式失敗。"
@@ -22470,7 +22607,11 @@ msgid ""
 "\n"
 "The post-processing plugin is expected to modify the G-code file %2% in place, but the G-code file was deleted.\n"
 "Please check the plugin implementation.\n"
-msgstr "後處理外掛程式 %1% 失敗。\n\n後處理外掛程式預計會就地修改 G-code 檔案 %2%，但 G-code 檔案被刪除了。\n請檢查外掛程式的實作。\n"
+msgstr ""
+"後處理外掛程式 %1% 失敗。\n"
+"\n"
+"後處理外掛程式預計會就地修改 G-code 檔案 %2%，但 G-code 檔案被刪除了。\n"
+"請檢查外掛程式的實作。\n"
 
 #, boost-format
 msgid ""
@@ -22478,7 +22619,11 @@ msgid ""
 "\n"
 "The post-processing script is expected to change the G-code file %2% in place, but the G-code file was deleted and likely saved under a new name.\n"
 "Please adjust the post-processing script to change the G-code in place and consult the manual on how to optionally rename the post-processed G-code file.\n"
-msgstr "後處理腳本 %1% 失敗。\n\n後處理腳本預計會就地更改 G-code 檔案 %2%，但 G-code 檔案已被刪除並可能以新名稱儲存。\n請調整後處理腳本以就地更改 G-code，並查閱手冊了解如何選擇性地重新命名後處理的 G-code 檔案。\n"
+msgstr ""
+"後處理腳本 %1% 失敗。\n"
+"\n"
+"後處理腳本預計會就地更改 G-code 檔案 %2%，但 G-code 檔案已被刪除並可能以新名稱儲存。\n"
+"請調整後處理腳本以就地更改 G-code，並查閱手冊了解如何選擇性地重新命名後處理的 G-code 檔案。\n"
 
 msgid "Purge Mode Settings"
 msgstr "清除模式設定"
@@ -22926,6 +23071,97 @@ msgid ""
 msgstr ""
 "避免翹曲\n"
 "您知道嗎？當列印容易翹曲的材料（如 ABS）時，適當提高熱床溫度可以降低翹曲的機率。"
+
+#~ msgid "Please check the network connection of the printer and Orca."
+#~ msgstr "請檢查列印裝置與 Inlong Slicer 的網路連線。"
+
+#~ msgid "with InlongSlicer so that Orca can open models from"
+#~ msgstr "與 InlongSlicer 以便 Orca 可以開啟模型"
+
+#~ msgid "If enabled, Orca will remember and switch filament/process configuration for each printer automatically."
+#~ msgstr "啟用後，Inlong 會記住且自動切換各機臺線材與列印設定。"
+
+#~ msgid ""
+#~ "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\n"
+#~ "Orca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the maximum jerk setting in your printer's configuration to get higher speeds."
+#~ msgstr ""
+#~ "抖動設定已超過列印裝置的最大急動值（machine_max_jerk_x/machine_max_jerk_y）。\n"
+#~ "Inlong 將自動限制急動速度，以確保不超出列印裝置的性能範圍。\n"
+#~ "如需更高速度，您可以在列印裝置配置中調整最大急動值。"
+
+#~ msgid ""
+#~ "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\n"
+#~ "Orca will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits."
+#~ msgstr ""
+#~ "轉角偏差設定超出列印裝置的最大值 (machine_max_junction_deviation)。\n"
+#~ "Inlong 將自動限制轉角偏差，以確保其不會超出列印裝置的能力。\n"
+#~ "您可以調整列印裝置配置中的 machine_max_junction_deviation 值以獲得更高的限制。"
+
+#~ msgid ""
+#~ "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\n"
+#~ "Orca will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds."
+#~ msgstr ""
+#~ "加速度設定已超過列印裝置的最大加速度值 (machine_max_acceleration_travel)。\n"
+#~ "Inlong 將自動限制加速度，以確保不超出列印裝置的性能範圍。\n"
+#~ "如需更高速度，您可以在列印裝置配置中調整 machine_max_acceleration_extruding 值。"
+
+#~ msgid ""
+#~ "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\n"
+#~ "Orca will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\n"
+#~ "You can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds."
+#~ msgstr ""
+#~ "移動加速度設定已超過列印裝置的最大移動加速度值（machine_max_acceleration_travel）。\n"
+#~ "Inlong 將自動限制移動加速度，以確保不超出列印裝置的性能範圍。\n"
+#~ "如需更高速度，您可以在列印裝置配置中調整 machine_max_acceleration_travel 值。"
+
+#~ msgid "Device (legacy)"
+#~ msgstr "設備（舊版）"
+
+#~ msgid "Copies all inherited values from the parent preset into this preset and removes the connection with the parent preset."
+#~ msgstr "將父預設中的所有繼承值複製到此預設中，並刪除與父預設的連線。"
+
+#~ msgid ""
+#~ "Layer height is too small.\n"
+#~ "It will set to min_layer_height\n"
+#~ msgstr ""
+#~ "層高過薄\n"
+#~ "將改為 min_layer_height\n"
+
+#~ msgid "Layer height exceeds the limit in Printer Settings -> Extruder -> Layer height limits, this may cause printing quality issues."
+#~ msgstr "層高超過了印表設備設定 -> 擠出機 -> 層高限制，這可能會導致列印品質問題。"
+
+#~ msgid "Adjust to the set range automatically?\n"
+#~ msgstr "是否自動調整至設定範圍？\n"
+
+#, c-format, boost-format
+#~ msgid "Native Wayland liveview requires the GStreamer GTK video sink. Please install the gtksink plugin for GStreamer, then restart %s."
+#~ msgstr "原生 Wayland 即時畫面需要 GStreamer GTK 影片接收器。請安裝 GStreamer 的 gtksink 外掛程式，然後重新啟動 %s。"
+
+#~ msgid "Failed to initialize the native Wayland GStreamer video sink. Please check your GStreamer GTK plugin installation."
+#~ msgstr "無法初始化原生 Wayland GStreamer 視訊接收器。請檢查您的 GStreamer GTK 外掛程式安裝。"
+
+#~ msgid "Windows Media Player is required for this task! Do you want to enable 'Windows Media Player' for your operation system?"
+#~ msgstr "執行此設置需要 Windows Media Player！您是否要啟用 Windows Media Player？"
+
+#~ msgid "BambuSource has not correctly been registered for media playing! Press Yes to re-register it. You will be promoted twice"
+#~ msgstr "「BambuSource 未正確註冊為媒體播放模組！請點擊『是』進行重新註冊，過程中會有兩次提示"
+
+#, c-format, boost-format
+#~ msgid "Missing BambuSource component registered for media playing! Please re-install %s or seek community help."
+#~ msgstr "找不到為媒體播放註冊的 BambuSource 元件！請重新安裝 %s 或尋求社群協助。"
+
+#~ msgid "Using a BambuSource from a different install, video play may not work correctly! Press Yes to fix it."
+#~ msgstr "BambuSource 來自其他安裝版本，可能導致影片播放異常！請點擊『是』進行修復。"
+
+#, c-format, boost-format
+#~ msgid "Your system is missing H.264 codecs for GStreamer, which are required to play video. (Try installing the gstreamer1.0-plugins-bad or gstreamer1.0-libav packages, then restart %s?)"
+#~ msgstr "系統缺少播放影片所需的 GStreamer H.264 編解碼器。（請嘗試安裝 gstreamer1.0-plugins-bad 或 gstreamer1.0-libav 套件，然後重新啟動 %s。）"
+
+#~ msgid "Controls how strongly sparse infill corners are rounded. 0% keeps the original right-angle path, while 100% produces the largest possible curves between adjacent infill lines. Currently applies only to the Hilbert Curve."
+#~ msgstr "控制稀疏填充轉角的圓滑程度。0% 保留原始直角路徑，100% 在相鄰填充線之間產生盡可能大的曲線。目前僅適用於希爾伯特曲線。"
 
 #~ msgid "Print order within a single layer."
 #~ msgstr "每一層的列印順序"

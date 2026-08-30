@@ -64,6 +64,10 @@ static constexpr double LARGE_BED_THRESHOLD = 2147;
 // Inlong: maximum number of extruders is 64. For SEMM printers, it defines maximum filament number.
 static constexpr size_t MAXIMUM_EXTRUDER_NUMBER = 64;
 
+// Inlong: keep AMS synchronization capped independently from the expanded
+// paintable-filament limit used by mixed-color projects.
+static constexpr size_t MAXIMUM_AMS_SYNC_FILAMENT_NUMBER = 16;
+
 // Inlong: maximum line width is 5 times the nozzle diameter
 static constexpr float MAX_LINE_WIDTH_MULTIPLIER = 5;
 

@@ -1425,7 +1425,7 @@ void MenuFactory::create_common_object_menu(wxMenu* menu)
 {
     append_menu_item_rename(menu);
     append_menu_items_instance_manipulation(menu);
-    
+
     // Delete menu was moved to be after +/- instace to make it more difficult to be selected by mistake.
     append_menu_item_delete(menu);
     menu->AppendSeparator();
@@ -1660,16 +1660,16 @@ void MenuFactory::create_filament_action_menu(bool init, int active_filament_men
 {
     wxMenu *menu = &m_filament_action_menu;
 
-    if (init) {
+    // ORCA rebuild menu everytime instead checking existing of every item then deleting
+    while (menu->GetMenuItemCount() > 0)
+        menu->Destroy(menu->FindItemByPosition(0));
+
+    //if (init) { //
         append_menu_item(
             menu, wxID_ANY, _L("Edit"), "", [](wxCommandEvent&) {
                 plater()->sidebar().edit_filament(); }, "", nullptr,
             []() { return true; }, m_parent);
-    }
-
-    const int item_id = menu->FindItem(_L("Merge with"));
-    if (item_id != wxNOT_FOUND)
-        menu->Destroy(item_id);
+    //}
 
     wxMenu* sub_menu = new wxMenu();
     std::vector<wxBitmap*> icons = get_extruder_color_icons(true);
@@ -1692,7 +1692,16 @@ void MenuFactory::create_filament_action_menu(bool init, int active_filament_men
     const int delete_id = menu->FindItem(_L("Delete"));
     if (delete_id != wxNOT_FOUND)
         menu->Destroy(delete_id);
-    
+
+    // Decompose a target colour into a printable mix of the loaded filaments. Placed before the
+    append_menu_item(
+        menu, wxID_ANY, _L("Decompose Color"), "", [](wxCommandEvent&) {
+            plater()->sidebar().decompose_filament_color(kSidebarContextMenuFilamentId); }, "", nullptr,
+        []() { return plater()->sidebar().combos_filament().size() >= 2; }, m_parent);
+
+    menu->AppendSeparator(); // Inlong: reduce accidental clicks on Delete.
+
+    // Inlong: keep Delete at the end of the menu.
     append_menu_item(
         menu, wxID_ANY, _L("Delete"), _L("Delete this filament"), [](wxCommandEvent&) {
             plater()->sidebar().delete_filament(-2); }, "", nullptr,
@@ -1949,13 +1958,13 @@ wxMenu* MenuFactory::multi_selection_menu()
 
         append_menu_item_set_printable(menu);
         menu->AppendSeparator();
-        
+
         append_menu_item_set_auto_drop(menu);
         menu->AppendSeparator();
-        
+
         append_menu_item_per_object_process(menu);
         menu->AppendSeparator();
-        
+
         append_menu_items_convert_unit(menu);
         append_menu_item_replace_all_with_stl(menu);
         //BBS
@@ -2020,16 +2029,16 @@ void MenuFactory::append_menu_items_instance_manipulation(wxMenu* menu)
     MenuType type = menu == &m_object_menu ? mtObjectFFF : mtObjectSLA;
 
     items_increase[type]                = append_menu_item(menu, wxID_ANY, _L("Add instance") + "\t+", _L("Add one more instance of the selected object"),
-        [](wxCommandEvent&) { plater()->increase_instances();      }, "", nullptr, 
+        [](wxCommandEvent&) { plater()->increase_instances();      }, "", nullptr,
         []() { return plater()->can_increase_instances(); }, m_parent);
     items_decrease[type]                = append_menu_item(menu, wxID_ANY, _L("Remove instance") + "\t-", _L("Remove one instance of the selected object"),
-        [](wxCommandEvent&) { plater()->decrease_instances();      }, "", nullptr, 
+        [](wxCommandEvent&) { plater()->decrease_instances();      }, "", nullptr,
         []() { return plater()->can_decrease_instances(); }, m_parent);
     items_set_number_of_copies[type]    = append_menu_item(menu, wxID_ANY, _L("Set number of instances") + dots, _L("Change the number of instances of the selected object"),
         [](wxCommandEvent&) { plater()->set_number_of_copies();    }, "", nullptr,
         []() { return plater()->can_increase_instances(); }, m_parent);
     append_menu_item(menu, wxID_ANY, _L("Fill bed with instances") + dots, _L("Fill the remaining area of bed with instances of the selected object"),
-        [](wxCommandEvent&) { plater()->fill_bed_with_instances();    }, "", nullptr, 
+        [](wxCommandEvent&) { plater()->fill_bed_with_instances();    }, "", nullptr,
         []() { return plater()->can_increase_instances(); }, m_parent);
 }
 
@@ -2293,7 +2302,7 @@ void MenuFactory::append_menu_item_change_filament(wxMenu* menu)
 void MenuFactory::append_menu_item_set_printable(wxMenu* menu)
 {
     const Selection& selection = plater()->canvas3D()->get_selection();
-    bool all_printable = true; 
+    bool all_printable = true;
     ObjectList* list = obj_list();
     wxDataViewItemArray sels;
     list->GetSelections(sels);

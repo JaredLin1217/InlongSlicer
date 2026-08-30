@@ -567,6 +567,8 @@ if [[ -n "${BUILD_INLONG}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
 	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target InlongSlicer
 	echo "Building Inlong Slicer profile validator .."
 	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target InlongSlicer_profile_validator
+	echo "Building generate_system_cache ..."
+	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target generate_system_cache
 	./scripts/run_gettext.sh
     fi
     if [[ -n "${BUILD_TESTS}" ]] ; then

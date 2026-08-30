@@ -2,6 +2,7 @@ Build
 Build.bat
 /build*/
 CMakeLists.txt.user
+CMakeUserPresets.json
 **/CMakeLists.txt.autosave
 deps/build*
 MYMETA.json
@@ -50,7 +51,6 @@ internal_docs/
 # Python bytecode
 __pycache__/
 *.pyc
-
 # Local logo design previews
 /InlongSlicer_doc/logo_design/
 
@@ -86,3 +86,6 @@ Thumbs.db
 .agents/runtime/tool-evidence/
 .agents/runtime/deployments/
 .codex/environments/*.toml
+
+# Open Packaging Convention scratch archives
+*.opc
