@@ -1,6 +1,7 @@
 Build
 Build.bat
 /build*/
+/out/
 CMakeLists.txt.user
 CMakeUserPresets.json
 **/CMakeLists.txt.autosave
@@ -89,3 +90,4 @@ Thumbs.db
 
 # Open Packaging Convention scratch archives
 *.opc
+/.test/

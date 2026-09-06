@@ -63,6 +63,10 @@ Do not remove these without an explicit product decision:
 - Third-party dependency download origins that still live under SoftFever or
   Orca dependency repositories, for example `Orca-deps-wxWidgets`,
   `OrcaSlicer_deps`, and `orca_deps`.
+- The `OrcaSlicer/OrcaSlicer-profile-validator` fixture archive is retained only
+  to test compatibility with custom presets saved by older OrcaSlicer versions.
+  Run those fixtures with the locally built InlongSlicer profile validator;
+  validator binary downloads use the InlongSlicer nightly release.
 - Historical notes that explicitly describe upstream comparison context, when
   they are not user-visible product identity.
 

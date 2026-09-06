@@ -8,8 +8,9 @@ flatpak install flathub org.gnome.Platform//50 org.gnome.Sdk//50 org.freedesktop
 
 ##
 # in InlongSlicer folder, run following command to build InlongSlicer
-# # First time build
-# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/io.github.JaredLin1217.InlongSlicer.yml
 
-# # Subsequent builds (only rebuilding InlongSlicer)
+# # First time build
+# ./scripts/flatpak/make_deps_tar.sh && flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/io.github.JaredLin1217.InlongSlicer.yml
+
+# # Subsequent builds (only rebuilding InlongSlicer; run make_deps_tar.sh first if deps/ changed)
 # flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user build-dir scripts/flatpak/io.github.JaredLin1217.InlongSlicer.yml --build-only=InlongSlicer
