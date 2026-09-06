@@ -1,22 +1,24 @@
 # InlongSlicer Project Structure
 
-This repository is an InlongSlicer product checkout and a `full_workflow`
-consumer of the repo-local Agents governance. It is not an Agents template
-provider.
+This repository is an InlongSlicer product checkout and an AI Agents v3
+consumer. It is not an Agents distribution provider.
 
 ## Governance Layout
 
 - `AGENTS.md` is the session entry point.
-- `.agents/docs/agents/*.yaml` is the only canonical governance rule set.
+- `.agents/managed.json` records the deployed version and owned file hashes.
+- `.agents/scripts/validate.ps1 -Scope Consumer -Profile Checkpoint` checks
+  the installed rules without running Provider-only checks.
 - `.agents/skills/` contains project-local skills, including the Inlong
   branding migration guardrails.
 - `.agents/docs/runbooks/` contains operator procedures.
 - `.agents/docs/memory/index.md` and `docs/memory/entries/` contain target-owned,
-  evidence-linked project memory.
+  historical project memory. Recheck sources before reusing historical facts;
+  new verified entries use JSON under `docs/memory/entries/`.
 - `tests/AGENTS.md` adds valid test-scope rules and is not a competing root
   layout.
-- `.agents/docs/templates/agents/` is provider-only and must not contain a
-  deployable mirror in this `full_workflow` consumer.
+- Deployment does not replace product files, local configuration, project
+  knowledge, or project-owned skills.
 
 ## Product Layout
 

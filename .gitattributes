@@ -5,3 +5,22 @@
 # with CRLF line endings: it fails on the first line. Windows checkouts default
 # to core.autocrlf=true, so keep these LF whatever the platform.
 *.sh text eol=lf
+
+# AI Agents v3: preserve exact bytes for managed content hashes.
+/AGENTS.md -text
+/.agents/skills/project-memory/SKILL.md -text
+/.agents/skills/project-checkpoint/SKILL.md -text
+/.agents/scripts/agent-core.ps1 -text
+/.agents/scripts/agent-checks.ps1 -text
+/.agents/scripts/validate.ps1 -text
+/.agents/scripts/resolve-agent-context.ps1 -text
+/.agents/scripts/project-memory.ps1 -text
+/.agents/scripts/task-state.ps1 -text
+/.agents/schemas/knowledge.schema.json -text
+/.agents/schemas/task-state.schema.json -text
+/.agents/schemas/managed.schema.json -text
+/.agents/schemas/sources.schema.json -text
+/.agents/docs/agents/sources.json -text
+/.agents/docs/runbooks/agents-operator-guide.md -text
+/.agents/.gitignore -text
+/.agents/managed.json -text

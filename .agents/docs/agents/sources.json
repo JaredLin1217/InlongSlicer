@@ -1,0 +1,66 @@
+{
+  "schema_version": "agents-sources/v3",
+  "sources": [
+    {
+      "id": "model",
+      "url": "https://developers.openai.com/api/docs/guides/latest-model",
+      "checked": "2026-09-05",
+      "refresh_interval_days": 30,
+      "next_review_due": "2026-10-05",
+      "boundary": "GPT-6 prompting guidance; API parameters are not Codex settings.",
+      "drift_risk": "Model guidance and hosted controls can change.",
+      "topics": [
+        "model",
+        "configuration"
+      ]
+    },
+    {
+      "id": "configuration",
+      "url": "https://learn.chatgpt.com/docs/config-file/config-reference",
+      "checked": "2026-09-05",
+      "refresh_interval_days": 30,
+      "next_review_due": "2026-10-05",
+      "boundary": "Project settings only; preserve user permissions and global settings.",
+      "drift_risk": "CLI and desktop versions may expose different keys.",
+      "topics": [
+        "configuration"
+      ]
+    },
+    {
+      "id": "skills",
+      "url": "https://learn.chatgpt.com/docs/build-skills",
+      "checked": "2026-09-05",
+      "refresh_interval_days": 90,
+      "next_review_due": "2026-12-04",
+      "boundary": "Use native progressive disclosure; skills do not add tool authority.",
+      "drift_risk": "Skill metadata limits and discovery may change.",
+      "topics": [
+        "skills"
+      ]
+    },
+    {
+      "id": "memory",
+      "url": "https://learn.chatgpt.com/docs/customization/memories",
+      "checked": "2026-09-05",
+      "refresh_interval_days": 90,
+      "next_review_due": "2026-12-04",
+      "boundary": "Native memory is not the sole durable store or a guarantee of recall.",
+      "drift_risk": "Generation availability and scope may change.",
+      "topics": [
+        "memory"
+      ]
+    },
+    {
+      "id": "subagents",
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+      "checked": "2026-09-05",
+      "refresh_interval_days": 90,
+      "next_review_due": "2026-12-04",
+      "boundary": "Delegate only with current authorization and available tools; count worker usage.",
+      "drift_risk": "Available tools and host concurrency differ.",
+      "topics": [
+        "subagents"
+      ]
+    }
+  ]
+}

@@ -1,65 +1,71 @@
-﻿# Agents Operator Guide
+# Operator Guide
 
-Use this guide to choose the lightest workflow that proves the claim you need.
+## Everyday Work
+Ask for the result in your normal language. Known local fixes need relevant code
+and tests, not a repository-wide scan. Use the optional context helper when paths
+or cross-module dependencies are unclear. Its output is a starting point, not a
+complete impact graph or an automated test exemption.
 
-## Choose The Lightest Flow
+Run `scripts/validate.ps1 -Scope Provider -Profile Changed -Path <files>` during
+iteration. For an installed project use Consumer, with the path from
+`.agents/managed.json`. Consumer checks only owned rules and explicitly registered
+project tests. Business changes still require their normal product tests.
 
-- Answer-only: no repository state claim, no command output, and no durable change.
-- Read-only audit: inspect only the assigned files and report findings with the isolation line.
-- Edit or maintenance work: inspect current state first, make scoped changes, then run the smallest verification profile that proves the claim.
-- Deployment work: require an exact target path and explicit write scope; run dry-run before any target write.
-- Release work: capture runtime evidence, run full validation, check whitespace, and commit only expected files.
+## Checkpoint and Release
+Before commit, push, tag, release or deploy, run the Checkpoint profile. One
+invocation uses one check registry and records each check once. A changed input
+invalidates prior results; current permissions, remote state and side effects
+always need fresh observation. There is no composite quality score.
 
-## Evidence Tiers
+Commit source, then run `scripts/capture-runtime-evidence.ps1 -OutputPath
+docs/evidence/releases/v3.0.0-runtime-evidence.json`. The collector runs the registry
+directly, without nesting another validator. Only that declared output is excluded
+from the content digest. Commit evidence separately; no unrelated source changes
+may be included in the evidence-only commit.
 
-- T0 static: rules, schemas, templates, and validation pass.
-- T1 dry-run: static proof plus no-write deployment or workflow dry-run evidence.
-- T2 current-repo practice: static proof plus repeatable practice evidence in this repository.
-- T3 external pilot: authorized external target evidence exists and is reviewed.
-- T4 enforced isolation: current runtime, OS, account, or cloud controls prove enforcement.
+## Knowledge and Recovery
+Project facts live in `docs/memory/entries/*.json`, not in a model's recall. Use
+the project-memory skill to recall, promote or supersede a verified finding.
+The runtime index can always be rebuilt. Changed sources make entries unusable
+until reverified. Conflicted entries suspend their scope. Mechanical validation
+does not prove a conclusion; a person or agent must check the cited evidence.
+Replacing a fact permanently retires its earlier entries. A stale or missing
+replacement source does not revive old conclusions; reverify the replacement or
+promote a newly reviewed entry. Explicit conflicts still need a fresh resolution.
+Unreadable knowledge records suspend recall until repaired, because their affected
+scopes and retirement relationships cannot be established safely.
 
-Do not claim above the captured tier. v2.9 defaults to T2 for this repository; external pilot and enforced isolation remain unclaimed.
+Use task-state checkpoints for long work. Resume checks the actual commit and
+file hashes and identifies required reinspection. Completed external actions must
+not be replayed just because a prior summary says they were planned. Runtime state
+stays local and ignored; durable knowledge stays versioned and project-specific.
 
-## Validate By Change Risk
+## Deployment
+The Provider offers two layouts: `root-layout` and `dot-agents-layout`. Deployment
+does not edit script source text. Every asset has an explicit destination; scripts
+discover their locations through the managed manifest.
 
-- Routine source or prose change: run `.\scripts\validate-changes.ps1 -Profile Auto -ContextMode Auto -Explain`; expected profile is `Fast` when context evidence has no wider-risk recommendation.
-- Canonical policy, instruction, skill, template, or memory change: expected profile is `Policy`.
-- Schema, version, release evidence, CI, deploy, or validator change: expected profile is `Full`.
-- Commit, push, deployment, or release claim: use the profile required by `.agents/docs/agents/verify.yaml`; release evidence requires `-ContextMode Required`.
+Run a dry-run against an explicitly authorized existing target. Inspect conflicts,
+creates, updates and removals. Pass `-ExpectedPlanDigest <digest>` to apply that
+exact preview. Unowned existing files and modified managed files stop all writes.
+Repeated deployment is a no-op. The `.agents/managed.json` manifest is versioned;
+keep it with the deployed files. Product code, README, local configuration and
+knowledge are never deployable assets.
 
-Auto-selection minimizes repeated work; it does not weaken the evidence needed for a broader claim.
+Rollback with `-TargetPath <target> -Rollback <transaction-id>`. It verifies current
+hashes and backup integrity first. Interrupted transactions must be reconciled or
+rolled back before new deployment. Never remove a lock while a deployment process
+is still active. These guards are behavioral/file ownership controls, not a hard
+security sandbox against an adversarial process racing file writes.
 
-## Recall Durable Knowledge
+## Evidence Boundaries
+Static checks establish syntax and contracts. Core offline regression exercises
+both layouts, ownership conflicts, deployment rollback, source-checked memory and
+task recovery. These run through the same checkpoint registry, not separate nested
+validation commands. No model comparison is a release prerequisite. Passing these
+checks does not establish model task accuracy, token savings, external project
+compatibility or enforced OS isolation. Token usage remains unavailable.
 
-1. Read `.agents/docs/memory/index.md`, not every memory entry.
-2. Filter by route, status, `next_review`, source commit, content hash, and boundary.
-3. Load at most three relevant details within the context byte budget.
-4. Verify remembered facts against current repository or tool evidence before acting.
-5. Update, supersede, or retire stale and conflicting memory after durable facts change.
-
-Checked-in memory supports recall. Canonical YAML and current evidence remain authoritative.
-
-## Keep Context Small
-
-- Keep stable instructions before dynamic task state so exact prefixes remain reusable.
-- Expand only the route files named by `.agents/docs/agents/ai-runtime.yaml`.
-- Use `.\scripts\resolve-agent-context.ps1 -Task <text>` for repository work; consume its file and line pointers before broader scans.
-- Treat provenance, confidence, hashes, and freshness as evidence quality. Heuristic links never justify a change or skipped validation by themselves.
-- Dirty, stale, degraded, conflicting, unsupported, and parse-failure states require broader inspection and validation.
-- Summarize long tool output to the evidence needed for the next decision.
-- Delegate only when parallel benefit exceeds context, coordination, and integration cost.
-- Compact at task boundaries or context pressure; preserve decisions, evidence, risks, and the next executable step.
-
-## Clean Closeout
-
-- State what changed and what was verified.
-- Report any command that could not run.
-- Keep runtime logs and raw outputs in status scratch, not in the release package.
-- Include GM, GS, XR, and XW in the isolation line.
-- Leave the working tree with only intentional files before commit.
-
-## Practice Evidence
-
-Use practice evidence before release when workflow behavior, deployment boundaries, context selection, or validation behavior changed. The evidence must bind the source commit, content digest, working tree state, command durations, A/B metrics, fallback results, scope, and boundary statement.
-
-Practice evidence is not proof of external target deployment or enforced isolation.
+Sources are reviewed when used or released: model/configuration references
+every 30 days, stable workflow references every 90. Stale claims need fresh official
+documentation; unrelated local edits are not blocked merely by a stale reference.

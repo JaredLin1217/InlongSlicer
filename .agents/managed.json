@@ -1,0 +1,87 @@
+{
+  "schema_version": "agents-managed/v3",
+  "version": "3.0.0",
+  "layout": "dot-agents-layout",
+  "files": [
+    {
+      "source": "AGENTS.md",
+      "path": "AGENTS.md",
+      "sha256": "dc6806cd14e4aa228ddaed523dae8affe15494b55fda564f4c32669f237b646e"
+    },
+    {
+      "source": ".agents/skills/project-memory/SKILL.md",
+      "path": ".agents/skills/project-memory/SKILL.md",
+      "sha256": "9f638b4ab3d8a3ff57d1dcdbe7ef78211b1cd055acf573bd64959439c4c742d7"
+    },
+    {
+      "source": ".agents/skills/project-checkpoint/SKILL.md",
+      "path": ".agents/skills/project-checkpoint/SKILL.md",
+      "sha256": "0e90c38f16684e022160f1714bd8dfd9b115d9eeeb826b780e3a90b14ff43d0d"
+    },
+    {
+      "source": "scripts/agent-core.ps1",
+      "path": ".agents/scripts/agent-core.ps1",
+      "sha256": "c0c671fb4eff27d08d8a60bb61af2b5a9c0befb96fc8c2421fabb8d6ec16abe6"
+    },
+    {
+      "source": "scripts/agent-checks.ps1",
+      "path": ".agents/scripts/agent-checks.ps1",
+      "sha256": "e2a3b54945306207ad0e368ba386abf5b0031b5a8a7471384b02ca4aca5e61fc"
+    },
+    {
+      "source": "scripts/validate.ps1",
+      "path": ".agents/scripts/validate.ps1",
+      "sha256": "3c02ef48123f12bb0593017587c5a1ff8af9d2c4db239389aa81b78011779b37"
+    },
+    {
+      "source": "scripts/resolve-agent-context.ps1",
+      "path": ".agents/scripts/resolve-agent-context.ps1",
+      "sha256": "78dd477fd213b5b4ca08b0075231b280450d3c0cdcc76ae2fbec485befab349b"
+    },
+    {
+      "source": "scripts/project-memory.ps1",
+      "path": ".agents/scripts/project-memory.ps1",
+      "sha256": "b447d0c42ccd0a39f7447bb0b3dce70801fa9c8bd596c32ba5799a1b7407823d"
+    },
+    {
+      "source": "scripts/task-state.ps1",
+      "path": ".agents/scripts/task-state.ps1",
+      "sha256": "b3ddb0e636df097b87817932ca8a3e8a86b3bd8890a016615a622ddd91473949"
+    },
+    {
+      "source": "schemas/knowledge.schema.json",
+      "path": ".agents/schemas/knowledge.schema.json",
+      "sha256": "8462ea1e4e3222dddf2061b05d0c2c198138209235b1f449fbb09d3f2715ede2"
+    },
+    {
+      "source": "schemas/task-state.schema.json",
+      "path": ".agents/schemas/task-state.schema.json",
+      "sha256": "ea8d56a97aa8bc1c52ebd10104f8d22457120b80f6d0eb1c51ee3bfc354d07da"
+    },
+    {
+      "source": "schemas/managed.schema.json",
+      "path": ".agents/schemas/managed.schema.json",
+      "sha256": "f88b30092498af1c4ef440d0e0372b55bc8a9416546f790e7cb0dde8ed8c8e2a"
+    },
+    {
+      "source": "schemas/sources.schema.json",
+      "path": ".agents/schemas/sources.schema.json",
+      "sha256": "e98edc30339da4e40b5393fc5d57762d8786008dc7ff1ef6b2a035dbe59c488c"
+    },
+    {
+      "source": "docs/agents/sources.json",
+      "path": ".agents/docs/agents/sources.json",
+      "sha256": "39c398a576495c600042c3359e5b07b5ab2d4be892f67697ffece2c7e762afa4"
+    },
+    {
+      "source": "docs/runbooks/agents-operator-guide.md",
+      "path": ".agents/docs/runbooks/agents-operator-guide.md",
+      "sha256": "169a722560501b56b3b294e417e6f821c5f9b86ca087a3513c0224daf8764410"
+    },
+    {
+      "source": ".agents/deploy-ignore",
+      "path": ".agents/.gitignore",
+      "sha256": "fdcd0183a4babd894e7cce83ec87bd24f385c424cc83571009ed07ab34722d9f"
+    }
+  ]
+}
