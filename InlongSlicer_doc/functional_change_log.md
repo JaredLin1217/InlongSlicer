@@ -22,6 +22,26 @@ branding migration checklist.
 - Use `inlong/orca-2.4-base` as the clean upstream base when classifying fork
   changes.
 
+## 2026-09-08 - Distinguish Contact Layer Line Spacing
+
+Status: `Uncommitted`
+
+Type: UI terminology and localization change
+
+- Rename the independent contact-layer controls to `Top contact line spacing`
+  and `Bottom contact line spacing`, with matching Simplified and Traditional
+  Chinese labels. The former Chinese labels duplicated the native interface
+  spacing controls.
+- Clarify that these values set extrusion-line gaps in the contact layer, not
+  the support/object Z gap. Preserve inheritance at `-1`, solid contact at `0`,
+  and the top-contact support-ironing explanation.
+- Keep configuration keys, defaults, slicing behavior, native interface/Z
+  labels, and contact pattern labels unchanged. Synchronize gettext catalogs
+  without changing unrelated translations.
+- Add configuration regression coverage for labels and existing preset values.
+  Verification also covers gettext catalogs, Release resources, both local
+  installation variants, and restoration of existing runtime user data.
+
 ## 2026-05-31 - INLONG And Infinity3DP Contact Pattern Defaults
 
 Status: `Uncommitted`

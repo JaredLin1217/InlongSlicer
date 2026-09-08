@@ -17747,12 +17747,12 @@ msgstr ""
 "Arayüz çizgilerinin aralığı. Sıfır, katı arayüz anlamına gelir.\n"
 "Destek ütüleme etkinleştirildiğinde katı arayüzü kullanarak zorlayın."
 
-msgid "Top contact spacing"
+msgid "Top contact line spacing"
 msgstr ""
 
 msgid ""
-"Spacing of the first support interface layer directly below the object. Set to -1 to use the top interface spacing. Zero means solid contact.\n"
-"Force using solid contact when support ironing is enabled."
+"Spacing between extrusion lines in the support contact layer directly below the object. Set to -1 to use Top interface spacing. Zero means a solid contact layer. This does not change the Z gap between the support and the object.\n"
+"Support ironing forces this contact layer to be solid."
 msgstr ""
 
 msgid "Bottom interface spacing"
@@ -17761,10 +17761,10 @@ msgstr "Alt arayüz aralığı"
 msgid "This is the spacing of bottom interface lines. 0 means solid interface."
 msgstr "Alt arayüz çizgilerinin aralığı. Sıfır, sağlam arayüz anlamına gelir."
 
-msgid "Bottom contact spacing"
+msgid "Bottom contact line spacing"
 msgstr ""
 
-msgid "Spacing of the first support interface layer directly above the object. Set to -1 to use the bottom interface spacing. Zero means solid contact."
+msgid "Spacing between extrusion lines in the support contact layer directly above the object. Set to -1 to use Bottom interface spacing. Zero means a solid contact layer. This does not change the Z gap between the support and the object."
 msgstr ""
 
 msgid "This is the speed for support interfaces."

@@ -17530,12 +17530,12 @@ msgstr ""
 "Az érintkező felület vonalai közötti távolság. A nulla tömör érintkező felületet jelent.\n"
 "Támaszérintkező felület vasalása esetén a tömör érintkező felület használatát kényszeríti."
 
-msgid "Top contact spacing"
+msgid "Top contact line spacing"
 msgstr ""
 
 msgid ""
-"Spacing of the first support interface layer directly below the object. Set to -1 to use the top interface spacing. Zero means solid contact.\n"
-"Force using solid contact when support ironing is enabled."
+"Spacing between extrusion lines in the support contact layer directly below the object. Set to -1 to use Top interface spacing. Zero means a solid contact layer. This does not change the Z gap between the support and the object.\n"
+"Support ironing forces this contact layer to be solid."
 msgstr ""
 
 msgid "Bottom interface spacing"
@@ -17545,10 +17545,10 @@ msgstr "Alső érintkező réteg térköz"
 msgid "This is the spacing of bottom interface lines. 0 means solid interface."
 msgstr "Az alsó érintkező réteg vonalai közötti távolság. A nulla tömör érintkező réteget jelent"
 
-msgid "Bottom contact spacing"
+msgid "Bottom contact line spacing"
 msgstr ""
 
-msgid "Spacing of the first support interface layer directly above the object. Set to -1 to use the bottom interface spacing. Zero means solid contact."
+msgid "Spacing between extrusion lines in the support contact layer directly above the object. Set to -1 to use Bottom interface spacing. Zero means a solid contact layer. This does not change the Z gap between the support and the object."
 msgstr ""
 
 msgid "This is the speed for support interfaces."

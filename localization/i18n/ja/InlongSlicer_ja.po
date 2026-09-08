@@ -17904,12 +17904,12 @@ msgstr ""
 "インターフェースラインの間隔です。0にするとソリッドインターフェースになります。\n"
 "サポートのアイロンが有効な場合は、強制的にソリッドインターフェースが使用されます。"
 
-msgid "Top contact spacing"
+msgid "Top contact line spacing"
 msgstr ""
 
 msgid ""
-"Spacing of the first support interface layer directly below the object. Set to -1 to use the top interface spacing. Zero means solid contact.\n"
-"Force using solid contact when support ironing is enabled."
+"Spacing between extrusion lines in the support contact layer directly below the object. Set to -1 to use Top interface spacing. Zero means a solid contact layer. This does not change the Z gap between the support and the object.\n"
+"Support ironing forces this contact layer to be solid."
 msgstr ""
 
 msgid "Bottom interface spacing"
@@ -17918,10 +17918,10 @@ msgstr "底部接触面間隔"
 msgid "This is the spacing of bottom interface lines. 0 means solid interface."
 msgstr "底部接触面を造形時に線の距離です。0はソリッド接触面です。"
 
-msgid "Bottom contact spacing"
+msgid "Bottom contact line spacing"
 msgstr ""
 
-msgid "Spacing of the first support interface layer directly above the object. Set to -1 to use the bottom interface spacing. Zero means solid contact."
+msgid "Spacing between extrusion lines in the support contact layer directly above the object. Set to -1 to use Bottom interface spacing. Zero means a solid contact layer. This does not change the Z gap between the support and the object."
 msgstr ""
 
 msgid "This is the speed for support interfaces."

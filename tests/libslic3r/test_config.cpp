@@ -17,6 +17,48 @@
 
 using namespace Slic3r;
 
+TEST_CASE("Support contact spacing labels identify line spacing", "[Config][SupportContact][Regression]") {
+    const bool top = GENERATE(true, false);
+    const char *key = top ? "support_top_contact_spacing" : "support_bottom_contact_spacing";
+    const ConfigOptionDef *definition = print_config_def.get(key);
+    REQUIRE(definition != nullptr);
+    CHECK(definition->label == (top ? "Top contact line spacing" : "Bottom contact line spacing"));
+    CHECK(definition->sidetext == "mm");
+    CHECK_THAT(definition->min, Catch::Matchers::WithinAbs(-1.0, EPSILON));
+    REQUIRE(definition->default_value.get() != nullptr);
+    CHECK(definition->default_value->serialize() == "-1");
+}
+
+TEST_CASE("Support interface and distance labels stay separate from contact line spacing", "[Config][SupportContact][Regression]") {
+    const auto entry = GENERATE(
+        std::make_pair("support_interface_spacing", "Top interface spacing"),
+        std::make_pair("support_bottom_interface_spacing", "Bottom interface spacing"),
+        std::make_pair("support_top_z_distance", "Top Z distance"),
+        std::make_pair("support_bottom_z_distance", "Bottom Z distance"),
+        std::make_pair("support_top_contact_pattern", "Top contact pattern"),
+        std::make_pair("support_bottom_contact_pattern", "Bottom contact pattern"));
+    const ConfigOptionDef *definition = print_config_def.get(entry.first);
+    REQUIRE(definition != nullptr);
+    CHECK(definition->label == entry.second);
+}
+
+TEST_CASE("Support contact spacing retains its preset keys and values", "[Config][SupportContact][Regression]") {
+    const char *key = GENERATE("support_top_contact_spacing", "support_bottom_contact_spacing");
+    const auto entry = GENERATE(std::make_pair("-1", -1.0), std::make_pair("0", 0.0), std::make_pair("0.05", 0.05));
+    DynamicPrintConfig config;
+    REQUIRE_NOTHROW(config.set_deserialize_strict(key, entry.first));
+    const auto *value = config.opt<ConfigOptionFloat>(key);
+    REQUIRE(value != nullptr);
+    CHECK_THAT(value->value, Catch::Matchers::WithinAbs(entry.second, EPSILON));
+
+    DynamicPrintConfig restored;
+    REQUIRE_NOTHROW(restored.set_deserialize_strict(key, value->serialize()));
+    REQUIRE(restored.has(key));
+    const auto *restored_value = restored.opt<ConfigOptionFloat>(key);
+    REQUIRE(restored_value != nullptr);
+    CHECK_THAT(restored_value->value, Catch::Matchers::WithinAbs(entry.second, EPSILON));
+}
+
 SCENARIO("Generic config validation performs as expected.", "[Config]") {
     GIVEN("A config generated from default options") {
         Slic3r::DynamicPrintConfig config = Slic3r::DynamicPrintConfig::full_print_config();

@@ -7146,11 +7146,12 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionFloat(0.5));
 
     def = this->add("support_top_contact_spacing", coFloat);
-    def->label = L("Top contact spacing");
+    def->label = L("Top contact line spacing");
     def->category = L("Support");
-    def->tooltip = L("Spacing of the first support interface layer directly below the object. "
-                     "Set to -1 to use the top interface spacing. Zero means solid contact.\n"
-                     "Force using solid contact when support ironing is enabled.");
+    def->tooltip = L("Spacing between extrusion lines in the support contact layer directly below the object. "
+                     "Set to -1 to use Top interface spacing. Zero means a solid contact layer. "
+                     "This does not change the Z gap between the support and the object.\n"
+                     "Support ironing forces this contact layer to be solid.");
     def->sidetext = L("mm");
     def->min = -1;
     def->mode = comAdvanced;
@@ -7167,10 +7168,11 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionFloat(0.5));
 
     def = this->add("support_bottom_contact_spacing", coFloat);
-    def->label = L("Bottom contact spacing");
+    def->label = L("Bottom contact line spacing");
     def->category = L("Support");
-    def->tooltip = L("Spacing of the first support interface layer directly above the object. "
-                     "Set to -1 to use the bottom interface spacing. Zero means solid contact.");
+    def->tooltip = L("Spacing between extrusion lines in the support contact layer directly above the object. "
+                     "Set to -1 to use Bottom interface spacing. Zero means a solid contact layer. "
+                     "This does not change the Z gap between the support and the object.");
     def->sidetext = L("mm");
     def->min = -1;
     def->mode = comAdvanced;
