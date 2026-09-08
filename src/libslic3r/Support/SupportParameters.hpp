@@ -28,6 +28,8 @@ inline InfillPattern support_interface_fill_pattern(
         return ipGrid;
     if (pattern == smipRectilinearInterlaced)
         return ipRectilinear;
+    if (pattern == smipSpiralInset)
+        return ipSpiralInset;
     return (pattern == smipAuto && zero_gap_interface) || pattern == smipConcentric ?
         ipConcentric :
         (density > 0.95 ? ipRectilinear : ipSupportBase);

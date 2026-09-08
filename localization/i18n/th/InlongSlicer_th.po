@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2026-06-19 13:40+0700\n"
 "Last-Translator: Icezaza\n"
 "Language-Team: Thai\n"
@@ -10017,6 +10017,9 @@ msgstr "คัดลอกค่าที่สืบทอดมาจากพ
 msgid "Detach from parent"
 msgstr "แยกออกจากผู้ปกครอง"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "พรีเซ็ตอิสระ"
@@ -13988,6 +13991,9 @@ msgstr "จัดแนวเป็นเส้นตรง"
 msgid "Concentric"
 msgstr "ศูนย์กลาง"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "ฮิลเบิร์ต เคิร์ฟ"
 
@@ -14077,29 +14083,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "ลำดับการเติมพื้นผิวด้านบน"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"ทิศทางที่พื้นผิวด้านบนถูกเติมเมื่อใช้ลวดลายแบบอิงจุดศูนย์กลาง (Concentric, Archimedean Chords, Octagram Spiral)\n"
-"ออกด้านนอกเริ่มที่กึ่งกลางของพื้นผิว ดังนั้นวัสดุส่วนเกินจะถูกดันไปทางขอบซึ่งมองเห็นได้น้อยที่สุด เข้าด้านในเริ่มที่ขอบและจบด้วยเส้นโค้งแคบที่กึ่งกลาง\n"
-"ค่าเริ่มต้นใช้การเรียงลำดับเส้นทางสั้นที่สุด ซึ่งอาจทำงานในทิศทางใดก็ได้"
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "ลำดับการเติมพื้นผิวด้านล่าง"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"ทิศทางที่พื้นผิวด้านล่างถูกเติมเมื่อใช้ลวดลายแบบอิงจุดศูนย์กลาง (Concentric, Archimedean Chords, Octagram Spiral)\n"
-"เข้าด้านในเริ่มแต่ละพื้นผิวด้วยเส้นโค้งด้านนอกที่กว้างกว่า ซึ่งช่วยเพิ่มการยึดเกาะเลเยอร์แรกบนฐานพิมพ์ที่เส้นโค้งแคบตรงกลางอาจไม่ติด ออกด้านนอกเริ่มที่กึ่งกลาง โดยดันวัสดุส่วนเกินไปทางขอบ\n"
-"ค่าเริ่มต้นใช้การเรียงลำดับเส้นทางสั้นที่สุด ซึ่งอาจทำงานในทิศทางใดก็ได้"
 
 msgid "Internal solid infill pattern"
 msgstr "รูปแบบไส้ในของแข็งภายใน"
@@ -23067,6 +23065,26 @@ msgid ""
 msgstr ""
 "หลีกเลี่ยงการบิดเบี้ยว\n"
 "คุณรู้หรือไม่ว่าเมื่อพิมพ์วัสดุที่มีแนวโน้มที่จะเกิดการบิดเบี้ยว เช่น ABS การเพิ่มอุณหภูมิฐานพิมพ์อย่างเหมาะสมสามารถลดความน่าจะเป็นของการบิดเบี้ยวได้"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "ทิศทางที่พื้นผิวด้านบนถูกเติมเมื่อใช้ลวดลายแบบอิงจุดศูนย์กลาง (Concentric, Archimedean Chords, Octagram Spiral)\n"
+#~ "ออกด้านนอกเริ่มที่กึ่งกลางของพื้นผิว ดังนั้นวัสดุส่วนเกินจะถูกดันไปทางขอบซึ่งมองเห็นได้น้อยที่สุด เข้าด้านในเริ่มที่ขอบและจบด้วยเส้นโค้งแคบที่กึ่งกลาง\n"
+#~ "ค่าเริ่มต้นใช้การเรียงลำดับเส้นทางสั้นที่สุด ซึ่งอาจทำงานในทิศทางใดก็ได้"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "ทิศทางที่พื้นผิวด้านล่างถูกเติมเมื่อใช้ลวดลายแบบอิงจุดศูนย์กลาง (Concentric, Archimedean Chords, Octagram Spiral)\n"
+#~ "เข้าด้านในเริ่มแต่ละพื้นผิวด้วยเส้นโค้งด้านนอกที่กว้างกว่า ซึ่งช่วยเพิ่มการยึดเกาะเลเยอร์แรกบนฐานพิมพ์ที่เส้นโค้งแคบตรงกลางอาจไม่ติด ออกด้านนอกเริ่มที่กึ่งกลาง โดยดันวัสดุส่วนเกินไปทางขอบ\n"
+#~ "ค่าเริ่มต้นใช้การเรียงลำดับเส้นทางสั้นที่สุด ซึ่งอาจทำงานในทิศทางใดก็ได้"
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "ผนังเสริมสำรองทำงานได้ไม่ดีเมื่อตั้งค่าความหนาของเปลือกแนวตั้งเป็นทั้งหมด"

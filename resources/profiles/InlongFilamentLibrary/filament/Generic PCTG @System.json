@@ -4,6 +4,7 @@
 	"inherits": "fdm_filament_pctg",
 	"from": "system",
 	"setting_id": "B3Raf1xw8rzFBF6h",
+	"filament_id": "OFu1evlr",
 	"instantiation": "true",
 	"compatible_printers": []
 }

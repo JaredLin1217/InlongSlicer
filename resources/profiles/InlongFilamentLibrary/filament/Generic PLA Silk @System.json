@@ -5,6 +5,7 @@
 	"inherits": "fdm_filament_pla_silk",
 	"from": "system",
 	"setting_id": "odHIai1HCk07Lgf0",
+	"filament_id": "OFesA6rF",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"7.5"

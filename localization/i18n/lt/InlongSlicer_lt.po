@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2026-07-02 14:13+0300\n"
 "Last-Translator: Gintaras Kučinskas <sharanchius@gmail.com>\n"
 "Language-Team: \n"
@@ -10033,6 +10033,9 @@ msgstr "Nukopijuoja į šį profilį visas iš pirminio profilio paveldėtas rei
 msgid "Detach from parent"
 msgstr "Detach from parent"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Savarankiškas profilis"
@@ -14009,6 +14012,9 @@ msgstr "Tiesiai sulygiuota"
 msgid "Concentric"
 msgstr "Koncentrinis"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Hilberto kreivė"
 
@@ -14098,29 +14104,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Viršutinio paviršiaus užpildymo tvarka"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Kryptis, kuria užpildomi viršutiniai paviršiai naudojant į centrą orientuotą raštą (koncentrinį, Archimedo stygų, Oktogramos spiralės).\n"
-"„Į išorę“ prasideda paviršiaus centre, todėl bet koks perteklinė medžiaga stumiama link krašto, kur ji mažiausiai matoma. „Į vidų“ prasideda nuo krašto ir baigiasi ankštomis kreivėmis centre.\n"
-"Numatytoji tvarka naudoja trumpiausio kelio rikiavimą, kuris gali vykti bet kuria kryptimi."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Apatinio paviršiaus užpildymo tvarka"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Kryptis, kuria užpildomi apatiniai paviršiai naudojant į centrą orientuotą raštą (koncentrinį, Archimedo stygų, Oktogramos spiralės).\n"
-"„Į vidų“ pradeda kiekvieną paviršių platesnėmis išorinėmis kreivėmis, o tai pagerina pirmojo sluoksnio sukibimą ant pagrindų, kur ankštos kreivės centre gali nesilaikyti. „Į išorę“ prasideda centre, stumdama bet kokią perteklinę medžiagą link krašto.\n"
-"Numatytoji tvarka naudoja trumpiausio kelio rikiavimą, kuris gali vykti bet kuria kryptimi."
 
 msgid "Internal solid infill pattern"
 msgstr "Vidinis vientiso užpildo raštas"
@@ -23054,6 +23052,26 @@ msgid ""
 msgstr ""
 "Išvengti deformacijos\n"
 "Ar žinojote, kad spausdinant medžiagas, kurios linkusios deformuotis, pavyzdžiui, ABS, tinkamai padidinus kaitinimo pagrindo temperatūrą galima sumažinti deformavimosi tikimybę."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Kryptis, kuria užpildomi viršutiniai paviršiai naudojant į centrą orientuotą raštą (koncentrinį, Archimedo stygų, Oktogramos spiralės).\n"
+#~ "„Į išorę“ prasideda paviršiaus centre, todėl bet koks perteklinė medžiaga stumiama link krašto, kur ji mažiausiai matoma. „Į vidų“ prasideda nuo krašto ir baigiasi ankštomis kreivėmis centre.\n"
+#~ "Numatytoji tvarka naudoja trumpiausio kelio rikiavimą, kuris gali vykti bet kuria kryptimi."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Kryptis, kuria užpildomi apatiniai paviršiai naudojant į centrą orientuotą raštą (koncentrinį, Archimedo stygų, Oktogramos spiralės).\n"
+#~ "„Į vidų“ pradeda kiekvieną paviršių platesnėmis išorinėmis kreivėmis, o tai pagerina pirmojo sluoksnio sukibimą ant pagrindų, kur ankštos kreivės centre gali nesilaikyti. „Į išorę“ prasideda centre, stumdama bet kokią perteklinę medžiagą link krašto.\n"
+#~ "Numatytoji tvarka naudoja trumpiausio kelio rikiavimą, kuris gali vykti bet kuria kryptimi."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Papildoma alternatyvi sienelė neveikia gerai, kai vertikalaus apvalkalo storis nustatytas į Visi."

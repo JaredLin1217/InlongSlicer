@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2025-06-02 17:12+0900\n"
 "Last-Translator: crwusiz <crwusiz@gmail.com>\n"
 "Language-Team: \n"
@@ -10228,6 +10228,9 @@ msgstr "상위 사전 설정에서 상속한 모든 값을 이 사전 설정으�
 msgid "Detach from parent"
 msgstr "상위 항목에서 분리"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "독립 사전 설정"
@@ -14350,6 +14353,9 @@ msgstr "정렬된 직선"
 msgid "Concentric"
 msgstr "동심"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "힐베르트 곡선"
 
@@ -14441,29 +14447,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "상단 표면 채우기 순서"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"중심 기반 패턴(동심원, 아르키메데스 현, 팔각별 나선)을 사용할 때 상단 표면을 채우는 방향입니다.\n"
-"바깥쪽은 표면 중앙에서 시작하므로 남는 재료가 가장 눈에 덜 띄는 가장자리로 밀려납니다. 안쪽은 가장자리에서 시작하여 중앙의 좁은 곡선에서 끝납니다.\n"
-"기본값은 최단 경로 순서를 사용하며 어느 방향으로든 진행될 수 있습니다."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "하단 표면 채우기 순서"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"중심 기반 패턴(동심원, 아르키메데스 현, 팔각별 나선)을 사용할 때 하단 표면을 채우는 방향입니다.\n"
-"안쪽은 각 표면을 더 넓은 바깥쪽 곡선에서 시작하므로, 중앙의 좁은 곡선이 잘 붙지 않는 빌드 플레이트에서 초기 레이어 접착력이 향상됩니다. 바깥쪽은 중앙에서 시작하여 남는 재료를 가장자리로 밀어냅니다.\n"
-"기본값은 최단 경로 순서를 사용하며 어느 방향으로든 진행될 수 있습니다."
 
 msgid "Internal solid infill pattern"
 msgstr "꽉찬 내부 채우기 패턴"
@@ -23778,6 +23776,26 @@ msgid ""
 msgstr ""
 "뒤틀림 방지\n"
 "ABS와 같이 뒤틀림이 발생하기 쉬운 소재를 출력할 때, 히트베드 온도를 적절하게 높이면 뒤틀림 가능성을 줄일 수 있다는 사실을 알고 계셨나요?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "중심 기반 패턴(동심원, 아르키메데스 현, 팔각별 나선)을 사용할 때 상단 표면을 채우는 방향입니다.\n"
+#~ "바깥쪽은 표면 중앙에서 시작하므로 남는 재료가 가장 눈에 덜 띄는 가장자리로 밀려납니다. 안쪽은 가장자리에서 시작하여 중앙의 좁은 곡선에서 끝납니다.\n"
+#~ "기본값은 최단 경로 순서를 사용하며 어느 방향으로든 진행될 수 있습니다."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "중심 기반 패턴(동심원, 아르키메데스 현, 팔각별 나선)을 사용할 때 하단 표면을 채우는 방향입니다.\n"
+#~ "안쪽은 각 표면을 더 넓은 바깥쪽 곡선에서 시작하므로, 중앙의 좁은 곡선이 잘 붙지 않는 빌드 플레이트에서 초기 레이어 접착력이 향상됩니다. 바깥쪽은 중앙에서 시작하여 남는 재료를 가장자리로 밀어냅니다.\n"
+#~ "기본값은 최단 경로 순서를 사용하며 어느 방향으로든 진행될 수 있습니다."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "세로 쉘 두께가 모두로 설정된 경우 대체 여분의 벽이 제대로 작동하지 않습니다."

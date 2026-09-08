@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10974,6 +10974,9 @@ msgstr "Kopieert alle overgeërfde waarden van de bovenliggende voorinstelling n
 msgid "Detach from parent"
 msgstr "Losmaken van bovenliggend element"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Unieke voorinstelling"
@@ -15346,6 +15349,9 @@ msgstr "Uitgelijnd Rechtlijnig"
 msgid "Concentric"
 msgstr "Concentrisch"
 
+msgid "Spiral Inset"
+msgstr ""
+
 # AI Translated
 msgid "Hilbert Curve"
 msgstr "Hilbertkromme"
@@ -15441,29 +15447,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Vulvolgorde bovenoppervlak"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Richting waarin bovenoppervlakken worden gevuld bij gebruik van een patroon dat vanuit het midden werkt (Concentrisch, Archimedische koorden, Octagramspiraal).\n"
-"Naar buiten begint in het midden van het oppervlak, zodat overtollig materiaal naar de rand wordt geduwd, waar het het minst zichtbaar is. Naar binnen begint aan de rand en eindigt met de krappe bochten in het midden.\n"
-"Standaard gebruikt de volgorde van het kortste pad, die beide kanten op kan lopen."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Vulvolgorde onderoppervlak"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Richting waarin onderoppervlakken worden gevuld bij gebruik van een patroon dat vanuit het midden werkt (Concentrisch, Archimedische koorden, Octagramspiraal).\n"
-"Naar binnen begint elk oppervlak met de bredere buitenbochten, wat de hechting van de eerste laag verbetert op printbedden waar de krappe bochten in het midden mogelijk niet hechten. Naar buiten begint in het midden en duwt overtollig materiaal naar de rand.\n"
-"Standaard gebruikt de volgorde van het kortste pad, die beide kanten op kan lopen."
 
 msgid "Internal solid infill pattern"
 msgstr "Intern massief invulpatroon"
@@ -25469,6 +25467,26 @@ msgid ""
 msgstr ""
 "Kromtrekken voorkomen\n"
 "Wist je dat bij het printen van materialen die gevoelig zijn voor kromtrekken, zoals ABS, een juiste verhoging van de temperatuur van het warmtebed de kans op kromtrekken kan verkleinen?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Richting waarin bovenoppervlakken worden gevuld bij gebruik van een patroon dat vanuit het midden werkt (Concentrisch, Archimedische koorden, Octagramspiraal).\n"
+#~ "Naar buiten begint in het midden van het oppervlak, zodat overtollig materiaal naar de rand wordt geduwd, waar het het minst zichtbaar is. Naar binnen begint aan de rand en eindigt met de krappe bochten in het midden.\n"
+#~ "Standaard gebruikt de volgorde van het kortste pad, die beide kanten op kan lopen."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Richting waarin onderoppervlakken worden gevuld bij gebruik van een patroon dat vanuit het midden werkt (Concentrisch, Archimedische koorden, Octagramspiraal).\n"
+#~ "Naar binnen begint elk oppervlak met de bredere buitenbochten, wat de hechting van de eerste laag verbetert op printbedden waar de krappe bochten in het midden mogelijk niet hechten. Naar buiten begint in het midden en duwt overtollig materiaal naar de rand.\n"
+#~ "Standaard gebruikt de volgorde van het kortste pad, die beide kanten op kan lopen."
 
 # AI Translated
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."

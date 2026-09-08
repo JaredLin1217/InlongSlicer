@@ -4,6 +4,7 @@
 	"inherits": "fdm_filament_bvoh",
 	"from": "system",
 	"setting_id": "Nr8wXhQLucHIhKAc",
+	"filament_id": "OFo2UF2C",
 	"instantiation": "true",
 	"compatible_printers": []
 }

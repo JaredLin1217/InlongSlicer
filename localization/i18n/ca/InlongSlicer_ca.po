@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2025-03-15 10:55+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10245,6 +10245,9 @@ msgstr "Copia en aquest perfil tots els valors heretats del perfil pare i elimin
 msgid "Detach from parent"
 msgstr "Desvincula del pare"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Perfil únic"
@@ -14312,6 +14315,9 @@ msgstr "Alineat Rectilini"
 msgid "Concentric"
 msgstr "Concèntric"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Corba de Hilbert"
 
@@ -14401,29 +14407,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Ordre d'emplenament de la superfície superior"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Direcció en què s'omplen les superfícies superiors quan s'utilitza un patró centrat (Concèntric, Acords d'Arquimedes, Octograma en Espiral).\n"
-"Cap a fora comença al centre de la superfície, de manera que l'excés de material es desplaça cap a la vora, on és menys visible. Cap a dins comença a la vora i acaba amb les corbes tancades del centre.\n"
-"Per defecte utilitza l'ordenació pel camí més curt, que pot anar en qualsevol direcció."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Ordre d'emplenament de la superfície inferior"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Direcció en què s'omplen les superfícies inferiors quan s'utilitza un patró centrat (Concèntric, Acords d'Arquimedes, Octograma en Espiral).\n"
-"Cap a dins comença cada superfície amb les corbes exteriors més amples, cosa que millora l'adherència de la capa inicial en plaques on les corbes tancades del centre poden no adherir-se. Cap a fora comença al centre i desplaça l'excés de material cap a la vora.\n"
-"Per defecte utilitza l'ordenació pel camí més curt, que pot anar en qualsevol direcció."
 
 msgid "Internal solid infill pattern"
 msgstr "Patró de farciment sòlid intern"
@@ -23609,6 +23607,26 @@ msgid ""
 msgstr ""
 "Evitar la deformació( warping )\n"
 "Sabíeu que quan imprimiu materials propensos a deformar-se, com ara l'ABS, augmentar adequadament la temperatura del llit pot reduir la probabilitat de deformació?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Direcció en què s'omplen les superfícies superiors quan s'utilitza un patró centrat (Concèntric, Acords d'Arquimedes, Octograma en Espiral).\n"
+#~ "Cap a fora comença al centre de la superfície, de manera que l'excés de material es desplaça cap a la vora, on és menys visible. Cap a dins comença a la vora i acaba amb les corbes tancades del centre.\n"
+#~ "Per defecte utilitza l'ordenació pel camí més curt, que pot anar en qualsevol direcció."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Direcció en què s'omplen les superfícies inferiors quan s'utilitza un patró centrat (Concèntric, Acords d'Arquimedes, Octograma en Espiral).\n"
+#~ "Cap a dins comença cada superfície amb les corbes exteriors més amples, cosa que millora l'adherència de la capa inicial en plaques on les corbes tancades del centre poden no adherir-se. Cap a fora comença al centre i desplaça l'excés de material cap a la vora.\n"
+#~ "Per defecte utilitza l'ordenació pel camí més curt, que pot anar en qualsevol direcció."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "La paret addicional alternativa no funciona bé quan assegurar el gruix de la closca vertical està establert a Tot."

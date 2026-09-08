@@ -22,6 +22,38 @@ branding migration checklist.
 - Use `inlong/orca-2.4-base` as the clean upstream base when classifying fork
   changes.
 
+## 2026-09-08 - Adopt Deterministic System Filament IDs
+
+Status: `Uncommitted`
+
+Type: Upstream merge and profile identity migration
+
+- Merge Orca upstream `bcb4f17d9ae5dd9c807550c92163389dcba66f28` into the
+  Inlong branch. Adopt the upstream product-based `OF` plus six base62 digit
+  filament IDs and regenerated per-preset setting IDs using
+  `scripts/inlong_id_tool.py`; keep both UUID namespaces unchanged.
+- Preserve the names and tuning of INLONG and Infinity3DP custom profiles.
+  Regenerate the fork's complete filament-ID snapshot, including InlongArena
+  and InlongFilamentLibrary claims. Use upstream's corrected Elegoo product
+  bases instead of the older mismatched copies.
+- Retain the Bambu `GF` catalog mapping at the printer boundary and the custom
+  `P` ID space. Do not rewrite saved user data; older projects or tray selections
+  referring to INLONG `IF201` through `IF214` may need the material reselected.
+- Keep local independent contact-layer spacing, pattern, zero-gap tree-support,
+  raft, and top-surface behavior while adding upstream Spiral Inset support.
+  Retain both sides' preset and support regression tests.
+- Port the updated homepage account layout to Inlong names and colors; accept
+  the existing local cloud callback names and both old/new login commands.
+- Preserve legacy Orca Arena printer/material names in `renamed_from` metadata
+  so imported user presets keep resolving their parents. Canonical Inlong names,
+  new IDs and tuning remain unchanged; never rewrite live user preset files.
+- Initialize the standalone profile validator's argument/filesystem encoding as
+  UTF-8, matching the application. Windows legacy-fixture validation otherwise
+  loses accented filenames. Cover ASCII and Unicode roots with isolated fixtures.
+- Verification: ID generator/checker, profile validators, ID-tool unit tests,
+  Windows build-script tests, gettext, Release build/regression tests, and
+  Consumer validation. See the merge handoff for actual outcomes and gaps.
+
 ## 2026-09-08 - Distinguish Contact Layer Line Spacing
 
 Status: `Uncommitted`

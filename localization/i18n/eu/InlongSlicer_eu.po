@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2026-07-20 13:33+0200\n"
 "Last-Translator: Manu Goiogana <mgoiogana@gmail.com>\n"
 "Language-Team: \n"
@@ -9849,6 +9849,9 @@ msgstr "Aurrezarpen honetara gurasoaren balio heredatu guztiak kopiatzen ditu et
 msgid "Detach from parent"
 msgstr "Bereizi gurasotik"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Aurrezarpen bakarra"
@@ -13781,6 +13784,9 @@ msgstr "Lerrozuzen lerrokatua"
 msgid "Concentric"
 msgstr "Kontzentrikoa"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Hilbert kurba"
 
@@ -13864,28 +13870,20 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Goiko gainazala betetzeko ordena"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Goiko gainazalak betetzen diren noranzkoa zentroan oinarritutako patroia erabiltzen denean (Kontzentrikoa, Arkimedesen kordak, Oktagrama-kiribila).\n"
-"Kanporanzkoa erdialdean hasten da, beraz, gehiegizko materiala gutxien ikusten den ertzera bultzatzen da. Barruranzkoa ertzean hasten da eta erdian kurba estuekin amaitzen da.\n"
-"Lehenetsiak bide laburreneko ordena erabiltzen du, zeina norabide batean zein bestean ibil daitekeen."
 
 msgid "Bottom surface fill order"
 msgstr "Beheko gainazala betetzeko ordena"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Beheko gainazalak betetzen diren noranzkoa zentroan oinarritutako patroia erabiltzen denean (Kontzentrikoa, Arkimedesen kordak, Oktagrama-kiribila).\n"
-"Barruranzkoa hasten da gainazal bakoitza kanpoko kurba zabalagoekin, eta horrek lehen geruzaren atxikimendua hobetzen du erdiko kurba estuak itsatsi ez daitezkeen inprimatze-plaketan. Kanporanzkoa erdialdean hasten da, gehiegizko materiala ertzera bultzatuz.\n"
-"Lehenetsiak bide laburreneko ordena erabiltzen du, zeina norabide batean zein bestean ibil daitekeen."
 
 # AI Translated
 msgid "Internal solid infill pattern"
@@ -22715,6 +22713,26 @@ msgid ""
 msgstr ""
 "Saihestu okertzea\n"
 "Ba al zenekien ABS bezalako okertzeko joera duten materialak inprimatzean ohe beroaren tenperatura egoki igotzeak okertzeko probabilitatea murriztu dezakeela?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Goiko gainazalak betetzen diren noranzkoa zentroan oinarritutako patroia erabiltzen denean (Kontzentrikoa, Arkimedesen kordak, Oktagrama-kiribila).\n"
+#~ "Kanporanzkoa erdialdean hasten da, beraz, gehiegizko materiala gutxien ikusten den ertzera bultzatzen da. Barruranzkoa ertzean hasten da eta erdian kurba estuekin amaitzen da.\n"
+#~ "Lehenetsiak bide laburreneko ordena erabiltzen du, zeina norabide batean zein bestean ibil daitekeen."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Beheko gainazalak betetzen diren noranzkoa zentroan oinarritutako patroia erabiltzen denean (Kontzentrikoa, Arkimedesen kordak, Oktagrama-kiribila).\n"
+#~ "Barruranzkoa hasten da gainazal bakoitza kanpoko kurba zabalagoekin, eta horrek lehen geruzaren atxikimendua hobetzen du erdiko kurba estuak itsatsi ez daitezkeen inprimatze-plaketan. Kanporanzkoa erdialdean hasten da, gehiegizko materiala ertzera bultzatuz.\n"
+#~ "Lehenetsiak bide laburreneko ordena erabiltzen du, zeina norabide batean zein bestean ibil daitekeen."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Perimetro gehigarri txandakatuak ez du ondo funtzionatzen \"Bermatu oskolaren lodiera bertikala\" Guztiak gisa ezarrita dagoenean."

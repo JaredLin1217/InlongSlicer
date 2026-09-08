@@ -1,0 +1,14 @@
+{
+	"type": "filament",
+	"name": "Generic ASA @InlongArena",
+	"inherits": "Generic ASA @InlongArena base",
+	"renamed_from": "InlongArena Generic ASA;Generic ASA @OrcaArena;OrcaArena Generic ASA",
+	"from": "system",
+	"setting_id": "Vw6vcUF3WwpLVB40",
+	"instantiation": "true",
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

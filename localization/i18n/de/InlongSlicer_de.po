@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Heiko Liebscher <hliebschergmail.com>\n"
 "Language-Team: \n"
@@ -10022,6 +10022,9 @@ msgstr "Kopiert alle vom übergeordneten Profil geerbten Werte in dieses Profil 
 msgid "Detach from parent"
 msgstr "Vom übergeordneten Element trennen"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Eigenständiges Profil"
@@ -13985,6 +13988,9 @@ msgstr "Geradlinig ausgerichtet"
 msgid "Concentric"
 msgstr "Konzentrisch"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Hilbert-Kurve"
 
@@ -14074,29 +14080,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Füllreihenfolge der oberen Oberfläche"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Richtung, in der obere Oberflächen gefüllt werden, wenn ein mittenbasiertes Muster (Konzentrisch, Archimedische Akkorde, Oktagramm Spirale) verwendet wird.\n"
-"Nach außen beginnt in der Mitte der Oberfläche, sodass überschüssiges Material zum Rand geschoben wird, wo es am wenigsten sichtbar ist. Nach innen beginnt am Rand und endet mit den engen Kurven in der Mitte.\n"
-"Standard verwendet die Sortierung nach kürzestem Pfad, die in beide Richtungen verlaufen kann."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Füllreihenfolge der unteren Oberfläche"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Richtung, in der untere Oberflächen gefüllt werden, wenn ein mittenbasiertes Muster (Konzentrisch, Archimedische Akkorde, Oktagramm Spirale) verwendet wird.\n"
-"Nach innen beginnt jede Oberfläche mit den breiteren äußeren Kurven, was die Haftung der ersten Schicht auf Druckbetten verbessert, auf denen die engen Kurven in der Mitte möglicherweise nicht haften. Nach außen beginnt in der Mitte und schiebt überschüssiges Material zum Rand.\n"
-"Standard verwendet die Sortierung nach kürzestem Pfad, die in beide Richtungen verlaufen kann."
 
 msgid "Internal solid infill pattern"
 msgstr "Muster für das interne feste Füllmuster"
@@ -23008,6 +23006,26 @@ msgid ""
 msgstr ""
 "Verwerfungen vermeiden\n"
 "Wussten Sie, dass beim Drucken von Materialien, die zu Verwerfungen neigen, wie z.B. ABS, durch eine entsprechende Erhöhung der Heizbetttemperatur die Wahrscheinlichkeit von Verwerfungen verringert werden kann?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Richtung, in der obere Oberflächen gefüllt werden, wenn ein mittenbasiertes Muster (Konzentrisch, Archimedische Akkorde, Oktagramm Spirale) verwendet wird.\n"
+#~ "Nach außen beginnt in der Mitte der Oberfläche, sodass überschüssiges Material zum Rand geschoben wird, wo es am wenigsten sichtbar ist. Nach innen beginnt am Rand und endet mit den engen Kurven in der Mitte.\n"
+#~ "Standard verwendet die Sortierung nach kürzestem Pfad, die in beide Richtungen verlaufen kann."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Richtung, in der untere Oberflächen gefüllt werden, wenn ein mittenbasiertes Muster (Konzentrisch, Archimedische Akkorde, Oktagramm Spirale) verwendet wird.\n"
+#~ "Nach innen beginnt jede Oberfläche mit den breiteren äußeren Kurven, was die Haftung der ersten Schicht auf Druckbetten verbessert, auf denen die engen Kurven in der Mitte möglicherweise nicht haften. Nach außen beginnt in der Mitte und schiebt überschüssiges Material zum Rand.\n"
+#~ "Standard verwendet die Sortierung nach kürzestem Pfad, die in beide Richtungen verlaufen kann."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Der alternative zusätzliche Wandmodus funktioniert nicht gut, wenn die vertikale Wanddicke auf Alle eingestellt ist."

@@ -1,0 +1,15 @@
+{
+	"type": "filament",
+	"name": "Generic PC @InlongArena 0.2 nozzle",
+	"inherits": "Generic PC @InlongArena base",
+	"renamed_from": "InlongArena Generic PC @0.2 nozzle;InlongArena Generic PC 0.2 nozzle;Generic PC @OrcaArena 0.2 nozzle;OrcaArena Generic PC @0.2 nozzle;OrcaArena Generic PC 0.2 nozzle",
+	"from": "system",
+	"setting_id": "mHBa7RawbpUNgG8p",
+	"instantiation": "true",
+	"filament_max_volumetric_speed": [
+		"1"
+	],
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.2 nozzle"
+	]
+}

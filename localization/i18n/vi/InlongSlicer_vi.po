@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2025-10-02 17:43+0700\n"
 "Last-Translator: \n"
 "Language-Team: hainguyen.ts13@gmail.com\n"
@@ -10681,6 +10681,9 @@ msgstr "Sao chép tất cả các giá trị kế thừa từ preset cha vào pr
 msgid "Detach from parent"
 msgstr "Tách khỏi vật thể cha"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Preset độc lập"
@@ -14896,6 +14899,9 @@ msgstr "Thẳng hàng căn chỉnh"
 msgid "Concentric"
 msgstr "Đồng tâm"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Đường cong Hilbert"
 
@@ -14985,29 +14991,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Thứ tự lấp bề mặt trên"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Hướng lấp các bề mặt trên khi dùng mẫu dựa trên tâm (Đồng tâm, Dây cung Archimedes, Xoắn ốc bát giác).\n"
-"Ra ngoài bắt đầu từ tâm bề mặt, nhờ đó vật liệu dư bị đẩy về phía mép nơi ít nhìn thấy nhất. Vào trong bắt đầu từ mép và kết thúc bằng các đường cong hẹp ở tâm.\n"
-"Mặc định dùng thứ tự đường đi ngắn nhất, có thể chạy theo hướng bất kỳ."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Thứ tự lấp bề mặt dưới"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Hướng lấp các bề mặt dưới khi dùng mẫu dựa trên tâm (Đồng tâm, Dây cung Archimedes, Xoắn ốc bát giác).\n"
-"Vào trong bắt đầu mỗi bề mặt bằng các đường cong ngoài rộng hơn, giúp cải thiện độ bám lớp đầu tiên trên những bàn in mà các đường cong hẹp ở tâm có thể không dính. Ra ngoài bắt đầu từ tâm, đẩy vật liệu dư về phía mép.\n"
-"Mặc định dùng thứ tự đường đi ngắn nhất, có thể chạy theo hướng bất kỳ."
 
 msgid "Internal solid infill pattern"
 msgstr "Mẫu infill đặc bên trong"
@@ -24413,6 +24411,26 @@ msgid ""
 msgstr ""
 "Tránh cong vênh\n"
 "Bạn có biết rằng khi in vật liệu dễ cong vênh như ABS, tăng nhiệt độ bàn nóng một cách thích hợp có thể giảm xác suất cong vênh không?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Hướng lấp các bề mặt trên khi dùng mẫu dựa trên tâm (Đồng tâm, Dây cung Archimedes, Xoắn ốc bát giác).\n"
+#~ "Ra ngoài bắt đầu từ tâm bề mặt, nhờ đó vật liệu dư bị đẩy về phía mép nơi ít nhìn thấy nhất. Vào trong bắt đầu từ mép và kết thúc bằng các đường cong hẹp ở tâm.\n"
+#~ "Mặc định dùng thứ tự đường đi ngắn nhất, có thể chạy theo hướng bất kỳ."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Hướng lấp các bề mặt dưới khi dùng mẫu dựa trên tâm (Đồng tâm, Dây cung Archimedes, Xoắn ốc bát giác).\n"
+#~ "Vào trong bắt đầu mỗi bề mặt bằng các đường cong ngoài rộng hơn, giúp cải thiện độ bám lớp đầu tiên trên những bàn in mà các đường cong hẹp ở tâm có thể không dính. Ra ngoài bắt đầu từ tâm, đẩy vật liệu dư về phía mép.\n"
+#~ "Mặc định dùng thứ tự đường đi ngắn nhất, có thể chạy theo hướng bất kỳ."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Luân phiên wall phụ không hoạt động tốt khi đảm bảo độ dày shell dọc được đặt thành Tất cả."

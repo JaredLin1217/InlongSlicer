@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2025-11-28 13:48-0600\n"
 "Last-Translator: tntchn <15895303+tntchn@users.noreply.github.com>\n"
 "Language-Team: \n"
@@ -10035,6 +10035,9 @@ msgstr "將父配置繼承的所有數值複製到目前的配置，並解除繼
 msgid "Detach from parent"
 msgstr "從父預設分離"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "獨立配置"
@@ -13979,6 +13982,9 @@ msgstr "直線排列"
 msgid "Concentric"
 msgstr "同心"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "希爾伯特曲線"
 
@@ -14068,29 +14074,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "頂面填充順序"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"使用以中心為基礎的圖樣（同心、阿基米德弦線、八角星螺旋）時，頂面填充的方向。\n"
-"「向外」從表面中心開始，因此多餘的材料會被推向最不明顯的邊緣。「向內」從邊緣開始，並以中心的緊密曲線結束。\n"
-"預設使用最短路徑排序，方向可能為任一種。"
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "底面填充順序"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"使用以中心為基礎的圖樣（同心、阿基米德弦線、八角星螺旋）時，底面填充的方向。\n"
-"「向內」讓每個表面從較寬的外側曲線開始，可改善中心緊密曲線可能無法附著的列印板上的第一層附著。「向外」從中心開始，將多餘的材料推向邊緣。\n"
-"預設使用最短路徑排序，方向可能為任一種。"
 
 msgid "Internal solid infill pattern"
 msgstr "內部實心填充圖案"
@@ -23109,6 +23107,26 @@ msgid ""
 msgstr ""
 "避免翹曲\n"
 "您知道嗎？當列印容易翹曲的材料（如 ABS）時，適當提高熱床溫度可以降低翹曲的機率。"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "使用以中心為基礎的圖樣（同心、阿基米德弦線、八角星螺旋）時，頂面填充的方向。\n"
+#~ "「向外」從表面中心開始，因此多餘的材料會被推向最不明顯的邊緣。「向內」從邊緣開始，並以中心的緊密曲線結束。\n"
+#~ "預設使用最短路徑排序，方向可能為任一種。"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "使用以中心為基礎的圖樣（同心、阿基米德弦線、八角星螺旋）時，底面填充的方向。\n"
+#~ "「向內」讓每個表面從較寬的外側曲線開始，可改善中心緊密曲線可能無法附著的列印板上的第一層附著。「向外」從中心開始，將多餘的材料推向邊緣。\n"
+#~ "預設使用最短路徑排序，方向可能為任一種。"
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "當確保垂直外殼厚度設為『全部』時，交錯額外牆壁效果不佳。"

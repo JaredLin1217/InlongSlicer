@@ -1,0 +1,15 @@
+{
+	"type": "filament",
+	"name": "Generic PVA @InlongArena 0.2 nozzle",
+	"inherits": "Generic PVA @InlongArena base",
+	"renamed_from": "InlongArena Generic PVA @0.2 nozzle;InlongArena Generic PVA 0.2 nozzle;Generic PVA @OrcaArena 0.2 nozzle;OrcaArena Generic PVA @0.2 nozzle;OrcaArena Generic PVA 0.2 nozzle",
+	"from": "system",
+	"setting_id": "kWkGwjp0Us8HZAFL",
+	"instantiation": "true",
+	"filament_max_volumetric_speed": [
+		"0.5"
+	],
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.2 nozzle"
+	]
+}

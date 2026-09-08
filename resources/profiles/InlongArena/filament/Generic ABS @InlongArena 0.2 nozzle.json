@@ -1,0 +1,15 @@
+{
+	"type": "filament",
+	"name": "Generic ABS @InlongArena 0.2 nozzle",
+	"inherits": "Generic ABS @InlongArena base",
+	"renamed_from": "InlongArena Generic ABS @0.2 nozzle;InlongArena Generic ABS 0.2 nozzle;Generic ABS @OrcaArena 0.2 nozzle;OrcaArena Generic ABS @0.2 nozzle;OrcaArena Generic ABS 0.2 nozzle",
+	"from": "system",
+	"setting_id": "bQlXwxBSeEKQoBVF",
+	"instantiation": "true",
+	"filament_max_volumetric_speed": [
+		"2"
+	],
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.2 nozzle"
+	]
+}

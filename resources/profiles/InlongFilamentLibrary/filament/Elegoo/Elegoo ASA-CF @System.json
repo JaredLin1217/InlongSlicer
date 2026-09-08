@@ -1,7 +1,7 @@
 {
 	"type": "filament",
 	"name": "Elegoo ASA-CF @System",
-	"inherits": "Elegoo ASA @base",
+	"inherits": "Elegoo ASA-CF @base",
 	"from": "system",
 	"setting_id": "HekSU26tkrwp1UI3",
 	"instantiation": "true",

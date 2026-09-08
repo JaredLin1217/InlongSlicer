@@ -1,0 +1,14 @@
+{
+	"type": "filament",
+	"name": "Generic ABS @InlongArena",
+	"inherits": "Generic ABS @InlongArena base",
+	"renamed_from": "InlongArena Generic ABS;Generic ABS @OrcaArena;OrcaArena Generic ABS",
+	"from": "system",
+	"setting_id": "BjjL9uAzFfA96A2r",
+	"instantiation": "true",
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

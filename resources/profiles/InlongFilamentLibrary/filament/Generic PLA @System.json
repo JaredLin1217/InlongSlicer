@@ -5,6 +5,7 @@
 	"inherits": "fdm_filament_pla",
 	"from": "system",
 	"setting_id": "AUepJ3r9XWZgLMVX",
+	"filament_id": "OFDSrzZ8",
 	"instantiation": "true",
 	"compatible_printers": []
 }

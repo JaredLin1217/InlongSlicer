@@ -3,7 +3,7 @@
 	"name": "Arena TPU 95A @base",
 	"inherits": "fdm_filament_tpu",
 	"from": "system",
-	"filament_id": "GFU01",
+	"filament_id": "OFdJB2fd",
 	"instantiation": "false",
 	"filament_vendor": [
 		"Inlong Arena"

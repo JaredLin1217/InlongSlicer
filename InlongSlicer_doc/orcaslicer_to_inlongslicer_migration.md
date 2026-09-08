@@ -385,6 +385,54 @@ The log should use Inlong process names, Inlong executable names, and no stale
 Orca source-file or runtime-resource names except the allowed external
 cloud/wiki/protocol URLs.
 
+## Deterministic Profile IDs (2026-09-08)
+
+The upstream product identity scheme is retained verbatim: `OF` followed by six
+base62 digits, minted from the fixed namespace and the effective material
+vendor/type/base-name triple. The prefix and UUID namespace are compatibility
+contracts, not brand strings. Use `scripts/inlong_id_tool.py`; it replaces the
+older `assign_vendor_setting_ids.py`. Keep the fork's
+`scripts/filament_id_snapshot.json` synchronized with the actual Inlong profiles.
+
+INLONG's approved system ID migration preserves all material names and tuning:
+
+| Material | Previous ID | Deterministic ID |
+| --- | --- | --- |
+| INLONG ABS | IF201 | OFNmFHz4 |
+| INLONG HIPS | IF202 | OFsJHymG |
+| INLONG PA6 | IF203 | OFODz6Al |
+| INLONG PAEK | IF204 | OFQBAaL7 |
+| INLONG PATH-CFGF | IF205 | OFNKQ4ON |
+| INLONG PC | IF206 | OFY9FEcg |
+| INLONG PEEK | IF207 | OFvBDEKj |
+| INLONG PET-CFGF | IF208 | OFpMcYY6 |
+| INLONG PETG-CFGF | IF209 | OFG7cUEc |
+| INLONG PLA | IF210 | OFP4H4J2 |
+| INLONG PPA-CFGF | IF211 | OFRktLCL |
+| INLONG PPS-CFGF | IF212 | OFG0tstI |
+| INLONG TPU | IF213 | OFOr9TlK |
+| INLONG VXL | IF214 | OFXqccCC |
+
+This changes system profile identity, not saved user data. Old project or tray
+associations using those `IF` IDs may require reselecting the material. Do not
+silently rewrite live user profiles. Bambu `GF` and Qidi `QD_` identifiers remain
+external protocol values; user `P` IDs remain reserved. The new C++ boundary
+helpers use `to_inlong_filament_id` / `from_inlong_filament_id` internally while
+leaving protocol payload keys and values unchanged.
+
+Homepage `orca_userlogin` / `orca_useroffline` callbacks and legacy
+`get_orca_login_info` / `homepage_orca_*` requests remain accepted as local bridge
+aliases. New homepage controls and requests use Inlong names; cloud hosts and
+authentication URLs keep their existing service contracts.
+
+InlongArena's `renamed_from` metadata also retains the former Orca Arena printer
+names, `Generic ... @OrcaArena` names, and older `OrcaArena Generic ...` names.
+These are read-compatibility aliases for imported presets, not product display
+names. Preserve existing Inlong aliases alongside them. Canonical `name`,
+`inherits`, `printer_model`, compatible-profile links and filenames remain Inlong.
+Do not remove the legacy aliases during future branding passes or rewrite user
+files to make compatibility checks pass.
+
 ## Common Pitfalls
 
 - Windows search includes `.git`, `build`, and `deps/build`; these can show old
@@ -411,13 +459,16 @@ These were intentionally left as Orca references:
 - `inlong/orca-2.4-base` and related `.git` refs/logs.
 - SoftFever dependency URLs containing `Orca-deps`, `OrcaSlicer_deps`, or
   `orca_deps`.
+- Legacy Orca Arena names in InlongArena `renamed_from` metadata and their
+  compatibility tests, but not canonical profile names or links.
 
 These should not be accepted as final source leftovers:
 
 - `OrcaSlicer.pot` output paths in active tools.
 - `OrcaSlicer_profile_validator`.
 - `OrcaCloudServiceAgent` or `OrcaPrinterAgent`.
-- `OrcaArena` or `Orca Filament Library` profile names.
+- Canonical `OrcaArena` or `Orca Filament Library` profile names (the explicit
+  `renamed_from` exception above is only for loading older presets).
 - `OrcaSlicer` image/icon/desktop/package/metainfo names.
 - stale `deps/build/OrcaSlicer_dep` output when evaluating a clean dependency
   build.

@@ -4,7 +4,7 @@
 	"inherits": "fdm_filament_ppa",
 	"from": "system",
 	"setting_id": "56ueBZxCKPcGSHe2",
-	"filament_id": "OGFN96",
+	"filament_id": "OF8Tlg47",
 	"instantiation": "true",
 	"filament_max_volumetric_speed": [
 		"6"

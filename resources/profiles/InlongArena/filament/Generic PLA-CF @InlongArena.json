@@ -1,0 +1,14 @@
+{
+	"type": "filament",
+	"name": "Generic PLA-CF @InlongArena",
+	"inherits": "Generic PLA-CF @InlongArena base",
+	"renamed_from": "InlongArena Generic PLA-CF;Generic PLA-CF @OrcaArena;OrcaArena Generic PLA-CF",
+	"from": "system",
+	"setting_id": "SNaXqKS2Qx1N6wz4",
+	"instantiation": "true",
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

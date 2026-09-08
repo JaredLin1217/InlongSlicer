@@ -1,0 +1,45 @@
+{
+	"type": "filament",
+	"name": "Generic PA-CF @InlongArena",
+	"inherits": "fdm_filament_pa",
+	"renamed_from": "InlongArena Generic PA-CF;Generic PA-CF @OrcaArena;OrcaArena Generic PA-CF",
+	"from": "system",
+	"setting_id": "y2vOqRpUzu4SfuA2",
+	"filament_id": "OFQLcbps",
+	"instantiation": "true",
+	"filament_type": [
+		"PA-CF"
+	],
+	"nozzle_temperature_initial_layer": [
+		"290"
+	],
+	"nozzle_temperature": [
+		"290"
+	],
+	"filament_max_volumetric_speed": [
+		"8"
+	],
+	"fan_max_speed": [
+		"30"
+	],
+	"fan_min_speed": [
+		"10"
+	],
+	"overhang_fan_threshold": [
+		"0%"
+	],
+	"overhang_fan_speed": [
+		"40"
+	],
+	"fan_cooling_layer_time": [
+		"5"
+	],
+	"full_fan_speed_layer": [
+		"2"
+	],
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

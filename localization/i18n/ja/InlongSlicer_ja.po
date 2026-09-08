@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10141,6 +10141,9 @@ msgstr "親プリセットから継承したすべての値をこのプリセッ
 msgid "Detach from parent"
 msgstr "親から分離"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "独立したプリセット"
@@ -14226,6 +14229,9 @@ msgstr "整列直線"
 msgid "Concentric"
 msgstr "同心"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "ヒルベルト曲線"
 
@@ -14317,29 +14323,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "上面の充填順序"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"中心を基準とするパターン (同心円、アルキメデス弦、八芒星スパイラル) を使用する場合に、上面を充填する方向です。\n"
-"外向きは面の中心から始まるため、余分な材料が最も目立たない縁へ押し出されます。内向きは縁から始まり、中心の細かいカーブで終わります。\n"
-"デフォルトは最短経路順で、どちらの方向にもなり得ます。"
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "底面の充填順序"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"中心を基準とするパターン (同心円、アルキメデス弦、八芒星スパイラル) を使用する場合に、底面を充填する方向です。\n"
-"内向きは各面を幅の広い外側のカーブから始めるため、中心の細かいカーブが定着しにくいベッドでも1層目の密着性が向上します。外向きは中心から始まり、余分な材料を縁へ押し出します。\n"
-"デフォルトは最短経路順で、どちらの方向にもなり得ます。"
 
 msgid "Internal solid infill pattern"
 msgstr "内部ソリッドインフィルパターン"
@@ -23916,6 +23914,26 @@ msgid ""
 msgstr ""
 "反りを避ける\n"
 "ABSのような反りやすい素材を印刷する場合、ヒートベッドの温度を適切に上げることで、反りが発生する確率を下げることができることをご存知ですか？"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "中心を基準とするパターン (同心円、アルキメデス弦、八芒星スパイラル) を使用する場合に、上面を充填する方向です。\n"
+#~ "外向きは面の中心から始まるため、余分な材料が最も目立たない縁へ押し出されます。内向きは縁から始まり、中心の細かいカーブで終わります。\n"
+#~ "デフォルトは最短経路順で、どちらの方向にもなり得ます。"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "中心を基準とするパターン (同心円、アルキメデス弦、八芒星スパイラル) を使用する場合に、底面を充填する方向です。\n"
+#~ "内向きは各面を幅の広い外側のカーブから始めるため、中心の細かいカーブが定着しにくいベッドでも1層目の密着性が向上します。外向きは中心から始まり、余分な材料を縁へ押し出します。\n"
+#~ "デフォルトは最短経路順で、どちらの方向にもなり得ます。"
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "垂直シェル厚さを「すべて」に設定すると、交互追加壁が適切に機能しません。"

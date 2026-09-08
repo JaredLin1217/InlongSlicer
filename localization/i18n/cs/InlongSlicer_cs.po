@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jakub Hencl\n"
 "Language-Team: \n"
@@ -10180,6 +10180,9 @@ msgstr "Zkopíruje do této předvolby všechny hodnoty zděděné z nadřazené
 msgid "Detach from parent"
 msgstr "Oddělit od nadřazeného"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Samostatná předvolba"
@@ -14260,6 +14263,9 @@ msgstr "Zarovnaná pravoúhlá"
 msgid "Concentric"
 msgstr "Koncentrický"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Hilbertova křivka"
 
@@ -14349,29 +14355,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Pořadí vyplňování horního povrchu"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Směr, ve kterém jsou horní povrchy vyplňovány při použití vzoru vycházejícího ze středu (Koncentrický, Archimédovy akordy, Oktagramová spirála).\n"
-"Ven začíná ve středu povrchu, takže je přebytečný materiál vytlačen k okraji, kde je nejméně viditelný. Dovnitř začíná u okraje a končí těsnými oblouky ve středu.\n"
-"Výchozí používá řazení podle nejkratší dráhy, které může probíhat v obou směrech."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Pořadí vyplňování spodního povrchu"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Směr, ve kterém jsou spodní povrchy vyplňovány při použití vzoru vycházejícího ze středu (Koncentrický, Archimédovy akordy, Oktagramová spirála).\n"
-"Dovnitř začíná každý povrch širšími vnějšími oblouky, což zlepšuje přilnavost první vrstvy na podložkách, kde se těsné oblouky ve středu nemusí přichytit. Ven začíná ve středu a přebytečný materiál vytlačuje k okraji.\n"
-"Výchozí používá řazení podle nejkratší dráhy, které může probíhat v obou směrech."
 
 msgid "Internal solid infill pattern"
 msgstr "Vzor vnitřní plné výplně"
@@ -23576,6 +23574,26 @@ msgid ""
 msgstr ""
 "Zamezte kroucení\n"
 "Víte, že při tisku materiálů náchylných ke kroucení, jako je ABS, může vhodné zvýšení teploty vyhřívané desky snížit pravděpodobnost kroucení?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Směr, ve kterém jsou horní povrchy vyplňovány při použití vzoru vycházejícího ze středu (Koncentrický, Archimédovy akordy, Oktagramová spirála).\n"
+#~ "Ven začíná ve středu povrchu, takže je přebytečný materiál vytlačen k okraji, kde je nejméně viditelný. Dovnitř začíná u okraje a končí těsnými oblouky ve středu.\n"
+#~ "Výchozí používá řazení podle nejkratší dráhy, které může probíhat v obou směrech."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Směr, ve kterém jsou spodní povrchy vyplňovány při použití vzoru vycházejícího ze středu (Koncentrický, Archimédovy akordy, Oktagramová spirála).\n"
+#~ "Dovnitř začíná každý povrch širšími vnějšími oblouky, což zlepšuje přilnavost první vrstvy na podložkách, kde se těsné oblouky ve středu nemusí přichytit. Ven začíná ve středu a přebytečný materiál vytlačuje k okraji.\n"
+#~ "Výchozí používá řazení podle nejkratší dráhy, které může probíhat v obou směrech."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Střídavá přídavná stěna nefunguje správně, pokud je zajištění tloušťky svislé stěny nastaveno na Vše."

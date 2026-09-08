@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: InlongSlicer 2.3.0-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Krzysztof Morga <<tlumaczeniebs@gmail.com>>\n"
 "Language-Team: \n"
@@ -10377,6 +10377,9 @@ msgstr "Kopiuje do tego profilu wszystkie wartości odziedziczone z profilu nadr
 msgid "Detach from parent"
 msgstr "Odłącz od elementu nadrzędnego"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Profil niezależny"
@@ -14511,6 +14514,9 @@ msgstr "Wyrównany prostoliniowy"
 msgid "Concentric"
 msgstr "Koncentryczny"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Krzywa Hilberta"
 
@@ -14602,29 +14608,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Kolejność wypełniania górnej powierzchni"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Kierunek wypełniania górnych powierzchni przy użyciu wzoru opartego na środku (Koncentryczny, Cięciwy Archimedesa, Spirala Octagram).\n"
-"Na zewnątrz zaczyna od środka powierzchni, dzięki czemu nadmiar materiału jest wypychany ku krawędzi, gdzie jest najmniej widoczny. Do wewnątrz zaczyna od krawędzi i kończy ciasnymi łukami na środku.\n"
-"Domyślnie używana jest kolejność najkrótszej ścieżki, która może przebiegać w dowolnym kierunku."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Kolejność wypełniania dolnej powierzchni"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Kierunek wypełniania dolnych powierzchni przy użyciu wzoru opartego na środku (Koncentryczny, Cięciwy Archimedesa, Spirala Octagram).\n"
-"Do wewnątrz rozpoczyna każdą powierzchnię od szerszych łuków zewnętrznych, co poprawia przyczepność pierwszej warstwy na stołach, do których ciasne łuki na środku mogą nie przylegać. Na zewnątrz zaczyna od środka, wypychając nadmiar materiału ku krawędzi.\n"
-"Domyślnie używana jest kolejność najkrótszej ścieżki, która może przebiegać w dowolnym kierunku."
 
 msgid "Internal solid infill pattern"
 msgstr "Wzór wewnętrznego pełnego wypełnienia"
@@ -23951,6 +23949,26 @@ msgid ""
 msgstr ""
 "Unikaj odkształceń\n"
 "Czy wiesz, że podczas drukowania filamentami podatnymi na odkształcenia, takimi jak ABS, odpowiednie zwiększenie temperatury podgrzewanej płyty może zmniejszyć prawdopodobieństwo odkształceń?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Kierunek wypełniania górnych powierzchni przy użyciu wzoru opartego na środku (Koncentryczny, Cięciwy Archimedesa, Spirala Octagram).\n"
+#~ "Na zewnątrz zaczyna od środka powierzchni, dzięki czemu nadmiar materiału jest wypychany ku krawędzi, gdzie jest najmniej widoczny. Do wewnątrz zaczyna od krawędzi i kończy ciasnymi łukami na środku.\n"
+#~ "Domyślnie używana jest kolejność najkrótszej ścieżki, która może przebiegać w dowolnym kierunku."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Kierunek wypełniania dolnych powierzchni przy użyciu wzoru opartego na środku (Koncentryczny, Cięciwy Archimedesa, Spirala Octagram).\n"
+#~ "Do wewnątrz rozpoczyna każdą powierzchnię od szerszych łuków zewnętrznych, co poprawia przyczepność pierwszej warstwy na stołach, do których ciasne łuki na środku mogą nie przylegać. Na zewnątrz zaczyna od środka, wypychając nadmiar materiału ku krawędzi.\n"
+#~ "Domyślnie używana jest kolejność najkrótszej ścieżki, która może przebiegać w dowolnym kierunku."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Alternatywna dodatkowa ściana działa tylko wtedy, gdy jest wyłączona opcja „zapewnij stałą grubość pionowej powłoki”."

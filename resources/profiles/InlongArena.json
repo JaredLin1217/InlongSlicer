@@ -1,7 +1,7 @@
 {
 	"name": "Inlong Arena Printer",
 	"url": "",
-	"version": "02.04.00.02",
+	"version": "02.04.00.03",
 	"force_update": "0",
 	"description": "Inlong Arena configuration files",
 	"machine_model_list": [
@@ -242,12 +242,12 @@
 			"sub_path": "filament/Arena ABS @base.json"
 		},
 		{
-			"name": "InlongArena Generic ABS @base",
-			"sub_path": "filament/InlongArena Generic ABS @base.json"
+			"name": "Generic ABS @InlongArena base",
+			"sub_path": "filament/Generic ABS @InlongArena base.json"
 		},
 		{
-			"name": "InlongArena Generic ASA @base",
-			"sub_path": "filament/InlongArena Generic ASA @base.json"
+			"name": "Generic ASA @InlongArena base",
+			"sub_path": "filament/Generic ASA @InlongArena base.json"
 		},
 		{
 			"name": "Arena PA-CF @base",
@@ -262,20 +262,20 @@
 			"sub_path": "filament/Arena Support G @base.json"
 		},
 		{
-			"name": "InlongArena Generic PA",
-			"sub_path": "filament/InlongArena Generic PA.json"
+			"name": "Generic PA @InlongArena",
+			"sub_path": "filament/Generic PA @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic PA-CF",
-			"sub_path": "filament/InlongArena Generic PA-CF.json"
+			"name": "Generic PA-CF @InlongArena",
+			"sub_path": "filament/Generic PA-CF @InlongArena.json"
 		},
 		{
 			"name": "Arena PC @base",
 			"sub_path": "filament/Arena PC @base.json"
 		},
 		{
-			"name": "InlongArena Generic PC @base",
-			"sub_path": "filament/InlongArena Generic PC @base.json"
+			"name": "Generic PC @InlongArena base",
+			"sub_path": "filament/Generic PC @InlongArena base.json"
 		},
 		{
 			"name": "Arena PET-CF @base",
@@ -290,12 +290,12 @@
 			"sub_path": "filament/Arena PETG-CF @base.json"
 		},
 		{
-			"name": "InlongArena Generic PETG @base",
-			"sub_path": "filament/InlongArena Generic PETG @base.json"
+			"name": "Generic PETG @InlongArena base",
+			"sub_path": "filament/Generic PETG @InlongArena base.json"
 		},
 		{
-			"name": "InlongArena Generic PETG-CF @base",
-			"sub_path": "filament/InlongArena Generic PETG-CF @base.json"
+			"name": "Generic PETG-CF @InlongArena base",
+			"sub_path": "filament/Generic PETG-CF @InlongArena base.json"
 		},
 		{
 			"name": "Arena PLA Basic @base",
@@ -338,16 +338,16 @@
 			"sub_path": "filament/Arena Support W @base.json"
 		},
 		{
-			"name": "InlongArena Generic PLA @base",
-			"sub_path": "filament/InlongArena Generic PLA @base.json"
+			"name": "Generic PLA @InlongArena base",
+			"sub_path": "filament/Generic PLA @InlongArena base.json"
 		},
 		{
-			"name": "InlongArena Generic PLA Silk @base",
-			"sub_path": "filament/InlongArena Generic PLA Silk @base.json"
+			"name": "Generic PLA Silk @InlongArena base",
+			"sub_path": "filament/Generic PLA Silk @InlongArena base.json"
 		},
 		{
-			"name": "InlongArena Generic PLA-CF @base",
-			"sub_path": "filament/InlongArena Generic PLA-CF @base.json"
+			"name": "Generic PLA-CF @InlongArena base",
+			"sub_path": "filament/Generic PLA-CF @InlongArena base.json"
 		},
 		{
 			"name": "PolyLite PLA @base",
@@ -358,16 +358,16 @@
 			"sub_path": "filament/PolyTerra PLA @base.json"
 		},
 		{
-			"name": "InlongArena Generic PVA @base",
-			"sub_path": "filament/InlongArena Generic PVA @base.json"
+			"name": "Generic PVA @InlongArena base",
+			"sub_path": "filament/Generic PVA @InlongArena base.json"
 		},
 		{
 			"name": "Arena TPU 95A @base",
 			"sub_path": "filament/Arena TPU 95A @base.json"
 		},
 		{
-			"name": "InlongArena Generic TPU",
-			"sub_path": "filament/InlongArena Generic TPU.json"
+			"name": "Generic TPU @InlongArena",
+			"sub_path": "filament/Generic TPU @InlongArena.json"
 		},
 		{
 			"name": "Arena ABS @Arena X1C",
@@ -382,20 +382,20 @@
 			"sub_path": "filament/Arena ABS @Arena X1C 0.8 nozzle.json"
 		},
 		{
-			"name": "InlongArena Generic ABS",
-			"sub_path": "filament/InlongArena Generic ABS.json"
+			"name": "Generic ABS @InlongArena",
+			"sub_path": "filament/Generic ABS @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic ABS @0.2 nozzle",
-			"sub_path": "filament/InlongArena Generic ABS @0.2 nozzle.json"
+			"name": "Generic ABS @InlongArena 0.2 nozzle",
+			"sub_path": "filament/Generic ABS @InlongArena 0.2 nozzle.json"
 		},
 		{
-			"name": "InlongArena Generic ASA",
-			"sub_path": "filament/InlongArena Generic ASA.json"
+			"name": "Generic ASA @InlongArena",
+			"sub_path": "filament/Generic ASA @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic ASA @0.2 nozzle",
-			"sub_path": "filament/InlongArena Generic ASA @0.2 nozzle.json"
+			"name": "Generic ASA @InlongArena 0.2 nozzle",
+			"sub_path": "filament/Generic ASA @InlongArena 0.2 nozzle.json"
 		},
 		{
 			"name": "Arena PA-CF @Arena X1C",
@@ -426,12 +426,12 @@
 			"sub_path": "filament/Arena PC @Arena X1C 0.8 nozzle.json"
 		},
 		{
-			"name": "InlongArena Generic PC",
-			"sub_path": "filament/InlongArena Generic PC.json"
+			"name": "Generic PC @InlongArena",
+			"sub_path": "filament/Generic PC @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic PC @0.2 nozzle",
-			"sub_path": "filament/InlongArena Generic PC @0.2 nozzle.json"
+			"name": "Generic PC @InlongArena 0.2 nozzle",
+			"sub_path": "filament/Generic PC @InlongArena 0.2 nozzle.json"
 		},
 		{
 			"name": "Arena PET-CF @Arena X1C",
@@ -454,16 +454,16 @@
 			"sub_path": "filament/Arena PETG-CF @Arena X1C.json"
 		},
 		{
-			"name": "InlongArena Generic PETG",
-			"sub_path": "filament/InlongArena Generic PETG.json"
+			"name": "Generic PETG @InlongArena",
+			"sub_path": "filament/Generic PETG @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic PETG @0.2 nozzle",
-			"sub_path": "filament/InlongArena Generic PETG @0.2 nozzle.json"
+			"name": "Generic PETG @InlongArena 0.2 nozzle",
+			"sub_path": "filament/Generic PETG @InlongArena 0.2 nozzle.json"
 		},
 		{
-			"name": "InlongArena Generic PETG-CF @Arena X1C",
-			"sub_path": "filament/InlongArena Generic PETG-CF @Arena X1C.json"
+			"name": "Generic PETG-CF @Arena X1C",
+			"sub_path": "filament/Generic PETG-CF @Arena X1C.json"
 		},
 		{
 			"name": "Arena PLA Basic @Arena X1C",
@@ -542,20 +542,20 @@
 			"sub_path": "filament/Arena Support W @Arena X1C 0.2 nozzle.json"
 		},
 		{
-			"name": "InlongArena Generic PLA",
-			"sub_path": "filament/InlongArena Generic PLA.json"
+			"name": "Generic PLA @InlongArena",
+			"sub_path": "filament/Generic PLA @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic PLA @0.2 nozzle",
-			"sub_path": "filament/InlongArena Generic PLA @0.2 nozzle.json"
+			"name": "Generic PLA @InlongArena 0.2 nozzle",
+			"sub_path": "filament/Generic PLA @InlongArena 0.2 nozzle.json"
 		},
 		{
-			"name": "InlongArena Generic PLA Silk",
-			"sub_path": "filament/InlongArena Generic PLA Silk.json"
+			"name": "Generic PLA Silk @InlongArena",
+			"sub_path": "filament/Generic PLA Silk @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic PLA-CF",
-			"sub_path": "filament/InlongArena Generic PLA-CF.json"
+			"name": "Generic PLA-CF @InlongArena",
+			"sub_path": "filament/Generic PLA-CF @InlongArena.json"
 		},
 		{
 			"name": "PolyLite PLA @Arena X1C",
@@ -566,12 +566,12 @@
 			"sub_path": "filament/PolyTerra PLA @Arena X1C.json"
 		},
 		{
-			"name": "InlongArena Generic PVA",
-			"sub_path": "filament/InlongArena Generic PVA.json"
+			"name": "Generic PVA @InlongArena",
+			"sub_path": "filament/Generic PVA @InlongArena.json"
 		},
 		{
-			"name": "InlongArena Generic PVA @0.2 nozzle",
-			"sub_path": "filament/InlongArena Generic PVA @0.2 nozzle.json"
+			"name": "Generic PVA @InlongArena 0.2 nozzle",
+			"sub_path": "filament/Generic PVA @InlongArena 0.2 nozzle.json"
 		},
 		{
 			"name": "Arena TPU 95A @Arena X1C",

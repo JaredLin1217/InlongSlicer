@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer Ukrainian\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2026-07-17 16:25+0300\n"
 "Last-Translator: Andrij Mizyk <andm1zyk@proton.me>\n"
 "Language-Team: Ukrainian\n"
@@ -10164,6 +10164,9 @@ msgstr "Копіює в цей пресет усі значення, успад�
 msgid "Detach from parent"
 msgstr "Відʼєднати від батьківського"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Незалежний пресет"
@@ -14321,6 +14324,9 @@ msgstr "Вирівняний прямолінійний"
 msgid "Concentric"
 msgstr "Концентричний"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Крива Гільберта"
 
@@ -14409,29 +14415,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Порядок заповнення верхньої поверхні"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Напрямок, у якому заповнюються верхні поверхні при використанні шаблону з центром (Концентричний, Хорди Архімеда, Спіральна октограма).\n"
-"Назовні починає з центру поверхні, тож надлишок матеріалу виштовхується до краю, де він найменш помітний. Усередину починає з краю та завершується щільними кривими в центрі.\n"
-"Типово використовується впорядкування за найкоротшим шляхом, яке може йти в будь-якому напрямку."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Порядок заповнення нижньої поверхні"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Напрямок, у якому заповнюються нижні поверхні при використанні шаблону з центром (Концентричний, Хорди Архімеда, Спіральна октограма).\n"
-"Усередину починає кожну поверхню з ширших зовнішніх кривих, що покращує зчеплення першого шару на столах, де щільні криві в центрі можуть не прилипати. Назовні починає з центру, виштовхуючи надлишок матеріалу до краю.\n"
-"Типово використовується впорядкування за найкоротшим шляхом, яке може йти в будь-якому напрямку."
 
 msgid "Internal solid infill pattern"
 msgstr "Шаблон внутрішнього суцільного заповнення"
@@ -23689,6 +23687,26 @@ msgid ""
 msgstr ""
 "Уникнення деформації\n"
 "Чи знаєте ви, що при друку матеріалами, схильними до деформації, такими як ABS, відповідне підвищення температури столу може зменшити ймовірність деформації?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Напрямок, у якому заповнюються верхні поверхні при використанні шаблону з центром (Концентричний, Хорди Архімеда, Спіральна октограма).\n"
+#~ "Назовні починає з центру поверхні, тож надлишок матеріалу виштовхується до краю, де він найменш помітний. Усередину починає з краю та завершується щільними кривими в центрі.\n"
+#~ "Типово використовується впорядкування за найкоротшим шляхом, яке може йти в будь-якому напрямку."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Напрямок, у якому заповнюються нижні поверхні при використанні шаблону з центром (Концентричний, Хорди Архімеда, Спіральна октограма).\n"
+#~ "Усередину починає кожну поверхню з ширших зовнішніх кривих, що покращує зчеплення першого шару на столах, де щільні криві в центрі можуть не прилипати. Назовні починає з центру, виштовхуючи надлишок матеріалу до краю.\n"
+#~ "Типово використовується впорядкування за найкоротшим шляхом, яке може йти в будь-якому напрямку."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Чергування додаткової стінки не працює добре, якщо для параметра \"Забезпечити товщину вертикальної оболонки\" встановлено значення \"Всі\"."

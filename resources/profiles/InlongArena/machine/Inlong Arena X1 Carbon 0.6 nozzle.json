@@ -1,6 +1,7 @@
 {
 	"type": "machine",
 	"name": "Inlong Arena X1 Carbon 0.6 nozzle",
+	"renamed_from": "Orca Arena X1 Carbon 0.6 nozzle",
 	"inherits": "Inlong Arena X1 Carbon 0.4 nozzle",
 	"from": "system",
 	"setting_id": "933EQTpOkxrOxwz0",

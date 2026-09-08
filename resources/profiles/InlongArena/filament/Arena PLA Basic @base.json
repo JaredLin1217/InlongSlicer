@@ -3,7 +3,7 @@
 	"name": "Arena PLA Basic @base",
 	"inherits": "fdm_filament_pla",
 	"from": "system",
-	"filament_id": "GFA00",
+	"filament_id": "OF2rwfEm",
 	"instantiation": "false",
 	"filament_vendor": [
 		"Inlong Arena"

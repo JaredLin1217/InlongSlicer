@@ -1,0 +1,14 @@
+{
+	"type": "filament",
+	"name": "Generic PETG-CF @Arena X1C",
+	"inherits": "Generic PETG-CF @InlongArena base",
+	"renamed_from": "InlongArena Generic PETG-CF @Arena X1C;InlongArena Generic PETG-CF Arena X1C;OrcaArena Generic PETG-CF @Arena X1C;OrcaArena Generic PETG-CF Arena X1C",
+	"from": "system",
+	"setting_id": "S6S8w44fq9zdUEyD",
+	"instantiation": "true",
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

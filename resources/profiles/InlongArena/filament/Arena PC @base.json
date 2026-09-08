@@ -3,7 +3,7 @@
 	"name": "Arena PC @base",
 	"inherits": "fdm_filament_pc",
 	"from": "system",
-	"filament_id": "GFC00",
+	"filament_id": "OFyMgtzp",
 	"instantiation": "false",
 	"filament_vendor": [
 		"Inlong Arena"

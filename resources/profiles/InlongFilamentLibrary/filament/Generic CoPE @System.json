@@ -4,6 +4,7 @@
 	"inherits": "fdm_filament_cope",
 	"from": "system",
 	"setting_id": "EAIE0ZC8sndFsXaN",
+	"filament_id": "OFjt9en1",
 	"instantiation": "true",
 	"compatible_printers": []
 }

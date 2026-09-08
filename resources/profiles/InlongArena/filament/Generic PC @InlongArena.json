@@ -1,0 +1,14 @@
+{
+	"type": "filament",
+	"name": "Generic PC @InlongArena",
+	"inherits": "Generic PC @InlongArena base",
+	"renamed_from": "InlongArena Generic PC;Generic PC @OrcaArena;OrcaArena Generic PC",
+	"from": "system",
+	"setting_id": "JUWYk2EFXhZUSVwK",
+	"instantiation": "true",
+	"compatible_printers": [
+		"Inlong Arena X1 Carbon 0.4 nozzle",
+		"Inlong Arena X1 Carbon 0.6 nozzle",
+		"Inlong Arena X1 Carbon 0.8 nozzle"
+	]
+}

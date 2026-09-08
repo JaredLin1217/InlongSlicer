@@ -3,83 +3,92 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Cache-Control" content="max-age=7200" />
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />	
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
 <title>homepage</title>
 <link rel="stylesheet" type="text/css" href="../include/global.css" />	<!-- INLONG One for all-->
 <link rel="stylesheet" type="text/css" href="./css/home.css" />
-<link rel="stylesheet" type="text/css" href="./css/dark.css" />	
+<link rel="stylesheet" type="text/css" href="./css/dark.css" />
 
 <script type="text/javascript" src="../include/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="../include/json2.js"></script>	
-<script type="text/javascript" src="../include/globalapi.js"></script>	
+<script type="text/javascript" src="../include/json2.js"></script>
+<script type="text/javascript" src="../include/globalapi.js"></script>
 
 <link rel="stylesheet" type="text/css" href="../include/swiper/swiper-bundle.min.css" />
 <script type="text/javascript" src="../include/swiper/swiper-bundle.min.js"></script>
-<script type="text/javascript" src="../data/text.js"></script>		
-	
+<script type="text/javascript" src="../data/text.js"></script>
+
 <script type="text/javascript" src="js/home.js"></script>
 </head>
 <body class="ZScrol" onLoad="OnInit()">
 <div id="LeftBoard">
 	<div id="LoginArea">
 
-	<!-- Inlong Cloud login section -->
-	<div id="InlongSectionLabel" class="AccountSectionLabel">
-		<img class="AccountSectionIcon" src="../../images/InlongSlicer_gradient_circle.svg" alt="" />
-		<span class="trans InlongAccountText" tid="inlong7">Inlong Cloud</span>
-	</div>
-
-		<div id="InlongLoginSection">
-			<div id="InlongLogin1">
-				<div id="Icon1"><img id="BBLIcon" src="../image/logo.png" /></div>
-				<div id="LoginBtn" class="ButtonStyleRegular ButtonTypeWindow" onClick="OnLoginOrRegister()"><span class="trans" tid="t26">login</span> / <span class="trans" tid="t27">register</span></div>
-				<div id="InlongStatusText" class="AccountStatusText trans" tid="inlong8">Not signed in</div>
-			</div>
-
-		<div id="InlongLogin2">
-			<div>
-				<img id="UserAvatarIcon" src="img/c.jpg" onerror="this.onerror=null;this.src='img/c.jpg';" />
-			</div>
-			<div id="UserName" class="TextS1"></div>
-			<div id="LogoutBtn" class="ButtonStyleAlert ButtonTypeWindow trans" tid="t50" onClick="OnLogOut()">log out</div>
-		</div>
-	</div>
-
-	<!-- Bambu Cloud Section -->
-	<div id="BambuCloudSection">
-		<div id="BambuCloudHeader" onClick="ToggleBambuSection()">
-			<svg class="bambu-chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+		<!-- Inlong Cloud account -->
+		<div id="InlongAccount" class="AccountRow" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"
+			 onClick="OnAccountRowClick('inlong')">
+			<span class="AccountAvatar">
+				<img id="UserAvatarIcon" class="AccountAvatarImg" alt="" onerror="OnAvatarLoadError(this)" />
+			</span>
+			<span class="AccountText">
+				<span id="UserName" class="AccountName"></span>
+				<span class="AccountSecondary">Inlong Cloud</span>
+			</span>
+			<span class="AccountSignIn trans" tid="t26">Login</span>
+			<svg class="AccountChevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path d="M3 4.75L6 7.75L9 4.75" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg>
-			<span class="trans" tid="inlong6">Bambu Cloud</span>
-			<span class="bambu-status-dot"></span>
 		</div>
 
-		<div id="BambuCloudBody">
-			<div id="BambuLogin1">
-				<div id="BambuLoginBtn" class="ButtonStyleRegular ButtonTypeWindow" onClick="OnBambuLoginOrRegister()"><span class="trans" tid="t26">login</span></div>
+		<!-- Bambu Cloud, a secondary provider folded away under the main account -->
+		<div id="BambuCloudSection">
+			<div id="BambuCloudHeader" tabindex="0" role="button" aria-expanded="false" aria-controls="BambuCloudBody"
+				 onClick="ToggleBambuSection()">
+				<svg class="SectionChevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+					<path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+				<span class="SectionLabel trans" tid="inlong6">Bambu Cloud</span>
+				<span id="BambuStatusDot"></span>
 			</div>
 
-			<div id="BambuLogin2">
-				<div>
-					<img id="BambuAvatarIcon" src="img/c.jpg" onerror="this.onerror=null;this.src='img/c.jpg';" />
+			<div id="BambuCloudBody">
+				<div id="BambuAccount" class="AccountRow AccountRowCompact" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"
+					 onClick="OnAccountRowClick('bambu')">
+					<span class="AccountAvatar">
+						<img id="BambuAvatarIcon" class="AccountAvatarImg" alt="" onerror="OnAvatarLoadError(this)" />
+					</span>
+					<span class="AccountText">
+						<span id="BambuUserName" class="AccountName"></span>
+						<span class="AccountSecondary trans" tid="inlong8">Not signed in</span>
+					</span>
+					<span class="AccountSignIn trans" tid="t26">Login</span>
+					<svg class="AccountChevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+						<path d="M3 4.75L6 7.75L9 4.75" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
 				</div>
-				<div id="BambuUserName" class="TextS1"></div>
-				<div id="BambuLogoutBtn" class="ButtonStyleAlert ButtonTypeWindow trans" tid="t50" onClick="OnBambuLogOut()">log out</div>
-			</div>
 
-			<div id="NoPluginTip">
-				<div id="NoPluginText"><a class="RedFont trans" tid="t76">Network plugin not detected. Click </a><a Class="LinkBtn trans" onClick="BeginDownloadNetworkPlugin()" tid="t77">here</a><a class="RedFont trans" tid="t78"> to install it.</a></div>
+				<div id="NoPluginTip">
+					<div id="NoPluginText"><a class="RedFont trans" tid="t76">Network plugin not detected. Click </a><a Class="LinkBtn trans" onClick="BeginDownloadNetworkPlugin()" tid="t77">here</a><a class="RedFont trans" tid="t78"> to install it.</a></div>
+				</div>
 			</div>
 		</div>
-	</div>
+
+		<!-- Shared account menu, anchored under the row it was opened from.
+		     The row already carries the avatar, name and provider, so the menu only
+		     adds the account handle. -->
+		<div id="AccountMenu" role="menu">
+			<div id="AccountMenuHandle" role="presentation"></div>
+			<div id="AccountMenuLogout" role="menuitem" tabindex="0" onClick="OnAccountMenuLogout()">
+				<span id="AccountMenuLogoutIcon"></span>
+				<span class="trans" tid="t50">Log out</span>
+			</div>
+		</div>
 
 	</div>
 
 	<div id="BtnArea">
 	    <div menu="recent" class="BtnItem BtnItemSelected" onClick="GotoMenu('recent')">
 			<div class="BtnIcon "><img class="LeftIcon" src="img/i2.png" /></div>
-			<div class="trans" tid="t28">recent</div> 
+			<div class="trans" tid="t28">recent</div>
 		</div>
 	    <div class="BtnItem BtnShortcut" onClick="OpenUrlInLocalBrowser('https://cloud.orcaslicer.com')">
 			<div class="BtnIcon "><img class="ShortcutBrandIcon" src="../image/logo.png" /></div>
@@ -98,7 +107,7 @@
 
 <div id="RightBoard">
 <div id="ContentBoard" class="ZScrol" board="recent">
-    <div style="height: 14px;"></div>	
+    <div style="height: 14px;"></div>
 	<div id="MenuArea">
 <!--		<div class="MenuItem" onClick="OnClickModelDepot()">
 			<div class="MenuIcon"><img src="img/i6.png"></div>
@@ -106,7 +115,7 @@
 				<div class="trans TextS1" tid="t90">3D Model</div>
 				<div class="MenuDesc trans"  tid="t91">Download 3D Models</div>
 			</div>
-		</div>	-->	
+		</div>	-->
 		<div class="MenuItem" onClick="OnClickNewProject()">
 			<div class="MenuIcon"><img src="img/i4.png"></div>
 			<div>
@@ -120,10 +129,10 @@
 				<div class="trans TextS1" tid="t33">open project</div>
 				<div class="MenuDesc">3mf</div>
 			</div>
-		</div>		
+		</div>
 	</div>
-	
-	<div id="DebugText"></div>	
+
+	<div id="DebugText"></div>
 	<div id="RecentFileArea">
 		<div id="RecentTitleBlock">
 		    <div id="RecentTitle" class="Content-Title trans TextS1" tid="t35">recent open</div>
@@ -201,12 +210,12 @@
 				<div class="FileImg"><img src="img/d.png"/></div>
 				<div class="FileName TextS1">abcd12334abcd12334abcd12334.3mf</div>
 				<div class="FileDate">2021/12/27 09:22</div>
-			</div>	-->		
+			</div>	-->
 		</div>
 	</div>
-	
-    <div style="height: 14px;"></div>	
-	
+
+    <div style="height: 14px;"></div>
+
 	<div id="recnet_context_menu">
 		<div id="CT_Delete_Bar" class="CT_Item" onClick="OnDeleteRecentFile()">
 			<div class="CT_Icon CT_Delete"></div>
@@ -215,13 +224,13 @@
 		<div id="CT_Folder_Bar" class="CT_Item " onClick="OnExploreRecentFile()" >
 			<div class="CT_Icon CT_Explore"></div>
 			<div class="CT_Text trans" tid="t89">open in explorer </div>
-		</div>				
+		</div>
     </div>
-	
-	
+
+
 </div>
 
-</div>	
+</div>
 </body>
 <script type="text/javascript">
 	//HandleStudio(TestData);

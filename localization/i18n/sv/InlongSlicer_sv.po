@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11077,6 +11077,9 @@ msgstr "Kopierar alla ärvda värden från den överordnade förinställningen t
 msgid "Detach from parent"
 msgstr "Koppla loss från överordnad"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Unik förinställning"
@@ -15504,6 +15507,9 @@ msgstr "Justerade Rätlinjig"
 msgid "Concentric"
 msgstr "Koncentrisk"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Hilbert kurvan"
 
@@ -15599,29 +15605,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Fyllordning för ovansidan"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Riktning i vilken ovansidor fylls när ett centrumbaserat mönster används (Koncentrisk, Arkimediska kordor, Oktagramspiral).\n"
-"Utåt börjar i ytans mitt, så att överskottsmaterial trycks ut mot kanten där det syns minst. Inåt börjar vid kanten och slutar med de trånga kurvorna i mitten.\n"
-"Standard använder ordning efter kortaste väg, vilken kan gå i endera riktningen."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Fyllordning för undersidan"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Riktning i vilken undersidor fylls när ett centrumbaserat mönster används (Koncentrisk, Arkimediska kordor, Oktagramspiral).\n"
-"Inåt börjar varje yta med de bredare yttre kurvorna, vilket förbättrar det första lagrets vidhäftning på byggplattor där de trånga kurvorna i mitten kanske inte fastnar. Utåt börjar i mitten och trycker överskottsmaterial mot kanten.\n"
-"Standard använder ordning efter kortaste väg, vilken kan gå i endera riktningen."
 
 msgid "Internal solid infill pattern"
 msgstr "Invändigt mönster för fyllning av solida ytor"
@@ -25757,6 +25755,26 @@ msgid ""
 msgstr ""
 "Undvik vridning\n"
 "Visste du att när du skriver ut material som är benägna att vrida, såsom ABS, kan en lämplig ökning av värmebäddens temperatur minska sannolikheten för vridning?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Riktning i vilken ovansidor fylls när ett centrumbaserat mönster används (Koncentrisk, Arkimediska kordor, Oktagramspiral).\n"
+#~ "Utåt börjar i ytans mitt, så att överskottsmaterial trycks ut mot kanten där det syns minst. Inåt börjar vid kanten och slutar med de trånga kurvorna i mitten.\n"
+#~ "Standard använder ordning efter kortaste väg, vilken kan gå i endera riktningen."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Riktning i vilken undersidor fylls när ett centrumbaserat mönster används (Koncentrisk, Arkimediska kordor, Oktagramspiral).\n"
+#~ "Inåt börjar varje yta med de bredare yttre kurvorna, vilket förbättrar det första lagrets vidhäftning på byggplattor där de trånga kurvorna i mitten kanske inte fastnar. Utåt börjar i mitten och trycker överskottsmaterial mot kanten.\n"
+#~ "Standard använder ordning efter kortaste väg, vilken kan gå i endera riktningen."
 
 # AI Translated
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."

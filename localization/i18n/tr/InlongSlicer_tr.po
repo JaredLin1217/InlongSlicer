@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 12:25+0800\n"
+"POT-Creation-Date: 2026-09-08 13:21+0800\n"
 "PO-Revision-Date: 2026-08-01 20:32+0300\n"
 "Last-Translator: GlauTech\n"
 "Language-Team: \n"
@@ -10209,6 +10209,9 @@ msgstr "Üst ön ayardan devralınan tüm değerleri bu ön ayara kopyalar ve ü
 msgid "Detach from parent"
 msgstr "Ebeveynden ayrıl"
 
+msgid "Save without parent"
+msgstr ""
+
 # AI Translated
 msgid "Unique preset"
 msgstr "Bağımsız ön ayar"
@@ -14276,6 +14279,9 @@ msgstr "Hizalanmış doğrusal"
 msgid "Concentric"
 msgstr "Konsantrik"
 
+msgid "Spiral Inset"
+msgstr ""
+
 msgid "Hilbert Curve"
 msgstr "Hilbert eğrisi"
 
@@ -14365,29 +14371,21 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr "Üst yüzey doldurma sırası"
 
-# AI Translated
 msgid ""
-"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which top surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Merkez tabanlı bir desen (Konsantrik, Arşimet akorları, Sekizgen spiral) kullanılırken üst yüzeylerin doldurulma yönü.\n"
-"Dışarı, yüzeyin merkezinden başlar; böylece fazla malzeme en az göründüğü kenara doğru itilir. İçeri kenardan başlar ve merkezdeki dar kavislerle biter.\n"
-"Varsayılan, her iki yönde de ilerleyebilen en kısa yol sıralamasını kullanır."
 
 # AI Translated
 msgid "Bottom surface fill order"
 msgstr "Alt yüzey doldurma sırası"
 
-# AI Translated
 msgid ""
-"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+"Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
 "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
-"Merkez tabanlı bir desen (Konsantrik, Arşimet akorları, Sekizgen spiral) kullanılırken alt yüzeylerin doldurulma yönü.\n"
-"İçeri, her yüzeye daha geniş dış kavislerle başlar; bu da merkezdeki dar kavislerin yapışmayabileceği yapı plakalarında ilk katman yapışmasını iyileştirir. Dışarı merkezden başlar ve fazla malzemeyi kenara doğru iter.\n"
-"Varsayılan, her iki yönde de ilerleyebilen en kısa yol sıralamasını kullanır."
 
 msgid "Internal solid infill pattern"
 msgstr "İç katı dolgu deseni"
@@ -23581,6 +23579,26 @@ msgid ""
 msgstr ""
 "Eğilmeyi önleyin\n"
 "ABS gibi bükülmeye yatkın malzemelere baskı yaparken, ısıtma yatağı sıcaklığının uygun şekilde arttırılmasının bükülme olasılığını azaltabileceğini biliyor muydunuz?"
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Outward starts at the center of the surface, so any excess material is pushed towards the edge where it is least visible. Inward starts at the edge and ends with the tight curves at the center.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Merkez tabanlı bir desen (Konsantrik, Arşimet akorları, Sekizgen spiral) kullanılırken üst yüzeylerin doldurulma yönü.\n"
+#~ "Dışarı, yüzeyin merkezinden başlar; böylece fazla malzeme en az göründüğü kenara doğru itilir. İçeri kenardan başlar ve merkezdeki dar kavislerle biter.\n"
+#~ "Varsayılan, her iki yönde de ilerleyebilen en kısa yol sıralamasını kullanır."
+
+# AI Translated
+#~ msgid ""
+#~ "Direction in which bottom surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
+#~ "Inward starts each surface with the wider outer curves, which improves first layer adhesion on build plates where the tight curves at the center may not stick. Outward starts at the center, pushing any excess material towards the edge.\n"
+#~ "Default uses shortest-path ordering, which may run in either direction."
+#~ msgstr ""
+#~ "Merkez tabanlı bir desen (Konsantrik, Arşimet akorları, Sekizgen spiral) kullanılırken alt yüzeylerin doldurulma yönü.\n"
+#~ "İçeri, her yüzeye daha geniş dış kavislerle başlar; bu da merkezdeki dar kavislerin yapışmayabileceği yapı plakalarında ilk katman yapışmasını iyileştirir. Dışarı merkezden başlar ve fazla malzemeyi kenara doğru iter.\n"
+#~ "Varsayılan, her iki yönde de ilerleyebilen en kısa yol sıralamasını kullanır."
 
 #~ msgid "Alternate extra wall does't work well when ensure vertical shell thickness is set to All."
 #~ msgstr "Alternatif ekstra duvar, dikey kabuk kalınlığının Tümü olarak ayarlandığından emin olunduğunda iyi çalışmaz."

@@ -12,6 +12,7 @@
 #include "BuildCommit.hpp"
 #include "Downloader.hpp"
 #include <boost/chrono/duration.hpp>
+#include <boost/locale/encoding_utf.hpp>
 #include <boost/log/detail/native_typeof.hpp>
 #include <libslic3r/Config.hpp>
 #include <mutex>
@@ -5087,11 +5088,13 @@ std::string GUI_App::handle_web_request(std::string cmd)
             static const std::unordered_set<std::string> stealth_blocked_info_commands = {
                 "get_login_info",
                 "get_orca_login_info",
+                "get_inlong_login_info",
                 "get_bambu_login_info",
             };
             static const std::unordered_set<std::string> stealth_blocked_login_commands = {
                 "homepage_login_or_register",
                 "homepage_orca_login_or_register",
+                "homepage_inlong_login_or_register",
                 "homepage_bambu_login_or_register",
             };
             if (app_config->get_stealth_mode() && stealth_blocked_info_commands.count(command_str)) {
@@ -5116,7 +5119,7 @@ std::string GUI_App::handle_web_request(std::string cmd)
                         // Continue with login
                         if (command_str == "homepage_login_or_register")
                             this->request_login(true);
-                        else if (command_str == "homepage_orca_login_or_register")
+                        else if (command_str == "homepage_inlong_login_or_register" || command_str == "homepage_orca_login_or_register")
                             this->request_login(true, INLONG_CLOUD_PROVIDER);
                         else if (command_str == "homepage_bambu_login_or_register")
                             this->request_login(true, BBL_CLOUD_PROVIDER);
@@ -5158,7 +5161,7 @@ std::string GUI_App::handle_web_request(std::string cmd)
                     request_user_logout();
                 });
             }
-            else if (command_str.compare("get_orca_login_info") == 0) {
+            else if (command_str == "get_inlong_login_info" || command_str == "get_orca_login_info") {
                 CallAfter([this] { get_login_info(INLONG_CLOUD_PROVIDER); });
             }
             else if (command_str.compare("get_bambu_login_info") == 0) {
@@ -5173,12 +5176,12 @@ std::string GUI_App::handle_web_request(std::string cmd)
                     request_user_logout(BBL_CLOUD_PROVIDER);
                 });
             }
-            else if (command_str.compare("homepage_orca_login_or_register") == 0) {
+            else if (command_str == "homepage_inlong_login_or_register" || command_str == "homepage_orca_login_or_register") {
                 CallAfter([this] { request_login(true, INLONG_CLOUD_PROVIDER); });
             }
-            else if (command_str.compare("homepage_orca_logout") == 0) {
+            else if (command_str == "homepage_inlong_logout" || command_str == "homepage_orca_logout") {
                 CallAfter([this] {
-                    BOOST_LOG_TRIVIAL(info) << "logout: homepage_orca_logout";
+                    BOOST_LOG_TRIVIAL(info) << "logout: homepage_inlong_logout";
                     request_user_logout(INLONG_CLOUD_PROVIDER);
                 });
             }
