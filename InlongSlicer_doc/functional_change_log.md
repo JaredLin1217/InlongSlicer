@@ -22,6 +22,37 @@ branding migration checklist.
 - Use `inlong/orca-2.4-base` as the clean upstream base when classifying fork
   changes.
 
+## 2026-09-10 - Audit INLONG And Infinity3DP Profile G-code
+
+Status: `Uncommitted`
+
+Type: Profile compatibility, retraction, and material cooling fixes
+
+- Apply the approved heatbreak and part-cooling fan table to all 28 material
+  presets. Preserve temperatures, extrusion tuning, IDs, and compatibility links.
+- Use resolved `retraction_speed` in all 10 common machine-start templates.
+  Reading nullable `filament_retraction_speed` directly made startup parsing fail
+  when a material inherited its retraction speed from the printer.
+- Set the incoming material's heatbreak fan immediately after tool selection in
+  the nine `global_m710` machine-change templates. This keeps the profile-owned
+  command independent of ooze prevention, standby-temperature delta, and the
+  Type 2 wipe-tower temperature-wait option. Keep SC12060's empty custom-control
+  template and the existing single-/dual-nozzle topology unchanged.
+- Use floating-point operands when converting heatbreak percentages to PWM.
+  Integer division truncated the old expression before `round`, disagreeing
+  with the engine's rounded 0-255 output for values such as 70 and 30.
+- Preserve fixed startup/end fan commands, movement sequences, purge quantities,
+  and all existing user/project data. Saved 3MF custom G-code and installed profile
+  copies are not rewritten by these repository resource changes.
+- Bump the INLONG bundle to `01.05.01.23` and Infinity3DP to `01.28.15.17`
+  so the installed-resource updater can recognize the corrected bundles when
+  they are included in a subsequent build or resource installation.
+- Add source-backed profile regression checks for manifest/inheritance/reference
+  integrity, approved fan values, resolved retraction, fan-command placement,
+  conversion arithmetic, and printer topology. Verification also includes native
+  profile loading and disposable slicing sweeps; detailed results and limitations
+  remain in the task's ignored runtime evidence.
+
 ## 2026-09-09 - Respect Model Default Nozzles After First-Run Setup
 
 Status: `Uncommitted`
