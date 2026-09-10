@@ -22,6 +22,40 @@ branding migration checklist.
 - Use `inlong/orca-2.4-base` as the clean upstream base when classifying fork
   changes.
 
+## 2026-09-10 - Respect Printer And Material Chamber Controls
+
+Status: `Uncommitted`
+
+Type: Profile-only chamber heating and custom start G-code fix
+
+- Keep the slicer core unchanged. In all ten INLONG and Infinity3DP common
+  startup templates, compute a local `inlong_chamber_target` from the existing
+  printer switch, material switches, temperatures, and used-material flags.
+  These single-/dual-material presets inspect slots 0 and 1, guard the second
+  slot by vector size, and ignore disabled or unused slots when taking the
+  maximum positive target. No new core placeholder is required.
+- Include the initial material explicitly: in by-object exports the existing
+  core's used-material mask can describe only the final object's tools. This
+  covers the initial material even when it is absent from that mask. A material
+  used only by an intermediate object can still be omitted by the unchanged
+  core; complete job-wide aggregation in that mode is not claimed.
+- Always emit M141 with that target before bed heating, including M141 S0 when
+  control is off. An explicit command prevents the unchanged core from adding
+  its own M191, whose original condition does not check printer capability.
+  Emit the template's M191 after bed heating only for a positive target.
+- M141 S0 is an intentional heater-off command, not the absence of chamber
+  commands; compatible firmware must support it even when control is disabled.
+  The core's original end-of-print M141 S0 behavior remains unchanged.
+- Preserve temperatures, machine capabilities, material enable defaults, nozzle
+  topology, fan commands, retraction, and movement sequences. Bump the INLONG
+  bundle to `01.05.01.24` and Infinity3DP to `01.28.15.18`.
+- Add source-profile and native G-code regressions using the unchanged core for
+  both switches, zero targets, two distinct materials, unused-material selection,
+  and suppression of its automatic chamber wait.
+- This source change does not rewrite installed resources, user presets, or
+  G-code embedded in saved 3MFs. Existing START_PRINTING/END_PRINTING firmware
+  macros remain untouched and require hardware-side verification.
+
 ## 2026-09-10 - Audit INLONG And Infinity3DP Profile G-code
 
 Status: `Uncommitted`

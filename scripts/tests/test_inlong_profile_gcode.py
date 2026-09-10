@@ -117,6 +117,26 @@ class TestInlongProfileGcode(unittest.TestCase):
                 after_tool = change.split('T{next_extruder}', 1)[1].splitlines()
                 self.assertEqual(after_tool[1], expression)
 
+    def test_chamber_startup_uses_the_printer_and_material_control_target(self):
+        guard = '{if inlong_chamber_target > 0}'
+        for _, name, printer in self.printers():
+            with self.subTest(printer=name):
+                start = printer['machine_start_gcode']
+                self.assertIn('{local inlong_chamber_target = 0}', start)
+                self.assertIn('{if support_chamber_temp_control}', start)
+                self.assertIn('{if size(chamber_temperature) > 1 and '
+                              'size(activate_chamber_temp_control) > 1}', start)
+                for slot in (0, 1):
+                    self.assertIn(f'{{if (is_extruder_used[{slot}] or initial_extruder == {slot}) and '
+                                  f'activate_chamber_temp_control[{slot}]}}', start)
+                    self.assertIn('{inlong_chamber_target = max(inlong_chamber_target, '
+                                  f'chamber_temperature[{slot}])}}', start)
+                self.assertEqual(start.count('M141 S{inlong_chamber_target}'), 1)
+                self.assertEqual(start.count(guard), 1)
+                self.assertIn(guard + '\nM191 S{inlong_chamber_target}\n{endif}', start)
+                self.assertNotIn('controlled_chamber_temperature', start)
+                self.assertNotIn('overall_chamber_temperature', start)
+
     def test_heatbreak_pwm_conversion_does_not_truncate_integer_division(self):
         for _, name, printer in self.printers():
             if printer.get('heatbreak_fan_control_mode') != 'global_m710':
