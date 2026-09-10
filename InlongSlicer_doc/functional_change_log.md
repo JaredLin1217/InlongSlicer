@@ -22,6 +22,30 @@ branding migration checklist.
 - Use `inlong/orca-2.4-base` as the clean upstream base when classifying fork
   changes.
 
+## 2026-09-09 - Respect Model Default Nozzles After First-Run Setup
+
+Status: `Uncommitted`
+
+Type: Configuration wizard and preset selection fix
+
+- Defer a newly enabled multi-variant model's nozzle choice until its vendor
+  presets have been installed and loaded. The web wizard previously consulted
+  an unloaded vendor and treated the sorted enabled-nozzle set as priority,
+  selecting SC12060's 0.4 mm profile instead of its declared 0.6 mm default.
+- Resolve an unspecified system-printer variant in model declaration order,
+  restricted to visible, available presets. Safely fall back if vendor/model
+  metadata is missing; retain exact lookups for explicitly requested variants.
+- Preserve saved selections when the wizard enables no new model or variant,
+  and retain cloud configuration-merge behavior. Do not change shipped profile
+  values, extruder counts, the generic 0.4 mm default, or user data.
+- Changes: `WebGuideDialog.cpp`, `Preset.cpp` / `Preset.hpp`, and preset-bundle
+  regression tests. Tests cover default order, disabled/missing variants and
+  metadata, explicit choices, and isolated first-install loading of the actual
+  single-nozzle SC12060 profiles, process and filament defaults.
+- Verification: Release regression tests, GUI build with hash-verified user-data
+  backup/restoration, and Consumer Changed validation; see the task handoff for
+  actual outcomes and any remaining visual checks.
+
 ## 2026-09-08 - Adopt Deterministic System Filament IDs
 
 Status: `Uncommitted`

@@ -78,6 +78,25 @@ struct RenameTestCollection : public PresetCollection
     using PresetCollection::update_map_system_profile_renamed;
 };
 
+// Install/load tests must never use the application's real data directory or
+// leave process-wide paths changed for subsequent randomized test cases.
+struct ScopedPresetDirectories
+{
+    const std::string previous_data = data_dir();
+    const std::string previous_resources = resources_dir();
+
+    ScopedPresetDirectories(const fs::path &data, const fs::path &resources)
+    {
+        set_data_dir(data.string());
+        set_resources_dir(resources.string());
+    }
+    ~ScopedPresetDirectories()
+    {
+        set_data_dir(previous_data);
+        set_resources_dir(previous_resources);
+    }
+};
+
 } // namespace
 
 TEST_CASE("Preset identity is canonicalized from load path", "[Preset][Identity]")
@@ -228,6 +247,105 @@ TEST_CASE("Switching printer models selects the target model default nozzle", "[
     Preset *explicit_variant = bundle.get_similar_printer_preset("Target Printer", "0.6");
     REQUIRE(explicit_variant != nullptr);
     CHECK(explicit_variant->config.opt_string("printer_variant") == "0.6");
+}
+
+TEST_CASE("A preferred printer model uses its first enabled declared nozzle", "[Preset][Bundle][Wizard][Regression]")
+{
+    const std::string default_variant = GENERATE(std::string("0.6"), std::string("0.4"));
+    PresetBundle bundle;
+    VendorProfile vendor("TestVendor");
+    VendorProfile::PrinterModel model;
+    model.id = model.name = "Test Printer";
+    model.variants.emplace_back(default_variant);
+    model.variants.emplace_back(default_variant == "0.6" ? "0.4" : "0.6");
+    model.variants.emplace_back("0.8");
+    vendor.models.emplace_back(std::move(model));
+    auto &installed_vendor = bundle.vendors.emplace("TestVendor", std::move(vendor)).first->second;
+
+    for (const std::string variant : {"0.4", "0.6", "0.8"})
+        add_system_printer_preset(bundle, "Test Printer " + variant, "Test Printer", variant, &installed_vendor).is_visible = true;
+
+    std::string requested_variant;
+    std::string expected_variant = default_variant;
+    SECTION("all variants are enabled") {}
+    SECTION("an explicit nozzle is retained") {
+        requested_variant = "0.8";
+        expected_variant = requested_variant;
+        // Preset creation also uses explicit lookups before visibility is set.
+        bundle.printers.find_preset("Test Printer 0.8")->is_visible = false;
+    }
+    SECTION("disabled defaults are skipped") {
+        bundle.printers.find_preset("Test Printer " + default_variant)->is_visible = false;
+        expected_variant = default_variant == "0.6" ? "0.4" : "0.6";
+    }
+    SECTION("a model with no enabled nozzle is not selected") {
+        for (auto &preset : bundle.printers)
+            preset.is_visible = false;
+        CHECK(bundle.printers.find_system_preset_by_model_and_variant("Test Printer", "") == nullptr);
+        return;
+    }
+    SECTION("unavailable declared variants are skipped") {
+        installed_vendor.models.front().variants.insert(installed_vendor.models.front().variants.begin(), {"1.0"});
+    }
+    SECTION("missing model metadata falls back safely") {
+        installed_vendor.models.front().id = "Another Printer";
+        expected_variant = "0.4";
+    }
+    SECTION("missing vendor metadata falls back safely") {
+        for (auto &preset : bundle.printers)
+            preset.vendor = nullptr;
+        expected_variant = "0.4";
+    }
+
+    const Preset *preferred = bundle.printers.find_system_preset_by_model_and_variant("Test Printer", requested_variant);
+    REQUIRE(preferred != nullptr);
+    CHECK(preferred->config.opt_string("printer_variant") == expected_variant);
+    CHECK(bundle.printers.find_system_preset_by_model_and_variant("", "") == nullptr);
+    CHECK(bundle.printers.find_system_preset_by_model_and_variant("Missing Printer", "") == nullptr);
+    CHECK(bundle.printers.find_system_preset_by_model_and_variant("Test Printer", "1.0") == nullptr);
+}
+
+TEST_CASE("A newly installed SC12060 selects its declared single nozzle profile", "[Preset][Bundle][Wizard][Regression]")
+{
+    const std::string requested_variant = GENERATE(std::string(), std::string("0.4"), std::string("0.8"));
+    const std::string expected_variant = requested_variant.empty() ? "0.6" : requested_variant;
+    ScopedTemporaryDir temporary_data("inlong-wizard");
+    ScopedPresetDirectories directories(temporary_data.path(), fs::path(std::string(PROFILES_DIR)).parent_path());
+    AppConfig app_config;
+    PresetBundle bundle;
+
+    // Like first launch, only the filament library is installed. The wizard
+    // knows the model, but the active bundle does not have its vendor metadata.
+    REQUIRE(install_vendor_bundles_from_resources({PresetBundle::INLONG_FILAMENT_LIBRARY}));
+    REQUIRE(bundle.vendors.count("INLONG") == 0);
+    REQUIRE_FALSE(fs::exists(temporary_data.path() / PRESET_SYSTEM_DIR / "INLONG.json"));
+    const AppConfig::VendorMap enabled_vendors{{"INLONG", {{"SC12060", {"0.4", "0.6", "0.8"}}}}};
+    const std::map<std::string, std::string> enabled_filaments{{"INLONG PET-CFGF", "true"}};
+    REQUIRE(bundle.apply_vendor_config(enabled_vendors, enabled_filaments, &app_config, true, "SC12060", requested_variant));
+
+    const auto &printer = bundle.printers.get_selected_preset();
+    CHECK(printer.name == "SC12060 " + expected_variant + "mm nozzle");
+    CHECK(printer.config.opt_string("printer_variant") == expected_variant);
+    const auto *nozzles = printer.config.option<ConfigOptionFloats>("nozzle_diameter");
+    REQUIRE(nozzles != nullptr);
+    REQUIRE(nozzles->values.size() == 1);
+    CHECK_THAT(nozzles->values.front(), Catch::Matchers::WithinAbs(std::stod(expected_variant), 0.000001));
+    CHECK(bundle.prints.get_selected_preset_name() == (expected_variant == "0.8" ? "SC Layer: 0.30mm" : "SC Layer: 0.25mm"));
+    REQUIRE_FALSE(bundle.filament_presets.empty());
+    CHECK(bundle.filament_presets.front() == "INLONG PET-CFGF");
+    CHECK(app_config.get("presets", PRESET_PRINTER_NAME) == printer.name);
+
+    // Reopening the wizard with no newly enabled model supplies no preference.
+    // A nozzle the user explicitly saved must not be reset to the model default.
+    REQUIRE(bundle.printers.select_preset_by_name("SC12060 0.4mm nozzle", true));
+    bundle.export_selections(app_config);
+    REQUIRE(bundle.apply_vendor_config(enabled_vendors, enabled_filaments, &app_config));
+    CHECK(bundle.printers.get_selected_preset_name() == "SC12060 0.4mm nozzle");
+    CHECK(app_config.get("presets", PRESET_PRINTER_NAME) == "SC12060 0.4mm nozzle");
+
+    // Cloud updates merge configuration without requesting a printer switch.
+    REQUIRE(bundle.apply_vendor_config({}, {}, &app_config, false));
+    CHECK(bundle.printers.get_selected_preset_name() == "SC12060 0.4mm nozzle");
 }
 
 TEST_CASE("Selected printer uses its default or saved bed type", "[Preset][Bundle]")

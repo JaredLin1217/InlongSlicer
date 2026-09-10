@@ -868,31 +868,19 @@ bool GuideFrame::apply_config(AppConfig *app_config, PresetBundle *preset_bundle
 
     std::string preferred_model;
     std::string preferred_variant;
-    PrinterTechnology preferred_pt = ptFFF;
-    auto get_preferred_printer_model = [preset_bundle, enabled_vendors, old_enabled_vendors](const std::string& bundle_name, std::string& variant) {
+    auto get_preferred_printer_model = [enabled_vendors, old_enabled_vendors](const std::string& bundle_name, std::string& variant) {
+        variant.clear();
         const auto config = enabled_vendors.find(bundle_name);
         if (config == enabled_vendors.end())
             return std::string();
 
-        const VendorProfile & printer_profile = preset_bundle->vendors[bundle_name];
         const std::map<std::string, std::set<std::string>>& model_maps = config->second;
-        //for (const auto& vendor_profile : preset_bundle->vendors) {
         for (const auto& model_it: model_maps) {
             if (model_it.second.size() > 0) {
-                variant = *model_it.second.begin();
-                if (model_it.second.size() > 1) {
-                    if (printer_profile.models.size() > 0) {
-                        const VendorProfile::PrinterModel& printer_model = *std::find_if(printer_profile.models.begin(), printer_profile.models.end(),
-                            [id = model_it.first](auto& m) { return m.id == id; });
-                        for (auto& vt : printer_model.variants) {
-                            if (std::find(model_it.second.begin(), model_it.second.end(), vt.name) != model_it.second.end()) { variant = vt.name; break; }
-                        }
-                    }
-                    else if (variant != PresetBundle::INLONG_DEFAULT_PRINTER_VARIANT){
-                        if (std::find(model_it.second.begin(), model_it.second.end(), PresetBundle::INLONG_DEFAULT_PRINTER_VARIANT) != model_it.second.end())
-                            variant = PresetBundle::INLONG_DEFAULT_PRINTER_VARIANT;
-                    }
-                }
+                // A newly enabled vendor is not loaded into the active bundle yet.
+                // Leave a multi-variant model's default unresolved until
+                // apply_vendor_config installs it and loads its ordered metadata.
+                variant = model_it.second.size() == 1 ? *model_it.second.begin() : std::string();
 
                 const auto config_old = old_enabled_vendors.find(bundle_name);
                 if (config_old == old_enabled_vendors.end())
@@ -909,9 +897,7 @@ bool GuideFrame::apply_config(AppConfig *app_config, PresetBundle *preset_bundle
                 }
             }
         }
-        //}
-        if (!variant.empty())
-            variant.clear();
+        variant.clear();
         return std::string();
     };
     // Inlong "custom" printers are considered first, then third party.

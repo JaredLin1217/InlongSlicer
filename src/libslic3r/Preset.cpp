@@ -4023,11 +4023,37 @@ const Preset* PrinterPresetCollection::find_system_preset_by_model_and_variant(c
         if (!preset.is_system || preset.config.opt_string("printer_model") != model_id)
             return false;
         if (variant.empty())
-            return true;
+            return preset.is_visible;
         return preset.config.opt_string("printer_variant") == variant;
     });
 
-    return it != cend() ? &*it : nullptr;
+    if (it == cend())
+        return nullptr;
+    if (!variant.empty() || it->vendor == nullptr)
+        return &*it;
+
+    // An unspecified nozzle means the model default, not the first preset name
+    // in lexicographic order. Resolve this after vendor loading and visibility
+    // filtering so first-run wizard selections also have their model metadata.
+    const auto &models = it->vendor->models;
+    const auto model = std::find_if(models.begin(), models.end(), [&model_id](const VendorProfile::PrinterModel &candidate) {
+        return candidate.id == model_id;
+    });
+    if (model != models.end()) {
+        for (const auto &declared_variant : model->variants) {
+            const auto preferred = std::find_if(cbegin(), cend(), [&](const Preset &preset) {
+                return preset.is_system && preset.is_visible && preset.vendor == it->vendor &&
+                       preset.config.opt_string("printer_model") == model_id &&
+                       preset.config.opt_string("printer_variant") == declared_variant.name;
+            });
+            if (preferred != cend())
+                return &*preferred;
+        }
+    }
+
+    // Incomplete metadata must not dereference a missing model or select a
+    // disabled nozzle. Keep a deterministic, enabled system-preset fallback.
+    return &*it;
 }
 
 const Preset *PrinterPresetCollection::find_custom_preset_by_model_and_variant(const std::string &model_id, const std::string &variant) const

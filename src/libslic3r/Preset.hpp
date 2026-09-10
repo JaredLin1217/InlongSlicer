@@ -977,6 +977,8 @@ public:
 
     const Preset&   default_preset_for(const DynamicPrintConfig &config) const override;
 
+    // An empty variant selects the first visible variant in the vendor model's
+    // declared order. Explicit variants are looked up unchanged (even if hidden).
     const Preset*   find_system_preset_by_model_and_variant(const std::string &model_id, const std::string &variant) const;
     const Preset*   find_custom_preset_by_model_and_variant(const std::string &model_id, const std::string &variant) const;
 
