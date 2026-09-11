@@ -91,3 +91,4 @@ Thumbs.db
 # Open Packaging Convention scratch archives
 *.opc
 /.test/
+docs/superpowers/

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: 2026-07-02 14:13+0300\n"
 "Last-Translator: Gintaras Kučinskas <sharanchius@gmail.com>\n"
 "Language-Team: \n"
@@ -2432,15 +2432,6 @@ msgstr "Yra prieinamas atnaujinimas. Atidarykite profilių paketo dialogo langą
 msgid "%s has been removed."
 msgstr "%s buvo pašalintas."
 
-msgid "Switching application language"
-msgstr "Perjungiama programoskalba"
-
-msgid "Select the language"
-msgstr "Pasirinkite kalbą"
-
-msgid "Language"
-msgstr "Kalba"
-
 # AI Translated
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
@@ -4574,6 +4565,12 @@ msgstr ""
 "Klaidos pranešimas: %1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "Nepavyko nukopijuoti laikinojo G-kodo į išvesties G-kodą. Gali kilti problemų dėl tikslinio įrenginio. Bandykite eksportuoti dar kartą arba naudokite kitą įrenginį. Sugadintas išvesties G-kodas yra %1%.tmp."
 
@@ -4872,6 +4869,9 @@ msgstr ""
 "Automatiškai pakeisti šiuos nustatymus?\n"
 "Taip – pakeisti šiuos nustatymus ir automatiškai įjungti spiralinį režimą\n"
 "Ne –  nenaudoti spiralinio režimo"
+
+msgid "N/A"
+msgstr "N/A"
 
 msgid "Printing"
 msgstr "Spausdinimas"
@@ -5333,28 +5333,21 @@ msgstr "Neteisingas šablonas. Naudokite N, N#K arba kableliais atskirtą sąra�
 msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "Netinkamas formatas. Tinkamas vektorinis formatas: \"%1%\""
 
-msgid "N/A"
-msgstr "N/A"
-
 # AI Translated
 msgid "System agents"
 msgstr "Sisteminiai agentai"
-
-# AI Translated
-msgid "No plugin selected"
-msgstr "Nepasirinktas joks papildinys"
 
 # AI Translated
 msgid "Add plugin"
 msgstr "Pridėti papildinį"
 
 # AI Translated
-msgid "Select plugin"
-msgstr "Pasirinkti papildinį"
-
-# AI Translated
 msgid "Remove plugin"
 msgstr "Pašalinti papildinį"
+
+# AI Translated
+msgid "No plugin selected"
+msgstr "Nepasirinktas joks papildinys"
 
 # AI Translated
 msgid "Configure"
@@ -6288,6 +6281,12 @@ msgstr "Išsaugoti projektą kaip"
 
 msgid "Save current project as"
 msgstr "Išsaugoti dabartinį projektą kaip"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "Importuoti 3MF/STL/STEP/SVG/OBJ/AMF"
@@ -7914,6 +7913,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Apatinis"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 # AI Translated
 msgid "Plugin Selection"
 msgstr "Papildinio pasirinkimas"
@@ -8467,6 +8472,12 @@ msgstr "Prašome patvirtinti, kad šiuose nustatymuose esantys G-kodai yra saug�
 msgid "Customized Preset"
 msgstr "Pakeisti nustatymai"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "Komponentų pavadinimai STEP faile nėra UTF-8 formato!"
 
@@ -8876,6 +8887,17 @@ msgstr "Išsaugoti susluoksniuotą failą kaip:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "Failas %s išsiųstas į spausdintuvo saugyklą ir gali būti peržiūrimas spausdintuve."
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "Talpinti"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "The nozzle type is not set. Please set the nozzle and try again."
 
@@ -9084,9 +9106,6 @@ msgstr "Ar norite tęsti?"
 msgid "Language selection"
 msgstr "Kalbos pasirinkimas"
 
-msgid "Switching application language while some presets are modified."
-msgstr "Keičiama programos kalba esant kai kurių nustatymų pakeitimams."
-
 msgid "Asia-Pacific"
 msgstr "Azija-Ramusis vandenynas"
 
@@ -9190,6 +9209,9 @@ msgstr "Dabartinės versijos kelias: "
 
 msgid "General"
 msgstr "Bendras"
+
+msgid "Language"
+msgstr "Kalba"
 
 msgid "Metric"
 msgstr "Metrinė"
@@ -9998,9 +10020,6 @@ msgstr "Pereiti į modelio talpinimo interneto puslapį"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "Pastaba: paruošimas gali užtrukti kelias minutes. Būkite kantrūs."
 
-msgid "Publish"
-msgstr "Talpinti"
-
 msgid "Publish was canceled"
 msgstr "Publikavimas buvo atšauktas"
 
@@ -10015,6 +10034,61 @@ msgstr "Uploading data"
 
 msgid "Jump to webpage"
 msgstr "Pereiti į interneto puslapį"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12369,14 +12443,20 @@ msgstr "Taisymas atšauktas"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "Failo %1% kopijavimas į %2% nepavyko: %3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "Prieš atnaujinant konfigūraciją reikia patikrinti neišsaugotus pakeitimus."
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "Konfigūracijos paketas: "
 
 msgid " updated to "
 msgstr " atnaujintas į "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "Prieš atnaujinant konfigūraciją reikia patikrinti neišsaugotus pakeitimus."
 
 msgid "Open G-code file:"
 msgstr "Atidaryti G-kodo failą:"
@@ -21399,6 +21479,15 @@ msgstr "This action cannot be undone. Continue?"
 msgid "Skipping objects."
 msgstr "Skipping objects."
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "Select Filament"
 
@@ -23052,6 +23141,19 @@ msgid ""
 msgstr ""
 "Išvengti deformacijos\n"
 "Ar žinojote, kad spausdinant medžiagas, kurios linkusios deformuotis, pavyzdžiui, ABS, tinkamai padidinus kaitinimo pagrindo temperatūrą galima sumažinti deformavimosi tikimybę."
+
+#~ msgid "Switching application language"
+#~ msgstr "Perjungiama programoskalba"
+
+#~ msgid "Select the language"
+#~ msgstr "Pasirinkite kalbą"
+
+# AI Translated
+#~ msgid "Select plugin"
+#~ msgstr "Pasirinkti papildinį"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "Keičiama programos kalba esant kai kurių nustatymų pakeitimams."
 
 # AI Translated
 #~ msgid ""

@@ -12,6 +12,7 @@
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/Color.hpp"
 #include "format.hpp"
+#include "ConfigValueFormatter.hpp"
 #include "GUI_App.hpp"
 #include "Plater.hpp"
 #include "Tab.hpp"
@@ -22,7 +23,6 @@
 #include "MsgDialog.hpp"
 
 #include "PresetComboBoxes.hpp"
-#include "Widgets/RoundedRectangle.hpp"
 #include "Widgets/CheckBox.hpp"
 #include "Widgets/DialogButtons.hpp"
 #include "Widgets/HyperLink.hpp"
@@ -570,14 +570,6 @@ void DiffModel::Clear()
         Delete(wxDataViewItem(m_preset_nodes.back().get()));
 }
 
-
-static std::string get_pure_opt_key(std::string opt_key)
-{
-    const int pos = opt_key.find("#");
-    if (pos > 0)
-        boost::erase_tail(opt_key, opt_key.size() - pos);
-    return opt_key;
-}
 
 // ----------------------------------------------------------------------------
 //                  DiffViewCtrl
@@ -1212,32 +1204,6 @@ bool UnsavedChangesDialog::save(PresetCollection* dependent_presets, bool show_s
     return true;
 }
 
-wxString get_string_from_enum(const std::string& opt_key, const DynamicPrintConfig& config, bool is_infill = false, int idx = -1)
-{
-    const ConfigOptionDef& def = config.def()->options.at(opt_key);
-    const std::vector<std::string>& names = def.enum_labels;//ConfigOptionEnum<T>::get_enum_names();
-    int val = 0;
-
-    if (idx >= 0)
-        val = dynamic_cast<const ConfigOptionInts*>(config.option(opt_key))->get_at(idx);
-    else
-        val = config.option(opt_key)->getInt();
-
-    // Each infill doesn't use all list of infill declared in PrintConfig.hpp.
-    // So we should "convert" val to the correct one
-    if (is_infill) {
-        for (auto key_val : *def.enum_keys_map)
-            if (int(key_val.second) == val) {
-                auto it = std::find(def.enum_values.begin(), def.enum_values.end(), key_val.first);
-                if (it == def.enum_values.end())
-                    return "";
-                return from_u8(_utf8(names[it - def.enum_values.begin()]));
-            }
-        return _L("Undefined");
-    }
-    return from_u8(_utf8(names[val]));
-}
-
 // BBS
 #if 0
 static size_t get_id_from_opt_key(std::string opt_key)
@@ -1251,7 +1217,9 @@ static size_t get_id_from_opt_key(std::string opt_key)
 }
 #endif
 
-static wxString get_full_label(std::string opt_key, const DynamicPrintConfig& config)
+// Keep the local diff formatter's Inlong-specific enum handling separate from
+// the upstream shared formatter introduced by ConfigValueFormatter.cpp.
+static wxString get_full_label_legacy(std::string opt_key, const DynamicPrintConfig& config)
 {
     opt_key = get_pure_opt_key(opt_key);
     auto option = config.option(opt_key);
@@ -1263,7 +1231,7 @@ static wxString get_full_label(std::string opt_key, const DynamicPrintConfig& co
     return opt->full_label.empty() ? opt->label : opt->full_label;
 }
 
-static wxString get_string_value(std::string opt_key, const DynamicPrintConfig& config)
+static wxString get_string_value_legacy(std::string opt_key, const DynamicPrintConfig& config)
 {
     int orig_opt_idx = -1;
     int opt_idx = -1;
@@ -1820,7 +1788,7 @@ void UnsavedChangesDialog::update_tree(Preset::Type type, PresetCollection* pres
 
             //PresetItem pi = {opt_key, type, 1983};
             //m_presetitems.push_back()
-            PresetItem pi = {type, opt_key, category, option.group_local, option.label_local, get_string_value(opt_key, old_config), get_string_value(opt_key, new_config)};
+            PresetItem pi = {type, opt_key, category, option.group_local, option.label_local, get_string_value_legacy(opt_key, old_config), get_string_value_legacy(opt_key, new_config)};
             m_presetitems.push_back(pi);
 
         }
@@ -2356,13 +2324,13 @@ void DiffPresetDialog::update_tree()
         }
 
         for (const std::string& opt_key : dirty_options) {
-            wxString left_val = get_string_value(opt_key, left_config);
-            wxString right_val = get_string_value(opt_key, right_congig);
+            wxString left_val = get_string_value_legacy(opt_key, left_config);
+            wxString right_val = get_string_value_legacy(opt_key, right_congig);
 
             const std::string lookup_key = get_pure_opt_key(opt_key);
-            Search::Option option = searcher.get_option(lookup_key, get_full_label(lookup_key, left_config), type);
+            Search::Option option = searcher.get_option(lookup_key, get_full_label_legacy(lookup_key, left_config), type);
             if (get_pure_opt_key(option.opt_key()) != lookup_key)
-                option = searcher.get_option(opt_key, get_full_label(opt_key, left_config), type);
+                option = searcher.get_option(opt_key, get_full_label_legacy(opt_key, left_config), type);
             if (get_pure_opt_key(option.opt_key()) != lookup_key) {
                 // When the found option is not the requested one.
                 // This can happen for dirty_options such as:

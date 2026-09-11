@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2466,15 +2466,6 @@ msgstr "アップデートが利用可能です。プリセットバンドルの
 msgid "%s has been removed."
 msgstr "%sを削除しました。"
 
-msgid "Switching application language"
-msgstr "アプリケーション言語の切り替え"
-
-msgid "Select the language"
-msgstr "言語を選択"
-
-msgid "Language"
-msgstr "言語"
-
 # AI Translated
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
@@ -4600,6 +4591,12 @@ msgstr ""
 "エラーメッセージ：%1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "一時Gコードの出力Gコードへのコピーに失敗しました。 ターゲットデバイスに問題がある可能性があります。もう一度エクスポートするか、別のデバイスを使用してみてください。 破損した出力Gコードは%1%.tmpにあります。"
 
@@ -4906,6 +4903,10 @@ msgstr ""
 "これらの設定を変更しますか？\n"
 "はい - 変更して、スパイラルモードを有効にします\n"
 "いいえ - 変更せず、スパイラルモードを有効しません"
+
+# AI Translated
+msgid "N/A"
+msgstr "N/A"
 
 msgid "Printing"
 msgstr "造形中"
@@ -5366,28 +5367,20 @@ msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "無効なフォーマット、%1%であるはずです。"
 
 # AI Translated
-msgid "N/A"
-msgstr "N/A"
-
-# AI Translated
 msgid "System agents"
 msgstr "システムエージェント"
-
-# AI Translated
-msgid "No plugin selected"
-msgstr "プラグインが選択されていません"
 
 # AI Translated
 msgid "Add plugin"
 msgstr "プラグインを追加"
 
 # AI Translated
-msgid "Select plugin"
-msgstr "プラグインを選択"
-
-# AI Translated
 msgid "Remove plugin"
 msgstr "プラグインを削除"
+
+# AI Translated
+msgid "No plugin selected"
+msgstr "プラグインが選択されていません"
 
 # AI Translated
 msgid "Configure"
@@ -6322,6 +6315,12 @@ msgstr "プロジェクトを名前を付けて保存"
 
 msgid "Save current project as"
 msgstr "プロジェクトを名前を付けて保存"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "3MF/STL/STEP/SVG/OBJ/AMFをインポート"
@@ -7952,6 +7951,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "底面"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 # AI Translated
 msgid "Plugin Selection"
 msgstr "プラグインの選択"
@@ -8512,6 +8517,12 @@ msgstr "これらのプリセット内のG-codeがマシンに損傷を与えな
 msgid "Customized Preset"
 msgstr "カスタマイズされたプリセット"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "ファイルのエンコーディング方式はUTF-8形式ではありません"
 
@@ -8925,6 +8936,17 @@ msgstr "名前を付けて保存:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "%sを送信しました、プリンターにて確認できます"
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "公開する"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "ノズルタイプが設定されていません。ノズルを設定して再試行してください。"
 
@@ -9136,9 +9158,6 @@ msgstr "続行しますか？"
 msgid "Language selection"
 msgstr "言語選択"
 
-msgid "Switching application language while some presets are modified."
-msgstr "アプリケーション言語を切り替える時に、プリセットの変更があります"
-
 msgid "Asia-Pacific"
 msgstr "アジア太平洋地域"
 
@@ -9242,6 +9261,9 @@ msgstr "現在のインスタンスのパス: "
 
 msgid "General"
 msgstr "一般"
+
+msgid "Language"
+msgstr "言語"
 
 msgid "Metric"
 msgstr "メートル"
@@ -10106,9 +10128,6 @@ msgstr "モデル公開ページに移動"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "注意: 準備するには数分かかる場合があります、暫くお待ち下さい。"
 
-msgid "Publish"
-msgstr "公開する"
-
 msgid "Publish was canceled"
 msgstr "公開は取り消しました"
 
@@ -10123,6 +10142,61 @@ msgstr "データをアップロード中"
 
 msgid "Jump to webpage"
 msgstr "ウェブページに移動"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12495,14 +12569,20 @@ msgstr "修復を取消しました"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "ファイル %1% を %2% へのコピーが失敗しました (%3%)"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "構成を更新する前に、未保存の変更をご確認ください"
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "設定パッケージ: "
 
 msgid " updated to "
 msgstr " を更新しました "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "構成を更新する前に、未保存の変更をご確認ください"
 
 msgid "Open G-code file:"
 msgstr "G-codeファイルを開く"
@@ -22222,6 +22302,15 @@ msgstr "この操作は元に戻せません。続行しますか？"
 msgid "Skipping objects."
 msgstr "オブジェクトをスキップ中。"
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "フィラメントを選択"
 
@@ -23914,6 +24003,19 @@ msgid ""
 msgstr ""
 "反りを避ける\n"
 "ABSのような反りやすい素材を印刷する場合、ヒートベッドの温度を適切に上げることで、反りが発生する確率を下げることができることをご存知ですか？"
+
+#~ msgid "Switching application language"
+#~ msgstr "アプリケーション言語の切り替え"
+
+#~ msgid "Select the language"
+#~ msgstr "言語を選択"
+
+# AI Translated
+#~ msgid "Select plugin"
+#~ msgstr "プラグインを選択"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "アプリケーション言語を切り替える時に、プリセットの変更があります"
 
 # AI Translated
 #~ msgid ""

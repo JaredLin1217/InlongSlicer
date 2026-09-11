@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: 2026-07-20 13:33+0200\n"
 "Last-Translator: Manu Goiogana <mgoiogana@gmail.com>\n"
 "Language-Team: \n"
@@ -2362,15 +2362,6 @@ msgstr "Eguneratze bat dago erabilgarri. Ireki aurrezarpen-paketeen elkarrizketa
 msgid "%s has been removed."
 msgstr "%s kendu da."
 
-msgid "Switching application language"
-msgstr "Aplikazioaren hizkuntza aldatzen"
-
-msgid "Select the language"
-msgstr "Hautatu hizkuntza"
-
-msgid "Language"
-msgstr "Hizkuntza"
-
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
 msgstr ""
@@ -4445,6 +4436,12 @@ msgstr ""
 "Errore- mezua: %1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "Aldi baterako G-code-a irteerako G-code-an kopiatzeak huts egin du. Arazoak egon daitezke helburuko gailuarekin, saiatu berriro esportatzen edo beste gailu bat erabiltzen. Hondatutako irteerako G-code-a hemen da: %1%.tmp."
 
@@ -4742,6 +4739,9 @@ msgstr ""
 "Ezarpen hauek automatikoki aldatu?\n"
 "Bai - Aldatu ezarpen hauek eta gaitu espiral/loreontzi modua automatikoki\n"
 "Ez  - Utzi bertan behera espiral modua gaitzea"
+
+msgid "N/A"
+msgstr "N/A"
 
 msgid "Printing"
 msgstr "Inprimatzen"
@@ -5203,23 +5203,17 @@ msgstr "Patroi baliogabea. Erabili N, N#K edo komaz bereizitako zerrenda bat, sa
 msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "Formatuak ez du balio. Espero den formatu bektoriala: \"%1%\""
 
-msgid "N/A"
-msgstr "N/A"
-
 msgid "System agents"
 msgstr "Sistema-agenteak"
-
-msgid "No plugin selected"
-msgstr "Ez da pluginik hautatu"
 
 msgid "Add plugin"
 msgstr "Gehitu plugina"
 
-msgid "Select plugin"
-msgstr "Hautatu plugina"
-
 msgid "Remove plugin"
 msgstr "Kendu plugina"
+
+msgid "No plugin selected"
+msgstr "Ez da pluginik hautatu"
 
 msgid "Configure"
 msgstr "Konfiguratu"
@@ -6146,6 +6140,12 @@ msgstr "Gorde proiektua honela"
 
 msgid "Save current project as"
 msgstr "Gorde uneko proiektua honela"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "Inportatu 3MF/STL/STEP/SVG/OBJ/AMF"
@@ -7757,6 +7757,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Behea"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 msgid "Plugin Selection"
 msgstr "Plugin-hautaketa"
 
@@ -8304,6 +8310,12 @@ msgstr "Berretsi aurrezarpen hauetako G-codea segurua dela, makinari kalterik ez
 msgid "Customized Preset"
 msgstr "Aurrezarpen pertsonalizatua"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "STEP fitxategiko osagai-izena(k) ez dago/daude UTF-8 formatuan!"
 
@@ -8705,6 +8717,17 @@ msgstr "Gorde xerratutako fitxategia honela:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "%s fitxategia inprimagailuaren biltegiratze-eremura bidali da eta inprimagailuan ikus daiteke."
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "Argitaratu"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "Pita mota ez dago ezarrita. Ezarri pita eta saiatu berriro."
 
@@ -8904,9 +8927,6 @@ msgstr "Jarraitu nahi duzu?"
 msgid "Language selection"
 msgstr "Hizkuntza-hautaketa"
 
-msgid "Switching application language while some presets are modified."
-msgstr "Aplikazioaren hizkuntza aldatzen ari da aurrezarpen batzuk aldatuta dauden bitartean."
-
 msgid "Asia-Pacific"
 msgstr "Asia-Pazifikoa"
 
@@ -9010,6 +9030,9 @@ msgstr "Uneko instantziaren bide-izena: "
 
 msgid "General"
 msgstr "Orokorra"
+
+msgid "Language"
+msgstr "Hizkuntza"
 
 msgid "Metric"
 msgstr "Metrikoa"
@@ -9814,9 +9837,6 @@ msgstr "Joan modeloa argitaratzeko web-orrira"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "Oharra: prestaketak minutu batzuk iraun ditzake. Izan pazientzia."
 
-msgid "Publish"
-msgstr "Argitaratu"
-
 msgid "Publish was canceled"
 msgstr "Argitaratzea bertan behera utzi da"
 
@@ -9831,6 +9851,61 @@ msgstr "Datuak igotzen"
 
 msgid "Jump to webpage"
 msgstr "Joan web-orrira"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12137,14 +12212,20 @@ msgstr "Konponketa bertan behera utzi da"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "%1% fitxategia %2% helmugara kopiatzeak huts egin du: %3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "Egiaztatu gorde gabeko aldaketarik dagoen konfigurazioa eguneratu aurretik."
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "Konfigurazio-paketea: "
 
 msgid " updated to "
 msgstr " hona eguneratu da: "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "Egiaztatu gorde gabeko aldaketarik dagoen konfigurazioa eguneratu aurretik."
 
 msgid "Open G-code file:"
 msgstr "Ireki G-code fitxategia:"
@@ -21116,6 +21197,15 @@ msgstr "Ekintza hau ezin da desegin. Jarraitu?"
 msgid "Skipping objects."
 msgstr "Objektuak saltatzen."
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "Hautatu filamentua"
 
@@ -22713,6 +22803,18 @@ msgid ""
 msgstr ""
 "Saihestu okertzea\n"
 "Ba al zenekien ABS bezalako okertzeko joera duten materialak inprimatzean ohe beroaren tenperatura egoki igotzeak okertzeko probabilitatea murriztu dezakeela?"
+
+#~ msgid "Switching application language"
+#~ msgstr "Aplikazioaren hizkuntza aldatzen"
+
+#~ msgid "Select the language"
+#~ msgstr "Hautatu hizkuntza"
+
+#~ msgid "Select plugin"
+#~ msgstr "Hautatu plugina"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "Aplikazioaren hizkuntza aldatzen ari da aurrezarpen batzuk aldatuta dauden bitartean."
 
 # AI Translated
 #~ msgid ""

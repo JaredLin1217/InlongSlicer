@@ -41,6 +41,9 @@ using namespace nlohmann;
 namespace Slic3r {
 
 static const std::string VERSION_CHECK_URL = "https://api.github.com/repos/JaredLin1217/InlongSlicer/releases";
+static const std::string PROFILE_UPDATE_URL = "https://check-version.orcaslicer.com/profile";
+
+constexpr const char* CONFIG_ORCA_UPDATER_URL = "orca_updater_url";
 static const std::string MODELS_STR = "models";
 
 const std::string AppConfig::SECTION_FILAMENTS = "filaments";
@@ -632,6 +635,11 @@ void AppConfig::set_defaults()
     {
         // false = legacy behavior using print hosts
         set_bool("use_printer_agents", false);
+    }
+
+    if (get("enable_ota").empty())
+    {
+        set_bool("enable_ota", false);
     }
 
     // Remove legacy window positions/sizes
@@ -1818,7 +1826,10 @@ std::string AppConfig::version_check_url() const
 
 std::string AppConfig::profile_update_url() const
 {
-    return "";
+    std::string orca_updater_url = get(CONFIG_ORCA_UPDATER_URL);
+    if (orca_updater_url.empty())
+        return PROFILE_UPDATE_URL;
+    return orca_updater_url;
 }
 
 bool AppConfig::exists()

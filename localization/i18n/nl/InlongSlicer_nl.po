@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2669,15 +2669,6 @@ msgstr "Er is een update beschikbaar. Open het dialoogvenster voor de voorinstel
 msgid "%s has been removed."
 msgstr "%s is verwijderd."
 
-msgid "Switching application language"
-msgstr "De taal van de applicatie wordt aangepast"
-
-msgid "Select the language"
-msgstr "Kies de taal"
-
-msgid "Language"
-msgstr "Taal"
-
 # AI Translated
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
@@ -4992,6 +4983,12 @@ msgstr ""
 "Foutbericht: %1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "Fout bij het exporteren naar output-G-code. Het probleem ligt mogelijk bij het doelapparaat. Probeer het opnieuw te exporteren of gebruik een ander apparat. De beschadigde G-code is opgeslagen als %1%.tmp."
 
@@ -5305,6 +5302,9 @@ msgstr ""
 "Wilt u de voorgestelde instellingen automatisch aanpassen?\n"
 "Ja - Pas de instellingen aan en zet de vaas modus automatisch aan\n"
 "Nee - Pas de vaas modus deze keer niet toe"
+
+msgid "N/A"
+msgstr "N/B"
 
 msgid "Printing"
 msgstr "Printen"
@@ -5842,28 +5842,21 @@ msgstr "Ongeldig patroon. Gebruik N, N#K of een door komma's gescheiden lijst me
 msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "Onjuist formaat. Het Vector formaat wordt verwacht: \"%1%\""
 
-msgid "N/A"
-msgstr "N/B"
-
 # AI Translated
 msgid "System agents"
 msgstr "Systeemagenten"
-
-# AI Translated
-msgid "No plugin selected"
-msgstr "Geen plug-in geselecteerd"
 
 # AI Translated
 msgid "Add plugin"
 msgstr "Plug-in toevoegen"
 
 # AI Translated
-msgid "Select plugin"
-msgstr "Plug-in selecteren"
-
-# AI Translated
 msgid "Remove plugin"
 msgstr "Plug-in verwijderen"
+
+# AI Translated
+msgid "No plugin selected"
+msgstr "Geen plug-in geselecteerd"
 
 # AI Translated
 msgid "Configure"
@@ -6868,6 +6861,12 @@ msgstr "Bewaar project als"
 
 msgid "Save current project as"
 msgstr "Bewaar huidig project als"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "3MF/STL/STEP/SVG/OBJ/AMF importeren"
@@ -8606,6 +8605,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Onderste"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 # AI Translated
 msgid "Plugin Selection"
 msgstr "Plug-inselectie"
@@ -9224,6 +9229,12 @@ msgstr "Controleer of de G-codes in deze presets veilig zijn om schade aan de ma
 msgid "Customized Preset"
 msgstr "Aangepaste voorinstelling"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "Naam van componenten in step-bestand is niet UTF-8-formaat!"
 
@@ -9659,6 +9670,17 @@ msgstr "Bewaar het geslicede bestand als:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "Het bestand %s is naar de opslagruimte van de printer gestuurd en kan op de printer worden bekeken."
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "Publiceren"
+
 # AI Translated
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "Het mondstuktype is niet ingesteld. Stel het mondstuk in en probeer het opnieuw."
@@ -9897,9 +9919,6 @@ msgstr "Wilt u doorgaan?"
 msgid "Language selection"
 msgstr "Taal selectie"
 
-msgid "Switching application language while some presets are modified."
-msgstr "De taal van de toepassing aanpaasen terwijl sommige voorinstellingen zijn aangepast."
-
 msgid "Asia-Pacific"
 msgstr "Azië-Pacific"
 
@@ -10013,6 +10032,9 @@ msgstr "Huidig instancepad: "
 
 msgid "General"
 msgstr "Algemeen"
+
+msgid "Language"
+msgstr "Taal"
 
 msgid "Metric"
 msgstr "Metrisch"
@@ -10937,9 +10959,6 @@ msgstr "Ga naar de website om het model te publiceren"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "Notitie: het voorbereiden kan enkele minuten duren. Even geduld alstublieft."
 
-msgid "Publish"
-msgstr "Publiceren"
-
 msgid "Publish was canceled"
 msgstr "Het publiceren is geannuleerd"
 
@@ -10955,6 +10974,61 @@ msgstr "Gegevens uploaden"
 
 msgid "Jump to webpage"
 msgstr "Ga naar de website"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -13529,8 +13603,8 @@ msgstr "Repareren geannuleerd"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "Het kopieeren van bestand %1% naar %2% is mislukt: %3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "Controleer niet-opgeslagen wijzigingen voordat u de configuratie bijwerkt."
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 # AI Translated
 msgid "Configuration package: "
@@ -13539,6 +13613,12 @@ msgstr "Configuratiepakket: "
 # AI Translated
 msgid " updated to "
 msgstr " bijgewerkt naar "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "Controleer niet-opgeslagen wijzigingen voordat u de configuratie bijwerkt."
 
 msgid "Open G-code file:"
 msgstr "Open G-code bestand:"
@@ -23755,6 +23835,15 @@ msgstr "Deze actie kan niet ongedaan worden gemaakt. Doorgaan?"
 msgid "Skipping objects."
 msgstr "Objecten worden overgeslagen."
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "Selecteer filament"
 
@@ -25467,6 +25556,19 @@ msgid ""
 msgstr ""
 "Kromtrekken voorkomen\n"
 "Wist je dat bij het printen van materialen die gevoelig zijn voor kromtrekken, zoals ABS, een juiste verhoging van de temperatuur van het warmtebed de kans op kromtrekken kan verkleinen?"
+
+#~ msgid "Switching application language"
+#~ msgstr "De taal van de applicatie wordt aangepast"
+
+#~ msgid "Select the language"
+#~ msgstr "Kies de taal"
+
+# AI Translated
+#~ msgid "Select plugin"
+#~ msgstr "Plug-in selecteren"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "De taal van de toepassing aanpaasen terwijl sommige voorinstellingen zijn aangepast."
 
 # AI Translated
 #~ msgid ""

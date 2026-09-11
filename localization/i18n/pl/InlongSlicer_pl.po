@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: InlongSlicer 2.3.0-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Krzysztof Morga <<tlumaczeniebs@gmail.com>>\n"
 "Language-Team: \n"
@@ -2502,15 +2502,6 @@ msgstr "Dostępna jest aktualizacja. Otwórz okno pakietu profili, aby ją zains
 msgid "%s has been removed."
 msgstr "%s został usunięty."
 
-msgid "Switching application language"
-msgstr "Zmiana języka aplikacji"
-
-msgid "Select the language"
-msgstr "Wybierz język"
-
-msgid "Language"
-msgstr "Język"
-
 # AI Translated
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
@@ -4689,6 +4680,12 @@ msgstr ""
 "Komunikat błędu: %1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "Kopiowanie tymczasowego G-code do wyjściowego pliku G-code nie powiodło się. Może być problem z urządzeniem docelowym, spróbuj ponownie wyeksportować lub użyć innego urządzenia. Uszkodzony plik wyjściowego G-code znajduje się w pliku %1%.tmp."
 
@@ -4996,6 +4993,10 @@ msgstr ""
 "Czy zmienić te ustawienia automatycznie?\n"
 "Tak - Zmień te ustawienia automatycznie i włącz tryb Wazy\n"
 "Nie - Zrezygnuj tym razem z używania trybu Wazy"
+
+# AI Translated
+msgid "N/A"
+msgstr "Nie dotyczy"
 
 msgid "Printing"
 msgstr "Drukowanie"
@@ -5465,28 +5466,20 @@ msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "Nieprawidłowy format. Oczekiwano formatu wektorowego: „%1%”"
 
 # AI Translated
-msgid "N/A"
-msgstr "Nie dotyczy"
-
-# AI Translated
 msgid "System agents"
 msgstr "Agenci systemowi"
-
-# AI Translated
-msgid "No plugin selected"
-msgstr "Nie wybrano wtyczki"
 
 # AI Translated
 msgid "Add plugin"
 msgstr "Dodaj wtyczkę"
 
 # AI Translated
-msgid "Select plugin"
-msgstr "Wybierz wtyczkę"
-
-# AI Translated
 msgid "Remove plugin"
 msgstr "Usuń wtyczkę"
+
+# AI Translated
+msgid "No plugin selected"
+msgstr "Nie wybrano wtyczki"
 
 # AI Translated
 msgid "Configure"
@@ -6452,6 +6445,12 @@ msgstr "Zapisz projekt jako"
 
 msgid "Save current project as"
 msgstr "Zapisz bieżący projekt jako"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "Importuj 3MF/STL/STEP/SVG/OBJ/AMF"
@@ -8119,6 +8118,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Dół"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 # AI Translated
 msgid "Plugin Selection"
 msgstr "Wybór wtyczek"
@@ -8683,6 +8688,12 @@ msgstr "Proszę potwierdź, że G-code w tych profilach jest bezpieczny, aby zap
 msgid "Customized Preset"
 msgstr "Dostosowany profil"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "Nazwa komponentów w pliku step nie jest w formacie UTF-8!"
 
@@ -9110,6 +9121,17 @@ msgstr "Zapisz plik po wykonaniu cięcia jako:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "Plik %s został wysłany do pamięci drukarki i można go obejrzeć na urządzeniu."
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "Opublikuj"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "Nie ustawiono typu dyszy Wprowadź ustawienia dyszy i spróbuj ponownie."
 
@@ -9322,9 +9344,6 @@ msgstr "Czy kontynuować?"
 msgid "Language selection"
 msgstr "Wybór języka"
 
-msgid "Switching application language while some presets are modified."
-msgstr "Zmiana języka aplikacji przy jednoczesnym istniejących zmodyfikowanych ustawieniach."
-
 msgid "Asia-Pacific"
 msgstr "Azja i Pacyfik"
 
@@ -9437,6 +9456,9 @@ msgstr "Aktualna ścieżka instancji: "
 
 msgid "General"
 msgstr "Ogólne"
+
+msgid "Language"
+msgstr "Język"
 
 msgid "Metric"
 msgstr "Metryczne"
@@ -10340,9 +10362,6 @@ msgstr "Przejdź do strony publikacji modelu"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "Uwaga: Przygotowanie może zająć kilka minut. Proszę o cierpliwość."
 
-msgid "Publish"
-msgstr "Opublikuj"
-
 msgid "Publish was canceled"
 msgstr "Publikacja została anulowana"
 
@@ -10358,6 +10377,61 @@ msgstr "Przesyłanie danych"
 
 msgid "Jump to webpage"
 msgstr "Przejdź na stronę"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12783,14 +12857,20 @@ msgstr "Naprawa anulowana"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "Nie udało się skopiować pliku %1% do %2%: %3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "Należy sprawdzić niezapisane zmiany przed aktualizacją konfiguracji."
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "Pakiet konfiguracyjny:"
 
 msgid " updated to "
 msgstr " aktualizacja do "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "Należy sprawdzić niezapisane zmiany przed aktualizacją konfiguracji."
 
 msgid "Open G-code file:"
 msgstr "Otwórz plik G-code:"
@@ -22251,6 +22331,15 @@ msgstr "Tego działania nie będzie można cofnąć. Kontynuować?"
 msgid "Skipping objects."
 msgstr "Pomijanie obiektów."
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "Wybierz filament"
 
@@ -23949,6 +24038,19 @@ msgid ""
 msgstr ""
 "Unikaj odkształceń\n"
 "Czy wiesz, że podczas drukowania filamentami podatnymi na odkształcenia, takimi jak ABS, odpowiednie zwiększenie temperatury podgrzewanej płyty może zmniejszyć prawdopodobieństwo odkształceń?"
+
+#~ msgid "Switching application language"
+#~ msgstr "Zmiana języka aplikacji"
+
+#~ msgid "Select the language"
+#~ msgstr "Wybierz język"
+
+# AI Translated
+#~ msgid "Select plugin"
+#~ msgstr "Wybierz wtyczkę"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "Zmiana języka aplikacji przy jednoczesnym istniejących zmodyfikowanych ustawieniach."
 
 # AI Translated
 #~ msgid ""

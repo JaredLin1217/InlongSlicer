@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jakub Hencl\n"
 "Language-Team: \n"
@@ -2467,15 +2467,6 @@ msgstr "Je k dispozici aktualizace. Otevřete dialog balíčku předvoleb a prov
 msgid "%s has been removed."
 msgstr "%s bylo odstraněno."
 
-msgid "Switching application language"
-msgstr "Přepnutí jazyka aplikace"
-
-msgid "Select the language"
-msgstr "Zvolte jazyk"
-
-msgid "Language"
-msgstr "Jazyk"
-
 # AI Translated
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
@@ -4630,6 +4621,12 @@ msgstr ""
 "Chybová zpráva: %1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "Kopírování dočasného G-kódu do výstupního G-kódu selhalo. Může být problém s cílovým zařízením, zkuste prosím exportovat znovu nebo použijte jiné zařízení. Poškozený výstupní G-kód je na %1%.tmp."
 
@@ -4932,6 +4929,10 @@ msgstr ""
 "Změnit tato nastavení automaticky?\n"
 "Ano – změnit tato nastavení a automaticky povolit spirálový režim\n"
 "Ne – tentokrát nepoužít spirálový režim"
+
+# AI Translated
+msgid "N/A"
+msgstr "N/A"
 
 msgid "Printing"
 msgstr "Tisk"
@@ -5393,28 +5394,20 @@ msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "Neplatný formát. Očekávaný vektorový formát: \"%1%\""
 
 # AI Translated
-msgid "N/A"
-msgstr "N/A"
-
-# AI Translated
 msgid "System agents"
 msgstr "Systémoví agenti"
-
-# AI Translated
-msgid "No plugin selected"
-msgstr "Není vybrán žádný plugin"
 
 # AI Translated
 msgid "Add plugin"
 msgstr "Přidat plugin"
 
 # AI Translated
-msgid "Select plugin"
-msgstr "Vybrat plugin"
-
-# AI Translated
 msgid "Remove plugin"
 msgstr "Odebrat plugin"
+
+# AI Translated
+msgid "No plugin selected"
+msgstr "Není vybrán žádný plugin"
 
 # AI Translated
 msgid "Configure"
@@ -6361,6 +6354,12 @@ msgstr "Uložit projekt jako"
 
 msgid "Save current project as"
 msgstr "Uložit aktuální projekt jako"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "Importovat 3MF/STL/STEP/SVG/OBJ/AMF"
@@ -8002,6 +8001,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Dole"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 # AI Translated
 msgid "Plugin Selection"
 msgstr "Výběr pluginů"
@@ -8561,6 +8566,12 @@ msgstr "Please confirm that the G-code within these presets is safe to prevent a
 msgid "Customized Preset"
 msgstr "Přizpůsobená předvolba"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "Názvy komponent v souboru STEP nejsou ve formátu UTF-8!"
 
@@ -8971,6 +8982,17 @@ msgstr "Uložit rozřezaný soubor jako:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "Soubor %s byl odeslán do úložiště tiskárny a lze jej zobrazit na tiskárně."
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "Publikovat"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "The nozzle type is not set. Please set the nozzle and try again."
 
@@ -9181,9 +9203,6 @@ msgstr "Chcete pokračovat?"
 msgid "Language selection"
 msgstr "Výběr jazyka"
 
-msgid "Switching application language while some presets are modified."
-msgstr "Přepnutí jazyka aplikace, když jsou některé předvolby upraveny."
-
 msgid "Asia-Pacific"
 msgstr "Asie-Pacifik"
 
@@ -9288,6 +9307,9 @@ msgstr "Cesta k aktuální instanci: "
 
 msgid "General"
 msgstr "Obecné"
+
+msgid "Language"
+msgstr "Jazyk"
 
 msgid "Metric"
 msgstr "Metrika"
@@ -10144,9 +10166,6 @@ msgstr "Přejít na stránku s publikací modelu"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "Poznámka: Příprava může trvat několik minut. Buďte trpěliví."
 
-msgid "Publish"
-msgstr "Publikovat"
-
 msgid "Publish was canceled"
 msgstr "Publish was canceled"
 
@@ -10161,6 +10180,61 @@ msgstr "Uploading data"
 
 msgid "Jump to webpage"
 msgstr "Přejít na webovou stránku"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12584,14 +12658,20 @@ msgstr "Oprava zrušena"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "Kopírování souboru %1% do %2% selhalo: %3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "Nejprve je třeba zkontrolovat neuložené změny před aktualizací konfigurace."
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "Balíček konfigurace: "
 
 msgid " updated to "
 msgstr " aktualizováno na "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "Nejprve je třeba zkontrolovat neuložené změny před aktualizací konfigurace."
 
 msgid "Open G-code file:"
 msgstr "Otevřít G-code soubor:"
@@ -21855,6 +21935,15 @@ msgstr "Tuto akci nelze vrátit zpět. Pokračovat?"
 msgid "Skipping objects."
 msgstr "Přeskakování objektů."
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 # AI Translated
 msgid "Select Filament"
 msgstr "Vybrat filament"
@@ -23574,6 +23663,19 @@ msgid ""
 msgstr ""
 "Zamezte kroucení\n"
 "Víte, že při tisku materiálů náchylných ke kroucení, jako je ABS, může vhodné zvýšení teploty vyhřívané desky snížit pravděpodobnost kroucení?"
+
+#~ msgid "Switching application language"
+#~ msgstr "Přepnutí jazyka aplikace"
+
+#~ msgid "Select the language"
+#~ msgstr "Zvolte jazyk"
+
+# AI Translated
+#~ msgid "Select plugin"
+#~ msgstr "Vybrat plugin"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "Přepnutí jazyka aplikace, když jsou některé předvolby upraveny."
 
 # AI Translated
 #~ msgid ""

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: 2025-11-28 13:48-0600\n"
 "Last-Translator: tntchn <15895303+tntchn@users.noreply.github.com>\n"
 "Language-Team: \n"
@@ -2425,15 +2425,6 @@ msgstr "有可用的更新。請開啟預設組合對話框進行更新。"
 msgid "%s has been removed."
 msgstr "%s 已移除。"
 
-msgid "Switching application language"
-msgstr "切換應用程式語言"
-
-msgid "Select the language"
-msgstr "選擇語言"
-
-msgid "Language"
-msgstr "語言"
-
 # AI Translated
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
@@ -4550,6 +4541,12 @@ msgstr ""
 "錯誤訊息：%1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "將臨時 G-code 複製到輸出 G-code 時失敗。目標設備可能存在問題，請嘗試再次匯出或使用不同的設備。損壞的 G-code 已輸出為 %1%.tmp。"
 
@@ -4865,6 +4862,9 @@ msgstr ""
 "自動調整這些設定？\n"
 "是 - 自動調整這些設定並啟用花瓶模式\n"
 "否 - 不使用花瓶模式"
+
+msgid "N/A"
+msgstr "N/A"
 
 msgid "Printing"
 msgstr "列印中"
@@ -5323,28 +5323,21 @@ msgstr "無效的格式。請使用 N、N#K 或逗號分隔的清單，每個項
 msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "無效格式，應該是「%1%」這種格式"
 
-msgid "N/A"
-msgstr "N/A"
-
 # AI Translated
 msgid "System agents"
 msgstr "系統代理程式"
-
-# AI Translated
-msgid "No plugin selected"
-msgstr "未選擇外掛"
 
 # AI Translated
 msgid "Add plugin"
 msgstr "新增外掛"
 
 # AI Translated
-msgid "Select plugin"
-msgstr "選擇外掛"
-
-# AI Translated
 msgid "Remove plugin"
 msgstr "移除外掛"
+
+# AI Translated
+msgid "No plugin selected"
+msgstr "未選擇外掛"
 
 # AI Translated
 msgid "Configure"
@@ -6280,6 +6273,12 @@ msgstr "另存專案為"
 
 msgid "Save current project as"
 msgstr "將目前專案另存為"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "匯入 3MF/STL/STEP/SVG/OBJ/AMF"
@@ -7899,6 +7898,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "底部"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 # AI Translated
 msgid "Plugin Selection"
 msgstr "外掛選擇"
@@ -8454,6 +8459,12 @@ msgstr "請確認這些預設中的 G-code 是安全的，以防止對列印設�
 msgid "Customized Preset"
 msgstr "自訂預設"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "STEP 檔案內部元件的名稱不是 UTF-8 格式！"
 
@@ -8865,6 +8876,17 @@ msgstr "切片檔案另存為："
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "檔案 %s 已經傳送到列印設備的儲存空間，可以在列印設備上瀏覽。"
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "發布"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "噴嘴類型尚未設定。請設定噴嘴後再試一次。"
 
@@ -9073,9 +9095,6 @@ msgstr "是否繼續？"
 msgid "Language selection"
 msgstr "語言選擇"
 
-msgid "Switching application language while some presets are modified."
-msgstr "在切換應用程式語言之前發現某些參數預設有更改。"
-
 msgid "Asia-Pacific"
 msgstr "亞太"
 
@@ -9179,6 +9198,9 @@ msgstr "目前實例路徑："
 
 msgid "General"
 msgstr "一般"
+
+msgid "Language"
+msgstr "語言"
 
 msgid "Metric"
 msgstr "公制"
@@ -10000,9 +10022,6 @@ msgstr "發布頁面"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "提示：發布前需要一些準備時間，請耐心等待。"
 
-msgid "Publish"
-msgstr "發布"
-
 msgid "Publish was canceled"
 msgstr "發布已取消"
 
@@ -10017,6 +10036,61 @@ msgstr "正在上傳資料"
 
 msgid "Jump to webpage"
 msgstr "跳至網頁"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12370,14 +12444,20 @@ msgstr "修復被取消"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "從 %1% 複製檔案到 %2% 失敗：%3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "在設定更新之前需要檢查未儲存的設定變更。"
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "設定檔："
 
 msgid " updated to "
 msgstr "更新到 "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "在設定更新之前需要檢查未儲存的設定變更。"
 
 msgid "Open G-code file:"
 msgstr "打開 G-code 檔案："
@@ -21392,6 +21472,15 @@ msgstr "此操作無法撤消。繼續？"
 msgid "Skipping objects."
 msgstr "跳過物件。"
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "選擇線材"
 
@@ -23107,6 +23196,19 @@ msgid ""
 msgstr ""
 "避免翹曲\n"
 "您知道嗎？當列印容易翹曲的材料（如 ABS）時，適當提高熱床溫度可以降低翹曲的機率。"
+
+#~ msgid "Switching application language"
+#~ msgstr "切換應用程式語言"
+
+#~ msgid "Select the language"
+#~ msgstr "選擇語言"
+
+# AI Translated
+#~ msgid "Select plugin"
+#~ msgstr "選擇外掛"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "在切換應用程式語言之前發現某些參數預設有更改。"
 
 # AI Translated
 #~ msgid ""

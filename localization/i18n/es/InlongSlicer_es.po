@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Ian A. Bassi <>\n"
 "Language-Team: \n"
@@ -2339,15 +2339,6 @@ msgstr "Hay una actualización disponible. Abra el cuadro de diálogo del paquet
 msgid "%s has been removed."
 msgstr "Se ha eliminado %s."
 
-msgid "Switching application language"
-msgstr "Cambiando el idioma de la aplicación"
-
-msgid "Select the language"
-msgstr "Seleccionar el idioma"
-
-msgid "Language"
-msgstr "Idioma"
-
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
 msgstr ""
@@ -4410,6 +4401,12 @@ msgstr ""
 "Mensaje de error: %1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "La copia del G-Code temporal al G-Code de salida ha fallado. Puede haber un problema con el dispositivo de destino, intenta exportar nuevamente o usa un dispositivo diferente. El G-Code de salida dañado está en %1%.tmp."
 
@@ -4711,6 +4708,9 @@ msgstr ""
 "¿Cambiar estos ajustes automáticamente?\n"
 "Sí - Cambiar estos ajustes y activar el modo espiral automáticamente\n"
 "No - Dejar de usar el modo espiral esta vez"
+
+msgid "N/A"
+msgstr "N/A"
 
 msgid "Printing"
 msgstr "Imprimiendo"
@@ -5165,23 +5165,17 @@ msgstr "Patrón inválido. Use N, N#K, o una lista separada por comas con #K opc
 msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "Formato inválido. Formato de vector esperado: \"%1%\""
 
-msgid "N/A"
-msgstr "N/A"
-
 msgid "System agents"
 msgstr "Agentes del sistema"
-
-msgid "No plugin selected"
-msgstr "Ningún plugin seleccionado"
 
 msgid "Add plugin"
 msgstr "Añadir plugin"
 
-msgid "Select plugin"
-msgstr "Seleccionar plugin"
-
 msgid "Remove plugin"
 msgstr "Eliminar plugin"
+
+msgid "No plugin selected"
+msgstr "Ningún plugin seleccionado"
 
 msgid "Configure"
 msgstr "Configurar"
@@ -6111,6 +6105,12 @@ msgstr "Guardar proyecto como"
 
 msgid "Save current project as"
 msgstr "Guardar el proyecto actual como"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "Importar 3MF/STL/STEP/SVG/OBJ/AMF"
@@ -7721,6 +7721,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Inferior"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 msgid "Plugin Selection"
 msgstr "Selección de plugins"
 
@@ -8238,6 +8244,12 @@ msgstr "¡Por favor, confirme que el G-Code dentro de los perfiles son seguros p
 msgid "Customized Preset"
 msgstr "Perfil Personalizado"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "¡El nombre de los componentes dentro del archivo de pasos no tiene formato UTF-8!"
 
@@ -8634,6 +8646,17 @@ msgstr "Guardar el archivo laminado como:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "El archivo %s ha sido mandado al almacenamiento de la impresora y puede ser visualizado en la impresora."
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "Publicar"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "El tipo de boquilla no está establecido. Configure la boquilla e inténtelo de nuevo."
 
@@ -8835,9 +8858,6 @@ msgstr "¿Quieres continuar?"
 msgid "Language selection"
 msgstr "Selección de idiomas"
 
-msgid "Switching application language while some presets are modified."
-msgstr "Cambiando idioma de la aplicación mientras se modifican algunos perfiles."
-
 msgid "Asia-Pacific"
 msgstr "Asia-Pacífico"
 
@@ -8941,6 +8961,9 @@ msgstr "Ruta de Instancia Actual: "
 
 msgid "General"
 msgstr "General"
+
+msgid "Language"
+msgstr "Idioma"
 
 msgid "Metric"
 msgstr "Métrico"
@@ -9740,9 +9763,6 @@ msgstr "Ir a la página web de publicación de modelos"
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "Nota: La preparación puede llevar varios minutos. Por favor, sea paciente."
 
-msgid "Publish"
-msgstr "Publicar"
-
 msgid "Publish was canceled"
 msgstr "La publicación fue cancelada"
 
@@ -9757,6 +9777,61 @@ msgstr "Cargando datos"
 
 msgid "Jump to webpage"
 msgstr "Ir a la página web"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12030,14 +12105,20 @@ msgstr "Reparación cancelada"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "La copia del archivo %1% a %2% falló: %3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "Es necesario comprobar los cambios no guardados antes de actualizar la configuración."
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "Paquete de configuración: "
 
 msgid " updated to "
 msgstr " Actualizado a "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "Es necesario comprobar los cambios no guardados antes de actualizar la configuración."
 
 msgid "Open G-code file:"
 msgstr "Abrir archivo G-Code:"
@@ -20950,6 +21031,15 @@ msgstr "Esta acción no se puede deshacer. ¿Continuar?"
 msgid "Skipping objects."
 msgstr "Omitiendo objetos."
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "Seleccionar Filamento"
 
@@ -22554,6 +22644,18 @@ msgid ""
 msgstr ""
 "Evita la deformación\n"
 "¿Sabías que al imprimir materiales propensos a la deformación como el ABS, aumentar adecuadamente la temperatura de la cama térmica puede reducir la probabilidad de deformaciones?"
+
+#~ msgid "Switching application language"
+#~ msgstr "Cambiando el idioma de la aplicación"
+
+#~ msgid "Select the language"
+#~ msgstr "Seleccionar el idioma"
+
+#~ msgid "Select plugin"
+#~ msgstr "Seleccionar plugin"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "Cambiando idioma de la aplicación mientras se modifican algunos perfiles."
 
 #~ msgid ""
 #~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"

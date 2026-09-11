@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: InlongSlicer V2.3.2 beta2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 13:21+0800\n"
+"POT-Creation-Date: 2026-09-11 20:42+0800\n"
 "PO-Revision-Date: 2026-02-25 13:38+0300\n"
 "Last-Translator: Felix14_v2\n"
 "Language-Team: Felix14_v2 (ДС/ТГ: @felix14_v2, почта: aleks111001@list.ru), Andylg <andylg@yandex.ru>\n"
@@ -2415,15 +2415,6 @@ msgstr "Доступно обновление. Проверьте меню па�
 msgid "%s has been removed."
 msgstr "%s был удалён."
 
-msgid "Switching application language"
-msgstr "Изменение языка приложения"
-
-msgid "Select the language"
-msgstr "Выбор языка"
-
-msgid "Language"
-msgstr "Язык"
-
 #, c-format, boost-format
 msgid "Switching Inlong Slicer to language %s failed."
 msgstr ""
@@ -4561,6 +4552,12 @@ msgstr ""
 "Сообщение об ошибке: %1%"
 
 #, boost-format
+msgid ""
+"Copying of the temporary G-code to the output G-code failed.\n"
+"Error message: %1%"
+msgstr ""
+
+#, boost-format
 msgid "Copying of the temporary G-code to the output G-code failed. There might be problem with target device, please try exporting again or using different device. The corrupted output G-code is at %1%.tmp."
 msgstr "Не удалось скопировать временный G-код в целевое расположение. Возможно, проблема с устройством хранения, попробуйте выполнить экспорт снова или использовать другое устройство. Повреждённый выходной файл G-кода находится в %1%.tmp."
 
@@ -4871,6 +4868,11 @@ msgid ""
 "Yes - Change these settings and enable spiral/vase mode automatically\n"
 "No  - Cancel enabling spiral mode"
 msgstr "Использовать эти настройки и режим вазы?"
+
+# Не знаю, как и почему, но это, похоже, исправляет "вопросики" вместо
+# символов
+msgid "N/A"
+msgstr "–"
 
 msgid "Printing"
 msgstr "Печать"
@@ -5340,25 +5342,17 @@ msgstr "Недопустимый шаблон. Используйте N, N#K и�
 msgid "Invalid format. Expected vector format: \"%1%\""
 msgstr "Недопустимый формат. Ожидаемый векторный формат: \"%1%\""
 
-# Не знаю, как и почему, но это, похоже, исправляет "вопросики" вместо
-# символов
-msgid "N/A"
-msgstr "–"
-
 msgid "System agents"
 msgstr "Системные агенты"
-
-msgid "No plugin selected"
-msgstr "Плагины не выбраны"
 
 msgid "Add plugin"
 msgstr "Добавить плагин"
 
-msgid "Select plugin"
-msgstr "Выбрать плагин"
-
 msgid "Remove plugin"
 msgstr "Удалить плагин"
+
+msgid "No plugin selected"
+msgstr "Плагины не выбраны"
 
 msgid "Configure"
 msgstr "Настроить"
@@ -6345,6 +6339,12 @@ msgstr "Сохранить проект как"
 
 msgid "Save current project as"
 msgstr "Сохранить текущий проект как"
+
+msgid "Publish 3MF"
+msgstr ""
+
+msgid "Export a 3MF file with the selected settings embedded"
+msgstr ""
 
 msgid "Import 3MF/STL/STEP/SVG/OBJ/AMF"
 msgstr "Импорт 3MF/STL/STEP/SVG/OBJ/AMF"
@@ -7981,6 +7981,12 @@ msgctxt "Layers"
 msgid "Bottom"
 msgstr "Снизу"
 
+msgid "This setting does not specify a plugin capability type."
+msgstr ""
+
+msgid "This setting specifies an unrecognized plugin capability type: "
+msgstr ""
+
 msgid "Plugin Selection"
 msgstr "Выбор плагинов"
 
@@ -8527,6 +8533,12 @@ msgstr "Во избежание повреждения принтера убед
 msgid "Customized Preset"
 msgstr "Пользовательский профиль"
 
+msgid "Some published settings could not be applied:"
+msgstr ""
+
+msgid "Some filament slots were changed:"
+msgstr ""
+
 msgid "Component name(s) inside step file not in UTF-8 format!"
 msgstr "Имена компонентов внутри файла STEP не в формате UTF-8."
 
@@ -8942,6 +8954,17 @@ msgstr "Сохранить нарезанный файл как:"
 msgid "The file %s has been sent to the printer's storage space and can be viewed on the printer."
 msgstr "Файл %s отправлен в память принтера и может быть просмотрен на нём."
 
+msgid "Publish 3MF file as:"
+msgstr ""
+
+msgid ""
+"Failed to export the published 3MF file.\n"
+"Please check whether the folder exists online or if other programs have the file open."
+msgstr ""
+
+msgid "Publish"
+msgstr "Опубликовать"
+
 msgid "The nozzle type is not set. Please set the nozzle and try again."
 msgstr "Тип сопла не задан, укажите его и попробуйте ещё раз."
 
@@ -9148,9 +9171,6 @@ msgstr "Хотите продолжить?"
 msgid "Language selection"
 msgstr "Выбор языка"
 
-msgid "Switching application language while some presets are modified."
-msgstr "Смена языка приложения при изменении некоторых профилей."
-
 msgid "Asia-Pacific"
 msgstr "Азиатско-Тихоокеанский"
 
@@ -9254,6 +9274,9 @@ msgstr "Расположение: "
 
 msgid "General"
 msgstr "Общие"
+
+msgid "Language"
+msgstr "Язык"
 
 msgid "Metric"
 msgstr "Метрическая СИ"
@@ -10079,9 +10102,6 @@ msgstr "Перейти на веб-страницу публикации мод�
 msgid "Note: The preparation may take several minutes. Please be patient."
 msgstr "Примечание: подготовка может занять несколько минут. Пожалуйста, наберитесь терпения."
 
-msgid "Publish"
-msgstr "Опубликовать"
-
 msgid "Publish was canceled"
 msgstr "Публикация была отменена"
 
@@ -10096,6 +10116,61 @@ msgstr "Отправка данных"
 
 msgid "Jump to webpage"
 msgstr "Перейти на страницу"
+
+msgid "Mixed filament"
+msgstr ""
+
+msgid "Some mixed filaments rely on filaments that will not be published:"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Filament %d (mixed)"
+msgstr ""
+
+msgid "needs"
+msgstr ""
+
+msgid "not enabled"
+msgstr ""
+
+msgid "material not published"
+msgstr ""
+
+msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
+msgstr ""
+
+msgid "Publish anyway"
+msgstr ""
+
+msgid "Publish 3MF..."
+msgstr ""
+
+msgid "Select which settings to be published in the 3MF file"
+msgstr ""
+
+msgid "Publish 3MF Wiki"
+msgstr ""
+
+msgid "Publish 3MF Video Guide"
+msgstr ""
+
+msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
+msgstr ""
+
+msgid "Publish this mixed filament and enable + Full Publish its component filaments"
+msgstr ""
+
+msgid "Publish this filament slot in the 3MF file"
+msgstr ""
+
+msgid "Full Publish"
+msgstr ""
+
+msgid "Embed the entire filament of this slot in the 3MF file"
+msgstr ""
+
+msgid "Filter non-selected"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Save %s as"
@@ -12438,14 +12513,20 @@ msgstr "Починка модели отменена"
 msgid "Copying of file %1% to %2% failed: %3%"
 msgstr "Не удалось скопировать файл %1% в %2%: %3%"
 
-msgid "Please check any unsaved changes before updating the configuration."
-msgstr "Перед обновлением профилей необходимо проверить несохранённые изменения."
+msgid "Downloading new vendor profile(s): "
+msgstr ""
 
 msgid "Configuration package: "
 msgstr "Пакет профилей: "
 
 msgid " updated to "
 msgstr " обновлён до "
+
+msgid "Failed to download vendor profile(s): "
+msgstr ""
+
+msgid "Please check any unsaved changes before updating the configuration."
+msgstr "Перед обновлением профилей необходимо проверить несохранённые изменения."
 
 msgid "Open G-code file:"
 msgstr "Выберите G-код файл:"
@@ -22021,6 +22102,15 @@ msgstr "Это действие необратимо. Продолжить?"
 msgid "Skipping objects."
 msgstr "Исключение объектов."
 
+msgid "Material Ratio"
+msgstr ""
+
+msgid "Model Height"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
 msgid "Select Filament"
 msgstr "Выбрать материал"
 
@@ -23646,6 +23736,18 @@ msgid ""
 msgstr ""
 "Предотвращение коробления материала\n"
 "Знаете ли вы, что при печати материалами, склонными к короблению, таких как ABS, повышение температуры подогреваемого стола может снизить эту вероятность?"
+
+#~ msgid "Switching application language"
+#~ msgstr "Изменение языка приложения"
+
+#~ msgid "Select the language"
+#~ msgstr "Выбор языка"
+
+#~ msgid "Select plugin"
+#~ msgstr "Выбрать плагин"
+
+#~ msgid "Switching application language while some presets are modified."
+#~ msgstr "Смена языка приложения при изменении некоторых профилей."
 
 #~ msgid ""
 #~ "Direction in which top surfaces are filled when using a center-based pattern (Concentric, Archimedean Chords, Octagram Spiral).\n"
