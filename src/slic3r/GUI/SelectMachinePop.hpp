@@ -186,7 +186,9 @@ private:
     wxBoxSizer *                      m_sizer_body{nullptr};
     wxBoxSizer *                      m_sizer_my_devices{nullptr};
     wxBoxSizer *                      m_sizer_other_devices{nullptr};
+#if defined(__WINDOWS__)
     wxBoxSizer *                      m_sizer_search_bar{nullptr};
+#endif
     wxSearchCtrl*                     m_search_bar{nullptr};
     wxScrolledWindow *                m_scrolledWindow{nullptr};
     wxTimer *                         m_refresh_timer{nullptr};
