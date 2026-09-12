@@ -607,6 +607,14 @@
    "filament_type": "PA11-CF",
    "filament_vendor": "Prusa Polymers"
   },
+  "OF55gCS3": {
+   "filaments": [
+    "INLONG/INLONG CAST"
+   ],
+   "name": "INLONG CAST",
+   "filament_type": "PLA",
+   "filament_vendor": "INLONG"
+  },
   "OF55jHAJ": {
    "filaments": [
     "Prusa/Generic ABS HF"
@@ -1112,6 +1120,14 @@
    "name": "Artillery PETG Basic",
    "filament_type": "PETG Basic",
    "filament_vendor": "Artillery"
+  },
+  "OF95DqoF": {
+   "filaments": [
+    "INLONG/INLONG S2"
+   ],
+   "name": "INLONG S2",
+   "filament_type": "PATH",
+   "filament_vendor": "INLONG"
   },
   "OF99UMPq": {
    "filaments": [
@@ -2823,6 +2839,14 @@
    "name": "addnorth PLA X-PLA High Speed",
    "filament_type": "PLA",
    "filament_vendor": "addnorth"
+  },
+  "OFLjRyct": {
+   "filaments": [
+    "INLONG/INLONG BL200"
+   ],
+   "name": "INLONG BL200",
+   "filament_type": "PETG",
+   "filament_vendor": "INLONG"
   },
   "OFLqgSuX": {
    "filaments": [
@@ -6817,6 +6841,14 @@
    "name": "addnorth PETG rPETG Matte",
    "filament_type": "PETG",
    "filament_vendor": "addnorth"
+  },
+  "OFqW4ED1": {
+   "filaments": [
+    "INLONG/INLONG S1"
+   ],
+   "name": "INLONG S1",
+   "filament_type": "PET",
+   "filament_vendor": "INLONG"
   },
   "OFqcL5UF": {
    "filaments": [

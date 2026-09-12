@@ -127,12 +127,20 @@
                               "sub_path":  "filament/INLONG PET-CFGF.json"
                           },
                           {
+                              "name":  "INLONG S1",
+                              "sub_path":  "filament/INLONG S1.json"
+                          },
+                          {
                               "name":  "INLONG PLA",
                               "sub_path":  "filament/INLONG PLA.json"
                           },
                           {
                               "name":  "INLONG PETG-CFGF",
                               "sub_path":  "filament/INLONG PETG-CFGF.json"
+                          },
+                          {
+                              "name":  "INLONG BL200",
+                              "sub_path":  "filament/INLONG BL200.json"
                           },
                           {
                               "name":  "INLONG ABS",
@@ -155,6 +163,10 @@
                               "sub_path":  "filament/INLONG PATH-CFGF.json"
                           },
                           {
+                              "name":  "INLONG S2",
+                              "sub_path":  "filament/INLONG S2.json"
+                          },
+                          {
                               "name":  "INLONG PPA-CFGF",
                               "sub_path":  "filament/INLONG PPA-CFGF.json"
                           },
@@ -173,6 +185,10 @@
                           {
                               "name":  "INLONG HIPS",
                               "sub_path":  "filament/INLONG HIPS.json"
+                          },
+                          {
+                              "name":  "INLONG CAST",
+                              "sub_path":  "filament/INLONG CAST.json"
                           },
                           {
                               "name":  "INLONG VXL",
