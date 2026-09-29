@@ -118,7 +118,7 @@ void write_full_vendor_tree(const fs::path& dir, const std::string& vendor, cons
 // from. `cost` lets a test bump the library and watch the change flow through.
 void write_lib_tree(const fs::path& dir, const std::string& version, const std::string& cost)
 {
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     fs::create_directories(dir / lib / "filament");
     std::ofstream((dir / (lib + ".json")).string())
         << R"({"version":")" << version << R"(","name":")" << lib << R"(",)"
@@ -348,7 +348,7 @@ static bool preset_deep_equal(const Preset& a, const Preset& b)
         && a.name == b.name && a.file == b.file && a.loaded == b.loaded
         && a.config.equals(b.config)
         && a.alias == b.alias && a.renamed_from == b.renamed_from
-        && a.m_excluded_from == b.m_excluded_from && a.m_from_orca_filament_lib == b.m_from_orca_filament_lib
+        && a.m_excluded_from == b.m_excluded_from && a.m_from_inlong_filament_lib == b.m_from_inlong_filament_lib
         && a.bundle_id == b.bundle_id && a.version == b.version && a.ini_str == b.ini_str
         && a.setting_id == b.setting_id && a.filament_id == b.filament_id && a.user_id == b.user_id
         && a.base_id == b.base_id && a.sync_info == b.sync_info && a.description == b.description
@@ -770,7 +770,7 @@ TEST_CASE("a vendor cache outlives a filament library update and resolves agains
     const fs::path user = tmp.path / "data" / PRESET_SYSTEM_DIR;
     fs::create_directories(rsrc);
     fs::create_directories(user);
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     write_lib_tree(user, "1.0.0", "20");
     write_vendor_with_lib_filament(user, "Acme", "1.0.0");
 
@@ -827,7 +827,7 @@ TEST_CASE("a vendor installed as its cache alone still loads after a library upd
     const fs::path user = tmp.path / "data" / PRESET_SYSTEM_DIR;
     fs::create_directories(rsrc);
     fs::create_directories(user);
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     write_lib_tree(user, "1.0.0", "20");
     write_vendor_with_lib_filament(user, "Acme", "1.0.0");
 
@@ -982,7 +982,7 @@ TEST_CASE("a vendor shipped as a cache alone is installed and loaded from it", "
 
     // A packaged build: every vendor is its cache, with no profile of any kind
     // beside it — not even the filament library's.
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     REQUIRE(save_one_vendor((rsrc / (lib + ".opc")).string(), one_vendor(lib, "Shipped Library"), lib, "1.0.0"));
     REQUIRE(save_one_vendor((rsrc / "Acme.opc").string(), one_vendor("Acme", "Shipped Acme"), "Acme", "1.0.0"));
 
@@ -1155,7 +1155,7 @@ TEST_CASE("the filament library's inheritance maps are rebuilt on cache load", "
     // which exist for exactly this and never become presets.
     TempDir tmp;
     const fs::path    cache = tmp.path / "lib.opc";
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
 
     auto base = filament_entry("Generic PLA", "GFL99");
     base.instantiation = "false";
