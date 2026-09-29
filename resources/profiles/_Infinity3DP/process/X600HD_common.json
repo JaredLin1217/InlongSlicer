@@ -230,7 +230,7 @@
     "support_on_build_plate_only": "0",
     "support_remove_small_overhang": "1",
     "support_speed": "60",
-    "support_style": "tree_strong",
+    "support_style": "organic",
     "support_threshold_angle": "40",
     "support_top_contact_pattern": "concentric",
     "support_top_contact_spacing": "0.05",
@@ -280,6 +280,8 @@
     "wall_transition_filter_deviation": "25%",
     "wall_transition_length": "100%",
     "wipe_before_external_loop": "0",
+    "wipe_inward": "0",
+    "wipe_inward_distance": "50%",
     "wipe_on_loops": "0",
     "wipe_speed": "90%",
     "wiping_volumes_extruders": [

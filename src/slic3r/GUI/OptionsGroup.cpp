@@ -1064,6 +1064,27 @@ boost::any ConfigOptionsGroup::get_config_value(const DynamicPrintConfig& config
     wxString text_value        = wxString("");
     const ConfigOptionDef* opt = config.def()->get(opt_key);
 
+    if (opt == nullptr) {
+        BOOST_LOG_TRIVIAL(warning) << "ConfigOptionsGroup::get_config_value: unknown option '" << opt_key << "'";
+        return ret;
+    }
+
+    // A preset may legitimately omit a newer option when it was authored
+    // against an older schema or when an inherited profile was only partially
+    // materialized.  The GUI still builds a field from the current definition,
+    // so do not pass a null ConfigOption through opt_* accessors.  Use the
+    // canonical print defaults for the missing key and keep the rest of the
+    // reload path unchanged.
+    if (!config.has(opt_key)) {
+        BOOST_LOG_TRIVIAL(warning) << "ConfigOptionsGroup::get_config_value: missing option '" << opt_key
+                                   << "', using the current default";
+        DynamicPrintConfig defaults;
+        defaults.apply_only(FullPrintConfig::defaults(), { opt_key });
+        if (defaults.has(opt_key))
+            return get_config_value(defaults, opt_key, opt_index);
+        return ret;
+    }
+
     if (opt->nullable) {
         switch (opt->type) {
         case coPercents:

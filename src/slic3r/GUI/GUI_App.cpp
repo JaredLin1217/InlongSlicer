@@ -915,7 +915,13 @@ void GUI_App::post_init()
 
     plater_->trigger_restore_project(1);
     //#endif
-    mainframe->prebuild_pages_when_idle();
+    // The first-run wizard must finish applying a complete preset bundle before
+    // the settings page is lazily built.  Otherwise the idle prebuild can race
+    // the modal wizard with an empty DynamicPrintConfig; ConfigOptionsGroup then
+    // dereferences a missing boolean option while reloading the page.
+    const bool wizard_pending = !m_app_conf_exists || preset_bundle->printers.only_default_printers();
+    if (!wizard_pending)
+        mainframe->prebuild_pages_when_idle();
 
     //BBS: remove GCodeViewer as seperate APP logic
     /*if (this->init_params->start_as_gcodeviewer) {
@@ -991,6 +997,8 @@ void GUI_App::post_init()
     if (this->preset_updater) { // G-Code Viewer does not initialize preset_updater.
         CallAfter([this] {
             bool cw_showed = this->config_wizard_startup();
+            if (cw_showed)
+                mainframe->prebuild_pages_when_idle();
 
             if (!app_config->get_stealth_mode()) {
                 std::string http_url = get_http_url(app_config->get_country_code());

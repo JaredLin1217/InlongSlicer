@@ -1,6 +1,6 @@
 {
     "name":  "INLONG",
-    "version":  "01.05.01.24",
+    "version":  "01.05.01.25",
     "force_update":  "1",
     "description":  "My configurations",
     "machine_model_list":  [

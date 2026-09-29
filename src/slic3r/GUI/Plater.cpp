@@ -670,6 +670,7 @@ struct ExtruderGroup : StaticBox
     ExtruderGroup(wxWindow * parent, int index, wxString const &title);
     wxBoxSizer *      sizer        = nullptr;
     HoverLabel *      hover_label  = nullptr;
+    wxPanel *          ams_panel{nullptr};
     wxStaticText*     ams_label{nullptr};
     ScalableButton *  btn_edit     = nullptr;
     ComboBox *        combo_diameter = nullptr;
@@ -999,8 +1000,12 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
     panel_printer_bed->Show(preset_bundle.is_bbl_vendor() || cfg.opt_bool("support_multi_bed_types"));
 
     extruder_dual_sizer->Show(isDual);
-    left_extruder->show_ams_controls(isBBL);
-    right_extruder->show_ams_controls(isBBL);
+    // The AMS row belongs to Bambu Lab's AMS integration.  Agent mode is also used by
+    // Inlong/Infinity3DP, but those printers have independent dual nozzles and no AMS box;
+    // using `isBBL` alone therefore exposed a misleading "AMS / Not installed" row.
+    const bool show_ams_controls = isBBL && preset_bundle.is_bbl_vendor();
+    left_extruder->show_ams_controls(show_ams_controls);
+    right_extruder->show_ams_controls(show_ams_controls);
 
     // NEEDFIX requires AMS check or any type of ???
     // Single nozzle & non ams
@@ -1440,7 +1445,7 @@ ExtruderGroup::ExtruderGroup(wxWindow * parent, int index, wxString const &title
     use_nozzle_row_font(combo_diameter);
 
     // AMS
-    auto ams_panel = new wxPanel(this, wxID_ANY);
+    ams_panel = new wxPanel(this, wxID_ANY);
     ams_panel->SetBackgroundColour(*wxWHITE);
 
     ams_label  = new wxStaticText(ams_panel, wxID_ANY, _L("AMS"));
@@ -1734,10 +1739,16 @@ void ExtruderGroup::update_ams()
 
 void ExtruderGroup::show_ams_controls(bool show)
 {
-    if (sizer && hsizer_ams)
-        sizer->Show(hsizer_ams, show, true);
+    // `hsizer_ams` is nested inside ams_panel; the card sizer owns the panel, not
+    // the nested sizer.  Hiding only the nested sizer leaves the AMS title visible.
+    if (sizer && ams_panel)
+        sizer->Show(ams_panel, show, true);
+    if (ams_panel)
+        ams_panel->Show(show);
 
     if (!show) {
+        if (ams_label)
+            ams_label->Hide();
         if (btn_edit)
             btn_edit->Hide();
         if (ams_not_installed_msg)
@@ -1750,6 +1761,8 @@ void ExtruderGroup::show_ams_controls(bool show)
             if (ams_preview)
                 ams_preview->Close();
     } else {
+        if (ams_label)
+            ams_label->Show();
         update_ams();
     }
 
