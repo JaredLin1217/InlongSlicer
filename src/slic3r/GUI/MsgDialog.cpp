@@ -109,7 +109,7 @@ void MsgDialog::show_dsa_button(wxString const &title)
     Fit();
 }
 
-bool MsgDialog::get_checkbox_state() 
+bool MsgDialog::get_checkbox_state()
 {
     if (m_checkbox_dsa) {
         return m_checkbox_dsa->GetValue();
@@ -117,7 +117,7 @@ bool MsgDialog::get_checkbox_state()
     return false;
 }
 
-void MsgDialog::on_dpi_changed(const wxRect &suggested_rect) 
+void MsgDialog::on_dpi_changed(const wxRect &suggested_rect)
  {
      if (m_buttons.size() > 0) {
          MsgButtonsHash::iterator i = m_buttons.begin();
@@ -143,7 +143,7 @@ void MsgDialog::on_dpi_changed(const wxRect &suggested_rect)
      }
  }
 
-void MsgDialog::SetButtonLabel(wxWindowID btn_id, const wxString& label, bool set_focus/* = false*/) 
+void MsgDialog::SetButtonLabel(wxWindowID btn_id, const wxString& label, bool set_focus/* = false*/)
 {
     if (Button* btn = get_button(btn_id)) {
         btn->SetLabel(label);
@@ -165,7 +165,7 @@ Button* MsgDialog::add_button(wxWindowID btn_id, bool set_focus /*= false*/, con
     else if (label.length() >= 5 && label.length() < 8) {
         type = ButtonSizeMiddle;
         btn->SetMinSize(MSG_DIALOG_MIDDLE_BUTTON_SIZE);
-    } 
+    }
     else if (label.length() >= 8 && label.length() < 12) {
         type = ButtonSizeMiddle;
         btn->SetMinSize(MSG_DIALOG_LONG_BUTTON_SIZE);
@@ -194,9 +194,10 @@ Button* MsgDialog::add_button(wxWindowID btn_id, bool set_focus /*= false*/, con
     bd->button = btn;
     //bd->type   = type;
 
-    mb->id        = wxString::Format("%d", m_buttons.size());
+    // m_buttons.size() is a size_t, which does not match the %d conversion
+    mb->id        = wxString(std::to_string(m_buttons.size()));
     mb->buttondata = bd;
-    m_buttons[ wxString::Format("%d", m_buttons.size())] = mb;
+    m_buttons[ wxString(std::to_string(m_buttons.size()))] = mb;
     return btn;
 };
 
@@ -349,7 +350,7 @@ static void add_msg_content(wxWindow   *parent,
     wxSize page_size;
     int em = wxGetApp().em_unit();
     if (!wxGetApp().mainframe) {
-        // If mainframe is nullptr, it means that GUI_App::on_init_inner() isn't completed 
+        // If mainframe is nullptr, it means that GUI_App::on_init_inner() isn't completed
         // (We just show information dialog about configuration version now)
         // And as a result the em_unit value wasn't created yet
         // So, calculate it from the scale factor of Dialog
@@ -398,7 +399,7 @@ static void add_msg_content(wxWindow   *parent,
             }
             wxScrolledWindow *scrolledWindow = new wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
             scrolledWindow->SetBackgroundColour(*wxWHITE);
-            scrolledWindow->SetScrollRate(0, 20);
+            scrolledWindow->SetScrollRate(0, scrolledWindow->FromDIP(20));
             scrolledWindow->EnableScrolling(false, true);
             wxBoxSizer *sizer_scrolled = new wxBoxSizer(wxHORIZONTAL);
             Label *wrapped_text = new Label(scrolledWindow, font, msg, LB_AUTO_WRAP, wxSize(info_width, -1));
@@ -469,7 +470,7 @@ WarningDialog::WarningDialog(wxWindow *parent,
                              const wxString& message,
                              const wxString& caption/* = wxEmptyString*/,
                              long style/* = wxOK*/)
-    : MsgDialog(parent, caption.IsEmpty() ? wxString::Format(_L("%s warning"), SLIC3R_APP_FULL_NAME) : caption, 
+    : MsgDialog(parent, caption.IsEmpty() ? wxString::Format(_L("%s warning"), SLIC3R_APP_FULL_NAME) : caption,
                         wxString::Format(_L("%s has a warning")+":", SLIC3R_APP_FULL_NAME), style)
 {
     add_msg_content(this, content_sizer, message);
@@ -593,12 +594,12 @@ DownloadDialog::DownloadDialog(wxWindow *parent, const wxString &msg, const wxSt
 {
     add_button(wxID_YES, true, _L("Download"));
     add_button(wxID_CANCEL, true, _L("Skip"));
-    
+
     finalize();
 }
 
 
-void DownloadDialog::SetExtendedMessage(const wxString &extendedMessage) 
+void DownloadDialog::SetExtendedMessage(const wxString &extendedMessage)
 {
     add_msg_content(this, content_sizer, msg + "\n" + extendedMessage, false, false);
     Layout();
@@ -684,14 +685,14 @@ wxBoxSizer *Newer3mfVersionDialog::get_msg_sizer()
     wxStaticText *text1;
     wxBoxSizer *     horizontal_sizer = new wxBoxSizer(wxHORIZONTAL);
     wxString    msg_str;
-    if (file_version_newer) { 
+    if (file_version_newer) {
         text1 = new wxStaticText(this, wxID_ANY, wxString::Format(_L("The 3MF file version is in Beta and it is newer than the current %s version."), wxString(SLIC3R_APP_FULL_NAME)));
         wxStaticText *   text2       = new wxStaticText(this, wxID_ANY, wxString::Format(_L("If you would like to try %s Beta, you may click to"), wxString(SLIC3R_APP_FULL_NAME)));
         // INLONG standardized HyperLink
         HyperLink *      github_link = new HyperLink(this, _L("Download Beta Version"), "https://github.com/JaredLin1217/InlongSlicer/releases");
         horizontal_sizer->Add(text2, 0, wxEXPAND, 0);
         horizontal_sizer->Add(github_link, 0, wxEXPAND | wxLEFT, 5);
-        
+
     } else {
         text1 = new wxStaticText(this, wxID_ANY, wxString::Format(_L("The 3MF file version is newer than the current %s version."), wxString(SLIC3R_APP_FULL_NAME)));
         wxStaticText *text2 = new wxStaticText(this, wxID_ANY, wxString::Format(_L("Updating your %s could enable all functionality in the 3MF file."), wxString(SLIC3R_APP_FULL_NAME)));

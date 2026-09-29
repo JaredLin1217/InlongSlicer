@@ -9,10 +9,9 @@ on:
     - release/*
     paths:
     - 'resources/profiles/**'
-    # The extra JSON check also validates resources/printers/bambu_filament_ids.json,
-    # and lives in scripts/, so a PR touching only those must still run this workflow.
     - 'resources/printers/**'
     - 'scripts/**'
+    - 'src/libslic3r/PrintConfig.cpp'
     - ".github/workflows/check_profiles.yml"
 
   workflow_dispatch:
@@ -36,7 +35,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Run extra JSON check
+      # Keep script regressions separate from the validator sweep.
+      - name: Run profile script unit tests
+        run: python3 -m unittest discover -s scripts/tests -t scripts
+
+      - name: Check profiles (Inlong extra profile check)
         id: extra_json_check
         continue-on-error: true
         run: |
@@ -60,16 +63,10 @@ jobs:
           ./InlongSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 2>&1 | tee ${{ runner.temp }}/validate_system.log
           exit ${PIPESTATUS[0]}
 
-      # For now run filament subtype check only for BBL profiles until other vendors' profiles are fixed.
-      - name: validate filament subtype check for BBL profiles
-        id: validate_filament_subtypes
-        continue-on-error: true
-        run: |
-          set +e
-          ./InlongSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -l 2 -v BBL -f 2>&1 | tee ${{ runner.temp }}/validate_filament_subtypes.log
-          exit ${PIPESTATUS[0]}
-      # Slice a two-colour cube through every printer so all custom g-code (incl. change_filament_gcode)
-      # is expanded - catches undefined-placeholder / invalid-flow bugs the static checks above cannot see.
+      # Slice a two-colour cube through every printer, and through every system process/filament whose
+      # templates no printer's own slice reaches, so every custom g-code and filename_format shipped is
+      # expanded (names in {if} branches not taken included) - catches undefined-placeholder /
+      # invalid-flow bugs the static checks above cannot see.
       - name: validate slice (expand custom g-code)
         id: validate_slice
         continue-on-error: true
@@ -77,8 +74,8 @@ jobs:
           set +e
           ./InlongSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -s -l 2 2>&1 | tee ${{ runner.temp }}/validate_slice.log
           exit ${PIPESTATUS[0]}
-      # All vendors' filament_id collisions were fixed (see scripts/filament_id_snapshot.json),
-      # so the duplicate-filament-subtype check runs tree-wide.
+      # All vendors' filament_id collisions were fixed, so the duplicate-filament-subtype
+      # check runs tree-wide.
       - name: validate filament subtype check
         id: validate_filament_subtypes
         continue-on-error: true
@@ -204,7 +201,7 @@ jobs:
             echo ""
 
             if [ "${{ steps.extra_json_check.outcome }}" = "failure" ]; then
-              echo "### Extra JSON Check Failed"
+              echo "### Inlong extra profile check failed"
               echo ""
               echo '```'
               head -c 30000 ${{ runner.temp }}/extra_json_check.log || echo "No output captured"
@@ -249,7 +246,7 @@ jobs:
             fi
 
             echo "---"
-            echo "*Please fix the above errors and push a new commit.*"
+            echo '*Fix the errors above and push a new commit. To reproduce this run locally: `scripts/check_profile.sh`, or `scripts\check_profile.bat` on Windows.*'
           } > ${{ runner.temp }}/profile-check-results/pr_comment.md
 
       - name: Upload comment artifact
@@ -263,5 +260,6 @@ jobs:
       - name: Fail if any check failed
         if: ${{ always() && (steps.extra_json_check.outcome == 'failure' || steps.validate_system.outcome == 'failure' || steps.validate_slice.outcome == 'failure' || steps.validate_filament_subtypes.outcome == 'failure' || steps.validate_custom.outcome == 'failure') }}
         run: |
-          echo "One or more profile checks failed. See above for details."
+          echo "One or more profile checks failed; see the step logs above."
+          echo 'Reproduce the whole run locally with scripts/check_profile.sh (scripts\check_profile.bat on Windows).'
           exit 1

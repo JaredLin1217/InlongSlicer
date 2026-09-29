@@ -888,7 +888,7 @@ class TestCli(SettingTreeCase):
                          afi.generate_preset_setting_id("VendorA", "filament",
                                                         "A PLA @P1"))
 
-    def test_setting_id_without_generate_is_a_usage_error(self):
+    def test_setting_id_without_a_command_is_a_usage_error(self):
         with contextlib.redirect_stderr(io.StringIO()), \
                 self.assertRaises(SystemExit) as cm:
             afi.main(["--setting-id", "--profiles", self.t.profiles])

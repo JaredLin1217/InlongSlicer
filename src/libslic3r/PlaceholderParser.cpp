@@ -222,7 +222,7 @@ namespace client
             rhs.m_type = TYPE_EMPTY;
         }
         expr &operator=(const expr &rhs)
-        { 
+        {
             if (rhs.type() == TYPE_STRING) {
                 this->set_s(rhs.s());
             } else  {
@@ -246,7 +246,7 @@ namespace client
         }
 
         void                reset()
-        { 
+        {
             if (this->type() == TYPE_STRING)
                 delete m_data.s;
             m_type = TYPE_EMPTY;
@@ -283,7 +283,7 @@ namespace client
         void                set_s(const std::string &s) {
             if (this->type() == TYPE_STRING)
                 *m_data.s = s;
-            else 
+            else
                 this->set_s_take_ownership(new std::string(s));
         }
         void                set_s(std::string &&s) {
@@ -341,7 +341,7 @@ namespace client
             case TYPE_INT :
                 return expr(- this->i(), start_pos, this->it_range.end());
             case TYPE_DOUBLE:
-                return expr(- this->d(), start_pos, this->it_range.end()); 
+                return expr(- this->d(), start_pos, this->it_range.end());
             default:
                 this->throw_exception("Cannot apply unary minus operator.");
             }
@@ -359,7 +359,7 @@ namespace client
             case TYPE_INT:
                 return expr(this->i(), start_pos, this->it_range.end());
             case TYPE_DOUBLE:
-                return expr(static_cast<int>(this->d()), start_pos, this->it_range.end()); 
+                return expr(static_cast<int>(this->d()), start_pos, this->it_range.end());
             default:
                 this->throw_exception("Cannot convert to integer.");
             }
@@ -736,11 +736,11 @@ namespace client
             out.set_b(false);
         }
         template<bool RegEx>
-        static void one_of_test(const expr &match, const expr &pattern, expr &out) { 
+        static void one_of_test(const expr &match, const expr &pattern, expr &out) {
             if (match.type() == TYPE_EMPTY) {
                 // Inside an if / else block to be skipped
                 out.reset();
-                return;            
+                return;
             }
             if (! out.b()) {
                 if (match.type() != TYPE_STRING)
@@ -762,7 +762,7 @@ namespace client
             if (match.type() == TYPE_EMPTY) {
                 // Inside an if / else block to be skipped
                 out.reset();
-                return;            
+                return;
             }
             if (! out.b()) {
                 if (match.type() != TYPE_STRING)
@@ -775,7 +775,7 @@ namespace client
         {
             if (lhs.type() == TYPE_EMPTY)
                 // Inside an if / else block to be skipped
-                return;            
+                return;
             bool value = false;
             if (lhs.type() == TYPE_BOOL && rhs.type() == TYPE_BOOL) {
                 value = (op == '|') ? (lhs.b() || rhs.b()) : (lhs.b() && rhs.b());
@@ -839,7 +839,7 @@ namespace client
         const DynamicConfig     *config                 = nullptr;
         // Config provided as a parameter to PlaceholderParser invocation, evaluated after the two configs above.
         const DynamicConfig     *config_override        = nullptr;
-        // Config provided as a parameter to PlaceholderParser invocation, containing variables that will be read out 
+        // Config provided as a parameter to PlaceholderParser invocation, containing variables that will be read out
         // and processed by the PlaceholderParser callee.
         mutable DynamicConfig   *config_outputs         = nullptr;
         // Local variables, read / write
@@ -851,6 +851,8 @@ namespace client
         // If true, the macro processor will evaluate just a boolean condition using the full expressive power of the macro processor.
         bool                     just_boolean_expression = false;
         std::string              error_message;
+        // Local variables declared in {if} branches that were not taken, see PlaceholderParser::check_inactive_branches.
+        mutable std::set<std::string> inactive_local_variables;
 
         // Table to translate symbol tag to a human readable error message.
         static std::map<std::string, std::string> tag_to_error_message;
@@ -892,6 +894,8 @@ namespace client
         }
         // Inside a block, which is conditionally suppressed?
         bool skipping() const { return m_depth_suppressed > 0; }
+        // Are variable names resolved inside the suppressed blocks too?
+        bool check_inactive_names() const { return PlaceholderParser::check_inactive_branches && ! just_boolean_expression; }
 
         const ConfigOption* 	optptr(const t_config_option_key &opt_key) const override
         {
@@ -927,7 +931,7 @@ namespace client
 
         static void legacy_variable_expansion(const MyContext *ctx, IteratorRange &opt_key, std::string &output)
         {
-            if (ctx->skipping())
+            if (ctx->skipping() && ! ctx->check_inactive_names())
                 return;
 
             std::string         opt_key_str(opt_key.begin(), opt_key.end());
@@ -949,7 +953,9 @@ namespace client
                 }
             }
             if (opt == nullptr)
-                ctx->throw_exception("Variable does not exist", opt_key);
+                ctx->throw_exception(ctx->skipping() ? "Variable does not exist (in an inactive branch)" : "Variable does not exist", opt_key);
+            if (ctx->skipping())
+                return;
             if (opt->is_scalar()) {
                 if (opt->is_nil())
                     ctx->throw_exception("Trying to reference an undefined (nil) optional variable", opt_key);
@@ -972,9 +978,10 @@ namespace client
             IteratorRange   &opt_vector_index,
             std::string     &output)
         {
-            if (ctx->skipping())
+            if (ctx->skipping() && ! ctx->check_inactive_names())
                 return;
 
+            const char         *not_found = ctx->skipping() ? "Variable does not exist (in an inactive branch)" : "Variable does not exist";
             std::string         opt_key_str(opt_key.begin(), opt_key.end());
             const ConfigOption *opt = ctx->resolve_symbol(opt_key_str);
             if (opt == nullptr) {
@@ -984,18 +991,20 @@ namespace client
                     opt = ctx->resolve_symbol(opt_key_str);
                 }
                 if (opt == nullptr)
-                    ctx->throw_exception("Variable does not exist", opt_key);
+                    ctx->throw_exception(not_found, opt_key);
             }
             if (! opt->is_vector())
                 ctx->throw_exception("Trying to index a scalar variable", opt_key);
+            const ConfigOption *opt_index = ctx->resolve_symbol(std::string(opt_vector_index.begin(), opt_vector_index.end()));
+            if (opt_index == nullptr)
+                ctx->throw_exception(not_found, opt_key);
+            if (opt_index->type() != coInt)
+                ctx->throw_exception("Indexing variable has to be integer", opt_key);
+            if (ctx->skipping())
+                return;
             const ConfigOptionVectorBase *vec = static_cast<const ConfigOptionVectorBase*>(opt);
             if (vec->empty())
                 ctx->throw_exception("Indexing an empty vector variable", opt_key);
-            const ConfigOption *opt_index = ctx->resolve_symbol(std::string(opt_vector_index.begin(), opt_vector_index.end()));
-            if (opt_index == nullptr)
-                ctx->throw_exception("Variable does not exist", opt_key);
-            if (opt_index->type() != coInt)
-                ctx->throw_exception("Indexing variable has to be integer", opt_key);
 			int idx = opt_index->getInt();
 			if (idx < 0)
                 ctx->throw_exception("Negative vector index", opt_key);
@@ -1021,6 +1030,13 @@ namespace client
                     output.writable = true;
                 }
                 output.opt = opt;
+            } else if (ctx->check_inactive_names()) {
+                // Only check the name. Back tracking may resolve the same identifier twice, so there are no side effects.
+                const std::string key{ opt_key.begin(), opt_key.end() };
+                if (ctx->resolve_symbol(key) == nullptr && ctx->resolve_output_symbol(key) == nullptr &&
+                    ctx->inactive_local_variables.count(key) == 0 &&
+                    (ctx->context_data == nullptr || ctx->context_data->inactive_global_variables.count(key) == 0))
+                    ctx->throw_exception("Not a variable name (in an inactive branch)", opt_key);
             }
             output.it_range = opt_key;
         }
@@ -1426,6 +1442,13 @@ namespace client
                     out.opt = ctx->config_local.optptr(key);
                 }
                 out.name     = std::move(key);
+            } else if (ctx->check_inactive_names()) {
+                // Declared in a branch that is not taken: the name still counts as defined for the names that follow.
+                std::string key(it_range.begin(), it_range.end());
+                if (global_variable && ctx->context_data != nullptr)
+                    ctx->context_data->inactive_global_variables.insert(std::move(key));
+                else
+                    ctx->inactive_local_variables.insert(std::move(key));
             }
             out.it_range = it_range;
         }
@@ -1529,7 +1552,7 @@ namespace client
                     // scalar_var = ( scalar )
                     scalar_variable_assign_scalar_expression(ctx, lhs, il.front());
                 else
-                    // scalar_var = () 
+                    // scalar_var = ()
                     // or
                     // scalar_var = ( scalar, scalar, ... )
                     ctx->throw_exception("Cannot assign a vector value to a scalar variable.", lhs.it_range);
@@ -1606,7 +1629,7 @@ namespace client
                     // Output is numeric.
                     if (num_double == 0)
                         opt_new = std::make_unique<ConfigOptionInts>();
-                    else 
+                    else
                         opt_new = std::make_unique<ConfigOptionFloats>();
                 }
                 OptWithPos lhs_opt{ opt_new.get(), lhs.it_range, true };
@@ -1660,8 +1683,8 @@ namespace client
             const OptWithPos  &rhs)
         {
             if (ctx->skipping())
-                // Skipping, continue parsing.
-                return true;
+                // Skipping, let conditional_expression parse the whole right hand side, which may continue after the variable reference.
+                return false;
 
             if (lhs.opt) {
                 assert(lhs.opt->is_vector());
@@ -1983,13 +2006,13 @@ namespace client
     // This parser is to be used inside a raw[] directive to accept a single valid UTF-8 character.
     // If an invalid UTF-8 sequence is encountered, a qi::expectation_failure is thrown.
     struct ascii_char_skipper_parser : public utf8_char_parser
-    { 
-        // This function is called during the actual parsing process 
+    {
+        // This function is called during the actual parsing process
         template <typename Iterator, typename Context, typename Skipper, typename Attribute>
         bool parse(Iterator &first, Iterator const &last, Context &context, Skipper const &skipper, Attribute &attr) const
-        { 
+        {
             Iterator it = first;
-            // Let the UTF-8 parser throw if it encounters an invalid UTF-8 sequence. 
+            // Let the UTF-8 parser throw if it encounters an invalid UTF-8 sequence.
             if (! utf8_char_parser::parse(it, last, context, skipper, attr))
                 return false;
             char c = *first;
@@ -2007,7 +2030,7 @@ namespace client
         // This function is called during error handling to create a human readable string for the error context.
         template <typename Context>
         spirit::info what(Context&) const
-        { 
+        {
             return spirit::info("ASCII7_char");
         }
     };
@@ -2015,28 +2038,28 @@ namespace client
     struct FactorActions {
         static void set_start_pos(Iterator &start_pos, expr &out)
                 { out.it_range = IteratorRange(start_pos, start_pos); }
-        static void int_(const MyContext *ctx, int &value, Iterator &end_pos, expr &out) { 
+        static void int_(const MyContext *ctx, int &value, Iterator &end_pos, expr &out) {
             if (ctx->skipping()) {
                 out.reset();
                 out.it_range.end() = end_pos;
             } else
                 out = expr(value, out.it_range.begin(), end_pos);
         }
-        static void double_(const MyContext *ctx, double &value, Iterator &end_pos, expr &out) { 
+        static void double_(const MyContext *ctx, double &value, Iterator &end_pos, expr &out) {
             if (ctx->skipping()) {
                 out.reset();
                 out.it_range.end() = end_pos;
             } else
                 out = expr(value, out.it_range.begin(), end_pos);
         }
-        static void bool_(const MyContext *ctx, bool &value, Iterator &end_pos, expr &out) { 
+        static void bool_(const MyContext *ctx, bool &value, Iterator &end_pos, expr &out) {
             if (ctx->skipping()) {
                 out.reset();
                 out.it_range.end() = end_pos;
             } else
                 out = expr(value, out.it_range.begin(), end_pos);
         }
-        static void string_(const MyContext *ctx, IteratorRange &it_range, expr &out) { 
+        static void string_(const MyContext *ctx, IteratorRange &it_range, expr &out) {
             if (ctx->skipping()) {
                 out.reset();
                 out.it_range = it_range;
@@ -2182,7 +2205,7 @@ namespace client
             else_macros.name("else_macros");
 
             // Blocks do not require a separating semicolon.
-            block = 
+            block =
                     (kw["if"] > if_else_output(_r1)[_val = _1])
                 // (kw["switch"] ...
                 ;
@@ -2292,12 +2315,12 @@ namespace client
             multiplicative_expression.name("multiplicative_expression");
 
             assignment_statement =
-                (variable_reference(_r1)[_a = _1] >> '=') > 
+                (variable_reference(_r1)[_a = _1] >> '=') >
                 (       // Consumes also '(' conditional_expression ')', that means enclosing an expression into braces makes it a single value vector initializer.
                          initializer_list(_r1)[px::bind(&MyContext::vector_variable_assign_initializer_list, _r1, _a, _1)]
                         // Process it before conditional_expression, as conditional_expression requires a vector reference to be augmented with an index.
                         // Only process such variable references, which return a naked vector variable.
-                    |  eps(px::bind(&MyContext::is_vector_variable_reference, _a)) >> 
+                    |  eps(px::bind(&MyContext::is_vector_variable_reference, _a)) >>
                             variable_reference(_r1)[px::bind(&MyContext::copy_vector_variable_to_vector_variable, _r1, _a, _1)]
                        // Would NOT consume '(' conditional_expression ')' because such value was consumed with the expression above.
                     |  conditional_expression(_r1)
@@ -2305,7 +2328,7 @@ namespace client
                     |  (kw["repeat"] > "(" > additive_expression(_r1) > "," > conditional_expression(_r1) > ")")
                             [px::bind(&MyContext::vector_variable_assign_array, _r1, _a, _1, _2)]
                 );
-  
+
             new_variable_statement =
                 (kw["local"][_a = false] | kw["global"][_a = true]) > identifier[px::bind(&MyContext::new_old_variable, _r1, _a, _1, _b)] > lit('=') >
                 (       // Consumes also '(' conditional_expression ')', that means enclosing an expression into braces makes it a single value vector initializer.
@@ -2366,7 +2389,7 @@ namespace client
 
             one_of = (unary_expression(_r1)[_a = _1] > one_of_list(_r1, _a))[_val = _2];
             one_of.name("one_of");
-            one_of_list = 
+            one_of_list =
                 eps[px::bind(&expr::one_of_test_init, _val)] >
                 (   ( ',' > *(
                         (
@@ -2384,7 +2407,7 @@ namespace client
             interpolate_table.name("interpolate_table");
             interpolate_table_list =
                 eps[px::bind(&InterpolateTableContext::init, _r2)] >
-                ( *(( lit('(') > unary_expression(_r1) > ',' > unary_expression(_r1) > ')' ) 
+                ( *(( lit('(') > unary_expression(_r1) > ',' > unary_expression(_r1) > ')' )
                     [px::bind(&InterpolateTableContext::add_pair, _1, _2, _val)] >> -lit(',')) );
             interpolate_table.name("interpolate_table_list");
 

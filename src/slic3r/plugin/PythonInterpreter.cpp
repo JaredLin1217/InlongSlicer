@@ -345,15 +345,17 @@ boost::filesystem::path find_bundled_python_home()
     fs::path bundle_python = fs::path(resources_dir()).parent_path() / "MacOS" / "python";
     if (valid_python_home(bundle_python))
         return bundle_python;
-#elif defined(_WIN32)
-    fs::path exe_python = boost::dll::program_location().parent_path() / "python";
-    if (valid_python_home(exe_python))
-        return exe_python;
-#else
+#elif !defined(_WIN32)
     fs::path linux_python = fs::path(resources_dir()).parent_path() / "lib" / "python";
     if (valid_python_home(linux_python))
         return linux_python;
 #endif
+
+    // Next to the executable: the Windows install layout, and the runtime copied
+    // beside every platform's unit-test binary.
+    fs::path exe_python = boost::dll::program_location().parent_path() / "python";
+    if (valid_python_home(exe_python))
+        return exe_python;
 
     fs::path configured_python = INLONG_BUNDLED_PYTHON_ROOT;
     if (!configured_python.empty() && valid_python_home(configured_python))

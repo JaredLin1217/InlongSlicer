@@ -4,7 +4,7 @@
 // https://github.com/Ultimaker/CuraEngine/pull/401
 //
 // Our implementation is more accurate (discretizes a bit less cubes than Cura's)
-// by splitting only such cubes which contain a triangle. 
+// by splitting only such cubes which contain a triangle.
 // Our line extraction is time optimal instead of O(n^2) when connecting extracted lines,
 // and we also implemented adaptivity for supporting internal overhangs only.
 
@@ -41,12 +41,15 @@ Eigen::Quaterniond              transform_to_octree();
 FillAdaptive::OctreePtr         build_octree(
     // Mesh is rotated to the coordinate system of the octree.
     const indexed_triangle_set  &triangle_mesh,
-    // Overhang triangles extracted from fill surfaces with stInternalBridge type, 
+    // Overhang triangles extracted from fill surfaces with stInternalBridge type,
     // rotated to the coordinate system of the octree.
-    const std::vector<Vec3d>    &overhang_triangles, 
-    coordf_t                     line_spacing, 
+    const std::vector<Vec3d>    &overhang_triangles,
+    coordf_t                     line_spacing,
     // If true, octree is densified below internal overhangs only.
     bool                         support_overhangs_only);
+
+// Multiline infill: lines of the three families to non-crossing paths d1 apart, ends reaching end_overlap into walls.
+Polylines                       multiline_paths(const Lines &lines, double d1, double end_overlap, int sweep, const BoundingBox &cover);
 
 //
 // Some of the algorithms used by class FillAdaptive were inspired by

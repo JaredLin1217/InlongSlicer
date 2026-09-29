@@ -22,6 +22,7 @@
     #include <boost/process/args.hpp>
 #endif
 
+#include <wx/filename.h>
 #include <wx/stdpaths.h>
 
 namespace Slic3r {
@@ -56,7 +57,7 @@ static void start_new_slicer_or_gcodeviewer(const NewSlicerInstanceType instance
 	// just hang in the background.
 	if (wxExecute(const_cast<wchar_t**>(args.data()), wxEXEC_ASYNC) <= 0)
 		BOOST_LOG_TRIVIAL(error) << "Failed to spawn a new slicer \"" << into_u8(path);
-#else 
+#else
 	// Own executable path.
 	boost::filesystem::path bin_path = into_path(wxStandardPaths::Get().GetExecutablePath());
 #if defined(__APPLE__)

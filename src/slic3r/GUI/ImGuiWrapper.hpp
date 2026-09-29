@@ -98,7 +98,11 @@ public:
     const ImWchar *get_glyph_ranges() const { return m_glyph_ranges; } // language specific
 
     void new_frame();
-    void render();
+    // Ends the frame and returns its draw data without drawing it.
+    ImDrawData* end_frame();
+    void render(ImDrawData* draw_data);
+    // Hash of every draw list's vertices, indices and commands.
+    static ImGuiID draw_data_signature(const ImDrawData* draw_data);
 
     float scaled(float x) const { return x * m_font_size; }
     ImVec2 scaled(float x, float y) const { return ImVec2(x * m_font_size, y * m_font_size); }
@@ -213,9 +217,9 @@ public:
     bool want_any_input() const;
 
     // Optional inputs are used for set up value inside of an optional, with default value
-    // 
+    //
     // Extended function ImGui::InputInt to work with std::optional<int>, when value == def_val optional is released.
-    static bool input_optional_int(const char *label, std::optional<int>& v, int step=1, int step_fast=100, ImGuiInputTextFlags flags=0, int def_val = 0);    
+    static bool input_optional_int(const char *label, std::optional<int>& v, int step=1, int step_fast=100, ImGuiInputTextFlags flags=0, int def_val = 0);
     // Extended function ImGui::InputFloat to work with std::optional<float> value near def_val cause release of optional
     static bool input_optional_float(const char* label, std::optional<float> &v, float step = 0.0f, float step_fast = 0.0f, const char* format = "%.3f", ImGuiInputTextFlags flags = 0, float def_val = .0f);
     // Extended function ImGui::DragFloat to work with std::optional<float> value near def_val cause release of optional

@@ -131,15 +131,12 @@ void GLGizmoPainterBase::render_triangles(const Selection& selection) const
     }
 }
 
-void GLGizmoPainterBase::render_cursor()
+std::vector<Transform3d> GLGizmoPainterBase::mesh_trafo_matrices() const
 {
-    // First check that the mouse pointer is on an object.
     const ModelObject* mo = m_c->selection_info()->model_object();
     const Selection& selection = m_parent.get_selection();
     const ModelInstance* mi = mo->instances[selection.get_instance_idx()];
-    const Camera& camera = wxGetApp().plater()->get_camera();
 
-    // Precalculate transformations of individual meshes.
     std::vector<Transform3d> trafo_matrices;
     for (const ModelVolume* mv : mo->volumes) {
         if (mv->is_model_part())
@@ -154,6 +151,26 @@ void GLGizmoPainterBase::render_cursor()
             }
         }
     }
+    return trafo_matrices;
+}
+
+bool GLGizmoPainterBase::render_follows_cursor() const
+{
+    // The brush is drawn only where the cursor meets the model. update_raycast_cache() keeps the
+    // answer for render_cursor().
+    if (m_c->selection_info() == nullptr || m_c->selection_info()->model_object() == nullptr)
+        return false;
+    update_raycast_cache(m_parent.get_local_mouse_position(), wxGetApp().plater()->get_camera(), mesh_trafo_matrices());
+    return m_rr.mesh_id != -1;
+}
+
+void GLGizmoPainterBase::render_cursor()
+{
+    // First check that the mouse pointer is on an object.
+    const Camera& camera = wxGetApp().plater()->get_camera();
+
+    // Precalculate transformations of individual meshes.
+    const std::vector<Transform3d> trafo_matrices = mesh_trafo_matrices();
     // Raycast and return if there's no hit.
     update_raycast_cache(m_parent.get_local_mouse_position(), camera, trafo_matrices);
     if (m_rr.mesh_id == -1)
@@ -818,7 +835,7 @@ bool GLGizmoPainterBase::gizmo_event(SLAGizmoEventType action, const Vec2d& mous
             else if(m_horizontal_only)
                 _mouse_position.y() = m_last_mouse_click.y();
         }
-        
+
         std::vector<std::vector<ProjectedMousePosition>> projected_mouse_positions_by_mesh = get_projected_mouse_positions(_mouse_position, 1., trafo_matrices);
         m_last_mouse_click = Vec2d::Zero(); // only actual hits should be saved
 
@@ -999,14 +1016,14 @@ bool GLGizmoPainterBase::on_mouse(const wxMouseEvent &mouse_event)
     const Selection &selection = m_parent.get_selection();
     int selected_object_idx = selection.get_object_idx();
     if (mouse_event.LeftDown()) {
-        if ((!control_down || grabber_contains_mouse) &&            
+        if ((!control_down || grabber_contains_mouse) &&
             gizmo_event(SLAGizmoEventType::LeftDown, mouse_pos, mouse_event.ShiftDown(), mouse_event.AltDown(), false))
             // the gizmo got the event and took some action, there is no need
             // to do anything more
             return true;
     } else if (mouse_event.RightDown()){
         if (!control_down && selected_object_idx != -1 &&
-            gizmo_event(SLAGizmoEventType::RightDown, mouse_pos, false, false, false)) 
+            gizmo_event(SLAGizmoEventType::RightDown, mouse_pos, false, false, false))
             // event was taken care of
             return true;
     } else if (mouse_event.Dragging()) {
@@ -1438,7 +1455,7 @@ void TriangleSelectorPatch::update_triangles_per_patch()
     auto [neighbors, neighbors_propagated] = this->precompute_all_neighbors();
     std::vector<bool>  visited(m_triangles.size(), false);
 
-    bool using_wireframe = (m_need_wireframe && wxGetApp().plater()->is_wireframe_enabled() && wxGetApp().plater()->is_show_wireframe()) ? true : false; 
+    bool using_wireframe = (m_need_wireframe && wxGetApp().plater()->is_wireframe_enabled() && wxGetApp().plater()->is_show_wireframe()) ? true : false;
 
     auto get_all_touching_triangles = [this](int facet_idx, const Vec3i32& neighbors, const Vec3i32& neighbors_propagated) -> std::vector<int> {
         assert(facet_idx != -1 && facet_idx < int(m_triangles.size()));

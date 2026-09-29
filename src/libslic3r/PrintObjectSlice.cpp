@@ -1271,8 +1271,8 @@ void PrintObject::slice_volumes()
 	                m_print->throw_if_canceled();
 	                Layer *layer = m_layers[layer_id];
 	                // Apply size compensation and perform clipping of multi-part objects.
-	                float elfoot = elephant_foot_compensation_scaled > 0 && layer_id < m_config.elefant_foot_compensation_layers.value ? 
-                        elephant_foot_compensation_scaled - (elephant_foot_compensation_scaled / m_config.elefant_foot_compensation_layers.value) * layer_id : 
+	                float elfoot = elephant_foot_compensation_scaled > 0 && layer_id < m_config.elefant_foot_compensation_layers.value ?
+                        elephant_foot_compensation_scaled - (elephant_foot_compensation_scaled / m_config.elefant_foot_compensation_layers.value) * layer_id :
                         0.f;
 	                if (layer->m_regions.size() == 1) {
 	                    // Optimized version for a single region layer.
@@ -1404,7 +1404,7 @@ void PrintObject::apply_conical_overhang() {
     if (m_layers.empty()) {
         return;
     }
-    
+
     const double conical_overhang_angle = this->config().make_overhang_printable_angle;
     if (conical_overhang_angle == 90.0) {
         return;
@@ -1551,12 +1551,19 @@ ExPolygons PrintObject::_shrink_contour_holes(double contour_delta, double hole_
 
 std::vector<Polygons> PrintObject::slice_support_volumes(const ModelVolumeType model_volume_type) const
 {
-    auto it_volume     = this->model_object()->volumes.begin();
-    auto it_volume_end = this->model_object()->volumes.end();
-    for (; it_volume != it_volume_end && (*it_volume)->type() != model_volume_type; ++ it_volume) ;
+    // Supports merge every matching volume; Precise Seam calls the shared slicer one volume at a time.
+    std::vector<const ModelVolume*> volumes;
+    for (const ModelVolume *volume : this->model_object()->volumes)
+        if (volume->type() == model_volume_type)
+            volumes.push_back(volume);
+    return this->slice_modifier_volumes(volumes);
+}
+
+std::vector<Polygons> PrintObject::slice_modifier_volumes(const std::vector<const ModelVolume*> &volumes) const
+{
     std::vector<Polygons> slices;
-    if (it_volume != it_volume_end) {
-        // Found at least a single support volume of model_volume_type.
+    if (!volumes.empty()) {
+        // Share layer heights, transforms and cancellation handling across the selected volumes.
         std::vector<float> zs = zs_from_layers(this->layers());
         std::vector<char>  merge_layers;
         bool               merge = false;
@@ -1564,27 +1571,26 @@ std::vector<Polygons> PrintObject::slice_support_volumes(const ModelVolumeType m
         auto               throw_on_cancel_callback = std::function<void()>([print](){ print->throw_if_canceled(); });
         MeshSlicingParamsEx params;
         params.trafo = this->trafo_centered();
-        for (; it_volume != it_volume_end; ++ it_volume)
-            if ((*it_volume)->type() == model_volume_type) {
-                std::vector<ExPolygons> slices2 = slice_volume(*(*it_volume), zs, params, throw_on_cancel_callback);
-                if (slices.empty()) {
-                    slices.reserve(slices2.size());
-                    for (ExPolygons &src : slices2)
-                        slices.emplace_back(to_polygons(std::move(src)));
-                } else if (!slices2.empty()) {
-                    if (merge_layers.empty())
-                        merge_layers.assign(zs.size(), false);
-                    for (size_t i = 0; i < zs.size(); ++ i) {
-                        if (slices[i].empty())
-                            slices[i] = to_polygons(std::move(slices2[i]));
-                        else if (! slices2[i].empty()) {
-                            append(slices[i], to_polygons(std::move(slices2[i])));
-                            merge_layers[i] = true;
-                            merge = true;
-                        }
+        for (const ModelVolume *volume : volumes) {
+            std::vector<ExPolygons> slices2 = slice_volume(*volume, zs, params, throw_on_cancel_callback);
+            if (slices.empty()) {
+                slices.reserve(slices2.size());
+                for (ExPolygons &src : slices2)
+                    slices.emplace_back(to_polygons(std::move(src)));
+            } else if (!slices2.empty()) {
+                if (merge_layers.empty())
+                    merge_layers.assign(zs.size(), false);
+                for (size_t i = 0; i < zs.size(); ++ i) {
+                    if (slices[i].empty())
+                        slices[i] = to_polygons(std::move(slices2[i]));
+                    else if (! slices2[i].empty()) {
+                        append(slices[i], to_polygons(std::move(slices2[i])));
+                        merge_layers[i] = true;
+                        merge = true;
                     }
                 }
             }
+        }
         if (merge) {
             std::vector<Polygons*> to_merge;
             to_merge.reserve(zs.size());

@@ -506,7 +506,7 @@ public:
 
     std::vector<int> stage_list_info;
     int stage_curr = 0;
-    int stage_remaining_seconds = 0; 
+    int stage_remaining_seconds = 0;
     int m_push_count = 0;
     int m_full_msg_count = 0; /*the full message count, there are full or diff messages from network*/
     bool calibration_done { false };
@@ -897,6 +897,7 @@ public:
 
     bool is_connected();
     bool is_connecting();
+    // Emits DeviceOnline or DeviceOffline only when the reachability state changes.
     void set_online_state(bool on_off);
     bool is_online() { return m_is_online; }
     bool is_info_ready(bool check_version = true) const;

@@ -24,7 +24,7 @@ struct FilamentSpec
     const char *name;
     const char *filament_id;
     const char *filament_type;
-    bool        is_library = false;   // belongs to the Orca Filament Library, not the printer vendor
+    bool        is_library = false;   // belongs to the Inlong filament library, not the printer vendor
     bool        is_system  = true;
 };
 

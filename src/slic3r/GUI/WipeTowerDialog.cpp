@@ -6,6 +6,7 @@
 #include "GUI.hpp"
 #include "I18N.hpp"
 #include "GUI_App.hpp"
+#include "WebViewDialog.hpp"
 #include "MsgDialog.hpp"
 #include "format.hpp"
 #include "libslic3r/Color.hpp"
@@ -60,7 +61,7 @@ RammingDialog::RammingDialog(wxWindow* parent,const std::string& parameters)
 
 #ifdef _WIN32
 #define style wxSP_ARROW_KEYS | wxBORDER_SIMPLE
-#else 
+#else
 #define style wxSP_ARROW_KEYS
 #endif
 
@@ -95,7 +96,7 @@ RammingPanel::RammingPanel(wxWindow* parent, const std::string& parameters)
 
     // Create help text for constant flow rate dragging
     std::string ctrl_str = GUI::shortkey_ctrl_prefix();
-    if (!ctrl_str.empty() && ctrl_str.back() == '+') 
+    if (!ctrl_str.empty() && ctrl_str.back() == '+')
         ctrl_str.pop_back(); // Remove trailing '+'
     wxString message = format_wxstr(_L("For constant flow rate, hold %1% while dragging."), ctrl_str);
     Label* label = new Label(this, wxEmptyString);
@@ -169,7 +170,7 @@ RammingPanel::RammingPanel(wxWindow* parent, const std::string& parameters)
         m_chart->set_xy_range(m_widget_time->GetValue() * 0.001,-1);
     });
     m_widget_time->Bind(wxEVT_CHAR,[](wxKeyEvent&){});      // do nothing - prevents the user to change the value
-    m_widget_volume->Bind(wxEVT_CHAR,[](wxKeyEvent&){});    // do nothing - prevents the user to change the value   
+    m_widget_volume->Bind(wxEVT_CHAR,[](wxKeyEvent&){});    // do nothing - prevents the user to change the value
     Bind(EVT_WIPE_TOWER_CHART_CHANGED,[this](wxCommandEvent&) {
         m_widget_volume->SetValue(m_chart->get_volume());
         m_widget_time->SetValue(m_chart->get_time() * 1000);
@@ -190,7 +191,7 @@ std::string RammingPanel::get_parameters()
     stream << m_ramming_line_width_multiplicator << " " << m_ramming_step_multiplicator;
     for (const float& speed_value : speeds)
         stream << " " << speed_value;
-    stream << "|";    
+    stream << "|";
     for (const auto& button : buttons)
         stream << " " << button.first << " " << button.second;
     return stream.str();
@@ -463,7 +464,7 @@ WipingDialog::WipingDialog(wxWindow* parent, const int max_flush_volume) :
     wxString filepath_str = from_path(filepath);
     wxFileName fn(filepath_str);
     if(fn.FileExists()) {
-        wxString url = wxFileSystem::FileNameToURL(fn);
+        wxString url = file_url_from_path(filepath);
         BOOST_LOG_TRIVIAL(debug) << __FUNCTION__<< "File exists and load url " << url.ToStdString();
         m_webview->LoadURL(url);
         BOOST_LOG_TRIVIAL(debug) << __FUNCTION__<< "Successfully loaded url: " << url.ToStdString();

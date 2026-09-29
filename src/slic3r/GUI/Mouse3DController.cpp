@@ -1,6 +1,7 @@
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/PresetBundle.hpp"
 #include "Mouse3DController.hpp"
+#include "GUI.hpp"
 
 #include "Camera.hpp"
 #include "GUI_App.hpp"
@@ -272,7 +273,7 @@ void Mouse3DController::device_attached(const std::string &device)
 //    BOOST_LOG_TRIVIAL(trace) << "Mouse3DController::device_attached: " << device;
 	    if (std::find(_3DCONNEXION_VENDORS.begin(), _3DCONNEXION_VENDORS.end(), vid) != _3DCONNEXION_VENDORS.end()) {
 			// Signal the worker thread to wake up and enumerate HID devices, if not connected at the moment.
-			// The message may come multiple times per each USB device. For example, some USB wireless dongles register as multiple HID sockets 
+			// The message may come multiple times per each USB device. For example, some USB wireless dongles register as multiple HID sockets
 			// for multiple devices to connect to.
 			// Never mind, enumeration will be performed until connected.
 		    m_wakeup = true;
@@ -370,7 +371,7 @@ bool Mouse3DController::State::apply(const Mouse3DController::Params &params, Ca
 // Load the device parameter database from appconfig. To be called on application startup.
 void Mouse3DController::load_config(const AppConfig &appconfig)
 {
-	// We do not synchronize m_params_by_device with the background thread explicitely 
+	// We do not synchronize m_params_by_device with the background thread explicitely
 	// as there should be a full memory barrier executed once the background thread is started.
 	m_params_by_device.clear();
 
@@ -420,7 +421,7 @@ void Mouse3DController::load_config(const AppConfig &appconfig)
 // Store the device parameter database back to appconfig. To be called on application closeup.
 void Mouse3DController::save_config(AppConfig &appconfig) const
 {
-	// We do not synchronize m_params_by_device with the background thread explicitely 
+	// We do not synchronize m_params_by_device with the background thread explicitely
 	// as there should be a full memory barrier executed once the background thread is stopped.
 
     for (const auto &key_value_pair : m_params_by_device) {
@@ -502,7 +503,7 @@ void Mouse3DController::render_settings_dialog(GLCanvas3D& canvas) const
         if (shown) {
             ImVec2 win_size = ImGui::GetWindowSize();
             if (last_win_size.x != win_size.x || last_win_size.y != win_size.y) {
-                // when the user clicks on [X] button, the next time the dialog is shown 
+                // when the user clicks on [X] button, the next time the dialog is shown
                 // has a dummy size, so we trigger an extra frame to let it have the correct size
                 last_win_size = win_size;
                 canvas.request_extra_frame();
@@ -772,7 +773,7 @@ bool Mouse3DController::handle_input(const DataPacketAxis& packet)
     		m_params_ui_changed = false;
     	}
     }
-    
+
     bool updated = false;
     // translation
     double deadzone = m_params.translation.deadzone;
@@ -886,13 +887,13 @@ void Mouse3DController::run()
     int res = hid_init();
     if (res != 0) {
     	// Give up.
-#if defined(__unix__) || defined(__unix) || defined(unix)    	
+#if defined(__unix__) || defined(__unix) || defined(unix)
     	if (res == -1)
     		// Hopefully this error code comes from our bundled patched hidapi. In that case, -1 is returned by hid_wrapper_udev_init() and it mean
 			BOOST_LOG_TRIVIAL(error) << "Unable to initialize hidapi library: failed to load libudev.so.1 or libudev.so.0";
     	else if (res == -2)
     		// Hopefully this error code comes from our bundled patched hidapi. In that case, -2 is returned by hid_wrapper_udev_init() and it mean
-			BOOST_LOG_TRIVIAL(error) << "Unable to initialize hidapi library: failed to resolve some function from libudev.so.1 or libudev.so.0"; 
+			BOOST_LOG_TRIVIAL(error) << "Unable to initialize hidapi library: failed to resolve some function from libudev.so.1 or libudev.so.0";
     	else
 #endif // unixes
 	        BOOST_LOG_TRIVIAL(error) << "Unable to initialize hidapi library";
@@ -1075,7 +1076,7 @@ bool Mouse3DController::connect_device()
                 hid_close(test_device);
 #else
             if (device.second.front().has_valid_usage()) {
-#endif // __linux__ 
+#endif // __linux__
                 vendor_id = device.first.first;
                 product_id = device.first.second;
                 break;
@@ -1205,7 +1206,7 @@ void Mouse3DController::disconnect_device()
 #ifdef _WIN32
 	    // Enumerate once immediately after disconnect.
 	    m_wakeup = true;
-#endif // _WIN32	    
+#endif // _WIN32
         wxGetApp().plater()->CallAfter([]() {
         	Plater *plater = wxGetApp().plater();
         	if (plater != nullptr) {

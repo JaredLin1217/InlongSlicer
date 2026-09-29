@@ -218,37 +218,38 @@ wxString GuideFrame::SetStartPage(GuidePage startpage, bool load)
     m_page = startpage;
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__<< boost::format(" enter, load=%1%, start_page=%2%")%load%int(startpage);
     //wxLogMessage("GUIDE: webpage_1  %s", (boost::filesystem::path(resources_dir()) / "web\\guide\\1\\index.html").make_preferred().string().c_str() );
-    wxString TargetUrl = from_u8( (boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=1").make_preferred().string() );
+    const wxString guide_url = file_url_from_path(boost::filesystem::path(resources_dir()) / "web/guide/0/index.html");
+    wxString TargetUrl = guide_url + "?target=1";
     //wxLogMessage("GUIDE: webpage_2  %s", TargetUrl.mb_str());
 
     if (startpage == BBL_WELCOME){
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=1").make_preferred().string());
+        TargetUrl = guide_url + "?target=1";
     } else if (startpage == BBL_REGION) {
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=11").make_preferred().string());
+        TargetUrl = guide_url + "?target=11";
     } else if (startpage == BBL_MODELS) {
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=21").make_preferred().string());
+        TargetUrl = guide_url + "?target=21";
     } else if (startpage == BBL_FILAMENTS) {
         SetTitle(_L("Setup Wizard"));
 
         int nSize = m_ProfileJson["model"].size();
 
         if (nSize>0)
-            TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=22").make_preferred().string());
+            TargetUrl = guide_url + "?target=22";
         else
-            TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=21").make_preferred().string());
+            TargetUrl = guide_url + "?target=21";
     } else if (startpage == BBL_FILAMENT_ONLY) {
         SetTitle("");
-        TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=23").make_preferred().string());
+        TargetUrl = guide_url + "?target=23";
     } else if (startpage == BBL_MODELS_ONLY) {
         SetTitle("");
-        TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=24").make_preferred().string());
+        TargetUrl = guide_url + "?target=24";
     }
     else {
         SetTitle(_L("Setup Wizard"));
-        TargetUrl = from_u8((boost::filesystem::path(resources_dir()) / "web/guide/0/index.html?target=21").make_preferred().string());
+        TargetUrl = guide_url + "?target=21";
     }
 
     wxString strlang = wxGetApp().current_language_code_safe();
@@ -256,7 +257,6 @@ wxString GuideFrame::SetStartPage(GuidePage startpage, bool load)
     if (strlang != "")
         TargetUrl = wxString::Format("%s&lang=%s", w2s(TargetUrl), strlang);
 
-    TargetUrl = "file://" + TargetUrl;
     if (load)
         load_url(TargetUrl);
 
@@ -802,7 +802,9 @@ int GuideFrame::SaveProfile()
 
     m_MainPtr->app_config->save();
 
-    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << ": saving profile selections to app_config";
+    std::string strAll = m_ProfileJson.dump(-1, ' ', false, json::error_handler_t::ignore);
+
+    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "before save to app_config: "<< std::endl<<strAll;
 
     //set filaments to app_config
     const std::string &section_name = AppConfig::SECTION_FILAMENTS;
@@ -941,19 +943,31 @@ bool GuideFrame::apply_config(AppConfig *app_config, PresetBundle *preset_bundle
 
     std::string preferred_model;
     std::string preferred_variant;
-    auto get_preferred_printer_model = [enabled_vendors, old_enabled_vendors](const std::string& bundle_name, std::string& variant) {
-        variant.clear();
+    PrinterTechnology preferred_pt = ptFFF;
+    auto get_preferred_printer_model = [preset_bundle, enabled_vendors, old_enabled_vendors](const std::string& bundle_name, std::string& variant) {
         const auto config = enabled_vendors.find(bundle_name);
         if (config == enabled_vendors.end())
             return std::string();
 
+        const VendorProfile & printer_profile = preset_bundle->vendors[bundle_name];
         const std::map<std::string, std::set<std::string>>& model_maps = config->second;
+        //for (const auto& vendor_profile : preset_bundle->vendors) {
         for (const auto& model_it: model_maps) {
             if (model_it.second.size() > 0) {
-                // A newly enabled vendor is not loaded into the active bundle yet.
-                // Leave a multi-variant model's default unresolved until
-                // apply_vendor_config installs it and loads its ordered metadata.
-                variant = model_it.second.size() == 1 ? *model_it.second.begin() : std::string();
+                variant = *model_it.second.begin();
+                if (model_it.second.size() > 1) {
+                    if (printer_profile.models.size() > 0) {
+                        const VendorProfile::PrinterModel& printer_model = *std::find_if(printer_profile.models.begin(), printer_profile.models.end(),
+                            [id = model_it.first](auto& m) { return m.id == id; });
+                        for (auto& vt : printer_model.variants) {
+                            if (std::find(model_it.second.begin(), model_it.second.end(), vt.name) != model_it.second.end()) { variant = vt.name; break; }
+                        }
+                    }
+                    else if (variant != PresetBundle::INLONG_DEFAULT_PRINTER_VARIANT){
+                        if (std::find(model_it.second.begin(), model_it.second.end(), PresetBundle::INLONG_DEFAULT_PRINTER_VARIANT) != model_it.second.end())
+                            variant = PresetBundle::INLONG_DEFAULT_PRINTER_VARIANT;
+                    }
+                }
 
                 const auto config_old = old_enabled_vendors.find(bundle_name);
                 if (config_old == old_enabled_vendors.end())
@@ -970,10 +984,12 @@ bool GuideFrame::apply_config(AppConfig *app_config, PresetBundle *preset_bundle
                 }
             }
         }
-        variant.clear();
+        //}
+        if (!variant.empty())
+            variant.clear();
         return std::string();
     };
-    // Inlong "custom" printers are considered first, then third party.
+    // Orca "custom" printers are considered first, then 3rd party.
     if (preferred_model = get_preferred_printer_model(PresetBundle::INLONG_DEFAULT_BUNDLE, preferred_variant);
         preferred_model.empty()) {
         for (const auto& bundle : enabled_vendors) {
@@ -1002,14 +1018,14 @@ bool GuideFrame::apply_config(AppConfig *app_config, PresetBundle *preset_bundle
     // // When printers from the default bundle are also selected, keep @System
     // // too since those printers need it.
     // static const std::string system_suffix              = " @System";
-    // auto                     it_default                 = enabled_vendors.find(PresetBundle::INLONG_DEFAULT_BUNDLE);
+    // auto                     it_default                 = enabled_vendors.find(PresetBundle::ORCA_DEFAULT_BUNDLE);
     // bool                     has_default_bundle_printer = it_default != enabled_vendors.end() && !it_default->second.empty();
     // bool                     has_filament_profiles      = m_ProfileJson.contains("filament");
 
     // // Check if any non-default vendor has selected printers
     // bool has_vendor_printer = false;
     // for (const auto& [vendor, models] : enabled_vendors) {
-    //     if (vendor != PresetBundle::INLONG_DEFAULT_BUNDLE && !models.empty()) {
+    //     if (vendor != PresetBundle::ORCA_DEFAULT_BUNDLE && !models.empty()) {
     //         has_vendor_printer = true;
     //         break;
     //     }
@@ -1144,8 +1160,23 @@ bool GuideFrame::run()
 
 int GuideFrame::GetFilamentInfo( std::string VendorDirectory, json & pFilaList, std::string filepath, std::string &sVendor, std::string &sType)
 {
+    std::unordered_set<std::string> visiting;
+    return GetFilamentInfo(VendorDirectory, pFilaList, filepath, sVendor, sType, visiting);
+}
+
+int GuideFrame::GetFilamentInfo(const std::string& VendorDirectory, json& pFilaList,
+                                const std::string& filepath, std::string& sVendor,
+                                std::string& sType, std::unordered_set<std::string>& visiting)
+{
     //GetStardardFilePath(filepath);
-    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << " GetFilamentInfo:VendorDirectory - " << VendorDirectory << ", Filepath - "<<filepath;
+    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " GetFilamentInfo:VendorDirectory - " << VendorDirectory << ", Filepath - "<<filepath;
+
+    // Path-scoped guard: without it an `inherits` cycle would recurse forever.
+    // The repeated file was not inserted, so the cycle hit has nothing to erase.
+    if (!visiting.insert(filepath).second) {
+        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " inherits cycle at " << filepath;
+        return -1;
+    }
 
     // Resolve this file's own vendor/type into LOCAL variables, independent of
     // whatever the caller already accumulated. The cache entry for `filepath`
@@ -1168,53 +1199,43 @@ int GuideFrame::GetFilamentInfo( std::string VendorDirectory, json & pFilaList, 
         try {
             std::string contents;
             LoadFile(filepath, contents);
+            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": Json Contents: " << contents;
             json jLocal = json::parse(contents);
 
             if (jLocal.contains("filament_vendor"))
                 vendor = jLocal["filament_vendor"][0];
             else
-                BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << filepath << " - Not Contains filament_vendor";
+                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << filepath << " - Not Contains filament_vendor";
 
             if (jLocal.contains("filament_type"))
                 type = jLocal["filament_type"][0];
             else
-                BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << filepath << " - Not Contains filament_type";
+                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << filepath << " - Not Contains filament_type";
 
-            if (vendor == "" || type == "") {
-                if (jLocal.contains("inherits")) {
-                    std::string FName = jLocal["inherits"];
+            if (jLocal.contains("inherits")) {
+                std::string FName = jLocal["inherits"];
 
-                    if (!pFilaList.contains(FName)) {
-                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "pFilaList - Not Contains inherits filaments: " << FName;
-                        status = -1;
-                    } else {
-                        std::string FPath = pFilaList[FName]["sub_path"];
-                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << " Before Format Inherits Path: VendorDirectory - " << VendorDirectory << ", sub_path - " << FPath;
-                        wxString strNewFile = wxString::Format("%s%c%s", wxString(VendorDirectory.c_str(), wxConvUTF8), boost::filesystem::path::preferred_separator, FPath);
-                        boost::filesystem::path inherits_path(w2s(strNewFile));
-                        if (!boost::filesystem::exists(inherits_path))
-                            inherits_path = (boost::filesystem::path(m_InlongFilaLibPath) / boost::filesystem::path(FPath)).make_preferred();
-
-                        if (boost::filesystem::exists(inherits_path)) {
-                            // Recurse with this file's own (vendor, type) as the chain accumulator.
-                            status = GetFilamentInfo(VendorDirectory, pFilaList, inherits_path.string(), vendor, type);
-                        } else {
-                            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << " inherits File Not Exist: " << inherits_path;
-                            status = -1;
-                        }
-                    }
+                if (!pFilaList.contains(FName)) {
+                    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "pFilaList - Not Contains inherits filaments: " << FName;
+                    status = -1;
                 } else {
-                    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << filepath << " - Not Contains inherits";
-                    if (type == "") {
-                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "sType is Empty";
-                        status = -1;
+                    std::string FPath = pFilaList[FName]["sub_path"];
+                    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " Before Format Inherits Path: VendorDirectory - " << VendorDirectory << ", sub_path - " << FPath;
+                    wxString strNewFile = wxString::Format("%s%c%s", wxString(VendorDirectory.c_str(), wxConvUTF8), boost::filesystem::path::preferred_separator, FPath);
+                    boost::filesystem::path inherits_path(w2s(strNewFile));
+                    if (!boost::filesystem::exists(inherits_path))
+                        inherits_path = (boost::filesystem::path(m_InlongFilaLibPath) / boost::filesystem::path(FPath)).make_preferred();
+
+                    if (boost::filesystem::exists(inherits_path)) {
+                        // Traverse the full chain for errors; inherited values only fill local gaps.
+                        status = GetFilamentInfo(VendorDirectory, pFilaList, inherits_path.string(), vendor, type, visiting);
                     } else {
-                        if (vendor == "")
-                            vendor = "Generic";
-                        status = 0;
+                        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " inherits File Not Exist: " << inherits_path;
+                        status = -1;
                     }
                 }
             } else {
+                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << filepath << " - Not Contains inherits";
                 status = 0;
             }
         }
@@ -1233,6 +1254,7 @@ int GuideFrame::GetFilamentInfo( std::string VendorDirectory, json & pFilaList, 
     // Merge this file's resolved values into the caller's out-params (fill empties only).
     if (sVendor.empty()) sVendor = vendor;
     if (sType.empty())   sType   = type;
+    visiting.erase(filepath);
     return status;
 }
 
@@ -1262,7 +1284,7 @@ bool GuideFrame::BuildProfileJson(const PresetBundle& bundle, bool require_all_r
                 entry["vendor"]          = vp.id;
                 entry["nozzle_diameter"] = nozzle_str;
                 entry["materials"]       = materials_str;
-                entry["cover"]           = cover_path.string();
+                entry["cover"]           = into_u8(file_url_from_path(cover_path));
                 entry["nozzle_selected"] = "";
                 entry["sub_path"]        = "";
                 m_ProfileJson["model"].push_back(entry);
@@ -1710,7 +1732,7 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
                     cover_path = (boost::filesystem::absolute(boost::filesystem::path(resources_dir()) / "/web/image/printer/") / cover_file)
                                      .make_preferred();
             }
-            OneModel["cover"]                  = cover_path.string();
+            OneModel["cover"]                  = into_u8(file_url_from_path(cover_path));
 
             OneModel["nozzle_selected"] = "";
 
@@ -1756,7 +1778,7 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
             std::string s2    = OneFF["sub_path"];
 
             tFilaList[s1] = OneFF;
-            BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "Vendor: " << strVendor <<", tFilaList Add: " << s1;
+            BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Vendor: " << strVendor <<", tFilaList Add: " << s1;
         }
 
         int nFalse  = 0;
@@ -1779,15 +1801,15 @@ int GuideFrame::LoadProfileFamily(std::string strVendor, std::string strFilePath
                 json pm = json::parse(contents);
 
                 std::string strInstant = pm["instantiation"];
-                BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "Load Filament:" << s1 << ",Path:" << sub_file << ",instantiation?" << strInstant;
+                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Load Filament:" << s1 << ",Path:" << sub_file << ",instantiation?" << strInstant;
 
                 if (strInstant == "true") {
                     std::string sV;
                     std::string sT;
 
                     int nRet = GetFilamentInfo(vendor_dir.string(),tFilaList, sub_file, sV, sT);
-                    if (nRet != 0) {
-                        BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << "Load Filament:" << s1 << ",GetFilamentInfo Failed, Vendor:" << sV << ",Type:"<< sT;
+                    if (nRet != 0 || sV.empty() || sT.empty()) {
+                        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "Load Filament:" << s1 << ",unresolved vendor/type, Vendor:" << sV << ",Type:"<< sT;
                         continue;
                     }
 

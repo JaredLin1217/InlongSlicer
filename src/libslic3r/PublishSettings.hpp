@@ -45,7 +45,7 @@ struct PublishedMaterialEntry {
     std::string filament_type;   // material family, e.g. "PLA" (may be empty)
     std::string filament_vendor; // e.g. "Generic", "Bambu" (may be empty)
     std::string filament_id;     // stable material id, e.g. "GFL99" (may be empty)
-    // Unique preset id of the author's slot preset (e.g. Orca Filament Library "setting_id").
+    // Unique preset id of the author's slot preset (e.g. Inlong filament library "setting_id").
     // Not matched against the receiver's library; carried so identical Full entries within one
     // load share one created instance (within-load dedup key).
     std::string setting_id;

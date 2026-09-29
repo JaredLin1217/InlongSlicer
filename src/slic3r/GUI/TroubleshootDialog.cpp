@@ -6,6 +6,8 @@
 #include "GUI_App.hpp"
 #include "MainFrame.hpp"
 
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
 #include <wx/display.h>
 #include <wx/wfstream.h>
 #include "wx/clipbrd.h"
@@ -71,7 +73,7 @@ wxFlexGridSizer* TroubleshootDialog::create_item_loaded_profiles()
 
     auto gen_stats = GetProfilesOverview();
     gen_stats      = ""; // clear mem. not needed after generating m_..._act, m_..._usr variables
-   
+
     auto add_sizer = [g_sizer, create_label](PresetCollection* col, wxString label, int in_use, int user) {
         int sys = 0;
         for (auto it = col->begin(); it != col->end(); it++) {
@@ -124,7 +126,7 @@ TroubleshootDialog::TroubleshootDialog()
     auto data_dir   = boost::filesystem::path(Slic3r::data_dir());
     auto app_config = wxGetApp().app_config;
     bool is_dark    = app_config->get("dark_color_mode") == "1";
- 
+
     // LEFT SIZER //////////////////////
 
     // HEADER
@@ -327,7 +329,7 @@ TroubleshootDialog::TroubleshootDialog()
     left_sizer->Add(sys_btn_sizer     , 0, wxEXPAND       | wxTOP, FromDIP(15));
     left_sizer->Add(link_wiki         , 0, wxALIGN_CENTER | wxTOP, FromDIP(15));
     left_sizer->AddSpacer(FromDIP(5));
-    
+
     wxBoxSizer *right_sizer  = new wxBoxSizer(wxVERTICAL);
 
     wxBoxSizer *pack_btn_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -343,7 +345,7 @@ TroubleshootDialog::TroubleshootDialog()
     right_sizer->Add(prf_sys_cache_szr              , 0, wxEXPAND | wxTOP, FromDIP(8));
     right_sizer->Add(prf_loaded_szr                 , 0, wxEXPAND | wxTOP, FromDIP(5));
     right_sizer->Add(profiles_loaded                , 0, wxEXPAND | wxTOP, FromDIP(5));
-    
+
     right_sizer->Add(create_title(_L("More"))       , 0, wxEXPAND | wxTOP, FromDIP(12));
     right_sizer->Add(cfg_folder_szr                 , 0, wxEXPAND | wxTOP, FromDIP(8));
     right_sizer->Add(log_level_szr                  , 0, wxEXPAND | wxTOP, FromDIP(5));
@@ -623,7 +625,7 @@ wxString TroubleshootDialog::GetWinVersion()
             osvi.dwOSVersionInfoSize = sizeof(osvi);
             if (RtlGetVersion(&osvi) == 0) {
                 int build = osvi.dwBuildNumber;
-                wxString win = (build >= 22000) ? "11" 
+                wxString win = (build >= 22000) ? "11"
                              : (build >= 10240) ? "10"
                              : (build >= 9200)  ? "8"
                              : (build >= 7601)  ? "7"
@@ -924,7 +926,7 @@ void TroubleshootDialog::PackAll()
     auto project_name = wxGetApp().plater()->get_project_filename(".3mf");
     if(!project_name.IsEmpty()){
         if (wxGetApp().plater()->is_project_dirty()) {
-            auto res = MessageDialog(this, 
+            auto res = MessageDialog(this,
                 _L("The current project has unsaved changes. Would you like to save before continuing\?") +
                 "\n\n" +
                 _L("Select NO to close dialog and review project."),
@@ -953,7 +955,7 @@ void TroubleshootDialog::PackAll()
 void TroubleshootDialog::RebuildSystemProfiles()
 {
     if (wxGetApp().plater()->is_project_dirty()) {
-        auto res = MessageDialog(this, 
+        auto res = MessageDialog(this,
             _L("The current project has unsaved changes. Would you like to save before continuing\?") +
             "\n\n" +
             _L("Select NO to close dialog and review project."),
@@ -967,7 +969,7 @@ void TroubleshootDialog::RebuildSystemProfiles()
             return;
         }
     }
-    
+
     MessageDialog msg(this,
         _L("Restart Required") + "\n" +
         _L("Please make sure any instances of InlongSlicer are not running") + "\n" +
@@ -1034,7 +1036,7 @@ bool TroubleshootDialog::RestartApplication()
 
 #ifdef __WXMSW__
     wxString cmd = wxString::Format(R"("%s")", execPath);
-    
+
     // CreateProcess needs a mutable buffer for lpCommandLine
     std::vector<wchar_t> cmdBuf(cmd.wc_str(), cmd.wc_str() + cmd.length() + 1);
 
@@ -1107,7 +1109,7 @@ void TroubleshootDialog::ClearLogs()
 void TroubleshootDialog::UpdateLogsStorage()
 {
     boost::filesystem::path logs_path = boost::filesystem::path(Slic3r::data_dir()) / "log";
-    
+
     uintmax_t total_bytes = 0;
     int file_count = 0;
     if (boost::filesystem::exists(logs_path) && boost::filesystem::is_directory(logs_path)) {
@@ -1259,7 +1261,7 @@ bool TroubleshootDialog::ExportAsZip(const std::vector<wxString>& sources, const
              wxString(SLIC3R_APP_FULL_NAME), wxICON_WARNING | wxOK
         ).ShowModal();
         return false;
-    } 
+    }
     else {
         MessageDialog(this, _L("Export successful"), wxString(SLIC3R_APP_FULL_NAME), wxICON_INFORMATION | wxOK).ShowModal();
     }
@@ -1377,7 +1379,7 @@ void TroubleshootDialog::on_dpi_changed(const wxRect& suggested_rect)
     auto processCtrls = [&](auto&& self, wxWindow* win) -> void {
         if (!win)
             return;
-        
+
         if (Button* btn = dynamic_cast<Button*>(win))
             btn->Rescale();
 

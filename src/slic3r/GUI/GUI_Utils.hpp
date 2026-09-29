@@ -292,7 +292,7 @@ public:
     {
         if (!dialogStack.empty() && dialogStack.front() != this) {
             // This is a bug in wxWidgets
-            // when the dialog is not top modal dialog, EndModal() just hide dialog without quit 
+            // when the dialog is not top modal dialog, EndModal() just hide dialog without quit
             // the modal event loop. And the modal event loop blocks us from bottom widgets.
             // Solution: let user click it manually or close outside. FIXME
             BOOST_LOG_TRIVIAL(warning) << "DPIAware::EndModal Error: dialogStack is not empty, but top dialog is not this one. retCode=" << retCode;
@@ -478,6 +478,8 @@ int get_dpi_for_window(const wxWindow *window);
 #ifdef __WXOSX__
 void dataview_remove_insets(wxDataViewCtrl* dv);
 void staticbox_remove_margin(wxStaticBox* sb);
+// Clip a top-level window (and its webview) to a rounded rect with a native layer.
+void set_window_corner_radius(wxWindow* win, int radius);
 #endif
 
 #ifdef __WXGTK__

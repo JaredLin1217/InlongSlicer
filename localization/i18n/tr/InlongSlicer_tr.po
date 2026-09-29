@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 20:42+0800\n"
+"POT-Creation-Date: 2026-09-30 02:58+0800\n"
 "PO-Revision-Date: 2026-08-01 20:32+0300\n"
 "Last-Translator: GlauTech\n"
 "Language-Team: \n"
@@ -289,6 +289,9 @@ msgstr "Standart"
 # AI Translated
 msgid "TPU High Flow"
 msgstr "TPU Yüksek Akış"
+
+msgid "E3D High Flow"
+msgstr ""
 
 msgid "Unknown"
 msgstr "Bilinmeyen"
@@ -2052,6 +2055,16 @@ msgstr "Yapılandırma paketi yüklendi ancak bazı değerler tanınamadı."
 msgid "The configuration file “%1%” was loaded, but some values were not recognized."
 msgstr "\"%1%\" yapılandırma dosyası yüklendi ancak bazı değerler tanınamadı."
 
+#, c-format, boost-format
+msgid ""
+"\"%s\" is not a plain document, image or model file. Opening it may run it as a program or script on this computer.\n"
+"\n"
+"Only open attachments from projects you trust. Open it anyway?"
+msgstr ""
+
+msgid "Open attachment"
+msgstr ""
+
 msgid "Loading configuration"
 msgstr "Yapılandırma yükleniyor"
 
@@ -2536,6 +2549,19 @@ msgstr ""
 msgid "Failed to open the Plugins dialog (unknown error)."
 msgstr "Eklentiler iletişim kutusu açılamadı (bilinmeyen hata)."
 
+msgid "Plugins refreshed."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Failed to refresh plugins: %s"
+msgstr ""
+
+msgid "Select plugin package"
+msgstr ""
+
+msgid "Plugin files (*.py;*.whl)|*.py;*.whl"
+msgstr ""
+
 # AI Translated
 msgid "Plugin Terminal"
 msgstr "Eklenti Terminali"
@@ -2655,6 +2681,9 @@ msgstr "Destek engelleyici ekle"
 msgid "Add Support Enforcer"
 msgstr "Destek uygulayıcısı ekle"
 
+msgid "Add Precise Seam"
+msgstr ""
+
 msgid "Add text"
 msgstr "Yazı ekle"
 
@@ -2719,6 +2748,9 @@ msgstr "Inlong Küpü"
 msgid "InlongSliced Combo"
 msgstr ""
 
+msgid "Inlong Badge"
+msgstr ""
+
 msgid "Inlong Tolerance Test"
 msgstr "Inlong tolerans testi"
 
@@ -2772,6 +2804,9 @@ msgstr "Destek Engelleyici"
 
 msgid "Support Enforcer"
 msgstr "Destek Uygulayıcısı"
+
+msgid "Precise Seam"
+msgstr ""
 
 # AI Translated
 msgid "Change part type"
@@ -2918,6 +2953,30 @@ msgstr "Z ekseni boyunca aynalama"
 
 msgid "Mirror object"
 msgstr "Nesneyi aynala"
+
+msgid "Precise Seam Type"
+msgstr ""
+
+msgid "Seam Center"
+msgstr ""
+
+msgid "Seam Left"
+msgstr ""
+
+msgid "Seam Right"
+msgstr ""
+
+msgid "Seam Enforced"
+msgstr ""
+
+msgid "Seam Blocked"
+msgstr ""
+
+msgid "Seam Neutral"
+msgstr ""
+
+msgid "Choose precise seam subtype"
+msgstr ""
 
 msgid "Edit text"
 msgstr "Metni düzenle"
@@ -3743,11 +3802,13 @@ msgstr "Geçerli filamenti Filament Track Switch'te geri çek"
 msgid "Switch track at Filament Track Switch"
 msgstr "Filament Track Switch'te hattı değiştir"
 
-msgid "The maximum temperature cannot exceed "
-msgstr "Maksimum sıcaklık şu değeri aşamaz: "
+#, c-format, boost-format
+msgid "The maximum temperature cannot exceed %d"
+msgstr ""
 
-msgid "The minmum temperature should not be less than "
-msgstr "Minimum sıcaklık şu değerden az olamaz: "
+#, c-format, boost-format
+msgid "The minimum temperature should not be less than %d"
+msgstr ""
 
 # AI Translated
 msgid "Type to filter..."
@@ -5397,14 +5458,11 @@ msgid "Value %s is out of range. The valid range is from %d to %d."
 msgstr "Değer %s aralık dışında. Geçerli aralık %d ile %d arasındadır."
 
 #, c-format, boost-format
-msgid ""
-"Is it %s%% or %s %s?\n"
-"YES for %s%%, \n"
-"NO for %s %s."
+msgid "Is it %s%% or %s %s?"
 msgstr ""
-"%s%% mi yoksa %s %s mi?\n"
-"%s%% için EVET,\n"
-"%s %s için HAYIR."
+
+msgid "%"
+msgstr "%"
 
 #, boost-format
 msgid "Invalid input format. Expected vector of dimensions in the following format: \"%1%\""
@@ -5627,6 +5685,12 @@ msgstr "Hız: "
 msgid "Actual speed profile"
 msgstr "Gerçek hız profili"
 
+msgid "Automatic"
+msgstr ""
+
+msgid "Last used"
+msgstr ""
+
 msgid "Statistics of All Plates"
 msgstr "Tüm Plakaların İstatistikleri"
 
@@ -5699,14 +5763,17 @@ msgstr "Optimum'a Ayarla"
 msgid "Regroup filament"
 msgstr "Filamenti yeniden gruplandır"
 
-msgid "up to"
-msgstr "kadar"
+#, boost-format
+msgid "up to %1% mm"
+msgstr ""
 
-msgid "above"
-msgstr "üstünde"
+#, boost-format
+msgid "above %1% mm"
+msgstr ""
 
-msgid "from"
-msgstr "itibaren"
+#, boost-format
+msgid "from %1% to %2% mm"
+msgstr ""
 
 msgid "Usage"
 msgstr "Kullan"
@@ -5950,11 +6017,14 @@ msgctxt "Camera View"
 msgid "Right"
 msgstr "Sağ"
 
-msgid "Add"
-msgstr "Ekle"
-
 msgid "Add plate"
 msgstr "Plaka ekle"
+
+msgid "Split to objects"
+msgstr "Nesnelere böl"
+
+msgid "Add"
+msgstr "Ekle"
 
 msgid "Auto orient all/selected objects"
 msgstr "Otomatik yönlendir tüm/seçili nesneler"
@@ -5967,9 +6037,6 @@ msgstr "Tüm nesneleri hizala"
 
 msgid "Arrange objects on selected plates"
 msgstr "Seçilen plakalardaki nesneleri hizala"
-
-msgid "Split to objects"
-msgstr "Nesnelere böl"
 
 msgid "Assembly View"
 msgstr "Montaj görünümü"
@@ -6026,6 +6093,9 @@ msgstr "Taslak"
 # AI Translated
 msgid "Wireframe"
 msgstr "Wireframe"
+
+msgid "X-Ray"
+msgstr ""
 
 # AI Translated
 msgid "Realistic View"
@@ -6236,6 +6306,9 @@ msgstr "Bazı ön ayarlar değiştirilirken Uygulama kapatılıyor."
 
 msgid "Logging"
 msgstr "Günlük kaydı"
+
+msgid "Design"
+msgstr ""
 
 msgid "Prepare"
 msgstr "Hazırlık"
@@ -6571,6 +6644,9 @@ msgstr "Düzen"
 
 msgid "View"
 msgstr "Görünüm"
+
+msgid "Open Speed Dial"
+msgstr ""
 
 # AI Translated
 msgid "Preset Bundle"
@@ -8386,6 +8462,9 @@ msgstr "Püskürtme ucu bilgilerini ve AMS sayısını senkronize edin"
 msgid "Click to edit preset"
 msgstr "Ön ayarı düzenlemek için tıklayın"
 
+msgid "Variant"
+msgstr ""
+
 msgid "Nozzle"
 msgstr "Nozul"
 
@@ -8506,10 +8585,6 @@ msgstr "Kenar çubuğunu genişlet"
 
 msgid "Collapse sidebar"
 msgstr "Kenar çubuğunu daralt"
-
-# AI Translated
-msgid "Tab"
-msgstr "Sekme"
 
 #, c-format, boost-format
 msgid "Loading file: %s"
@@ -8902,6 +8977,9 @@ msgstr "3mf dosyasını hazırla..."
 
 msgid "Download failed; unknown file format."
 msgstr "İndirme başarısız oldu, dosya türü bilinmiyor."
+
+msgid "Importing to Inlong Slicer failed. Please download the file and manually import it."
+msgstr "Inlong Slicer'ya aktarma başarısız oldu. Lütfen dosyayı indirin ve manuel olarak İçe aktarın."
 
 msgid "Downloading project..."
 msgstr "Proje indiriliyor..."
@@ -9543,6 +9621,33 @@ msgstr "Çoklu cihaz yönetimi"
 msgid "With this option enabled, you can send a task to multiple devices at the same time and manage multiple devices."
 msgstr "Bu seçenek etkinleştirildiğinde, aynı anda birden fazla cihaza bir görev gönderebilir ve birden fazla cihazı yönetebilirsiniz."
 
+msgid "Open the Speed Dial from the keyboard"
+msgstr ""
+
+msgid "When enabled, the Speed Dial keyboard shortcut (Space by default) opens the action search from any page."
+msgstr ""
+
+msgid "Recent actions"
+msgstr ""
+
+msgid "actions"
+msgstr ""
+
+msgid "How many recently launched actions to show at the top of the Speed Dial. Set to 0 to hide recent actions."
+msgstr ""
+
+msgid "CAD feature (experimental)"
+msgstr ""
+
+msgid "With this option enabled, the Design tab is shown, where models can be built and edited parametrically. This feature is experimental and still under development."
+msgstr ""
+
+msgid "Auto-close sketch loops"
+msgstr ""
+
+msgid "Treat sketch endpoints within 0.001 mm as one joint and weld the loop shut. Off: only exactly coincident endpoints join, so a loop with a tiny gap is shown as open instead of being closed for you."
+msgstr ""
+
 msgid "Pop up to select filament grouping mode"
 msgstr "Filament gruplama modunu seçmek için açılır pencere"
 
@@ -9624,6 +9729,12 @@ msgstr "Mouse yakınlaştırmasını tersine çevir"
 msgid "If enabled, reverses the direction of zoom with mouse wheel."
 msgstr "Etkinleştirilirse, mouse tekerleğiyle yakınlaştırmanın yönü tersine çevrilir."
 
+msgid "Draw mate connectors as a face"
+msgstr ""
+
+msgid "In the Design tab, draw a mate connector as a small face instead of the conventional disc with a roll quadrant. A face's orientation is read without being learned. Turn this off for the conventional CAD representation."
+msgstr ""
+
 # AI Translated
 msgid "Pan"
 msgstr "Kaydır"
@@ -9651,6 +9762,15 @@ msgstr "Sağ fare sürükleme"
 # AI Translated
 msgid "Set the action that dragging the right mouse button should perform."
 msgstr "Sağ fare düğmesiyle sürüklemenin gerçekleştireceği eylemi ayarlayın."
+
+msgid "Keyboard"
+msgstr ""
+
+msgid "Keyboard shortcuts"
+msgstr ""
+
+msgid "Choose the key for each action."
+msgstr ""
 
 msgid "Clear my choice on..."
 msgstr "Seçimimi Temizle"
@@ -9698,6 +9818,14 @@ msgstr "Phong gölgelendirme"
 # AI Translated
 msgid "Uses Phong shading inside realistic view."
 msgstr "Gerçekçi görünümde Phong gölgelendirme kullanır."
+
+msgid "Enable in Preview"
+msgstr ""
+
+msgid ""
+"Also applies realistic view to the Preview canvas, not just Prepare.\n"
+"Preview draws the full toolpath geometry, so shadows and SSAO cost considerably more there than on a plain model."
+msgstr ""
 
 # AI Translated
 msgid "SSAO ambient occlusion"
@@ -9773,17 +9901,55 @@ msgstr ""
 "GPU yükünü ve güç tüketimini azaltmak için görünüm penceresinin kare hızını sınırlar.\n"
 "Sınırsız kare hızı için 0 olarak ayarlayın."
 
+msgid "Reuse the 3D scene while idle"
+msgstr ""
+
+msgid ""
+"Skips redrawing the 3D scene when only the mouse cursor moves over the viewport,\n"
+"and reuses the previous frame's scene instead. Reduces GPU load.\n"
+"Disable it if the viewport shows stale or missing contents.\n"
+"\n"
+"Takes effect immediately."
+msgstr ""
+
+msgid "Skip unchanged frames"
+msgstr ""
+
+msgid ""
+"Skips drawing a frame altogether when it would be identical to the one already on screen.\n"
+"Only applies to frames that reuse the 3D scene, so it needs Reuse the 3D scene while idle.\n"
+"Disable it if a hover highlight, tooltip or animation stops updating.\n"
+"\n"
+"Takes effect immediately."
+msgstr ""
+
 # AI Translated
 msgid "Show FPS overlay"
 msgstr "FPS göstergesini göster"
 
-# AI Translated
-msgid "Displays current viewport FPS in the top-right corner."
-msgstr "Geçerli görünüm penceresinin FPS değerini sağ üst köşede gösterir."
+msgid "Displays rendering counts in the top-right corner of the viewport."
+msgstr ""
+
+msgid "FPS: frames presented to the screen per second."
+msgstr ""
+
+msgid "3D: frames per second that redrew the 3D scene."
+msgstr ""
 
 # AI Translated
 msgid "G-code Preview"
 msgstr "G-code Önizleme"
+
+msgid "Default view type"
+msgstr ""
+
+msgid ""
+"The color scheme the sliced preview opens with.\n"
+"Automatic: Filament for multi material prints, Line Type for single material ones.\n"
+"Last used: the view type you selected last.\n"
+"Any other value always opens that view type.\n"
+"You can still switch the view type in the preview afterwards."
+msgstr ""
 
 # AI Translated
 msgid "Dim lower layers"
@@ -9796,9 +9962,6 @@ msgstr "Dilimlenmiş önizlemede katman kaydırıcısı gezdirilirken, geçerli 
 # AI Translated
 msgid "Dimmed layer brightness"
 msgstr "Karartılmış katman parlaklığı"
-
-msgid "%"
-msgstr "%"
 
 # AI Translated
 msgid ""
@@ -10221,13 +10384,12 @@ msgstr ""
 msgid "Filament %d (mixed)"
 msgstr ""
 
-msgid "needs"
+#, boost-format
+msgid "%1% needs %2%, which is not enabled."
 msgstr ""
 
-msgid "not enabled"
-msgstr ""
-
-msgid "material not published"
+#, boost-format
+msgid "%1% needs %2%, whose material will not be published."
 msgstr ""
 
 msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
@@ -10242,10 +10404,7 @@ msgstr ""
 msgid "Select which settings to be published in the 3MF file"
 msgstr ""
 
-msgid "Publish 3MF Wiki"
-msgstr ""
-
-msgid "Publish 3MF Video Guide"
+msgid "Video Guide"
 msgstr ""
 
 msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
@@ -11000,8 +11159,14 @@ msgstr "Topaklanma tespiti için bir ana kule gereklidir. Prime tower olmayan mo
 msgid "Enabling both precise Z height and the prime tower may cause slicing errors. Do you still want to enable precise Z height?"
 msgstr "Hem hassas Z yüksekliğini hem de hazırlık kulesini etkinleştirmek dilimleme hatalarına neden olabilir. Yine de hassas Z yüksekliğini etkinleştirmek istiyor musunuz?"
 
+msgid "Smooth timelapse needs a prime tower on every layer, which is not compatible with \"No sparse layers\". \"No sparse layers\" has been turned off."
+msgstr ""
+
 msgid "A prime tower is required for smooth timelapse mode. There may be flaws on the model without prime tower. Do you want to enable the prime tower?"
 msgstr "Sorunsuz hızlandırılmış çekim için Prime Tower gereklidir. Prime tower olmayan modelde kusurlar olabilir. Prime tower'ı etkinleştirmek istiyor musunuz?"
+
+msgid "\"No sparse layers\" is not compatible with smooth timelapse, which needs a prime tower on every layer. Timelapse has been switched to traditional mode."
+msgstr ""
 
 msgid "Still print by object?"
 msgstr "Hala nesneye göre yazdırıyor musunuz?"
@@ -11379,9 +11544,6 @@ msgstr "Uyumlu süreç profilleri"
 
 msgid "Printable space"
 msgstr "Plaka Ayarı"
-
-msgid "Printer Agent"
-msgstr "Yazıcı Aracısı"
 
 msgid "Select the network agent implementation for printer communication. Available agents are registered at startup."
 msgstr "Yazıcı iletişimi için ağ aracısı uygulamasını seçin. Kullanılabilir aracılar başlangıçta kaydedilir."
@@ -11803,14 +11965,6 @@ msgstr "Ekstruder sayısı"
 msgid "Capabilities"
 msgstr "Yetenekler"
 
-# AI Translated
-msgid "Left: "
-msgstr "Sol: "
-
-# AI Translated
-msgid "Right: "
-msgstr "Sağ: "
-
 msgid "Show all presets (including incompatible)"
 msgstr "Tüm ön ayarları göster (uyumsuz olanlar dahil)"
 
@@ -12198,57 +12352,42 @@ msgstr "Yapılandırma paketi önceki Yapılandırma Kılavuzu'nda değiştirild
 msgid "Configuration package changed"
 msgstr "Yapılandırma paketi değiştirildi"
 
-msgid "Toolbar"
-msgstr "Araç Çubuğu"
-
-msgid "Objects list"
-msgstr "Nesne listesi"
-
-msgid "Import geometry data from STL/STEP/3MF/OBJ/AMF files"
-msgstr "STL/STEP/3MF/OBJ/AMF dosyalarından geometri verilerini içe aktarın"
-
-msgid "Paste from clipboard"
-msgstr "Panodan yapıştır"
-
-msgid "Show/Hide 3Dconnexion devices settings dialog"
-msgstr "3Dconnexion cihazları ayarları iletişim kutusunu Göster/Gizle"
-
-msgid "Switch table page"
-msgstr "Tablo sayfasını değiştir"
-
-msgid "Show keyboard shortcuts list"
-msgstr "Klavye kısayolları listesini göster"
-
-msgid "Global shortcuts"
-msgstr "Genel kısayollar"
-
 msgid "Pan View"
 msgstr "Pan Görünümü"
 
 msgid "Rotate View"
 msgstr "Görüntüyü döndür"
 
+#, c-format, boost-format
+msgid "Use %s or %s, or a key that does not type a character."
+msgstr ""
+
+msgctxt "Keyboard Shortcut"
+msgid "Key"
+msgstr ""
+
+msgid "Left mouse"
+msgstr ""
+
+msgid "Available anywhere in the window, even while typing in a text field."
+msgstr ""
+
+msgid "Run favorite 1 to 10"
+msgstr ""
+
+msgid "Pin or unpin the selected action"
+msgstr ""
+
 # AI Translated
-msgid "Middle mouse button"
-msgstr "Orta fare düğmesi"
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr "Tab"
 
-msgid "Zoom View"
-msgstr "Zoom Görünümü"
+msgid "Switch to the next main tab"
+msgstr ""
 
-msgid "Auto orients selected objects or all objects. If there are selected objects, it just orients the selected ones. Otherwise, it will orient all objects in the current project."
-msgstr "Seçilen nesneleri veya tüm nesneleri otomatik olarak yönlendirir. Seçilen nesneler varsa, yalnızca seçilenleri yönlendirir. Aksi takdirde mevcut projedeki tüm nesneler yönlendirilecektir."
-
-msgid "Auto orients all objects on the active plate."
-msgstr "Aktif plakadaki tüm nesneleri otomatik olarak yönlendirir."
-
-msgid "Collapse/Expand the sidebar"
-msgstr "Kenar çubuğunu daralt/genişlet"
-
-msgid "Any arrow"
-msgstr "Herhangi bir ok"
-
-msgid "Movement in camera space"
-msgstr "Kamera alanında hareket"
+msgid "Available while the 3D view on the Prepare tab has focus."
+msgstr ""
 
 msgid "Select a part"
 msgstr "Parça seçin"
@@ -12259,136 +12398,29 @@ msgstr "Birden fazla nesne seç"
 msgid "Select objects by rectangle"
 msgstr "Nesneleri dikdörtgene göre seç"
 
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Up"
-msgstr "Yukarı Ok"
-
-msgid "Move selection 10mm in positive Y direction"
-msgstr "Seçimi pozitif Y yönünde 10 mm taşı"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Down"
-msgstr "Aşağı Ok"
-
-msgid "Move selection 10mm in negative Y direction"
-msgstr "Seçimi negatif Y yönünde 10 mm taşı"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Left"
-msgstr "Sol Ok"
-
-msgid "Move selection 10mm in negative X direction"
-msgstr "Seçimi negatif X yönünde 10 mm taşı"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Right"
-msgstr "Sağ Ok"
-
-msgid "Move selection 10mm in positive X direction"
-msgstr "Seçimi pozitif X yönünde 10 mm taşı"
+msgid "Keyboard 1-9: set filament for object/part"
+msgstr "Klavye 1-9: nesneye/parçaya filament ata"
 
 msgid "Movement step set to 1mm"
 msgstr "Hareket adımı 1 mm'ye ayarlandı"
 
-msgid "Keyboard 1-9: set filament for object/part"
-msgstr "Klavye 1-9: nesneye/parçaya filament ata"
+msgid "Movement in camera space"
+msgstr "Kamera alanında hareket"
 
-msgid "Camera view - Default"
-msgstr "Kamera görünümü - Varsayılan"
+msgid "Middle mouse"
+msgstr ""
 
-msgid "Camera view - Top"
-msgstr "Kamera görünümü - Üst"
+msgid "Right mouse"
+msgstr ""
 
-msgid "Camera view - Bottom"
-msgstr "Kamera görünümü - Alt"
+msgid "Zoom View"
+msgstr "Zoom Görünümü"
 
-msgid "Camera view - Front"
-msgstr "Kamera görünümü - Ön"
+msgid "Painting"
+msgstr ""
 
-msgid "Camera view - Behind"
-msgstr "Kamera görünümü - Arka"
-
-msgid "Camera Angle - Left side"
-msgstr "Kamera Açısı - Sol"
-
-msgid "Camera Angle - Right side"
-msgstr "Kamera Açısı - Sağ"
-
-msgid "Select all objects"
-msgstr "Tüm nesneleri seç"
-
-msgid "Gizmo move"
-msgstr "Gizmo hareket"
-
-msgid "Gizmo rotate"
-msgstr "Gizmo döndürme"
-
-msgid "Gizmo scale"
-msgstr "Gizmo ölçek"
-
-msgid "Gizmo place face on bed"
-msgstr "Gizmo yüzünüzü yatağa yerleştirin"
-
-msgid "Gizmo cut"
-msgstr "Gizmo kesim"
-
-msgid "Gizmo mesh boolean"
-msgstr "Gizmo mesh bölme"
-
-msgid "Gizmo FDM paint-on fuzzy skin"
-msgstr "Gizmo FDM boyama ile uygulanan pütürlü yüzey"
-
-msgid "Gizmo SLA support points"
-msgstr "Gizmo SLA destek noktaları"
-
-msgid "Gizmo FDM paint-on seam"
-msgstr "Gizmo FDM boyalı dikiş"
-
-msgid "Gizmo text emboss/engrave"
-msgstr "Gizmo metin kabartma/kazıma"
-
-msgid "Gizmo measure"
-msgstr "Gizmo ölçüm"
-
-msgid "Gizmo assemble"
-msgstr "Gizmo birleştir"
-
-msgid "Gizmo brim ears"
-msgstr "Gizmo lenarlık kulakları"
-
-msgid "Zoom in"
-msgstr "Yakınlaştır"
-
-msgid "Zoom out"
-msgstr "Uzaklaştır"
-
-# AI Translated
-msgid "Toggle printable for object/part"
-msgstr "Nesne/parça için yazdırılabilirliği aç/kapat"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Tab"
-msgstr "Tab"
-
-msgid "Switch between Prepare/Preview"
-msgstr "Hazırlama/Önizleme arasında geçiş yap"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Space"
-msgstr "Boşluk"
-
-# AI Translated
-msgid "Open actions speed dial"
-msgstr "Eylem hızlı erişim menüsünü aç"
-
-msgid "Plater"
-msgstr "Plakacı"
+msgid "Available while a painting gizmo is open: supports, seam, fuzzy skin or color painting."
+msgstr ""
 
 msgid "Move: press to snap by 1mm"
 msgstr "Hareket Ettir: 1 mm kadar yaslamak için basın"
@@ -12399,15 +12431,19 @@ msgstr "Destek/Renkli Boyama: kalem yarıçapını ayarlayın"
 msgid "Support/Color Painting: adjust section position"
 msgstr "Destek/Renkli Boyama: bölüm konumunu ayarlayın"
 
-# AI Translated
-msgid "Gizmo"
-msgstr "Gizmo"
+msgid "Objects list"
+msgstr "Nesne listesi"
+
+msgid "Available while the object list has focus."
+msgstr ""
 
 msgid "Set extruder number for the objects and parts"
 msgstr "Nesneler ve parçalar için ekstruder numarasını ayarlayın"
 
-msgid "Delete objects, parts, modifiers"
-msgstr "Nesneleri, parçaları, değiştiricileri silin"
+# AI Translated
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr "Boşluk"
 
 msgid "Select the object/part and press space to change the name"
 msgstr "Nesneyi/parçayı seçin ve adını değiştirmek için boşluk tuşuna basın"
@@ -12418,45 +12454,51 @@ msgstr "Fare tıklaması"
 msgid "Select the object/part and mouse click to change the name"
 msgstr "Nesneyi/parçayı seçin ve adını değiştirmek için fareye tıklayın"
 
-msgid "Objects List"
-msgstr "Nesne Listesi"
-
-msgid "Vertical slider - Move active thumb Up"
-msgstr "Dikey kaydırıcı - Etkin başparmağı yukarı hareket ettir"
-
-msgid "Vertical slider - Move active thumb Down"
-msgstr "Dikey kaydırıcı - Etkin başparmağı Aşağı hareket ettir"
-
-msgid "Horizontal slider - Move active thumb Left"
-msgstr "Yatay kaydırıcı - Etkin başparmağı sola taşı"
-
-msgid "Horizontal slider - Move active thumb Right"
-msgstr "Yatay kaydırıcı - Etkin başparmağı sağa taşı"
-
-msgid "On/Off one layer mode of the vertical slider"
-msgstr "Dikey kaydırıcının tek katman modunu açma/kapama"
-
-msgid "On/Off G-code window"
-msgstr "G-kodu penceresini aç/kapat"
+msgid "Available while the 3D view on the Preview tab has focus."
+msgstr ""
 
 msgid "Move slider 5x faster"
 msgstr "Kaydırıcıyı 5 kat daha hızlı hareket ettirin"
 
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Home"
-msgstr "Home"
+msgid "Scroll slider 5x faster"
+msgstr ""
 
-msgid "Horizontal slider - Move to start position"
-msgstr "Yatay kaydırıcı - Başlangıç konumuna taşıyın"
+msgid "Not customizable"
+msgstr ""
 
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "End"
-msgstr "End"
+#, c-format, boost-format
+msgid "%s is assigned to %s. Reassign it to %s?"
+msgstr ""
 
-msgid "Horizontal slider - Move to last position"
-msgstr "Yatay kaydırıcı - Son konuma git"
+#, c-format, boost-format
+msgid "The default %s is assigned to %s. Reassign it to %s?"
+msgstr ""
+
+msgid "Global shortcuts also apply while typing."
+msgstr ""
+
+msgid "A key that types a character cannot be a global shortcut."
+msgstr ""
+
+msgid "Esc cancels, Enter confirms."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Press the new shortcut for\n"
+"\"%s\""
+msgstr ""
+
+msgid "The system uses this shortcut, so it cannot be assigned."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Shift and Ctrl with this key belong to %s and cannot be assigned."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Already assigned to %s. Press OK to reassign it."
+msgstr ""
 
 msgid "Release Note"
 msgstr "Sürüm notu"
@@ -12662,11 +12704,9 @@ msgstr "%1% dosyasının %2% dosyasına kopyalanması başarısız oldu: %3%"
 msgid "Downloading new vendor profile(s): "
 msgstr ""
 
-msgid "Configuration package: "
-msgstr "Yapılandırma paketi: "
-
-msgid " updated to "
-msgstr " güncellendi "
+#, boost-format
+msgid "Configuration package: %1% updated to %2%"
+msgstr ""
 
 msgid "Failed to download vendor profile(s): "
 msgstr ""
@@ -12738,11 +12778,13 @@ msgstr ""
 msgid "Input shaping is only supported by Klipper, RepRapFirmware and Marlin 2."
 msgstr "Input shaping yalnızca Klipper, RepRapFirmware ve Marlin 2 tarafından desteklenir."
 
-msgid "Grouping error: "
-msgstr "Gruplama hatası: "
+#, boost-format
+msgid "Grouping error: %1% cannot be placed in the left nozzle"
+msgstr ""
 
-msgid " can not be placed in the "
-msgstr " içine yerleştirilemez "
+#, boost-format
+msgid "Grouping error: %1% cannot be placed in the right nozzle"
+msgstr ""
 
 # AI Translated
 msgid "Group error in manual mode. Please check nozzle count or regroup."
@@ -12856,6 +12898,9 @@ msgstr "%1% diğerlerine çok yakın ve çarpışmalara neden olabilir."
 #, boost-format
 msgid "%1% is too tall, and collisions will be caused."
 msgstr "%1% çok uzun ve çarpışmalara neden olacak."
+
+msgid "The relative position of the model and the prime tower does not meet the requirements of the \"No sparse layers\" feature. Please adjust their relative positions, lower the model height, or turn off \"No sparse layers\"."
+msgstr ""
 
 msgid " is too close to exclusion area, there may be collisions when printing."
 msgstr " Hariç tutma alanına çok yakın olduğundan yazdırma sırasında çarpışmalar meydana gelebilir."
@@ -13206,6 +13251,9 @@ msgstr "G-code yerine 3MF kullan"
 
 msgid "Enable this if the printer accepts a 3MF file as the print job. When enabled, Inlong Slicer sends the sliced file as a .gcode.3mf, instead of a plain .gcode file."
 msgstr ""
+
+msgid "Printer Agent"
+msgstr "Yazıcı Aracısı"
 
 msgid "Select the network agent implementation for printer communication."
 msgstr "Yazıcı iletişimi için ağ aracısı uygulamasını seçin."
@@ -14569,6 +14617,12 @@ msgstr "Saat yönünün tersine"
 
 msgid "Clockwise"
 msgstr "Saat yönünde"
+
+msgid "Distance to rod"
+msgstr ""
+
+msgid "Horizontal distance of the nozzle tip to the rod's farther edge. Used for collision avoidance in by-object printing."
+msgstr ""
 
 msgid "Height to rod"
 msgstr "Çubuğa kadar olan yükseklik"
@@ -16824,6 +16878,15 @@ msgstr "Çıkıntılı duvarı algıla"
 msgid "This detects the overhang percentage relative to line width and uses a different speed to print. For 100%% overhang, bridging speed is used."
 msgstr "Çizgi genişliğine göre çıkıntı yüzdesini tespit edin ve yazdırmak için farklı hızlar kullanın. %%100 çıkıntı için köprü hızı kullanılır."
 
+msgid "Print unsupported walls last"
+msgstr ""
+
+msgid ""
+"Wall loops that lie entirely in mid air are printed once something can hold them:\n"
+"they are extruded after the other walls of their island, innermost first, whatever the wall order is.\n"
+"A loop that only the bridges of this layer can anchor waits until those bridges are printed, while a loop running alongside a supported wall keeps its place before the infill, which needs it as an anchor."
+msgstr ""
+
 # AI Translated
 msgid "Outer walls"
 msgstr "Dış duvarlar"
@@ -17123,6 +17186,9 @@ msgstr ""
 msgid "Hybrid"
 msgstr "Hibrit"
 
+msgid "Extra High Flow"
+msgstr ""
+
 msgid "Default Nozzle Volume Type"
 msgstr ""
 
@@ -17371,6 +17437,27 @@ msgstr "Döngülerde temizleme"
 msgid "To minimize the visibility of the seam in a closed loop extrusion, a small inward movement is executed before the extruder leaves the loop."
 msgstr "Kapalı döngü ekstrüzyonda dikişin görünürlüğünü en aza indirmek için, ekstruder döngüden ayrılmadan önce içeriye doğru küçük bir hareket gerçekleştirilir."
 
+msgid "Wipe inward"
+msgstr ""
+
+msgid ""
+"Applies only to external walls, including hole boundaries. Moves the hot nozzle toward printed inner walls during wiping to reduce reheating of freshly printed plastic and seam marks.\n"
+"\n"
+"Especially useful at layer heights below 0.1 mm, where wipe marks are more visible.\n"
+"\n"
+"Uses the regular wipe if no adjacent inner wall is already printed (single-wall areas or Outer/Inner wall order), or if no supported inward path can be found, for example at tight corners or seam gaps."
+msgstr ""
+
+msgid "Wipe inward distance"
+msgstr ""
+
+#, no-c-format, no-boost-format
+msgid ""
+"The distance the wipe path is shifted away from the external perimeter, specified in millimeters or as a percentage of the actual outer-wall extrusion width.\n"
+"\n"
+"For example, 50% shifts the path by half of the outer-wall width. The effective offset is limited by both the actual outer-wall width and the available spacing to the adjacent wall, so values above 100% or an equivalent absolute distance have no additional effect. Set to 0 to disable the offset."
+msgstr ""
+
 msgid "Wipe before external loop"
 msgstr "Harici döngüden önce silin"
 
@@ -17573,8 +17660,8 @@ msgstr "Ön ısıtma adımları"
 msgid "Insert multiple preheat commands (e.g. M104.1). Only useful for Prusa XL. For other printers, please set it to 1."
 msgstr "Birden fazla ön ısıtma komutu ekleyin (örn. M104.1). Yalnızca Prusa XL için kullanışlıdır. Diğer yazıcılar için lütfen 1’e ayarlayın."
 
-msgid "G-code written at the very top of the output file, before any other content. Useful for adding metadata that printer firmware reads from the first lines of the file (e.g. estimated print time, filament usage). Supports placeholders like {print_time_sec} and {used_filament_length}."
-msgstr "G kodu, çıktı dosyasının en üstünde, diğer içeriklerden önce yazılır. Yazıcı ürün yazılımının dosyanın ilk satırlarından okuduğu meta verileri (ör. tahmini yazdırma süresi, filament kullanımı) eklemek için kullanışlıdır. {print_time_sec} ve {used_filament_length} gibi yer tutucuları destekler."
+msgid "G-code written at the very top of the output file, before any other content. Useful for adding metadata that printer firmware reads from the first lines of the file (e.g. estimated print time, filament usage). Supports placeholders like {print_time_total_sec}, {print_time_day}, {print_time_hour}, {print_time_minute}, {print_time_sec} and {used_filament_length}."
+msgstr ""
 
 msgid "Start G-code"
 msgstr "Başlangıç G Kodu"
@@ -17636,8 +17723,19 @@ msgstr "Yeni takımı baskı sıcaklığına ulaşmasını beklemeden alır, sil
 msgid "No sparse layers (beta)"
 msgstr "Seyrek katman yok (beta)"
 
-msgid "If enabled, the wipe tower will not be printed on layers with no tool changes. On layers with a tool change, extruder will travel downward to print the wipe tower. User is responsible for ensuring there is no collision with the print."
-msgstr "Etkinleştirilirse, silme kulesi araç değişimi olmayan katmanlarda yazdırılmayacaktır. Araç değişimi olan katmanlarda, ekstruder silme kulesini yazdırmak için aşağı doğru hareket edecektir. Baskı ile çarpışma olmamasını sağlamak kullanıcının sorumluluğundadır."
+msgid "If enabled, the wipe tower will not be printed on layers with no tool changes. On layers with a tool change, extruder will travel downward to print the wipe tower, so the tower ends up below the model and the toolhead has to reach down to it. Layouts where that would collide with an already printed object are rejected. Has no effect with smooth timelapse or clumping detection, which need a tower on every layer."
+msgstr ""
+
+msgid "Combine sparse layers"
+msgstr ""
+
+msgid ""
+"If enabled, consecutive layers on which the prime tower has no filament change are printed as a single thicker tower layer instead of one thin layer each, the same way infill combination merges sparse infill. The merged layer is printed at the top of the run, at the height of everything it covers.\n"
+"\n"
+"Only whole layers are merged, and never past the maximum layer height of the nozzle printing the tower (three quarters of the nozzle diameter when that is left at 0). Two or more layers therefore have to fit under that limit before anything changes at all: at a 0.2 mm layer height under a 0.3 mm maximum nothing is merged, while at 0.1 mm three layers become one.\n"
+"\n"
+"Unlike \"No sparse layers\" the tower keeps following the model, so the toolhead never has to reach down to it. Has no effect with \"No sparse layers\", smooth timelapse or clumping detection, which need a tower on every layer."
+msgstr ""
 
 msgid "Prime all printing extruders"
 msgstr "Tüm ekstruderleri temizle"
@@ -17663,6 +17761,24 @@ msgstr ""
 msgid "Cyclic"
 msgstr "Döngüsel"
 
+msgid "Cyclic order"
+msgstr ""
+
+msgid ""
+"Custom filament sequence used by the cyclic toolchange ordering, as filament numbers separated by commas (e.g. \"3,2,1,4\").\n"
+"Each layer prints its filaments following this sequence; filaments not listed are printed last, in ascending order.\n"
+"Leave empty to cycle through the filaments in ascending order."
+msgstr ""
+
+msgid "Apply cyclic order to first layer"
+msgstr ""
+
+msgid ""
+"Applies the cyclic toolchange order to the first layer as well.\n"
+"By default this is disabled, because the first layer is instead ordered for the best bed adhesion: filaments that print small, fragile first-layer features are printed last, so the following tool changes and travel moves are less likely to knock those weakly anchored parts loose. This first-layer order also honors a custom first layer filament sequence when one is set. The cyclic order's benefit (extra tool changes give each layer more time to cool) does not apply to the first layer, which is printed slowly and hot for adhesion.\n"
+"Enable this only if you need the exact same tool sequence on every layer, including the first, at the cost of that adhesion optimization."
+msgstr ""
+
 msgid "Slice gap closing radius"
 msgstr "Dilim aralığı kapanma yarıçapı"
 
@@ -17671,9 +17787,6 @@ msgstr "Üçgen mesh dilimleme sırasında 2x boşluk kapatma yarıçapından k�
 
 msgid "Slicing Mode"
 msgstr "Dilimleme modu"
-
-msgid "Other"
-msgstr "Diğer"
 
 msgid "Use \"Even-odd\" for 3DLabPrint airplane models. Use \"Close holes\" to close all holes in the model."
 msgstr "3DLabPrint uçak modelleri için \"Çift-tek\" seçeneğini kullanın. Modeldeki tüm delikleri kapatmak için \"Delikleri kapat\"ı kullanın."
@@ -18717,6 +18830,12 @@ msgstr "Kontrol yok"
 msgid "Do not run any validity checks, such as G-code path conflicts check."
 msgstr "Gcode yol çakışmaları kontrolü gibi herhangi bir geçerlilik kontrolü çalıştırmayın."
 
+msgid "Strict mode"
+msgstr ""
+
+msgid "Exit non-zero when slicing raises a non-critical warning that is otherwise only logged, such as a model that needs support while support is disabled. Use this in CI or scripted pipelines that should never ship a subtly broken slice. Each such warning is also listed with a stable class in the `warnings` array of result.json, which is written on Linux only. Cannot be combined with --no-check, which skips the support check."
+msgstr ""
+
 msgid "Normative check"
 msgstr "Normatif kontrol"
 
@@ -18729,11 +18848,23 @@ msgstr "Çıktı Model Bilgileri"
 msgid "This outputs the model’s information."
 msgstr "Modelin bilgilerini çıktıla."
 
+msgid "Inspect mesh (JSON to stdout)"
+msgstr ""
+
+msgid "Print a JSON summary of each loaded object to stdout, then exit: its bounding boxes and the convex hull faces it can be laid on, with their normals, areas and centers. These are the faces the --ground-* options choose from. Machine-readable alternative to --info."
+msgstr ""
+
+msgid "Inspect paint (JSON to stdout)"
+msgstr ""
+
+msgid "Print a structured JSON summary of every painted layer (supports, seam, MMU color, fuzzy-skin) already stored on the loaded model — per-state facet count, surface area, and mesh-local bounding box — then exit. Machine-readable alternative to opening the paint gizmos in the GUI."
+msgstr ""
+
 msgid "Export Settings"
 msgstr "Dışa Aktarma Ayarları"
 
-msgid "This exports settings to a file."
-msgstr "Ayarları bir dosyaya aktarın."
+msgid "This exports settings to a file. Use - to write them to stdout."
+msgstr ""
 
 msgid "Send progress to pipe"
 msgstr "İlerlemeyi kanala gönder"
@@ -18788,6 +18919,24 @@ msgstr "Y etrafında döndür"
 
 msgid "Rotation angle around the Y axis in degrees."
 msgstr "Y ekseni etrafında derece cinsinden dönüş açısı."
+
+msgid "Ground largest face"
+msgstr ""
+
+msgid "Lay each object on the largest face of its convex hull and drop it onto the bed. Of equally large faces, the one already facing down is kept. Objects without a face large enough to rest on are left as they are. Transforms run in command-line order, so rotations given before this option are respected. --orient 1 runs after all transforms and replaces the orientation."
+msgstr ""
+
+msgid "Ground face by normal"
+msgstr ""
+
+msgid "Lay each object on the convex hull face whose outward normal is closest to the direction NX,NY,NZ and drop it onto the bed. The direction is in object coordinates, which include the rotations given before this option and match the plate axes unless the input file rotates the object. For example, 1,0,0 stands the object on its +X side. --orient 1 runs after all transforms and replaces the orientation."
+msgstr ""
+
+msgid "Ground face at point"
+msgstr ""
+
+msgid "Lay each object on the convex hull face that contains the point X,Y,Z and drop it onto the bed. The point is in object coordinates, which include the rotations given before this option; --inspect-mesh reports face centers in them. Objects without such a face are left as they are, and the run fails if no object has one. --orient 1 runs after all transforms and replaces the orientation."
+msgstr ""
 
 msgid "Scale the model by a float factor."
 msgstr "Modeli kayan nokta faktörüne göre ölçeklendirin."
@@ -18901,6 +19050,12 @@ msgstr "Düzenlerken rotasyonlara izin ver"
 
 msgid "If enabled, Arrange will allow rotation when placing objects."
 msgstr "Etkinleştirilirse düzenleme, nesne yerleştirildiğinde dönüşlere izin verir."
+
+msgid "Align to Y axis when arranging"
+msgstr ""
+
+msgid "If enabled, Arrange will turn each object so its long side runs along the Y axis before placing it. When not given, it is on for i3 printers and off for the others, as in the GUI."
+msgstr ""
 
 msgid "Avoid extrusion calibrate region when arranging"
 msgstr "Düzenleme yaparken ekstrüzyon kalibrasyon bölgesinden kaçının"
@@ -19089,11 +19244,35 @@ msgstr "Kullanılan"
 msgid "Total length of filament used in the print."
 msgstr "Baskıda kullanılan filamentin toplam uzunluğu."
 
-msgid "Print time (seconds)"
-msgstr "Yazdırma süresi (saniye)"
+msgid "Print time (total seconds)"
+msgstr ""
 
 msgid "Total estimated print time in seconds. Replaced with actual value during post-processing."
 msgstr "Saniye cinsinden toplam tahmini yazdırma süresi. Son işlem sırasında gerçek değerle değiştirilir."
+
+msgid "Print time (days component)"
+msgstr ""
+
+msgid "Estimated print time day component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
+
+msgid "Print time (hours component)"
+msgstr ""
+
+msgid "Estimated print time hour component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
+
+msgid "Print time (minutes component)"
+msgstr ""
+
+msgid "Estimated print time minute component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
+
+msgid "Print time (seconds component)"
+msgstr ""
+
+msgid "Estimated print time second component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
 
 msgid "Filament length (meters)"
 msgstr "Filament uzunluğu (metre)"
@@ -20967,6 +21146,9 @@ msgstr "Geçerli oturum algılanmadı. 3DPrinterOS'a giriş yapılsın mı?"
 msgid "Success!"
 msgstr "Başarılı!"
 
+msgid "Generate API Key"
+msgstr ""
+
 msgid "Are you sure to log out?"
 msgstr "Çıkış yaptığınızdan emin misiniz?"
 
@@ -22267,13 +22449,13 @@ msgstr "Kurutma-Isıtma"
 msgid "Drying-Dehumidifying"
 msgstr "Kurutma-Nem Alma"
 
-# AI Translated
-msgid " maximum drying temperature is "
-msgstr " için maksimum kurutma sıcaklığı "
+#, c-format, boost-format
+msgid "%s maximum drying temperature is %d°C."
+msgstr ""
 
-# AI Translated
-msgid " minimum drying temperature is "
-msgstr " için minimum kurutma sıcaklığı "
+#, c-format, boost-format
+msgid "%s minimum drying temperature is %d°C."
+msgstr ""
 
 # AI Translated
 msgid "This filament may not be completely dried."
@@ -22505,6 +22687,12 @@ msgid "Script plugin skipped."
 msgstr ""
 
 msgid "Script plugin finished."
+msgstr ""
+
+msgid "Recent Projects"
+msgstr ""
+
+msgid "Go to Plate"
 msgstr ""
 
 #, c-format, boost-format
@@ -23070,6 +23258,29 @@ msgstr ""
 msgid "Overwrite Plugin"
 msgstr ""
 
+msgid "Select a .py or .whl plugin package."
+msgstr ""
+
+msgid "Failed to install plugin package. See the log for details."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Plugin \"%s\" is already installed.\n"
+"\n"
+"Installing this package will overwrite the existing plugin."
+msgstr ""
+
+msgid "Overwrite"
+msgstr ""
+
+msgid "Installing plugin"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Installed \"%s\"."
+msgstr ""
+
 #, c-format, boost-format
 msgid "Failed to activate \"%s\"."
 msgstr ""
@@ -23112,35 +23323,6 @@ msgstr ""
 
 #, c-format, boost-format
 msgid "Disabled \"%s\"."
-msgstr ""
-
-msgid "Select plugin package"
-msgstr ""
-
-msgid "Plugin files (*.py;*.whl)|*.py;*.whl"
-msgstr ""
-
-msgid "Select a .py or .whl plugin package."
-msgstr ""
-
-msgid "Failed to install plugin package. See the log for details."
-msgstr ""
-
-#, c-format, boost-format
-msgid ""
-"Plugin \"%s\" is already installed.\n"
-"\n"
-"Installing this package will overwrite the existing plugin."
-msgstr ""
-
-msgid "Overwrite"
-msgstr ""
-
-msgid "Installing plugin"
-msgstr ""
-
-#, c-format, boost-format
-msgid "Installed \"%s\"."
 msgstr ""
 
 msgid "Downloading plugin"
@@ -23261,6 +23443,112 @@ msgid "Prime Saving"
 msgstr ""
 
 msgid "Reduces prime waste and prints faster. May cause slight color mixing or small surface defects."
+msgstr ""
+
+msgid "Expert"
+msgstr ""
+
+msgid "Simple"
+msgstr ""
+
+msgid "Search actions"
+msgstr ""
+
+msgid "Recent"
+msgstr ""
+
+msgid "Other"
+msgstr "Diğer"
+
+#, c-format, boost-format
+msgid "No actions match (Total: %s)"
+msgstr ""
+
+msgid "No actions yet"
+msgstr ""
+
+msgid "No tabs match"
+msgstr ""
+
+msgid "No tabs"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Showing %s actions"
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s actions"
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s tabs"
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s matches"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Favourites are full (%s max)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Go to %s%% of the layer range"
+msgstr ""
+
+msgid "Enter a layer percentage (0-100)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Go to layer %% (0-100)"
+msgstr ""
+
+msgid "Go to tab"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Favourite %s (%s)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Pin to favourites (%s)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Unpin from favourites (%s)"
+msgstr ""
+
+msgid "Remove from favourites"
+msgstr ""
+
+msgid "Move left"
+msgstr ""
+
+msgid "Move right"
+msgstr ""
+
+msgid "Unpin"
+msgstr ""
+
+msgid "Wiki (F1)"
+msgstr ""
+
+msgid "No wiki page for this action"
+msgstr ""
+
+#, c-format, boost-format
+msgid "\"%s\" is a Developer setting. Enable Developer mode to edit it?"
+msgstr ""
+
+msgid "Developer setting"
+msgstr ""
+
+#, c-format, boost-format
+msgid "\"%s\" is a %s setting. Switch from %s mode to %s mode to edit it?"
+msgstr ""
+
+msgid "Switch settings mode"
 msgstr ""
 
 #, c-format, boost-format
@@ -23668,6 +23956,275 @@ msgid ""
 msgstr ""
 "Eğilmeyi önleyin\n"
 "ABS gibi bükülmeye yatkın malzemelere baskı yaparken, ısıtma yatağı sıcaklığının uygun şekilde arttırılmasının bükülme olasılığını azaltabileceğini biliyor muydunuz?"
+
+#~ msgid "The maximum temperature cannot exceed "
+#~ msgstr "Maksimum sıcaklık şu değeri aşamaz: "
+
+#~ msgid "The minmum temperature should not be less than "
+#~ msgstr "Minimum sıcaklık şu değerden az olamaz: "
+
+#, c-format, boost-format
+#~ msgid ""
+#~ "Is it %s%% or %s %s?\n"
+#~ "YES for %s%%, \n"
+#~ "NO for %s %s."
+#~ msgstr ""
+#~ "%s%% mi yoksa %s %s mi?\n"
+#~ "%s%% için EVET,\n"
+#~ "%s %s için HAYIR."
+
+#~ msgid "up to"
+#~ msgstr "kadar"
+
+#~ msgid "above"
+#~ msgstr "üstünde"
+
+#~ msgid "from"
+#~ msgstr "itibaren"
+
+# AI Translated
+#~ msgid "Tab"
+#~ msgstr "Sekme"
+
+# AI Translated
+#~ msgid "Displays current viewport FPS in the top-right corner."
+#~ msgstr "Geçerli görünüm penceresinin FPS değerini sağ üst köşede gösterir."
+
+# AI Translated
+#~ msgid "Left: "
+#~ msgstr "Sol: "
+
+# AI Translated
+#~ msgid "Right: "
+#~ msgstr "Sağ: "
+
+#~ msgid "Toolbar"
+#~ msgstr "Araç Çubuğu"
+
+#~ msgid "Import geometry data from STL/STEP/3MF/OBJ/AMF files"
+#~ msgstr "STL/STEP/3MF/OBJ/AMF dosyalarından geometri verilerini içe aktarın"
+
+#~ msgid "Paste from clipboard"
+#~ msgstr "Panodan yapıştır"
+
+#~ msgid "Show/Hide 3Dconnexion devices settings dialog"
+#~ msgstr "3Dconnexion cihazları ayarları iletişim kutusunu Göster/Gizle"
+
+#~ msgid "Switch table page"
+#~ msgstr "Tablo sayfasını değiştir"
+
+#~ msgid "Show keyboard shortcuts list"
+#~ msgstr "Klavye kısayolları listesini göster"
+
+#~ msgid "Global shortcuts"
+#~ msgstr "Genel kısayollar"
+
+# AI Translated
+#~ msgid "Middle mouse button"
+#~ msgstr "Orta fare düğmesi"
+
+#~ msgid "Auto orients selected objects or all objects. If there are selected objects, it just orients the selected ones. Otherwise, it will orient all objects in the current project."
+#~ msgstr "Seçilen nesneleri veya tüm nesneleri otomatik olarak yönlendirir. Seçilen nesneler varsa, yalnızca seçilenleri yönlendirir. Aksi takdirde mevcut projedeki tüm nesneler yönlendirilecektir."
+
+#~ msgid "Auto orients all objects on the active plate."
+#~ msgstr "Aktif plakadaki tüm nesneleri otomatik olarak yönlendirir."
+
+#~ msgid "Collapse/Expand the sidebar"
+#~ msgstr "Kenar çubuğunu daralt/genişlet"
+
+#~ msgid "Any arrow"
+#~ msgstr "Herhangi bir ok"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Up"
+#~ msgstr "Yukarı Ok"
+
+#~ msgid "Move selection 10mm in positive Y direction"
+#~ msgstr "Seçimi pozitif Y yönünde 10 mm taşı"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Down"
+#~ msgstr "Aşağı Ok"
+
+#~ msgid "Move selection 10mm in negative Y direction"
+#~ msgstr "Seçimi negatif Y yönünde 10 mm taşı"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Left"
+#~ msgstr "Sol Ok"
+
+#~ msgid "Move selection 10mm in negative X direction"
+#~ msgstr "Seçimi negatif X yönünde 10 mm taşı"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Right"
+#~ msgstr "Sağ Ok"
+
+#~ msgid "Move selection 10mm in positive X direction"
+#~ msgstr "Seçimi pozitif X yönünde 10 mm taşı"
+
+#~ msgid "Camera view - Default"
+#~ msgstr "Kamera görünümü - Varsayılan"
+
+#~ msgid "Camera view - Top"
+#~ msgstr "Kamera görünümü - Üst"
+
+#~ msgid "Camera view - Bottom"
+#~ msgstr "Kamera görünümü - Alt"
+
+#~ msgid "Camera view - Front"
+#~ msgstr "Kamera görünümü - Ön"
+
+#~ msgid "Camera view - Behind"
+#~ msgstr "Kamera görünümü - Arka"
+
+#~ msgid "Camera Angle - Left side"
+#~ msgstr "Kamera Açısı - Sol"
+
+#~ msgid "Camera Angle - Right side"
+#~ msgstr "Kamera Açısı - Sağ"
+
+#~ msgid "Select all objects"
+#~ msgstr "Tüm nesneleri seç"
+
+#~ msgid "Gizmo move"
+#~ msgstr "Gizmo hareket"
+
+#~ msgid "Gizmo rotate"
+#~ msgstr "Gizmo döndürme"
+
+#~ msgid "Gizmo scale"
+#~ msgstr "Gizmo ölçek"
+
+#~ msgid "Gizmo place face on bed"
+#~ msgstr "Gizmo yüzünüzü yatağa yerleştirin"
+
+#~ msgid "Gizmo cut"
+#~ msgstr "Gizmo kesim"
+
+#~ msgid "Gizmo mesh boolean"
+#~ msgstr "Gizmo mesh bölme"
+
+#~ msgid "Gizmo FDM paint-on fuzzy skin"
+#~ msgstr "Gizmo FDM boyama ile uygulanan pütürlü yüzey"
+
+#~ msgid "Gizmo SLA support points"
+#~ msgstr "Gizmo SLA destek noktaları"
+
+#~ msgid "Gizmo FDM paint-on seam"
+#~ msgstr "Gizmo FDM boyalı dikiş"
+
+#~ msgid "Gizmo text emboss/engrave"
+#~ msgstr "Gizmo metin kabartma/kazıma"
+
+#~ msgid "Gizmo measure"
+#~ msgstr "Gizmo ölçüm"
+
+#~ msgid "Gizmo assemble"
+#~ msgstr "Gizmo birleştir"
+
+#~ msgid "Gizmo brim ears"
+#~ msgstr "Gizmo lenarlık kulakları"
+
+#~ msgid "Zoom in"
+#~ msgstr "Yakınlaştır"
+
+#~ msgid "Zoom out"
+#~ msgstr "Uzaklaştır"
+
+# AI Translated
+#~ msgid "Toggle printable for object/part"
+#~ msgstr "Nesne/parça için yazdırılabilirliği aç/kapat"
+
+#~ msgid "Switch between Prepare/Preview"
+#~ msgstr "Hazırlama/Önizleme arasında geçiş yap"
+
+# AI Translated
+#~ msgid "Open actions speed dial"
+#~ msgstr "Eylem hızlı erişim menüsünü aç"
+
+#~ msgid "Plater"
+#~ msgstr "Plakacı"
+
+# AI Translated
+#~ msgid "Gizmo"
+#~ msgstr "Gizmo"
+
+#~ msgid "Delete objects, parts, modifiers"
+#~ msgstr "Nesneleri, parçaları, değiştiricileri silin"
+
+#~ msgid "Objects List"
+#~ msgstr "Nesne Listesi"
+
+#~ msgid "Vertical slider - Move active thumb Up"
+#~ msgstr "Dikey kaydırıcı - Etkin başparmağı yukarı hareket ettir"
+
+#~ msgid "Vertical slider - Move active thumb Down"
+#~ msgstr "Dikey kaydırıcı - Etkin başparmağı Aşağı hareket ettir"
+
+#~ msgid "Horizontal slider - Move active thumb Left"
+#~ msgstr "Yatay kaydırıcı - Etkin başparmağı sola taşı"
+
+#~ msgid "Horizontal slider - Move active thumb Right"
+#~ msgstr "Yatay kaydırıcı - Etkin başparmağı sağa taşı"
+
+#~ msgid "On/Off one layer mode of the vertical slider"
+#~ msgstr "Dikey kaydırıcının tek katman modunu açma/kapama"
+
+#~ msgid "On/Off G-code window"
+#~ msgstr "G-kodu penceresini aç/kapat"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Home"
+#~ msgstr "Home"
+
+#~ msgid "Horizontal slider - Move to start position"
+#~ msgstr "Yatay kaydırıcı - Başlangıç konumuna taşıyın"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "End"
+#~ msgstr "End"
+
+#~ msgid "Horizontal slider - Move to last position"
+#~ msgstr "Yatay kaydırıcı - Son konuma git"
+
+#~ msgid "Configuration package: "
+#~ msgstr "Yapılandırma paketi: "
+
+#~ msgid " updated to "
+#~ msgstr " güncellendi "
+
+#~ msgid "Grouping error: "
+#~ msgstr "Gruplama hatası: "
+
+#~ msgid " can not be placed in the "
+#~ msgstr " içine yerleştirilemez "
+
+#~ msgid "G-code written at the very top of the output file, before any other content. Useful for adding metadata that printer firmware reads from the first lines of the file (e.g. estimated print time, filament usage). Supports placeholders like {print_time_sec} and {used_filament_length}."
+#~ msgstr "G kodu, çıktı dosyasının en üstünde, diğer içeriklerden önce yazılır. Yazıcı ürün yazılımının dosyanın ilk satırlarından okuduğu meta verileri (ör. tahmini yazdırma süresi, filament kullanımı) eklemek için kullanışlıdır. {print_time_sec} ve {used_filament_length} gibi yer tutucuları destekler."
+
+#~ msgid "If enabled, the wipe tower will not be printed on layers with no tool changes. On layers with a tool change, extruder will travel downward to print the wipe tower. User is responsible for ensuring there is no collision with the print."
+#~ msgstr "Etkinleştirilirse, silme kulesi araç değişimi olmayan katmanlarda yazdırılmayacaktır. Araç değişimi olan katmanlarda, ekstruder silme kulesini yazdırmak için aşağı doğru hareket edecektir. Baskı ile çarpışma olmamasını sağlamak kullanıcının sorumluluğundadır."
+
+#~ msgid "This exports settings to a file."
+#~ msgstr "Ayarları bir dosyaya aktarın."
+
+#~ msgid "Print time (seconds)"
+#~ msgstr "Yazdırma süresi (saniye)"
+
+# AI Translated
+#~ msgid " maximum drying temperature is "
+#~ msgstr " için maksimum kurutma sıcaklığı "
+
+# AI Translated
+#~ msgid " minimum drying temperature is "
+#~ msgstr " için minimum kurutma sıcaklığı "
 
 #~ msgid "Switching application language"
 #~ msgstr "Uygulama dilini değiştirme"
@@ -25550,9 +26107,6 @@ msgstr ""
 
 #~ msgid "Would you like InlongSlicer to automatically fix this by clearing the rotation template settings?"
 #~ msgstr "InlongSlicer’ın, döndürme şablonu ayarlarını temizleyerek otomatik olarak düzeltmesini ister misiniz?"
-
-#~ msgid "Importing to Inlong Slicer failed. Please download the file and manually import it."
-#~ msgstr "Inlong Slicer'ya aktarma başarısız oldu. Lütfen dosyayı indirin ve manuel olarak İçe aktarın."
 
 #, c-format, boost-format
 #~ msgid "InlongSlicer can't connect to %s. Please check if the printer is powered on and connected to the network."

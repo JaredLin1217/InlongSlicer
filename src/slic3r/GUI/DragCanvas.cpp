@@ -1,6 +1,7 @@
 #include "DragCanvas.hpp"
 #include "wxExtensions.hpp"
 #include "GUI_App.hpp"
+#include "Widgets/StateColor.hpp"
 
 namespace Slic3r { namespace GUI {
 
@@ -137,7 +138,7 @@ void DragCanvas::on_erase(wxEraseEvent& event)
         dc.SetBrush(m_background_color); // INLONG
         dc.DrawRectangle({ 0,0 }, size);
     }
-    else 
+    else
     {
         wxClientDC dc(this);
         dc.SetPen(  m_border_color);     // INLONG

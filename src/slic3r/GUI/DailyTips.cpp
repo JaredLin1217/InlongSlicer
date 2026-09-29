@@ -1,4 +1,5 @@
 #include "DailyTips.hpp"
+#include "slic3r/GUI/Widgets/Label.hpp"
 
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -178,7 +179,7 @@ void DailyTipsDataRenderer::render_text(const ImVec2& start_pos, const ImVec2& s
 
     ImGui::SetCursorPos(start_pos);
     imgui.text(title_line);
-    
+
     bool is_zh = has_cjk(content_lines);
     if (!is_zh) {
         // problem in Chinese with spaces
@@ -467,7 +468,7 @@ void DailyTipsPanel::render_controller_buttons(const ImVec2& pos, const ImVec2& 
                     if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
                         expand();
                 }
-                
+
                 ImGui::PopStyleColor(4);
 
                 ImGui::EndChild();
@@ -488,7 +489,7 @@ void DailyTipsPanel::render_controller_buttons(const ImVec2& pos, const ImVec2& 
         imgui.text(text_str);
         ImGui::PopStyleColor();
         ImGui::PopItemWidth();
-        
+
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(.0f, .0f, .0f, .0f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));

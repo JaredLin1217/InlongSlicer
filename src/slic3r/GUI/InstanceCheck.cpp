@@ -72,7 +72,7 @@ namespace instance_check_internal
 	struct CommandLineAnalysis
 	{
 		std::optional<bool>	should_send;
-		std::string    		cl_string;
+		std::string		cl_string;
 	};
 	static CommandLineAnalysis process_command_line(int argc, char** argv)
 	{
@@ -89,15 +89,15 @@ namespace instance_check_internal
 				ret.should_send = false;
 			else
 				arguments.emplace_back(token);
-		} 
+		}
 		ret.cl_string = escape_strings_cstyle(arguments);
-		BOOST_LOG_TRIVIAL(debug) << "single instance: " << 
+		BOOST_LOG_TRIVIAL(debug) << "single instance: " <<
             (ret.should_send.has_value() ? (*ret.should_send ? "true" : "false") : "undefined") <<
 			". other params: " << ret.cl_string;
 		return ret;
 	}
 
-	
+
 
 #ifdef _WIN32
 
@@ -128,7 +128,10 @@ namespace instance_check_internal
 		if (my_instance_hash == other_instance_hash) {
 			BOOST_LOG_TRIVIAL(debug) << "win enum - found correct instance";
 			inlong_slicer_hwnd = hwnd;
-			ShowWindow(hwnd, SW_SHOWMAXIMIZED);
+			// Do not alter the window state when opening a file in the existing instance.
+			// A minimized window still needs restoring before it can receive focus.
+			if (IsIconic(hwnd))
+				ShowWindow(hwnd, SW_RESTORE);
 			SetForegroundWindow(hwnd);
 			return false;
 		}
@@ -154,12 +157,12 @@ namespace instance_check_internal
 			data_to_send.cbData = sizeof(TCHAR) * (wcslen(*command_line_args.get()) + 1);
 			data_to_send.lpData = *command_line_args.get();
 			SendMessage(inlong_slicer_hwnd, WM_COPYDATA, 0, (LPARAM)&data_to_send);
-			return true;  
+			return true;
 		}
 	    return false;
 	}
 
-#else 
+#else
 
 	static bool get_lock(const std::string& name, const std::string& path)
 	{
@@ -204,12 +207,12 @@ namespace instance_check_internal
 		{
 			std::string path = data_dir() + "/cache/" + GUI::wxGetApp().get_instance_hash_string() + ".lock";
 			if( remove( path.c_str() ) != 0 )
-	   			BOOST_LOG_TRIVIAL(error) << "Failed to delete lockfile " << path;
-	  		//else
-	    	//	BOOST_LOG_TRIVIAL(error) << "success delete lockfile " << path;
+				BOOST_LOG_TRIVIAL(error) << "Failed to delete lockfile " << path;
+			//else
+		//	BOOST_LOG_TRIVIAL(error) << "success delete lockfile " << path;
 #ifdef __APPLE__
-	   		send_message_mac_closing(GUI::wxGetApp().get_instance_hash_string(),GUI::wxGetApp().get_instance_hash_string());
-#endif	    
+			send_message_mac_closing(GUI::wxGetApp().get_instance_hash_string(),GUI::wxGetApp().get_instance_hash_string());
+#endif
 		}
 	}
 
@@ -220,7 +223,7 @@ namespace instance_check_internal
 	{
 		//std::string v(version);
 		//std::replace(v.begin(), v.end(), '.', '-');
-		//if (!instance_check_internal::get_lock(v)) 
+		//if (!instance_check_internal::get_lock(v))
 		{
 			send_message_mac(message_text, version);
 			return true;
@@ -241,11 +244,11 @@ namespace instance_check_internal
 			DBusMessage* msg;
             // DBusMessageIter args;
 			DBusConnection* conn;
-			DBusError 		err;
-			dbus_uint32_t 	serial = 0;
+			DBusError		err;
+			dbus_uint32_t	serial = 0;
 			const char* sigval = message_text.c_str();
 			std::string		interface_name = dbus_instance_check_base_name() + ".Object" + version;
-			std::string   	method_name = "AnotherInstance";
+			std::string	method_name = "AnotherInstance";
 			std::string		object_name = dbus_instance_check_base_path() + "/Object" + version;
 
 
@@ -297,7 +300,7 @@ namespace instance_check_internal
 			BOOST_LOG_TRIVIAL(trace) << "DBus message sent.";
 
 			// free the message and close the connection
-			dbus_message_unref(msg);                                                                                                                                                                                    
+			dbus_message_unref(msg);
 			dbus_connection_unref(conn);
 			return true;
 		}
@@ -326,7 +329,7 @@ bool instance_check(int argc, char** argv, bool app_config_single_instance)
 				hashed_path = std::hash<std::string>{}(appimage_path.string());
 				appimage_env_valid = true;
 			}
-		} catch (std::exception &) {			
+		} catch (std::exception &) {
 		}
 		if (! appimage_env_valid)
 			BOOST_LOG_TRIVIAL(error) << "APPIMAGE environment variable was set, but it does not point to a valid file: " << appimage_env;
@@ -345,7 +348,7 @@ bool instance_check(int argc, char** argv, bool app_config_single_instance)
 	}
 #endif // _WIN32
 
-	std::string lock_name 	= std::to_string(hashed_path);
+	std::string lock_name	= std::to_string(hashed_path);
 	GUI::wxGetApp().set_instance_hash(hashed_path);
 	BOOST_LOG_TRIVIAL(debug) <<"full path: "<< lock_name;
 	instance_check_internal::CommandLineAnalysis cla = instance_check_internal::process_command_line(argc, argv);
@@ -359,7 +362,7 @@ bool instance_check(int argc, char** argv, bool app_config_single_instance)
 	if (instance_check_internal::get_lock(lock_name + ".lock", data_dir() + "/cache/") && *cla.should_send) {
 #endif
 		instance_check_internal::send_message(cla.cl_string, lock_name);
-		BOOST_LOG_TRIVIAL(error) << "Instance check: Another instance found. This instance will terminate. Lock file of current running instance is located at " << data_dir() << 
+		BOOST_LOG_TRIVIAL(error) << "Instance check: Another instance found. This instance will terminate. Lock file of current running instance is located at " << data_dir() <<
 #ifdef _WIN32
 			"\\cache\\"
 #else // mac & linx
@@ -369,7 +372,7 @@ bool instance_check(int argc, char** argv, bool app_config_single_instance)
 		return true;
 	}
 	BOOST_LOG_TRIVIAL(info) << "Instance check: Another instance not found or single-instance not set.";
-	
+
 	return false;
 }
 
@@ -384,7 +387,7 @@ void OtherInstanceMessageHandler::init(wxEvtHandler* callback_evt_handler)
 {
 	assert(!m_initialized);
 	assert(m_callback_evt_handler == nullptr);
-	if (m_initialized) 
+	if (m_initialized)
 		return;
 
 	m_initialized = true;
@@ -434,7 +437,7 @@ void OtherInstanceMessageHandler::shutdown(MainFrame* main_frame)
 	}
 }
 
-#ifdef _WIN32 
+#ifdef _WIN32
 void OtherInstanceMessageHandler::init_windows_properties(MainFrame* main_frame, size_t instance_hash)
 {
 	size_t       minor_hash = instance_hash & 0xFFFFFFFF;
@@ -452,8 +455,8 @@ void OtherInstanceMessageHandler::init_windows_properties(MainFrame* main_frame,
 void OtherInstanceMessageHandler::print_window_info(HWND hwnd)
 {
 	std::wstring instance_hash = boost::nowide::widen(wxGetApp().get_instance_hash_string());
-	TCHAR 		 wndText[1000];
-	TCHAR 		 className[1000];
+	TCHAR		 wndText[1000];
+	TCHAR		 className[1000];
 	GetClassName(hwnd, className, 1000);
 	GetWindowText(hwnd, wndText, 1000);
 	std::wstring classNameString(className);
@@ -493,7 +496,7 @@ namespace MessageHandlerInternal
 	}
 } //namespace MessageHandlerInternal
 
-void OtherInstanceMessageHandler::handle_message(const std::string& message) 
+void OtherInstanceMessageHandler::handle_message(const std::string& message)
 {
 	BOOST_LOG_TRIVIAL(info) << "message from other instance: " << message;
 
@@ -533,7 +536,7 @@ void OtherInstanceMessageHandler::handle_message(const std::string& message)
 }
 
 #ifdef __APPLE__
-void OtherInstanceMessageHandler::handle_message_other_closed() 
+void OtherInstanceMessageHandler::handle_message_other_closed()
 {
 	instance_check_internal::get_lock(wxGetApp().get_instance_hash_string() + ".lock", data_dir() + "/cache/");
 }
@@ -544,9 +547,9 @@ void OtherInstanceMessageHandler::handle_message_other_closed()
 namespace MessageHandlerDBusInternal
 {
 	//reply to introspect makes our DBus object visible for other programs like D-Feet
-	static void respond_to_introspect(DBusConnection *connection, DBusMessage *request) 
+	static void respond_to_introspect(DBusConnection *connection, DBusMessage *request)
 	{
-    	DBusMessage *reply;
+	DBusMessage *reply;
 	    const char  *introspection_data =
 	        " <!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\" "
 	        "\"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">"
@@ -563,7 +566,7 @@ namespace MessageHandlerDBusInternal
 	        "     </method>"
 	        "   </interface>"
 	        " </node>";
-	     
+
 	    reply = dbus_message_new_method_return(request);
 	    dbus_message_append_args(reply, DBUS_TYPE_STRING, &introspection_data, DBUS_TYPE_INVALID);
 	    dbus_connection_send(connection, reply, NULL);
@@ -579,8 +582,8 @@ namespace MessageHandlerDBusInternal
 	    dbus_error_init(&err);
 	    dbus_message_get_args(request, &err, DBUS_TYPE_STRING, &text, DBUS_TYPE_INVALID);
 	    if (dbus_error_is_set(&err)) {
-	    	BOOST_LOG_TRIVIAL(trace) << "Dbus method AnotherInstance received with wrong arguments.";
-	    	dbus_error_free(&err);
+		BOOST_LOG_TRIVIAL(trace) << "Dbus method AnotherInstance received with wrong arguments.";
+		dbus_error_free(&err);
 	        return;
 	    }
 	    wxGetApp().other_instance_message_handler()->handle_message(text);
@@ -597,39 +600,39 @@ namespace MessageHandlerDBusInternal
 	    const char* member_name    = dbus_message_get_member(message);
 	    std::string our_interface  = dbus_instance_check_base_name() + ".Object" + wxGetApp().get_instance_hash_string();
 	    BOOST_LOG_TRIVIAL(trace) << "DBus message received: interface: " << interface_name << ", member: " << member_name;
-	    if (0 == strcmp("org.freedesktop.DBus.Introspectable", interface_name) && 0 == strcmp("Introspect", member_name)) {		
+	    if (0 == strcmp("org.freedesktop.DBus.Introspectable", interface_name) && 0 == strcmp("Introspect", member_name)) {
 	        respond_to_introspect(connection, message);
 	        return DBUS_HANDLER_RESULT_HANDLED;
 	    } else if (0 == strcmp(our_interface.c_str(), interface_name) && 0 == strcmp("AnotherInstance", member_name)) {
 	        handle_method_another_instance(connection, message);
 	        return DBUS_HANDLER_RESULT_HANDLED;
-	    } 
+	    }
 	    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	}
 } //namespace MessageHandlerDBusInternal
 
 void OtherInstanceMessageHandler::listen()
 {
-    DBusConnection* 	 conn;
-    DBusError 			 err;
-    int 				 name_req_val;
+    DBusConnection*	 conn;
+    DBusError			 err;
+    int				 name_req_val;
     DBusObjectPathVTable vtable;
-    std::string 		 instance_hash  = wxGetApp().get_instance_hash_string();
+    std::string		 instance_hash  = wxGetApp().get_instance_hash_string();
 	std::string			 interface_name = dbus_instance_check_base_name() + ".Object" + instance_hash;
-	std::string			 object_name 	= dbus_instance_check_base_path() + "/Object" + instance_hash;
+	std::string			 object_name	= dbus_instance_check_base_path() + "/Object" + instance_hash;
 
     //BOOST_LOG_TRIVIAL(debug) << "init dbus listen " << interface_name << " " << object_name;
     dbus_error_init(&err);
 
     // connect to the bus and check for errors (use SESSION bus everywhere!)
     conn = dbus_bus_get(DBUS_BUS_SESSION, &err);
-    if (dbus_error_is_set(&err)) { 
+    if (dbus_error_is_set(&err)) {
 	    BOOST_LOG_TRIVIAL(error) << "DBus Connection Error: "<< err.message;
 	    BOOST_LOG_TRIVIAL(error) << "Dbus Messages listening terminating.";
-        dbus_error_free(&err); 
+        dbus_error_free(&err);
         return;
     }
-    if (NULL == conn) { 
+    if (NULL == conn) {
 		BOOST_LOG_TRIVIAL(error) << "DBus Connection is NULL. Dbus Messages listening terminating.";
         return;
     }
@@ -637,9 +640,9 @@ void OtherInstanceMessageHandler::listen()
 	// request our name on the bus and check for errors
 	name_req_val = dbus_bus_request_name(conn, interface_name.c_str(), DBUS_NAME_FLAG_REPLACE_EXISTING , &err);
 	if (dbus_error_is_set(&err)) {
-	    BOOST_LOG_TRIVIAL(error) << "DBus Request name Error: "<< err.message; 
+	    BOOST_LOG_TRIVIAL(error) << "DBus Request name Error: "<< err.message;
 	    BOOST_LOG_TRIVIAL(error) << "Dbus Messages listening terminating.";
-	    dbus_error_free(&err); 
+	    dbus_error_free(&err);
 	    dbus_connection_unref(conn);
 	    return;
 	}
@@ -656,8 +659,8 @@ void OtherInstanceMessageHandler::listen()
 
     // register new object - this is our access to DBus
     dbus_connection_try_register_object_path(conn, object_name.c_str(), &vtable, NULL, &err);
-   	if ( dbus_error_is_set(&err) ) {
-   		BOOST_LOG_TRIVIAL(error) << "DBus Register object Error: "<< err.message; 
+	if ( dbus_error_is_set(&err) ) {
+		BOOST_LOG_TRIVIAL(error) << "DBus Register object Error: "<< err.message;
 	    BOOST_LOG_TRIVIAL(error) << "Dbus Messages listening terminating.";
 	    dbus_connection_unref(conn);
 		dbus_error_free(&err);
@@ -667,7 +670,7 @@ void OtherInstanceMessageHandler::listen()
 	BOOST_LOG_TRIVIAL(trace) << "Dbus object "<< object_name <<" registered. Starting listening for messages.";
 
 	for (;;) {
-		// Wait for 1 second 
+		// Wait for 1 second
 		// Cancellable.
 		{
 			std::unique_lock<std::mutex> lck(m_thread_stop_mutex);
@@ -682,8 +685,8 @@ void OtherInstanceMessageHandler::listen()
 		//that is handled here with our own event loop above
 		dbus_connection_read_write_dispatch(conn, 0);
      }
-     
-   	 dbus_connection_unref(conn);
+
+	 dbus_connection_unref(conn);
 }
 #endif //BACKGROUND_MESSAGE_LISTENER
 } // namespace GUI

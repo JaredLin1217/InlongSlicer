@@ -192,8 +192,10 @@ void CalibrationCaliPage::update(MachineObject* obj)
             set_cali_img();
         }
 
+        // A calibration can run before the Device tab is ever opened, and only its status
+        // panel shows a print error.
         if (obj->print_error > 0) {
-            StatusPanel* status_panel = Slic3r::GUI::wxGetApp().mainframe->m_monitor->get_status_panel();
+            StatusPanel* status_panel = MonitorPanel::ensure()->get_status_panel();
             status_panel->obj = obj;
             status_panel->update_error_message();
         }
@@ -273,7 +275,7 @@ void CalibrationCaliPage::update(MachineObject* obj)
                 //assert(false);
             }
             m_action_panel->enable_button(CaliPageActionType::CALI_ACTION_CALI_NEXT, enable_cali);
-        } 
+        }
         else if (m_cali_mode == CalibMode::Calib_Vol_speed_Tower) {
             if (get_obj_calibration_mode(obj) == m_cali_mode && obj->is_printing_finished()) {
                 enable_cali = true;

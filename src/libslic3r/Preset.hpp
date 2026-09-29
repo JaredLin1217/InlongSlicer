@@ -62,6 +62,7 @@
 #define INLONG_JSON_KEY_UPDATE_TIME    "updated_time"
 #define INLONG_JSON_KEY_CREATED_TIME    "created_time"
 #define BBL_JSON_KEY_INHERITS       "inherits"
+#define BBL_JSON_KEY_INCLUDES       "include"
 #define BBL_JSON_KEY_INSTANTIATION  "instantiation"
 #define BBL_JSON_KEY_NOZZLE_DIAMETER            "nozzle_diameter"
 #define BBL_JSON_KEY_PRINTER_TECH                 "machine_tech"
@@ -413,12 +414,12 @@ public:
 
     static double convert_pellet_flow_to_filament_diameter(double pellet_flow_coefficient)
     {
-        return sqrt(4 / (PI * pellet_flow_coefficient)); 
+        return sqrt(4 / (PI * pellet_flow_coefficient));
     }
 
     static double convert_filament_diameter_to_pellet_flow(double filament_diameter)
     {
-        return 4 / (pow(filament_diameter, 2) * PI); 
+        return 4 / (pow(filament_diameter, 2) * PI);
     }
 
     static const std::vector<std::string>&  print_options();
@@ -749,7 +750,7 @@ public:
     {
         return const_cast<PresetCollection*>(this)->find_preset2(name, auto_match);
     }
-    
+
     size_t first_visible_idx() const;
     // Return the index of the first visible, compatible, system base preset
     // matching the given filament_type.  Falls back to base type, then any visible.

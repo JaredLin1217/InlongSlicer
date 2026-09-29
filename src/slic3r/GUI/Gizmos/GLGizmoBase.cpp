@@ -4,6 +4,7 @@
 #include <glad/gl.h>
 
 #include "slic3r/GUI/GUI_App.hpp"
+#include "slic3r/GUI/Shortcuts.hpp"
 #include "slic3r/GUI/Plater.hpp"
 #include "slic3r/GUI/GUI_Colors.hpp"
 
@@ -170,7 +171,7 @@ void GLGizmoBase::Grabber::render(float size, const ColorRGBA& render_color)
     } else {
         const Transform3d model_matrix = matrix * Geometry::assemble_transform(center, angles, grabber_size * Vec3d::Ones());
         render_extension(0, s_cube, model_matrix);
-        
+
         const Transform3d extension_model_matrix_base = matrix * Geometry::assemble_transform(center, angles);
         const Vec3d extension_scale(0.75 * extension_size, 0.75 * extension_size, 3.0 * extension_size);
         if ((int(extensions) & int(GLGizmoBase::EGrabberExtension::PosX)) != 0) {
@@ -259,37 +260,37 @@ void GLGizmoBase::render_cross_mark(const Vec3f &target, bool is_single)
     // draw line for x axis
     if (!is_single) {
         render_line(
-            {target(0) - half_length, target(1), target(2)}, 
+            {target(0) - half_length, target(1), target(2)},
             {target(0) + half_length, target(1), target(2)},
             ColorRGBA::X()); // INLONG match axis colors
     }
     else {
         render_line(
-            {target(0), target(1), target(2)}, 
+            {target(0), target(1), target(2)},
             {target(0) + half_length, target(1), target(2)},
             ColorRGBA::X()); // INLONG match axis colors
     }
     // draw line for y axis
     if (!is_single) {
         render_line(
-            {target(0), target(1) - half_length, target(2)}, 
+            {target(0), target(1) - half_length, target(2)},
             {target(0), target(1) + half_length, target(2)},
             ColorRGBA::Y()); // INLONG match axis colors
     } else {
         render_line(
-            {target(0), target(1), target(2)}, 
+            {target(0), target(1), target(2)},
             {target(0), target(1) + half_length, target(2)},
             ColorRGBA::Y()); // INLONG match axis colors
     }
     // draw line for z axis
     if (!is_single) {
         render_line(
-            {target(0), target(1), target(2) - half_length}, 
+            {target(0), target(1), target(2) - half_length},
             {target(0), target(1), target(2) + half_length},
             ColorRGBA::Z()); // INLONG match axis colors
     } else {
         render_line(
-            {target(0), target(1), target(2)}, 
+            {target(0), target(1), target(2)},
             {target(0), target(1), target(2) + half_length},
             ColorRGBA::Z()); // INLONG match axis colors
     }
@@ -299,7 +300,6 @@ GLGizmoBase::GLGizmoBase(GLCanvas3D &parent, const std::string &icon_filename, u
     : m_parent(parent)
     , m_group_id(-1)
     , m_state(Off)
-    , m_shortcut_key(NO_SHORTCUT_KEY_VALUE)
     , m_icon_filename(icon_filename)
     , m_sprite_id(sprite_id)
     , m_imgui(wxGetApp().imgui())
@@ -324,9 +324,9 @@ void GLGizmoBase::set_hover_id(int id)
     // allow empty grabbers when not using grabbers but use hover_id - flatten, rotate
 //    if (!m_grabbers.empty() && id >= (int) m_grabbers.size())
 //        return;
-    
+
     m_hover_id = id;
-    on_set_hover_id();    
+    on_set_hover_id();
 }
 
 bool GLGizmoBase::update_items_state()
@@ -415,12 +415,12 @@ void GLGizmoBase::render_grabbers(size_t first, size_t last, float size, bool fo
 // call start_dragging, stop_dragging, on_dragging
 bool GLGizmoBase::use_grabbers(const wxMouseEvent &mouse_event) {
     bool is_dragging_finished = false;
-    if (mouse_event.Moving()) { 
+    if (mouse_event.Moving()) {
         // it should not happen but for sure
         assert(!m_dragging);
         if (m_dragging) is_dragging_finished = true;
-        else return false; 
-    } 
+        else return false;
+    }
 
     if (mouse_event.LeftDown()) {
         Selection &selection = m_parent.get_selection();
@@ -432,7 +432,7 @@ bool GLGizmoBase::use_grabbers(const wxMouseEvent &mouse_event) {
             for (auto &grabber : m_grabbers) grabber.dragging = false;
 //            if (!m_grabbers.empty() && m_hover_id < int(m_grabbers.size()))
 //                m_grabbers[m_hover_id].dragging = true;
-            
+
             on_start_dragging();
 
             // Let the plater know that the dragging started
@@ -515,11 +515,8 @@ void GLGizmoBase::render_input_window(float x, float y, float bottom_limit)
 
 std::string GLGizmoBase::get_name(bool include_shortcut) const
 {
-    int key = get_shortcut_key();
-    std::string out = on_get_name();
-    if (include_shortcut && key >= WXK_CONTROL_A && key <= WXK_CONTROL_Z)
-        out += std::string(" [") + char(int('A') + key - int(WXK_CONTROL_A)) + "]";
-    return out;
+    const std::string name = on_get_name();
+    return include_shortcut && m_shortcut.has_value() ? wxGetApp().shortcuts().with_key(name, *m_shortcut) : name;
 }
 
 } // namespace GUI

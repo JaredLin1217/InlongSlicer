@@ -40,7 +40,7 @@
 namespace Slic3r {
 namespace GUI {
 
-  static const std::vector<std::string> filament_vendors = 
+  static const std::vector<std::string> filament_vendors =
     {"3Dgenius",               "3DJake",                 "3DXTECH",                "3D BEST-Q",              "3D Hero",
      "3D-Fuel",                "Aceaddity",              "AddNorth",               "Amazon Basics",          "AMOLEN",
      "Ankermake",              "Anycubic",               "Atomic",                 "AzureFilm",              "BASF",
@@ -57,27 +57,27 @@ namespace GUI {
      "MatterHackers",         "MIKA3D",                  "NinjaTek",               "Nobufil",                "Novamaker",
      "OVERTURE",              "OVVNYXE",                 "Polymaker",              "Priline",                "Printed Solid",
      "Protopasta",            "Prusament",               "Push Plastic",           "R3D",                    "re3D",
-     "Re-pet3D",              "Recreus",                 "Regen",                  "RatRig",                 "Sain SMART",             
-     "SliceWorx",             "Snapmaker",               "SnoLabs",                "Spectrum",               "SUNLU",                  
-     "TTYT3D",                "Tianse",                  "UltiMaker",              "Valment",                "Verbatim",               
-     "VO3D",                  "Voxelab",                 "VOXELPLA",               "YOOPAI",                 "Yousu",                  
+     "Re-pet3D",              "Recreus",                 "Regen",                  "RatRig",                 "Sain SMART",
+     "SliceWorx",             "Snapmaker",               "SnoLabs",                "Spectrum",               "SUNLU",
+     "TTYT3D",                "Tianse",                  "UltiMaker",              "Valment",                "Verbatim",
+     "VO3D",                  "Voxelab",                 "VOXELPLA",               "YOOPAI",                 "Yousu",
      "Ziro",                  "Zyltech"};
-     
+
 static const std::vector<std::string> filament_types = {"PLA",    "rPLA",  "PLA+",      "PLA Tough", "PETG",  "ABS",    "ASA",    "FLEX",   "HIPS",   "PA",     "PACF",
                                                         "NYLON",  "PVA",   "PVB",       "PC",        "PCABS", "PCTG",   "PCCF",   "PHA",    "PP",     "PEI",    "PET",
                                                         "PETGCF", "PTBA",  "PTBA90A",   "PEEK",  "TPU93A", "TPU75D", "TPU",       "TPU92A", "TPU98A", "Misc",
                                                         "TPE",    "GLAZE", "Nylon",     "CPE",   "METAL",  "ABST",   "Carbon Fiber", "SBS"};
 
-static const std::vector<std::string> printer_vendors = 
+static const std::vector<std::string> printer_vendors =
     {"Anker",              "Anycubic",           "Artillery",          "Bambulab",           "BIQU",
      "Blocks",             "Chuanying",          "Co Print",           "Comgrow",            "CONSTRUCT3D",
      "Creality",           "DeltaMaker",         "Dremel",             "Elegoo",             "Flashforge",
      "FLSun",              "FlyingBear",         "Folgertech",         "Geeetech",           "Ginger Additive",
      "InfiMech",           "Kingroon",           "Lulzbot",            "MagicMaker",         "Mellow",
      "Inlong Arena Printer", "Peopoly",          "Positron 3D",        "Prusa",              "Qidi",
-     "Raise3D",            "RatRig",             "re3D",               "RolohaunDesign",     "SecKit",             
-     "Snapmaker",          "Sovol",              "Thinker X400",       "Tronxy",             "TwoTrees",           
-     "UltiMaker",          "Vivedino",           "Volumic",            "Voron",              "Voxelab",            
+     "Raise3D",            "RatRig",             "re3D",               "RolohaunDesign",     "SecKit",
+     "Snapmaker",          "Sovol",              "Thinker X400",       "Tronxy",             "TwoTrees",
+     "UltiMaker",          "Vivedino",           "Volumic",            "Voron",              "Voxelab",
      "Vzbot",              "Wanhao",             "Z-Bolt"};
 
 static const std::unordered_map<std::string, std::vector<std::string>> printer_model_map =
@@ -152,8 +152,8 @@ static const std::unordered_map<std::string, std::vector<std::string>> printer_m
      {"TwoTrees",          {"TwoTrees SP-5 Klipper", "TwoTrees SK1"}},
      {"UltiMaker",         {"UltiMaker 2"}},
      {"Vivedino",          {"Troodon 2.0 - RRF",     "Troodon 2.0 - Klipper"}},
-     {"Volumic",           {"EXO42 Performance", "EXO65 Performance", "SH65 Performance",  "EXO42",             "EXO65",           
-                            "SH65",              "VS30SC2",           "VS30SC",            "VS30ULTRA",         "VS30MK3",         
+     {"Volumic",           {"EXO42 Performance", "EXO65 Performance", "SH65 Performance",  "EXO42",             "EXO65",
+                            "SH65",              "VS30SC2",           "VS30SC",            "VS30ULTRA",         "VS30MK3",
                             "VS30MK2",           "VS20MK2"}},
      {"Voron",             {"Voron 2.4 250",        "Voron 2.4 300",        "Voron 2.4 350",        "Voron Trident 250",    "Voron Trident 300",
                             "Voron Trident 350",    "Voron 0.1",            "Voron Switchwire 250"}},
@@ -166,7 +166,7 @@ static const std::unordered_map<std::string, std::vector<std::string>> printer_m
 static std::vector<std::string>               nozzle_diameter_vec = {"0.4", "0.15", "0.2", "0.25", "0.3", "0.35", "0.5", "0.6", "0.75", "0.8", "1.0", "1.2", "1.75"};
 static std::unordered_map<std::string, float> nozzle_diameter_map = {{"0.15", 0.15}, {"0.2", 0.2},   {"0.25", 0.25}, {"0.3", 0.3},
                                                                      {"0.35", 0.35}, {"0.4", 0.4},   {"0.5", 0.5},   {"0.6", 0.6},
-                                                                     {"0.75", 0.75}, {"0.8", 0.8},   {"1.0", 1.0},   {"1.2", 1.2}, 
+                                                                     {"0.75", 0.75}, {"0.8", 0.8},   {"1.0", 1.0},   {"1.2", 1.2},
                                                                      {"1.75", 1.75}};
 
 static std::set<int> cannot_input_key = {9, 10, 13, 33, 35, 36, 37, 38, 40, 41, 42, 44, 46, 47, 59, 60, 62, 63, 64, 92, 94, 95, 124, 126};
@@ -699,7 +699,7 @@ CreateFilamentPresetDialog::CreateFilamentPresetDialog(wxWindow *parent)
     m_scrolled_preset_panel = new wxScrolledWindow(this, wxID_ANY);
     m_scrolled_preset_panel->SetMaxSize(wxSize(-1, FromDIP(350)));
     m_scrolled_preset_panel->SetBackgroundColour(*wxWHITE);
-    m_scrolled_preset_panel->SetScrollRate(5, 5);
+    m_scrolled_preset_panel->SetScrollRate(5, FromDIP(20));
     m_scrolled_sizer = new wxBoxSizer(wxVERTICAL);
     m_scrolled_sizer->Add(create_item(FilamentOptionType::PRESET_FOR_PRINTER), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, FromDIP(5));
     m_scrolled_sizer->Add(0, 0, 0, wxTOP, FromDIP(5));
@@ -981,7 +981,7 @@ wxBoxSizer *CreateFilamentPresetDialog::create_filament_preset_item()
                         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "show compatible printer name: " << visible_printer
                                                 << " and preset name is: " << preset->name;
                     }
-                    
+
                     continue;
                 }
                 for (std::string &compatible_printer_name : compatible_printers->values) {
@@ -1201,7 +1201,7 @@ wxWindow *CreateFilamentPresetDialog::create_dialog_buttons()
         EndModal(wxID_OK);
         });
 
-    dlg_btns->GetCANCEL()->Bind(wxEVT_BUTTON, [this](wxCommandEvent &e) { 
+    dlg_btns->GetCANCEL()->Bind(wxEVT_BUTTON, [this](wxCommandEvent &e) {
         EndModal(wxID_CANCEL);
     });
 
@@ -1396,7 +1396,7 @@ void CreateFilamentPresetDialog::get_filament_presets_by_machine()
                 BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "show compatible printer name: " << visible_printer
                                         << " and preset name is: " << preset->name;
             }
-            
+
             continue;
         }
         for (std::string &compatible_printer_name : compatible_printers->values) {
@@ -1593,7 +1593,7 @@ CreatePrinterPresetDialog::CreatePrinterPresetDialog(wxWindow *parent)
 
     m_page1 = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     m_page1->SetBackgroundColour(*wxWHITE);
-    m_page1->SetScrollRate(5, 5);
+    m_page1->SetScrollRate(5, FromDIP(20));
     m_page2 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);    m_page2->SetBackgroundColour(*wxWHITE);
 
     create_printer_page1(m_page1);
@@ -2097,7 +2097,7 @@ wxBoxSizer *CreatePrinterPresetDialog::create_max_print_height_item(wxWindow *pa
 wxWindow *CreatePrinterPresetDialog::create_page1_dialog_buttons(wxWindow *parent)
 {
     auto dlg_btns = new DialogButtons(parent, {"OK", "Cancel"});
-    
+
     dlg_btns->GetOK()->Bind(wxEVT_BUTTON, [this](wxCommandEvent &e) {
         if (!validate_input_valid()) return;
         data_init();
@@ -2652,7 +2652,7 @@ wxBoxSizer *CreatePrinterPresetDialog::create_presets_template_item(wxWindow *pa
     wxBoxSizer *vertical_sizer = new wxBoxSizer(wxVERTICAL);
 
     m_scrolled_preset_window = new wxScrolledWindow(parent);
-    m_scrolled_preset_window->SetScrollRate(5, 5);
+    m_scrolled_preset_window->SetScrollRate(5, FromDIP(20));
     m_scrolled_preset_window->SetBackgroundColour(*wxWHITE);
     //m_scrolled_preset_window->SetMinSize(wxSize(FromDIP(1500), FromDIP(-1)));
     m_scrolled_preset_window->SetMaxSize(wxSize(FromDIP(1500), FromDIP(-1)));
@@ -3493,7 +3493,7 @@ CreatePresetSuccessfulDialog::CreatePresetSuccessfulDialog(wxWindow *parent, con
 
     auto dlg_btns = new DialogButtons(this, is_cancel_needed ? std::vector<wxString>{"OK", "Cancel"} : std::vector<wxString>{"OK"});
 
-    if      (create_success_type == PRINTER) 
+    if      (create_success_type == PRINTER)
         dlg_btns->GetOK()->SetLabel(_L("Printer Setting"));
     else if (create_success_type == FILAMENT && sync_user_preset_need_enabled)
         dlg_btns->GetOK()->SetLabel(_L("Sync user presets"));
@@ -4297,7 +4297,7 @@ wxBoxSizer *ExportConfigsDialog::create_select_printer(wxWindow *parent)
     optionSizer->SetMinSize(OPTION_SIZE);
     horizontal_sizer->Add(optionSizer, 0, wxEXPAND | wxALL, FromDIP(10));
     m_scrolled_preset_window = new wxScrolledWindow(parent);
-    m_scrolled_preset_window->SetScrollRate(5, 5);
+    m_scrolled_preset_window->SetScrollRate(5, FromDIP(20));
     m_scrolled_preset_window->SetBackgroundColour(*wxWHITE);
     m_scrolled_preset_window->SetMaxSize(wxSize(FromDIP(660), FromDIP(400)));
     m_scrolled_preset_window->SetSize(wxSize(FromDIP(660), FromDIP(400)));
@@ -4415,7 +4415,7 @@ EditFilamentPresetDialog::EditFilamentPresetDialog(wxWindow *parent, Filamentinf
     m_main_sizer->Add(m_line_top, 0, wxEXPAND, 0);
     m_main_sizer->Add(0, 0, 0, wxTOP, FromDIP(5));
 
-    wxStaticText* basic_information = new wxStaticText(this, wxID_ANY, _L("Basic Information")); 
+    wxStaticText* basic_information = new wxStaticText(this, wxID_ANY, _L("Basic Information"));
     basic_information->SetFont(Label::Head_16);
 
     m_main_sizer->Add(basic_information, 0, wxALL, FromDIP(10));
@@ -4736,7 +4736,7 @@ wxBoxSizer *EditFilamentPresetDialog::create_preset_tree_sizer()
 {
     wxBoxSizer *filament_preset_tree_sizer = new wxBoxSizer(wxHORIZONTAL);
     m_preset_tree_window = new wxScrolledWindow(this);
-    m_preset_tree_window->SetScrollRate(5, 5);
+    m_preset_tree_window->SetScrollRate(5, FromDIP(20));
     m_preset_tree_window->SetBackgroundColour(PRINTER_LIST_COLOUR);
     m_preset_tree_window->SetMinSize(wxSize(-1, FromDIP(400)));
     m_preset_tree_window->SetMaxSize(wxSize(-1, FromDIP(300)));
@@ -5049,7 +5049,7 @@ wxPanel *PresetTree::get_child_item(wxPanel *parent, std::shared_ptr<Preset> pre
     }
     sizer->Add(0, 0, 1, wxEXPAND, 0);
 
-    Button *edit_preset_btn = new Button(panel, _L("Edit Preset")); 
+    Button *edit_preset_btn = new Button(panel, _L("Edit Preset"));
     edit_preset_btn->SetStyle(ButtonStyle::Regular, ButtonType::Compact);
     //edit_preset_btn->Hide();
     sizer->Add(edit_preset_btn, 0, wxALL | wxALIGN_CENTER_VERTICAL, 0);

@@ -8,14 +8,6 @@
    "filament_type": "PLA",
    "filament_vendor": "Creality"
   },
-  "OF03RK6r": {
-   "filaments": [
-    "BBL/BETA PLA Metal"
-   ],
-   "name": "BETA PLA Metal",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OF0AquDh": {
    "filaments": [
     "Flashforge/FusRock S-Multi"
@@ -23,14 +15,6 @@
    "name": "FusRock S-Multi",
    "filament_type": "PA",
    "filament_vendor": "FusRock"
-  },
-  "OF0EYBWQ": {
-   "filaments": [
-    "BBL/addnorth PETG Flame v0"
-   ],
-   "name": "addnorth PETG Flame v0",
-   "filament_type": "PETG",
-   "filament_vendor": "addnorth"
   },
   "OF0FfcAG": {
    "filaments": [
@@ -42,7 +26,6 @@
   },
   "OF0NgY1y": {
    "filaments": [
-    "BBL/COEX NYLEX PA6-CF",
     "InlongFilamentLibrary/COEX NYLEX PA6-CF"
    ],
    "name": "COEX NYLEX PA6-CF",
@@ -101,7 +84,6 @@
   },
   "OF0gGRWk": {
    "filaments": [
-    "BBL/Panchroma PLA Glow",
     "InlongFilamentLibrary/Panchroma PLA Glow",
     "Snapmaker/Panchroma PLA Glow"
    ],
@@ -111,7 +93,6 @@
   },
   "OF0kCNDK": {
    "filaments": [
-    "BBL/Panchroma PLA Luminous",
     "InlongFilamentLibrary/Panchroma PLA Luminous",
     "Snapmaker/Panchroma PLA Luminous"
    ],
@@ -129,7 +110,6 @@
   },
   "OF0pzFLc": {
    "filaments": [
-    "BBL/COEX PLA+Silk",
     "InlongFilamentLibrary/COEX PLA+Silk"
    ],
    "name": "COEX PLA+Silk",
@@ -177,17 +157,8 @@
    "filament_type": "PETG",
    "filament_vendor": "Generic"
   },
-  "OF1ID4N1": {
-   "filaments": [
-    "BBL/addnorth PA6 Addlantis"
-   ],
-   "name": "addnorth PA6 Addlantis",
-   "filament_type": "PA6",
-   "filament_vendor": "addnorth"
-  },
   "OF1N1qMK": {
    "filaments": [
-    "BBL/Panchroma PLA UV Shift",
     "InlongFilamentLibrary/Panchroma PLA UV Shift",
     "Snapmaker/Panchroma PLA UV Shift"
    ],
@@ -197,12 +168,19 @@
   },
   "OF1Pke8t": {
    "filaments": [
-    "BBL/Overture Easy PLA",
     "InlongFilamentLibrary/Overture Easy PLA"
    ],
    "name": "Overture Easy PLA",
    "filament_type": "PLA",
    "filament_vendor": "Overture"
+  },
+  "OF1PznHI": {
+   "filaments": [
+    "Meltingplot/Extrudr PLA NX2 Matt"
+   ],
+   "name": "Extrudr PLA NX2 Matt",
+   "filament_type": "PLA",
+   "filament_vendor": "Extrudr"
   },
   "OF1UNk9P": {
    "filaments": [
@@ -256,6 +234,14 @@
    "name": "Elegoo PAHT-CF",
    "filament_type": "PA",
    "filament_vendor": "Elegoo"
+  },
+  "OF20zavY": {
+   "filaments": [
+    "Flashforge/Kexcelled TPU 64D"
+   ],
+   "name": "Kexcelled TPU 64D",
+   "filament_type": "TPU",
+   "filament_vendor": "Kexcelled"
   },
   "OF223rZv": {
    "filaments": [
@@ -327,7 +313,6 @@
   },
   "OF2pj5l5": {
    "filaments": [
-    "BBL/Overture Super PLA+",
     "InlongFilamentLibrary/Overture Super PLA+"
    ],
    "name": "Overture Super PLA+",
@@ -388,14 +373,6 @@
    "name": "CR-Silk",
    "filament_type": "PLA",
    "filament_vendor": "Creality"
-  },
-  "OF3PDEw3": {
-   "filaments": [
-    "BBL/BETA PLA High Speed"
-   ],
-   "name": "BETA PLA High Speed",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
   },
   "OF3WQaKK": {
    "filaments": [
@@ -492,6 +469,14 @@
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
   },
+  "OF4MZtnE": {
+   "filaments": [
+    "Prusa/Prusament PA11 Carbon Fiber"
+   ],
+   "name": "Prusament PA11 Carbon Fiber",
+   "filament_type": "PA11-CF",
+   "filament_vendor": "Prusa Polymers"
+  },
   "OF4Nhggz": {
    "filaments": [
     "Artillery/Artillery PLA Basic+"
@@ -499,22 +484,6 @@
    "name": "Artillery PLA Basic+",
    "filament_type": "PLA Basic+",
    "filament_vendor": "Artillery"
-  },
-  "OF4PKvem": {
-   "filaments": [
-    "BBL/BETA PLA Fluorescence"
-   ],
-   "name": "BETA PLA Fluorescence",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
-  "OF4QZANi": {
-   "filaments": [
-    "BBL/BETA TPU Matte"
-   ],
-   "name": "BETA TPU Matte",
-   "filament_type": "TPU",
-   "filament_vendor": "BETA"
   },
   "OF4RvVuU": {
    "filaments": [
@@ -539,14 +508,6 @@
    "name": "Snapmaker PETG",
    "filament_type": "PETG",
    "filament_vendor": "Snapmaker"
-  },
-  "OF4XTfoI": {
-   "filaments": [
-    "BBL/BETA PETG Marble"
-   ],
-   "name": "BETA PETG Marble",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
   },
   "OF4f8vVp": {
    "filaments": [
@@ -582,7 +543,6 @@
   },
   "OF53eLVD": {
    "filaments": [
-    "Blocks/Generic ASA-CF",
     "Creality/Generic ASA-CF",
     "Elegoo/Generic ASA-CF"
    ],
@@ -623,14 +583,6 @@
    "filament_type": "ABS",
    "filament_vendor": "Generic"
   },
-  "OF5B9sUc": {
-   "filaments": [
-    "BBL/Fiberon PA6-GF25"
-   ],
-   "name": "Fiberon PA6-GF25",
-   "filament_type": "PA-GF",
-   "filament_vendor": "Polymaker"
-  },
   "OF5BN24W": {
    "filaments": [
     "Flashforge/Flashforge PPA-GF"
@@ -638,14 +590,6 @@
    "name": "Flashforge PPA-GF",
    "filament_type": "PPA-GF",
    "filament_vendor": "Flashforge"
-  },
-  "OF5BXhHF": {
-   "filaments": [
-    "BBL/BETA PLA High Temp"
-   ],
-   "name": "BETA PLA High Temp",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
   },
   "OF5CgdDq": {
    "filaments": [
@@ -659,13 +603,13 @@
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
   },
-  "OF5LAnla": {
+  "OF5F0S66": {
    "filaments": [
-    "BBL/BETA PLA Gradient"
+    "Anycubic/Anycubic PLA Metal"
    ],
-   "name": "BETA PLA Gradient",
+   "name": "Anycubic PLA Metal",
    "filament_type": "PLA",
-   "filament_vendor": "BETA"
+   "filament_vendor": "Anycubic"
   },
   "OF5NqBfC": {
    "filaments": [
@@ -764,7 +708,6 @@
   },
   "OF5umxxT": {
    "filaments": [
-    "BBL/PolyLite PLA Glow",
     "Snapmaker/PolyLite PLA Glow"
    ],
    "name": "PolyLite PLA Glow",
@@ -811,6 +754,14 @@
    "filament_type": "ABS",
    "filament_vendor": "Infinity3DP"
   },
+  "OF6FfwOP": {
+   "filaments": [
+    "Blocks/Blocks PLA-CF"
+   ],
+   "name": "Blocks PLA-CF",
+   "filament_type": "PLA-CF",
+   "filament_vendor": "Blocks"
+  },
   "OF6H51Xx": {
    "filaments": [
     "Snapmaker/Polymaker PETG",
@@ -847,14 +798,6 @@
    "filament_type": "PVA",
    "filament_vendor": "Snapmaker"
   },
-  "OF6Yn69v": {
-   "filaments": [
-    "BBL/BETA TPU 90A"
-   ],
-   "name": "BETA TPU 90A",
-   "filament_type": "TPU",
-   "filament_vendor": "BETA"
-  },
   "OF6kj4jI": {
    "filaments": [
     "iQ/Fiberthree PACF Pro P2"
@@ -879,14 +822,6 @@
    "filament_type": "PLA",
    "filament_vendor": "Flashforge"
   },
-  "OF6qw3Wb": {
-   "filaments": [
-    "BBL/BETA PAHT-CF"
-   ],
-   "name": "BETA PAHT-CF",
-   "filament_type": "PA-CF",
-   "filament_vendor": "BETA"
-  },
   "OF6rdQ6M": {
    "filaments": [
     "BBL/Generic PPS-CF",
@@ -904,14 +839,6 @@
    "name": "Hyper L-W PLA",
    "filament_type": "PLA",
    "filament_vendor": "Creality"
-  },
-  "OF71b7qO": {
-   "filaments": [
-    "BBL/addnorth PLA E-PLA"
-   ],
-   "name": "addnorth PLA E-PLA",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
   },
   "OF72YYTd": {
    "filaments": [
@@ -1013,6 +940,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Cubicon"
   },
+  "OF80Qbpq": {
+   "filaments": [
+    "Anycubic/Anycubic PLA Galaxy"
+   ],
+   "name": "Anycubic PLA Galaxy",
+   "filament_type": "PLA",
+   "filament_vendor": "Anycubic"
+  },
   "OF8GnyFU": {
    "filaments": [
     "Creality/Hyper ABS"
@@ -1045,14 +980,6 @@
    "filament_type": "PLA",
    "filament_vendor": "Flashforge"
   },
-  "OF8QdQwS": {
-   "filaments": [
-    "BBL/BETA PLA Silk+"
-   ],
-   "name": "BETA PLA Silk+",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OF8Tlg47": {
    "filaments": [
     "BBL/Generic PPA-GF",
@@ -1070,6 +997,14 @@
    "name": "FilAr PLA Amarillo Lirio",
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
+  },
+  "OF8b9I7o": {
+   "filaments": [
+    "Blocks/Blocks ASA-CF"
+   ],
+   "name": "Blocks ASA-CF",
+   "filament_type": "ASA-CF",
+   "filament_vendor": "Blocks"
   },
   "OF8dCquh": {
    "filaments": [
@@ -1129,9 +1064,16 @@
    "filament_type": "PATH",
    "filament_vendor": "INLONG"
   },
+  "OF99Cc22": {
+   "filaments": [
+    "Eryone/Eryone pla-Ultra Silk"
+   ],
+   "name": "Eryone pla-Ultra Silk",
+   "filament_type": "PLA",
+   "filament_vendor": "Eryone"
+  },
   "OF99UMPq": {
    "filaments": [
-    "BBL/COEX ABS",
     "InlongFilamentLibrary/COEX ABS"
    ],
    "name": "COEX ABS",
@@ -1201,6 +1143,22 @@
    "filament_type": "PETG",
    "filament_vendor": "RatRig"
   },
+  "OF9mNFSM": {
+   "filaments": [
+    "Eryone/Eryone PLA-Matte HS"
+   ],
+   "name": "Eryone PLA-Matte HS",
+   "filament_type": "PLA",
+   "filament_vendor": "Eryone"
+  },
+  "OF9t1Ga0": {
+   "filaments": [
+    "Blocks/Blocks PETG"
+   ],
+   "name": "Blocks PETG",
+   "filament_type": "PETG",
+   "filament_vendor": "Blocks"
+  },
   "OFAC7Wyu": {
    "filaments": [
     "Artillery/Artillery PLA Matte"
@@ -1241,14 +1199,6 @@
    "filament_type": "PLA",
    "filament_vendor": "QIDI"
   },
-  "OFAO9A7J": {
-   "filaments": [
-    "Sovol/Sovol Zero PLA Silk HS Nozzle"
-   ],
-   "name": "Sovol Zero PLA Silk HS Nozzle",
-   "filament_type": "PLA",
-   "filament_vendor": "Generic"
-  },
   "OFAZllAN": {
    "filaments": [
     "Artillery/Artillery PLA-CF"
@@ -1256,22 +1206,6 @@
    "name": "Artillery PLA-CF",
    "filament_type": "PLA-CF",
    "filament_vendor": "Artillery"
-  },
-  "OFAc0Pr3": {
-   "filaments": [
-    "BBL/Fiberon PET-CF17"
-   ],
-   "name": "Fiberon PET-CF17",
-   "filament_type": "PET-CF",
-   "filament_vendor": "Polymaker"
-  },
-  "OFAcJkl1": {
-   "filaments": [
-    "BBL/addnorth PETG-CF Rigid X"
-   ],
-   "name": "addnorth PETG-CF Rigid X",
-   "filament_type": "PETG-CF",
-   "filament_vendor": "addnorth"
   },
   "OFAebKg8": {
    "filaments": [
@@ -1322,6 +1256,14 @@
    "filament_type": "PLA",
    "filament_vendor": "WonderMaker"
   },
+  "OFBBhiX8": {
+   "filaments": [
+    "Blocks/Blocks ABS"
+   ],
+   "name": "Blocks ABS",
+   "filament_type": "ABS",
+   "filament_vendor": "Blocks"
+  },
   "OFBJAdLw": {
    "filaments": [
     "LH/LHS PCTG"
@@ -1366,20 +1308,11 @@
   },
   "OFBoSWxb": {
    "filaments": [
-    "BBL/PolyLite PLA Luminous",
     "Snapmaker/PolyLite PLA Luminous"
    ],
    "name": "PolyLite PLA Luminous",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
-  },
-  "OFBsbMMF": {
-   "filaments": [
-    "BBL/addnorth PA-CF Adura X"
-   ],
-   "name": "addnorth PA-CF Adura X",
-   "filament_type": "PA-CF",
-   "filament_vendor": "addnorth"
   },
   "OFBw6eEG": {
    "filaments": [
@@ -1408,7 +1341,6 @@
   },
   "OFC78WGQ": {
    "filaments": [
-    "BBL/Panchroma PLA Starlight",
     "InlongFilamentLibrary/Panchroma PLA Starlight",
     "Snapmaker/Panchroma PLA Starlight"
    ],
@@ -1428,7 +1360,6 @@
   },
   "OFCIUsWh": {
    "filaments": [
-    "BBL/Panchroma PLA Translucent",
     "InlongFilamentLibrary/Panchroma PLA Translucent",
     "Snapmaker/Panchroma PLA Translucent"
    ],
@@ -1443,6 +1374,14 @@
    "name": "HP Ultra PLA",
    "filament_type": "PLA",
    "filament_vendor": "Creality"
+  },
+  "OFCSyK66": {
+   "filaments": [
+    "Anycubic/Anycubic PLA Marble"
+   ],
+   "name": "Anycubic PLA Marble",
+   "filament_type": "PLA",
+   "filament_vendor": "Anycubic"
   },
   "OFCZsqXg": {
    "filaments": [
@@ -1533,6 +1472,14 @@
    "filament_type": "PLA",
    "filament_vendor": "FlyingBear"
   },
+  "OFDDdgHM": {
+   "filaments": [
+    "Flashforge/Flashforge PLA LITE"
+   ],
+   "name": "Flashforge PLA LITE",
+   "filament_type": "PLA",
+   "filament_vendor": "Flashforge"
+  },
   "OFDETOM6": {
    "filaments": [
     "Creality/eSUN PLA-Matte",
@@ -1598,7 +1545,6 @@
     "Anycubic/Generic PLA",
     "Artillery/Generic PLA",
     "BBL/Generic PLA",
-    "Blocks/Generic PLA",
     "CONSTRUCT3D/Generic PLA",
     "Chuanying/Generic PLA",
     "Co Print/Generic PLA",
@@ -1627,6 +1573,7 @@
     "SecKit/Generic PLA",
     "Sovol/Generic PLA",
     "Tiertime/Generic PLA",
+    "UltiMaker/Generic PLA",
     "Vzbot/Generic PLA",
     "Z-Bolt/Generic PLA"
    ],
@@ -1679,7 +1626,6 @@
     "Anker/Generic PVA",
     "Anycubic/Generic PVA",
     "BBL/Generic PVA",
-    "Blocks/Generic PVA",
     "Chuanying/Generic PVA",
     "Creality/Generic PVA",
     "Custom/Generic PVA",
@@ -1733,7 +1679,6 @@
   },
   "OFE0NFRh": {
    "filaments": [
-    "BBL/COEX TPU 60A",
     "InlongFilamentLibrary/COEX TPU 60A"
    ],
    "name": "COEX TPU 60A",
@@ -1785,7 +1730,6 @@
   "OFEabreg": {
    "filaments": [
     "Anycubic/Fiberon PA6-CF20",
-    "BBL/Fiberon PA6-CF20",
     "Snapmaker/Fiberon PA6-CF20"
    ],
    "name": "Fiberon PA6-CF20",
@@ -1816,7 +1760,6 @@
   },
   "OFEjbwqG": {
    "filaments": [
-    "BBL/PolyTerra PLA+",
     "Snapmaker/PolyTerra PLA+"
    ],
    "name": "PolyTerra PLA+",
@@ -1889,17 +1832,8 @@
    "filament_type": "TPU",
    "filament_vendor": "Generic"
   },
-  "OFF5o7b2": {
-   "filaments": [
-    "BBL/BETA PLA Youth"
-   ],
-   "name": "BETA PLA Youth",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OFF9OKoY": {
    "filaments": [
-    "BBL/PolyLite PLA Pro",
     "InlongFilamentLibrary/PolyLite PLA Pro",
     "Snapmaker/PolyLite PLA Pro"
    ],
@@ -1930,6 +1864,14 @@
    "name": "Flashforge ASA Basic",
    "filament_type": "ASA",
    "filament_vendor": "Flashforge"
+  },
+  "OFFMWFWL": {
+   "filaments": [
+    "Eryone/Eryone PLA-Matte"
+   ],
+   "name": "Eryone PLA-Matte",
+   "filament_type": "PLA",
+   "filament_vendor": "Eryone"
   },
   "OFFNYwWR": {
    "filaments": [
@@ -1980,17 +1922,8 @@
    "filament_type": "PLA",
    "filament_vendor": "Bambu Lab"
   },
-  "OFFfJ09N": {
-   "filaments": [
-    "BBL/BETA PETG Glow"
-   ],
-   "name": "BETA PETG Glow",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
-  },
   "OFFkCLBl": {
    "filaments": [
-    "BBL/Panchroma PLA Galaxy",
     "InlongFilamentLibrary/Panchroma PLA Galaxy",
     "Snapmaker/Panchroma PLA Galaxy"
    ],
@@ -2072,22 +2005,6 @@
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
   },
-  "OFGVxj2A": {
-   "filaments": [
-    "BBL/BETA PLA Wood"
-   ],
-   "name": "BETA PLA Wood",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
-  "OFGc9l16": {
-   "filaments": [
-    "BBL/BETA PLA Glow"
-   ],
-   "name": "BETA PLA Glow",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OFGcLA5R": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PLA-mate Beige"
@@ -2114,7 +2031,6 @@
   },
   "OFGkyftV": {
    "filaments": [
-    "BBL/Overture Silk PLA",
     "InlongFilamentLibrary/Overture Silk PLA"
    ],
    "name": "Overture Silk PLA",
@@ -2185,14 +2101,6 @@
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
   },
-  "OFHHwrd1": {
-   "filaments": [
-    "BBL/addnorth PETG Base"
-   ],
-   "name": "addnorth PETG Base",
-   "filament_type": "PETG",
-   "filament_vendor": "addnorth"
-  },
   "OFHWSM21": {
    "filaments": [
     "BBL/Fiberon PET-CF",
@@ -2262,14 +2170,6 @@
    "filament_type": "PLA",
    "filament_vendor": "SUNLU"
   },
-  "OFI2MKy7": {
-   "filaments": [
-    "BBL/BETA PEBA 90A"
-   ],
-   "name": "BETA PEBA 90A",
-   "filament_type": "TPU",
-   "filament_vendor": "BETA"
-  },
   "OFIBXa0k": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PLA-mate Rojo"
@@ -2325,6 +2225,14 @@
    "name": "eSUN PLA-Silk",
    "filament_type": "PLA",
    "filament_vendor": "eSUN"
+  },
+  "OFIUkWYN": {
+   "filaments": [
+    "Sovol/Generic PLA SPEEDBENCHY"
+   ],
+   "name": "Generic PLA SPEEDBENCHY",
+   "filament_type": "PLA",
+   "filament_vendor": "Generic"
   },
   "OFIVWJPm": {
    "filaments": [
@@ -2385,12 +2293,19 @@
   },
   "OFIxOuOu": {
    "filaments": [
-    "BBL/PolyLite PLA Starlight",
     "Snapmaker/PolyLite PLA Starlight"
    ],
    "name": "PolyLite PLA Starlight",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
+  },
+  "OFIzY5sP": {
+   "filaments": [
+    "Eryone/Eryone ASA-HS"
+   ],
+   "name": "Eryone ASA-HS",
+   "filament_type": "ASA",
+   "filament_vendor": "Eryone"
   },
   "OFJ3F2jm": {
    "filaments": [
@@ -2424,7 +2339,6 @@
   },
   "OFJOFnOZ": {
    "filaments": [
-    "BBL/AliZ PETG-CF",
     "InlongFilamentLibrary/AliZ PETG-CF"
    ],
    "name": "AliZ PETG-CF",
@@ -2461,9 +2375,16 @@
    "filament_type": "TPU-90A",
    "filament_vendor": "Generic"
   },
+  "OFJdf5nt": {
+   "filaments": [
+    "Meltingplot/Meltingplot PET-CF15"
+   ],
+   "name": "Meltingplot PET-CF15",
+   "filament_type": "PET-CF",
+   "filament_vendor": "Meltingplot"
+  },
   "OFJgijky": {
    "filaments": [
-    "BBL/PolyLite CosPLA",
     "Snapmaker/PolyLite CosPLA"
    ],
    "name": "PolyLite CosPLA",
@@ -2478,14 +2399,6 @@
    "filament_type": "ABS",
    "filament_vendor": "Snapmaker"
   },
-  "OFJnEaCp": {
-   "filaments": [
-    "BBL/BETA PLA Transparent"
-   ],
-   "name": "BETA PLA Transparent",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OFJrvXth": {
    "filaments": [
     "Snapmaker/Snapmaker ABS Benchy"
@@ -2495,9 +2408,7 @@
    "filament_vendor": "Snapmaker"
   },
   "OFJs1ToM": {
-   "filaments": [
-    "BBL/COEX NYLEX UNFILLED"
-   ],
+   "filaments": [],
    "name": "COEX NYLEX UNFILLED",
    "filament_type": "PA",
    "filament_vendor": "COEX 3D"
@@ -2517,14 +2428,6 @@
    "name": "YUMI PLA Direct Drive",
    "filament_type": "PLA",
    "filament_vendor": "Yumi"
-  },
-  "OFK7830e": {
-   "filaments": [
-    "BBL/BETA TPU 95A"
-   ],
-   "name": "BETA TPU 95A",
-   "filament_type": "TPU",
-   "filament_vendor": "BETA"
   },
   "OFK8XHPn": {
    "filaments": [
@@ -2590,14 +2493,6 @@
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
   },
-  "OFKYBAWe": {
-   "filaments": [
-    "BBL/BETA PLA Marble"
-   ],
-   "name": "BETA PLA Marble",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OFKZ9skj": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PLA Naranja Tigre"
@@ -2649,21 +2544,12 @@
   },
   "OFKiSMWR": {
    "filaments": [
-    "BBL/Panchroma PLA Marble",
     "InlongFilamentLibrary/Panchroma PLA Marble",
     "Snapmaker/Panchroma PLA Marble"
    ],
    "name": "Panchroma PLA Marble",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
-  },
-  "OFKyNkQz": {
-   "filaments": [
-    "BBL/BETA PETG UV Color Change"
-   ],
-   "name": "BETA PETG UV Color Change",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
   },
   "OFL9aRjN": {
    "filaments": [
@@ -2719,7 +2605,6 @@
     "Anycubic/Generic ASA",
     "Artillery/Generic ASA",
     "BBL/Generic ASA",
-    "Blocks/Generic ASA",
     "Chuanying/Generic ASA",
     "Creality/Generic ASA",
     "Custom/Generic ASA",
@@ -2770,7 +2655,6 @@
     "Anker/Generic PC",
     "Anycubic/Generic PC",
     "BBL/Generic PC",
-    "Blocks/Generic PC",
     "Creality/Generic PC",
     "Custom/Generic PC",
     "Elegoo/Generic PC",
@@ -2832,14 +2716,6 @@
    "filament_type": "PETG-GF",
    "filament_vendor": "Creality"
   },
-  "OFLjDYxH": {
-   "filaments": [
-    "BBL/addnorth PLA X-PLA High Speed"
-   ],
-   "name": "addnorth PLA X-PLA High Speed",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
-  },
   "OFLjRyct": {
    "filaments": [
     "INLONG/INLONG BL200"
@@ -2847,14 +2723,6 @@
    "name": "INLONG BL200",
    "filament_type": "PETG",
    "filament_vendor": "INLONG"
-  },
-  "OFLqgSuX": {
-   "filaments": [
-    "BBL/BETA PLA-CF"
-   ],
-   "name": "BETA PLA-CF",
-   "filament_type": "PLA-CF",
-   "filament_vendor": "BETA"
   },
   "OFLzx3J4": {
    "filaments": [
@@ -2882,7 +2750,6 @@
   },
   "OFM91vZs": {
    "filaments": [
-    "BBL/Overture ASA",
     "InlongFilamentLibrary/Overture ASA"
    ],
    "name": "Overture ASA",
@@ -2942,7 +2809,6 @@
   },
   "OFMZvH0z": {
    "filaments": [
-    "BBL/Overture Rock PLA",
     "InlongFilamentLibrary/Overture Rock PLA"
    ],
    "name": "Overture Rock PLA",
@@ -2997,22 +2863,6 @@
    "name": "Elas PLA Basic",
    "filament_type": "PLA",
    "filament_vendor": "Elas"
-  },
-  "OFMzRg65": {
-   "filaments": [
-    "BBL/BETA PLA PRO"
-   ],
-   "name": "BETA PLA PRO",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
-  "OFN8QBhu": {
-   "filaments": [
-    "BBL/addnorth PLA Wood"
-   ],
-   "name": "addnorth PLA Wood",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
   },
   "OFNGTH3w": {
    "filaments": [
@@ -3070,14 +2920,6 @@
    "filament_type": "PETG",
    "filament_vendor": "Generic"
   },
-  "OFNk8AvA": {
-   "filaments": [
-    "BBL/BETA PETG Gradient"
-   ],
-   "name": "BETA PETG Gradient",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
-  },
   "OFNk8bxk": {
    "filaments": [
     "BBL/Bambu PA6-GF",
@@ -3113,7 +2955,6 @@
   },
   "OFO1GEq6": {
    "filaments": [
-    "BBL/Panchroma PLA Neon",
     "InlongFilamentLibrary/Panchroma PLA Neon",
     "Snapmaker/Panchroma PLA Neon"
    ],
@@ -3138,17 +2979,8 @@
    "filament_type": "PETG-CF",
    "filament_vendor": "Generic"
   },
-  "OFO6GMJ3": {
-   "filaments": [
-    "BBL/addnorth TPU EasyFlex"
-   ],
-   "name": "addnorth TPU EasyFlex",
-   "filament_type": "TPU",
-   "filament_vendor": "addnorth"
-  },
   "OFOABq7t": {
    "filaments": [
-    "BBL/AliZ PETG-Metal",
     "InlongFilamentLibrary/AliZ PETG-Metal"
    ],
    "name": "AliZ PETG-Metal",
@@ -3186,14 +3018,6 @@
    "name": "Snapmaker PLA Full Spectrum",
    "filament_type": "PLA",
    "filament_vendor": "Snapmaker"
-  },
-  "OFOQCfVa": {
-   "filaments": [
-    "BBL/addnorth PLA Premium Silk"
-   ],
-   "name": "addnorth PLA Premium Silk",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
   },
   "OFObG16Q": {
    "filaments": [
@@ -3336,7 +3160,6 @@
   },
   "OFPkCJKE": {
    "filaments": [
-    "BBL/Panchroma PLA Satin",
     "Creality/Panchroma PLA Satin",
     "InlongFilamentLibrary/Panchroma PLA Satin",
     "Snapmaker/Panchroma PLA Satin"
@@ -3357,7 +3180,6 @@
   },
   "OFPoyiFs": {
    "filaments": [
-    "BBL/Polymaker HT-PLA",
     "InlongFilamentLibrary/Polymaker HT-PLA",
     "Snapmaker/Polymaker HT-PLA"
    ],
@@ -3406,14 +3228,6 @@
    "filament_type": "PETG",
    "filament_vendor": "QIDI"
   },
-  "OFQ5TxZ2": {
-   "filaments": [
-    "BBL/addnorth PVDF Adamant S1"
-   ],
-   "name": "addnorth PVDF Adamant S1",
-   "filament_type": "PA",
-   "filament_vendor": "addnorth"
-  },
   "OFQBAaL7": {
    "filaments": [
     "INLONG/INLONG PAEK"
@@ -3444,7 +3258,6 @@
     "Anker/Generic PA-CF",
     "Anycubic/Generic PA-CF",
     "BBL/Generic PA-CF",
-    "Blocks/Generic PA-CF",
     "Creality/Generic PA-CF",
     "Custom/Generic PA-CF",
     "FLSun/Generic PA-CF",
@@ -3552,14 +3365,6 @@
    "filament_type": "TPU",
    "filament_vendor": "QIDI"
   },
-  "OFRFhdqy": {
-   "filaments": [
-    "BBL/addnorth PLA Textura"
-   ],
-   "name": "addnorth PLA Textura",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
-  },
   "OFRJ325z": {
    "filaments": [
     "LH/LHS PETG"
@@ -3567,6 +3372,22 @@
    "name": "LHS PETG",
    "filament_type": "PETG",
    "filament_vendor": "LH Stinger"
+  },
+  "OFRdywGp": {
+   "filaments": [
+    "Meltingplot/Meltingplot ASA"
+   ],
+   "name": "Meltingplot ASA",
+   "filament_type": "ASA",
+   "filament_vendor": "Meltingplot"
+  },
+  "OFRgjTRp": {
+   "filaments": [
+    "Eryone/Eryone ABS+-HS"
+   ],
+   "name": "Eryone ABS+-HS",
+   "filament_type": "ABS",
+   "filament_vendor": "Eryone"
   },
   "OFRhBryT": {
    "filaments": [
@@ -3594,7 +3415,6 @@
   },
   "OFRiYgMK": {
    "filaments": [
-    "BBL/Panchroma PLA Celestial",
     "InlongFilamentLibrary/Panchroma PLA Celestial",
     "Snapmaker/Panchroma PLA Celestial"
    ],
@@ -3669,7 +3489,6 @@
   },
   "OFS8lTQt": {
    "filaments": [
-    "BBL/Panchroma PLA Silk",
     "InlongFilamentLibrary/Panchroma PLA Silk",
     "Snapmaker/Panchroma PLA Silk"
    ],
@@ -3701,22 +3520,6 @@
    "filament_type": "PLA",
    "filament_vendor": "Snapmaker"
   },
-  "OFSfm8iP": {
-   "filaments": [
-    "BBL/BETA PLA Heat Color Change"
-   ],
-   "name": "BETA PLA Heat Color Change",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
-  "OFSiCZP3": {
-   "filaments": [
-    "BBL/BETA PETG-GF"
-   ],
-   "name": "BETA PETG-GF",
-   "filament_type": "PETG-CF",
-   "filament_vendor": "BETA"
-  },
   "OFSqIcJC": {
    "filaments": [
     "Flashforge/Flashforge TPU 95A"
@@ -3725,19 +3528,27 @@
    "filament_type": "TPU",
    "filament_vendor": "Flashforge"
   },
-  "OFSw6Mor": {
+  "OFSvr7Aj": {
    "filaments": [
-    "BBL/addnorth PA Adura FDA"
+    "Eryone/Eryone PETG-Matte"
    ],
-   "name": "addnorth PA Adura FDA",
-   "filament_type": "PA",
-   "filament_vendor": "addnorth"
+   "name": "Eryone PETG-Matte",
+   "filament_type": "PETG",
+   "filament_vendor": "Eryone"
   },
   "OFSwbBWS": {
    "filaments": [],
    "name": "DREMC PLA+",
    "filament_type": "PLA",
    "filament_vendor": "DREMC"
+  },
+  "OFT02Lz9": {
+   "filaments": [
+    "Flashforge/Flashforge R PLA"
+   ],
+   "name": "Flashforge R PLA",
+   "filament_type": "PLA",
+   "filament_vendor": "Flashforge"
   },
   "OFT2jon4": {
    "filaments": [
@@ -3852,6 +3663,14 @@
    "filament_type": "ASA",
    "filament_vendor": "QIDI"
   },
+  "OFTz2YXa": {
+   "filaments": [
+    "Blocks/Blocks ASA"
+   ],
+   "name": "Blocks ASA",
+   "filament_type": "ASA",
+   "filament_vendor": "Blocks"
+  },
   "OFU1zPxE": {
    "filaments": [
     "Elegoo/Elegoo PLA Galaxy",
@@ -3868,14 +3687,6 @@
    "name": "re3D PC",
    "filament_type": "PC",
    "filament_vendor": "re3D"
-  },
-  "OFU5JPDy": {
-   "filaments": [
-    "BBL/addnorth PETG PRO Matte"
-   ],
-   "name": "addnorth PETG PRO Matte",
-   "filament_type": "PETG",
-   "filament_vendor": "addnorth"
   },
   "OFU7CKZt": {
    "filaments": [
@@ -3950,14 +3761,6 @@
    "filament_type": "ASA",
    "filament_vendor": "eSUN"
   },
-  "OFUtiVRn": {
-   "filaments": [
-    "BBL/addnorth PETG ESD"
-   ],
-   "name": "addnorth PETG ESD",
-   "filament_type": "PETG",
-   "filament_vendor": "addnorth"
-  },
   "OFUyDDNv": {
    "filaments": [
     "Elegoo/Elegoo PC",
@@ -4012,13 +3815,13 @@
    "filament_type": "TPU",
    "filament_vendor": "Bambu Lab"
   },
-  "OFVDWuxl": {
+  "OFVGAC8g": {
    "filaments": [
-    "BBL/addnorth PLA HT-PLA PRO Matte"
+    "Blocks/Blocks PLA"
    ],
-   "name": "addnorth PLA HT-PLA PRO Matte",
+   "name": "Blocks PLA",
    "filament_type": "PLA",
-   "filament_vendor": "addnorth"
+   "filament_vendor": "Blocks"
   },
   "OFVHMFJX": {
    "filaments": [
@@ -4028,9 +3831,16 @@
    "filament_type": "PETG",
    "filament_vendor": "QIDI"
   },
+  "OFVIMei2": {
+   "filaments": [
+    "Meltingplot/Meltingplot ABS"
+   ],
+   "name": "Meltingplot ABS",
+   "filament_type": "ABS",
+   "filament_vendor": "Meltingplot"
+  },
   "OFVptRxp": {
    "filaments": [
-    "BBL/COEX TPE 30D",
     "InlongFilamentLibrary/COEX TPE 30D"
    ],
    "name": "COEX TPE 30D",
@@ -4064,14 +3874,6 @@
    "filament_type": "PLA",
    "filament_vendor": "QIDI"
   },
-  "OFW8M3CY": {
-   "filaments": [
-    "BBL/BETA PLA Chameleon"
-   ],
-   "name": "BETA PLA Chameleon",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OFW8lqnb": {
    "filaments": [
     "Snapmaker/Snapmaker PETG Translucent"
@@ -4080,6 +3882,14 @@
    "filament_type": "PETG",
    "filament_vendor": "Snapmaker"
   },
+  "OFWDDu8u": {
+   "filaments": [
+    "Eryone/Eryone petg-Galaxy"
+   ],
+   "name": "Eryone petg-Galaxy",
+   "filament_type": "PETG",
+   "filament_vendor": "Eryone"
+  },
   "OFWDe7YH": {
    "filaments": [
     "Qidi/QIDI UltraPA"
@@ -4087,14 +3897,6 @@
    "name": "QIDI UltraPA",
    "filament_type": "UltraPA",
    "filament_vendor": "QIDI"
-  },
-  "OFWK0Y9A": {
-   "filaments": [
-    "BBL/addnorth PA Adura"
-   ],
-   "name": "addnorth PA Adura",
-   "filament_type": "PA",
-   "filament_vendor": "addnorth"
   },
   "OFWRHucq": {
    "filaments": [
@@ -4167,7 +3969,6 @@
     "Anycubic/Generic PLA-CF",
     "Artillery/Generic PLA-CF",
     "BBL/Generic PLA-CF",
-    "Blocks/Generic PLA-CF",
     "Creality/Generic PLA-CF",
     "Custom/Generic PLA-CF",
     "FLSun/Generic PLA-CF",
@@ -4218,6 +4019,14 @@
    "name": "Generic PLA-CF10",
    "filament_type": "PLA-CF",
    "filament_vendor": "Generic"
+  },
+  "OFXB8ZI7": {
+   "filaments": [
+    "Flashforge/Flashforge HS PLA+"
+   ],
+   "name": "Flashforge HS PLA+",
+   "filament_type": "PLA",
+   "filament_vendor": "Flashforge"
   },
   "OFXCBZTA": {
    "filaments": [
@@ -4369,6 +4178,14 @@
    "filament_type": "PETG",
    "filament_vendor": "Volumic"
   },
+  "OFY2E8cd": {
+   "filaments": [
+    "Eryone/Eryone PETG-Translucent"
+   ],
+   "name": "Eryone PETG-Translucent",
+   "filament_type": "PETG",
+   "filament_vendor": "Eryone"
+  },
   "OFY3AB7j": {
    "filaments": [
     "Snapmaker/Snapmaker J1 PLA Matte"
@@ -4399,7 +4216,6 @@
     "Anycubic/Generic ABS",
     "Artillery/Generic ABS",
     "BBL/Generic ABS",
-    "Blocks/Generic ABS",
     "Chuanying/Generic ABS",
     "Co Print/Generic ABS",
     "CoLiDo/Generic ABS",
@@ -4422,6 +4238,7 @@
     "SecKit/Generic ABS",
     "Sovol/Generic ABS",
     "Tiertime/Generic ABS",
+    "UltiMaker/Generic ABS",
     "Vzbot/Generic ABS",
     "Z-Bolt/Generic ABS"
    ],
@@ -4454,21 +4271,12 @@
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
   },
-  "OFYGrfHY": {
-   "filaments": [
-    "BBL/BETA PETG Fluorescence"
-   ],
-   "name": "BETA PETG Fluorescence",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
-  },
   "OFYPdQJh": {
    "filaments": [
     "Anker/Generic PETG",
     "Anycubic/Generic PETG",
     "Artillery/Generic PETG",
     "BBL/Generic PETG",
-    "Blocks/Generic PETG",
     "CONSTRUCT3D/Generic PETG",
     "Chuanying/Generic PETG",
     "Co Print/Generic PETG",
@@ -4495,6 +4303,7 @@
     "SecKit/Generic PETG",
     "Sovol/Generic PETG",
     "Tiertime/Generic PETG",
+    "UltiMaker/Generic PETG",
     "Vzbot/Generic PETG",
     "Z-Bolt/Generic PETG"
    ],
@@ -4531,6 +4340,14 @@
    "name": "FlyingBear TPU",
    "filament_type": "TPU",
    "filament_vendor": "FlyingBear"
+  },
+  "OFYnedOZ": {
+   "filaments": [
+    "Blocks/Blocks TPU"
+   ],
+   "name": "Blocks TPU",
+   "filament_type": "TPU",
+   "filament_vendor": "Blocks"
   },
   "OFYuowge": {
    "filaments": [
@@ -4573,22 +4390,6 @@
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
   },
-  "OFZGrQTU": {
-   "filaments": [
-    "BBL/addnorth PETG Economy"
-   ],
-   "name": "addnorth PETG Economy",
-   "filament_type": "PETG",
-   "filament_vendor": "addnorth"
-  },
-  "OFZJft47": {
-   "filaments": [
-    "BBL/addnorth PLA Economy"
-   ],
-   "name": "addnorth PLA Economy",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
-  },
   "OFZLtWYs": {
    "filaments": [
     "Qidi/QIDI ABS-GF25"
@@ -4620,14 +4421,6 @@
    "name": "Snapmaker Dual PLA",
    "filament_type": "PLA",
    "filament_vendor": "Snapmaker"
-  },
-  "OFZqZMuv": {
-   "filaments": [
-    "BBL/BETA ASA"
-   ],
-   "name": "BETA ASA",
-   "filament_type": "ASA",
-   "filament_vendor": "BETA"
   },
   "OFZr862X": {
    "filaments": [
@@ -4815,6 +4608,14 @@
    "filament_type": "PP-CF",
    "filament_vendor": "Eryone"
   },
+  "OFbzOkXX": {
+   "filaments": [
+    "Eryone/Eryone PETG-GF"
+   ],
+   "name": "Eryone PETG-GF",
+   "filament_type": "PETG",
+   "filament_vendor": "Eryone"
+  },
   "OFc3xdm9": {
    "filaments": [
     "BBL/Overture PLA",
@@ -4832,14 +4633,6 @@
    "name": "Snapmaker Dual TPU High-Flow",
    "filament_type": "TPU",
    "filament_vendor": "Snapmaker"
-  },
-  "OFcBl0nJ": {
-   "filaments": [
-    "BBL/Fiberon PA612-CF15"
-   ],
-   "name": "Fiberon PA612-CF15",
-   "filament_type": "PA-CF",
-   "filament_vendor": "Polymaker"
   },
   "OFcJDtTx": {
    "filaments": [
@@ -4867,20 +4660,11 @@
   },
   "OFcfQk4h": {
    "filaments": [
-    "BBL/Overture Air PLA",
     "InlongFilamentLibrary/Overture Air PLA"
    ],
    "name": "Overture Air PLA",
    "filament_type": "PLA",
    "filament_vendor": "Overture"
-  },
-  "OFcnWTJB": {
-   "filaments": [
-    "BBL/BETA PLA Glitter"
-   ],
-   "name": "BETA PLA Glitter",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
   },
   "OFcogyWl": {
    "filaments": [
@@ -4889,14 +4673,6 @@
    "name": "WonderMaker PLA Metal",
    "filament_type": "PLA",
    "filament_vendor": "WonderMaker"
-  },
-  "OFcpa50Z": {
-   "filaments": [
-    "BBL/addnorth PLA-CF Carbon Fiber"
-   ],
-   "name": "addnorth PLA-CF Carbon Fiber",
-   "filament_type": "PLA-CF",
-   "filament_vendor": "addnorth"
   },
   "OFctg8r1": {
    "filaments": [
@@ -4908,7 +4684,6 @@
   },
   "OFcvKkrs": {
    "filaments": [
-    "BBL/Overture TPU",
     "InlongFilamentLibrary/Overture TPU"
    ],
    "name": "Overture TPU",
@@ -4937,7 +4712,6 @@
   },
   "OFd2vX0G": {
    "filaments": [
-    "BBL/COEX PLA PRIME",
     "InlongFilamentLibrary/COEX PLA PRIME"
    ],
    "name": "COEX PLA PRIME",
@@ -4946,7 +4720,6 @@
   },
   "OFd4zw5l": {
    "filaments": [
-    "BBL/AliZ PA-CF",
     "InlongFilamentLibrary/AliZ PA-CF"
    ],
    "name": "AliZ PA-CF",
@@ -4974,6 +4747,30 @@
    "name": "Arena TPU 95A",
    "filament_type": "TPU",
    "filament_vendor": "Inlong Arena"
+  },
+  "OFdO6vpt": {
+   "filaments": [
+    "Prusa/Prusament PC Blend Carbon Fiber"
+   ],
+   "name": "Prusament PC Blend Carbon Fiber",
+   "filament_type": "PC-CF",
+   "filament_vendor": "Prusa Polymers"
+  },
+  "OFdPevOo": {
+   "filaments": [
+    "Meltingplot/Meltingplot PA6 CF HT"
+   ],
+   "name": "Meltingplot PA6 CF HT",
+   "filament_type": "PA-CF",
+   "filament_vendor": "Meltingplot"
+  },
+  "OFdWrXpL": {
+   "filaments": [
+    "Blocks/Blocks PA-CF"
+   ],
+   "name": "Blocks PA-CF",
+   "filament_type": "PA-CF",
+   "filament_vendor": "Blocks"
   },
   "OFdXVjGZ": {
    "filaments": [
@@ -5022,6 +4819,14 @@
    "name": "QIDI PETG-GF",
    "filament_type": "PETG-GF",
    "filament_vendor": "QIDI"
+  },
+  "OFdyfQvU": {
+   "filaments": [
+    "BBL/Bambu PETG Matte"
+   ],
+   "name": "Bambu PETG Matte",
+   "filament_type": "PETG",
+   "filament_vendor": "Bambu Lab"
   },
   "OFdzlrhi": {
    "filaments": [
@@ -5088,14 +4893,6 @@
    "filament_type": "ABS",
    "filament_vendor": "QIDI"
   },
-  "OFeF4UNh": {
-   "filaments": [
-    "BBL/BETA PLA Silk"
-   ],
-   "name": "BETA PLA Silk",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OFeIyhUx": {
    "filaments": [
     "Anycubic/Anycubic PC-CF"
@@ -5103,6 +4900,14 @@
    "name": "Anycubic PC-CF",
    "filament_type": "PC-CF",
    "filament_vendor": "Anycubic"
+  },
+  "OFeRoHy3": {
+   "filaments": [
+    "Eryone/Eryone PLA+HS"
+   ],
+   "name": "Eryone PLA+HS",
+   "filament_type": "PLA",
+   "filament_vendor": "Eryone"
   },
   "OFeTATC7": {
    "filaments": [
@@ -5128,6 +4933,14 @@
    "filament_type": "PLA",
    "filament_vendor": "HATCHBOX"
   },
+  "OFefnvF0": {
+   "filaments": [
+    "M3D/Enabler PLA"
+   ],
+   "name": "Enabler PLA",
+   "filament_type": "PLA",
+   "filament_vendor": "Generic"
+  },
   "OFelDBgv": {
    "filaments": [
     "Snapmaker/Polymaker PLA"
@@ -5135,6 +4948,14 @@
    "name": "Polymaker PLA",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
+  },
+  "OFenMm2Y": {
+   "filaments": [
+    "Eryone/Eryone ABS-GF"
+   ],
+   "name": "Eryone ABS-GF",
+   "filament_type": "ABS",
+   "filament_vendor": "Eryone"
   },
   "OFepU7Tl": {
    "filaments": [
@@ -5294,7 +5115,6 @@
   },
   "OFfnXFie": {
    "filaments": [
-    "BBL/COEX TPE 40D",
     "InlongFilamentLibrary/COEX TPE 40D"
    ],
    "name": "COEX TPE 40D",
@@ -5311,7 +5131,6 @@
   },
   "OFfr4XNO": {
    "filaments": [
-    "BBL/COEX TPE 60D",
     "InlongFilamentLibrary/COEX TPE 60D"
    ],
    "name": "COEX TPE 60D",
@@ -5373,7 +5192,6 @@
     "Anker/Generic PA",
     "Anycubic/Generic PA",
     "BBL/Generic PA",
-    "Blocks/Generic PA",
     "Creality/Generic PA",
     "Custom/Generic PA",
     "Elegoo/Generic PA",
@@ -5430,7 +5248,6 @@
     "Anycubic/Generic TPU",
     "Artillery/Generic TPU",
     "BBL/Generic TPU",
-    "Blocks/Generic TPU",
     "Chuanying/Generic TPU",
     "Co Print/Generic TPU",
     "CoLiDo/Generic TPU",
@@ -5530,7 +5347,6 @@
   },
   "OFhASRWj": {
    "filaments": [
-    "BBL/Panchroma PLA Temp Shift",
     "InlongFilamentLibrary/Panchroma PLA Temp Shift",
     "Snapmaker/Panchroma PLA Temp Shift"
    ],
@@ -5545,14 +5361,6 @@
    "name": "GreenGate3D PETG",
    "filament_type": "PETG",
    "filament_vendor": "GreenGate3D"
-  },
-  "OFhN09f0": {
-   "filaments": [
-    "BBL/addnorth PC BLend HT LCF"
-   ],
-   "name": "addnorth PC BLend HT LCF",
-   "filament_type": "PC",
-   "filament_vendor": "addnorth"
   },
   "OFhO5aEJ": {
    "filaments": [
@@ -5572,7 +5380,6 @@
   },
   "OFhQfUQY": {
    "filaments": [
-    "BBL/Generic SBS",
     "InlongFilamentLibrary/Generic SBS",
     "Tiertime/Generic SBS"
    ],
@@ -5672,7 +5479,6 @@
   },
   "OFhlCNqq": {
    "filaments": [
-    "BBL/COEX PLA",
     "InlongFilamentLibrary/COEX PLA"
    ],
    "name": "COEX PLA",
@@ -5771,6 +5577,14 @@
    "filament_type": "ABS",
    "filament_vendor": "Flashforge"
   },
+  "OFidOgK4": {
+   "filaments": [
+    "Blocks/Blocks PA"
+   ],
+   "name": "Blocks PA",
+   "filament_type": "PA",
+   "filament_vendor": "Blocks"
+  },
   "OFilAA3b": {
    "filaments": [
     "Eryone/Eryone PLA-CF"
@@ -5805,7 +5619,6 @@
   },
   "OFitS8al": {
    "filaments": [
-    "BBL/PolyLite PLA Neon",
     "Snapmaker/PolyLite PLA Neon"
    ],
    "name": "PolyLite PLA Neon",
@@ -5885,14 +5698,6 @@
    "filament_type": "PACF Pro",
    "filament_vendor": "iQ Materials"
   },
-  "OFjUXn67": {
-   "filaments": [
-    "BBL/BETA ABS"
-   ],
-   "name": "BETA ABS",
-   "filament_type": "ABS",
-   "filament_vendor": "BETA"
-  },
   "OFjVOWfJ": {
    "filaments": [
     "Anycubic/Anycubic PLA High Speed"
@@ -5903,7 +5708,6 @@
   },
   "OFjb0wos": {
    "filaments": [
-    "BBL/Panchroma PLA Metallic",
     "InlongFilamentLibrary/Panchroma PLA Metallic",
     "Snapmaker/Panchroma PLA Metallic"
    ],
@@ -5935,14 +5739,6 @@
    "name": "Qidi PLA-CF",
    "filament_type": "PLA-CF",
    "filament_vendor": "QIDI"
-  },
-  "OFjogeYN": {
-   "filaments": [
-    "BBL/BETA PETG Glitter"
-   ],
-   "name": "BETA PETG Glitter",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
   },
   "OFjorDcx": {
    "filaments": [
@@ -6009,14 +5805,6 @@
    "name": "FilAr PLA Verde Pixel",
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
-  },
-  "OFkHbjUv": {
-   "filaments": [
-    "BBL/BETA PLA Metallic"
-   ],
-   "name": "BETA PLA Metallic",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
   },
   "OFkOviHk": {
    "filaments": [
@@ -6118,6 +5906,14 @@
    "filament_type": "TPU",
    "filament_vendor": "Snapmaker"
   },
+  "OFlGY0MN": {
+   "filaments": [
+    "Blocks/Blocks PC"
+   ],
+   "name": "Blocks PC",
+   "filament_type": "PC",
+   "filament_vendor": "Blocks"
+  },
   "OFlIsW6f": {
    "filaments": [
     "Snapmaker/Snapmaker Dual PLA Matte"
@@ -6175,14 +5971,6 @@
    "filament_type": "PETG",
    "filament_vendor": "Generic"
   },
-  "OFlmxlDG": {
-   "filaments": [
-    "BBL/BETA HIPS"
-   ],
-   "name": "BETA HIPS",
-   "filament_type": "HIPS",
-   "filament_vendor": "BETA"
-  },
   "OFln72PT": {
    "filaments": [
     "Elegoo/Elegoo PLA-CF",
@@ -6211,7 +5999,6 @@
   },
   "OFlwmqrC": {
    "filaments": [
-    "BBL/Polymaker HT-PLA-GF",
     "InlongFilamentLibrary/Polymaker HT-PLA-GF",
     "Snapmaker/Polymaker HT-PLA-GF"
    ],
@@ -6328,7 +6115,6 @@
   },
   "OFmn9NZL": {
    "filaments": [
-    "BBL/FusRock ABS-GF",
     "InlongFilamentLibrary/FusRock ABS-GF"
    ],
    "name": "FusRock ABS-GF",
@@ -6348,14 +6134,6 @@
    "name": "Generic PLA High Speed",
    "filament_type": "PLA",
    "filament_vendor": "Generic"
-  },
-  "OFmt513L": {
-   "filaments": [
-    "BBL/BETA PETG Transparent"
-   ],
-   "name": "BETA PETG Transparent",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
   },
   "OFmveLWz": {
    "filaments": [
@@ -6390,14 +6168,6 @@
    "name": "QIDI PA12-CF",
    "filament_type": "PA12-CF",
    "filament_vendor": "QIDI"
-  },
-  "OFnBvPhb": {
-   "filaments": [
-    "BBL/addnorth PLA rPLA RE-ADD"
-   ],
-   "name": "addnorth PLA rPLA RE-ADD",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
   },
   "OFnHc3D6": {
    "filaments": [
@@ -6520,14 +6290,6 @@
    "filament_type": "PLA",
    "filament_vendor": "Anycubic"
   },
-  "OFnpX8uh": {
-   "filaments": [
-    "BBL/BETA PETG Matte"
-   ],
-   "name": "BETA PETG Matte",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
-  },
   "OFnyHfcv": {
    "filaments": [
     "Ratrig/Generic ABS BigNozzle"
@@ -6607,7 +6369,6 @@
   },
   "OFocyw69": {
    "filaments": [
-    "BBL/AliZ PETG",
     "InlongFilamentLibrary/AliZ PETG"
    ],
    "name": "AliZ PETG",
@@ -6740,14 +6501,6 @@
    "filament_type": "PLA",
    "filament_vendor": "Inlong Arena"
   },
-  "OFpdjFI3": {
-   "filaments": [
-    "BBL/BETA PLA UV Color Change"
-   ],
-   "name": "BETA PLA UV Color Change",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
-  },
   "OFpu74Qe": {
    "filaments": [
     "Snapmaker/Snapmaker PLA Eco"
@@ -6800,7 +6553,6 @@
   },
   "OFqGRZyH": {
    "filaments": [
-    "BBL/Numakers PLA+",
     "InlongFilamentLibrary/Numakers PLA+"
    ],
    "name": "Numakers PLA+",
@@ -6834,14 +6586,6 @@
    "filament_type": "PET",
    "filament_vendor": "Infinity3DP"
   },
-  "OFqTwtXM": {
-   "filaments": [
-    "BBL/addnorth PETG rPETG Matte"
-   ],
-   "name": "addnorth PETG rPETG Matte",
-   "filament_type": "PETG",
-   "filament_vendor": "addnorth"
-  },
   "OFqW4ED1": {
    "filaments": [
     "INLONG/INLONG S1"
@@ -6858,6 +6602,14 @@
    "filament_type": "PA-S",
    "filament_vendor": "QIDI"
   },
+  "OFqcNuE1": {
+   "filaments": [
+    "Blocks/Blocks PVA"
+   ],
+   "name": "Blocks PVA",
+   "filament_type": "PVA",
+   "filament_vendor": "Blocks"
+  },
   "OFqtx549": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PLA-mate Celeste Cielo"
@@ -6868,7 +6620,6 @@
   },
   "OFqw2PQA": {
    "filaments": [
-    "BBL/Panchroma CoPE",
     "InlongFilamentLibrary/Panchroma CoPE",
     "Snapmaker/Panchroma CoPE"
    ],
@@ -6919,7 +6670,6 @@
   },
   "OFrOh600": {
    "filaments": [
-    "BBL/Panchroma PLA Matte",
     "Creality/Panchroma PLA Matte",
     "InlongFilamentLibrary/Panchroma PLA Matte",
     "Snapmaker/Panchroma PLA Matte"
@@ -6951,14 +6701,6 @@
    "name": "Flashforge PET-CF",
    "filament_type": "PET-CF",
    "filament_vendor": "Flashforge"
-  },
-  "OFrqMlGt": {
-   "filaments": [
-    "BBL/BETA PETG"
-   ],
-   "name": "BETA PETG",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
   },
   "OFryjl35": {
    "filaments": [
@@ -7051,7 +6793,6 @@
   "OFsRDvTM": {
    "filaments": [
     "Anycubic/Panchroma PLA",
-    "BBL/Panchroma PLA",
     "InlongFilamentLibrary/Panchroma PLA",
     "Snapmaker/Panchroma PLA"
    ],
@@ -7163,14 +6904,6 @@
    "filament_type": "SBS",
    "filament_vendor": "FDplast"
   },
-  "OFtdVZpV": {
-   "filaments": [
-    "BBL/addnorth PLA X-PLA"
-   ],
-   "name": "addnorth PLA X-PLA",
-   "filament_type": "PLA",
-   "filament_vendor": "addnorth"
-  },
   "OFtefokm": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PLA-mate Blanco"
@@ -7187,22 +6920,21 @@
    "filament_type": "TPU",
    "filament_vendor": "Bambu Lab"
   },
-  "OFtndTHe": {
-   "filaments": [
-    "BBL/BETA PETG-CF"
-   ],
-   "name": "BETA PETG-CF",
-   "filament_type": "PETG-CF",
-   "filament_vendor": "BETA"
-  },
   "OFtpXCCv": {
    "filaments": [
-    "BBL/COEX ASA PRIME",
     "InlongFilamentLibrary/COEX ASA PRIME"
    ],
    "name": "COEX ASA PRIME",
    "filament_type": "ASA",
    "filament_vendor": "COEX 3D"
+  },
+  "OFtqfvcE": {
+   "filaments": [
+    "Eryone/Eryone PETG HS"
+   ],
+   "name": "Eryone PETG HS",
+   "filament_type": "PETG",
+   "filament_vendor": "Eryone"
   },
   "OFtr8eZw": {
    "filaments": [
@@ -7299,7 +7031,6 @@
   },
   "OFuWCQXN": {
    "filaments": [
-    "BBL/COEX ABS PRIME",
     "InlongFilamentLibrary/COEX ABS PRIME"
    ],
    "name": "COEX ABS PRIME",
@@ -7353,14 +7084,6 @@
    "name": "Hyper PETG-CF",
    "filament_type": "PETG-CF",
    "filament_vendor": "Creality"
-  },
-  "OFuvOt0r": {
-   "filaments": [
-    "BBL/BETA PLA Basic"
-   ],
-   "name": "BETA PLA Basic",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
   },
   "OFuxH0Uz": {
    "filaments": [
@@ -7421,7 +7144,6 @@
   },
   "OFvTVZc3": {
    "filaments": [
-    "BBL/COEX PETG",
     "InlongFilamentLibrary/COEX PETG"
    ],
    "name": "COEX PETG",
@@ -7444,14 +7166,6 @@
    "filament_type": "HIPS",
    "filament_vendor": "Flashforge"
   },
-  "OFvcIGee": {
-   "filaments": [
-    "BBL/addnorth TPU Pro Matte 85A"
-   ],
-   "name": "addnorth TPU Pro Matte 85A",
-   "filament_type": "TPU",
-   "filament_vendor": "addnorth"
-  },
   "OFvdZ2bx": {
    "filaments": [
     "Qidi/QIDI WOOD Rapido"
@@ -7468,6 +7182,14 @@
    "name": "Elegoo PLA",
    "filament_type": "PLA",
    "filament_vendor": "Elegoo"
+  },
+  "OFvlreVF": {
+   "filaments": [
+    "Meltingplot/Meltingplot PETG"
+   ],
+   "name": "Meltingplot PETG",
+   "filament_type": "PETG",
+   "filament_vendor": "Meltingplot"
   },
   "OFvmwTZE": {
    "filaments": [
@@ -7488,7 +7210,6 @@
   },
   "OFvxIS9g": {
    "filaments": [
-    "BBL/Fiberon PA12-CF10",
     "Snapmaker/Fiberon PA12-CF10"
    ],
    "name": "Fiberon PA12-CF10",
@@ -7515,7 +7236,6 @@
   },
   "OFvyB0Bz": {
    "filaments": [
-    "BBL/PolyLite PLA Galaxy",
     "Snapmaker/PolyLite PLA Galaxy"
    ],
    "name": "PolyLite PLA Galaxy",
@@ -7529,14 +7249,6 @@
    "name": "Eolas Prints PLA High Speed",
    "filament_type": "PLA",
    "filament_vendor": "Eolas Prints"
-  },
-  "OFw4WD4T": {
-   "filaments": [
-    "BBL/Fiberon PETG-rCF08"
-   ],
-   "name": "Fiberon PETG-rCF08",
-   "filament_type": "PETG-CF",
-   "filament_vendor": "Polymaker"
   },
   "OFwJ0qu2": {
    "filaments": [],
@@ -7578,6 +7290,14 @@
    "filament_type": "TPU",
    "filament_vendor": "Other"
   },
+  "OFwXRVbB": {
+   "filaments": [
+    "Meltingplot/Meltingplot PLA"
+   ],
+   "name": "Meltingplot PLA",
+   "filament_type": "PLA",
+   "filament_vendor": "Meltingplot"
+  },
   "OFwaYjL6": {
    "filaments": [
     "BBL/Fiberon PA6-GF",
@@ -7586,14 +7306,6 @@
    "name": "Fiberon PA6-GF",
    "filament_type": "PA-GF",
    "filament_vendor": "Polymaker"
-  },
-  "OFwc74ck": {
-   "filaments": [
-    "BBL/BETA PLA Matte"
-   ],
-   "name": "BETA PLA Matte",
-   "filament_type": "PLA",
-   "filament_vendor": "BETA"
   },
   "OFwhLMs4": {
    "filaments": [
@@ -7621,7 +7333,6 @@
   },
   "OFwu7IAG": {
    "filaments": [
-    "BBL/COEX PCTG PRIME",
     "InlongFilamentLibrary/COEX PCTG PRIME"
    ],
    "name": "COEX PCTG PRIME",
@@ -7662,7 +7373,6 @@
   },
   "OFxA1p01": {
    "filaments": [
-    "BBL/Overture PLA Pro",
     "InlongFilamentLibrary/Overture PLA Pro"
    ],
    "name": "Overture PLA Pro",
@@ -7714,24 +7424,14 @@
   },
   "OFxe4rXr": {
    "filaments": [
-    "BBL/PolyTerra PLA Marble",
     "Snapmaker/PolyTerra PLA Marble"
    ],
    "name": "PolyTerra PLA Marble",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
   },
-  "OFxqf79Q": {
-   "filaments": [
-    "BBL/BETA PETG HF"
-   ],
-   "name": "BETA PETG HF",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
-  },
   "OFy02QHU": {
    "filaments": [
-    "BBL/PolyLite PLA Translucent",
     "Snapmaker/PolyLite PLA Translucent"
    ],
    "name": "PolyLite PLA Translucent",
@@ -7778,14 +7478,6 @@
    "filament_type": "TPU",
    "filament_vendor": "SeeMeCNC"
   },
-  "OFyJjkek": {
-   "filaments": [
-    "BBL/addnorth TPU Pro Matte 95A"
-   ],
-   "name": "addnorth TPU Pro Matte 95A",
-   "filament_type": "TPU",
-   "filament_vendor": "addnorth"
-  },
   "OFyLWVF3": {
    "filaments": [
     "Creality/Generic PETG-GF"
@@ -7818,14 +7510,6 @@
    "filament_type": "PLA",
    "filament_vendor": "Snapmaker"
   },
-  "OFyPTnSk": {
-   "filaments": [
-    "BBL/BETA PETG Heat Color Change"
-   ],
-   "name": "BETA PETG Heat Color Change",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
-  },
   "OFyQwdaM": {
    "filaments": [
     "Volumic/Volumic ABS Ultra (Performance)"
@@ -7851,6 +7535,22 @@
    "filament_type": "ABS",
    "filament_vendor": "Volumic"
   },
+  "OFyWb8AA": {
+   "filaments": [
+    "Eryone/Eryone PETG-Lite"
+   ],
+   "name": "Eryone PETG-Lite",
+   "filament_type": "PETG",
+   "filament_vendor": "Eryone"
+  },
+  "OFyYfgDM": {
+   "filaments": [
+    "Meltingplot/Meltingplot TitanX"
+   ],
+   "name": "Meltingplot TitanX",
+   "filament_type": "ABS",
+   "filament_vendor": "Meltingplot"
+  },
   "OFybzvQN": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PETG Gris Ceniza"
@@ -7874,14 +7574,6 @@
    "name": "Snapmaker Dual PLA Silk",
    "filament_type": "PLA",
    "filament_vendor": "Snapmaker"
-  },
-  "OFymnal9": {
-   "filaments": [
-    "Sovol/Sovol Zero PETG HS Nozzle"
-   ],
-   "name": "Sovol Zero PETG HS Nozzle",
-   "filament_type": "PETG",
-   "filament_vendor": "Generic"
   },
   "OFyoBZdm": {
    "filaments": [
@@ -7917,20 +7609,11 @@
   },
   "OFyxayW4": {
    "filaments": [
-    "BBL/AliZ PLA",
     "InlongFilamentLibrary/AliZ PLA"
    ],
    "name": "AliZ PLA",
    "filament_type": "PLA",
    "filament_vendor": "Aliz"
-  },
-  "OFz1a1fy": {
-   "filaments": [
-    "BBL/BETA PETG Metallic"
-   ],
-   "name": "BETA PETG Metallic",
-   "filament_type": "PETG",
-   "filament_vendor": "BETA"
   },
   "OFz2b3Y3": {
    "filaments": [
@@ -7956,14 +7639,6 @@
    "filament_type": "TPU",
    "filament_vendor": "QIDI"
   },
-  "OFzB4uOs": {
-   "filaments": [
-    "Sovol/Sovol Zero PLA Basic HS Nozzle"
-   ],
-   "name": "Sovol Zero PLA Basic HS Nozzle",
-   "filament_type": "PLA",
-   "filament_vendor": "Generic"
-  },
   "OFzRtFM9": {
    "filaments": [
     "Prusa/Generic ASA HF"
@@ -7987,22 +7662,6 @@
    "name": "Artillery PLA",
    "filament_type": "PLA",
    "filament_vendor": "Artillery"
-  },
-  "OFzaq7Yg": {
-   "filaments": [
-    "BBL/BETA TPU 98A"
-   ],
-   "name": "BETA TPU 98A",
-   "filament_type": "TPU",
-   "filament_vendor": "BETA"
-  },
-  "OFzk5oAo": {
-   "filaments": [
-    "BBL/addnorth ABS rABS"
-   ],
-   "name": "addnorth ABS rABS",
-   "filament_type": "ABS",
-   "filament_vendor": "addnorth"
   },
   "OFzrUUxc": {
    "filaments": [],

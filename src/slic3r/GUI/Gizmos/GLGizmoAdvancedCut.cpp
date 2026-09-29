@@ -1,5 +1,7 @@
 // Include GLGizmoBase.hpp before I18N.hpp as it includes some libigl code, which overrides our localization "L" macro.
 #include "GLGizmoAdvancedCut.hpp"
+#include "slic3r/GUI/Widgets/ProgressDialog.hpp"
+#include "slic3r/GUI/GUI.hpp"
 #include "slic3r/GUI/GLCanvas3D.hpp"
 
 #include <glad/gl.h>
@@ -352,7 +354,6 @@ bool GLGizmoAdvancedCut::on_init()
     if (!GLGizmoRotate3D::on_init())
         return false;
 
-    m_shortcut_key = WXK_CONTROL_C;
 
     // initiate info shortcuts
     const wxString ctrl  = GUI::shortkey_ctrl_prefix();
@@ -483,7 +484,7 @@ void GLGizmoAdvancedCut::on_render()
     if (m_connectors_editing) {
         render_connectors();
     }
-    
+
     // render_clipper_cut for get the cut plane result
     render_clipper_cut();
 
@@ -928,7 +929,7 @@ void GLGizmoAdvancedCut::render_cut_plane_and_grabbers()
     glsafe(::glDisable(GL_CULL_FACE));
     glsafe(::glEnable(GL_BLEND));
     glsafe(::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    
+
     GLShaderProgram *shader = wxGetApp().get_shader("flat");
     if (shader != nullptr) {
         shader->start_using();
@@ -1927,12 +1928,12 @@ bool GLGizmoAdvancedCut::render_slider_double_input(const std::string &label, fl
     float       min_tolerance = tolerance_in < 0.f ? UndefMinVal : 0.f;
 
     m_imgui->bbl_slider_float_style(("##tolerance_" + label).c_str(), &tolerance, min_tolerance, 2.f, format.c_str(), 1.f, true, _L("Tolerance"));
-    
+
     left_width += (slider_with + item_in_gap);
     ImGui::SameLine(left_width);
     ImGui::PushItemWidth(second_input_width);
     ImGui::BBLDragFloat(("##tolerance_input_" + label).c_str(), &tolerance, 0.05f, min_tolerance, 2.f, format.c_str());
-    
+
     tolerance_in = tolerance * float(m_imperial_units ? units_in_to_mm : 1.0);
 
     return !is_approx(old_val, value) || !is_approx(old_tolerance, tolerance);

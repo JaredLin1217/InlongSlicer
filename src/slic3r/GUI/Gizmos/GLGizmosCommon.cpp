@@ -302,7 +302,7 @@ void ObjectClipper::render_cut(const std::vector<size_t>* ignore_idxs) const
         return;
     const SelectionInfo* sel_info = get_pool()->selection_info();
     const Geometry::Transformation inst_trafo = sel_info->model_object()->instances[sel_info->get_active_instance()]->get_transformation();
-    
+
     std::vector<size_t> ignore_idxs_local = ignore_idxs ? *ignore_idxs : std::vector<size_t>();
 
     for (auto& clipper : m_clippers) {
@@ -311,10 +311,10 @@ void ObjectClipper::render_cut(const std::vector<size_t>* ignore_idxs) const
         clipper.first->set_plane(*m_clp);
         clipper.first->set_transformation(trafo);
         clipper.first->set_limiting_plane(ClippingPlane(Vec3d::UnitZ(), -SINKING_Z_THRESHOLD));
-		// BBS      
+		// BBS
         clipper.first->render_cut({ 0.25f, 0.25f, 0.25f, 1.0f }, &ignore_idxs_local);
         clipper.first->render_contour({ 1.f, 1.f, 1.f, 1.f },  &ignore_idxs_local);
-  
+
         // Now update the ignore idxs. Find the first element belonging to the next clipper,
         // and remove everything before it and decrement everything by current number of contours.
         const int num_of_contours = clipper.first->get_number_of_contours();
@@ -410,6 +410,10 @@ void ObjectClipper::set_position_by_ratio(double pos, bool keep_normal, bool ver
 
 void ObjectClipper::set_range_and_pos(const Vec3d& cpl_normal, double cpl_offset, double pos)
 {
+    // Called every frame by GLGizmoCut3D::on_render(), usually with the plane already set.
+    if (m_clp && *m_clp == ClippingPlane(cpl_normal, cpl_offset) && m_clp_ratio == pos)
+        return;
+
     m_clp.reset(new ClippingPlane(cpl_normal, cpl_offset));
     m_clp_ratio = pos;
     get_pool()->get_canvas()->set_as_dirty();

@@ -4,7 +4,9 @@
 #include "libslic3r/Print.hpp"
 
 #include "slic3r/GUI/GLCanvas3D.hpp"
+#include "slic3r/GUI/GUI.hpp"
 #include "slic3r/GUI/GUI_App.hpp"
+#include "slic3r/GUI/Shortcuts.hpp"
 #include "slic3r/GUI/GUI_ObjectList.hpp"
 #include "slic3r/GUI/ImGuiWrapper.hpp"
 #include "slic3r/GUI/MsgDialog.hpp"
@@ -30,7 +32,7 @@ std::string GLGizmoFuzzySkin::on_get_name() const
 
 bool GLGizmoFuzzySkin::on_init()
 {
-    m_shortcut_key = WXK_CONTROL_H;
+    m_shortcut = Shortcut::GizmoFuzzySkin;
 
     const wxString ctrl  = GUI::shortkey_ctrl_prefix();
     const wxString alt   = GUI::shortkey_alt_prefix();
@@ -62,8 +64,8 @@ bool GLGizmoFuzzySkin::on_init()
     };
 
     m_shortcuts_triangle = {
-        add_fuzzy_skin_shortcut, 
-        remove_fuzzy_skin_shortcut, 
+        add_fuzzy_skin_shortcut,
+        remove_fuzzy_skin_shortcut,
         clipping_shortcut
     };
 
@@ -180,7 +182,7 @@ void GLGizmoFuzzySkin::on_render_input_window(float x, float y, float bottom_lim
     window_width                   = std::max(window_width, cursor_type_radio_circle + cursor_type_radio_sphere + cursor_type_radio_pointer);
     window_width                   = std::max(window_width, tool_type_radio_left + tool_type_radio_brush + tool_type_radio_smart_fill);
     window_width                   = std::max(window_width, 2.f * buttons_width + m_imgui->scaled(1.f));
-    
+
     const float sliders_width = m_imgui->scaled(7.0f);
     const float drag_left_width = ImGui::GetStyle().WindowPadding.x + sliders_width - space_size;
 

@@ -3,6 +3,7 @@
 #include "slic3r/GUI/ImGuiWrapper.hpp"
 
 #include "slic3r/GUI/GUI_App.hpp"
+#include "slic3r/GUI/Shortcuts.hpp"
 #include "slic3r/GUI/GUI.hpp"
 #include "slic3r/GUI/Plater.hpp"
 #include "slic3r/GUI/Jobs/RotoptimizeJob.hpp"
@@ -194,7 +195,7 @@ void GLGizmoRotate::on_render()
 
         // INLONG dont use axis color on line because they are not on same direction with axis
         const ColorRGBA line_color = (m_hover_id != -1) ? m_drag_color : ColorRGBA(.6f, .6f ,.6f, 1.f);
-        render_grabber_connection(line_color, radius_changed); 
+        render_grabber_connection(line_color, radius_changed);
         shader->stop_using();
     }
 
@@ -514,8 +515,8 @@ Vec3d GLGizmoRotate::mouse_position_in_local_plane(const Linef3& mouse_ray) cons
 //BBS: GUI refactor: add obj manipulation
 GLGizmoRotate3D::GLGizmoRotate3D(GLCanvas3D& parent, const std::string& icon_filename, unsigned int sprite_id, GizmoObjectManipulation* obj_manipulation)
     : GLGizmoBase(parent, icon_filename, sprite_id)
-    , m_gizmos({ 
-        GLGizmoRotate(parent, GLGizmoRotate::X), 
+    , m_gizmos({
+        GLGizmoRotate(parent, GLGizmoRotate::X),
         GLGizmoRotate(parent, GLGizmoRotate::Y),
         GLGizmoRotate(parent, GLGizmoRotate::Z) })
 	//BBS: GUI refactor: add obj manipulation
@@ -549,13 +550,13 @@ bool GLGizmoRotate3D::on_mouse(const wxMouseEvent &mouse_event)
 
 bool GLGizmoRotate3D::on_init()
 {
-    for (GLGizmoRotate& g : m_gizmos) 
+    for (GLGizmoRotate& g : m_gizmos)
         if (!g.init()) return false;
 
     for (unsigned int i = 0; i < 3; ++i)
         m_gizmos[i].set_highlight_color(AXES_COLOR[i]);
 
-    m_shortcut_key = WXK_CONTROL_R;
+    m_shortcut = Shortcut::GizmoRotate;
 
     return true;
 }

@@ -28,7 +28,7 @@ public:
 	Polygon(std::initializer_list<Point> points) : MultiPoint(points) {}
     Polygon(const Polygon &other) : MultiPoint(other.points) {}
     Polygon(Polygon &&other) : MultiPoint(std::move(other.points)) {}
-	static Polygon new_scale(const std::vector<Vec2d> &points) { 
+	static Polygon new_scale(const std::vector<Vec2d> &points) {
         Polygon pgn;
         pgn.points.reserve(points.size());
         for (const Vec2d &pt : points)
@@ -52,7 +52,7 @@ public:
     // Split a closed polygon into an open polyline, with the split point duplicated at both ends.
     Polyline split_at_first_point() const { return this->split_at_index(0); }
     Points   equally_spaced_points(double distance) const { return this->split_at_first_point().equally_spaced_points(distance); }
-    
+
     static double area(const Points &pts);
     double area() const;
     bool is_counter_clockwise() const;
@@ -85,9 +85,11 @@ public:
     Points convex_points(double angle_threshold = 0.) const;
     Points concave_points(double angle_threshold = 0.) const;
     // Projection of a point onto the polygon.
-    Point point_projection(const Point &point) const;
+    // Optional index: start of the closest edge, or the vertex itself for an endpoint.
+    // Empty polygons return the query point and std::numeric_limits<size_t>::max() as the index.
+    Point point_projection(const Point &point, size_t *edge_index = nullptr) const;
     std::vector<float> parameter_by_length() const;
-    
+
     //BBS
     Polygon transform(const Transform3d& trafo) const;
 
@@ -147,7 +149,7 @@ void remove_collinear(Polygons &polys);
 // Append a vector of polygons at the end of another vector of polygons.
 inline void polygons_append(Polygons &dst, const Polygons &src) { dst.insert(dst.end(), src.begin(), src.end()); }
 
-inline void polygons_append(Polygons &dst, Polygons &&src) 
+inline void polygons_append(Polygons &dst, Polygons &&src)
 {
     if (dst.empty()) {
         dst = std::move(src);
@@ -184,7 +186,7 @@ inline size_t count_points(const Polygons &polys) {
     return n_points;
 }
 
-inline Points to_points(const Polygons &polys) 
+inline Points to_points(const Polygons &polys)
 {
     Points points;
     points.reserve(count_points(polys));
@@ -193,7 +195,7 @@ inline Points to_points(const Polygons &polys)
     return points;
 }
 
-inline Lines to_lines(const Polygon &poly) 
+inline Lines to_lines(const Polygon &poly)
 {
     Lines lines;
     lines.reserve(poly.points.size());
@@ -205,7 +207,7 @@ inline Lines to_lines(const Polygon &poly)
     return lines;
 }
 
-inline Lines to_lines(const Polygons &polys) 
+inline Lines to_lines(const Polygons &polys)
 {
     Lines lines;
     lines.reserve(count_points(polys));
@@ -354,7 +356,7 @@ namespace boost { namespace polygon {
             return polygon;
         }
     };
-    
+
     template <>
     struct geometry_concept<Slic3r::Polygons> { typedef polygon_set_concept type; };
 

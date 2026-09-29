@@ -11,6 +11,7 @@
 #include "MainFrame.hpp"
 #include "Tab.hpp"
 #include "libslic3r/Config.hpp"
+#include "libslic3r/PrintBase.hpp"
 #include "format.hpp"
 
 #include <boost/algorithm/string.hpp>
@@ -344,7 +345,7 @@ void NotificationManager::PopNotification::render(GLCanvas3D& canvas, float init
 	{
 		ImGui::BringWindowToDisplayFront(ImGui::GetCurrentWindow());
 	}
-	
+
 	imgui.end();
 
 	restore_default_theme();
@@ -405,12 +406,12 @@ void NotificationManager::PopNotification::bbl_render_block_notification(GLCanva
 	std::string name = "!!Ntfctn" + std::to_string(m_id);
 
 	use_bbl_theme();
-    if (m_data.level == NotificationLevel::SeriousWarningNotificationLevel) 
+    if (m_data.level == NotificationLevel::SeriousWarningNotificationLevel)
 	{   // ORCA match and ensure color usage
         push_style_color(ImGuiCol_Border,   m_WarnColor, true, m_current_fade_opacity);
         push_style_color(ImGuiCol_WindowBg, m_WarnColor, true, m_current_fade_opacity);
 	}
-    if (m_data.level == NotificationLevel::ErrorNotificationLevel) 
+    if (m_data.level == NotificationLevel::ErrorNotificationLevel)
     {   // ORCA match and ensure color usage
         push_style_color(ImGuiCol_Border,   m_ErrorColor, true, m_current_fade_opacity);
         push_style_color(ImGuiCol_WindowBg, m_ErrorColor, true, m_current_fade_opacity);
@@ -755,12 +756,12 @@ void NotificationManager::PopNotification::render_hypertext(ImGuiWrapper& imgui,
 
 	//hover color
     ImVec4 HyperColor = m_HyperTextColor;//ImVec4(150.f / 255.f, 100.f / 255.f, 0.f / 255.f, 1)
-    if (m_data.level == NotificationLevel::SeriousWarningNotificationLevel) 
-		HyperColor = ImVec4(0.f, 0.f, 0.f, 0.4f); 
-	if (m_data.level == NotificationLevel::ErrorNotificationLevel) 
-		HyperColor = ImVec4(135.f / 255.f, 43 / 255.f, 43 / 255.f, 1); 
-	if (ImGui::IsItemHovered(ImGuiHoveredFlags_RectOnly)) 
-	{ 
+    if (m_data.level == NotificationLevel::SeriousWarningNotificationLevel)
+		HyperColor = ImVec4(0.f, 0.f, 0.f, 0.4f);
+	if (m_data.level == NotificationLevel::ErrorNotificationLevel)
+		HyperColor = ImVec4(135.f / 255.f, 43 / 255.f, 43 / 255.f, 1);
+	if (ImGui::IsItemHovered(ImGuiHoveredFlags_RectOnly))
+	{
 		if (m_data.level == NotificationLevel::SeriousWarningNotificationLevel){
 			HyperColor.y += 0.1f;
 			HyperColor.x += 0.2f;
@@ -950,7 +951,7 @@ void NotificationManager::PopNotification::bbl_render_block_notif_left_sign(ImGu
 	ImGui::SetCursorPosX(m_line_height / 3);
 	ImGui::SetCursorPosY(m_window_height / 2 - m_line_height);
 	imgui.text(text.c_str());
-	
+
 }
 
 void NotificationManager::PopNotification::bbl_render_left_sign(ImGuiWrapper &imgui, const float win_size_x, const float win_size_y, const float win_pos_x, const float win_pos_y)
@@ -1965,7 +1966,7 @@ void NotificationManager::push_validate_error_notification(StringObjectException
                              selected = true;
                          }
                       }
-                      
+
                       if (!selected) {
                            wxGetApp().obj_list()->select_items({ {obj, nullptr} });
                       }
@@ -2301,7 +2302,7 @@ void NotificationManager::SharedProfilesNotification::init()
 	PopNotification::init();
 
     // PopNotification::count_lines() may append a duplicate "hypertext doesn't fit inline" placeholder endline (same value as the previous entry)
-    // for the generic renderer's benefit. This class always renders its hyperlink on its own dedicated line regardless, 
+    // for the generic renderer's benefit. This class always renders its hyperlink on its own dedicated line regardless,
     // so that placeholder is meaningless here and would otherwise be drawn as a spurious blank text row.
     if (!m_hypertext.empty() && m_endlines.size() >= 2 && m_endlines.back() == m_endlines[m_endlines.size() - 2]) {
         m_endlines.pop_back();
@@ -2309,7 +2310,7 @@ void NotificationManager::SharedProfilesNotification::init()
     }
 
     // Reserve rows for: "Browse shared profiles" hyperlink, spacing, "Don't show again"
-    m_lines_count += 3; 
+    m_lines_count += 3;
 }
 
 void NotificationManager::SharedProfilesNotification::render_text(ImGuiWrapper& imgui,
@@ -2343,9 +2344,9 @@ void NotificationManager::SharedProfilesNotification::render_text(ImGuiWrapper& 
 
         if (!m_multiline && m_lines_count > 2) {
 		    render_hypertext(imgui, x_offset + (m_endlines.size() == 1 ? 0 : ImGui::CalcTextSize((line + " ").c_str()).x) , starting_y + shift_y, _u8L("More"), true);
-	    } 
+	    }
         else {
-	    // Render "Browse shared profiles" hyperlink on the next line	
+	    // Render "Browse shared profiles" hyperlink on the next line
 	    render_hypertext(imgui, x_offset, hyper_y, m_hypertext);
 
 		// Invisible button
@@ -2744,7 +2745,7 @@ void NotificationManager::push_slicing_serious_warning_notification(const std::s
             for (const auto& pair : ids) {
                 ObjectID obj_id = pair.first;
                 ObjectID inst_id = pair.second;
-                
+
                 auto iter = std::find_if(objects.begin(), objects.end(), [obj_id](auto o) { return o->id() == obj_id; });
                 if (iter != objects.end()) {
                     ModelObject* obj = *iter;
@@ -2755,7 +2756,7 @@ void NotificationManager::push_slicing_serious_warning_notification(const std::s
                             break;
                         }
                     }
-                    
+
                     if (inst_idx != -1) {
                         wxDataViewItem item;
                         wxDataViewItem objItem = model->GetObjectItem(obj);
@@ -2776,9 +2777,9 @@ void NotificationManager::push_slicing_serious_warning_notification(const std::s
                     }
                 }
             }
-            
+
             wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
-            
+
             if (!sel_items.empty()) {
                 obj_list->select_items(sel_items);
                 obj_list->update_selections_on_canvas();
@@ -2786,7 +2787,7 @@ void NotificationManager::push_slicing_serious_warning_notification(const std::s
                 obj_list->select_items(fallback_ovs);
                 obj_list->update_selections_on_canvas();
             }
-            
+
             return false;
         };
     }
@@ -2812,7 +2813,7 @@ void NotificationManager::push_slicing_serious_warning_notification(const std::s
     set_slicing_progress_hidden();
 }
 
-void NotificationManager::close_slicing_serious_warning_notification(const std::string &text) 
+void NotificationManager::close_slicing_serious_warning_notification(const std::string &text)
 {
     for (std::unique_ptr<PopNotification> &notification : m_pop_notifications) {
         if (notification->get_type() == NotificationType::SlicingSeriousWarning && notification->compare_text(_u8L("Serious warning:") + "\n" + text)) { notification->close(); }
@@ -3084,7 +3085,9 @@ bool NotificationManager::push_notification_data(std::unique_ptr<NotificationMan
 	bool retval = false;
 	if (this->activate_existing(notification.get())) {
 		if (m_initialized && m_imgui_ready) {
-			if (notification->get_type() == NotificationType::SlicingWarning) {
+			// Precise Seam already aggregates all causes; replace it on repeated warning events.
+			if (notification->get_type() == NotificationType::SlicingWarning &&
+                notification->get_data().sub_msg_id != PrintStateBase::SlicingPreciseSeamWarning) {
 				m_pop_notifications.back()->append(notification->get_data().ori_text);
 			} else {
                 m_pop_notifications.back()->update(notification->get_data());
@@ -3092,7 +3095,7 @@ bool NotificationManager::push_notification_data(std::unique_ptr<NotificationMan
 		}
 	} else {
 		m_pop_notifications.emplace_back(std::move(notification));
-        
+
 		retval = true;
 	}
 	if (!m_initialized)
@@ -3141,7 +3144,7 @@ void NotificationManager::render_notifications(GLCanvas3D &canvas, float overlay
 	for (const auto& notification : m_pop_notifications) {
         if (notification->get_data().level == NotificationLevel::ErrorNotificationLevel || notification->get_data().level == NotificationLevel::SeriousWarningNotificationLevel) {
             notification->bbl_render_block_notification(canvas, bottom_up_last_y, m_move_from_overlay && !m_in_preview, overlay_width * m_scale, right_margin);  // ORCA dont scale margins
-            if (notification->get_state() != PopNotification::EState::Finished) 
+            if (notification->get_state() != PopNotification::EState::Finished)
 				bottom_up_last_y = notification->get_top() + GAP_WIDTH;
 		}
 		else {
@@ -3293,7 +3296,7 @@ void NotificationManager::set_in_preview(bool preview)
             notification->hide(preview);
 		if (m_in_preview && notification->get_type() == NotificationType::DidYouKnowHint)
 			notification->close();
-        if (notification->get_type() == NotificationType::ValidateWarning) 
+        if (notification->get_type() == NotificationType::ValidateWarning)
 			notification->hide(preview);
     }
 }

@@ -8,6 +8,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <nlohmann/json.hpp>
 
 #include <wx/progdlg.h>
 #include <wx/string.h>
@@ -29,6 +30,8 @@
 #include "Http.hpp"
 #include <wx/busyinfo.h>
 
+
+using json = nlohmann::json;
 
 namespace fs = boost::filesystem;
 namespace pt = boost::property_tree;
@@ -113,7 +116,7 @@ public:
         printerTypeComboBox->Bind(wxEVT_COMBOBOX, &UploadOptionsDialog::OnPrinterTypeChanged, this);
         ValidateOkButton(); // Initial validation
         Slic3r::GUI::wxGetApp().UpdateDlgDarkUI(this);
-        
+
         CenterOnParent();
     }
 
@@ -314,12 +317,12 @@ C3DPrinterOS::C3DPrinterOS(DynamicPrintConfig *config)
 
 const char *C3DPrinterOS::get_name() const { return "3DPrinterOS"; }
 
-bool C3DPrinterOS::test(wxString &msg) const 
+bool C3DPrinterOS::test(wxString &msg) const
 {
     return check_session(msg);
 }
 
-bool C3DPrinterOS::login(wxString& msg) const 
+bool C3DPrinterOS::login(wxString& msg) const
 {
     // Get token for auth
     msg.clear();
@@ -353,19 +356,19 @@ bool C3DPrinterOS::login(wxString& msg) const
     return res;
 }
 
-wxString C3DPrinterOS::get_test_ok_msg() const 
+wxString C3DPrinterOS::get_test_ok_msg() const
 {
     return _("Connection to 3DPrinterOS cloud works correctly.") + (!m_username.empty() ? "" + _(" Logined as user: ") + m_username : "");
 }
 
-wxString C3DPrinterOS::get_test_failed_msg(wxString &msg) const 
+wxString C3DPrinterOS::get_test_failed_msg(wxString &msg) const
 {
     return GUI::format_wxstr("%s: %s\n\n", _L("Error session check"), msg);
 }
 
 bool C3DPrinterOS::upload(
     PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn
-) const 
+) const
 {
     const char *name = get_name();
     const auto upload_filename = upload_data.upload_path.filename();
@@ -400,16 +403,16 @@ bool C3DPrinterOS::upload(
         error_fn(_L("Could not parse server response."));
         return false;
     }
-    
+
     // Show "Confirm cloud printer type and project for 3DPrinterOS upload
-    
+
     UploadOptionsDialog dlg(GUI::wxGetApp().GetTopWindow(), cloud_projects_list, cloud_printer_types_list, m_preset_name);
 
     if (dlg.ShowModal() != wxID_OK) {
         error_fn(_L("Canceled"));
         return false;
     }
-    
+
     std::string selected_project;
     std::string selected_printer_type;
     dlg.GetValues(selected_project, selected_printer_type);
@@ -483,7 +486,7 @@ bool C3DPrinterOS::upload(
             res = false;
             error_fn(uploadResponse.get<std::string>("message"));
         }
-    } catch (const std::exception &) { 
+    } catch (const std::exception &) {
         res = false;
         error_fn(_L("Error during file upload"));
     }
@@ -508,17 +511,17 @@ bool C3DPrinterOS::upload(
     return res;
 }
 
-void C3DPrinterOS::log_out() const 
-{ 
+void C3DPrinterOS::log_out() const
+{
     boost::filesystem::remove(m_api_session_file_path.c_str());
 }
 
-bool C3DPrinterOS::validate_version_text(const boost::optional<std::string> &version_text) const 
+bool C3DPrinterOS::validate_version_text(const boost::optional<std::string> &version_text) const
 {
     return version_text ? boost::starts_with(*version_text, "3DPrinterOS") : true;
 }
 
-std::string C3DPrinterOS::make_url(const std::string &path) const 
+std::string C3DPrinterOS::make_url(const std::string &path) const
 {
     if (m_host.find("http://") == 0 || m_host.find("https://") == 0) {
         if (m_host.back() == '/') {
@@ -531,7 +534,7 @@ std::string C3DPrinterOS::make_url(const std::string &path) const
     }
 }
 
-std::string C3DPrinterOS::get_api_auth_token(wxString &err) const 
+std::string C3DPrinterOS::get_api_auth_token(wxString &err) const
 {
     std::string result;
     pt::ptree resp;
@@ -591,7 +594,7 @@ bool C3DPrinterOS::save_api_session(const std::string &session, const std::strin
     return true;
 }
 
-void C3DPrinterOS::load_api_session() 
+void C3DPrinterOS::load_api_session()
 {
     m_apikey.clear();
     if (boost::filesystem::exists(m_api_session_file_path)) {
@@ -614,7 +617,7 @@ void C3DPrinterOS::send_form(
     const std::string &endpoint,
     const std::string &postBody,
     boost::property_tree::ptree &responseTree
-) const 
+) const
 {
     responseTree.clear();
     auto url = make_url(endpoint);
@@ -641,13 +644,13 @@ void C3DPrinterOS::send_form(
         .perform_sync();
 }
 
-void C3DPrinterOS::get_cloud_projects_list(boost::property_tree::ptree &response) const 
+void C3DPrinterOS::get_cloud_projects_list(boost::property_tree::ptree &response) const
 {
     std::string postBody = std::string("session=" + m_apikey);
     send_form("apiglobal/get_projects", postBody, response);
 }
 
-void C3DPrinterOS::get_cloud_printer_types(boost::property_tree::ptree &response, const std::string &query) const 
+void C3DPrinterOS::get_cloud_printer_types(boost::property_tree::ptree &response, const std::string &query) const
 {
     std::string postBody = std::string("session=" + m_apikey);
     if (!query.empty()) {
@@ -656,11 +659,11 @@ void C3DPrinterOS::get_cloud_printer_types(boost::property_tree::ptree &response
     send_form("apiglobal/get_printer_types", postBody, response);
 }
 
-void C3DPrinterOS::update_file(boost::property_tree::ptree &response, const std::string &file_id, const std::string &ptype, const std::string &gtype) const 
+void C3DPrinterOS::update_file(boost::property_tree::ptree &response, const std::string &file_id, const std::string &ptype, const std::string &gtype) const
 {
-    std::string postBody = "session=" + m_apikey 
+    std::string postBody = "session=" + m_apikey
         + "&updates[" + file_id + "][ptype]=" + ptype
-        + "&updates[" + file_id + "][gtype]=" + Http::url_encode(gtype) 
+        + "&updates[" + file_id + "][gtype]=" + Http::url_encode(gtype)
         + "&updates[" + file_id + "][zip]=false";
     send_form("apiglobal/file_update", postBody, response);
 }

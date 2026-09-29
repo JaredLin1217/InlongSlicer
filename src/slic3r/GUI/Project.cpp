@@ -44,10 +44,11 @@ const std::vector<std::string> license_list = {
 
 ProjectPanel::ProjectPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long style) : wxPanel(parent, id, pos, size, style)
 {
-    m_project_home_url = wxString::Format("file://%s/web/model/index.html", from_u8(resources_dir()));
+    SetBackgroundColour(*wxWHITE);
+    m_project_home_url = file_url_from_path(boost::filesystem::path(resources_dir()) / "web/model/index.html");
     wxString strlang = wxGetApp().current_language_code_safe();
     if (strlang != "")
-        m_project_home_url = wxString::Format("file://%s/web/model/index.html?lang=%s", from_u8(resources_dir()), strlang);
+        m_project_home_url += "?lang=" + strlang;
 
     wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -67,6 +68,7 @@ ProjectPanel::ProjectPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, 
     m_auxiliary = new AuxiliaryPanel(this);
     m_auxiliary->Hide();
     main_sizer->Add(m_auxiliary, wxSizerFlags().Expand().Proportion(1));
+    add_build_steps_of(*m_auxiliary);
     Bind(EVT_AUXILIARY_DONE, [this](wxCommandEvent& e) { update_model_data();});
 
     SetSizer(main_sizer);
@@ -262,7 +264,7 @@ void ProjectPanel::on_reload(wxCommandEvent& evt)
     });
 }
 
-void ProjectPanel::msw_rescale() 
+void ProjectPanel::msw_rescale()
 {
     m_auxiliary->msw_rescale();
 }
@@ -291,10 +293,8 @@ void ProjectPanel::OnScriptMessage(wxWebViewEvent& evt)
             if (!accessory_path.empty()) {
                 std::string decode_path = wxGetApp().url_decode(accessory_path.ToStdString());
                 fs::path path(decode_path);
-
-                if (fs::exists(path)) {
-                    wxLaunchDefaultApplication(path.wstring(), 0);
-                }
+                if (!desktop_open_project_attachment(this, path))
+                    BOOST_LOG_TRIVIAL(warning) << "open_3mf_accessory: not opening " << decode_path;
             }
         }
         else if (strCmd == "request_3mf_info") {
@@ -333,7 +333,7 @@ void ProjectPanel::update_model_data()
     //basics info
     //if (model.model_info == nullptr)
     //    return;
-    
+
     auto event = wxCommandEvent(EVT_PROJECT_RELOAD);
     event.SetEventObject(this);
     wxPostEvent(this, event);
@@ -411,7 +411,7 @@ std::map<std::string, std::vector<json>> ProjectPanel::Reload(wxString aux_path)
             for (auto folder : s_default_folders) {
                 auto idx = file_path.find(folder.ToStdString());
                 if (idx != std::string::npos) {
-                    
+
                     wxStructStat strucStat;
                     wxString file_name = encode_path(file_path.c_str());
                     wxStat(file_name, &strucStat);
@@ -459,7 +459,7 @@ std::string ProjectPanel::formatBytes(unsigned long bytes)
     return wxString::Format("%.2fMB", dValidData).ToStdString();
 }
 
-wxString ProjectPanel::to_base64(std::string file_path) 
+wxString ProjectPanel::to_base64(std::string file_path)
 {
 
     std::ifstream imageFile(encode_path(file_path.c_str()), std::ios::binary);
@@ -474,7 +474,7 @@ wxString ProjectPanel::to_base64(std::string file_path)
 
     std::string extension;
     size_t last_dot = file_path.find_last_of(".");
-   
+
     if (last_dot != std::string::npos) {
         extension = file_path.substr(last_dot + 1);
     }
@@ -495,10 +495,10 @@ void ProjectPanel::RunScript(std::string content)
     WebView::RunScript(m_browser, content);
 }
 
-bool ProjectPanel::Show(bool show) 
+bool ProjectPanel::Show(bool show)
 {
     if (show) update_model_data();
-    return wxPanel::Show(show); 
+    return wxPanel::Show(show);
 }
 
 }} // namespace Slic3r::GUI

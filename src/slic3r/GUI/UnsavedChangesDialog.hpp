@@ -10,6 +10,7 @@
 #include "libslic3r/PresetBundle.hpp"
 #include "Widgets/Button.hpp"
 #include "Widgets/ScrolledWindow.hpp"
+#include "Lazy.hpp"
 
 class ScalableButton;
 class wxStaticText;
@@ -313,7 +314,7 @@ public:
         }
     };
 public:
-    int getUpdateItemCount() { return m_presetitems.size(); }  
+    int getUpdateItemCount() { return m_presetitems.size(); }
 
 private:
     std::vector<PresetItem> m_presetitems;
@@ -416,7 +417,7 @@ public:
 //------------------------------------------
 //          DiffPresetDialog
 //------------------------------------------
-class DiffPresetDialog : public DPIDialog
+class DiffPresetDialog : public DPIDialog, public LazyInstance<DiffPresetDialog>
 {
     DiffViewCtrl*           m_tree              { nullptr };
     wxBoxSizer*             m_presets_sizer     { nullptr };
@@ -445,7 +446,7 @@ class DiffPresetDialog : public DPIDialog
     void update_bundles_from_app();
     void update_controls_visibility(Preset::Type type = Preset::TYPE_INVALID);
     void update_compatibility(const std::string& preset_name, Preset::Type type, PresetBundle* preset_bundle);
-         
+
     void button_event(Action act);
 
     struct DiffPresets

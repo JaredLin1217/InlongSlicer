@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 #include <shared_mutex>
+#include <tuple>
 #include <unordered_map>
 #include <optional>
 #include <array>
@@ -199,7 +200,7 @@ class PresetBundle
 {
 public:
     // ---- Per-vendor preset cache --------------------------------------------
-    // One cache file per vendor (plus the Orca filament library), stamped with
+    // One cache file per vendor (plus the Inlong filament library), stamped with
     // the vendor's own profile version rather than a directory scan. The bytes
     // on disk are VendorCacheFile's business (PresetCacheFormat.hpp); what
     // lives here is how a cache's contents install into a bundle.
@@ -299,7 +300,7 @@ public:
                              int& overwrite,
                              std::vector<std::string>& result,
                              const std::string& bundle_dir = "");
-                             
+
     void save_user_presets(AppConfig& config, std::map<std::string, std::string>& need_to_delete_list);
     void check_and_fix_user_presets_syncinfo(const std::string& user_id);
     void remove_users_preset(AppConfig &config, std::map<std::string, std::map<std::string, std::string>> * my_presets = nullptr);
@@ -393,7 +394,7 @@ public:
     std::set<std::string> get_printer_names_by_printer_type_and_nozzle(const std::string &printer_type, std::string nozzle_diameter_str, bool system_only = true);
     // Orca: the root filament presets a connected machine can use, resolved with the rule the rest
     // of the app applies (is_compatible_with_printer): an empty compatible_printers means every
-    // printer, minus the alias shadowing exclusions the Orca Filament Library records in
+    // printer, minus the alias shadowing exclusions the Inlong filament library records in
     // Preset::m_excluded_from.
     std::vector<Preset *> get_filament_presets_for_machine(const std::string &printer_type,
                                                            const std::string &nozzle_diameter_str,
@@ -616,6 +617,11 @@ public:
     // compatible_prints references a deleted (unknown) or renamed (old) preset name.
     bool check_preset_references() const;
 
+    // Validator-only: every system FFF printer variant needs a compatible system filament
+    // named in its model's default_materials, every name there and in the printer's
+    // default_filament_profile must resolve to a system filament.
+    bool check_printer_default_materials() const;
+
     // Merge one vendor's presets with the other vendor's presets, report duplicates.
     // Public so per-vendor-cache consumers (e.g. the setup wizard) can assemble a
     // bundle out of several per-vendor caches loaded into separate PresetBundle instances.
@@ -628,22 +634,24 @@ private:
     // load_vendor_configs_from_json reads a cache.
     bool load_vendor_cache(const boost::filesystem::path& dir, const std::string& vendor_name, const PresetBundle* base_bundle);
 
-    // Load one source-form preset entry into this bundle: resolve `inherits`,
-    // flatten, validate and register the preset. Returns the reason loading
-    // failed, empty on success. See the definition for the sharing contract
-    // between the JSON parse and the cache load.
-    // retain_configs, when non-null, names the only presets registered into
-    // config_maps (a full config copy each). The cache load passes the names its
-    // entries inherit — the only ones ever looked up again; the JSON parse
-    // retains all, not knowing what later subfiles inherit.
+    // Load one source-form preset entry into this bundle: resolve `inherits`
+    // and `include`, flatten, validate and register the preset. Returns the
+    // reason loading failed, empty on success. See the definition for the
+    // sharing contract between the JSON parse and the cache load.
+    // retain_configs / retain_includes, when non-null, name the only presets
+    // registered into config_maps / include_maps (a config copy each). The
+    // cache load passes the names its entries inherit / include — the only
+    // ones ever looked up again; the JSON parse retains all, not knowing what
+    // later subfiles name.
     std::string load_vendor_preset(const CachedPreset& entry,
         const std::string& path, const std::string& vendor_name,
         const PresetBundle* base_bundle,
         LoadConfigBundleAttributes flags,
         ConfigSubstitutionContext& substitution_context, PresetsConfigSubstitutions& substitutions,
-        std::map<std::string, DynamicPrintConfig>& config_maps, std::map<std::string, std::string>& filament_id_maps,
+        std::map<std::string, DynamicPrintConfig>& config_maps, std::map<std::string, DynamicPrintConfig>& include_maps,
+        std::map<std::string, std::string>& filament_id_maps,
         PresetCollection* presets_collection, size_t& count, bool is_from_lib,
-        const std::set<std::string>* retain_configs = nullptr);
+        const std::set<std::string>* retain_configs = nullptr, const std::set<std::string>* retain_includes = nullptr);
 
     // Clear every collection's m_printer_hold_alias, which reset() leaves alone.
     void clear_printer_hold_aliases();
@@ -651,6 +659,17 @@ private:
     // Whether to (re)write a per-vendor cache after a JSON parse.
     bool m_generate_vendor_caches { false };
     bool m_preserve_vendor_source_paths { false };
+
+    // Vendor trees loaded by resolve_preset_config's manifest path, so every preset
+    // resolved through this bundle shares one load per source root and vendor. The
+    // filament library is one such tree, shared by every vendor under its root.
+    std::map<std::tuple<std::string, std::string, ForwardCompatibilitySubstitutionRule>, std::unique_ptr<PresetBundle>>
+        m_source_vendor_bundles;
+
+    const PresetBundle *load_source_vendor(const boost::filesystem::path &root_dir,
+                                           const std::string &vendor_id,
+                                           ForwardCompatibilitySubstitutionRule compatibility_rule,
+                                           std::string &error);
 
     // Orca: validation only - flag any printer with two or more compatible
     // filament presets sharing one filament_id (ambiguous AMS subtype match).

@@ -53,7 +53,7 @@ while getopts ":dpa:snt:xbc:i:j:Tuh" opt; do
         echo "   -s: Build slicer only"
         echo "   -u: Build universal app only (requires existing arm64 and x86_64 app bundles)"
         echo "   -n: Nightly build"
-        echo "   -t: Specify minimum version of the target platform, default is 11.3"
+        echo "   -t: Specify minimum version of the target platform, default is 12.0"
         echo "   -x: Use Ninja Multi-Config CMake generator, default is Xcode"
         echo "   -b: Build without reconfiguring CMake"
         echo "   -c: Set CMake build configuration, default is Release"
@@ -95,7 +95,7 @@ if [ -z "$DEPS_CMAKE_GENERATOR" ]; then
 fi
 
 if [ -z "$OSX_DEPLOYMENT_TARGET" ]; then
-  export OSX_DEPLOYMENT_TARGET="11.3"
+  export OSX_DEPLOYMENT_TARGET="12.0"
 fi
 
 if [ -z "$CMAKE_IGNORE_PREFIX_PATH" ]; then
@@ -298,7 +298,7 @@ function build_slicer() {
             # delete .DS_Store file
             find ./InlongSlicer.app/ -name '.DS_Store' -delete
             verify_python_runtime ./InlongSlicer.app
-            
+
             # Copy InlongSlicer_profile_validator.app if it exists
             if [ -f "../src$BUILD_DIR_CONFIG_SUBDIR/InlongSlicer_profile_validator.app/Contents/MacOS/InlongSlicer_profile_validator" ]; then
                 echo "Copying InlongSlicer_profile_validator.app..."

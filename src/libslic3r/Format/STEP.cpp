@@ -25,6 +25,7 @@
 #include "XCAFDoc_DocumentTool.hxx"
 #include "XCAFDoc_ShapeTool.hxx"
 #include "XCAFApp_Application.hxx"
+#include "TDF_LabelSequence.hxx"
 #include "TopoDS_Solid.hxx"
 #include "TopoDS_Compound.hxx"
 #include "TopoDS_Builder.hxx"
@@ -515,7 +516,7 @@ Step::Step_Status Step::load()
     }else {
         return Step_Status::LOAD_ERROR;
     }
-    
+
 }
 
 Step::Step_Status Step::mesh(Model* model,
@@ -541,7 +542,7 @@ Step::Step_Status Step::mesh(Model* model,
         m_shape_tool->GetFreeShapes(topLevelShapes);
         unsigned int id{ 1 };
         Standard_Integer topShapeLength = topLevelShapes.Length() + 1;
-        
+
         for (Standard_Integer iLabel = 1; iLabel < topShapeLength; ++iLabel) {
             progress = static_cast<double>(iLabel) / (topShapeLength-1);
             if (cb_cancel) {
@@ -665,8 +666,8 @@ Step::Step_Status Step::mesh(Model* model,
                 }
             }
         }
-        
-        
+
+
         if (cb_cancel) {
             if (task) {
                 if (task->joinable()) {
@@ -725,7 +726,7 @@ unsigned int Step::get_triangle_num(double linear_deflection, double angle_defle
     } catch(const Exception &) {
         return 0;
     }
-    
+
     return tri_num;
 }
 

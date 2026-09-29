@@ -60,6 +60,22 @@ public:
     // using the given camera matrices.
     //
     void render(const Mat4x4& view_matrix, const Mat4x4& projection_matrix);
+    //
+    // ORCA: realistic view. Render the toolpaths as seen from the light, to fill the caller's
+    // shadow map. Depth only - the caller masks colour writes and owns the framebuffer.
+    //
+    void render_shadow_casters(const Mat4x4& view_matrix, const Mat4x4& projection_matrix, const Vec3& light_position);
+    //
+    // ORCA: realistic view. The shadow map the toolpaths sample, in the given texture unit.
+    // intensity == 0, the default, turns the lookup off and restores the plain shading.
+    //
+    void set_shadow_map(int texture_unit, const Mat4x4& light_view_projection, float intensity, float texel_size);
+    //
+    // ORCA: tone applied to the shaded toolpaths, to pay back the light the lighting term,
+    // the shadow and the SSAO pass each take off. 1.0/1.0, the default, is a no-op; the
+    // caller decides which of the two it varies with the realistic view setting.
+    //
+    void set_tone(float exposure, float saturation);
 
     //
     // ************************************************************************
@@ -262,12 +278,12 @@ public:
     // Full is the range of vertices that could potentially be visualized accordingly to the current settings.
     // Enabled is the part of the full range that is selected for visualization accordingly to the current settings.
     // Visible is the part of the enabled range that is actually visualized accordingly to the current settings.
-    // 
+    //
     const Interval& get_view_visible_range() const;
     //
     // Set the current visible range.
     // Values are clamped to the current view enabled range;
-    // 
+    //
     void set_view_visible_range(Interval::value_type min, Interval::value_type max);
     //
     // Return the current full range.

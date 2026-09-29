@@ -7,6 +7,7 @@
 #include "GUI.hpp"
 #include "GUI_App.hpp"
 #include "I18N.hpp"
+#include "Widgets/StateColor.hpp"
 
 wxDEFINE_EVENT(EVT_WIPE_TOWER_CHART_CHANGED, wxCommandEvent);
 
@@ -27,19 +28,19 @@ void Chart::draw() {
     dc.SetPen(    wxPen(StateColor::darkModeColorFor(wxColour("#DBDBDB")), 1)); // input box border color
     dc.SetBrush(wxBrush(StateColor::darkModeColorFor(wxColour("#F1F1F1")))); // sidebar titlebar bg color
     dc.DrawRectangle(m_rect);
-    
+
     if (visible_area.m_width < 0.499) {
         dc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#FF6F00"))); // Use orange color for warning
         dc.DrawText(_(L("NO RAMMING AT ALL")),wxPoint(m_rect.GetLeft()+m_rect.GetWidth()/2-legend_side,m_rect.GetBottom()-m_rect.GetHeight()/2));
         return;
     }
-    
-    
+
+
     if (!m_line_to_draw.empty()) {
         for (unsigned int i=0;i<m_line_to_draw.size()-2;++i) {
             int color = 444*((m_rect.GetBottom()-(m_line_to_draw)[i])/double(m_rect.GetHeight()));
             dc.SetPen( wxPen( wxColor(std::min(222,color), 222-std::max(color-222,0), 60), 1) ); // adding blue color sligtly gives a bit more modern look instead using raw red & green
-            dc.DrawLine(m_rect.GetLeft()+1+i,(m_line_to_draw)[i],m_rect.GetLeft()+1+i,m_rect.GetBottom());        
+            dc.DrawLine(m_rect.GetLeft()+1+i,(m_line_to_draw)[i],m_rect.GetLeft()+1+i,m_rect.GetBottom());
         }
         dc.SetPen(wxPen(StateColor::darkModeColorFor(wxColour("#363636")), 1));
         for (unsigned int i=0;i<m_line_to_draw.size()-2;++i) {
@@ -51,7 +52,7 @@ void Chart::draw() {
             }
         }
     }
-    
+
     // draw draggable buttons
     dc.SetBrush(StateColor::darkModeColorFor(wxColour("#D66C47"))); // Inlong color for draggable circles
     dc.SetPen(wxPen(StateColor::darkModeColorFor(wxColour("#363636")), 1));
@@ -74,20 +75,20 @@ void Chart::draw() {
         dc.DrawText(label ,wxPoint(x - text_width * .5, y + .8 * scale_unit));
         last_mark = x;
     }
-    
+
     // draw y-axis:
     last_mark=10000;
     for (int math_y=visible_area.m_y ; math_y < (visible_area.m_y+visible_area.m_height) ; math_y+=1) {
         int y = math_to_screen(wxPoint2DDouble(visible_area.m_x,math_y)).y;
         int x = m_rect.GetLeft();
-        if (last_mark-y < legend_side) continue;    
+        if (last_mark-y < legend_side) continue;
         dc.DrawLine(x-tick_w,y,x+tick_w+1,y); // +1 for border; make sure drawn on both size
         auto label = wxString()<<math_y;
         dc.GetTextExtent(label,&text_width,&text_height);// center text with lines & make it right aligned
         dc.DrawText(label ,wxPoint(x - scale_unit - text_width, y - .5 * text_height + 1));
         last_mark = y;
     }
-    
+
     // axis labels:
     wxString label = _(L("Time")) + " (" + _(L("s")) + ")";
     dc.GetTextExtent(label,&text_width,&text_height);
@@ -99,8 +100,8 @@ void Chart::draw() {
     // draw a label with the value above each button
     for (auto& button : m_buttons) {
         if (!visible_area.Contains(button.get_pos()))
-            continue; 
-        
+            continue;
+
         wxPoint button_screen_pos = math_to_screen(button.get_pos());
         wxString value_label = wxString().Format(wxT("%.1f"), button.get_pos().m_y);
 
@@ -111,22 +112,22 @@ void Chart::draw() {
         // Calculate label x position
         int label_x = button_screen_pos.x - (label_width/2); // centered with button
         label_x = std::clamp(label_x, m_rect.GetLeft() + (padding*2), m_rect.GetRight() - label_width - (padding*2)); // adjust to fit within chart bounds
-        
+
         // Calculate label y position
         int label_y = button_screen_pos.y - (side/2) - label_height - (padding*2); // above button
         if (label_y - (padding*2) < m_rect.GetTop()) { // move below the button if there isn't enough space
-            label_y = button_screen_pos.y + (side/2) + (padding*2); 
+            label_y = button_screen_pos.y + (side/2) + (padding*2);
         }
-        
+
         // Draw label background
         dc.SetPen(wxPen(StateColor::darkModeColorFor(wxColour("#DBDBDB")), 1));
         wxColour bg_color = StateColor::darkModeColorFor(wxColour("#F1F1F1"));
         dc.SetBrush(wxBrush(wxColour(bg_color.Red(), bg_color.Green(), bg_color.Blue(), 204))); // 80% opacity
         wxRect label_rect(label_x - padding, label_y - padding, label_width + (2*padding), label_height + (2*padding));
         dc.DrawRoundedRectangle(label_rect, 2);
-        
+
         // Draw the label text
-        dc.SetTextForeground(StateColor::darkModeColorFor("#363636")); 
+        dc.SetTextForeground(StateColor::darkModeColorFor("#363636"));
         dc.DrawText(value_label, wxPoint(label_x, label_y));
     }
 }
@@ -141,7 +142,7 @@ void Chart::mouse_right_button_clicked(wxMouseEvent& event) {
         recalculate_line();
     }
 }
-    
+
 
 
 void Chart::mouse_clicked(wxMouseEvent& event) {
@@ -150,14 +151,14 @@ void Chart::mouse_clicked(wxMouseEvent& event) {
     int button_index = which_button_is_clicked(point);
     if ( button_index != -1) {
         m_dragged = &m_buttons[button_index];
-        m_previous_mouse = point;            
+        m_previous_mouse = point;
     }
 }
-    
-    
-    
+
+
+
 void Chart::mouse_moved(wxMouseEvent& event) {
-    wxPoint pos = event.GetPosition();    
+    wxPoint pos = event.GetPosition();
     wxRect rect = m_rect;
     if (!event.Dragging() || !m_dragged){
         // change cursor while button hovered && drag
@@ -168,7 +169,7 @@ void Chart::mouse_moved(wxMouseEvent& event) {
     if (!(rect.Contains(pos))) {  // the mouse left chart area
         mouse_left_window(event);
         return;
-    }    
+    }
     int delta_x = pos.x - m_previous_mouse.x;
     int delta_y = pos.y - m_previous_mouse.y;
 
@@ -176,9 +177,9 @@ void Chart::mouse_moved(wxMouseEvent& event) {
 
     if (m_uniform)
         for (ButtonToDrag& b : m_buttons)
-            b.move(fixed_x?0:double(delta_x)/m_rect.GetWidth() * visible_area.m_width, new_y - b.get_pos().m_y); 
+            b.move(fixed_x?0:double(delta_x)/m_rect.GetWidth() * visible_area.m_width, new_y - b.get_pos().m_y);
     else
-        m_dragged->move(fixed_x?0:double(delta_x)/m_rect.GetWidth() * visible_area.m_width, new_y - m_dragged->get_pos().m_y); 
+        m_dragged->move(fixed_x?0:double(delta_x)/m_rect.GetWidth() * visible_area.m_width, new_y - m_dragged->get_pos().m_y);
 
     m_previous_mouse = pos;
     recalculate_line();
@@ -228,7 +229,7 @@ void Chart::recalculate_line() {
         std::vector<float> lambda(N+1);
         std::vector<float> h(N+1);
         std::vector<float> rhs(N+1);
-        
+
         // let's fill in inner equations
         for (int i=1;i<=N;++i) h[i] = points[i].x-points[i-1].x;
         std::fill(diag.begin(),diag.end(),2.f);
@@ -304,14 +305,14 @@ void Chart::recalculate_line() {
 
 std::vector<float> Chart::get_ramming_speed(float sampling) const {
     std::vector<float> speeds_out;
-    
+
     const int number_of_samples = std::round( visible_area.m_width / sampling);
     if (number_of_samples>0) {
         const int dx = (m_line_to_draw.size()-1) / number_of_samples;
         for (int j=0;j<number_of_samples;++j) {
             float left =  screen_to_math(wxPoint(0,m_line_to_draw[j*dx])).m_y;
             float right = screen_to_math(wxPoint(0,m_line_to_draw[(j+1)*dx])).m_y;
-            speeds_out.push_back((left+right)/2.f);            
+            speeds_out.push_back((left+right)/2.f);
         }
     }
     return speeds_out;
@@ -324,9 +325,9 @@ std::vector<std::pair<float,float>> Chart::get_buttons() const {
         buttons_out.push_back(std::make_pair(float(button.get_pos().m_x),float(button.get_pos().m_y)));
     return buttons_out;
 }
-    
-    
-    
+
+
+
 
 BEGIN_EVENT_TABLE(Chart, wxWindow)
 EVT_MOTION(Chart::mouse_moved)

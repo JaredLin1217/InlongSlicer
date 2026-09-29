@@ -134,6 +134,7 @@ public:
 
     void set_position(Vec2d& position);
     void set_axes_mode(bool origin);
+    void set_axes_origin(const Vec3d& origin) { m_axes.set_origin(origin); }   // Design tab: triad at bed centre
     const Vec2d& get_position() const { return m_position; }
 
     // Build volume geometry for various collision detection tasks.
@@ -177,7 +178,7 @@ private:
     void render_model(const Transform3d& view_matrix, const Transform3d& projection_matrix);
     void render_custom(GLCanvas3D& canvas, const Transform3d& view_matrix, const Transform3d& projection_matrix, bool bottom);
     void render_default(bool bottom, const Transform3d& view_matrix, const Transform3d& projection_matrix);
-    
+
     // BBS: remove the bed picking logic
     // void register_raycasters_for_picking(const GLModel::Geometry& geometry, const Transform3d& trafo);
 };

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 20:42+0800\n"
+"POT-Creation-Date: 2026-09-30 02:58+0800\n"
 "PO-Revision-Date: 2025-11-28 13:48-0600\n"
 "Last-Translator: tntchn <15895303+tntchn@users.noreply.github.com>\n"
 "Language-Team: \n"
@@ -294,6 +294,9 @@ msgstr "標準模式（100%）"
 
 msgid "TPU High Flow"
 msgstr "TPU高流量"
+
+msgid "E3D High Flow"
+msgstr ""
 
 msgid "Unknown"
 msgstr "未定義"
@@ -1998,6 +2001,16 @@ msgstr "設定檔已被載入，但部分數值無法識別。"
 msgid "The configuration file “%1%” was loaded, but some values were not recognized."
 msgstr "設定檔「%1%」 已被載入，但部分數值無法識別。"
 
+#, c-format, boost-format
+msgid ""
+"\"%s\" is not a plain document, image or model file. Opening it may run it as a program or script on this computer.\n"
+"\n"
+"Only open attachments from projects you trust. Open it anyway?"
+msgstr ""
+
+msgid "Open attachment"
+msgstr ""
+
 msgid "Loading configuration"
 msgstr "正在讀取設定檔"
 
@@ -2461,6 +2474,19 @@ msgstr ""
 msgid "Failed to open the Plugins dialog (unknown error)."
 msgstr "無法開啟外掛對話框（未知錯誤）。"
 
+msgid "Plugins refreshed."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Failed to refresh plugins: %s"
+msgstr ""
+
+msgid "Select plugin package"
+msgstr "選擇外掛程式包"
+
+msgid "Plugin files (*.py;*.whl)|*.py;*.whl"
+msgstr "外掛程式檔 (*.py;*.whl)|*.py;*.whl"
+
 # AI Translated
 msgid "Plugin Terminal"
 msgstr "外掛終端機"
@@ -2580,6 +2606,9 @@ msgstr "新增支撐遮蔽"
 msgid "Add Support Enforcer"
 msgstr "新增支撐產生器"
 
+msgid "Add Precise Seam"
+msgstr ""
+
 msgid "Add text"
 msgstr "加文字"
 
@@ -2644,6 +2673,9 @@ msgstr "Inlong 立方體"
 msgid "InlongSliced Combo"
 msgstr "InlongSliced 組合"
 
+msgid "Inlong Badge"
+msgstr ""
+
 msgid "Inlong Tolerance Test"
 msgstr "Inlong 誤差測試"
 
@@ -2699,6 +2731,9 @@ msgstr "支撐去除器"
 
 msgid "Support Enforcer"
 msgstr "支撐添加器"
+
+msgid "Precise Seam"
+msgstr ""
 
 msgid "Change part type"
 msgstr "更換零件型別"
@@ -2841,6 +2876,30 @@ msgstr "沿 Z 軸鏡像"
 
 msgid "Mirror object"
 msgstr "鏡像物件"
+
+msgid "Precise Seam Type"
+msgstr ""
+
+msgid "Seam Center"
+msgstr ""
+
+msgid "Seam Left"
+msgstr ""
+
+msgid "Seam Right"
+msgstr ""
+
+msgid "Seam Enforced"
+msgstr ""
+
+msgid "Seam Blocked"
+msgstr ""
+
+msgid "Seam Neutral"
+msgstr ""
+
+msgid "Choose precise seam subtype"
+msgstr ""
 
 msgid "Edit text"
 msgstr "編輯文字"
@@ -3658,11 +3717,13 @@ msgstr "在 線材軌道切換器 退回目前線材"
 msgid "Switch track at Filament Track Switch"
 msgstr "在 線材軌道切換器 切換軌道"
 
-msgid "The maximum temperature cannot exceed "
-msgstr "最高溫度不能超過 "
+#, c-format, boost-format
+msgid "The maximum temperature cannot exceed %d"
+msgstr ""
 
-msgid "The minmum temperature should not be less than "
-msgstr "最低溫度不應低於 "
+#, c-format, boost-format
+msgid "The minimum temperature should not be less than %d"
+msgstr ""
 
 msgid "Type to filter..."
 msgstr "輸入以篩選..."
@@ -5294,14 +5355,11 @@ msgid "Value %s is out of range. The valid range is from %d to %d."
 msgstr "數值 %s 超出範圍。有效範圍是從 %d 到 %d。"
 
 #, c-format, boost-format
-msgid ""
-"Is it %s%% or %s %s?\n"
-"YES for %s%%, \n"
-"NO for %s %s."
+msgid "Is it %s%% or %s %s?"
 msgstr ""
-"是 %s%% 還是 %s %s？\n"
-"選『是』代表 %s%%，\n"
-"選『否』代表 %s %s。"
+
+msgid "%"
+msgstr "%"
 
 #, boost-format
 msgid "Invalid input format. Expected vector of dimensions in the following format: \"%1%\""
@@ -5522,6 +5580,12 @@ msgstr "速度："
 msgid "Actual speed profile"
 msgstr "實際速度設定檔"
 
+msgid "Automatic"
+msgstr ""
+
+msgid "Last used"
+msgstr ""
+
 msgid "Statistics of All Plates"
 msgstr "所有列印板統計資料"
 
@@ -5594,14 +5658,17 @@ msgstr "設為最佳"
 msgid "Regroup filament"
 msgstr "重新分組線材"
 
-msgid "up to"
-msgstr "達到"
+#, boost-format
+msgid "up to %1% mm"
+msgstr ""
 
-msgid "above"
-msgstr "高於"
+#, boost-format
+msgid "above %1% mm"
+msgstr ""
 
-msgid "from"
-msgstr "從"
+#, boost-format
+msgid "from %1% to %2% mm"
+msgstr ""
 
 msgid "Usage"
 msgstr "使用情況"
@@ -5843,11 +5910,14 @@ msgctxt "Camera View"
 msgid "Right"
 msgstr "右"
 
-msgid "Add"
-msgstr "新增"
-
 msgid "Add plate"
 msgstr "新增列印板"
+
+msgid "Split to objects"
+msgstr "拆分為物件"
+
+msgid "Add"
+msgstr "新增"
 
 msgid "Auto orient all/selected objects"
 msgstr "自動旋轉所有/選取物件的方向"
@@ -5860,9 +5930,6 @@ msgstr "全域整理"
 
 msgid "Arrange objects on selected plates"
 msgstr "在選定的列印板上排列物件"
-
-msgid "Split to objects"
-msgstr "拆分為物件"
 
 msgid "Assembly View"
 msgstr "組裝視角"
@@ -5918,6 +5985,9 @@ msgstr "輪廓線"
 # AI Translated
 msgid "Wireframe"
 msgstr "線框"
+
+msgid "X-Ray"
+msgstr ""
 
 msgid "Realistic View"
 msgstr "擬真檢視"
@@ -6127,6 +6197,9 @@ msgstr "正在關閉應用程式，部分預設已修改。"
 
 msgid "Logging"
 msgstr "日誌"
+
+msgid "Design"
+msgstr ""
 
 msgid "Prepare"
 msgstr "準備"
@@ -6461,6 +6534,9 @@ msgstr "編輯"
 
 msgid "View"
 msgstr "視角"
+
+msgid "Open Speed Dial"
+msgstr ""
 
 msgid "Preset Bundle"
 msgstr "設定檔組"
@@ -8259,6 +8335,9 @@ msgstr "同步噴嘴資訊和 AMS 數量"
 msgid "Click to edit preset"
 msgstr "點擊編輯預設檔設定"
 
+msgid "Variant"
+msgstr ""
+
 msgid "Nozzle"
 msgstr "噴嘴"
 
@@ -8381,9 +8460,6 @@ msgstr "展開側邊欄"
 
 msgid "Collapse sidebar"
 msgstr "折疊側邊欄"
-
-msgid "Tab"
-msgstr "分頁"
 
 #, c-format, boost-format
 msgid "Loading file: %s"
@@ -8771,6 +8847,9 @@ msgstr "正在準備 3MF 檔案..."
 
 msgid "Download failed; unknown file format."
 msgstr "下載失敗，未知的檔案格式。"
+
+msgid "Importing to Inlong Slicer failed. Please download the file and manually import it."
+msgstr "匯入 Inlong Slicer 失敗。 請下載該檔案並手動匯入。"
 
 msgid "Downloading project..."
 msgstr "專案下載中..."
@@ -9406,6 +9485,33 @@ msgstr "多臺設備管理"
 msgid "With this option enabled, you can send a task to multiple devices at the same time and manage multiple devices."
 msgstr "啟用時可以同時傳送到並管理多個機臺。"
 
+msgid "Open the Speed Dial from the keyboard"
+msgstr ""
+
+msgid "When enabled, the Speed Dial keyboard shortcut (Space by default) opens the action search from any page."
+msgstr ""
+
+msgid "Recent actions"
+msgstr ""
+
+msgid "actions"
+msgstr ""
+
+msgid "How many recently launched actions to show at the top of the Speed Dial. Set to 0 to hide recent actions."
+msgstr ""
+
+msgid "CAD feature (experimental)"
+msgstr ""
+
+msgid "With this option enabled, the Design tab is shown, where models can be built and edited parametrically. This feature is experimental and still under development."
+msgstr ""
+
+msgid "Auto-close sketch loops"
+msgstr ""
+
+msgid "Treat sketch endpoints within 0.001 mm as one joint and weld the loop shut. Off: only exactly coincident endpoints join, so a loop with a tiny gap is shown as open instead of being closed for you."
+msgstr ""
+
 msgid "Pop up to select filament grouping mode"
 msgstr "彈出視窗選擇線材分組模式"
 
@@ -9487,6 +9593,12 @@ msgstr "反轉滑鼠滾輪縮放方向"
 msgid "If enabled, reverses the direction of zoom with mouse wheel."
 msgstr "啟用後，改變滑鼠滾輪縮放方向。"
 
+msgid "Draw mate connectors as a face"
+msgstr ""
+
+msgid "In the Design tab, draw a mate connector as a small face instead of the conventional disc with a roll quadrant. A face's orientation is read without being learned. Turn this off for the conventional CAD representation."
+msgstr ""
+
 msgid "Pan"
 msgstr "平移"
 
@@ -9507,6 +9619,15 @@ msgstr "滑鼠右鍵拖曳"
 
 msgid "Set the action that dragging the right mouse button should perform."
 msgstr "設定拖曳滑鼠右鍵時應執行的動作。"
+
+msgid "Keyboard"
+msgstr ""
+
+msgid "Keyboard shortcuts"
+msgstr ""
+
+msgid "Choose the key for each action."
+msgstr ""
 
 msgid "Clear my choice on..."
 msgstr "清除我的選擇於..."
@@ -9550,6 +9671,14 @@ msgstr "Phong 著色"
 
 msgid "Uses Phong shading inside realistic view."
 msgstr "在擬真檢視中使用 Phong 著色。"
+
+msgid "Enable in Preview"
+msgstr ""
+
+msgid ""
+"Also applies realistic view to the Preview canvas, not just Prepare.\n"
+"Preview draws the full toolpath geometry, so shadows and SSAO cost considerably more there than on a plain model."
+msgstr ""
 
 msgid "SSAO ambient occlusion"
 msgstr "SSAO 環境光遮蔽"
@@ -9615,15 +9744,54 @@ msgstr ""
 "限制視埠影格率以降低 GPU 負載與耗電量。\n"
 "設為 0 表示不限制影格率。"
 
+msgid "Reuse the 3D scene while idle"
+msgstr ""
+
+msgid ""
+"Skips redrawing the 3D scene when only the mouse cursor moves over the viewport,\n"
+"and reuses the previous frame's scene instead. Reduces GPU load.\n"
+"Disable it if the viewport shows stale or missing contents.\n"
+"\n"
+"Takes effect immediately."
+msgstr ""
+
+msgid "Skip unchanged frames"
+msgstr ""
+
+msgid ""
+"Skips drawing a frame altogether when it would be identical to the one already on screen.\n"
+"Only applies to frames that reuse the 3D scene, so it needs Reuse the 3D scene while idle.\n"
+"Disable it if a hover highlight, tooltip or animation stops updating.\n"
+"\n"
+"Takes effect immediately."
+msgstr ""
+
 msgid "Show FPS overlay"
 msgstr "顯示 FPS 疊加層"
 
-msgid "Displays current viewport FPS in the top-right corner."
-msgstr "在右上角顯示目前視埠的 FPS。"
+msgid "Displays rendering counts in the top-right corner of the viewport."
+msgstr ""
+
+msgid "FPS: frames presented to the screen per second."
+msgstr ""
+
+msgid "3D: frames per second that redrew the 3D scene."
+msgstr ""
 
 # AI Translated
 msgid "G-code Preview"
 msgstr "G-code 預覽"
+
+msgid "Default view type"
+msgstr ""
+
+msgid ""
+"The color scheme the sliced preview opens with.\n"
+"Automatic: Filament for multi material prints, Line Type for single material ones.\n"
+"Last used: the view type you selected last.\n"
+"Any other value always opens that view type.\n"
+"You can still switch the view type in the preview afterwards."
+msgstr ""
 
 # AI Translated
 msgid "Dim lower layers"
@@ -9636,9 +9804,6 @@ msgstr "在切片預覽中拖曳層滑桿時，將目前層以下的各層算繪
 # AI Translated
 msgid "Dimmed layer brightness"
 msgstr "變暗層的亮度"
-
-msgid "%"
-msgstr "%"
 
 # AI Translated
 msgid ""
@@ -10047,13 +10212,12 @@ msgstr ""
 msgid "Filament %d (mixed)"
 msgstr ""
 
-msgid "needs"
+#, boost-format
+msgid "%1% needs %2%, which is not enabled."
 msgstr ""
 
-msgid "not enabled"
-msgstr ""
-
-msgid "material not published"
+#, boost-format
+msgid "%1% needs %2%, whose material will not be published."
 msgstr ""
 
 msgid "To publish a mixed filament, enable every filament it uses and choose Full Publish or check its Type requirement."
@@ -10068,10 +10232,7 @@ msgstr ""
 msgid "Select which settings to be published in the 3MF file"
 msgstr ""
 
-msgid "Publish 3MF Wiki"
-msgstr ""
-
-msgid "Publish 3MF Video Guide"
+msgid "Video Guide"
 msgstr ""
 
 msgid "Mixed filament - published as a whole when \"Enable\" above is selected"
@@ -10814,8 +10975,14 @@ msgstr "堵塞偵測需要換料塔。若沒有換料塔，列印物件上可能
 msgid "Enabling both precise Z height and the prime tower may cause slicing errors. Do you still want to enable precise Z height?"
 msgstr "同時啟用精確 Z 高度和擦拭塔可能會導致切片錯誤。您仍然要啟用精確 Z 高度嗎？"
 
+msgid "Smooth timelapse needs a prime tower on every layer, which is not compatible with \"No sparse layers\". \"No sparse layers\" has been turned off."
+msgstr ""
+
 msgid "A prime tower is required for smooth timelapse mode. There may be flaws on the model without prime tower. Do you want to enable the prime tower?"
 msgstr "平滑模式的縮時錄影需要換料塔，否則列印物件上可能會有瑕疵。您是否要啟用換料塔？"
+
+msgid "\"No sparse layers\" is not compatible with smooth timelapse, which needs a prime tower on every layer. Timelapse has been switched to traditional mode."
+msgstr ""
 
 msgid "Still print by object?"
 msgstr "持續逐件列印？"
@@ -11188,9 +11355,6 @@ msgstr "相容的切片設定"
 
 msgid "Printable space"
 msgstr "可列印區域"
-
-msgid "Printer Agent"
-msgstr "列印設備代理"
 
 msgid "Select the network agent implementation for printer communication. Available agents are registered at startup."
 msgstr "選擇列印設備通訊的網路代理實施。可用代理在啟動時註冊。"
@@ -11593,14 +11757,6 @@ msgstr "擠出機數量"
 msgid "Capabilities"
 msgstr "能力"
 
-# AI Translated
-msgid "Left: "
-msgstr "左： "
-
-# AI Translated
-msgid "Right: "
-msgstr "右： "
-
 msgid "Show all presets (including incompatible)"
 msgstr "顯示所有預設（包括不相容的）"
 
@@ -11988,56 +12144,42 @@ msgstr "設定檔在之前的設定引導過程中已改變"
 msgid "Configuration package changed"
 msgstr "設定檔已改變"
 
-msgid "Toolbar"
-msgstr "工具欄"
-
-msgid "Objects list"
-msgstr "物件清單"
-
-msgid "Import geometry data from STL/STEP/3MF/OBJ/AMF files"
-msgstr "從 STL/STEP/3MF/OBJ/AMF 檔案中匯入幾何模型"
-
-msgid "Paste from clipboard"
-msgstr "從剪貼簿貼上"
-
-msgid "Show/Hide 3Dconnexion devices settings dialog"
-msgstr "顯示/隱藏 3Dconnexion 設備的設定對話框"
-
-msgid "Switch table page"
-msgstr "切換表單頁面"
-
-msgid "Show keyboard shortcuts list"
-msgstr "顯示鍵盤快捷鍵清單"
-
-msgid "Global shortcuts"
-msgstr "全域快捷鍵"
-
 msgid "Pan View"
 msgstr "移動視角"
 
 msgid "Rotate View"
 msgstr "旋轉視角"
 
-msgid "Middle mouse button"
-msgstr "滑鼠中鍵"
+#, c-format, boost-format
+msgid "Use %s or %s, or a key that does not type a character."
+msgstr ""
 
-msgid "Zoom View"
-msgstr "縮放視角"
+msgctxt "Keyboard Shortcut"
+msgid "Key"
+msgstr ""
 
-msgid "Auto orients selected objects or all objects. If there are selected objects, it just orients the selected ones. Otherwise, it will orient all objects in the current project."
-msgstr "自動旋轉選取的物件或所有物件的方向。當有物件被選取時，僅自動旋轉選取的物件。無選取的物件時，會自動旋轉專案中的所有物件。"
+msgid "Left mouse"
+msgstr ""
 
-msgid "Auto orients all objects on the active plate."
-msgstr "自動旋轉目前板上所有物件的方向"
+msgid "Available anywhere in the window, even while typing in a text field."
+msgstr ""
 
-msgid "Collapse/Expand the sidebar"
-msgstr "摺疊/展開 側邊欄"
+msgid "Run favorite 1 to 10"
+msgstr ""
 
-msgid "Any arrow"
-msgstr "任意方向鍵"
+msgid "Pin or unpin the selected action"
+msgstr ""
 
-msgid "Movement in camera space"
-msgstr "沿相機視角移動物件"
+# AI Translated
+msgctxt "Keyboard Shortcut"
+msgid "Tab"
+msgstr "Tab"
+
+msgid "Switch to the next main tab"
+msgstr ""
+
+msgid "Available while the 3D view on the Prepare tab has focus."
+msgstr ""
 
 msgid "Select a part"
 msgstr "選擇單一零件"
@@ -12048,139 +12190,29 @@ msgstr "選擇多個物件"
 msgid "Select objects by rectangle"
 msgstr "框選多個零件"
 
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Up"
-msgstr "上箭頭"
-
-# AI Translated
-msgid "Move selection 10mm in positive Y direction"
-msgstr "將選取物件沿 Y 軸正方向移動 10mm"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Down"
-msgstr "下箭頭"
-
-# AI Translated
-msgid "Move selection 10mm in negative Y direction"
-msgstr "將選取物件沿 Y 軸負方向移動 10mm"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Left"
-msgstr "左箭頭"
-
-# AI Translated
-msgid "Move selection 10mm in negative X direction"
-msgstr "將選取物件沿 X 軸負方向移動 10mm"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Arrow Right"
-msgstr "右箭頭"
-
-# AI Translated
-msgid "Move selection 10mm in positive X direction"
-msgstr "將選取物件沿 X 軸正方向移動 10mm"
+msgid "Keyboard 1-9: set filament for object/part"
+msgstr "按鍵 １～９：設定物件/零件的線材"
 
 msgid "Movement step set to 1mm"
 msgstr "沿 X、Y 軸以 1mm 為單位步進移動"
 
-msgid "Keyboard 1-9: set filament for object/part"
-msgstr "按鍵 １～９：設定物件/零件的線材"
+msgid "Movement in camera space"
+msgstr "沿相機視角移動物件"
 
-msgid "Camera view - Default"
-msgstr "攝影機視角 - 預設"
+msgid "Middle mouse"
+msgstr ""
 
-msgid "Camera view - Top"
-msgstr "攝影機視角 - 頂部"
+msgid "Right mouse"
+msgstr ""
 
-msgid "Camera view - Bottom"
-msgstr "攝影機視角 - 底部"
+msgid "Zoom View"
+msgstr "縮放視角"
 
-msgid "Camera view - Front"
-msgstr "攝影機視角 - 前面"
+msgid "Painting"
+msgstr ""
 
-msgid "Camera view - Behind"
-msgstr "攝影機視角 - 後面"
-
-msgid "Camera Angle - Left side"
-msgstr "攝影機視角 - 左面"
-
-msgid "Camera Angle - Right side"
-msgstr "攝影機視角 - 右面"
-
-msgid "Select all objects"
-msgstr "選擇所有物件"
-
-msgid "Gizmo move"
-msgstr "線框移動"
-
-msgid "Gizmo rotate"
-msgstr "旋轉物件"
-
-msgid "Gizmo scale"
-msgstr "線框縮放"
-
-msgid "Gizmo place face on bed"
-msgstr "選擇底面"
-
-msgid "Gizmo cut"
-msgstr "切割物件"
-
-msgid "Gizmo mesh boolean"
-msgstr "線框網格布林運算"
-
-msgid "Gizmo FDM paint-on fuzzy skin"
-msgstr "Gizmo FDM 塗刷絨毛表面效果"
-
-msgid "Gizmo SLA support points"
-msgstr "SLA 支撐點"
-
-msgid "Gizmo FDM paint-on seam"
-msgstr "FDM 塗裝接縫"
-
-msgid "Gizmo text emboss/engrave"
-msgstr "浮雕/雕刻文字工具"
-
-msgid "Gizmo measure"
-msgstr "測量"
-
-msgid "Gizmo assemble"
-msgstr "組裝"
-
-msgid "Gizmo brim ears"
-msgstr "擴邊耳工具"
-
-msgid "Zoom in"
-msgstr "放大"
-
-msgid "Zoom out"
-msgstr "縮小"
-
-msgid "Toggle printable for object/part"
-msgstr "切換物件/零件的可列印屬性"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Tab"
-msgstr "Tab"
-
-msgid "Switch between Prepare/Preview"
-msgstr "在準備/預覽模式之中切換"
-
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Space"
-msgstr "Space"
-
-# AI Translated
-msgid "Open actions speed dial"
-msgstr "開啟操作快捷選單"
-
-msgid "Plater"
-msgstr "準備"
+msgid "Available while a painting gizmo is open: supports, seam, fuzzy skin or color painting."
+msgstr ""
 
 msgid "Move: press to snap by 1mm"
 msgstr "移動：以 1mm 為單位步進移動"
@@ -12191,14 +12223,19 @@ msgstr "支撐/顏色繪製：調整筆刷半徑"
 msgid "Support/Color Painting: adjust section position"
 msgstr "支撐/色彩繪製：調整剖面位置"
 
-msgid "Gizmo"
-msgstr "浮雕"
+msgid "Objects list"
+msgstr "物件清單"
+
+msgid "Available while the object list has focus."
+msgstr ""
 
 msgid "Set extruder number for the objects and parts"
 msgstr "設定物件、零件使用的擠出機編號"
 
-msgid "Delete objects, parts, modifiers"
-msgstr "刪除物件、零件、修改器"
+# AI Translated
+msgctxt "Keyboard Shortcut"
+msgid "Space"
+msgstr "Space"
 
 msgid "Select the object/part and press space to change the name"
 msgstr "選取物件、零件，按空格可修改名稱"
@@ -12209,45 +12246,51 @@ msgstr "滑鼠點擊"
 msgid "Select the object/part and mouse click to change the name"
 msgstr "選取物件或零件，雙擊可修改名稱"
 
-msgid "Objects List"
-msgstr "物件清單"
-
-msgid "Vertical slider - Move active thumb Up"
-msgstr "垂直滑動條 - 向上移動一層"
-
-msgid "Vertical slider - Move active thumb Down"
-msgstr "垂直滑動條 - 向下移動一層"
-
-msgid "Horizontal slider - Move active thumb Left"
-msgstr "水平滑動條 - 向左移動一步"
-
-msgid "Horizontal slider - Move active thumb Right"
-msgstr "水平滑動條 - 向右移動一步"
-
-msgid "On/Off one layer mode of the vertical slider"
-msgstr "開啟/關閉垂直滑動條的單層模式"
-
-msgid "On/Off G-code window"
-msgstr "開啟/關閉 G-code 視窗"
+msgid "Available while the 3D view on the Preview tab has focus."
+msgstr ""
 
 msgid "Move slider 5x faster"
 msgstr "5 倍速移動滑動條"
 
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "Home"
-msgstr "Home"
+msgid "Scroll slider 5x faster"
+msgstr ""
 
-msgid "Horizontal slider - Move to start position"
-msgstr "水平滑動條 - 移動到起始位置"
+msgid "Not customizable"
+msgstr ""
 
-# AI Translated
-msgctxt "Keyboard Shortcut"
-msgid "End"
-msgstr "End"
+#, c-format, boost-format
+msgid "%s is assigned to %s. Reassign it to %s?"
+msgstr ""
 
-msgid "Horizontal slider - Move to last position"
-msgstr "水平滑動條 - 移動到最後位置"
+#, c-format, boost-format
+msgid "The default %s is assigned to %s. Reassign it to %s?"
+msgstr ""
+
+msgid "Global shortcuts also apply while typing."
+msgstr ""
+
+msgid "A key that types a character cannot be a global shortcut."
+msgstr ""
+
+msgid "Esc cancels, Enter confirms."
+msgstr ""
+
+#, c-format, boost-format
+msgid ""
+"Press the new shortcut for\n"
+"\"%s\""
+msgstr ""
+
+msgid "The system uses this shortcut, so it cannot be assigned."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Shift and Ctrl with this key belong to %s and cannot be assigned."
+msgstr ""
+
+#, c-format, boost-format
+msgid "Already assigned to %s. Press OK to reassign it."
+msgstr ""
 
 msgid "Release Note"
 msgstr "更新說明"
@@ -12447,11 +12490,9 @@ msgstr "從 %1% 複製檔案到 %2% 失敗：%3%"
 msgid "Downloading new vendor profile(s): "
 msgstr ""
 
-msgid "Configuration package: "
-msgstr "設定檔："
-
-msgid " updated to "
-msgstr "更新到 "
+#, boost-format
+msgid "Configuration package: %1% updated to %2%"
+msgstr ""
 
 msgid "Failed to download vendor profile(s): "
 msgstr ""
@@ -12518,11 +12559,13 @@ msgstr ""
 msgid "Input shaping is only supported by Klipper, RepRapFirmware and Marlin 2."
 msgstr "輸入整形僅受 Klipper、RepRapFirmware 和 Marlin 2 支援"
 
-msgid "Grouping error: "
-msgstr "分組錯誤："
+#, boost-format
+msgid "Grouping error: %1% cannot be placed in the left nozzle"
+msgstr ""
 
-msgid " can not be placed in the "
-msgstr "無法放置於"
+#, boost-format
+msgid "Grouping error: %1% cannot be placed in the right nozzle"
+msgstr ""
 
 # AI Translated
 msgid "Group error in manual mode. Please check nozzle count or regroup."
@@ -12635,6 +12678,9 @@ msgstr "%1% 離其它物件太近，可能會發生碰撞。"
 #, boost-format
 msgid "%1% is too tall, and collisions will be caused."
 msgstr "%1% 太高，會發生碰撞。"
+
+msgid "The relative position of the model and the prime tower does not meet the requirements of the \"No sparse layers\" feature. Please adjust their relative positions, lower the model height, or turn off \"No sparse layers\"."
+msgstr ""
 
 msgid " is too close to exclusion area, there may be collisions when printing."
 msgstr "離淨空區域太近，列印時可能會發生碰撞。"
@@ -12965,6 +13011,9 @@ msgstr "使用 3MF 而不是 G-code"
 
 msgid "Enable this if the printer accepts a 3MF file as the print job. When enabled, Inlong Slicer sends the sliced file as a .gcode.3mf, instead of a plain .gcode file."
 msgstr "如果列印設備接受 3MF 檔案作為列印工作，請啟用此選項。啟用後，Inlong Slicer 會將切片檔案以 .gcode.3mf 傳送，而不是一般的 .gcode 檔案。"
+
+msgid "Printer Agent"
+msgstr "列印設備代理"
 
 msgid "Select the network agent implementation for printer communication."
 msgstr "選擇用於列印設備通訊的網路代理實作。"
@@ -14266,6 +14315,12 @@ msgstr "逆時針"
 
 msgid "Clockwise"
 msgstr "順時針"
+
+msgid "Distance to rod"
+msgstr ""
+
+msgid "Horizontal distance of the nozzle tip to the rod's farther edge. Used for collision avoidance in by-object printing."
+msgstr ""
 
 msgid "Height to rod"
 msgstr "到橫杆高度"
@@ -16466,6 +16521,15 @@ msgstr "檢測懸空外牆"
 msgid "This detects the overhang percentage relative to line width and uses a different speed to print. For 100%% overhang, bridging speed is used."
 msgstr "偵測懸空相對於線寬的百分比，並套用不同的速度列印。100%% 的懸空將使用橋接速度。"
 
+msgid "Print unsupported walls last"
+msgstr ""
+
+msgid ""
+"Wall loops that lie entirely in mid air are printed once something can hold them:\n"
+"they are extruded after the other walls of their island, innermost first, whatever the wall order is.\n"
+"A loop that only the bridges of this layer can anchor waits until those bridges are printed, while a loop running alongside a supported wall keeps its place before the infill, which needs it as an anchor."
+msgstr ""
+
 msgid "Outer walls"
 msgstr "外牆"
 
@@ -16756,6 +16820,9 @@ msgstr "擠出機的噴嘴流量類型。"
 msgid "Hybrid"
 msgstr "混合"
 
+msgid "Extra High Flow"
+msgstr ""
+
 msgid "Default Nozzle Volume Type"
 msgstr "預設噴嘴流量類型"
 
@@ -16997,6 +17064,27 @@ msgstr "閉環擦拭"
 msgid "To minimize the visibility of the seam in a closed loop extrusion, a small inward movement is executed before the extruder leaves the loop."
 msgstr "為了降低閉環擠出中接縫的可見性，在擠出機退出閉環前會進行一次微小的內縮移動。"
 
+msgid "Wipe inward"
+msgstr ""
+
+msgid ""
+"Applies only to external walls, including hole boundaries. Moves the hot nozzle toward printed inner walls during wiping to reduce reheating of freshly printed plastic and seam marks.\n"
+"\n"
+"Especially useful at layer heights below 0.1 mm, where wipe marks are more visible.\n"
+"\n"
+"Uses the regular wipe if no adjacent inner wall is already printed (single-wall areas or Outer/Inner wall order), or if no supported inward path can be found, for example at tight corners or seam gaps."
+msgstr ""
+
+msgid "Wipe inward distance"
+msgstr ""
+
+#, no-c-format, no-boost-format
+msgid ""
+"The distance the wipe path is shifted away from the external perimeter, specified in millimeters or as a percentage of the actual outer-wall extrusion width.\n"
+"\n"
+"For example, 50% shifts the path by half of the outer-wall width. The effective offset is limited by both the actual outer-wall width and the available spacing to the adjacent wall, so values above 100% or an equivalent absolute distance have no additional effect. Set to 0 to disable the offset."
+msgstr ""
+
 msgid "Wipe before external loop"
 msgstr "外牆迴圈前的擦拭動作"
 
@@ -17189,8 +17277,8 @@ msgstr "預熱階段"
 msgid "Insert multiple preheat commands (e.g. M104.1). Only useful for Prusa XL. For other printers, please set it to 1."
 msgstr "插入多條預熱指令（例如：M104.1）。此功能僅適用於 Prusa XL。其他列印設備請將其設為 1。"
 
-msgid "G-code written at the very top of the output file, before any other content. Useful for adding metadata that printer firmware reads from the first lines of the file (e.g. estimated print time, filament usage). Supports placeholders like {print_time_sec} and {used_filament_length}."
-msgstr "G-code 寫在輸出檔案的最頂部，位於任何其他內容之前。對於新增列印設備韌體從檔案第一行讀取的中繼資料（例如估計列印時間、線材使用情況）很有用。支援 {print_time_sec} 和 {used_filament_length} 等預留位置。"
+msgid "G-code written at the very top of the output file, before any other content. Useful for adding metadata that printer firmware reads from the first lines of the file (e.g. estimated print time, filament usage). Supports placeholders like {print_time_total_sec}, {print_time_day}, {print_time_hour}, {print_time_minute}, {print_time_sec} and {used_filament_length}."
+msgstr ""
 
 msgid "Start G-code"
 msgstr "起始 G-code"
@@ -17249,8 +17337,19 @@ msgstr "拾取新工具時不等待其達到列印溫度，先移動到換料塔
 msgid "No sparse layers (beta)"
 msgstr "取消稀疏層（Beta）"
 
-msgid "If enabled, the wipe tower will not be printed on layers with no tool changes. On layers with a tool change, extruder will travel downward to print the wipe tower. User is responsible for ensuring there is no collision with the print."
-msgstr "啟用此選項後，換料塔將不會在沒有工具更換的層中列印。在有工具更換的層中，擠出機將向下移動以列印換料塔。請使用者自行確保清洗塔與列印物之間不會發生碰撞。"
+msgid "If enabled, the wipe tower will not be printed on layers with no tool changes. On layers with a tool change, extruder will travel downward to print the wipe tower, so the tower ends up below the model and the toolhead has to reach down to it. Layouts where that would collide with an already printed object are rejected. Has no effect with smooth timelapse or clumping detection, which need a tower on every layer."
+msgstr ""
+
+msgid "Combine sparse layers"
+msgstr ""
+
+msgid ""
+"If enabled, consecutive layers on which the prime tower has no filament change are printed as a single thicker tower layer instead of one thin layer each, the same way infill combination merges sparse infill. The merged layer is printed at the top of the run, at the height of everything it covers.\n"
+"\n"
+"Only whole layers are merged, and never past the maximum layer height of the nozzle printing the tower (three quarters of the nozzle diameter when that is left at 0). Two or more layers therefore have to fit under that limit before anything changes at all: at a 0.2 mm layer height under a 0.3 mm maximum nothing is merged, while at 0.1 mm three layers become one.\n"
+"\n"
+"Unlike \"No sparse layers\" the tower keeps following the model, so the toolhead never has to reach down to it. Has no effect with \"No sparse layers\", smooth timelapse or clumping detection, which need a tower on every layer."
+msgstr ""
 
 msgid "Prime all printing extruders"
 msgstr "所有擠出機畫線"
@@ -17276,6 +17375,24 @@ msgstr ""
 msgid "Cyclic"
 msgstr "循環"
 
+msgid "Cyclic order"
+msgstr ""
+
+msgid ""
+"Custom filament sequence used by the cyclic toolchange ordering, as filament numbers separated by commas (e.g. \"3,2,1,4\").\n"
+"Each layer prints its filaments following this sequence; filaments not listed are printed last, in ascending order.\n"
+"Leave empty to cycle through the filaments in ascending order."
+msgstr ""
+
+msgid "Apply cyclic order to first layer"
+msgstr ""
+
+msgid ""
+"Applies the cyclic toolchange order to the first layer as well.\n"
+"By default this is disabled, because the first layer is instead ordered for the best bed adhesion: filaments that print small, fragile first-layer features are printed last, so the following tool changes and travel moves are less likely to knock those weakly anchored parts loose. This first-layer order also honors a custom first layer filament sequence when one is set. The cyclic order's benefit (extra tool changes give each layer more time to cool) does not apply to the first layer, which is printed slowly and hot for adhesion.\n"
+"Enable this only if you need the exact same tool sequence on every layer, including the first, at the cost of that adhesion optimization."
+msgstr ""
+
 msgid "Slice gap closing radius"
 msgstr "切片間隙閉合半徑"
 
@@ -17284,9 +17401,6 @@ msgstr "在三角網格切片過程中，寬度小於 2 倍間隙閉合半徑的
 
 msgid "Slicing Mode"
 msgstr "切片模式"
-
-msgid "Other"
-msgstr "其他"
 
 msgid "Use \"Even-odd\" for 3DLabPrint airplane models. Use \"Close holes\" to close all holes in the model."
 msgstr "針對 3DLabPrint 飛機模型，請選擇『奇偶』模式。若需閉合模型中的所有孔洞，請啟用『閉合孔洞』選項。"
@@ -18303,6 +18417,12 @@ msgstr "不檢查"
 msgid "Do not run any validity checks, such as G-code path conflicts check."
 msgstr "不要執行任何有效性檢查，如 G-code 路徑衝突檢查。"
 
+msgid "Strict mode"
+msgstr ""
+
+msgid "Exit non-zero when slicing raises a non-critical warning that is otherwise only logged, such as a model that needs support while support is disabled. Use this in CI or scripted pipelines that should never ship a subtly broken slice. Each such warning is also listed with a stable class in the `warnings` array of result.json, which is written on Linux only. Cannot be combined with --no-check, which skips the support check."
+msgstr ""
+
 msgid "Normative check"
 msgstr "規範符合性檢測"
 
@@ -18315,12 +18435,23 @@ msgstr "輸出模型資訊"
 msgid "This outputs the model’s information."
 msgstr "輸出模型資訊。"
 
+msgid "Inspect mesh (JSON to stdout)"
+msgstr ""
+
+msgid "Print a JSON summary of each loaded object to stdout, then exit: its bounding boxes and the convex hull faces it can be laid on, with their normals, areas and centers. These are the faces the --ground-* options choose from. Machine-readable alternative to --info."
+msgstr ""
+
+msgid "Inspect paint (JSON to stdout)"
+msgstr ""
+
+msgid "Print a structured JSON summary of every painted layer (supports, seam, MMU color, fuzzy-skin) already stored on the loaded model — per-state facet count, surface area, and mesh-local bounding box — then exit. Machine-readable alternative to opening the paint gizmos in the GUI."
+msgstr ""
+
 msgid "Export Settings"
 msgstr "匯出設定"
 
-# AI Translated
-msgid "This exports settings to a file."
-msgstr "將設定匯出至檔案。"
+msgid "This exports settings to a file. Use - to write them to stdout."
+msgstr ""
 
 msgid "Send progress to pipe"
 msgstr "將進度傳送到 Pipe"
@@ -18375,6 +18506,24 @@ msgstr "繞 Y 旋轉"
 
 msgid "Rotation angle around the Y axis in degrees."
 msgstr "繞 Y 軸的旋轉角度（以度為單位）。"
+
+msgid "Ground largest face"
+msgstr ""
+
+msgid "Lay each object on the largest face of its convex hull and drop it onto the bed. Of equally large faces, the one already facing down is kept. Objects without a face large enough to rest on are left as they are. Transforms run in command-line order, so rotations given before this option are respected. --orient 1 runs after all transforms and replaces the orientation."
+msgstr ""
+
+msgid "Ground face by normal"
+msgstr ""
+
+msgid "Lay each object on the convex hull face whose outward normal is closest to the direction NX,NY,NZ and drop it onto the bed. The direction is in object coordinates, which include the rotations given before this option and match the plate axes unless the input file rotates the object. For example, 1,0,0 stands the object on its +X side. --orient 1 runs after all transforms and replaces the orientation."
+msgstr ""
+
+msgid "Ground face at point"
+msgstr ""
+
+msgid "Lay each object on the convex hull face that contains the point X,Y,Z and drop it onto the bed. The point is in object coordinates, which include the rotations given before this option; --inspect-mesh reports face centers in them. Objects without such a face are left as they are, and the run fails if no object has one. --orient 1 runs after all transforms and replaces the orientation."
+msgstr ""
 
 msgid "Scale the model by a float factor."
 msgstr "依浮點數比例縮放模型"
@@ -18486,6 +18635,12 @@ msgstr "允許在排列時進行旋轉調整"
 
 msgid "If enabled, Arrange will allow rotation when placing objects."
 msgstr "若啟用，物件排列時將允許旋轉調整"
+
+msgid "Align to Y axis when arranging"
+msgstr ""
+
+msgid "If enabled, Arrange will turn each object so its long side runs along the Y axis before placing it. When not given, it is on for i3 printers and off for the others, as in the GUI."
+msgstr ""
 
 msgid "Avoid extrusion calibrate region when arranging"
 msgstr "在排列物件時避開擠出校正區域"
@@ -18673,11 +18828,35 @@ msgstr "使用的線材"
 msgid "Total length of filament used in the print."
 msgstr "列印所使用的線材總長度"
 
-msgid "Print time (seconds)"
-msgstr "列印時間（秒）"
+msgid "Print time (total seconds)"
+msgstr ""
 
 msgid "Total estimated print time in seconds. Replaced with actual value during post-processing."
 msgstr "預估列印總時間（秒）。後處理時將以實際值取代"
+
+msgid "Print time (days component)"
+msgstr ""
+
+msgid "Estimated print time day component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
+
+msgid "Print time (hours component)"
+msgstr ""
+
+msgid "Estimated print time hour component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
+
+msgid "Print time (minutes component)"
+msgstr ""
+
+msgid "Estimated print time minute component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
+
+msgid "Print time (seconds component)"
+msgstr ""
+
+msgid "Estimated print time second component (normal mode). Replaced with actual value during post-processing."
+msgstr ""
 
 msgid "Filament length (meters)"
 msgstr "線材長度（公尺）"
@@ -20517,6 +20696,9 @@ msgstr "未偵測到有效的工作階段。要繼續登入 3DPrinterOS 嗎？"
 msgid "Success!"
 msgstr "成功！"
 
+msgid "Generate API Key"
+msgstr ""
+
 msgid "Are you sure to log out?"
 msgstr "確認要登出嗎？"
 
@@ -21736,13 +21918,13 @@ msgstr "烘乾—加熱"
 msgid "Drying-Dehumidifying"
 msgstr "烘乾—除濕"
 
-# AI Translated
-msgid " maximum drying temperature is "
-msgstr " 最高烘乾溫度為 "
+#, c-format, boost-format
+msgid "%s maximum drying temperature is %d°C."
+msgstr ""
 
-# AI Translated
-msgid " minimum drying temperature is "
-msgstr " 最低烘乾溫度為 "
+#, c-format, boost-format
+msgid "%s minimum drying temperature is %d°C."
+msgstr ""
 
 # AI Translated
 msgid "This filament may not be completely dried."
@@ -21975,6 +22157,12 @@ msgstr "腳本外掛程式已跳過。"
 
 msgid "Script plugin finished."
 msgstr "腳本外掛程式完成。"
+
+msgid "Recent Projects"
+msgstr ""
+
+msgid "Go to Plate"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Please select the filament installed on the %s."
@@ -22545,6 +22733,32 @@ msgstr "退訂"
 msgid "Overwrite Plugin"
 msgstr "覆蓋外掛程式"
 
+msgid "Select a .py or .whl plugin package."
+msgstr "選擇 .py 或 .whl 外掛程式包。"
+
+msgid "Failed to install plugin package. See the log for details."
+msgstr "外掛程式包安裝失敗。詳細資訊請參閱日誌。"
+
+#, c-format, boost-format
+msgid ""
+"Plugin \"%s\" is already installed.\n"
+"\n"
+"Installing this package will overwrite the existing plugin."
+msgstr ""
+"外掛程式“%s”已安裝。\n"
+"\n"
+"安裝此套件將覆蓋現有外掛程式。"
+
+msgid "Overwrite"
+msgstr "覆蓋"
+
+msgid "Installing plugin"
+msgstr "安裝外掛程式"
+
+#, c-format, boost-format
+msgid "Installed \"%s\"."
+msgstr "安裝“%s”。"
+
 #, c-format, boost-format
 msgid "Failed to activate \"%s\"."
 msgstr "無法啟動“%s”。"
@@ -22592,38 +22806,6 @@ msgstr "啟用“%s”。"
 #, c-format, boost-format
 msgid "Disabled \"%s\"."
 msgstr "禁用“%s”。"
-
-msgid "Select plugin package"
-msgstr "選擇外掛程式包"
-
-msgid "Plugin files (*.py;*.whl)|*.py;*.whl"
-msgstr "外掛程式檔 (*.py;*.whl)|*.py;*.whl"
-
-msgid "Select a .py or .whl plugin package."
-msgstr "選擇 .py 或 .whl 外掛程式包。"
-
-msgid "Failed to install plugin package. See the log for details."
-msgstr "外掛程式包安裝失敗。詳細資訊請參閱日誌。"
-
-#, c-format, boost-format
-msgid ""
-"Plugin \"%s\" is already installed.\n"
-"\n"
-"Installing this package will overwrite the existing plugin."
-msgstr ""
-"外掛程式“%s”已安裝。\n"
-"\n"
-"安裝此套件將覆蓋現有外掛程式。"
-
-msgid "Overwrite"
-msgstr "覆蓋"
-
-msgid "Installing plugin"
-msgstr "安裝外掛程式"
-
-#, c-format, boost-format
-msgid "Installed \"%s\"."
-msgstr "安裝“%s”。"
 
 msgid "Downloading plugin"
 msgstr "正在下載外掛程式"
@@ -22764,6 +22946,112 @@ msgstr "優惠儲蓄"
 
 msgid "Reduces prime waste and prints faster. May cause slight color mixing or small surface defects."
 msgstr "减少底材浪费并加快列印速度。可能會導致輕微的混色或小表面缺陷。"
+
+msgid "Expert"
+msgstr ""
+
+msgid "Simple"
+msgstr ""
+
+msgid "Search actions"
+msgstr ""
+
+msgid "Recent"
+msgstr ""
+
+msgid "Other"
+msgstr "其他"
+
+#, c-format, boost-format
+msgid "No actions match (Total: %s)"
+msgstr ""
+
+msgid "No actions yet"
+msgstr ""
+
+msgid "No tabs match"
+msgstr ""
+
+msgid "No tabs"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Showing %s actions"
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s actions"
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s tabs"
+msgstr ""
+
+#, c-format, boost-format
+msgid "%s matches"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Favourites are full (%s max)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Go to %s%% of the layer range"
+msgstr ""
+
+msgid "Enter a layer percentage (0-100)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Go to layer %% (0-100)"
+msgstr ""
+
+msgid "Go to tab"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Favourite %s (%s)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Pin to favourites (%s)"
+msgstr ""
+
+#, c-format, boost-format
+msgid "Unpin from favourites (%s)"
+msgstr ""
+
+msgid "Remove from favourites"
+msgstr ""
+
+msgid "Move left"
+msgstr ""
+
+msgid "Move right"
+msgstr ""
+
+msgid "Unpin"
+msgstr ""
+
+msgid "Wiki (F1)"
+msgstr ""
+
+msgid "No wiki page for this action"
+msgstr ""
+
+#, c-format, boost-format
+msgid "\"%s\" is a Developer setting. Enable Developer mode to edit it?"
+msgstr ""
+
+msgid "Developer setting"
+msgstr ""
+
+#, c-format, boost-format
+msgid "\"%s\" is a %s setting. Switch from %s mode to %s mode to edit it?"
+msgstr ""
+
+msgid "Switch settings mode"
+msgstr ""
 
 #, c-format, boost-format
 msgid "Run \"%s\"?"
@@ -23196,6 +23484,275 @@ msgid ""
 msgstr ""
 "避免翹曲\n"
 "您知道嗎？當列印容易翹曲的材料（如 ABS）時，適當提高熱床溫度可以降低翹曲的機率。"
+
+#~ msgid "The maximum temperature cannot exceed "
+#~ msgstr "最高溫度不能超過 "
+
+#~ msgid "The minmum temperature should not be less than "
+#~ msgstr "最低溫度不應低於 "
+
+#, c-format, boost-format
+#~ msgid ""
+#~ "Is it %s%% or %s %s?\n"
+#~ "YES for %s%%, \n"
+#~ "NO for %s %s."
+#~ msgstr ""
+#~ "是 %s%% 還是 %s %s？\n"
+#~ "選『是』代表 %s%%，\n"
+#~ "選『否』代表 %s %s。"
+
+#~ msgid "up to"
+#~ msgstr "達到"
+
+#~ msgid "above"
+#~ msgstr "高於"
+
+#~ msgid "from"
+#~ msgstr "從"
+
+#~ msgid "Tab"
+#~ msgstr "分頁"
+
+#~ msgid "Displays current viewport FPS in the top-right corner."
+#~ msgstr "在右上角顯示目前視埠的 FPS。"
+
+# AI Translated
+#~ msgid "Left: "
+#~ msgstr "左： "
+
+# AI Translated
+#~ msgid "Right: "
+#~ msgstr "右： "
+
+#~ msgid "Toolbar"
+#~ msgstr "工具欄"
+
+#~ msgid "Import geometry data from STL/STEP/3MF/OBJ/AMF files"
+#~ msgstr "從 STL/STEP/3MF/OBJ/AMF 檔案中匯入幾何模型"
+
+#~ msgid "Paste from clipboard"
+#~ msgstr "從剪貼簿貼上"
+
+#~ msgid "Show/Hide 3Dconnexion devices settings dialog"
+#~ msgstr "顯示/隱藏 3Dconnexion 設備的設定對話框"
+
+#~ msgid "Switch table page"
+#~ msgstr "切換表單頁面"
+
+#~ msgid "Show keyboard shortcuts list"
+#~ msgstr "顯示鍵盤快捷鍵清單"
+
+#~ msgid "Global shortcuts"
+#~ msgstr "全域快捷鍵"
+
+#~ msgid "Middle mouse button"
+#~ msgstr "滑鼠中鍵"
+
+#~ msgid "Auto orients selected objects or all objects. If there are selected objects, it just orients the selected ones. Otherwise, it will orient all objects in the current project."
+#~ msgstr "自動旋轉選取的物件或所有物件的方向。當有物件被選取時，僅自動旋轉選取的物件。無選取的物件時，會自動旋轉專案中的所有物件。"
+
+#~ msgid "Auto orients all objects on the active plate."
+#~ msgstr "自動旋轉目前板上所有物件的方向"
+
+#~ msgid "Collapse/Expand the sidebar"
+#~ msgstr "摺疊/展開 側邊欄"
+
+#~ msgid "Any arrow"
+#~ msgstr "任意方向鍵"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Up"
+#~ msgstr "上箭頭"
+
+# AI Translated
+#~ msgid "Move selection 10mm in positive Y direction"
+#~ msgstr "將選取物件沿 Y 軸正方向移動 10mm"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Down"
+#~ msgstr "下箭頭"
+
+# AI Translated
+#~ msgid "Move selection 10mm in negative Y direction"
+#~ msgstr "將選取物件沿 Y 軸負方向移動 10mm"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Left"
+#~ msgstr "左箭頭"
+
+# AI Translated
+#~ msgid "Move selection 10mm in negative X direction"
+#~ msgstr "將選取物件沿 X 軸負方向移動 10mm"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Arrow Right"
+#~ msgstr "右箭頭"
+
+# AI Translated
+#~ msgid "Move selection 10mm in positive X direction"
+#~ msgstr "將選取物件沿 X 軸正方向移動 10mm"
+
+#~ msgid "Camera view - Default"
+#~ msgstr "攝影機視角 - 預設"
+
+#~ msgid "Camera view - Top"
+#~ msgstr "攝影機視角 - 頂部"
+
+#~ msgid "Camera view - Bottom"
+#~ msgstr "攝影機視角 - 底部"
+
+#~ msgid "Camera view - Front"
+#~ msgstr "攝影機視角 - 前面"
+
+#~ msgid "Camera view - Behind"
+#~ msgstr "攝影機視角 - 後面"
+
+#~ msgid "Camera Angle - Left side"
+#~ msgstr "攝影機視角 - 左面"
+
+#~ msgid "Camera Angle - Right side"
+#~ msgstr "攝影機視角 - 右面"
+
+#~ msgid "Select all objects"
+#~ msgstr "選擇所有物件"
+
+#~ msgid "Gizmo move"
+#~ msgstr "線框移動"
+
+#~ msgid "Gizmo rotate"
+#~ msgstr "旋轉物件"
+
+#~ msgid "Gizmo scale"
+#~ msgstr "線框縮放"
+
+#~ msgid "Gizmo place face on bed"
+#~ msgstr "選擇底面"
+
+#~ msgid "Gizmo cut"
+#~ msgstr "切割物件"
+
+#~ msgid "Gizmo mesh boolean"
+#~ msgstr "線框網格布林運算"
+
+#~ msgid "Gizmo FDM paint-on fuzzy skin"
+#~ msgstr "Gizmo FDM 塗刷絨毛表面效果"
+
+#~ msgid "Gizmo SLA support points"
+#~ msgstr "SLA 支撐點"
+
+#~ msgid "Gizmo FDM paint-on seam"
+#~ msgstr "FDM 塗裝接縫"
+
+#~ msgid "Gizmo text emboss/engrave"
+#~ msgstr "浮雕/雕刻文字工具"
+
+#~ msgid "Gizmo measure"
+#~ msgstr "測量"
+
+#~ msgid "Gizmo assemble"
+#~ msgstr "組裝"
+
+#~ msgid "Gizmo brim ears"
+#~ msgstr "擴邊耳工具"
+
+#~ msgid "Zoom in"
+#~ msgstr "放大"
+
+#~ msgid "Zoom out"
+#~ msgstr "縮小"
+
+#~ msgid "Toggle printable for object/part"
+#~ msgstr "切換物件/零件的可列印屬性"
+
+#~ msgid "Switch between Prepare/Preview"
+#~ msgstr "在準備/預覽模式之中切換"
+
+# AI Translated
+#~ msgid "Open actions speed dial"
+#~ msgstr "開啟操作快捷選單"
+
+#~ msgid "Plater"
+#~ msgstr "準備"
+
+#~ msgid "Gizmo"
+#~ msgstr "浮雕"
+
+#~ msgid "Delete objects, parts, modifiers"
+#~ msgstr "刪除物件、零件、修改器"
+
+#~ msgid "Objects List"
+#~ msgstr "物件清單"
+
+#~ msgid "Vertical slider - Move active thumb Up"
+#~ msgstr "垂直滑動條 - 向上移動一層"
+
+#~ msgid "Vertical slider - Move active thumb Down"
+#~ msgstr "垂直滑動條 - 向下移動一層"
+
+#~ msgid "Horizontal slider - Move active thumb Left"
+#~ msgstr "水平滑動條 - 向左移動一步"
+
+#~ msgid "Horizontal slider - Move active thumb Right"
+#~ msgstr "水平滑動條 - 向右移動一步"
+
+#~ msgid "On/Off one layer mode of the vertical slider"
+#~ msgstr "開啟/關閉垂直滑動條的單層模式"
+
+#~ msgid "On/Off G-code window"
+#~ msgstr "開啟/關閉 G-code 視窗"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "Home"
+#~ msgstr "Home"
+
+#~ msgid "Horizontal slider - Move to start position"
+#~ msgstr "水平滑動條 - 移動到起始位置"
+
+# AI Translated
+#~ msgctxt "Keyboard Shortcut"
+#~ msgid "End"
+#~ msgstr "End"
+
+#~ msgid "Horizontal slider - Move to last position"
+#~ msgstr "水平滑動條 - 移動到最後位置"
+
+#~ msgid "Configuration package: "
+#~ msgstr "設定檔："
+
+#~ msgid " updated to "
+#~ msgstr "更新到 "
+
+#~ msgid "Grouping error: "
+#~ msgstr "分組錯誤："
+
+#~ msgid " can not be placed in the "
+#~ msgstr "無法放置於"
+
+#~ msgid "G-code written at the very top of the output file, before any other content. Useful for adding metadata that printer firmware reads from the first lines of the file (e.g. estimated print time, filament usage). Supports placeholders like {print_time_sec} and {used_filament_length}."
+#~ msgstr "G-code 寫在輸出檔案的最頂部，位於任何其他內容之前。對於新增列印設備韌體從檔案第一行讀取的中繼資料（例如估計列印時間、線材使用情況）很有用。支援 {print_time_sec} 和 {used_filament_length} 等預留位置。"
+
+#~ msgid "If enabled, the wipe tower will not be printed on layers with no tool changes. On layers with a tool change, extruder will travel downward to print the wipe tower. User is responsible for ensuring there is no collision with the print."
+#~ msgstr "啟用此選項後，換料塔將不會在沒有工具更換的層中列印。在有工具更換的層中，擠出機將向下移動以列印換料塔。請使用者自行確保清洗塔與列印物之間不會發生碰撞。"
+
+# AI Translated
+#~ msgid "This exports settings to a file."
+#~ msgstr "將設定匯出至檔案。"
+
+#~ msgid "Print time (seconds)"
+#~ msgstr "列印時間（秒）"
+
+# AI Translated
+#~ msgid " maximum drying temperature is "
+#~ msgstr " 最高烘乾溫度為 "
+
+# AI Translated
+#~ msgid " minimum drying temperature is "
+#~ msgstr " 最低烘乾溫度為 "
 
 #~ msgid "Switching application language"
 #~ msgstr "切換應用程式語言"
@@ -25598,9 +26155,6 @@ msgstr ""
 
 #~ msgid "Would you like InlongSlicer to automatically fix this by clearing the rotation template settings?"
 #~ msgstr "您是否希望 InlongSlicer 透過清除旋轉模板設定來自動修正此問題？"
-
-#~ msgid "Importing to Inlong Slicer failed. Please download the file and manually import it."
-#~ msgstr "匯入 Inlong Slicer 失敗。 請下載該檔案並手動匯入。"
 
 #, c-format, boost-format
 #~ msgid "InlongSlicer can't connect to %s. Please check if the printer is powered on and connected to the network."

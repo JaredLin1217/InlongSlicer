@@ -122,7 +122,7 @@ public:
         Legend
     };
 
-    Preview(wxWindow* parent, Bed3D& bed, Model* model, DynamicPrintConfig* config, BackgroundSlicingProcess* process, 
+    Preview(wxWindow* parent, Bed3D& bed, Model* model, DynamicPrintConfig* config, BackgroundSlicingProcess* process,
         GCodeProcessorResult* gcode_result, std::function<void()> schedule_background_process = []() {});
     virtual ~Preview();
 
@@ -169,9 +169,8 @@ private:
     void check_layers_slider_values(std::vector<CustomGCode::Item>& ticks_from_model,
         const std::vector<double>& layers_z);
 
-    void update_layers_slider(const std::vector<double>& layers_z, bool keep_z_range = false);    
+    void update_layers_slider(const std::vector<double>& layers_z, bool keep_z_range = false);
     void update_layers_slider_mode();
-    void update_layers_slider_from_canvas(wxKeyEvent &event);
     //BBS: add only gcode mode
     void load_print_as_fff(bool keep_z_range = false, bool only_gcode = false);
 };

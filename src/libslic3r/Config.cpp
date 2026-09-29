@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <iomanip>
 #include <regex>
@@ -481,7 +482,7 @@ void ConfigBase::apply_only(const ConfigBase &other, const t_config_option_keys 
                     if (my_opt2->empty()) {
                         my_opt2->resize(1, other_opt);
                     }
-                }   
+                }
                 if (my_opt2) {
                     int index = std::atoi(opt_key.c_str() + n + 1);
                     if (other_opt)
@@ -764,7 +765,7 @@ double ConfigBase::get_abs_value(const t_config_option_key &opt_key) const
     // For example, XXX_extrusion_width parameters are not handled by get_abs_value correctly.
     return opt_def->ratio_over.empty() ? 0. :
         static_cast<const ConfigOptionFloatOrPercent*>(raw_opt)->get_abs_value(this->get_abs_value(opt_def->ratio_over));
-    
+
 
     throw ConfigurationError("ConfigBase::get_abs_value(): Not a valid option type for get_abs_value()");
 }
@@ -775,7 +776,9 @@ double ConfigBase::get_abs_value(const t_config_option_key &opt_key, double rati
 {
     // Get stored option value.
     const ConfigOption *raw_opt = this->option(opt_key);
-    assert(raw_opt != nullptr);
+    // Mirror the single-arg overload — assert() is a no-op under NDEBUG.
+    if (raw_opt == nullptr)
+        throw ConfigurationError("ConfigBase::get_abs_value(): \"" + opt_key + "\" is not defined");
     if (raw_opt->type() != coFloatOrPercent)
         throw ConfigurationError("ConfigBase::get_abs_value(): opt_key is not of coFloatOrPercent");
     // Compute absolute value.
@@ -947,6 +950,9 @@ int ConfigBase::load_from_json(const std::string &file, ConfigSubstitutionContex
             }
             else if (!load_inherits_to_config && boost::iequals(it.key(), BBL_JSON_KEY_INHERITS)) {
                 key_values.emplace(BBL_JSON_KEY_INHERITS, it.value());
+            }
+            else if (!load_inherits_to_config && boost::iequals(it.key(), BBL_JSON_KEY_INCLUDES)) {
+                key_values.emplace(BBL_JSON_KEY_INCLUDES, it.value().dump());
             } else if (boost::iequals(it.key(), INLONG_JSON_KEY_RENAMED_FROM)) {
                 key_values.emplace(INLONG_JSON_KEY_RENAMED_FROM, it.value());
             } else {
@@ -1118,7 +1124,7 @@ int ConfigBase::load_from_json(const std::string &file, ConfigSubstitutionContex
                 }
             }
         }
-        
+
         // Do legacy conversion on a completely loaded dictionary.
         // Perform composite conversions, for example merging multiple keys into one key.
         this->handle_legacy_composite();
@@ -1512,6 +1518,19 @@ std::optional<PluginCapabilityRef> parse_capability_ref(const std::string& value
 //BBS: add json support
 void ConfigBase::save_to_json(const std::string &file, const std::string &name, const std::string &from, const std::string &version) const
 {
+    // Serialize first: if that throws (invalid UTF-8), the existing file stays untouched.
+    std::ostringstream ss;
+    this->save_to_json(ss, name, from, version);
+    boost::nowide::ofstream c;
+    c.open(file, std::ios::out | std::ios::trunc);
+    c << ss.str();
+    c.close();
+
+    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ":" <<__LINE__ << boost::format(", saved config to %1%\n")%file;
+}
+
+void ConfigBase::save_to_json(std::ostream &os, const std::string &name, const std::string &from, const std::string &version, bool replace_invalid_utf8) const
+{
     json j;
     //record the headers
     j[BBL_JSON_KEY_VERSION] = version;
@@ -1557,12 +1576,7 @@ void ConfigBase::save_to_json(const std::string &file, const std::string &name, 
             j["plugins"] = unique_refs;
     }
 
-    boost::nowide::ofstream c;
-    c.open(file, std::ios::out | std::ios::trunc);
-    c << j.dump(1, '\t') << std::endl;
-    c.close();
-
-    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ":" <<__LINE__ << boost::format(", saved config to %1%\n")%file;
+    os << j.dump(1, '\t', false, replace_invalid_utf8 ? json::error_handler_t::replace : json::error_handler_t::strict) << std::endl;
 }
 
 void ConfigBase::save(const std::string &file) const

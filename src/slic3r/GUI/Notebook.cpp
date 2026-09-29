@@ -10,6 +10,7 @@
 #include "Widgets/Label.hpp"
 
 #include <wx/button.h>
+#include <wx/dcclient.h>
 #include <wx/sizer.h>
 
 wxDEFINE_EVENT(wxCUSTOMEVT_NOTEBOOK_SEL_CHANGED, wxCommandEvent);
@@ -28,7 +29,7 @@ ButtonsListCtrl::ButtonsListCtrl(wxWindow *parent, wxBoxSizer* side_tools) :
     default_btn_bg = wxColour("#2D2D30"); // Gradient #414B4E
 #endif
 
-   
+
     SetBackgroundColour(default_btn_bg);
 
     int em = em_unit(this);// Slic3r::GUI::wxGetApp().em_unit();
@@ -152,17 +153,27 @@ void ButtonsListCtrl::SetSelection(int sel)
         std::pair{wxColour(254, 254, 254), (int) StateColor::Normal}
         );
     m_pageButtons[m_selection]->SetTextColor(text_color);
-    
+
     Refresh();
 }
 
 bool ButtonsListCtrl::InsertPage(size_t n, const wxString &text, bool bSelect /* = false*/, const std::string &bmp_name /* = ""*/, const wxBitmap &bmp /* = wxNullBitmap */)
 {
-    Button * btn = new Button(this, text.empty() ? text : " " + text, bmp_name, wxNO_BORDER);
+    Button * btn = new Button(this, text, bmp_name, wxNO_BORDER);
     btn->SetCornerRadius(0);
 
     if (bmp_name.empty() && bmp.IsOk())
         btn->SetIcon(bmp);
+
+    // The label no longer carries a leading space, so widen the icon<->text gap to keep the
+    // original spacing between a tab's icon and its caption.
+    {
+        wxClientDC dc(btn);
+        dc.SetFont(btn->GetFont());
+        int space_w = 0;
+        dc.GetTextExtent(" ", &space_w, nullptr);
+        btn->SetIconSpacing(5 + space_w);
+    }
 
     int em = em_unit(this);
     //BBS set size for button
@@ -181,7 +192,7 @@ bool ButtonsListCtrl::InsertPage(size_t n, const wxString &text, bool bSelect /*
             auto sel = it - m_pageButtons.begin();
             //do it later
             //SetSelection(sel);
-            
+
             wxCommandEvent evt = wxCommandEvent(wxCUSTOMEVT_NOTEBOOK_SEL_CHANGED);
             evt.SetId(sel);
             wxPostEvent(this->GetParent(), evt);
@@ -190,6 +201,7 @@ bool ButtonsListCtrl::InsertPage(size_t n, const wxString &text, bool bSelect /*
     Slic3r::GUI::wxGetApp().UpdateDarkUI(btn);
     m_pageButtons.insert(m_pageButtons.begin() + n, btn);
     m_pageLabels.insert(m_pageLabels.begin() + n, text); // INLONG
+    m_pageIcons.insert(m_pageIcons.begin() + n, bmp_name);
     m_buttons_sizer->Insert(n, new wxSizerItem(btn));
     m_buttons_sizer->SetCols(m_buttons_sizer->GetCols() + 1);
     m_sizer->Layout();
@@ -209,6 +221,7 @@ void ButtonsListCtrl::RemovePage(size_t n)
     Button* btn = m_pageButtons[n];
     m_pageButtons.erase(m_pageButtons.begin() + n);
     m_pageLabels.erase(m_pageLabels.begin() + n); // INLONG
+    m_pageIcons.erase(m_pageIcons.begin() + n);
     m_buttons_sizer->Remove(n);
 #if __WXOSX__
     RemoveChild(btn);
@@ -223,7 +236,7 @@ bool ButtonsListCtrl::SetPageImage(size_t n, const std::string& bmp_name) const
 {
     if (n >= m_pageButtons.size())
         return false;
-     
+
     // BBS
     //return m_pageButtons[n]->SetBitmap_(bmp_name);
     ScalableBitmap bitmap(NULL, bmp_name);
@@ -245,13 +258,19 @@ void ButtonsListCtrl::SetCompact(size_t n, bool compact)
     int em = em_unit(this);
     Button* btn = m_pageButtons[n];
     btn->SetMinSize({(compact ? 40 : 136) * em / 10, 36 * em / 10});
-    btn->SetLabel(compact ? "" : (" " +  m_pageLabels[n]));
+    btn->SetLabel(compact ? "" : m_pageLabels[n]);
 }
 
 wxString ButtonsListCtrl::GetPageText(size_t n) const
 {
     Button* btn = m_pageButtons[n];
     return btn->GetLabel();
+}
+
+// ORCA
+wxString ButtonsListCtrl::GetPageLabel(size_t n) const
+{
+    return n < m_pageLabels.size() ? m_pageLabels[n] : wxString();
 }
 
 // ORCA
@@ -289,9 +308,9 @@ void Notebook::Init()
 
     /* On Linux, Gstreamer wxMediaCtrl does not seem to get along well with
      * 32-bit X11 visuals (the overlay does not work).  Is this a wxWindows
-     * bug?  Is this a Gstreamer bug?  No idea, but it is our problem ... 
+     * bug?  Is this a Gstreamer bug?  No idea, but it is our problem ...
      * and anyway, this transparency thing just isn't all that interesting,
-     * so we just don't do it on Linux. 
+     * so we just don't do it on Linux.
      */
 #ifndef __WXGTK__
     SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);

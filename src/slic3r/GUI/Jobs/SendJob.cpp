@@ -1,4 +1,7 @@
 #include "SendJob.hpp"
+#include "libslic3r/LifecycleEvents.hpp"
+#include "slic3r/GUI/I18N.hpp"
+#include "slic3r/Utils/NetworkAgent.hpp"
 #include "libslic3r/MTUtils.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/PresetBundle.hpp"
@@ -145,6 +148,13 @@ void SendJob::process(Ctl &ctl)
             return;
         }
     }
+
+    LifecycleEventContext start_ctx;
+    start_ctx.name = m_project_name;
+    start_ctx.device_id = m_dev_id;
+    start_ctx.source = "send_job";
+    fire_lifecycle_event(LifecycleEvent::SendJobStarted, start_ctx);
+    m_lifecycle_started = true;
 
     int total_plate_num = m_plater->get_partplate_list().get_plate_count();
 
@@ -343,7 +353,7 @@ void SendJob::process(Ctl &ctl)
                     return;
                 case DevStorage::SdcardState::HAS_SDCARD_NORMAL:
                     ctl.update_status(curr_percent, _u8L("Sending G-code file over LAN"));
-                    result = agent->start_send_gcode_to_sdcard(params, update_fn, cancel_fn, nullptr);       
+                    result = agent->start_send_gcode_to_sdcard(params, update_fn, cancel_fn, nullptr);
                     break;
                 default:
                     ctl.update_status(curr_percent, _u8L("Encountered an unknown error with the Storage status. Please try again."));
@@ -420,6 +430,19 @@ void SendJob::finalize(bool canceled, std::exception_ptr &eptr)
         eptr = nullptr;
     } catch (...) {
         eptr = std::current_exception();
+    }
+
+    if (m_lifecycle_started && !m_lifecycle_finished) {
+        LifecycleEventContext finish_ctx;
+        finish_ctx.name = m_project_name;
+        finish_ctx.device_id = m_dev_id;
+        finish_ctx.source = "send_job";
+        finish_ctx.code = canceled ? LifecycleEvtCode::Warn :
+            (eptr ? LifecycleEvtCode::Error : (m_job_finished ? LifecycleEvtCode::Ok : LifecycleEvtCode::Error));
+        finish_ctx.msg = canceled ? "cancelled" : (eptr ? "exception" :
+            (m_job_finished ? "" : "failed"));
+        fire_lifecycle_event(LifecycleEvent::SendJobFinished, finish_ctx);
+        m_lifecycle_finished = true;
     }
 
     if (canceled || eptr)

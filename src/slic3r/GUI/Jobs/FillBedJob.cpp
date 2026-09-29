@@ -6,6 +6,7 @@
 #include "slic3r/GUI/Plater.hpp"
 #include "slic3r/GUI/GLCanvas3D.hpp"
 #include "slic3r/GUI/GUI_ObjectList.hpp"
+#include "slic3r/plugin/PluginManager.hpp"
 #include "libnest2d/common.hpp"
 
 #include <numeric>
@@ -197,7 +198,7 @@ void FillBedJob::prepare()
                 newObj->name = mo->name +" "+ std::to_string(p.itemid);
                 obj = newObj;
             }
-            for (ModelInstance *newInst : obj->instances) { newInst->apply_arrange_result(p.translation.cast<double>(), p.rotation); }            
+            for (ModelInstance *newInst : obj->instances) { newInst->apply_arrange_result(p.translation.cast<double>(), p.rotation); }
             //m_plater->sidebar().obj_list()->paste_objects_into_list({m_plater->model().objects.size()-1});
         };
         m_selected.emplace_back(ap);
@@ -347,6 +348,13 @@ void FillBedJob::finalize(bool canceled, std::exception_ptr &eptr)
             m_plater->arrange();
         }
         m_plater->update();
+
+        {
+            Slic3r::LifecycleEventContext ctx;
+            ctx.code = Slic3r::LifecycleEvtCode::Ok;
+            ctx.msg = "arranged";
+            Slic3r::fire_lifecycle_event(Slic3r::LifecycleEvent::ObjectTransformed, ctx);
+        }
     }
 
     m_plater->mark_plate_toolbar_image_dirty();

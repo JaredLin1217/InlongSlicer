@@ -1,6 +1,7 @@
 #include "ExtraRenderers.hpp"
 #include "wxExtensions.hpp"
 #include "GUI.hpp"
+#include "I18N.hpp"
 #include "BitmapComboBox.hpp"
 #include "Plater.hpp"
 #include "Widgets/ComboBox.hpp"
@@ -38,8 +39,8 @@ IMPLEMENT_VARIANT_OBJECT(DataViewBitmapText)
 // ---------------------------------------------------------
 
 #if ENABLE_NONCUSTOM_DATA_VIEW_RENDERING
-BitmapTextRenderer::BitmapTextRenderer(wxDataViewCellMode mode /*= wxDATAVIEW_CELL_EDITABLE*/, 
-                                                 int align /*= wxDVR_DEFAULT_ALIGNMENT*/): 
+BitmapTextRenderer::BitmapTextRenderer(wxDataViewCellMode mode /*= wxDATAVIEW_CELL_EDITABLE*/,
+                                                 int align /*= wxDVR_DEFAULT_ALIGNMENT*/):
 wxDataViewRenderer(wxT("PrusaDataViewBitmapText"), mode, align)
 {
     SetMode(mode);
@@ -84,8 +85,8 @@ bool BitmapTextRenderer::SetValue(const wxVariant &value)
 #ifdef wxHAS_GENERIC_DATAVIEWCTRL
     if (m_markupText)
         m_markupText->SetMarkup(m_value.GetText());
-    /* 
-#else 
+    /*
+#else
 #if defined(__WXGTK__)
    GValue gvalue = G_VALUE_INIT;
     g_value_init(&gvalue, G_TYPE_STRING);
@@ -141,7 +142,7 @@ bool BitmapTextRenderer::Render(wxRect rect, wxDC *dc, int state)
     }
     else
 #endif // SUPPORTS_MARKUP && wxHAS_GENERIC_DATAVIEWCTRL
-#ifdef _WIN32 
+#ifdef _WIN32
         // workaround for Windows DarkMode : Don't respect to the state & wxDATAVIEW_CELL_SELECTED to avoid update of the text color
         RenderText(m_value.GetText(), xoffset, rect, dc, state & wxDATAVIEW_CELL_SELECTED ? 0 :state);
 #else
@@ -235,8 +236,8 @@ bool BitmapTextRenderer::GetValueFromEditorCtrl(wxWindow* ctrl, wxVariant& value
 
     // The icon can't be edited so get its old value and reuse it.
     wxVariant valueOld;
-    GetView()->GetModel()->GetValue(valueOld, m_item, Slic3r::GUI::ColumnNumber::colName); 
-    
+    GetView()->GetModel()->GetValue(valueOld, m_item, Slic3r::GUI::ColumnNumber::colName);
+
     DataViewBitmapText bmpText;
     bmpText << valueOld;
 
@@ -257,7 +258,7 @@ bool BitmapChoiceRenderer::SetValue(const wxVariant& value)
     return true;
 }
 
-bool BitmapChoiceRenderer::GetValue(wxVariant& value) const 
+bool BitmapChoiceRenderer::GetValue(wxVariant& value) const
 {
     value << m_value;
     return true;
@@ -312,7 +313,7 @@ wxWindow* BitmapChoiceRenderer::CreateEditorCtrl(wxWindow* parent, wxRect labelR
         labelRect.GetTopLeft(), wxSize(labelRect.GetWidth(), -1),
         0, nullptr, wxCB_READONLY | CB_NO_DROP_ICON | CB_NO_TEXT);
     c_editor->GetDropDown().SetUseContentWidth(true);
-       
+
     if (has_default_extruder && has_default_extruder())
         c_editor->Append(_L("default"), *get_default_extruder_color_icon());
 
@@ -336,12 +337,12 @@ wxWindow* BitmapChoiceRenderer::CreateEditorCtrl(wxWindow* parent, wxRect labelR
 #else
         c_editor->ForceDropdownOpen();
 #endif
-        evt.Skip(); 
+        evt.Skip();
     });
 
     // Close editor after selection is made
     c_editor->Bind(wxEVT_COMBOBOX, [this](wxCommandEvent& evt) {
-        evt.StopPropagation(); 
+        evt.StopPropagation();
         // FinishEditing grabs new selection and triggers config update. We better call
         // it explicitly, automatic update on KILL_FOCUS didn't work on Linux.
         this->FinishEditing();
@@ -359,7 +360,7 @@ bool BitmapChoiceRenderer::GetValueFromEditorCtrl(wxWindow* ctrl, wxVariant& val
     int selection = c->GetSelection();
     if (selection < 0)
         return false;
-   
+
     DataViewBitmapText bmpText;
 
     bmpText.SetText(c->GetString(selection));

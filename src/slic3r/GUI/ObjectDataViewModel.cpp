@@ -205,7 +205,7 @@ void ObjectDataViewModelNode::set_printable_icon(PrintIndicator printable)
     if (m_printable == printable)
         return;
     m_printable = printable;
-    m_printable_icon = m_printable == piUndef ? 
+    m_printable_icon = m_printable == piUndef ?
         m_empty_bmp : create_scaled_bitmap(m_printable == piPrintable ? "check_on" : "check_off_focused");
 }
 
@@ -366,10 +366,10 @@ bool ObjectDataViewModelNode::SetValue(const wxVariant& variant, unsigned col)
     return false;
 }
 
-void ObjectDataViewModelNode::SetName(const wxString &tempName) 
-{ 
+void ObjectDataViewModelNode::SetName(const wxString &tempName)
+{
     if (m_name != tempName) {
-        m_name = tempName; 
+        m_name = tempName;
     }
 }
 
@@ -518,7 +518,7 @@ wxDataViewItem ObjectDataViewModel::AddPlate(PartPlate* part_plate, wxString nam
     if (!is_added) {
         m_plates.push_back(plate_node);
     }
-    
+
     wxDataViewItem plate_item(plate_node);
     if (refresh) {
         ItemAdded(wxDataViewItem(nullptr), plate_item);
@@ -546,12 +546,13 @@ void ObjectDataViewModel::UpdateBitmapForNode(ObjectDataViewModelNode *node)
 {
     bool is_volume_node = node->GetType() & itVolume;
     int  vol_type       = static_cast<int>(node->GetVolumeType());
-    is_volume_node &= (vol_type >= int(ModelVolumeType::MODEL_PART) && vol_type <= int(ModelVolumeType::SUPPORT_ENFORCER));
+    // Extended range to include Precise Seam modifier types
+    is_volume_node &= (vol_type >= int(ModelVolumeType::MODEL_PART) && vol_type <= int(ModelVolumeType::PRECISE_SEAM_NEUTRAL));
 
     if (!node->has_warning_icon() && !node->has_lock()) {
         node->SetBitmap(is_volume_node ? (
-            node->is_text_volume() ? m_text_volume_bmps.at(vol_type) : 
-            node->is_svg_volume() ? m_svg_volume_bmps.at(vol_type) : 
+            node->is_text_volume() ? m_text_volume_bmps.at(vol_type) :
+            node->is_svg_volume() ? m_svg_volume_bmps.at(vol_type) :
             m_volume_bmps.at(vol_type)) : m_empty_bmp);
         return;
     }
@@ -559,7 +560,7 @@ void ObjectDataViewModel::UpdateBitmapForNode(ObjectDataViewModelNode *node)
     std::string scaled_bitmap_name = std::string();
     if (node->has_warning_icon())
         scaled_bitmap_name += node->warning_icon_name();
-    if (node->has_lock()) 
+    if (node->has_lock())
         scaled_bitmap_name += LockIcon;
     if (is_volume_node)
         scaled_bitmap_name += std::to_string(vol_type);
@@ -580,7 +581,7 @@ void ObjectDataViewModel::UpdateBitmapForNode(ObjectDataViewModelNode *node)
                 bmps.emplace_back(create_scaled_bitmap("dot", nullptr, int(wxGetApp().em_unit() / 10) * 4));
             bmps.emplace_back(
                 node->is_text_volume() ? m_text_volume_bmps[vol_type] :
-                node->is_svg_volume() ? m_svg_volume_bmps[vol_type] : 
+                node->is_svg_volume() ? m_svg_volume_bmps[vol_type] :
                 m_volume_bmps[vol_type]);
         }
         bmp = m_bitmap_cache->insert(scaled_bitmap_name, bmps);
@@ -1317,9 +1318,9 @@ wxDataViewItem ObjectDataViewModel::GetItemByPlateId(int plate_idx)
     return wxDataViewItem(nullptr);
 }
 
-void ObjectDataViewModel::SetCurSelectedPlateFullName(int plate_idx, const std::string & custom_name) { 
+void ObjectDataViewModel::SetCurSelectedPlateFullName(int plate_idx, const std::string & custom_name) {
     for (auto plate : m_plates) {
-        if (plate->m_plate_idx == plate_idx) { 
+        if (plate->m_plate_idx == plate_idx) {
             wxString plate_full_name =_L("Plate");
             plate_full_name += wxString::Format(" %d", plate_idx + 1);
             if (!custom_name.empty()) {
@@ -2126,7 +2127,7 @@ bool ObjectDataViewModel::HasInfoItem(InfoItemType type) const
 
 ItemType ObjectDataViewModel::GetItemType(const wxDataViewItem &item) const
 {
-    if (!item.IsOk()) 
+    if (!item.IsOk())
         return itUndef;
     ObjectDataViewModelNode *node = static_cast<ObjectDataViewModelNode *>(item.GetID());
     return node->m_type < 0 ? itUndef : node->m_type;

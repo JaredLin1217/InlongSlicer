@@ -280,8 +280,6 @@ bool Preview::init(wxWindow* parent, Bed3D& bed, Model* model)
     m_canvas->enable_assemble_view_toolbar(false);
 
     // sizer, m_canvas_widget
-    m_canvas_widget->Bind(wxEVT_KEY_DOWN, &Preview::update_layers_slider_from_canvas, this);
-
     wxBoxSizer *main_sizer = new wxBoxSizer(wxVERTICAL);
     main_sizer->Add(m_canvas_widget, 1, wxALL | wxEXPAND, 0);
 
@@ -505,28 +503,6 @@ void Preview::update_layers_slider_mode()
     m_layers_slider->SetModeAndOnlyExtruder(one_extruder_printed_model, only_extruder, can_change_color);
 }
 
-void Preview::update_layers_slider_from_canvas(wxKeyEvent &event)
-{
-    if (event.HasModifiers()) {
-        event.Skip();
-        return;
-    }
-
-    const auto key = event.GetKeyCode();
-
-    IMSlider *m_layers_slider = m_canvas->get_gcode_viewer().get_layers_slider();
-    IMSlider *m_moves_slider  = m_canvas->get_gcode_viewer().get_moves_slider();
-    if (key == 'L') {
-        if(!m_layers_slider->switch_one_layer_mode())
-            event.Skip();
-        m_canvas->set_as_dirty();
-    }
-    /*else if (key == WXK_SHIFT)
-        m_layers_slider->UseDefaultColors(false);*/
-    else
-        event.Skip();
-}
-
 void Preview::update_layers_slider(const std::vector<double>& layers_z, bool keep_z_range)
 {
     IMSlider *m_layers_slider = m_canvas->get_gcode_viewer().get_layers_slider();
@@ -581,7 +557,7 @@ void Preview::update_layers_slider(const std::vector<double>& layers_z, bool kee
     auto curr_print_seq = curr_plate->get_real_print_seq();
     bool sequential_print = (curr_print_seq == PrintSequence::ByObject);
     m_layers_slider->SetDrawMode(sequential_print);
-    
+
     m_layers_slider->SetTicksValues(ticks_info_from_curr_plate);
 
     auto print_mode_stat = m_gcode_result->print_statistics.modes.front();

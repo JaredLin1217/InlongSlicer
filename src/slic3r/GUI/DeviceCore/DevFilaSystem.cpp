@@ -1,5 +1,6 @@
 #include <nlohmann/json.hpp>
 #include "DevFilaSystem.h"
+#include "slic3r/Utils/NetworkAgent.hpp"
 #include "DevNozzleSystem.h" // DevNozzle / DevNozzleSystem for GetNozzleFlowStringByAmsId
 
 // TODO: remove this include
@@ -152,7 +153,7 @@ wxString DevAms::GetDisplayName() const
     wxString ams_display_format;
     // GetAmsType() maps AMS_LITE_MIXED -> AMS_LITE so N9 shows the AMS-Lite name.
     auto iter = s_ams_display_formats.find(GetAmsType());
-    if (iter != s_ams_display_formats.end()) 
+    if (iter != s_ams_display_formats.end())
     {
         ams_display_format = iter->second;
     }
@@ -167,7 +168,7 @@ wxString DevAms::GetDisplayName() const
     {
         num_id = std::stoi(GetAmsId());
     }
-    catch (const std::exception& e) 
+    catch (const std::exception& e)
     {
         assert(0 && __FUNCTION__);
         BOOST_LOG_TRIVIAL(error) << "Invalid AMS ID: " << GetAmsId() << ", error: " << e.what();

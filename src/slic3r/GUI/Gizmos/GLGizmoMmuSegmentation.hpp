@@ -82,7 +82,7 @@ public:
 
     // BBS
     bool on_number_key_down(int number);
-    bool on_key_down_select_tool_type(int keyCode);
+    bool on_tool_shortcut(Shortcut shortcut) override;
 
 protected:
     // BBS
@@ -112,7 +112,7 @@ protected:
     // BBS
     wchar_t                           m_current_tool = 0;
     bool                              m_detect_geometry_edge = true;
-    
+
     // Filament remap feature
     std::vector<size_t>               m_extruder_remap;      // index → target extruder index
     // Colours each gradient mixed filament actually prints, bottom of the model first, mirrored
@@ -151,7 +151,7 @@ private:
     // BBS
     void update_triangle_selectors_colors();
     void init_extruders_data();
-    
+
     // Filament remapping methods
     void remap_filament_assignments();
     void render_filament_remap_ui(float window_width, float max_tooltip_width, float scale);

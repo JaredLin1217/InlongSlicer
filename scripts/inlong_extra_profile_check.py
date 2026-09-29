@@ -86,6 +86,12 @@ def check_filament_compatible_printers(vendor, vendor_folder):
             error += 1
             continue
 
+        # Vendor directories may also contain auxiliary JSON indexes and
+        # recommendation tables.  They are not profiles and therefore do not
+        # participate in the profile compatibility checks below.
+        if not isinstance(data, dict) or 'name' not in data:
+            continue
+
         profile_name = data['name']
         if profile_name in profiles:
             print_error(f"Duplicated profile {profile_name}: {file_path}")

@@ -67,7 +67,7 @@ bool Selection::Clipboard::is_sla_compliant() const
             return false;
 
         for (const ModelVolume* v : o->volumes) {
-            if (v->is_modifier())
+            if (v->is_modifier() || v->is_precise_seam()) // Precise Seam not supported in SLA
                 return false;
         }
     }
@@ -804,7 +804,7 @@ bool Selection::is_any_connector() const
 {
     const int obj_idx = get_object_idx();
 
-    if ((is_any_volume() || is_any_modifier() || is_mixed()) && // some solid_part AND/OR modifier is selected 
+    if ((is_any_volume() || is_any_modifier() || is_mixed()) && // some solid_part AND/OR modifier is selected
         obj_idx >= 0 && m_model->objects[obj_idx]->is_cut()) {
         const ModelVolumePtrs& obj_volumes = m_model->objects[obj_idx]->volumes;
         for (size_t vol_idx = 0; vol_idx < obj_volumes.size(); vol_idx++)
@@ -879,7 +879,7 @@ bool Selection::is_single_text() const
 
     const GLVolume* gl_volume = (*m_volumes)[*m_list.begin()];
     const ModelVolume* model_volume = m_model->objects[gl_volume->object_idx()]->volumes[gl_volume->volume_idx()];
-    
+
     return model_volume && model_volume->text_configuration.has_value();
 }
 
@@ -2022,7 +2022,7 @@ void Selection::render_center(bool gizmo_is_dragging)
 
     shader->set_uniform("view_model_matrix", view_model_matrix);
     shader->set_uniform("projection_matrix", camera.get_projection_matrix());
-	
+
     m_vbo_sphere.set_color(ColorRGBA::WHITE());
     m_vbo_sphere.render();
 
@@ -2633,49 +2633,49 @@ void Selection::render_bounding_box(const BoundingBoxf3& box, const Transform3d&
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y() + size.y(), b_min.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y(),            b_min.z() + size.z()));
-                                                                               
+
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x() - size.x(), b_min.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y() + size.y(), b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_min.z() + size.z()));
-                                                                               
+
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x() - size.x(), b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y() - size.y(), b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_min.z() + size.z()));
-                                                                               
+
         init_data.add_vertex(Vec3f(b_min.x(),            b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_min.x() + size.x(), b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_max.y() - size.y(), b_min.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_max.y(),            b_min.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_max.y(),            b_min.z() + size.z()));
-                                                                               
+
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_min.x() + size.x(), b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y() + size.y(), b_max.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_min.y(),            b_max.z() - size.z()));
-                                                                               
+
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x() - size.x(), b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y() + size.y(), b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_min.y(),            b_max.z() - size.z()));
-                                                                               
+
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x() - size.x(), b_max.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y() - size.y(), b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_max.x(),            b_max.y(),            b_max.z() - size.z()));
-                                                                               
+
         init_data.add_vertex(Vec3f(b_min.x(),            b_max.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_min.x() + size.x(), b_max.y(),            b_max.z()));
         init_data.add_vertex(Vec3f(b_min.x(),            b_max.y(),            b_max.z()));
@@ -3104,9 +3104,9 @@ void Selection::ensure_on_bed()
         ModelInstance* mi   = mo->instances[volume->instance_idx()];
 
         if (mi->auto_drop == false
-            || volume->is_wipe_tower 
-            || volume->is_modifier 
-            || std::find(m_cache.sinking_volumes.begin(), m_cache.sinking_volumes.end(), i) != m_cache.sinking_volumes.end()) 
+            || volume->is_wipe_tower
+            || volume->is_modifier
+            || std::find(m_cache.sinking_volumes.begin(), m_cache.sinking_volumes.end(), i) != m_cache.sinking_volumes.end())
         {
             continue;
         }
@@ -3420,7 +3420,7 @@ ModelVolume *get_volume(const ObjectID &volume_id, const Selection &selection) {
         for (ModelVolume *volume : object->volumes) {
             if (volume->id() == volume_id)
                 return volume;
-        }        
+        }
     }
     return nullptr;
 }

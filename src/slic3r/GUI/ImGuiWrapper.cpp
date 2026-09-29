@@ -506,6 +506,23 @@ bool ImGuiWrapper::update_key_data(wxKeyEvent &evt)
     if (evt.GetEventType() == wxEVT_CHAR) {
         // Char event
         const auto key = evt.GetUnicodeKey();
+        // THE MEASUREMENT THAT CANNOT LIE. This is the ONLY place in the application where ImGui
+        // is ever handed a character, so an ImGui text field that stays empty while reporting
+        // itself active has exactly two possible causes, and this line separates them: no output
+        // at all means the wxEVT_CHAR never reached the GL canvas (a focus problem, upstream of
+        // ImGui entirely), while output with unicode=0 means the character arrived empty and is
+        // being dropped right here.
+        //
+        // It lives here rather than on the canvas because a probe bound on the canvas CANNOT
+        // answer this: GLCanvas3D::on_char is bound later than any constructor-time probe, wx
+        // runs handlers in reverse bind order, and on_char returns without Skip() whenever this
+        // function returns true — so such a probe stays silent whether or not the key arrived.
+        // A day was lost to reading that silence as evidence.
+        if (std::getenv("ORCA_CAD_UXTRACE")) {
+            fprintf(stderr, "[UX] imgui_char unicode=%d keycode=%d want_text=%d\n",
+                    (int) key, evt.GetKeyCode(), (int) io.WantTextInput);
+            fflush(stderr);
+        }
         if (key != 0) {
             io.AddInputCharacter(key);
         }
@@ -574,11 +591,39 @@ void ImGuiWrapper::new_frame()
     // BBL: end copy & paste
 }
 
-void ImGuiWrapper::render()
+ImDrawData* ImGuiWrapper::end_frame()
 {
     ImGui::Render();
-    render_draw_data(ImGui::GetDrawData());
     m_new_frame_open = false;
+    return ImGui::GetDrawData();
+}
+
+void ImGuiWrapper::render(ImDrawData* draw_data)
+{
+    render_draw_data(draw_data);
+}
+
+ImGuiID ImGuiWrapper::draw_data_signature(const ImDrawData* draw_data)
+{
+    ImGuiID hash = 0;
+    if (draw_data == nullptr)
+        return hash;
+
+    for (int i = 0; i < draw_data->CmdListsCount; ++i) {
+        const ImDrawList* list = draw_data->CmdLists[i];
+        hash = ImHashData(list->VtxBuffer.Data, list->VtxBuffer.Size * sizeof(ImDrawVert), hash);
+        hash = ImHashData(list->IdxBuffer.Data, list->IdxBuffer.Size * sizeof(ImDrawIdx), hash);
+        // ImDrawCmd has padding, and a hovered ImageButton3() differs only in TextureId.
+        for (const ImDrawCmd& cmd : list->CmdBuffer) {
+            hash = ImHashData(&cmd.ClipRect, sizeof(cmd.ClipRect), hash);
+            hash = ImHashData(&cmd.TextureId, sizeof(cmd.TextureId), hash);
+            hash = ImHashData(&cmd.VtxOffset, sizeof(cmd.VtxOffset), hash);
+            hash = ImHashData(&cmd.IdxOffset, sizeof(cmd.IdxOffset), hash);
+            hash = ImHashData(&cmd.ElemCount, sizeof(cmd.ElemCount), hash);
+            hash = ImHashData(&cmd.UserCallback, sizeof(cmd.UserCallback), hash);
+        }
+    }
+    return hash;
 }
 
 ImVec2 ImGuiWrapper::calc_text_size(std::string_view text,
@@ -926,7 +971,7 @@ bool ImGuiWrapper::glyph_button(wchar_t icon_char, ImVec2 icon_size)
     float       rounding  = style.FrameRounding;
     std::string icon_str  = into_u8(icon_char);
     const char* icon      = icon_str.c_str();
-    
+
     float  width  = icon_size.x + (padding.x + border_w) * 2.f;
     float  height = icon_size.y + (padding.y + border_w) * 2.f;
     ImVec2 rc_min = ImGui::GetCursorScreenPos();
@@ -2096,7 +2141,7 @@ ColorRGBA ImGuiWrapper::from_ImVec4(const ImVec4& color)
     return { color.x, color.y, color.z, color.w };
 }
 
-template <typename T, typename Func> 
+template <typename T, typename Func>
 static bool input_optional(std::optional<T> &v, Func& f, std::function<bool(const T&)> is_default, const T& def_val)
 {
     if (v.has_value()) {
@@ -2124,7 +2169,7 @@ bool ImGuiWrapper::input_optional_int(const char *        label,
     auto func = [&](int &value) {
         return ImGui::InputInt(label, &value, step, step_fast, flags);
     };
-    std::function<bool(const int &)> is_default = 
+    std::function<bool(const int &)> is_default =
         [def_val](const int &value) -> bool { return value == def_val; };
     return input_optional(v, func, is_default, def_val);
 }
@@ -2213,7 +2258,7 @@ bool ImGuiWrapper::slider_optional_int(const char         *label,
         if (val.has_value())
             v = static_cast<int>(std::round(*val));
         else
-            v.reset(); 
+            v.reset();
         return true;
     } else return false;
 }
@@ -2234,14 +2279,14 @@ std::optional<ImVec2> ImGuiWrapper::change_window_position(const char *window_na
     std::optional<ImVec2> output_window_offset;
     if (position.x < 0) {
         if (position.y < 0)
-            // top left 
-            output_window_offset = ImVec2(0, 0); 
+            // top left
+            output_window_offset = ImVec2(0, 0);
         else
             // only left
-            output_window_offset = ImVec2(0, position.y); 
+            output_window_offset = ImVec2(0, position.y);
     } else if (position.y < 0) {
         // only top
-        output_window_offset = ImVec2(position.x, 0); 
+        output_window_offset = ImVec2(position.x, 0);
     } else if (screen.x < (position.x + size.x)) {
         if (screen.y < (position.y + size.y))
             // right bottom
@@ -2260,8 +2305,8 @@ std::optional<ImVec2> ImGuiWrapper::change_window_position(const char *window_na
     return output_window_offset;
 }
 
-void ImGuiWrapper::left_inputs() { 
-    ImGui::ClearActiveID(); 
+void ImGuiWrapper::left_inputs() {
+    ImGui::ClearActiveID();
 }
 
 std::string ImGuiWrapper::trunc(const std::string &text,
@@ -2274,7 +2319,7 @@ std::string ImGuiWrapper::trunc(const std::string &text,
     assert(width > tail_width);
     if (width <= tail_width) return "Error: Can't add tail and not be under wanted width.";
     float allowed_width = width - tail_width;
-    
+
     // guess approx count of letter
     float average_letter_width = calc_text_size(std::string_view("n")).x; // average letter width
     unsigned count_letter  = static_cast<unsigned>(allowed_width / average_letter_width);
@@ -2297,8 +2342,8 @@ std::string ImGuiWrapper::trunc(const std::string &text,
             --count_letter;
             result_text = text_.substr(0, count_letter);
             text_width  = calc_text_size(result_text).x;
-            if (text_width < allowed_width) break;            
-        } 
+            if (text_width < allowed_width) break;
+        }
     }
     return std::string(result_text) + tail;
 }
@@ -2309,7 +2354,7 @@ void ImGuiWrapper::escape_double_hash(std::string &text)
     const std::string search  = "##";
     const std::string replace = "# #";
     size_t pos = 0;
-    while ((pos = text.find(search, pos)) != std::string::npos) 
+    while ((pos = text.find(search, pos)) != std::string::npos)
         text.replace(pos, search.length(), replace);
 }
 
@@ -2369,7 +2414,7 @@ ImVec2 ImGuiWrapper::suggest_location(const ImVec2 &dialog_size,
     double allowed_space = 10; // in px
     double allowed_space_sq = allowed_space * allowed_space;
     Vec2d  move_vec         = (center - (offset.cast<coord_t>() + half_dialog_size))
-                         .cast<double>();    
+                         .cast<double>();
     Vec2d result_move(0, 0);
     do {
         move_vec             = move_vec / 2.;
@@ -2378,7 +2423,7 @@ ImVec2 ImGuiWrapper::suggest_location(const ImVec2 &dialog_size,
         for (Point &p : moved_polygon) p += move_point;
         if (Slic3r::intersection(interest, Polygon(moved_polygon)).empty())
             result_move += move_vec;
-        
+
     } while (move_vec.squaredNorm() >= allowed_space_sq);
     offset += result_move;
 
@@ -3123,8 +3168,8 @@ void ImGuiWrapper::init_style()
     set_color(ImGuiCol_HeaderActive,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.75f)));  // ORCA Use orca color for headers
 
     // Slider
-    set_color(ImGuiCol_SliderGrab,			to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.50f))); // ORCA Use orca color for slider thumbs 
-    set_color(ImGuiCol_SliderGrabActive,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.75f))); // ORCA Use orca color for slider thumbs 
+    set_color(ImGuiCol_SliderGrab,			to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.50f))); // ORCA Use orca color for slider thumbs
+    set_color(ImGuiCol_SliderGrabActive,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.75f))); // ORCA Use orca color for slider thumbs
 
     // Separator
     set_color(ImGuiCol_Separator, COL_BLUE_LIGHT);

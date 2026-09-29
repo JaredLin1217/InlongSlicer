@@ -71,6 +71,24 @@ public:
     // Render the toolpaths
     //
     void render(const Mat4x4& view_matrix, const Mat4x4& projection_matrix);
+    //
+    // ORCA: realistic view. Render the toolpaths as seen from the light, to fill the caller's
+    // shadow map. Only depth matters here, so the caller masks colour writes; light_position
+    // takes the place of the camera when the segment boxes are expanded, which gives their
+    // silhouette as the light sees it.
+    //
+    void render_shadow_casters(const Mat4x4& view_matrix, const Mat4x4& projection_matrix, const Vec3& light_position);
+    //
+    // ORCA: realistic view. The shadow map the toolpaths sample, in the given texture unit.
+    // intensity == 0, the default, turns the lookup off and restores the plain shading.
+    //
+    void set_shadow_map(int texture_unit, const Mat4x4& light_view_projection, float intensity, float texel_size);
+    //
+    // ORCA: tone applied to the shaded toolpaths, to pay back the light the lighting term,
+    // the shadow and the SSAO pass each take off. 1.0/1.0, the default, is a no-op; the
+    // caller decides which of the two it varies with the realistic view setting.
+    //
+    void set_tone(float exposure, float saturation);
 
     EViewType get_view_type() const { return m_settings.view_type; }
     void set_view_type(EViewType type);
@@ -234,6 +252,20 @@ private:
     //
     std::array<float, TIME_MODES_COUNT> m_total_time{ 0.0f, 0.0f };
     //
+    // Running sum of the vertex estimated times at each layer's first vertex, for each time mode,
+    // so that get_estimated_time_at() only accumulates the vertices of one layer.
+    //
+    std::array<std::vector<float>, TIME_MODES_COUNT> m_layer_start_times;
+    //
+    // For each layer L, the index of the first vertex whose layer_id is >= L (m_vertices.size()
+    // if there is none). Derived from the vertices, so it stays exact whatever order they arrive in.
+    //
+    std::vector<uint32_t> m_layer_first_vertex;
+    //
+    // Scratch buffer for update_colors_texture(), kept alive across slider steps
+    //
+    std::vector<float> m_colors_scratch;
+    //
     // Detected travel moves times
     //
     std::array<float, TIME_MODES_COUNT> m_travels_time{ 0.0f, 0.0f };
@@ -323,7 +355,7 @@ private:
     unsigned int m_tool_marker_shader_id{ 0 };
 #endif // VGCODE_ENABLE_COG_AND_TOOL_MARKERS
     //
-    // Caches for OpenGL uniforms id for segments shader 
+    // Caches for OpenGL uniforms id for segments shader
     //
     int m_uni_segments_view_matrix_id{ -1 };
     int m_uni_segments_projection_matrix_id{ -1 };
@@ -333,8 +365,17 @@ private:
     int m_uni_segments_colors_tex_id{ -1 };
     int m_uni_segments_segment_index_tex_id{ -1 };
     int m_uni_segments_flat_segment_color_id{ -1 };
+    int m_uni_segments_reverse_order_id{ -1 };
+    int m_uni_segments_instance_count_id{ -1 };
+    int m_uni_segments_shadow_map_id{ -1 };
+    int m_uni_segments_shadow_light_vp_id{ -1 };
+    int m_uni_segments_shadow_intensity_id{ -1 };
+    int m_uni_segments_shadow_map_texel_id{ -1 };
+    int m_uni_segments_exposure_id{ -1 };
+    int m_uni_segments_saturation_id{ -1 };
+    int m_uni_segments_bias_scale_id{ -1 };
     //
-    // Caches for OpenGL uniforms id for options shader 
+    // Caches for OpenGL uniforms id for options shader
     //
     int m_uni_options_view_matrix_id{ -1 };
     int m_uni_options_projection_matrix_id{ -1 };
@@ -344,14 +385,14 @@ private:
     int m_uni_options_segment_index_tex_id{ -1 };
 #if VGCODE_ENABLE_COG_AND_TOOL_MARKERS
     //
-    // Caches for OpenGL uniforms id for cog marker shader 
+    // Caches for OpenGL uniforms id for cog marker shader
     //
     int m_uni_cog_marker_world_center_position{ -1 };
     int m_uni_cog_marker_scale_factor{ -1 };
     int m_uni_cog_marker_view_matrix{ -1 };
     int m_uni_cog_marker_projection_matrix{ -1 };
     //
-    // Caches for OpenGL uniforms id for tool marker shader 
+    // Caches for OpenGL uniforms id for tool marker shader
     //
     int m_uni_tool_marker_world_origin{ -1 };
     int m_uni_tool_marker_scale_factor{ -1 };
@@ -472,6 +513,27 @@ private:
     size_t m_enabled_options_tex_size{ 0 };
 #endif // ENABLE_OPENGL_ES
 
+    //
+    // ORCA: realistic view. Shadow map state set by set_shadow_map(), consumed by the segments
+    // shader. m_rendering_shadow_casters forces the intensity to 0 for the depth pass, which
+    // must not sample the very map it is writing.
+    //
+    // Defaults past the four texture units render_segments() binds itself, so the sampler never
+    // aliases one of the buffer textures before the owner of the map has said where it lives.
+    int    m_shadow_map_texture_unit{ 4 };
+    Mat4x4 m_shadow_light_vp{ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+    float  m_shadow_intensity{ 0.0f };
+    float  m_shadow_map_texel{ 0.0f };
+    bool   m_rendering_shadow_casters{ false };
+
+    //
+    // ORCA: realistic view. Tone set by set_tone(), consumed by the segments shader.
+    // The identity values leave the shading as it is outside realistic view.
+    //
+    float m_exposure{ 1.0f };
+    float m_saturation{ 1.0f };
+
+    void apply_pending_updates();
     void update_view_full_range();
     void update_color_ranges();
     void update_heights_widths();

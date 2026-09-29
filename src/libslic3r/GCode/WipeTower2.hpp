@@ -36,7 +36,7 @@ public:
 	// used to reserve wipe tower space before the tower is generated.
 	static float estimate_semm_flush_volume(const ConfigBase& config, size_t filaments_cnt);
 
-    
+
     // Construct ToolChangeResult from current state of WipeTower2 and WipeTowerWriter2.
     // WipeTowerWriter2 is moved from !
     WipeTower::ToolChangeResult construct_tcr(WipeTowerWriter2& writer,
@@ -114,7 +114,7 @@ public:
         m_current_layer_finished = false;
         m_prev_layer_had_interface = m_current_layer_has_interface;
 
-		
+
         // Advance m_layer_info iterator, making sure we got it right
 		while (!m_plan.empty() && m_layer_info->z < print_z - WT_EPSILON && m_layer_info+1 != m_plan.end())
 			++m_layer_info;
@@ -127,7 +127,7 @@ public:
             m_num_tool_changes 	= 0;
         } else
             ++ m_num_layer_changes;
-		
+
 		// Calculate extrusion flow from desired line width, nozzle diameter, filament diameter and layer_height:
 		m_extrusion_flow = extrusion_flow(layer_height);
 	}
@@ -142,7 +142,7 @@ public:
 	// Returns gcode to prime the nozzles at the front edge of the print bed.
 	std::vector<WipeTower::ToolChangeResult> prime(
 		// print_z of the first layer.
-		float 						first_layer_height, 
+		float 						first_layer_height,
 		// Extruder indices, in the order to be primed. The last extruder will later print the wipe tower brim, print brim and the object.
 		const std::vector<unsigned int> &tools,
 		// If true, the last priming are will be the same as the other priming areas, and the rest of the wipe will be performed inside the wipe tower.
@@ -200,6 +200,8 @@ public:
         float               tower_interface_pre_extrusion_length = 0.f;
         float               tower_ironing_area = 4.f;
         float               tower_interface_purge_length = 0.f;
+        // Tallest layer this filament's nozzle can lay down; caps the sparse layer combination.
+        float               max_layer_height = 0.f;
     };
 
 private:
@@ -267,7 +269,8 @@ private:
     float           m_parking_pos_retraction    = 0.f;
     float           m_extra_loading_move        = 0.f;
     float           m_bridging                  = 0.f;
-    bool            m_no_sparse_layers          = false;
+    bool            m_sparse_layers_skipped     = false;
+    bool            m_sparse_layers_combined    = false;
     bool            m_set_extruder_trimpot      = false;
     bool            m_adhesion                  = true;
     GCodeFlavor     m_gcode_flavor;
@@ -368,6 +371,8 @@ private:
 		float z;		// z position of the layer
 		float height;	// layer height
 		float depth;	// depth of the layer based on all layers above
+		// Folded into a later, thicker layer, so this one prints nothing at all.
+		bool  combined_away{false};
 		float toolchanges_depth() const { float sum = 0.f; for (const auto &a : tool_changes) sum += a.required_depth; return sum; }
 
 		std::vector<ToolChange> tool_changes;
@@ -395,7 +400,7 @@ private:
 
 	void toolchange_Unload(
 		WipeTowerWriter2 &writer,
-		const WipeTower::box_coordinates  &cleaning_box, 
+		const WipeTower::box_coordinates  &cleaning_box,
 		const std::string&	 	current_material,
 		const int 				old_temperature,
 		const int 				new_temperature);
@@ -406,11 +411,11 @@ private:
 		const std::string& 		new_material,
 		const int 				wait_for_temp,
 		const bool 				wait_beside_tower);
-	
+
 	void toolchange_Load(
 		WipeTowerWriter2 &writer,
 		const WipeTower::box_coordinates  &cleaning_box);
-	
+
 	void toolchange_Wipe(
 		WipeTowerWriter2 &writer,
 		const WipeTower::box_coordinates  &cleaning_box,
@@ -428,10 +433,10 @@ private:
                                       bool                   extrude_perimeter);
 
     Polygon generate_support_cone_wall(
-        WipeTowerWriter2& writer, 
-		const WipeTower::box_coordinates& wt_box, 
-		double feedrate, 
-		bool infill_cone, 
+        WipeTowerWriter2& writer,
+		const WipeTower::box_coordinates& wt_box,
+		double feedrate,
+		bool infill_cone,
 		float spacing);
 
     Polygon generate_rib_polygon(const WipeTower::box_coordinates& wt_box);
@@ -448,4 +453,4 @@ private:
 
 } // namespace Slic3r
 
-#endif // slic3r_GCode_WipeTower_hpp_ 
+#endif // slic3r_GCode_WipeTower_hpp_

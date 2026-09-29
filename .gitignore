@@ -92,3 +92,4 @@ Thumbs.db
 *.opc
 /.test/
 docs/superpowers/
+ctest_results.xml

@@ -1,6 +1,7 @@
 #include "IMSlider.hpp"
 #include "libslic3r/GCode.hpp"
 #include "GUI_App.hpp"
+#include "GUI.hpp"
 #include "NotificationManager.hpp"
 #include "Widgets/StateColor.hpp"
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
@@ -197,8 +198,8 @@ void IMSlider::SetSelectionSpan(const int lower_val, const int higher_val)
     if (m_lower_value < m_higher_value) m_is_one_layer = false;
 
     // INLONG reset single layer position when min max values changed
-    // This will trigger when print height changed. but stays same on reslicing if layer count is same 
-    m_one_layer_value = int((m_higher_value - m_lower_value)/2); 
+    // This will trigger when print height changed. but stays same on reslicing if layer count is same
+    m_one_layer_value = int((m_higher_value - m_lower_value)/2);
 
     set_as_dirty();
 }
@@ -460,7 +461,7 @@ bool IMSlider::switch_one_layer_mode()
                                                  // INLONG Ensure value fits range. value set in IMSlider::SetSelectionSpan but added this just in case
         if(!m_one_layer_value || m_one_layer_value > m_max_value || m_one_layer_value < m_min_value){
             m_one_layer_value = int((m_max_value - m_min_value)/2);
-            SetHigherValue(m_one_layer_value);  
+            SetHigherValue(m_one_layer_value);
         }
         else if(GetHigherValue() == m_max_value) // INLONG Prefer backup value if higher value reseted
             SetHigherValue(m_one_layer_value);      // INLONG Restore value
@@ -812,7 +813,7 @@ void IMSlider::show_tooltip(const TickCode& tick){
     if (!time_str.empty()) {
         time_str += "\n";
     }
-    
+
     switch (tick.type)
     {
     case CustomGCode::ColorChange:
@@ -836,17 +837,17 @@ void IMSlider::show_tooltip(const TickCode& tick){
 
 int IMSlider::get_tick_near_point(int v_min, int v_max, const ImVec2& pt, const ImRect& rect) {
     ImS32 v_range = (v_min < v_max ? v_max - v_min : v_min - v_max);
-    
+
     const ImGuiAxis axis = is_horizontal() ? ImGuiAxis_X : ImGuiAxis_Y;
     const float region_usable_sz = (rect.Max[axis] - rect.Min[axis]);
     const float region_usable_pos_min = rect.Min[axis];
-    
+
     const float abs_pos = pt[axis];
-    
+
     float pos_ratio = (region_usable_sz > 0.0f) ? ImClamp((abs_pos - region_usable_pos_min) / region_usable_sz, 0.0f, 1.0f) : 0.0f;
     if (axis == ImGuiAxis_Y)
         pos_ratio = 1.0f - pos_ratio;
-    
+
     return v_min + (ImS32)(v_range * pos_ratio + 0.5f);
 }
 
@@ -854,9 +855,9 @@ void IMSlider::draw_tick_on_mouse_position(const ImRect& slideable_region) {
     int v_min = GetMinValue();
     int v_max = GetMaxValue();
     ImGuiContext& context = *GImGui;
-    
+
     int tick = get_tick_near_point(v_min, v_max, context.IO.MousePos, slideable_region);
-    
+
     //draw tick
     ImVec2 tick_offset   = ImVec2(22.0f, 14.0f) * m_scale;
     float  tick_width    = 1.0f * m_scale;
@@ -868,7 +869,7 @@ void IMSlider::draw_tick_on_mouse_position(const ImRect& slideable_region) {
     ImRect tick_right = ImRect(slideable_region.GetCenter().x + tick_offset.y, tick_pos - tick_width, slideable_region.GetCenter().x + tick_offset.x, tick_pos);
     ImGui::RenderFrame(tick_left.Min, tick_left.Max, tick_clr, false);
     ImGui::RenderFrame(tick_right.Min, tick_right.Max, tick_clr, false);
-    
+
     // draw layer time
     std::string label = get_label(tick, ltEstimatedTime);
     show_tooltip(label);
@@ -1152,7 +1153,7 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
         const bool lower_label_active = active_label == ssLower;
         draw_label(text_rect, lower_text_content_size, lower_label,
             hovered_label == ssLower || lower_label_active, lower_label_active);
-        
+
         // draw mouse position
         if (slider_hovered && !context.IO.MouseDown[0]) {
             draw_tick_on_mouse_position(h_selected ? higher_slideable_region : lower_slideable_region);
@@ -1201,7 +1202,7 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
         ImRect text_rect = ImRect(text_start, text_start + text_size);
         const bool label_active = context.ActiveId == id && context.IO.MouseDown[0];
         draw_label(text_rect, higher_text_content_size, higher_label, hovered_label == ssHigher || label_active, label_active);
-        
+
         // draw mouse position
         if (slider_hovered && !context.IO.MouseDown[0]) {
             draw_tick_on_mouse_position(one_slideable_region);

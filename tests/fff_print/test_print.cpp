@@ -15,6 +15,9 @@
 #include "libslic3r/Layer.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/GCodeReader.hpp"
+#include "libslic3r/GCode/GCodeProcessor.hpp"
+#include "libslic3r/Exception.hpp"
+#include "libslic3r/LifecycleEvents.hpp"
 
 #include "test_helpers.hpp"
 #include "test_utils.hpp"
@@ -22,9 +25,61 @@
 #include <algorithm>
 #include <fstream>
 #include <iterator>
+#include <memory>
+#include <string_view>
+#include <utility>
+#include <vector>
 
 using namespace Slic3r;
 using namespace Slic3r::Test;
+
+TEST_CASE("Timelapse g-code is emitted once per layer for Bambu and non-Bambu printers", "[Print][Regression]")
+{
+    struct PrinterCase {
+        std::string name;
+        std::string structure;
+        bool        is_bbl;
+    };
+    const PrinterCase printer = GENERATE(from_range(std::vector<PrinterCase>{
+        { "non-BBL undefined", "undefine", false },
+        { "non-BBL CoreXY",    "corexy",   false },
+        { "non-BBL i3",        "i3",       false },
+        { "non-BBL H-Bot",     "hbot",     false },
+        { "non-BBL Delta",     "delta",    false },
+        { "Bambu CoreXY",      "corexy",   true },
+        { "Bambu i3",          "i3",       true },
+    }));
+    INFO("printer: " << printer.name);
+
+    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        { "initial_layer_print_height", 0.2 },
+        { "layer_change_gcode",          ";TEST_LAYER_CHANGE" },
+        { "layer_height",                0.2 },
+        { "printer_structure",           printer.structure },
+        { "spiral_mode",                 false },
+        { "time_lapse_gcode",            "TIMELAPSE_TAKE_FRAME" },
+    });
+    Print print;
+    print.is_BBL_printer() = printer.is_bbl;
+    Model model;
+    init_print({ cube(20) }, print, model, config);
+    const std::string gcode = Slic3r::Test::gcode(print);
+
+    const auto count = [&gcode](std::string_view token) {
+        size_t occurrences = 0;
+        size_t pos = 0;
+        while ((pos = gcode.find(token, pos)) != std::string::npos) {
+            ++occurrences;
+            pos += token.size();
+        }
+        return occurrences;
+    };
+
+    const size_t layer_changes = count("\n;TEST_LAYER_CHANGE\n");
+    REQUIRE(layer_changes > 0);
+    CHECK(count("\nTIMELAPSE_TAKE_FRAME\n") == layer_changes);
+}
 
 SCENARIO("Changing the number of solid shell layers does not make all surfaces internal", "[Print]") {
     GIVEN("sliced 20mm cube and config with top_shell_layers = 2 and bottom_shell_layers = 1") {
@@ -144,6 +199,154 @@ void trigger_precise_wall_warning(DynamicPrintConfig& c)
 }
 
 } // namespace
+
+// ---------------------------------------------------------------------------
+// {first_object_name} filename placeholder
+// ---------------------------------------------------------------------------
+namespace {
+
+// Add a printable 20mm cube named `name` to `model`; returns it so the caller can tweak it.
+ModelObject* add_named_cube(Model& model, const std::string& name)
+{
+    ModelObject* obj = model.add_object();
+    obj->name = name;
+    obj->add_volume(make_cube(20.0, 20.0, 20.0));
+    obj->add_instance();
+    obj->ensure_on_bed();
+    return obj;
+}
+
+// Resolve `format` to an output file name for a print of `model`. `filename_base`, when set,
+// is the saved-project name passed to output_filename().
+std::string resolved_output_name(Model& model, const std::string& format, const std::string& filename_base = {})
+{
+    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+    config.set_key_value("filename_format", new ConfigOptionString(format));
+
+    Print print;
+    for (ModelObject* obj : model.objects)
+        print.auto_assign_extruders(obj);
+    print.apply(model, config);
+    return print.output_filename(filename_base);
+}
+
+struct ScopedLifecycleHook
+{
+    explicit ScopedLifecycleHook(LifecycleHookFn hook) { set_lifecycle_hook_fn(std::move(hook)); }
+    ~ScopedLifecycleHook() { set_lifecycle_hook_fn(nullptr); }
+};
+
+} // namespace
+
+TEST_CASE("Slicing lifecycle events identify the model", "[Print][LifecycleEvents]")
+{
+    struct ObservedEvent {
+        LifecycleEvent event;
+        std::string id;
+        std::string name;
+    };
+    std::vector<ObservedEvent> events;
+    ScopedLifecycleHook hook([&](LifecycleEvent event, const LifecycleEventContext& ctx) {
+        events.push_back({ event, ctx.id, ctx.name });
+    });
+
+    Print print;
+    Model model;
+    ModelInfo info;
+    info.model_name = "Lifecycle test model";
+    model.model_info = std::make_shared<ModelInfo>(std::move(info));
+    init_print({cube(20)}, print, model);
+
+    print.process();
+    ScopedTemporaryFile temp(".gcode");
+    print.export_gcode(temp.string(), nullptr, nullptr);
+    GCodeProcessorResult result;
+    print.export_gcode_from_previous_file(temp.string(), &result);
+
+    const std::string expected_id = std::to_string(print.model().id().id);
+    const std::vector<LifecycleEvent> expected_events = {
+        LifecycleEvent::SliceStarted,
+        LifecycleEvent::SliceGeometryFinished,
+        LifecycleEvent::GCodeExportStarted,
+        LifecycleEvent::GCodeExportFinished,
+        LifecycleEvent::GCodeExportStarted,
+        LifecycleEvent::GCodeExportFinished,
+    };
+    REQUIRE(events.size() == expected_events.size());
+    for (size_t i = 0; i < expected_events.size(); ++i) {
+        CHECK(events[i].event == expected_events[i]);
+        CHECK(events[i].id == expected_id);
+        CHECK(events[i].name == "Lifecycle test model");
+    }
+}
+
+TEST_CASE("Slicing lifecycle event name is empty without model metadata", "[Print][LifecycleEvents]")
+{
+    std::string event_id;
+    std::string event_name = "unset";
+    ScopedLifecycleHook hook([&](LifecycleEvent event, const LifecycleEventContext& ctx) {
+        if (event == LifecycleEvent::SliceStarted) {
+            event_id = ctx.id;
+            event_name = ctx.name;
+        }
+    });
+
+    Print print;
+    Model model;
+    init_print({cube(20)}, print, model);
+    print.process();
+
+    CHECK(event_id == std::to_string(print.model().id().id));
+    CHECK(event_name.empty());
+}
+
+TEST_CASE("Output filenames with numeric statistics fail before slicing finishes", "[Print][Regression]")
+{
+    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+    config.set_key_value("filename_format", new ConfigOptionString("{int(total_weight*10) / 10.0}"));
+
+    Print print;
+    Model model;
+    init_print({cube(20)}, print, model, config);
+
+    CHECK_THROWS_AS(print.output_filename(), PlaceholderParserError);
+}
+
+TEST_CASE("Print: {first_object_name} names the first printable object on the plate", "[Print]")
+{
+    Model model;
+
+    SECTION("uses the object's name") {
+        add_named_cube(model, "WidgetPart");
+        CHECK(resolved_output_name(model, "{first_object_name}") == "WidgetPart.gcode");
+    }
+
+    SECTION("picks the first when several objects are printable") {
+        add_named_cube(model, "FirstPart");
+        add_named_cube(model, "SecondPart");
+        CHECK(resolved_output_name(model, "{first_object_name}") == "FirstPart.gcode");
+    }
+
+    SECTION("skips objects outside the print volume (e.g. on another plate)") {
+        // First in model order, but not on the current plate, so is_printable() is false.
+        add_named_cube(model, "OtherPlatePart")->instances.front()->print_volume_state = ModelInstancePVS_Fully_Outside;
+        add_named_cube(model, "OnPlatePart");
+        CHECK(resolved_output_name(model, "{first_object_name}") == "OnPlatePart.gcode");
+    }
+
+    SECTION("is empty when the object has no name") {
+        add_named_cube(model, "");
+        CHECK(resolved_output_name(model, "part_{first_object_name}") == "part_.gcode");
+    }
+}
+
+TEST_CASE("Print: {first_object_name} is not replaced by the saved-project file name", "[Print]")
+{
+    // Passing a saved-project file name as the filename_base must not change {first_object_name}.
+    Model model;
+    add_named_cube(model, "WidgetPart");
+    CHECK(resolved_output_name(model, "{first_object_name}", "SavedProject") == "WidgetPart.gcode");
+}
 
 TEST_CASE("Print::validate stacks independent warnings", "[Print][validate]")
 {
@@ -389,70 +592,28 @@ TEST_CASE("Sequential printing publishes the nozzle group result", "[Print][Mult
     }
 }
 
-// ---------------------------------------------------------------------------
-// {first_object_name} filename placeholder
-// ---------------------------------------------------------------------------
-namespace {
-
-// Add a printable 20mm cube named `name` to `model`; returns it so the caller can tweak it.
-ModelObject* add_named_cube(Model& model, const std::string& name)
+TEST_CASE("Slicing errors are reported per object with the object's name", "[Print]")
 {
-    ModelObject* obj = model.add_object();
-    obj->name = name;
-    obj->add_volume(make_cube(20.0, 20.0, 20.0));
-    obj->add_instance();
-    obj->ensure_on_bed();
-    return obj;
-}
-
-// Resolve `format` to an output file name for a print of `model`. `filename_base`, when set,
-// is the saved-project name passed to output_filename().
-std::string resolved_output_name(Model& model, const std::string& format, const std::string& filename_base = {})
-{
-    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
-    config.set_key_value("filename_format", new ConfigOptionString(format));
-
     Print print;
-    for (ModelObject* obj : model.objects)
-        print.auto_assign_extruders(obj);
-    print.apply(model, config);
-    return print.output_filename(filename_base);
-}
-
-} // namespace
-
-TEST_CASE("Print: {first_object_name} names the first printable object on the plate", "[Print]")
-{
     Model model;
+    init_print({Slic3r::Test::cube(20.)}, print, model);
+    // Lift the cube off the bed: its first layer is empty, which G-code export reports per object.
+    ModelObject *object = model.objects.front();
+    object->name = "floating cube";
+    object->instances.front()->set_offset(object->instances.front()->get_offset() + Vec3d(0., 0., 2.));
+    print.apply(model, DynamicPrintConfig::full_print_config());
+    print.set_status_silent();
 
-    SECTION("uses the object's name") {
-        add_named_cube(model, "WidgetPart");
-        CHECK(resolved_output_name(model, "{first_object_name}") == "WidgetPart.gcode");
+    ScopedTemporaryFile temp(".gcode");
+    std::string message;
+    try {
+        print.process();
+        print.export_gcode(temp.string(), nullptr, nullptr);
+        FAIL("slicing did not report the empty first layer");
+    } catch (const SlicingErrors &errors) {
+        REQUIRE(errors.errors_.size() == 1);
+        message = print.slicing_errors_message(errors);
     }
-
-    SECTION("picks the first when several objects are printable") {
-        add_named_cube(model, "FirstPart");
-        add_named_cube(model, "SecondPart");
-        CHECK(resolved_output_name(model, "{first_object_name}") == "FirstPart.gcode");
-    }
-
-    SECTION("skips objects outside the print volume (e.g. on another plate)") {
-        // First in model order, but not on the current plate, so is_printable() is false.
-        add_named_cube(model, "OtherPlatePart")->instances.front()->print_volume_state = ModelInstancePVS_Fully_Outside;
-        add_named_cube(model, "OnPlatePart");
-        CHECK(resolved_output_name(model, "{first_object_name}") == "OnPlatePart.gcode");
-    }
-
-    SECTION("is empty when the object has no name") {
-        add_named_cube(model, "");
-        CHECK(resolved_output_name(model, "part_{first_object_name}") == "part_.gcode");
-    }
-}
-
-TEST_CASE("Print: {first_object_name} is not replaced by the saved-project file name", "[Print]")
-{
-    // Passing a saved-project file name as the filename_base must not change {first_object_name}.
-    Model model;
-    add_named_cube(model, "WidgetPart");
-    CHECK(resolved_output_name(model, "{first_object_name}", "SavedProject") == "WidgetPart.gcode");
+    CHECK(message.rfind("floating cube: ", 0) == 0);
+    CHECK(message.find("empty first layer") != std::string::npos);
 }

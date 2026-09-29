@@ -25,7 +25,6 @@ GLGizmoHollow::GLGizmoHollow(GLCanvas3D& parent, const std::string& icon_filenam
 
 bool GLGizmoHollow::on_init()
 {
-    m_shortcut_key = WXK_CONTROL_H;
     m_desc["enable"]           = _(L("Hollow this object"));
     m_desc["preview"]          = _(L("Preview hollowed and drilled model"));
     m_desc["offset"]           = _(L("Offset")) + ": ";
@@ -507,7 +506,7 @@ RENDER_AGAIN:
 
     if (m_imgui->button(m_desc["preview"]))
         hollow_mesh();
-    
+
     bool config_changed = false;
 
     ImGui::Separator();

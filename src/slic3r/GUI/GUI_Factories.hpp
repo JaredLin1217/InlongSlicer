@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <array>
+#include <cstddef>
 
 #include <wx/bitmap.h>
 
@@ -50,6 +51,23 @@ public:
 	static std::vector<wxBitmap>    get_volume_bitmaps();
 	static std::vector<wxBitmap> get_text_volume_bitmaps();
 	static std::vector<wxBitmap> get_svg_volume_bitmaps();
+
+    // Orca: handy models shipped under <resources>/handy_models. The menu and the command palette
+    // share this table so the model list and its per-model behavior live in one place.
+    struct HandyModel
+    {
+        const char*              key;
+        const char*              label;
+        std::vector<std::string> file_names;
+        bool                     arrange_after_import = false;
+        bool                     is_stringhell        = false;
+    };
+    static const std::vector<HandyModel>& handy_models();
+    static void                           load_handy_model(std::size_t index);
+
+    // Add a Text/SVG volume through the Emboss/SVG gizmo. Shared by the add menu and the palette.
+    static void add_text_volume(ModelVolumeType type);
+    static void add_svg_volume(ModelVolumeType type);
 
     MenuFactory();
     ~MenuFactory() = default;
@@ -102,7 +120,7 @@ private:
     MenuWithSeparators m_assemble_part_menu;
 
     wxMenu m_filament_action_menu;
-   
+
 
     // Removed/Prepended Items according to the view mode
     std::array<wxMenuItem*, mtCount> items_increase;
@@ -130,7 +148,7 @@ private:
     // Inlong: add submenu for adding handy models
     wxMenu*     append_submenu_add_handy_model(wxMenu* menu, ModelVolumeType type);
     void        append_menu_item_add_text(wxMenu* menu, ModelVolumeType type, bool is_submenu_item = true);
-    void        append_menu_item_add_svg(wxMenu *menu, ModelVolumeType type, bool is_submenu_item = true);    
+    void        append_menu_item_add_svg(wxMenu *menu, ModelVolumeType type, bool is_submenu_item = true);
     void        append_menu_items_add_volume(wxMenu* menu);
     wxMenuItem* append_menu_item_layers_editing(wxMenu* menu);
     wxMenuItem* append_menu_item_settings(wxMenu* menu);
@@ -156,6 +174,7 @@ private:
     void        append_menu_item_merge_to_single_object(wxMenu* menu);
     void        append_menu_item_merge_parts_to_single_part(wxMenu *menu);
     void        append_menu_items_mirror(wxMenu *menu);
+    void        append_menu_item_precise_seam_submenu(wxMenu* menu);
     void        append_menu_item_invalidate_cut_info(wxMenu *menu);
     void        append_menu_item_edit_text(wxMenu *menu);
     void        append_menu_item_edit_svg(wxMenu *menu);

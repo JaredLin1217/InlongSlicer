@@ -4,6 +4,7 @@
 #include <atomic>
 #include <string>
 #include <vector>
+#include <array>
 #include <thread>
 
 #include <wx/colour.h>
@@ -41,7 +42,7 @@ namespace GUI {
             // This atomic also works as a memory barrier for synchronizing results of the worker thread with the calling thread.
             std::atomic<unsigned int> m_num_levels_compressed;
 
-            static std::atomic<bool> m_dirty; 
+            static std::atomic<bool> m_dirty;
 
         public:
             explicit Compressor(GLTexture& texture) : m_texture(texture), m_abort_compressing(false), m_num_levels_compressed(0) {}
@@ -132,6 +133,9 @@ namespace GUI {
 
         static void render_texture(unsigned int tex_id, float left, float right, float bottom, float top);
         static void render_sub_texture(unsigned int tex_id, float left, float right, float bottom, float top, const Quad_UVs& uvs);
+        // Copies the bound read framebuffer into an RGBA texture, creating it on first use and
+        // reallocating it when the size changes.
+        static void copy_from_framebuffer(unsigned int& tex_id, std::array<unsigned int, 2>& tex_size, unsigned int width, unsigned int height, int filter);
 
     private:
         bool load_from_png(const std::string& filename, bool use_mipmaps, ECompressionType compression_type, bool apply_anisotropy);

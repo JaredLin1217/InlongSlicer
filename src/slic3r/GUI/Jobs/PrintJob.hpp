@@ -5,7 +5,7 @@
 #include <boost/filesystem/operations.hpp>
 #include "libslic3r/PrintConfig.hpp"
 #include "Job.hpp"
-#include "slic3r/GUI/DeviceCore/DevStorage.h" 
+#include "slic3r/GUI/DeviceCore/DevStorage.h"
 
 namespace fs = boost::filesystem;
 
@@ -43,6 +43,9 @@ class PrintJob : public Job
     std::function<void()> m_success_fun{nullptr};
     std::string         m_dev_id;
     bool                m_job_finished{ false };
+    bool                m_lifecycle_started{ false };
+    bool                m_lifecycle_finished{ false };
+    bool                m_lifecycle_success{ false };
     int                 m_print_job_completed_id = 0;
     wxString            m_completed_evt_data;
     std::function<void()> m_enter_ip_address_fun_fail{ nullptr };
@@ -87,7 +90,7 @@ public:
     bool        could_emmc_print { false };
     bool        task_use_ams { true };
 
-    DevStorage::SdcardState sdcard_state = DevStorage::SdcardState::NO_SDCARD;        
+    DevStorage::SdcardState sdcard_state = DevStorage::SdcardState::NO_SDCARD;
     bool        task_ext_change_assist { false };
 
     int         auto_bed_leveling{0};

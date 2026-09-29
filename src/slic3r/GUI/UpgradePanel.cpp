@@ -1629,7 +1629,7 @@ UpgradePanel::UpgradePanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, 
     auto m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
     m_scrolledWindow = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
-    m_scrolledWindow->SetScrollRate(5, 25);
+    m_scrolledWindow->SetScrollRate(5, FromDIP(20));
 
     m_machine_list_sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -1702,7 +1702,7 @@ void UpgradePanel::update(MachineObject *obj)
         if (m_obj->upgrade_force_upgrade) {
             m_show_forced_hint = false;   //lock hint
             if (force_dlg == nullptr) {
-                force_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // ORCA VisibleButtons instead ButtonStyle 
+                force_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // ORCA VisibleButtons instead ButtonStyle
                 force_dlg->Bind(EVT_SECONDARY_CHECK_CONFIRM, [this](wxCommandEvent& e) {
                     if (m_obj) {
                         m_obj->command_upgrade_confirm();
@@ -1725,7 +1725,7 @@ void UpgradePanel::update(MachineObject *obj)
         if (m_obj->upgrade_consistency_request) {
             m_show_consistency_hint = false;
             if (consistency_dlg == nullptr) {
-                consistency_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // ORCA VisibleButtons instead ButtonStyle 
+                consistency_dlg = new SecondaryCheckDialog(this->GetParent(), wxID_ANY, _L("Update firmware"), SecondaryCheckDialog::VisibleButtons::CONFIRM_AND_CANCEL, wxDefaultPosition, wxDefaultSize);  // ORCA VisibleButtons instead ButtonStyle
                 consistency_dlg->Bind(EVT_SECONDARY_CHECK_CONFIRM, [this](wxCommandEvent& e) {
                     if (m_obj) {
                         m_obj->command_consistency_upgrade_confirm();
