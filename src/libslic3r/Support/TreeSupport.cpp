@@ -856,7 +856,11 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
                 if (duration > 30 || overhangs_all_layers[layer_nr].size() > 100) {
                     BOOST_LOG_TRIVIAL(info) << "detect_overhangs takes more than 30 secs, skip cantilever and sharp tails detection: layer_nr=" << layer_nr << " duration=" << duration;
                     config_detect_sharp_tails = false;
-                    config_remove_small_overhangs = false;
+                    // The timeout only means that the expensive sharp-tail /
+                    // cantilever classification is unavailable.  Small
+                    // overhang removal is an independent geometric filter;
+                    // disabling it here turns every thin wall fragment into a
+                    // support-interface island on large models.
                     continue;
                 }
                 if (is_auto(stype) && config_detect_sharp_tails)
@@ -1008,14 +1012,12 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
     m_object->project_and_append_custom_facets(false, EnforcerBlockerType::ENFORCER, enforcers, &m_vertical_enforcer_points);
     m_object->project_and_append_custom_facets(false, EnforcerBlockerType::BLOCKER, blockers);
 
-    // Organic contact layers follow the model, including narrow corners, at
-    // every clearance.  Let collision clipping and printable infill decide
-    // which parts fit rather than deleting an entire overhang cluster here.
-    // Without contact layers, the small-overhang removal setting still applies.
-    const bool preserve_organic_contacts =
-        m_support_params.support_style == smsTreeOrganic &&
-        m_support_params.num_top_interface_layers > 0;
-    if (is_auto(stype) && config_remove_small_overhangs && !preserve_organic_contacts) {
+    // Remove ordinary narrow overhang clusters before generating either the
+    // organic tree or its contact/interface footprint.  Contact layers must
+    // not disable this filter globally: doing so turns every small wall
+    // fragment into an interface, even when support_remove_small_overhang is
+    // enabled.  Sharp tails and cantilevers remain explicit exceptions below.
+    if (is_auto(stype) && config_remove_small_overhangs) {
         // remove small overhangs
         for (auto& cluster : overhangClusters) {
             // 3. check whether the small overhang is sharp tail

@@ -17501,7 +17501,7 @@ msgid "Tip contact angle"
 msgstr "尖端接触角度"
 
 msgid "Only sharp convex tips whose interior angle is at most this angle use the special tip contact clearances. The default 45° targets sharp-tip-like shapes. This affects Organic support contact areas only."
-msgstr ""
+msgstr "只有内角小于或等于此角度的尖锐凸角，才会使用特殊的尖端接触间距。默认值 45° 针对类似尖端的形状。此设置只会影响有机树支撑接触面。"
 
 msgid "Tip contact XY distance"
 msgstr "尖端接触 XY 间距"

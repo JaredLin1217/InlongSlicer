@@ -1182,13 +1182,12 @@ static std::optional<std::pair<Point, size_t>> polyline_sample_next_point_at_dis
     if (areas.empty() || radius <= 0 || turn_angle >= M_PI - EPSILON)
         return {};
 
-    // A sharp edge is represented by a long, narrow overhang polygon rather
-    // than by a single acute vertex.  A vertex-only mask leaves the middle of
-    // that edge without a printable platform as soon as normal XY clearance
-    // removes the strip.  Keep only positively oriented contours whose
-    // hydraulic width is close to the tree-tip footprint; broad overhangs and
-    // holes therefore stay on the ordinary contact path.
     const double tip_radius = unscale<double>(radius);
+    // The raw overhang difference is the only source allowed to use the
+    // narrow-strip fallback.  A model slice can contain many thin vertical
+    // walls that are unrelated to the active overhang; classifying those
+    // walls as tip contacts was what produced the detached interface islands.
+    const bool allow_narrow_strip = support_areas == nullptr;
     const double narrow_width_limit = std::max(4.0 * tip_radius, 1.5);
     // The overhang detector works on a difference between adjacent model
     // slices.  At a sharp edge that difference may contain only one incident
@@ -1198,7 +1197,13 @@ static std::optional<std::pair<Point, size_t>> polyline_sample_next_point_at_dis
     // every convex corner would receive a tip contact footprint.
     Polygons support_adjacency;
     if (support_areas != nullptr && !support_areas->empty()) {
-        const coord_t adjacency_radius = scaled<coord_t>(std::max(4.0, 20.0 * tip_radius));
+        // A tip is associated with the overhang that actually caused it, not
+        // with every contour corner in a large neighbourhood.  The old
+        // 20-radius envelope promoted unrelated wall corners into contact
+        // platforms and was the source of detached interface islands.  Keep
+        // the envelope to one tip footprint plus one extrusion width; the
+        // ordinary overhang footprint still supplies the full platform.
+        const coord_t adjacency_radius = radius + scaled<coord_t>(0.5);
         support_adjacency = offset(union_ex(*support_areas), adjacency_radius,
             jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
     }
@@ -1255,18 +1260,21 @@ static std::optional<std::pair<Point, size_t>> polyline_sample_next_point_at_dis
             }
         }
 
-        const double perimeter = poly.length();
-        const double polygon_area = std::abs(poly.area());
-        const double hydraulic_width = perimeter > EPSILON ? 2. * polygon_area / perimeter : std::numeric_limits<double>::infinity();
-        const double contour_length = unscale<double>(perimeter);
-        if (poly.area() > 0. && contour_length > 4. * tip_radius && hydraulic_width <= scaled<double>(narrow_width_limit)) {
-            // A narrow overhang is a long edge, not a request for a full
-            // tree-tip-radius perimeter. Cap its local contact wrap at
-            // 0.5 mm so the concentric contact filler can keep two nearby
-            // rings and close the centre without a large unsupported loop.
-            const coord_t contour_wrap = std::min<coord_t>(radius, scaled<coord_t>(0.5));
-            append(mask, offset(poly, contour_wrap, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION));
+        if (allow_narrow_strip) {
+            const double perimeter = poly.length();
+            const double polygon_area = std::abs(poly.area());
+            const double hydraulic_width = perimeter > EPSILON ? 2. * polygon_area / perimeter : std::numeric_limits<double>::infinity();
+            const double contour_length = unscale<double>(perimeter);
+            if (poly.area() > 0. && contour_length > 4. * tip_radius && hydraulic_width <= scaled<double>(narrow_width_limit)) {
+                // This is a property of the overhang difference itself, not
+                // of an arbitrary nearby model wall.  Keep the wrap local so
+                // a sharp edge still gets a printable platform without the
+                // former long necklace around unrelated contours.
+                const coord_t contour_wrap = std::min<coord_t>(radius, scaled<coord_t>(0.5));
+                append(mask, offset(poly, contour_wrap, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION));
+            }
         }
+
     }
     return mask.empty() ? Polygons{} : union_(mask);
 }
@@ -2048,34 +2056,15 @@ static void generate_initial_areas(
                         to_polygons(print_object.get_layer(object_layer_idx)->lslices),
                         config.support_tip_turn_angle, tip_mask_radius,
                         &overhang_raw);
-                // A long sharp edge is not a single convex vertex in the
-                // model slice.  Its overhang strip is itself a narrow contour;
-                // include that local footprint so it receives a printable
-                // platform instead of isolated corner caps.
-                // The overhang difference is often the only polygon that
-                // contains the sharp corner (the full model slice may have
-                // no matching convex vertex after slicing).  Keep the
-                // incident-edge extension enabled here so that this path
-                // produces the same short V platform as the model-derived
-                // mask.  sharp_tip_contact_mask() caps that extension at
-                // 0.5 mm and the result is still clipped by the local
-                // contact collision volume below.
-                Polygons overhang_tip_mask = sharp_tip_contact_mask(overhang_raw,
+                // Preserve a corner that exists only in the adjacent-slice
+                // difference (the full model contour may already have been
+                // simplified there), but only its actual convex vertices.
+                // Do not use the former narrow-polygon fallback: that path
+                // treated an entire thin wall strip as a sharp tip.
+                append(model_tip_mask, sharp_tip_contact_mask(overhang_raw,
                     config.support_tip_turn_angle, tip_mask_radius,
-                    nullptr, true);
-                const coord_t tip_reach = scaled<coord_t>(std::max(
-                    4.0, 20.0 * unscale<double>(config.min_radius)));
-                // The raw overhang difference may contain only one side of a
-                // sharp corner.  Clip the raw-derived mask as before, but keep
-                // complete model-derived tip footprints whose corner point is
-                // locally adjacent to that raw area.  Clipping those circles
-                // by the one-sided difference was the reason the opposite
-                // half of a 90-degree tip disappeared.
-                const Polygons raw_tip_reach = offset(union_ex(overhang_raw),
-                    tip_reach, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
-                overhang_tip_mask = intersection(overhang_tip_mask, raw_tip_reach);
+                    nullptr, true));
                 Polygons tip_mask = std::move(model_tip_mask);
-                append(tip_mask, std::move(overhang_tip_mask));
                 if (!tip_mask.empty()) {
                     tip_contact_roof = diff(std::move(tip_mask),
                         volumes.getCollisionForContact(0, layer_idx,
@@ -2345,10 +2334,16 @@ static void generate_initial_areas(
             const Polygons regular_shared_tip_reach = regular_support_union.empty() ? Polygons{} :
                 offset(union_ex(regular_support_union), regular_tip_reach, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
             for (Polygons &support_area : regular_support_areas) {
+                // `overhang_regular` contains the thin/sloped remainder after
+                // actual roof regions have been removed. It still needs a
+                // contact footprint for narrow tips, but that footprint must
+                // stay local to this tree component. Using the shared union
+                // envelope here lets a distant component promote an
+                // otherwise unsupported wall strip into an interface.
                 Polygons ordinary_contact_roof = contact_roof;
                 if (!tip_contact_roof.empty())
                     ordinary_contact_roof = diff(ordinary_contact_roof, tip_contact_roof);
-                Polygons contact_area = contact_for_support(support_area, ordinary_contact_roof, false, &regular_shared_reach, true, &regular_support_union);
+                Polygons contact_area = contact_for_support(support_area, ordinary_contact_roof, false, nullptr, true, nullptr);
                 Polygons sharp_tail_contact_area = contact_for_support(support_area, sharp_tail_contact_roof, false, &regular_shared_reach, false, &regular_support_union);
                 Polygons tip_contact_area = contact_for_support(support_area, tip_contact_roof, true, &regular_shared_tip_reach, false, &regular_support_union);
                 sample_overhang_area(std::move(support_area), std::move(contact_area), std::move(sharp_tail_contact_area), std::move(tip_contact_area),
