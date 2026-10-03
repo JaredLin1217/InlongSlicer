@@ -1704,42 +1704,17 @@ void sample_overhang_area(
         const LayerIndex branch_layer = layer_idx - layer_generation_dtt;
         const bool min_xy_dist = interface_placer.config.xy_distance >=
             interface_placer.config.xy_min_distance;
-        auto append_safe_branch_core = [&](const Polygons &footprint, Polygons forbidden) {
+        auto append_contact_branch_area = [&](const Polygons &footprint, Polygons forbidden) {
             if (footprint.empty())
                 return;
-            // Erode each connected contact component by the branch radius so
-            // a sampled tree tip has room to stay clear of its boundary. A
-            // narrow sharp edge can be thinner than that full diameter,
-            // though; eroding the whole union in one pass used to delete the
-            // component entirely and left the contact line unsupported. Keep
-            // a conservative half-radius core for those components, and only
-            // fall back to the original clipped footprint when even that
-            // cannot represent a printable candidate. The forbidden volume
-            // is subtracted after every fallback, so this never bypasses the
-            // model-collision guard.
-            const coord_t full_erosion = interface_placer.config.min_radius;
-            const coord_t narrow_erosion = std::min<coord_t>(
-                full_erosion / 2,
-                mesh_group_settings.support_roof_line_width / 2);
+            // The sampled branch candidates intentionally use the complete
+            // collision-clipped contact footprint.  An eroded core used to be
+            // calculated and appended before that same full footprint; the
+            // core is a subset of the full component, so it could not change
+            // the final union and only added expensive offset work.  Keep the
+            // original ExPolygon decomposition and per-component difference
+            // so the clipping topology and path ordering stay unchanged.
             for (const ExPolygon &component : union_ex(footprint)) {
-                Polygons core = offset(component, -full_erosion,
-                    jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
-                if (core.empty() && narrow_erosion > 0)
-                    core = offset(component, -narrow_erosion,
-                        jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
-                if (core.empty())
-                    core = offset(component, 0,
-                        jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
-                core = diff(std::move(core), forbidden);
-                append(contact_branch_area, std::move(core));
-
-                // Keep a second, full-width candidate region for contact
-                // branches.  The line-to-tip conversion performs the final
-                // model collision check, so eroding the entire contact strip
-                // here is unnecessarily destructive: on a sharp edge it can
-                // remove the only printable middle rows and leave a hollow
-                // contact platform.  This region is still filtered by the
-                // same forbidden volume before line generation.
                 Polygons full_component = diff(to_polygons(component), forbidden);
                 append(contact_branch_area, std::move(full_component));
             }
@@ -1749,16 +1724,16 @@ void sample_overhang_area(
         // area used for normal tree sampling. Add safe cores for the ordinary
         // contact, sharp-tail exception, and configurable tip exception
         // separately so each keeps its own collision rule.
-        append_safe_branch_core(
+        append_contact_branch_area(
             contact_roof_area,
             interface_placer.volumes.getAvoidance(
                 interface_placer.config.getRadius(0), branch_layer,
                 TreeModelVolumes::AvoidanceType::Fast, false, min_xy_dist));
-        append_safe_branch_core(
+        append_contact_branch_area(
             sharp_tail_contact_roof_area,
             interface_placer.volumes.getCollisionWithoutXY(
                 interface_placer.config.getRadius(0), branch_layer));
-        append_safe_branch_core(
+        append_contact_branch_area(
             tip_contact_roof_area,
             interface_placer.volumes.getCollisionForContact(
                 interface_placer.config.getRadius(0), branch_layer,
