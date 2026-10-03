@@ -153,7 +153,7 @@
                             "0.6"
                         ],
     "nozzle_height":  "2.5",
-    "nozzle_hrc":  "6",
+    "nozzle_hrc":  "55",
     "nozzle_type":  "hardened_steel",
     "nozzle_volume":  "0",
     "parking_pos_retraction":  "20",

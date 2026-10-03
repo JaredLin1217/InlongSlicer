@@ -61,6 +61,41 @@ TEST_CASE("Support contact spacing retains its preset keys and values", "[Config
     CHECK_THAT(restored_value->value, Catch::Matchers::WithinAbs(entry.second, EPSILON));
 }
 
+TEST_CASE("Organic tip contact parameters keep their defaults and bounds", "[Config][OrganicTree][Regression]") {
+    const DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+
+    const ConfigOptionDef *angle = print_config_def.get("support_tip_turn_angle");
+    const ConfigOptionDef *xy = print_config_def.get("support_tip_xy_distance_percent");
+    const ConfigOptionDef *z = print_config_def.get("support_tip_z_distance_percent");
+    REQUIRE(angle != nullptr);
+    REQUIRE(xy != nullptr);
+    REQUIRE(z != nullptr);
+
+    CHECK(angle->default_value->serialize() == "45");
+    CHECK(xy->default_value->serialize() == "50%");
+    CHECK(z->default_value->serialize() == "50%");
+    CHECK(angle->min == 0);
+    CHECK(angle->max == 180);
+    CHECK(xy->min == 0);
+    CHECK(xy->max == 100);
+    CHECK(z->min == 0);
+    CHECK(z->max == 100);
+    CHECK_THAT(config.opt<ConfigOptionFloat>("support_tip_turn_angle")->value, Catch::Matchers::WithinAbs(45., EPSILON));
+    CHECK_THAT(config.opt<ConfigOptionPercent>("support_tip_xy_distance_percent")->value, Catch::Matchers::WithinAbs(50., EPSILON));
+    CHECK_THAT(config.opt<ConfigOptionPercent>("support_tip_z_distance_percent")->value, Catch::Matchers::WithinAbs(50., EPSILON));
+
+    DynamicPrintConfig values = config;
+    REQUIRE_NOTHROW(values.set_deserialize_strict("support_tip_turn_angle", "0"));
+    REQUIRE_NOTHROW(values.set_deserialize_strict("support_tip_xy_distance_percent", "0%"));
+    REQUIRE_NOTHROW(values.set_deserialize_strict("support_tip_z_distance_percent", "100%"));
+    CHECK(values.validate().empty());
+
+    REQUIRE_NOTHROW(values.set_deserialize_strict("support_tip_turn_angle", "180"));
+    REQUIRE_NOTHROW(values.set_deserialize_strict("support_tip_xy_distance_percent", "100%"));
+    REQUIRE_NOTHROW(values.set_deserialize_strict("support_tip_z_distance_percent", "0%"));
+    CHECK(values.validate().empty());
+}
+
 SCENARIO("Generic config validation performs as expected.", "[Config]") {
     GIVEN("A config generated from default options") {
         Slic3r::DynamicPrintConfig config = Slic3r::DynamicPrintConfig::full_print_config();

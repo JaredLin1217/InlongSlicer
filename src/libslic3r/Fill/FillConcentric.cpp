@@ -35,14 +35,16 @@ void append_concentric_center_paths(
     const ExPolygons &collapsed_regions,
     coord_t           line_width,
     size_t            first_path,
-    Polylines        &polylines_out)
+    Polylines        &polylines_out,
+    bool              preserve_compact_regions)
 {
     if (line_width <= 0 || first_path > polylines_out.size() || collapsed_regions.empty())
         return;
 
     ExPolygons center_candidates;
     for (const ExPolygon &region : collapsed_regions)
-        expolygons_append(center_candidates, offset_ex(region, -0.25f * float(line_width)));
+        expolygons_append(center_candidates, preserve_compact_regions ?
+            ExPolygons{ region } : offset_ex(region, -0.25f * float(line_width)));
     center_candidates = union_ex(center_candidates);
     if (center_candidates.empty())
         return;
@@ -122,6 +124,50 @@ void append_concentric_center_paths(
         if (longest != clipped.end() && longest->is_valid() && longest->length() > SCALED_EPSILON)
             polylines_out.emplace_back(std::move(*longest));
     }
+}
+
+// Keep concentric support-contact rings as separate paths by default. Organic
+// contact footprints can, however, leave two neighbouring rings less than one
+// bead apart after sharp-corner clipping. In that narrow case, join the rings
+// with one short in-footprint bridge. The bridge is deliberately constrained to
+// this one ExPolygon, so it cannot cross a hole, jump to another support island,
+// or alter ordinary model concentric infill.
+void connect_nearby_concentric_loops(
+    const ExPolygon &footprint,
+    coord_t          max_gap,
+    size_t           first_path,
+    Polylines       &polylines_out)
+{
+    if (max_gap <= 0 || first_path >= polylines_out.size() || polylines_out.size() - first_path < 2)
+        return;
+
+    Polylines connected;
+    connected.reserve(polylines_out.size() - first_path);
+    connected.emplace_back(std::move(polylines_out[first_path]));
+
+    for (size_t i = first_path + 1; i < polylines_out.size(); ++i) {
+        Polyline &previous = connected.back();
+        Polyline &current  = polylines_out[i];
+        const bool valid_paths = previous.size() >= 2 && current.size() >= 2;
+        const Point from = valid_paths ? previous.last_point() : Point(0, 0);
+        const Point to   = valid_paths ? current.first_point() : Point(0, 0);
+        const bool short_bridge = valid_paths && from.distance_to(to) <= double(max_gap) &&
+            footprint.contains(Line(from, to));
+
+        if (!short_bridge) {
+            connected.emplace_back(std::move(current));
+            continue;
+        }
+
+        // The previous ring is already a complete path. Append the bridge and
+        // then the next ring without duplicating its first point.
+        previous.append(to);
+        previous.append(current.points.begin() + 1, current.points.end());
+    }
+
+    polylines_out.erase(polylines_out.begin() + first_path, polylines_out.end());
+    polylines_out.insert(polylines_out.end(),
+        std::make_move_iterator(connected.begin()), std::make_move_iterator(connected.end()));
 }
 
 } // namespace
@@ -220,9 +266,17 @@ void FillConcentric::_fill_surface_single(
     if (j < polylines_out.size())
         polylines_out.erase(polylines_out.begin() + j, polylines_out.end());
 
+    if (params.connect_concentric_loops) {
+        const coord_t line_width = params.flow.scaled_width() > 0 ?
+            params.flow.scaled_width() : min_spacing;
+        connect_nearby_concentric_loops(expolygon, line_width, iPathFirst, polylines_out);
+    }
+
     if (params.fill_concentric_gaps) {
         const coord_t line_width = params.flow.scaled_width() > 0 ? params.flow.scaled_width() : min_spacing;
-        append_concentric_center_paths(collapsed_regions, line_width, iPathFirst, polylines_out);
+        append_concentric_center_paths(
+            collapsed_regions, line_width, iPathFirst, polylines_out,
+            params.preserve_short_paths);
     }
     //TODO: return ExtrusionLoop objects to get better chained paths,
     // otherwise the outermost loop starts at the closest point to (0, 0).

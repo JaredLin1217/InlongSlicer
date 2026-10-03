@@ -15,6 +15,7 @@
 #include "libslic3r/Thread.hpp"
 
 #include <cmath>
+#include <limits>
 #include <map>
 #include <mutex>
 #include <set>
@@ -765,6 +766,108 @@ static double support_interface_extrusion_length(const std::string &gcode)
     return len;
 }
 
+// Minimum radial clearance between organic support-interface paths and the
+// outer wall of a spherical object.  The center and radius are recovered from
+// the outer-wall toolpaths on each layer, so this remains independent of the
+// arrange position used by the test helpers.
+static double sphere_interface_clearance(const std::string &gcode)
+{
+    std::map<double, std::vector<Vec2d>> outer_points;
+    std::map<double, std::vector<std::pair<Vec2d, Vec2d>>> interface_segments;
+    bool outer_wall = false;
+    GCodeReader parser;
+    parser.parse_buffer(gcode, [&outer_points, &interface_segments, &outer_wall](GCodeReader &self, const GCodeReader::GCodeLine &line) {
+        const std::string_view comment = line.comment();
+        if (comment.find("TYPE:") != std::string_view::npos || comment.find("FEATURE:") != std::string_view::npos)
+            outer_wall = comment.find("Outer wall") != std::string_view::npos ||
+                         comment.find("External perimeter") != std::string_view::npos;
+        if (! line.extruding(self) || line.dist_XY(self) <= EPSILON)
+            return;
+        const double z = self.z();
+        const Vec2d start(self.x(), self.y());
+        const Vec2d end(line.new_X(self), line.new_Y(self));
+        if (outer_wall) {
+            outer_points[z].push_back(start);
+            outer_points[z].push_back(end);
+        } else if (comment.find("support material interface") != std::string_view::npos) {
+            interface_segments[z].emplace_back(start, end);
+        }
+    });
+
+    std::map<double, std::pair<Vec2d, double>> outer_geometry;
+    for (const auto &[z, points] : outer_points) {
+        if (points.empty())
+            continue;
+        Vec2d center(0., 0.);
+        for (const Vec2d &point : points)
+            center += point;
+        center /= double(points.size());
+        std::vector<double> radii;
+        radii.reserve(points.size());
+        for (const Vec2d &point : points)
+            radii.emplace_back((point - center).norm());
+        const auto middle = radii.begin() + radii.size() / 2;
+        std::nth_element(radii.begin(), middle, radii.end());
+        outer_geometry.emplace(z, std::make_pair(center, *middle));
+    }
+
+    double minimum_clearance = std::numeric_limits<double>::infinity();
+    for (const auto &[z, segments] : interface_segments) {
+        if (outer_geometry.empty())
+            continue;
+        // Independent support layers are intentionally printed below the
+        // model layer when a non-zero top Z distance is configured.  Match
+        // the interface to the surrounding model layers by interpolating the
+        // fitted outer radius instead of requiring an exact Z key.
+        auto upper = outer_geometry.lower_bound(z);
+        Vec2d center;
+        double object_radius = 0.;
+        if (upper == outer_geometry.begin()) {
+            center = upper->second.first;
+            object_radius = upper->second.second;
+        } else if (upper == outer_geometry.end()) {
+            const auto &last = std::prev(upper)->second;
+            center = last.first;
+            object_radius = last.second;
+        } else if (std::abs(upper->first - z) <= EPSILON) {
+            center = upper->second.first;
+            object_radius = upper->second.second;
+        } else {
+            const auto lower = std::prev(upper);
+            const double t = (z - lower->first) / (upper->first - lower->first);
+            center = lower->second.first + (upper->second.first - lower->second.first) * t;
+            object_radius = lower->second.second + (upper->second.second - lower->second.second) * t;
+        }
+        for (const auto &[start, end] : segments)
+            for (const double t : { 0., 0.5, 1. })
+                minimum_clearance = std::min(minimum_clearance,
+                    (start + (end - start) * t - center).norm() - object_radius);
+    }
+    return minimum_clearance;
+}
+
+// Ignore short tip-cap loops: a concentric contact on a spherical overhang
+// must contain an uninterrupted contour following a substantial part of the
+// model, not merely many independently printable circles.
+static double longest_continuous_interface_path(const std::string &gcode, double min_z, double max_z)
+{
+    double current_length = 0.;
+    double maximum_length = 0.;
+    GCodeReader parser;
+    parser.parse_buffer(gcode, [&](GCodeReader &self, const GCodeReader::GCodeLine &line) {
+        if (!line.cmd_is("G0") && !line.cmd_is("G1"))
+            return;
+        if (line.extruding(self) && self.z() >= min_z - EPSILON && self.z() <= max_z + EPSILON &&
+            line.comment().find("support material interface") != std::string_view::npos) {
+            current_length += line.dist_XY(self);
+            maximum_length = std::max(maximum_length, current_length);
+        } else {
+            current_length = 0.;
+        }
+    });
+    return maximum_length;
+}
+
 // A cap slab overhanging a base, joined by a central stem: the cap can only be supported by resting on the
 // base, forcing a genuine bottom contact. A horizontal tunnel does not work here -- tree/organic can arch a
 // branch in from the opening and avoid the floor entirely.
@@ -775,6 +878,68 @@ static TriangleMesh support_capital()
     TriangleMesh cap   = make_cube(40, 40, 2);  cap.translate(0, 0, 12);    // cap   z 12..14
     model.merge(stem);
     model.merge(cap);
+    return model;
+}
+
+// Two separated stems leave neighboring tree components under one cap.  The
+// contact footprint should be joined across the small gap before infill is
+// generated, while the branch collision geometry remains split per stem.
+static TriangleMesh twin_support_capital()
+{
+    TriangleMesh model = make_cube(40, 40, 2);
+    TriangleMesh left  = make_cube(8, 8, 12);  left.translate(8, 16, 1);
+    TriangleMesh right = make_cube(8, 8, 12);  right.translate(24, 16, 1);
+    TriangleMesh cap   = make_cube(40, 40, 2); cap.translate(0, 0, 12);
+    model.merge(left);
+    model.merge(right);
+    model.merge(cap);
+    return model;
+}
+
+// A cap begins immediately above a narrow first layer.  Its support contact
+// is emitted on support layer 0, so this catches the build-plate fallback
+// using the lower support remainder instead of the next model-layer footprint.
+static TriangleMesh near_bed_support_capital()
+{
+    TriangleMesh model = make_cube(8, 8, 0.2f);
+    model.translate(16, 16, 0);
+    TriangleMesh cap = make_cube(40, 40, 0.2f);
+    cap.translate(0, 0, 0.2f);
+    model.merge(cap);
+    return model;
+}
+
+// The same corner-standing cube geometry as the user-reported project.  Keeping
+// it in the unit test avoids making the regression depend on a local 3MF file.
+static TriangleMesh rotated_support_fixture()
+{
+    constexpr float side = 60.5f;
+    TriangleMesh model = make_cube(side, side, side);
+    model.translate(-side / 2.f, -side / 2.f, -side / 2.f);
+    Matrix3d rotation;
+    rotation <<
+        0.707106781,  0.0,          -0.707106781,
+        0.5,          0.707106781,   0.5,
+        0.5,         -0.707106781,   0.5;
+    model.transform(rotation);
+    const BoundingBoxf3 box = model.bounding_box();
+    model.translate(float(100.0 - box.min.x()), float(100.0 - box.min.y()), float(-box.min.z()));
+    return model;
+}
+
+static TriangleMesh edge_on_sharp_tip_fixture()
+{
+    TriangleMesh model = make_cube(80.f, 16.f, 4.f);
+    model.translate(-40.f, -8.f, -2.f);
+    const double angle = Geometry::deg2rad(30.);
+    Matrix3d rotation;
+    rotation <<
+        1., 0., 0.,
+        0., std::cos(angle), -std::sin(angle),
+        0., std::sin(angle),  std::cos(angle);
+    model.transform(rotation);
+    const BoundingBoxf3 box = model.bounding_box();
+    model.translate(float(100. - box.min.x()), float(100. - box.min.y()), float(-box.min.z()));
     return model;
 }
 
@@ -1713,6 +1878,291 @@ TEST_CASE("Every tree support style produces base and interface material", "[Sup
     });
     CHECK(support_base_layer_count(g)      > 0);
     CHECK(support_interface_layer_count(g) > 0);
+}
+
+TEST_CASE("Zero-gap organic support keeps a tilted cube covered", "[SupportMaterial][OrganicTree][Regression]")
+{
+    // A cube standing on a corner has narrow overhang strips continuing up both
+    // inclined faces. Losing those strips cuts the support off halfway up.
+    const TriangleMesh tilted_cube = rotated_support_fixture();
+    const auto settings = [](double top_z, double bottom_z, double xy) {
+        DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+        config.set_deserialize_strict({
+            { "enable_support", true },
+            { "support_type", "tree(auto)" },
+            { "support_style", "organic" },
+            { "support_threshold_angle", 50 },
+            { "support_threshold_overlap", 0.5 },
+            { "support_angle", 0 },
+            { "support_expansion", 1 },
+            { "support_remove_small_overhang", true },
+            { "support_on_build_plate_only", false },
+            { "raft_layers", 1 },
+            { "layer_height", 0.3 },
+            { "initial_layer_print_height", 0.3 },
+            { "nozzle_diameter", "0.6" },
+            { "support_line_width", "102%" },
+            { "tree_support_branch_angle_organic", 30 },
+            { "tree_support_branch_diameter_organic", 2 },
+            { "tree_support_branch_distance_organic", 1 },
+            { "tree_support_tip_diameter", 2 },
+            { "tree_support_top_rate", "30%" },
+            { "support_top_z_distance", top_z },
+            { "support_bottom_z_distance", bottom_z },
+            { "support_object_xy_distance", xy },
+            { "support_interface_top_layers", 4 },
+            { "support_top_contact_pattern", "concentric" },
+            { "support_top_contact_spacing", 0.05 },
+            { "independent_support_layer_height", true },
+            { "independent_support_top_contact_layer_height", true }
+        });
+        return config;
+    };
+    const std::string normal = slice({ tilted_cube }, settings(0.255, 0.255, 0.4));
+    const auto gaps = GENERATE(std::array<double, 3>{0., 0., 0.4},
+                              std::array<double, 3>{0.255, 0.255, 0.},
+                              std::array<double, 3>{0., 0., 0.});
+    CAPTURE(gaps);
+    const std::string zero = slice({ tilted_cube }, settings(gaps[0], gaps[1], gaps[2]));
+    REQUIRE(support_base_layer_count(zero) > 0);
+    REQUIRE(support_interface_layer_count(zero) > 0);
+    // A non-zero XY clearance may legitimately trim the narrow inclined
+    // strips.  The zero/zero case must retain the dense contact; all variants
+    // still need a printable interface.
+    const double zero_interface_length = support_interface_extrusion_length(zero);
+    REQUIRE(zero_interface_length > (gaps[2] == 0. ?
+        0.5 * support_interface_extrusion_length(normal) : 0.05 * support_interface_extrusion_length(normal)));
+    const std::set<double> normal_layers = layers_with_role(normal, "support material interface");
+    const std::set<double> zero_layers = layers_with_role(zero, "support material interface");
+    if (gaps[2] == 0.) {
+        REQUIRE(*zero_layers.rbegin() >= *normal_layers.rbegin() - 0.3 - EPSILON);
+        const double expected_last_z = gaps[0] == 0. ? 60.5 : *normal_layers.rbegin();
+        REQUIRE_THAT(*zero_layers.rbegin(), Catch::Matchers::WithinAbs(expected_last_z, 0.3));
+    } else {
+        REQUIRE(*zero_layers.rbegin() > 0.);
+    }
+}
+
+TEST_CASE("Organic sphere contacts stay continuous at every XY and Z clearance", "[SupportMaterial][OrganicTree][Regression]")
+{
+    const auto gaps = GENERATE(std::array<double, 3>{0., 0., 0.},
+                              std::array<double, 3>{0., 0., 0.4},
+                              std::array<double, 3>{0.255, 0.255, 0.},
+                              std::array<double, 3>{0.255, 0.255, 0.4});
+    const char *interface_pattern = GENERATE("concentric", "rectilinear");
+    CAPTURE(gaps, interface_pattern);
+    TriangleMesh sphere = make_sphere(30.3, PI / 90.0);
+    const BoundingBoxf3 box = sphere.bounding_box();
+    sphere.translate(0.f, 0.f, float(-box.min.z()));
+    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        { "enable_support", true },
+        { "support_type", "tree(auto)" },
+        { "support_style", "organic" },
+        { "support_threshold_angle", 50 },
+        { "support_on_build_plate_only", false },
+        { "layer_height", 0.3 },
+        { "initial_layer_print_height", 0.3 },
+        { "nozzle_diameter", "0.6" },
+        { "support_line_width", "102%" },
+        { "tree_support_branch_angle_organic", 30 },
+        { "tree_support_branch_diameter_organic", 2 },
+        { "tree_support_branch_distance_organic", 1 },
+        { "tree_support_tip_diameter", 1.6 },
+        { "tree_support_top_rate", "30%" },
+        { "support_top_z_distance", gaps[0] },
+        { "support_bottom_z_distance", gaps[1] },
+        { "support_object_xy_distance", gaps[2] },
+        { "support_interface_top_layers", 4 },
+        { "support_interface_pattern", interface_pattern },
+        { "support_interface_spacing", 0.4 },
+        { "support_top_contact_pattern", "concentric" },
+        { "support_top_contact_spacing", 0.05 },
+        { "arc_fitting", false },
+        { "independent_support_layer_height", true },
+        { "independent_support_top_contact_layer_height", true }
+    });
+    const std::string g = slice({ sphere }, config);
+    REQUIRE(support_interface_layer_count(g) > 0);
+    const double clearance = sphere_interface_clearance(g);
+    CAPTURE(clearance);
+    REQUIRE(std::isfinite(clearance));
+    REQUIRE(clearance > -0.05);
+    // The contact footprint must follow the model with and without a gap,
+    // including the preset's concentric-contact / rectilinear-interface mix.
+    const double continuous_length = longest_continuous_interface_path(g, 5., 10.);
+    CAPTURE(continuous_length);
+    REQUIRE(continuous_length > 50.);
+}
+
+TEST_CASE("Organic sharp tip keeps a continuous contact platform", "[SupportMaterial][OrganicTree][SharpTip]")
+{
+    const TriangleMesh sharp_tip = rotated_support_fixture();
+    const double tip_angle = GENERATE(45., 90.);
+    CAPTURE(tip_angle);
+    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        { "enable_support", true },
+        { "support_type", "tree(auto)" },
+        { "support_style", "organic" },
+        { "support_threshold_angle", 50 },
+        { "support_on_build_plate_only", false },
+        { "layer_height", 0.3 },
+        { "initial_layer_print_height", 0.3 },
+        { "nozzle_diameter", "0.6" },
+        { "support_line_width", "102%" },
+        { "tree_support_branch_angle_organic", 30 },
+        { "tree_support_branch_diameter_organic", 2 },
+        { "tree_support_branch_distance_organic", 1 },
+        { "tree_support_tip_diameter", 2 },
+        { "tree_support_top_rate", "30%" },
+        { "support_top_z_distance", 0.0 },
+        { "support_bottom_z_distance", 0.0 },
+        { "support_object_xy_distance", 0.4 },
+        { "support_interface_top_layers", 4 },
+        { "support_top_contact_pattern", "concentric" },
+        { "support_top_contact_spacing", 0.05 },
+        { "support_tip_turn_angle", tip_angle },
+        { "support_tip_xy_distance_percent", "50%" },
+        { "support_tip_z_distance_percent", "50%" },
+        { "independent_support_layer_height", true },
+        { "independent_support_top_contact_layer_height", true }
+    });
+    const std::string gcode = slice({ sharp_tip }, config);
+    const double platform_path = longest_continuous_interface_path(gcode, 0., 100.);
+    const std::string edge_gcode = slice({ edge_on_sharp_tip_fixture() }, config);
+    const double edge_platform_path = longest_continuous_interface_path(edge_gcode, 0., 20.);
+    CAPTURE(platform_path);
+    CAPTURE(edge_platform_path);
+    REQUIRE(platform_path > 10.);
+    REQUIRE(edge_platform_path > 10.);
+}
+
+TEST_CASE("Zero XY organic support keeps contact paths on an overhang", "[SupportMaterial][OrganicTree][Regression]")
+{
+    const auto settings = [](double xy) {
+        DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+        config.set_deserialize_strict({
+            { "enable_support", true },
+            { "support_type", "tree(auto)" },
+            { "support_style", "organic" },
+            { "layer_height", 0.2 },
+            { "initial_layer_print_height", 0.2 },
+            { "support_top_z_distance", 0.2 },
+            { "support_bottom_z_distance", 0.2 },
+            { "support_object_xy_distance", xy },
+            { "support_interface_top_layers", 3 },
+            { "independent_support_layer_height", true },
+            { "independent_support_top_contact_layer_height", true }
+        });
+        return config;
+    };
+    const std::string normal = slice({ TestMesh::overhang }, settings(0.4));
+    const std::string zero   = slice({ TestMesh::overhang }, settings(0.0));
+    REQUIRE(support_base_layer_count(zero) > 0);
+    REQUIRE(support_interface_layer_count(zero) > 0);
+    REQUIRE(support_interface_extrusion_length(zero) > 0.5 * support_interface_extrusion_length(normal));
+}
+
+TEST_CASE("Changing Organic tip contact parameters invalidates support", "[SupportMaterial][OrganicTree][Regression]")
+{
+    Model model;
+    Print print;
+    DynamicPrintConfig baseline = organic_support_config(true, true, 0.2, 0.4);
+    init_print({ TestMesh::overhang }, print, model, baseline);
+    print.process();
+    REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
+    std::shared_ptr<TreeSupportData> first_cache =
+        print.get_object(0)->alloc_tree_support_preview_cache();
+
+    for (const auto &[key, value] : std::vector<std::pair<const char *, const char *>>{
+            { "support_tip_turn_angle", "120" },
+            { "support_tip_xy_distance_percent", "60%" },
+            { "support_tip_z_distance_percent", "60%" }}) {
+        DynamicPrintConfig changed = baseline;
+        changed.set_deserialize_strict(key, value);
+        REQUIRE(print.apply(model, changed) == PrintBase::APPLY_STATUS_INVALIDATED);
+        REQUIRE_FALSE(print.objects().front()->is_step_done(posSupportMaterial));
+        print.validate();
+        print.process();
+        REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
+        REQUIRE(print.get_object(0)->alloc_tree_support_preview_cache() != first_cache);
+        first_cache = print.get_object(0)->alloc_tree_support_preview_cache();
+        baseline = changed;
+    }
+}
+
+TEST_CASE("Organic contact reaches a horizontal ceiling with exactly the requested gap", "[SupportMaterial][OrganicTree][Regression]")
+{
+    const double top_gap = GENERATE(0., 0.2, 0.4);
+    CAPTURE(top_gap);
+    const std::string g = slice({ support_capital() }, {
+        { "enable_support", true },
+        { "support_type", "tree(auto)" },
+        { "support_style", "organic" },
+        { "layer_height", 0.2 },
+        { "initial_layer_print_height", 0.2 },
+        { "support_top_z_distance", top_gap },
+        { "support_bottom_z_distance", 0.0 },
+        { "support_object_xy_distance", 0.0 },
+        { "support_interface_top_layers", 4 },
+        { "independent_support_layer_height", true },
+        { "independent_support_top_contact_layer_height", true }
+    });
+    const std::set<double> interface_layers = layers_with_role(g, "support material interface");
+    REQUIRE_FALSE(interface_layers.empty());
+    REQUIRE_THAT(*interface_layers.rbegin(), Catch::Matchers::WithinAbs(12.0 - top_gap, 1e-4));
+}
+
+TEST_CASE("Organic neighboring contact components form one platform", "[SupportMaterial][OrganicTree][Regression]")
+{
+    const std::string g = slice({ twin_support_capital() }, {
+        { "enable_support", true },
+        { "support_type", "tree(auto)" },
+        { "support_style", "organic" },
+        { "layer_height", 0.2 },
+        { "initial_layer_print_height", 0.2 },
+        { "support_top_z_distance", 0.2 },
+        { "support_bottom_z_distance", 0.0 },
+        { "support_object_xy_distance", 0.4 },
+        { "support_interface_top_layers", 4 },
+        { "support_interface_pattern", "rectilinear" },
+        { "support_interface_spacing", 0.4 },
+        { "independent_support_layer_height", true },
+        { "independent_support_top_contact_layer_height", true }
+    });
+    REQUIRE(support_interface_layer_count(g) > 0);
+    // The cap spans the two stems and the interface must remain a continuous
+    // printable platform instead of two disconnected contact strips.
+    const double platform_path = longest_continuous_interface_path(g, 10., 14.);
+    CAPTURE(platform_path);
+    REQUIRE(platform_path > 20.);
+}
+
+TEST_CASE("Organic contact at the build plate follows the next model layer", "[SupportMaterial][OrganicTree][Regression]")
+{
+    const std::string g = slice({ near_bed_support_capital() }, {
+        { "enable_support", true },
+        { "support_type", "tree(auto)" },
+        { "support_style", "organic" },
+        { "layer_height", 0.2 },
+        { "initial_layer_print_height", 0.2 },
+        { "support_top_z_distance", 0.0 },
+        { "support_bottom_z_distance", 0.0 },
+        { "support_object_xy_distance", 0.0 },
+        { "support_interface_top_layers", 4 },
+        { "support_top_contact_pattern", "concentric" },
+        { "support_top_contact_spacing", 0.05 },
+        { "independent_support_layer_height", true },
+        { "independent_support_top_contact_layer_height", true }
+    });
+    REQUIRE(support_interface_layer_count(g) > 0);
+    // The 40 mm cap is supported from the 8 mm first-layer stem.  A contact
+    // footprint based on the next model layer must therefore contain a long,
+    // continuous platform even though layer 0 itself is narrow.
+    const double platform_path = longest_continuous_interface_path(g, 0., 1.);
+    CAPTURE(platform_path);
+    REQUIRE(platform_path > 20.);
 }
 
 TEST_CASE("Spiral inset remains available to independent contact layers", "[SupportMaterial][Regression]")

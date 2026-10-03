@@ -700,7 +700,10 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
     const int thresh_layers_below = 10 / config.layer_height;
     // +1 makes the threshold inclusive
     double thresh_angle = config.support_threshold_angle.value > EPSILON ? config.support_threshold_angle.value + 1 : 30;
-    thresh_angle = std::min(thresh_angle, 89.); // should be smaller than 90
+    // Keep 90° usable as an inclusive threshold.  tan(90°) is undefined, so
+    // evaluate just below the mathematical limit instead of clamping all
+    // 90° presets to 89°, which can drop thin sharp-edge overhangs.
+    thresh_angle = std::min(thresh_angle, std::nextafter(90., 0.));
     const double threshold_rad = Geometry::deg2rad(thresh_angle);
     // FIXME this is a fudge constant!
     double support_tree_tip_diameter = 0.8;
@@ -717,7 +720,8 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
         bool is_cantilever = false;
         bool is_sharp_tail = false;
         bool is_small_overhang = false;
-        OverhangCluster(const ExPolygon* expoly, int layer_nr) {
+        OverhangCluster(const ExPolygon* expoly, int layer_nr, coordf_t offset) {
+            this->offset = offset;
             push_back(expoly, layer_nr);
         }
         void push_back(const ExPolygon* expoly, int layer_nr) {
@@ -786,7 +790,7 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
             }
         }
         if (!cluster) {
-            cluster = &regionClusters.emplace_back(&region, layer_nr);
+            cluster = &regionClusters.emplace_back(&region, layer_nr, offset);
         }
         return cluster;
     };
@@ -1004,7 +1008,14 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
     m_object->project_and_append_custom_facets(false, EnforcerBlockerType::ENFORCER, enforcers, &m_vertical_enforcer_points);
     m_object->project_and_append_custom_facets(false, EnforcerBlockerType::BLOCKER, blockers);
 
-    if (is_auto(stype) && config_remove_small_overhangs) {
+    // Organic contact layers follow the model, including narrow corners, at
+    // every clearance.  Let collision clipping and printable infill decide
+    // which parts fit rather than deleting an entire overhang cluster here.
+    // Without contact layers, the small-overhang removal setting still applies.
+    const bool preserve_organic_contacts =
+        m_support_params.support_style == smsTreeOrganic &&
+        m_support_params.num_top_interface_layers > 0;
+    if (is_auto(stype) && config_remove_small_overhangs && !preserve_organic_contacts) {
         // remove small overhangs
         for (auto& cluster : overhangClusters) {
             // 3. check whether the small overhang is sharp tail

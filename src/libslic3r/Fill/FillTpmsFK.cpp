@@ -144,7 +144,8 @@ void FillTpmsFK::_fill_surface_single(const FillParams&              params,
     if (!polylines.empty()) {
         // Remove very small bits, but be careful to not remove infill lines connecting thin walls!
         // The infill perimeter lines should be separated by around a single infill line width.
-        const double minlength = scale_(0.8 * this->spacing);
+        const double minlength = params.preserve_short_paths ?
+            double(SCALED_EPSILON) : scale_(0.8 * this->spacing);
         polylines.erase(std::remove_if(polylines.begin(), polylines.end(),
                                        [minlength](const Polyline& pl) { return pl.length() < minlength; }),
                         polylines.end());

@@ -1389,7 +1389,9 @@ static inline ExPolygons detect_overhangs(
     // Zero means automatic overhang detection.
     // +1 makes the threshold inclusive
     double thresh_angle = object_config.support_threshold_angle.value > 0 ? object_config.support_threshold_angle.value + 1 : 0;
-    thresh_angle = std::min(thresh_angle, 89.); // BBS should be smaller than 90
+    // 90° is an inclusive user threshold; keep the tangent finite without
+    // silently reducing it to 89°, which loses near-horizontal edges.
+    thresh_angle = std::min(thresh_angle, std::nextafter(90., 0.));
     const double threshold_rad = Geometry::deg2rad(thresh_angle);
     const bool bridge_no_support = object_config.bridge_no_support.value;
     const coordf_t xy_expansion = scale_(object_config.support_expansion.value);

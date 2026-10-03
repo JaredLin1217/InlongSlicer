@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inlong Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 02:58+0800\n"
+"POT-Creation-Date: 2026-10-01 19:17+0800\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19709,6 +19709,24 @@ msgstr "Tree support grenarnas vinkel"
 
 msgid "This setting determines the maximum overhang angle that the branches of tree support are allowed to make. If the angle is increased, the branches can be printed more horizontally, allowing them to reach farther."
 msgstr "Inställningen bestämmer max överhängs vinkel som grenarna i tree support tillåts att ha. Om vinkeln ökas, kan grenarna skrivas ut mer horisontellt och nå längre."
+
+msgid "Tip contact angle"
+msgstr ""
+
+msgid "Only sharp convex tips whose interior angle is at most this angle use the special tip contact clearances. The default 45° targets sharp-tip-like shapes. This affects Organic support contact areas only."
+msgstr ""
+
+msgid "Tip contact XY distance"
+msgstr ""
+
+msgid "XY clearance used inside the sharp tip mask, as a percentage of the normal support XY distance. 100% keeps the normal distance and 0% allows the contact footprint to reach the model boundary, subject to the line width and collision checks."
+msgstr ""
+
+msgid "Tip contact Z distance"
+msgstr ""
+
+msgid "Z clearance used inside the sharp tip mask, as a percentage of the normal support top Z distance. The value is evaluated at the sliced layer height and only affects the local tip contact footprint."
+msgstr ""
 
 # AI Translated
 msgid "Preferred Branch Angle"

@@ -1374,7 +1374,10 @@ bool PrintObject::invalidate_state_by_config_options(
             || opt_key == "tree_support_branch_angle"
             || opt_key == "tree_support_branch_angle_organic"
             || opt_key == "tree_support_angle_slow"
-            || opt_key == "tree_support_wall_count") {
+            || opt_key == "tree_support_wall_count"
+            || opt_key == "support_tip_turn_angle"
+            || opt_key == "support_tip_xy_distance_percent"
+            || opt_key == "support_tip_z_distance_percent") {
             steps.emplace_back(posSupportMaterial);
         } else if (
                opt_key == "bottom_shell_layers"

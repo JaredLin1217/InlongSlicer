@@ -1117,8 +1117,13 @@ float GLVolumeCollection::get_selection_support_normal_z() const
 
     if (support_threshold_angle > 0) {
         // Match support generation: explicit threshold angles are treated as inclusive.
-        const int effective_support_threshold_angle = std::min(support_threshold_angle + 1, 89);
-        angle_rad = Geometry::deg2rad(static_cast<double>(effective_support_threshold_angle));
+        // Keep the visible overhang preview consistent with support
+        // generation: a 90-degree threshold is inclusive. Avoid the exact
+        // singularity while retaining the limiting value.
+        const double effective_support_threshold_angle = std::min(
+            static_cast<double>(support_threshold_angle) + 1.,
+            std::nextafter(90., 0.));
+        angle_rad = Geometry::deg2rad(effective_support_threshold_angle);
     } else if (is_tree(support_type)) {
         angle_rad = Geometry::deg2rad(30.0); // fallback value for tree supports
     } else { // For normal supports, if the angle is set to 0, calculate normal_z from overlap.

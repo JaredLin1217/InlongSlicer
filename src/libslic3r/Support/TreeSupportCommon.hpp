@@ -89,6 +89,11 @@ struct TreeSupportMeshGroupSettings {
         this->support_tree_branch_diameter = scaled<coord_t>(config.tree_support_branch_diameter_organic.value);
         this->support_tree_branch_diameter_angle  = std::clamp<double>(config.tree_support_branch_diameter_angle * M_PI / 180., 0., 0.5 * M_PI - EPSILON);
         this->support_tree_top_rate       = config.tree_support_top_rate.value; // percent
+        // The UI stores the interior convex-tip angle. Polygon::convex_points()
+        // consumes the corresponding exterior turn angle.
+        this->support_tip_turn_angle      = std::clamp<double>(M_PI - config.support_tip_turn_angle.value * M_PI / 180., 0., M_PI);
+        this->support_tip_xy_distance     = scaled<coord_t>(config.support_object_xy_distance.value * std::clamp(config.support_tip_xy_distance_percent.value, 0., 100.) / 100.);
+        this->support_tip_z_distance      = scaled<coord_t>(slicing_params.gap_support_object * std::clamp(config.support_tip_z_distance_percent.value, 0., 100.) / 100.);
     //    this->support_tree_tip_diameter = this->support_line_width;
         this->support_tree_tip_diameter = std::clamp(scaled<coord_t>(config.tree_support_tip_diameter.value), (coord_t)0, this->support_tree_branch_diameter);
     }
@@ -135,6 +140,10 @@ struct TreeSupportMeshGroupSettings {
     // Distance of the support structure from the overhang in the X/Y directions.
     // minimum_value: 0,  minimum warning": support_xy_distance - support_line_width * 2, maximum warning: support_xy_distance
     coord_t                         support_xy_distance_overhang            { scaled<coord_t>(0.2) };
+    // Local clearance used by the configurable sharp-tip contact mask.
+    double                          support_tip_turn_angle                  { 135. * M_PI / 180. };
+    coord_t                         support_tip_xy_distance                 { scaled<coord_t>(0.35) };
+    coord_t                         support_tip_z_distance                  { scaled<coord_t>(0.05) };
     // Support Top Distance
     // Distance from the top of the support to the print.
     coord_t                         support_top_distance                    { scaled<coord_t>(0.1) };
@@ -288,6 +297,9 @@ public:
           bp_radius_increase_per_layer(std::min(tan(0.7) * layer_height, 0.5 * support_line_width)),
           z_distance_bottom_layers(size_t(round(double(mesh_group_settings.support_bottom_distance) / double(layer_height)))),
           z_distance_top_layers(size_t(round(double(mesh_group_settings.support_top_distance) / double(layer_height)))),
+          support_tip_turn_angle(mesh_group_settings.support_tip_turn_angle),
+          support_tip_xy_distance(mesh_group_settings.support_tip_xy_distance),
+          support_tip_z_distance(mesh_group_settings.support_tip_z_distance),
     //              support_infill_angles(mesh_group_settings.support_infill_angles),
           support_roof_angles(mesh_group_settings.support_roof_angles),
           roof_pattern(mesh_group_settings.support_roof_pattern),
@@ -306,13 +318,11 @@ public:
     
         layer_start_bp_radius = (bp_radius - branch_radius) / bp_radius_increase_per_layer;
     
-        if (TreeSupportSettings::zero_top_z_gap) {
-            // safeOffsetInc can only work in steps of the size xy_min_distance in the worst case => xy_min_distance has to be a bit larger than 0 in this worst case and should be large enough for performance to not suffer extremely
-            // When for all meshes the z bottom and top distance is more than one layer though the worst case is xy_min_distance + min_feature_size
-            // This is not the best solution, but the only one to ensure areas can not lag though walls at high maximum_move_distance.
-            xy_min_distance = std::max(xy_min_distance, scaled<coord_t>(0.1));
-            xy_distance     = std::max(xy_distance, xy_min_distance);
-        }
+        // Keep a configured zero XY distance at zero even when the top Z gap is
+        // zero.  The previous unconditional 0.1 mm floor made a zero-clearance
+        // organic contact silently avoid the model.  Movement code now supplies
+        // its own non-zero safety step where safe_offset_inc() requires one;
+        // collision and contact footprints must still honour the user setting.
     
     //            const std::unordered_map<std::string, InterfacePreference> interface_map = { { "support_area_overwrite_interface_area", InterfacePreference::SupportAreaOverwritesInterface }, { "interface_area_overwrite_support_area", InterfacePreference::InterfaceAreaOverwritesSupport }, { "support_lines_overwrite_interface_area", InterfacePreference::SupportLinesOverwriteInterface }, { "interface_lines_overwrite_support_area", InterfacePreference::InterfaceLinesOverwriteSupport }, { "nothing", InterfacePreference::Nothing } };
     //            interface_preference = interface_map.at(mesh_group_settings.get<std::string>("support_interface_priority"));
@@ -442,6 +452,11 @@ public:
      * \brief Amount of layers distance required from the top of the model to the bottom of a support structure.
      */
     size_t z_distance_bottom_layers;
+    // Organic sharp-tip contact controls. The turn angle is the contour's
+    // exterior turn (180 degrees means a very sharp convex tip).
+    double support_tip_turn_angle;
+    coord_t support_tip_xy_distance;
+    coord_t support_tip_z_distance;
     /*!
      * \brief User specified angles for the support infill.
      */
@@ -515,6 +530,9 @@ public:
                increase_radius_until_radius == other.increase_radius_until_radius && support_bottom_layers == other.support_bottom_layers && layer_height == other.layer_height && z_distance_top_layers == other.z_distance_top_layers && resolution == other.resolution && // Infill generation depends on deviation and resolution.
                support_roof_line_distance == other.support_roof_line_distance && interface_preference == other.interface_preference
                && min_feature_size == other.min_feature_size // interface_preference should be identical to ensure the tree will correctly interact with the roof.
+               && support_tip_turn_angle == other.support_tip_turn_angle
+               && support_tip_xy_distance == other.support_tip_xy_distance
+               && support_tip_z_distance == other.support_tip_z_distance
                // The infill class now wants the settings object and reads a lot of settings, and as the infill class is used to calculate support roof lines for interface-preference. Not all of these may be required to be identical, but as I am not sure, better safe than sorry
 #if 0
                 && (interface_preference == InterfacePreference::InterfaceAreaOverwritesSupport || interface_preference == InterfacePreference::SupportAreaOverwritesInterface
@@ -693,7 +711,7 @@ public:
         SupportGeneratorLayersPtr       &top_base_interfaces) 
     :
         slicing_parameters(slicing_parameters), support_parameters(support_parameters), config(config),
-        layer_storage(layer_storage), top_contacts(top_contacts), top_interfaces(top_interfaces), top_base_interfaces(top_base_interfaces)  
+        layer_storage(layer_storage), top_contacts(top_contacts), top_interfaces(top_interfaces), top_base_interfaces(top_base_interfaces)
     {}
     InterfacePlacer(const InterfacePlacer& rhs) :
         slicing_parameters(rhs.slicing_parameters), support_parameters(rhs.support_parameters), config(rhs.config),
@@ -794,6 +812,10 @@ enum class LineStatus
 {
     INVALID,
     TO_MODEL,
+    // Contact candidates may use the local sharp-tip XY/Z clearance. Keep
+    // this distinct from ordinary model contacts so the next-layer validity
+    // check can preserve that narrower exception without relaxing branches.
+    CONTACT_TO_MODEL,
     TO_MODEL_GRACIOUS,
     TO_MODEL_GRACIOUS_SAFE,
     TO_BP,

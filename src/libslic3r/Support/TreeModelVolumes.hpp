@@ -99,6 +99,18 @@ public:
      */
     const Polygons& getCollision(const coord_t radius, LayerIndex layer_idx, bool min_xy_dist) const;
 
+    // Collision volume for a contact footprint that is allowed to use the
+    // configured Z gap without an additional XY clearance.  This is limited
+    // to the current model outline and is intended for narrow sharp-tail
+    // contact regions; tree branches continue to use getCollision().
+    Polygons getCollisionWithoutXY(const coord_t radius, LayerIndex layer_idx) const;
+
+    // Collision volume for a narrow Organic tip contact mask. This mirrors
+    // the normal XY/Z accumulation, but uses local clearances without
+    // changing the branch collision cache.
+    Polygons getCollisionForContact(const coord_t radius, LayerIndex layer_idx,
+                                    coord_t xy_distance, coord_t z_distance) const;
+
     // Get a collision area at a given layer for a radius that is a lower or equial to the key radius.
     // It is expected that the collision area is precalculated for a given layer at least for the radius zero.
     // Used for pushing tree supports away from object during the final Organic optimization step.

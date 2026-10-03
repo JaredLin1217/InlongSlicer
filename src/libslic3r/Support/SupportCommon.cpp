@@ -4,6 +4,7 @@
 #include "../Layer.hpp"
 #include "../Print.hpp"
 #include "../Fill/FillBase.hpp"
+#include "../VariableWidth.hpp"
 #include "../MutablePolygon.hpp"
 #include "../Geometry.hpp"
 #include "../Point.hpp"
@@ -198,13 +199,13 @@ std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> generate_interfa
         const bool                 smooth_supports        = support_params.support_style != smsGrid;
         SupportGeneratorLayersPtr &interface_layers       = base_and_interface_layers.first;
         SupportGeneratorLayersPtr &base_interface_layers  = base_and_interface_layers.second;
-        // Contacts printed separately consume one requested interface layer. Organic
-        // bottom contacts are projection seeds and are not printed separately.
-        const bool organic_tree = support_params.support_style == smsTreeOrganic;
+        // Contacts printed separately consume one requested interface layer.
+        // Organic bottom contacts are emitted as real toolpaths too, so they
+        // must consume the same configured layer as classic support contacts.
         const size_t num_top_interface_layers         = support_params.has_top_contacts ?
                                                         support_params.num_top_interface_layers - 1 : 0;
         const size_t num_bottom_interface_layers      = support_params.has_bottom_contacts ?
-                                                        support_params.num_bottom_interface_layers - (organic_tree ? 0 : 1) : 0;
+                                                        support_params.num_bottom_interface_layers - 1 : 0;
         const size_t num_top_base_interface_layers    = std::min(support_params.num_top_base_interface_layers,    num_top_interface_layers);
         const size_t num_bottom_base_interface_layers = std::min(support_params.num_bottom_base_interface_layers, num_bottom_interface_layers);
         const size_t num_top_interface_layers_only    = num_top_interface_layers    - num_top_base_interface_layers;
@@ -599,15 +600,83 @@ static inline void fill_expolygons_generate_paths(
     float                    density,
     ExtrusionRole            role,
     const Flow              &flow,
-    bool                     fill_concentric_gaps = false)
+    bool                     fill_concentric_gaps = false,
+    bool                     preserve_short_paths = false,
+    bool                     connect_concentric_loops = false)
 {
     FillParams fill_params;
     fill_params.density               = density;
     fill_params.dont_adjust           = true;
     fill_params.fill_concentric_gaps  = fill_concentric_gaps;
+    fill_params.preserve_short_paths  = preserve_short_paths;
+    fill_params.connect_concentric_loops = connect_concentric_loops;
     if (fill_concentric_gaps)
         fill_params.flow = flow;
     fill_expolygons_generate_paths(dst, std::move(expolygons), filler, fill_params, density, role, flow);
+}
+
+// A clipped contact strip can be narrower than one normal infill line. Keep
+// that strip printable with a variable-width medial-axis path instead of
+// widening it to a full bead or dropping it with ordinary infill cleanup.
+// This is intentionally used only for organic support contact/interface
+// regions; regular model and base-support infill retain their normal filters.
+static void append_narrow_contact_paths(
+    ExtrusionEntitiesPtr &dst,
+    const ExPolygons      &regions,
+    size_t                 first_entity,
+    ExtrusionRole          role,
+    const Flow            &flow)
+{
+    if (regions.empty() || flow.scaled_width() <= 0 || first_entity > dst.size())
+        return;
+
+    Polygons covered;
+    for (size_t idx = first_entity; idx < dst.size(); ++ idx)
+        if (dst[idx] != nullptr)
+            dst[idx]->polygons_covered_by_width(covered, 1.f);
+
+    const float line_width = float(flow.scaled_width());
+    // Identify narrow source geometry before subtracting the paths already
+    // produced by the selected pattern. Otherwise a normal 0.05 mm spacing
+    // between broad contact lines would look like a narrow leftover and be
+    // incorrectly filled.
+    const ExPolygons narrow_features = diff_ex(
+        regions, opening_ex(regions, line_width / 2.f));
+    if (narrow_features.empty())
+        return;
+    const ExPolygons remaining = covered.empty() ? regions :
+        diff_ex(regions, union_ex(std::move(covered)));
+    const ExPolygons narrow_remaining = intersection_ex(remaining, narrow_features);
+    const coord_t width_correction = scaled<coord_t>(
+        flow.height() * float(1. - 0.25 * PI));
+    const coord_t minimum_width = width_correction + SCALED_EPSILON;
+    const coord_t maximum_width = std::max<coord_t>(
+        minimum_width, line_width / 2);
+    for (const ExPolygon &region : narrow_remaining) {
+
+        ThickPolylines medial;
+        region.medial_axis(
+            minimum_width,
+            maximum_width,
+            &medial);
+        for (ThickPolyline &path : medial) {
+            // MedialAxis may accept a polyline when only one endpoint meets
+            // min_width. Keep only paths whose complete bead can stay inside
+            // the narrow source geometry, then compensate for the width term
+            // that variable_width() adds for the rounded extrusion model.
+            if (path.width.empty() || std::any_of(path.width.begin(), path.width.end(),
+                [minimum_width](coordf_t width) { return width < minimum_width; })) {
+                path.clear();
+                continue;
+            }
+            for (coordf_t &width : path.width)
+                width -= width_correction;
+        }
+        medial.erase(std::remove_if(medial.begin(), medial.end(),
+            [](const ThickPolyline &path) { return !path.is_valid(); }), medial.end());
+        if (!medial.empty())
+            variable_width(medial, role, flow, dst);
+    }
 }
 
 static Polylines draw_perimeters(const ExPolygon &expoly, double clip_length)
@@ -2170,9 +2239,11 @@ void generate_support_toolpaths(
                 if (top_contact_layer.could_merge(interface_layer) && ! raft_layer && top_contact_matches_interface)
                     top_contact_layer.merge(std::move(interface_layer));
             }
-            // Inlong: Organic bottom contacts are projection seeds, not same-layer toolpaths.
-            // Do not merge them into another same-layer support region.
-            if (!organic_tree) {
+            // Bottom contacts are real support-contact surfaces. Keep the
+            // normal merge/difference rules for organic trees as well; using
+            // them only as projection seeds drops the entire bottom contact
+            // toolpath before extrusion.
+            {
                 if (!bottom_interfaces && support_params.can_merge_support_regions) {
                     if (base_layer.could_merge(bottom_contact_layer))
                         base_layer.merge(std::move(bottom_contact_layer));
@@ -2200,7 +2271,7 @@ void generate_support_toolpaths(
             }
 
             // Inlong: For organic trees the support-material regions are generated from
-            // expanded wall polygons. With zero top Z gap and separate interface material,
+            // expanded wall polygons. With separate interface material,
             // that expansion can overlap same-layer interface-material regions, so trim
             // the support-material regions from those interface footprints here.
             if (organic_tree && support_params.zero_gap_interface_top && !support_params.can_merge_support_regions &&
@@ -2236,6 +2307,13 @@ void generate_support_toolpaths(
 
             // Top and bottom contacts, interface layers.
             enum class InterfaceLayerType { TopContact, BottomContact, RaftContact, Interface, InterfaceAsBase };
+            // Keep the actual printed contact beads available while the
+            // generic interface is filled below.  The contact polygons are
+            // trimmed once before filling, but organic closing of adjacent
+            // clipped pieces can grow back across that trim.  Reapplying the
+            // exact bead footprint after closing keeps the two toolpath roles
+            // disjoint without introducing an extra nominal gap.
+            Polygons contact_keepout;
             auto extrude_interface = [&](SupportGeneratorLayerExtruded &layer_ex, InterfaceLayerType interface_layer_type) {
                 if (! layer_ex.empty() && ! layer_ex.polygons_to_extrude().empty()) {
                     bool interface_as_base = interface_layer_type == InterfaceLayerType::InterfaceAsBase;
@@ -2273,22 +2351,87 @@ void generate_support_toolpaths(
                         bottom_interface ? support_params.bottom_interface_density : support_params.top_interface_density;
                     filler->spacing = raft_contact ? support_params.raft_interface_flow.spacing() :
                         interface_as_base ? support_params.support_material_flow.spacing() : support_params.support_material_interface_flow.spacing();
-                    filler->link_max_length = coord_t(scale_(filler->spacing * link_max_length_factor / density));
+                    // Organic contact/interface regions are often split into
+                    // adjacent clipped polygons around a sharp overhang. A
+                    // zero link length leaves every short fill segment
+                    // isolated, even when the connector is fully inside the
+                    // collision-safe interface polygon. Keep the existing
+                    // base-support behavior, but allow the interface filler
+                    // to stitch nearby segments into one printable platform.
+                    const coordf_t interface_link_factor =
+                        organic_tree && !interface_as_base ? 3. : link_max_length_factor;
+                    filler->link_max_length = coord_t(scale_(filler->spacing * interface_link_factor / density));
+                    // Concentric contact surfaces can collapse into a narrow
+                    // center remainder at a sharp tip.  The center paths are
+                    // safe because they are clipped to the already collision-
+                    // checked contact polygon, and are required for top and
+                    // bottom contacts as well as raft contacts.  Without
+                    // this, only raft contact layers fill the remainder and
+                    // the model-side contact platform has a longitudinal gap.
+                    const bool fill_concentric_contact_gaps =
+                        pattern == ipConcentric;
+                    Polygons interface_fill_polygons = layer_ex.polygons_to_extrude();
+                    if (organic_tree && !interface_as_base && !interface_fill_polygons.empty()) {
+                        // Tree contact regions can be split by sub-nozzle
+                        // clipping at a sharp corner. Close only a half-line-
+                        // width seam before filling, so neighboring pieces
+                        // become one platform while the change remains below
+                        // one bead on either side of the seam.
+                        const coord_t closing_distance = std::max<coord_t>(
+                            1, interface_flow.scaled_width() / 2);
+                        interface_fill_polygons = to_polygons(closing_ex(
+                            interface_fill_polygons, closing_distance));
+                    }
+                    if (organic_tree && !interface_as_base &&
+                        &layer_ex == &interface_layer && !contact_keepout.empty()) {
+                        interface_fill_polygons = diff(
+                            std::move(interface_fill_polygons), contact_keepout);
+                    }
+                    const ExtrusionRole interface_role = interface_as_base ?
+                        ExtrusionRole::erSupportMaterial : ExtrusionRole::erSupportMaterialInterface;
+                    const size_t first_contact_entity = layer_ex.extrusions.size();
+                    ExPolygons fill_regions = union_safety_offset_ex(std::move(interface_fill_polygons));
+                    const ExPolygons narrow_contact_regions = fill_regions;
                     fill_expolygons_generate_paths(
                         // Destination
                         layer_ex.extrusions,
                         // Regions to fill
-                        union_safety_offset_ex(layer_ex.polygons_to_extrude()),
+                        std::move(fill_regions),
                         // Filler and its parameters
                         filler, float(density),
                         // Extrusion parameters
-                        interface_as_base ? ExtrusionRole::erSupportMaterial : ExtrusionRole::erSupportMaterialInterface, interface_flow,
-                        raft_contact && support_params.raft_interface_fill_pattern == ipConcentric);
+                        interface_role, interface_flow,
+                        fill_concentric_contact_gaps,
+                        organic_tree && !interface_as_base,
+                        organic_tree && !interface_as_base &&
+                            pattern == ipConcentric);
+                    const bool no_native_contact_paths =
+                        layer_ex.extrusions.size() == first_contact_entity;
+                    if (organic_tree && !interface_as_base &&
+                        (pattern == ipConcentric ||
+                         (pattern == ipRectilinear && no_native_contact_paths)))
+                        append_narrow_contact_paths(
+                            layer_ex.extrusions,
+                            narrow_contact_regions,
+                            first_contact_entity,
+                            interface_role,
+                            interface_flow);
                 }
             };
             extrude_interface(top_contact_layer,    raft_layer ? InterfaceLayerType::RaftContact : top_interfaces ? InterfaceLayerType::TopContact : InterfaceLayerType::InterfaceAsBase);
-            if (!organic_tree)
-                extrude_interface(bottom_contact_layer, bottom_interfaces ? InterfaceLayerType::BottomContact : InterfaceLayerType::InterfaceAsBase);
+            extrude_interface(bottom_contact_layer, bottom_interfaces ? InterfaceLayerType::BottomContact : InterfaceLayerType::InterfaceAsBase);
+            if (organic_tree && !interface_layer.empty()) {
+                // Contact paths must be generated before they are used as a
+                // keepout. Include both contact directions because an
+                // interface layer can be shared by top and bottom contact
+                // projections on the same output Z.
+                for (const SupportGeneratorLayerExtruded *contact_layer : { &top_contact_layer, &bottom_contact_layer })
+                    for (const ExtrusionEntity *entity : contact_layer->extrusions)
+                        if (entity != nullptr)
+                            entity->polygons_covered_by_width(contact_keepout, 1.f);
+                if (!contact_keepout.empty())
+                    contact_keepout = union_(std::move(contact_keepout));
+            }
             const bool interface_layer_enabled = !interface_layer.empty() &&
                 (interface_layer.layer->layer_type == SupporLayerType::BottomInterface ? bottom_interfaces : top_interfaces);
             extrude_interface(interface_layer,      interface_layer_enabled ? InterfaceLayerType::Interface : InterfaceLayerType::InterfaceAsBase);

@@ -1554,6 +1554,37 @@ TEST_CASE("Smoothed concentric infill stays inside the fill region", "[Fill][Reg
         REQUIRE(point_count(smooth) > point_count(sharp));
 }
 
+TEST_CASE("Organic concentric contact can bridge adjacent rings", "[Fill][Regression]")
+{
+    // Support contact footprints use a concentric pattern at a narrow spacing.
+    // Adjacent rings are allowed to share one short bead only when the bridge
+    // remains inside the same footprint; separate islands must stay separate.
+    const ExPolygon footprint = ExPolygon{Points{
+        Point::new_scale(0., 0.), Point::new_scale(10., 0.),
+        Point::new_scale(10., 10.), Point::new_scale(0., 10.)}};
+    const Flow flow(0.6f, 0.2f, 0.6f);
+
+    auto fill = [&](bool connect) {
+        std::unique_ptr<Fill> filler(Fill::new_from_type(ipConcentric));
+        filler->spacing = 0.4;
+        filler->set_bounding_box(footprint.contour.bounding_box());
+        FillParams params;
+        params.density = 1.f;
+        params.dont_adjust = true;
+        params.flow = flow;
+        params.connect_concentric_loops = connect;
+        Surface surface(stInternal, footprint);
+        return filler->fill_surface(&surface, params);
+    };
+
+    const Polylines separate = fill(false);
+    const Polylines connected = fill(true);
+    REQUIRE(separate.size() > 1);
+    REQUIRE(connected.size() < separate.size());
+    for (const Polyline &path : connected)
+        CHECK(footprint.contains(path));
+}
+
 TEST_CASE("Smoothing multiline lightning infill keeps its outlines connected", "[Fill][Regression]")
 {
     // With more than one line per infill wall, the branches are printed as outlines drawn around them,

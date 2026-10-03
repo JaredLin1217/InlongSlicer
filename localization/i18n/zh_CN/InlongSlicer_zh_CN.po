@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slic3rPE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 02:58+0800\n"
+"POT-Creation-Date: 2026-10-02 02:09+0800\n"
 "PO-Revision-Date: 2026-06-11 12:37-0300\n"
 "Last-Translator: Handle <mail@bysb.net>\n"
 "Language-Team: \n"
@@ -17497,6 +17497,24 @@ msgstr "树状支撑分支角度"
 msgid "This setting determines the maximum overhang angle that the branches of tree support are allowed to make. If the angle is increased, the branches can be printed more horizontally, allowing them to reach farther."
 msgstr "此设置确定了允许树状支撑的最大悬垂角度。如果角度增加，可以更水平地打印分支，使它们可以到达更远的地方。"
 
+msgid "Tip contact angle"
+msgstr "尖端接触角度"
+
+msgid "Only sharp convex tips whose interior angle is at most this angle use the special tip contact clearances. The default 45° targets sharp-tip-like shapes. This affects Organic support contact areas only."
+msgstr ""
+
+msgid "Tip contact XY distance"
+msgstr "尖端接触 XY 间距"
+
+msgid "XY clearance used inside the sharp tip mask, as a percentage of the normal support XY distance. 100% keeps the normal distance and 0% allows the contact footprint to reach the model boundary, subject to the line width and collision checks."
+msgstr "尖锐尖端遮罩内使用的 XY 间距，以普通支撑 XY 间距的百分比表示。100% 保持普通间距，0% 允许接触面在满足线宽和碰撞检查的前提下贴到模型边界。"
+
+msgid "Tip contact Z distance"
+msgstr "尖端接触 Z 间距"
+
+msgid "Z clearance used inside the sharp tip mask, as a percentage of the normal support top Z distance. The value is evaluated at the sliced layer height and only affects the local tip contact footprint."
+msgstr "尖锐尖端遮罩内使用的 Z 间距，以普通支撑顶部 Z 间距的百分比表示。该值会按照切片层高计算，并且只影响局部尖端接触面。"
+
 msgid "Preferred Branch Angle"
 msgstr "首选分支角度"
 
@@ -23275,6 +23293,15 @@ msgid ""
 msgstr ""
 "避免翘曲\n"
 "您知道吗？打印ABS这类易翘曲材料时，适当提高热床温度可以降低翘曲的概率。"
+
+#~ msgid "Only sharp convex tips whose interior angle is at most this angle use the special tip contact clearances. The default 45° targets knife-edge-like tips. This affects Organic support contact areas only."
+#~ msgstr "只有内角不大于此角度的尖锐凸角才会使用特殊的尖端接触间距。默认 45° 用于刀锋状尖端。此参数仅影响有机树支撑的接触区域。"
+
+#~ msgid "Tip contact turn angle"
+#~ msgstr "尖端接触转角"
+
+#~ msgid "Only sharp convex tips whose contour turns by at least this angle use the special tip contact clearances. The default 135° corresponds to an interior tip angle of about 45°. This affects Organic support contact areas only."
+#~ msgstr "只有轮廓转角不小于此角度的尖锐凸角才会使用特殊的尖端接触间距。默认 135° 约对应 45° 的内角。此参数仅影响有机树支撑的接触区域。"
 
 #~ msgid "The maximum temperature cannot exceed "
 #~ msgstr "最高温度不可超过 "

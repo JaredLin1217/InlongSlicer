@@ -3840,23 +3840,33 @@ int Print::get_hrc_by_nozzle_type(const NozzleType&type)
     if (nozzle_type_to_hrc.empty()) {
         fs::path file_path = fs::path(resources_dir()) / "info" / "nozzle_info.json";
         boost::nowide::ifstream in(file_path.string());
-        //std::ifstream in(file_path.string());
-        json j;
-        try {
-            j = json::parse(in);
+        if (in.good()) {
+            json j;
+            try {
+                j = json::parse(in);
+                for (const auto& elem : j.at("nozzle_hrc").items())
+                    nozzle_type_to_hrc[elem.key()] = elem.value();
+            }
+            catch (const json::exception& err) {
+                BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": parse " << file_path.string()
+                    << " got a JSON error, reason = " << err.what();
+                nozzle_type_to_hrc.clear();
+            }
             in.close();
-            for (const auto& elem : j["nozzle_hrc"].items())
-                nozzle_type_to_hrc[elem.key()] = elem.value();
         }
-        catch (const json::parse_error& err) {
-            in.close();
-            BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": parse " << file_path.string() << " got a nlohmann::detail::parse_error, reason = " << err.what();
+
+        // Tests and lightweight command-line invocations may not have a
+        // resources directory configured.  Keep the same safe defaults as the
+        // shipped nozzle_info.json instead of parsing an empty stream and
+        // emitting a misleading error.
+        if (nozzle_type_to_hrc.empty()) {
             nozzle_type_to_hrc = {
-                {"hardened_steel",55},
-                {"stainless_steel",20},
+                {"hardened_steel", 55},
+                {"stainless_steel", 20},
                 {"tungsten_carbide", 85},
-                {"brass",2},
-                {"undefine",0}
+                {"brass", 2},
+                {"E3D", 55},
+                {"undefine", 0}
             };
         }
     }

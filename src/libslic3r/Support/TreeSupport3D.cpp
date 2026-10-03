@@ -632,7 +632,7 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
 [[nodiscard]] LineStatus get_avoidance_status(const Point& p, coord_t radius, LayerIndex layer_idx,
     const TreeModelVolumes& volumes, const TreeSupportSettings& config)
 {
-    const bool min_xy_dist = config.xy_distance > config.xy_min_distance;
+    const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
 
     LineStatus type = LineStatus::INVALID;
 
@@ -662,7 +662,7 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
     const TreeModelVolumes &volumes, const TreeSupportSettings &config,
     const Polylines &polylines, LayerIndex layer_idx)
 {
-    const bool min_xy_dist = config.xy_distance > config.xy_min_distance;
+    const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
 
     LineInformations result;
     // Also checks if the position is valid, if it is NOT, it deletes that point
@@ -690,6 +690,45 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
         }
     }
 
+    validate_range(result);
+    return result;
+}
+
+// Contact candidates are generated directly below the model. Use the local
+// tip clearance for the model test instead of the ordinary support XY gap;
+// otherwise the candidates that are meant to carry a contact roof are
+// discarded before they can become tree tips.
+[[nodiscard]] static LineInformations convert_contact_lines_to_internal(
+    const TreeModelVolumes &volumes, const TreeSupportSettings &config,
+    const Polylines &polylines, LayerIndex layer_idx)
+{
+    const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
+    const coord_t collision_radius = config.getRadius(0);
+
+    LineInformations result;
+    for (const Polyline &line : polylines) {
+        LineInformation res_line;
+        for (Point p : line) {
+            if (config.support_rests_on_model && ! contains(
+                    volumes.getCollisionForContact(collision_radius, layer_idx,
+                        config.support_tip_xy_distance, config.support_tip_z_distance), p))
+                res_line.emplace_back(p, LineStatus::CONTACT_TO_MODEL);
+            else if (!config.support_rests_on_model && ! contains(
+                    volumes.getAvoidance(collision_radius, layer_idx,
+                        TreeModelVolumes::AvoidanceType::FastSafe, false, min_xy_dist), p))
+                res_line.emplace_back(p, LineStatus::TO_BP_SAFE);
+            else if (!config.support_rests_on_model && ! contains(
+                    volumes.getAvoidance(collision_radius, layer_idx,
+                        TreeModelVolumes::AvoidanceType::Fast, false, min_xy_dist), p))
+                res_line.emplace_back(p, LineStatus::TO_BP);
+            else if (!res_line.empty()) {
+                result.emplace_back(std::move(res_line));
+                res_line.clear();
+            }
+        }
+        if (!res_line.empty())
+            result.emplace_back(std::move(res_line));
+    }
     validate_range(result);
     return result;
 }
@@ -726,11 +765,14 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
     size_t current_layer, const std::pair<Point, LineStatus> &p)
 {
     using AvoidanceType = TreeModelVolumes::AvoidanceType;
-    const bool min_xy_dist = config.xy_distance > config.xy_min_distance;
+    const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
     if (! contains(volumes.getAvoidance(config.getRadius(0), current_layer - 1, p.second == LineStatus::TO_BP_SAFE ? AvoidanceType::FastSafe : AvoidanceType::Fast, false, min_xy_dist), p.first))
         return true;
     if (config.support_rests_on_model && (p.second != LineStatus::TO_BP && p.second != LineStatus::TO_BP_SAFE))
         return ! contains(
+            p.second == LineStatus::CONTACT_TO_MODEL ?
+                volumes.getCollisionForContact(config.getRadius(0), current_layer - 1,
+                    config.support_tip_xy_distance, config.support_tip_z_distance) :
             p.second == LineStatus::TO_MODEL_GRACIOUS || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE ?
                 volumes.getAvoidance(config.getRadius(0), current_layer - 1, p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE ? AvoidanceType::FastSafe : AvoidanceType::Fast, true, min_xy_dist) :
                 volumes.getCollision(config.getRadius(0), current_layer - 1, min_xy_dist),
@@ -1127,6 +1169,108 @@ static std::optional<std::pair<Point, size_t>> polyline_sample_next_point_at_dis
     return union_(ret);
 }
 
+// Build a small footprint around sharp convex contour tips. Polygon::convex_points()
+// measures the exterior turn between the incoming and outgoing contour edges.
+// The UI exposes the equivalent interior tip angle, so a 45 degree setting is
+// passed here as a 135 degree exterior-turn threshold.
+[[nodiscard]] static Polygons sharp_tip_contact_mask(const Polygons &areas,
+                                                     double turn_angle,
+                                                     coord_t radius,
+                                                     const Polygons *support_areas = nullptr,
+                                                     bool extend_incident_edges = true)
+{
+    if (areas.empty() || radius <= 0 || turn_angle >= M_PI - EPSILON)
+        return {};
+
+    // A sharp edge is represented by a long, narrow overhang polygon rather
+    // than by a single acute vertex.  A vertex-only mask leaves the middle of
+    // that edge without a printable platform as soon as normal XY clearance
+    // removes the strip.  Keep only positively oriented contours whose
+    // hydraulic width is close to the tree-tip footprint; broad overhangs and
+    // holes therefore stay on the ordinary contact path.
+    const double tip_radius = unscale<double>(radius);
+    const double narrow_width_limit = std::max(4.0 * tip_radius, 1.5);
+    // The overhang detector works on a difference between adjacent model
+    // slices.  At a sharp edge that difference may contain only one incident
+    // side, even though the model contour still has the complete corner.  Use
+    // the same local reach used by the tip roof to decide whether a model tip
+    // belongs to this overhang; do not use the whole model slice, otherwise
+    // every convex corner would receive a tip contact footprint.
+    Polygons support_adjacency;
+    if (support_areas != nullptr && !support_areas->empty()) {
+        const coord_t adjacency_radius = scaled<coord_t>(std::max(4.0, 20.0 * tip_radius));
+        support_adjacency = offset(union_ex(*support_areas), adjacency_radius,
+            jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+    }
+
+    Polygons mask;
+    for (const Polygon &poly : areas) {
+        if (poly.points.size() < 3)
+            continue;
+        // Polygon::convex_points() intentionally excludes an exact threshold
+        // angle and advances its own threshold by one ULP internally. A
+        // single nextafter() therefore cancels out at an exact right angle.
+        // Keep a small explicit tolerance so the UI's inclusive 90° setting
+        // really includes a mathematically exact 90° corner.
+        const double inclusive_turn_angle = turn_angle > 1e-6 ?
+            turn_angle - 1e-6 : 0.0;
+        const Points convex_tips = poly.convex_points(inclusive_turn_angle);
+        for (const Point &tip : convex_tips) {
+            if (!support_adjacency.empty() && !contains(support_adjacency, tip))
+                continue;
+            Polygon circle{ make_circle(radius, SUPPORT_TREE_CIRCLE_RESOLUTION) };
+            circle.translate(tip);
+            mask.emplace_back(std::move(circle));
+
+            // A vertex-only circle leaves the two neighboring contact strips
+            // disconnected when the overhang detector trims the last few
+            // millimeters before the vertex. Extend the two incident contour
+            // edges as one narrow V-shaped platform. When only one incident
+            // edge is present in the overhang area, keep the wrap short so a
+            // one-sided corner does not grow a long unsupported cap.
+            auto tip_it = std::find(poly.points.begin(), poly.points.end(), tip);
+            if (extend_incident_edges && tip_it != poly.points.end() && poly.points.size() >= 3) {
+                const size_t tip_idx = size_t(std::distance(poly.points.begin(), tip_it));
+                const Point  previous = poly.points[(tip_idx + poly.points.size() - 1) % poly.points.size()];
+                const Point  next     = poly.points[(tip_idx + 1) % poly.points.size()];
+                const coord_t long_extension = scaled<coord_t>(std::max(4.0, 20.0 * tip_radius));
+                // The V is only a local bridge.  The previous implementation
+                // treated the raw overhang itself as proof that both sides
+                // were supported, so a one-sided tip frequently received a
+                // 4--8 mm V.  Continuity between two supported sides is
+                // provided by the collision-clipped contact footprint and its
+                // fill paths; the incident-edge bridge must stay within the
+                // user-visible 0.5 mm limit in every case.
+                const coord_t extension = std::min(long_extension, scaled<coord_t>(0.5));
+                auto limit_to_extension = [tip, extension](const Point &from) {
+                    const Vec2d direction = (from - tip).cast<double>();
+                    const double length = direction.norm();
+                    if (length <= EPSILON)
+                        return tip;
+                    const double distance = std::min<double>(double(extension), length);
+                    return Point(tip + (direction * (distance / length)).cast<coord_t>());
+                };
+                const Polyline incident_edges({ limit_to_extension(previous), tip, limit_to_extension(next) });
+                append(mask, offset(incident_edges, radius, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION));
+            }
+        }
+
+        const double perimeter = poly.length();
+        const double polygon_area = std::abs(poly.area());
+        const double hydraulic_width = perimeter > EPSILON ? 2. * polygon_area / perimeter : std::numeric_limits<double>::infinity();
+        const double contour_length = unscale<double>(perimeter);
+        if (poly.area() > 0. && contour_length > 4. * tip_radius && hydraulic_width <= scaled<double>(narrow_width_limit)) {
+            // A narrow overhang is a long edge, not a request for a full
+            // tree-tip-radius perimeter. Cap its local contact wrap at
+            // 0.5 mm so the concentric contact filler can keep two nearby
+            // rings and close the centre without a large unsupported loop.
+            const coord_t contour_wrap = std::min<coord_t>(radius, scaled<coord_t>(0.5));
+            append(mask, offset(poly, contour_wrap, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION));
+        }
+    }
+    return mask.empty() ? Polygons{} : union_(mask);
+}
+
 class RichInterfacePlacer : public InterfacePlacer {
 public:
     RichInterfacePlacer(
@@ -1140,7 +1284,7 @@ public:
         volumes(volumes), force_tip_to_roof(force_tip_to_roof), move_bounds(move_bounds)
     {
         m_already_inserted.assign(num_support_layers, {});
-        this->min_xy_dist = this->config.xy_distance > this->config.xy_min_distance;
+        this->min_xy_dist = this->config.xy_distance >= this->config.xy_min_distance;
         m_base_radius = scaled<coord_t>(0.01);
         m_base_circle = Polygon{ make_circle(m_base_radius, SUPPORT_TREE_CIRCLE_RESOLUTION) };
 
@@ -1162,7 +1306,17 @@ public:
         // True if an interface is already generated above these lines.
         size_t              supports_roof_layers,
         // The element tries to not move until this dtt is reached.
-        size_t              dont_move_until)
+        size_t              dont_move_until,
+        // Optional clipped overhang region for contacts/interfaces.
+        // Organic tips still place branches; roofs follow this region instead
+        // of a necklace of overlapping tip circles.
+        const Polygons       *continuous_roof_area = nullptr,
+        // Sharp-tail contact footprint that intentionally ignores XY
+        // clearance.  This remains separate from the ordinary footprint so
+        // the exception cannot relax branch collision avoidance globally.
+        const Polygons       *continuous_roof_area_no_xy = nullptr,
+        // Configurable sharp-tip contact footprint using local XY/Z values.
+        const Polygons       *continuous_roof_area_tip = nullptr)
     {
         validate_range(lines);
         // Add tip area as roof (happens when minimum roof area > minimum tip area) if possible
@@ -1170,6 +1324,7 @@ public:
         for (dtt_roof_tip = 0; dtt_roof_tip < roof_tip_layers && insert_layer_idx - dtt_roof_tip >= 1; ++ dtt_roof_tip) {
             size_t this_layer_idx = insert_layer_idx - dtt_roof_tip;
             const size_t roof_recovery_depth = dtt_roof_tip + supports_roof_layers;
+            const bool use_continuous_roof = continuous_roof_area != nullptr || continuous_roof_area_no_xy != nullptr || continuous_roof_area_tip != nullptr;
             auto evaluateRoofWillGenerate = [&](const std::pair<Point, LineStatus> &p) {
                 //FIXME Vojtech: The circle is just shifted, it has a known size, the infill should fit all the time!
     #if 0
@@ -1203,19 +1358,37 @@ public:
                             // recovered roof/contact depth for this slice
                             roof_recovery_depth,
                             // disable ovalization
-                            false);
+                            false,
+                            // The contact polygon is generated independently
+                            // of whether an individual tip can move down.
+                            use_continuous_roof);
             }
 
-            // add all tips as roof to the roof storage
+            // The sampler returns a set of tips, not an ordered path: it inserts
+            // the furthest endpoint before the remaining contour samples.
+            // Sweeping between consecutive tips would connect across the model.
+            // Keep the original per-tip regions; continuous roofs are generated
+            // from the clipped overhang polygons by sample_overhang_area().
             Polygons new_roofs;
-            for (const LineInformation &line : lines)
-                //FIXME sweep the tip radius along the line?
-                for (const std::pair<Point, LineStatus> &p : line) {
-                    Polygon roof_circle{ m_base_circle };
-                    roof_circle.scale(config.min_radius / m_base_radius);
-                    roof_circle.translate(p.first);
-                    new_roofs.emplace_back(std::move(roof_circle));
-                }
+            // Contact geometry is independent of clearance and fill pattern.
+            // Tree tips still synchronize/support the roof stack, while the
+            // filler generates the selected pattern inside this footprint.
+            if (continuous_roof_area != nullptr)
+                new_roofs = diff(*continuous_roof_area, volumes.getCollision(0, this_layer_idx, min_xy_dist));
+            if (continuous_roof_area_no_xy != nullptr)
+                append(new_roofs, diff(*continuous_roof_area_no_xy, volumes.getCollisionWithoutXY(0, this_layer_idx)));
+            if (continuous_roof_area_tip != nullptr)
+                append(new_roofs, diff(*continuous_roof_area_tip,
+                    volumes.getCollisionForContact(0, this_layer_idx,
+                        config.support_tip_xy_distance, config.support_tip_z_distance)));
+            if (!use_continuous_roof)
+                for (const LineInformation &line : lines)
+                    for (const std::pair<Point, LineStatus> &p : line) {
+                        Polygon roof_circle{ m_base_circle };
+                        roof_circle.scale(config.min_radius / m_base_radius);
+                        roof_circle.translate(p.first);
+                        new_roofs.emplace_back(std::move(roof_circle));
+                    }
             this->add_roof(std::move(new_roofs), this_layer_idx, roof_recovery_depth);
         }
 
@@ -1238,10 +1411,10 @@ public:
 
 private:
     // called by this->add_points_along_lines()
-    void add_point_as_influence_area(std::pair<Point, LineStatus> p, LayerIndex insert_layer, size_t dont_move_until, bool roof, size_t roof_recovery_dtt, bool skip_ovalisation)
+    void add_point_as_influence_area(std::pair<Point, LineStatus> p, LayerIndex insert_layer, size_t dont_move_until, bool roof, size_t roof_recovery_dtt, bool skip_ovalisation, bool roof_already_generated = false)
     {
         bool to_bp = p.second == LineStatus::TO_BP || p.second == LineStatus::TO_BP_SAFE;
-        bool gracious = to_bp || p.second == LineStatus::TO_MODEL_GRACIOUS || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE;
+        bool gracious = to_bp || p.second == LineStatus::CONTACT_TO_MODEL || p.second == LineStatus::TO_MODEL_GRACIOUS || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE;
         bool safe_radius = p.second == LineStatus::TO_BP_SAFE || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE;
         if (! config.support_rests_on_model && ! to_bp) {
             BOOST_LOG_TRIVIAL(warning) << "Tried to add an invalid support point";
@@ -1274,7 +1447,7 @@ private:
                 state.supports_roof = roof;
                 state.dont_move_until = dont_move_until;
                 state.can_use_safe_radius = safe_radius;
-                state.set_pending_roof_recovery(force_tip_to_roof ? dont_move_until : 0, roof_recovery_dtt);
+                state.set_pending_roof_recovery(force_tip_to_roof && !roof_already_generated ? dont_move_until : 0, roof_recovery_dtt);
                 state.skip_ovalisation = skip_ovalisation;
                 move_bounds[insert_layer].emplace_back(state, std::move(circle));
             }
@@ -1385,6 +1558,13 @@ void finalize_raft_contact(
 void sample_overhang_area(
     // Area to support
     Polygons                           &&overhang_area,
+    // Clipped model-side footprint used for contact/interface surfaces.
+    // Organic branches continue to use the expanded support area above.
+    Polygons                           &&contact_area,
+    // Sharp-tail footprint using only the Z-gap collision model.
+    Polygons                           &&sharp_tail_contact_area,
+    // Sharp convex tip footprint using the configurable local XY/Z values.
+    Polygons                           &&tip_contact_area,
     // If true, then the overhang_area is likely large and wide, thus it is worth to try
     // to cover it with continuous interfaces supported by zig-zag patterned tree tips.
     const bool                           large_horizontal_roof,
@@ -1411,6 +1591,22 @@ void sample_overhang_area(
     };
 
     LineInformations        overhang_lines;
+    // Keep the polygon that was actually selected for the top contact layer.
+    // `overhang_area` is progressively clipped while looking for a lower
+    // support layer; after that loop it is no longer the contact footprint.
+    // Using that lower-layer remainder for the contact infill produces a
+    // necklace of isolated tree-tip caps around the object instead of a
+    // continuous surface over the original overhang.
+    Polygons                contact_roof_area = std::move(contact_area);
+    Polygons                sharp_tail_contact_roof_area = std::move(sharp_tail_contact_area);
+    Polygons                tip_contact_roof_area = std::move(tip_contact_area);
+    const bool              continuous_contact = !contact_roof_area.empty() || !sharp_tail_contact_roof_area.empty() || !tip_contact_roof_area.empty();
+    // Keep the roof polygons pending until the actual tree-tip candidate
+    // region has been calculated below.  A continuous contact footprint is
+    // only printable when a branch can reach every part of it; committing the
+    // full model footprint before sampling tips creates unsupported interface
+    // strips at sharp ends.
+    std::vector<Polygons> pending_roofs;
     // Track how many top contact / interface layers were already generated.
     size_t                  dtt_roof             = 0;
     size_t                  layer_generation_dtt = 0;
@@ -1425,7 +1621,7 @@ void sample_overhang_area(
             // here the roof is handled. If roof can not be added the branches will try to not move instead
             Polygons forbidden_next;
             {
-                const bool min_xy_dist = interface_placer.config.xy_distance > interface_placer.config.xy_min_distance;
+                const bool min_xy_dist = interface_placer.config.xy_distance >= interface_placer.config.xy_min_distance;
                 const Polygons &forbidden_next_raw = interface_placer.config.support_rests_on_model ?
                     interface_placer.volumes.getCollision(interface_placer.config.getRadius(0), layer_idx - (dtt_roof + 1), min_xy_dist) :
                     interface_placer.volumes.getAvoidance(interface_placer.config.getRadius(0), layer_idx - (dtt_roof + 1), TreeModelVolumes::AvoidanceType::Fast, false, min_xy_dist);
@@ -1448,14 +1644,36 @@ void sample_overhang_area(
                 }
                 break;
             }
-            added_roofs[dtt_roof] = overhang_area;
+            // Contact and lower interface layers share a continuous footprint,
+            // trimmed against the collision volume on each output layer.
+            // Branch sampling still uses the original safe support area.
+            if (continuous_contact) {
+                added_roofs[dtt_roof] = diff(contact_roof_area,
+                    interface_placer.volumes.getCollision(0, layer_idx - dtt_roof, interface_placer.min_xy_dist));
+                if (!sharp_tail_contact_roof_area.empty())
+                    append(added_roofs[dtt_roof], diff(sharp_tail_contact_roof_area,
+                        interface_placer.volumes.getCollisionWithoutXY(0, layer_idx - dtt_roof)));
+                if (!tip_contact_roof_area.empty())
+                    append(added_roofs[dtt_roof], diff(tip_contact_roof_area,
+                        interface_placer.volumes.getCollisionForContact(0, layer_idx - dtt_roof,
+                            interface_placer.config.support_tip_xy_distance,
+                            interface_placer.config.support_tip_z_distance)));
+                added_roofs[dtt_roof] = union_(added_roofs[dtt_roof]);
+            } else
+                added_roofs[dtt_roof] = overhang_area;
             last_overhang   = std::move(overhang_area);
             overhang_area = std::move(overhang_area_next);
         }
 
         layer_generation_dtt = std::max(dtt_roof, size_t(1)) - 1; // 1 inside max and -1 outside to avoid underflow. layer_generation_dtt=dtt_roof-1 if dtt_roof!=0;
-        // if the roof should be valid, check that the area does generate lines. This is NOT guaranteed.
-        if (overhang_lines.empty() && dtt_roof != 0 && generate_roof_lines(overhang_area, layer_idx - layer_generation_dtt).empty())
+        // If the roof should be valid, check that the area does generate lines.
+        // Continuous contact layers are also valid when the narrow
+        // overhang does not yield a sampled line: keep the clipped polygon so
+        // the contact surface remains continuous instead of falling back to
+        // isolated organic tip circles.
+        if (overhang_lines.empty() && dtt_roof != 0 &&
+            !continuous_contact &&
+            generate_roof_lines(overhang_area, layer_idx - layer_generation_dtt).empty())
             for (size_t idx = 0; idx < dtt_roof; idx++) {
                 // check for every roof area that it has resulting lines. Remember idx 1 means the 2. layer of roof => higher idx == lower layer
                 if (generate_roof_lines(added_roofs[idx], layer_idx - idx).empty()) {
@@ -1465,15 +1683,120 @@ void sample_overhang_area(
                 }
             }
         added_roofs.erase(added_roofs.begin() + dtt_roof, added_roofs.end());
-        interface_placer.add_roofs(std::move(added_roofs), layer_idx);
+        pending_roofs = std::move(added_roofs);
+    }
+
+    const bool supports_roof = dtt_roof > 0;
+    const bool continuous_tips = !supports_roof && large_horizontal_roof;
+    Polygons contact_branch_area;
+    if (continuous_contact) {
+        // Contact candidates are inserted on the same layer as the sampled
+        // overhang lines below. Keeping the collision check on that layer
+        // avoids re-evaluating a valid tip against a different model slice.
+        const LayerIndex branch_layer = layer_idx - layer_generation_dtt;
+        const bool min_xy_dist = interface_placer.config.xy_distance >=
+            interface_placer.config.xy_min_distance;
+        auto append_safe_branch_core = [&](const Polygons &footprint, Polygons forbidden) {
+            if (footprint.empty())
+                return;
+            // Erode each connected contact component by the branch radius so
+            // a sampled tree tip has room to stay clear of its boundary. A
+            // narrow sharp edge can be thinner than that full diameter,
+            // though; eroding the whole union in one pass used to delete the
+            // component entirely and left the contact line unsupported. Keep
+            // a conservative half-radius core for those components, and only
+            // fall back to the original clipped footprint when even that
+            // cannot represent a printable candidate. The forbidden volume
+            // is subtracted after every fallback, so this never bypasses the
+            // model-collision guard.
+            const coord_t full_erosion = interface_placer.config.min_radius;
+            const coord_t narrow_erosion = std::min<coord_t>(
+                full_erosion / 2,
+                mesh_group_settings.support_roof_line_width / 2);
+            for (const ExPolygon &component : union_ex(footprint)) {
+                Polygons core = offset(component, -full_erosion,
+                    jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                if (core.empty() && narrow_erosion > 0)
+                    core = offset(component, -narrow_erosion,
+                        jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                if (core.empty())
+                    core = offset(component, 0,
+                        jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                core = diff(std::move(core), forbidden);
+                append(contact_branch_area, std::move(core));
+
+                // Keep a second, full-width candidate region for contact
+                // branches.  The line-to-tip conversion performs the final
+                // model collision check, so eroding the entire contact strip
+                // here is unnecessarily destructive: on a sharp edge it can
+                // remove the only printable middle rows and leave a hollow
+                // contact platform.  This region is still filtered by the
+                // same forbidden volume before line generation.
+                Polygons full_component = diff(to_polygons(component), forbidden);
+                append(contact_branch_area, std::move(full_component));
+            }
+        };
+
+        // A continuous contact roof may extend beyond the reduced branch
+        // area used for normal tree sampling. Add safe cores for the ordinary
+        // contact, sharp-tail exception, and configurable tip exception
+        // separately so each keeps its own collision rule.
+        append_safe_branch_core(
+            contact_roof_area,
+            interface_placer.volumes.getAvoidance(
+                interface_placer.config.getRadius(0), branch_layer,
+                TreeModelVolumes::AvoidanceType::Fast, false, min_xy_dist));
+        append_safe_branch_core(
+            sharp_tail_contact_roof_area,
+            interface_placer.volumes.getCollisionWithoutXY(
+                interface_placer.config.getRadius(0), branch_layer));
+        append_safe_branch_core(
+            tip_contact_roof_area,
+            interface_placer.volumes.getCollisionForContact(
+                interface_placer.config.getRadius(0), branch_layer,
+                interface_placer.config.support_tip_xy_distance,
+                interface_placer.config.support_tip_z_distance));
+        if (!contact_branch_area.empty())
+            contact_branch_area = union_(std::move(contact_branch_area));
+
+        // Keep the full model-side contact footprint. The branch candidates
+        // below are generated from that same footprint (and collision filtered
+        // independently), so a narrow tree core cannot make the requested
+        // contact fill disappear.
+    }
+
+    // Roofs without a separate contact footprint still need to be committed;
+    // delay only changes the ordering, not the ordinary non-contact path.
+    if (!pending_roofs.empty())
+        interface_placer.add_roofs(std::move(pending_roofs), layer_idx);
+
+    // Even when the roof sampler already produced lines, add safe tree-tip
+    // candidates for the contact-only portion. Previously this was done only
+    // in the empty-line fallback, so a continuous interface could be emitted
+    // with no organic tree points underneath its outer edge.
+    if (!overhang_lines.empty() && !contact_branch_area.empty()) {
+        const LayerIndex branch_layer = layer_idx - layer_generation_dtt;
+        Polylines contact_polylines = generate_support_infill_lines(
+            contact_branch_area,
+            interface_placer.support_parameters,
+            supports_roof,
+            branch_layer,
+            supports_roof ? mesh_group_settings.support_roof_line_distance : mesh_group_settings.support_tree_branch_distance);
+        contact_polylines = ensure_maximum_distance_polyline(
+            std::move(contact_polylines),
+            continuous_tips ? interface_placer.config.min_radius / 2 : connect_length,
+            1);
+        append(overhang_lines, convert_contact_lines_to_internal(
+            interface_placer.volumes,
+            interface_placer.config,
+            contact_polylines,
+            branch_layer));
     }
 
     if (overhang_lines.empty()) {
         // support_line_width to form a line here as otherwise most will be unsupported. Technically this violates branch distance, but not only is this the only reasonable choice,
         // but it ensures consistant behaviour as some infill patterns generate each line segment as its own polyline part causing a similar line forming behaviour.
         // This is not doen when a roof is above as the roof will support the model and the trees only need to support the roof
-        bool supports_roof = dtt_roof > 0;
-        bool continuous_tips = !supports_roof && large_horizontal_roof;
         Polylines polylines = ensure_maximum_distance_polyline(
             generate_support_infill_lines(overhang_area, interface_placer.support_parameters, supports_roof, layer_idx - layer_generation_dtt,
                 supports_roof ? mesh_group_settings.support_roof_line_distance : mesh_group_settings.support_tree_branch_distance),
@@ -1497,15 +1820,64 @@ void sample_overhang_area(
                 connect_length, min_support_points);
         }
         overhang_lines = convert_lines_to_internal(interface_placer.volumes, interface_placer.config, polylines, layer_idx - dtt_roof);
+        // Contact-only candidates must not be reclassified with the ordinary
+        // XY clearance.  This path is used when the roof sampler produced no
+        // normal lines, which is common for narrow one-sided components.
+        if (!contact_branch_area.empty()) {
+            Polylines contact_polylines = ensure_maximum_distance_polyline(
+                generate_support_infill_lines(contact_branch_area,
+                    interface_placer.support_parameters,
+                    supports_roof,
+                    layer_idx - layer_generation_dtt,
+                    supports_roof ? mesh_group_settings.support_roof_line_distance : mesh_group_settings.support_tree_branch_distance),
+                continuous_tips ? interface_placer.config.min_radius / 2 : connect_length,
+                1);
+            append(overhang_lines, convert_contact_lines_to_internal(
+                interface_placer.volumes,
+                interface_placer.config,
+                contact_polylines,
+                layer_idx - layer_generation_dtt));
+        }
     }
 
     assert(dtt_roof <= layer_idx);
-    if (dtt_roof >= layer_idx && large_horizontal_roof)
-        // Reached buildplate when generating contact, interface and base interface layers.
-        interface_placer.add_roof_build_plate(std::move(overhang_area), dtt_roof);
+    if (dtt_roof >= layer_idx && large_horizontal_roof) {
+        // Reached the build plate while generating the roof stack.  The
+        // support-layer remainder is only the area where a tree branch can
+        // stand; it is not the footprint of the model layer that this roof
+        // must support.  In particular, layer 0 is the layer immediately
+        // below the first overhanging model layer.  A continuous contact
+        // must therefore keep the footprint captured from that next model
+        // layer instead of the progressively clipped support remainder.
+        // Keep the contact footprint derived from the next model layer and
+        // apply only the collision rule for the actual output layer.
+        const LayerIndex output_layer_idx = layer_idx - dtt_roof;
+        Polygons build_plate_roof;
+        if (continuous_contact) {
+            build_plate_roof = diff(contact_roof_area,
+                interface_placer.volumes.getCollision(0, output_layer_idx, interface_placer.min_xy_dist));
+            if (!sharp_tail_contact_roof_area.empty())
+                append(build_plate_roof, diff(sharp_tail_contact_roof_area,
+                    interface_placer.volumes.getCollisionWithoutXY(0, output_layer_idx)));
+            if (!tip_contact_roof_area.empty())
+                append(build_plate_roof, diff(tip_contact_roof_area,
+                    interface_placer.volumes.getCollisionForContact(0, output_layer_idx,
+                        interface_placer.config.support_tip_xy_distance,
+                        interface_placer.config.support_tip_z_distance)));
+            build_plate_roof = build_plate_roof.empty() ? Polygons{} : union_(std::move(build_plate_roof));
+        } else {
+            build_plate_roof = std::move(overhang_area);
+        }
+        // Reached buildplate when generating contact, interface and base
+        // interface layers.
+        interface_placer.add_roof_build_plate(std::move(build_plate_roof), dtt_roof);
+    }
     else {
         // normal trees have to be generated
         const bool roof_enabled = num_support_roof_layers > 0;
+        // The tip mask uses the same roof stack, but its collision footprint is
+        // evaluated with the local XY/Z clearances. Keep this path separate
+        // from ordinary contacts so the exception cannot widen all branches.
         interface_placer.add_points_along_lines(
             // Sample along these lines
             overhang_lines,
@@ -1516,7 +1888,10 @@ void sample_overhang_area(
             // Supports roof already? How many roof layers were already produced above these tips?
             dtt_roof,
             // Don't move until the following distance to top is reached.
-            roof_enabled ? num_support_roof_layers - dtt_roof : 0);
+            roof_enabled ? num_support_roof_layers - dtt_roof : 0,
+            contact_roof_area.empty() ? nullptr : &contact_roof_area,
+            sharp_tail_contact_roof_area.empty() ? nullptr : &sharp_tail_contact_roof_area,
+            tip_contact_roof_area.empty() ? nullptr : &tip_contact_roof_area);
     }
 }
 
@@ -1534,6 +1909,7 @@ static void generate_initial_areas(
     const TreeModelVolumes          &volumes,
     const TreeSupportSettings       &config,
     const std::vector<Polygons>     &overhangs,
+    const std::vector<Polygons>     &sharp_tail_overhangs,
     std::vector<SupportElements>    &move_bounds,
     InterfacePlacer                 &interface_placer,
     std::function<void()>            throw_on_cancel)
@@ -1542,9 +1918,11 @@ static void generate_initial_areas(
     TreeSupportMeshGroupSettings    mesh_group_settings(print_object);
 
     // To ensure z_distance_top_layers are left empty between the overhang (zeroth empty layer), the support has to be added z_distance_top_layers+1 layers below
+    // Keep the source-layer mapping aligned with the object layer immediately
+    // above the contact surface when the configured Z gap is zero.
     const size_t z_distance_delta = config.z_distance_top_layers + 1;
 
-    const bool min_xy_dist = config.xy_distance > config.xy_min_distance;
+    const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
 
 #if 0
     if (mesh.overhang_areas.size() <= z_distance_delta)
@@ -1569,7 +1947,11 @@ static void generate_initial_areas(
         ;
     const size_t  num_support_roof_layers = mesh_group_settings.support_roof_layers;
     const bool    roof_enabled        = num_support_roof_layers > 0;
-    const bool    force_tip_to_roof   = roof_enabled && (interface_placer.support_parameters.zero_gap_interface_top || sqr<double>(config.min_radius) * M_PI > mesh_group_settings.minimum_roof_area);
+    // Force a small tree tip into a roof only when the contact is zero-gap or
+    // when the tip itself is large enough to form a valid roof footprint.
+    const bool    force_tip_to_roof   = roof_enabled &&
+        (interface_placer.support_parameters.zero_gap_interface_top ||
+         sqr<double>(config.min_radius) * M_PI > mesh_group_settings.minimum_roof_area);
     // cap for how much layer below the overhang a new support point may be added, as other than with regular support every new inserted point
     // may cause extra material and time cost.  Could also be an user setting or differently calculated. Idea is that if an overhang
     // does not turn valid in double the amount of layers a slope of support angle would take to travel xy_distance, nothing reasonable will come from it.
@@ -1591,29 +1973,197 @@ static void generate_initial_areas(
     size_t                                          num_support_layers;
     int                                             raft_contact_layer_idx;
     // Layers with their overhang regions.
-    std::vector<std::pair<size_t, const Polygons*>>  raw_overhangs;
+    struct RawOverhang {
+        size_t layer_idx;
+        const Polygons *areas;
+        const Polygons *sharp_tail_areas;
+    };
+    std::vector<RawOverhang> raw_overhangs;
 
     {
         const size_t num_raft_layers     = config.raft_layers.size();
-        const size_t first_support_layer = std::max(int(num_raft_layers) - int(z_distance_delta), 1);
+        const size_t first_support_layer = std::max(int(num_raft_layers) - int(z_distance_delta), roof_enabled ? 0 : 1);
         num_support_layers  = size_t(std::max(0, int(print_object.layer_count()) + int(num_raft_layers) - int(z_distance_delta)));
         raft_contact_layer_idx = generate_raft_contact(print_object, config, interface_placer);
         // Enumerate layers for which the support tips may be generated from overhangs above.
         raw_overhangs.reserve(num_support_layers - first_support_layer);
         for (size_t layer_idx = first_support_layer; layer_idx < num_support_layers; ++ layer_idx)
             if (const size_t overhang_idx = layer_idx + z_distance_delta; ! overhangs[overhang_idx].empty())
-                raw_overhangs.push_back({ layer_idx, &overhangs[overhang_idx] });
+                raw_overhangs.push_back({ layer_idx, &overhangs[overhang_idx],
+                    overhang_idx < sharp_tail_overhangs.size() && !sharp_tail_overhangs[overhang_idx].empty() ?
+                        &sharp_tail_overhangs[overhang_idx] : nullptr });
     }
 
     RichInterfacePlacer rich_interface_placer{ interface_placer, volumes, force_tip_to_roof, num_support_layers, move_bounds };
 
     tbb::parallel_for(tbb::blocked_range<size_t>(0, raw_overhangs.size()),
-        [&volumes, &config, &raw_overhangs, &mesh_group_settings,
+        [&volumes, &config, &print_object, &raw_overhangs, &mesh_group_settings,
+         z_distance_delta,
          min_xy_dist, roof_enabled, num_support_roof_layers, extra_outset, circle_length_to_half_linewidth_change, connect_length,
          &rich_interface_placer, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
         for (size_t raw_overhang_idx = range.begin(); raw_overhang_idx < range.end(); ++ raw_overhang_idx) {
-            size_t           layer_idx    = raw_overhangs[raw_overhang_idx].first;
-            const Polygons  &overhang_raw = *raw_overhangs[raw_overhang_idx].second;
+            size_t           layer_idx    = raw_overhangs[raw_overhang_idx].layer_idx;
+            const Polygons  &overhang_raw = *raw_overhangs[raw_overhang_idx].areas;
+            const Polygons  *sharp_tail_raw = raw_overhangs[raw_overhang_idx].sharp_tail_areas;
+            Polygons contact_roof;
+            Polygons sharp_tail_contact_roof;
+            Polygons tip_contact_roof;
+            if (roof_enabled) {
+                // Contact infill needs only the extrusion footprint to clear
+                // the model, not the full tree-tip radius. Use the same
+                // polygon offset/trim operation as ordinary support contacts.
+                // Expand by one roof line width so the contact bead's
+                // centreline reaches the model-facing edge after the
+                // overhang difference is clipped.  Collision subtraction
+                // below still prevents overlap; this compensates the
+                // half-line-width inset that otherwise leaves a one-sided
+                // outer-ring gap.
+                const coord_t contact_margin = std::min<coord_t>(
+                    config.min_radius, mesh_group_settings.support_roof_line_width);
+                contact_roof = diff(
+                    offset(union_ex(overhang_raw), contact_margin, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION),
+                    volumes.getCollision(0, layer_idx, true));
+                if (sharp_tail_raw != nullptr) {
+                    // Sharp tails are the one intentional exception to the
+                    // normal XY clearance rule.  Keep the tree itself away
+                    // from the model, but let the dense contact footprint
+                    // follow the model using only the configured Z gap.
+                    sharp_tail_contact_roof = diff(
+                        offset(union_ex(*sharp_tail_raw), contact_margin, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION),
+                        volumes.getCollisionWithoutXY(0, layer_idx));
+                }
+
+                // Apply the reduced clearances only around qualifying convex
+                // tips. The ordinary support area and branch collision rules
+                // remain unchanged, so broad overhangs do not inherit the
+                // local relaxation.
+                const coord_t tip_mask_radius = std::max(config.min_radius, mesh_group_settings.support_roof_line_width / 2);
+                const size_t object_layer_idx = layer_idx + z_distance_delta - config.raft_layers.size();
+                // Classify the model contour, not the thin difference strip
+                // left by overhang detection. Otherwise almost every sloping
+                // face looks like a sharp edge and real model tips are lost.
+                Polygons model_tip_mask;
+                if (object_layer_idx < print_object.layer_count())
+                    model_tip_mask = sharp_tip_contact_mask(
+                        to_polygons(print_object.get_layer(object_layer_idx)->lslices),
+                        config.support_tip_turn_angle, tip_mask_radius,
+                        &overhang_raw);
+                // A long sharp edge is not a single convex vertex in the
+                // model slice.  Its overhang strip is itself a narrow contour;
+                // include that local footprint so it receives a printable
+                // platform instead of isolated corner caps.
+                // The overhang difference is often the only polygon that
+                // contains the sharp corner (the full model slice may have
+                // no matching convex vertex after slicing).  Keep the
+                // incident-edge extension enabled here so that this path
+                // produces the same short V platform as the model-derived
+                // mask.  sharp_tip_contact_mask() caps that extension at
+                // 0.5 mm and the result is still clipped by the local
+                // contact collision volume below.
+                Polygons overhang_tip_mask = sharp_tip_contact_mask(overhang_raw,
+                    config.support_tip_turn_angle, tip_mask_radius,
+                    nullptr, true);
+                const coord_t tip_reach = scaled<coord_t>(std::max(
+                    4.0, 20.0 * unscale<double>(config.min_radius)));
+                // The raw overhang difference may contain only one side of a
+                // sharp corner.  Clip the raw-derived mask as before, but keep
+                // complete model-derived tip footprints whose corner point is
+                // locally adjacent to that raw area.  Clipping those circles
+                // by the one-sided difference was the reason the opposite
+                // half of a 90-degree tip disappeared.
+                const Polygons raw_tip_reach = offset(union_ex(overhang_raw),
+                    tip_reach, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                overhang_tip_mask = intersection(overhang_tip_mask, raw_tip_reach);
+                Polygons tip_mask = std::move(model_tip_mask);
+                append(tip_mask, std::move(overhang_tip_mask));
+                if (!tip_mask.empty()) {
+                    tip_contact_roof = diff(std::move(tip_mask),
+                        volumes.getCollisionForContact(0, layer_idx,
+                            config.support_tip_xy_distance,
+                            config.support_tip_z_distance));
+                }
+            }
+
+            // Keep each support component paired with the part of the model
+            // footprint it can actually reach.  Sharing the complete layer
+            // footprint with every component lets a one-sided tip emit a
+            // short contact arc on the opposite side of the overhang.
+            auto contact_for_support = [&](const Polygons &support_area,
+                                           const Polygons &footprint,
+                                           bool tip_platform = false,
+                                           const Polygons *shared_support_reach = nullptr,
+                                           bool ordinary_contact = true,
+                                           const Polygons *all_support_union = nullptr) {
+                if (support_area.empty())
+                    return Polygons{};
+                // The organic branch area is already the collision-safe
+                // `overhang_roofs` footprint.  Keep that complete footprint
+                // as the contact platform; restricting it to an individual
+                // branch's reach breaks a broad face into small islands even
+                // though the branches jointly support the same roof.
+                // The support area describes where tree tips may stand; it
+                // is not itself an instruction to print a second outer
+                // contact loop. Keep ordinary contact inside the model-side
+                // footprint whenever one is available. This prevents a
+                // tree-tip safety ring from becoming an unsupported skirt.
+                Polygons contact = ordinary_contact && footprint.empty() ?
+                    support_area : Polygons{};
+                if (footprint.empty())
+                    return contact;
+                // The wide sharp-tip exception is reserved for the default
+                // 45-degree mask.  At the user's 90-degree threshold a tip
+                // is a broad corner/edge contact and its incident bridge must
+                // stay local to 0.5 mm instead of inheriting the shared
+                // four-radius reach envelope.
+                const bool local_tip_platform = tip_platform &&
+                    config.support_tip_turn_angle <= 0.5 * M_PI + EPSILON;
+                const coord_t tip_bridge_reach = std::min<coord_t>(
+                    4 * config.min_radius, scaled<coord_t>(0.5));
+                const coord_t reach = config.min_radius + mesh_group_settings.support_roof_line_width +
+                    (local_tip_platform ? tip_bridge_reach : (tip_platform ? 4 * config.min_radius : 0));
+                Polygons support_reach;
+                if (shared_support_reach != nullptr && !shared_support_reach->empty()) {
+                    // Tip contacts and their branch candidates must use the
+                    // same union reach envelope on this layer.  Previously a
+                    // local tip fell back to its individual component unless
+                    // a second *independent* support component happened to
+                    // overlap the footprint.  A one-sided overhang therefore
+                    // lost its opposite half even though the union envelope
+                    // already represented the tree candidates that could
+                    // carry it.  The tip footprint itself is still capped by
+                    // sharp_tip_contact_mask() (the incident V is at most
+                    // 0.5 mm), so this does not widen ordinary contacts or
+                    // create a long one-sided V.
+                    support_reach = *shared_support_reach;
+                } else {
+                    support_reach = offset(union_ex(support_area), reach,
+                        jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                }
+                Polygons clipped = intersection(footprint, support_reach);
+                // `support_area` is the collision-safe center region for
+                // branch placement and is intentionally eroded from the
+                // model.  It is therefore too restrictive for the printed
+                // contact footprint: using support_area ∩ footprint here
+                // leaves a visible gap at an outer-ring start even though a
+                // branch can safely reach the region.  The shared reach
+                // envelope already limits the contact to an area covered by
+                // the support union; use that envelope for ordinary contact
+                // paths as well.
+                if (ordinary_contact)
+                    contact = clipped;
+                // A sharp-tip platform is an explicit local exception: when
+                // both incident sides are being supported, keep the complete
+                // collision-clipped tip footprint so the contact surface is
+                // continuous instead of two disconnected arcs. Long narrow
+                // overhangs are already capped to a 0.5 mm contour wrap in
+                // sharp_tip_contact_mask(), so this does not restore the old
+                // oversized outer loop for the user's blade-like case.
+                if (tip_platform && !local_tip_platform)
+                    clipped = footprint;
+                if (!clipped.empty())
+                    contact = union_(std::move(contact), std::move(clipped));
+                return contact;
+            };
 
             // take the least restrictive avoidance possible
             Polygons relevant_forbidden;
@@ -1718,8 +2268,60 @@ static void generate_initial_areas(
                     remove_small(overhang_roofs, mesh_group_settings.minimum_roof_area);
                 overhang_regular = diff(overhang_regular, overhang_roofs, ApplySafetyOffset::Yes);
                 //check_self_intersections(overhang_regular, "overhang_regular3");
-                for (ExPolygon &roof_part : union_ex(overhang_roofs)) {
-                    sample_overhang_area(to_polygons(std::move(roof_part)), true, layer_idx, num_support_roof_layers, connect_length,
+                // A sharp-tip contact footprint can be printable even when
+                // the normal overhang difference retained only one incident
+                // side.  Keep that local, collision-clipped footprint in the
+                // tree support seed as well; otherwise the roof can be emitted
+                // on one side while no organic branch is ever allowed to
+                // reach the other side.  The footprint is already bounded by
+                // sharp_tip_contact_mask() and the local XY/Z collision rule,
+                // so this does not widen ordinary support regions.
+                Polygons roof_support_seed = overhang_roofs;
+                // The tip footprint has already been clipped with the
+                // configured local XY/Z contact clearance.  It therefore
+                // must also seed the organic branch planner for every tip
+                // angle.  Restricting this to the old <=90-degree branch
+                // left a valid contact roof without a tree below it for the
+                // normal 45-degree setting, especially once the ordinary
+                // support XY clearance exceeded the narrow edge width.
+                if (!tip_contact_roof.empty())
+                    append(roof_support_seed, tip_contact_roof);
+                roof_support_seed = roof_support_seed.empty() ? Polygons{} : union_(std::move(roof_support_seed));
+                std::vector<Polygons> roof_support_areas;
+                for (ExPolygon &roof_part : union_ex(roof_support_seed))
+                    roof_support_areas.emplace_back(to_polygons(std::move(roof_part)));
+                Polygons roof_support_union;
+                for (const Polygons &support_area : roof_support_areas)
+                    append(roof_support_union, support_area);
+                roof_support_union = roof_support_union.empty() ? Polygons{} : union_(roof_support_union);
+                const coord_t roof_contact_reach = config.min_radius + mesh_group_settings.support_roof_line_width;
+                // Keep the shared reach envelope for two-sided tip
+                // connections; the emitted contact footprint is still
+                // clipped to that envelope rather than copied wholesale.
+                const coord_t roof_tip_reach = roof_contact_reach + 4 * config.min_radius;
+                const Polygons roof_shared_reach = roof_support_union.empty() ? Polygons{} :
+                    offset(union_ex(roof_support_union), roof_contact_reach, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                const Polygons roof_shared_tip_reach = roof_support_union.empty() ? Polygons{} :
+                    offset(union_ex(roof_support_union), roof_tip_reach, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                for (Polygons &support_area : roof_support_areas) {
+                    // The safe tree area is deliberately offset away from the
+                    // model, so it normally has no geometric intersection with
+                    // the original overhang.  Keep the original footprint as
+                    // the contact seed.  A shared reach envelope joins
+                    // neighboring components before the interface polygons
+                    // are accumulated, so the platform is not cut into strips.
+                    // A sharp-tip footprint is the only region allowed to
+                    // use the reduced local contact rule. Remove it from the
+                    // ordinary footprint first; otherwise the normal contact
+                    // path recreates the long V/necklace around a tip even
+                    // though the tip-specific mask was capped to 0.5 mm.
+                    Polygons ordinary_contact_roof = contact_roof;
+                    if (!tip_contact_roof.empty())
+                        ordinary_contact_roof = diff(ordinary_contact_roof, tip_contact_roof);
+                    Polygons contact_area = contact_for_support(support_area, ordinary_contact_roof, false, &roof_shared_reach, true, &roof_support_union);
+                    Polygons sharp_tail_contact_area = contact_for_support(support_area, sharp_tail_contact_roof, false, &roof_shared_reach, false, &roof_support_union);
+                    Polygons tip_contact_area = contact_for_support(support_area, tip_contact_roof, true, &roof_shared_tip_reach, false, &roof_support_union);
+                    sample_overhang_area(std::move(support_area), std::move(contact_area), std::move(sharp_tail_contact_area), std::move(tip_contact_area), true, layer_idx, num_support_roof_layers, connect_length,
                         mesh_group_settings, rich_interface_placer);
                     throw_on_cancel();
                 }
@@ -1729,8 +2331,27 @@ static void generate_initial_areas(
             if (mesh_group_settings.minimum_support_area > 0)
                 remove_small(overhang_regular, mesh_group_settings.minimum_support_area);
 
-            for (ExPolygon &support_part : union_ex(overhang_regular)) {
-                sample_overhang_area(to_polygons(std::move(support_part)),
+            std::vector<Polygons> regular_support_areas;
+            for (ExPolygon &support_part : union_ex(overhang_regular))
+                regular_support_areas.emplace_back(to_polygons(std::move(support_part)));
+            Polygons regular_support_union;
+            for (const Polygons &support_area : regular_support_areas)
+                append(regular_support_union, support_area);
+            regular_support_union = regular_support_union.empty() ? Polygons{} : union_(regular_support_union);
+            const coord_t regular_contact_reach = config.min_radius + mesh_group_settings.support_roof_line_width;
+            const coord_t regular_tip_reach = regular_contact_reach + 4 * config.min_radius;
+            const Polygons regular_shared_reach = regular_support_union.empty() ? Polygons{} :
+                offset(union_ex(regular_support_union), regular_contact_reach, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+            const Polygons regular_shared_tip_reach = regular_support_union.empty() ? Polygons{} :
+                offset(union_ex(regular_support_union), regular_tip_reach, jtRound, SUPPORT_TREE_CIRCLE_RESOLUTION);
+            for (Polygons &support_area : regular_support_areas) {
+                Polygons ordinary_contact_roof = contact_roof;
+                if (!tip_contact_roof.empty())
+                    ordinary_contact_roof = diff(ordinary_contact_roof, tip_contact_roof);
+                Polygons contact_area = contact_for_support(support_area, ordinary_contact_roof, false, &regular_shared_reach, true, &regular_support_union);
+                Polygons sharp_tail_contact_area = contact_for_support(support_area, sharp_tail_contact_roof, false, &regular_shared_reach, false, &regular_support_union);
+                Polygons tip_contact_area = contact_for_support(support_area, tip_contact_roof, true, &regular_shared_tip_reach, false, &regular_support_union);
+                sample_overhang_area(std::move(support_area), std::move(contact_area), std::move(sharp_tail_contact_area), std::move(tip_contact_area),
                     false, layer_idx, num_support_roof_layers, connect_length,
                     mesh_group_settings, rich_interface_placer);
                 throw_on_cancel();
@@ -3739,15 +4360,24 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
 #if 1
         // use smart overhang detection
         std::vector<Polygons>        overhangs;
+        std::vector<Polygons>        sharp_tail_overhangs;
         tree_support->detect_overhangs();
         const int       num_raft_layers = int(config.raft_layers.size());
         const int       num_layers = int(print_object.layer_count()) + num_raft_layers;
         overhangs.resize(num_layers);
+        sharp_tail_overhangs.resize(num_layers);
         for (size_t i = 0; i < print_object.layer_count(); i++) {
             for (ExPolygon& expoly : print_object.get_layer(i)->loverhangs) {
                 Polygons polys = to_polygons(expoly);
-                if (tree_support->overhang_types[&expoly] == TreeSupport::SharpTail) { polys = offset(polys, scale_(0.2));
-                }
+                const bool is_sharp_tail = tree_support->overhang_types[&expoly] == TreeSupport::SharpTail;
+                // Keep the unexpanded footprint for the actual contact
+                // exception.  The legacy +0.2 mm expansion is useful for
+                // locating a tree branch, but must not enlarge printed
+                // interface material into the model.
+                if (is_sharp_tail)
+                    append(sharp_tail_overhangs[i + num_raft_layers], polys);
+                if (is_sharp_tail)
+                    polys = offset(polys, scale_(0.2));
                 append(overhangs[i + num_raft_layers], polys);
             }
         }
@@ -3825,7 +4455,7 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
 
             // ### Place tips of the support tree
             for (size_t mesh_idx : processing.second)
-                generate_initial_areas(*print.get_object(mesh_idx), volumes, config, overhangs, 
+                generate_initial_areas(*print.get_object(mesh_idx), volumes, config, overhangs, sharp_tail_overhangs,
                     move_bounds, interface_placer, throw_on_cancel);
             auto t_gen = std::chrono::high_resolution_clock::now();
 
@@ -4620,6 +5250,7 @@ void organic_draw_branches(
             throw_on_cancel();
         }
     }, tbb::simple_partitioner());
+
 }
 
 } // namespace TreeSupport3D

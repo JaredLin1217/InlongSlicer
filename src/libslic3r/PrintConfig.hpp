@@ -1281,6 +1281,10 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionPercent,            tree_support_top_rate))
     ((ConfigOptionFloat,              tree_support_branch_diameter_organic))
     ((ConfigOptionFloat,              tree_support_branch_angle_organic))
+    // Inlong: local clearance controls for sharp Organic support tips.
+    ((ConfigOptionFloat,              support_tip_turn_angle))
+    ((ConfigOptionPercent,            support_tip_xy_distance_percent))
+    ((ConfigOptionPercent,            support_tip_z_distance_percent))
     ((ConfigOptionEnum<GapFillTarget>,gap_fill_target))
     ((ConfigOptionFloat,              min_length_factor))
 

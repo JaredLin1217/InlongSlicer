@@ -22,6 +22,33 @@ branding migration checklist.
 - Use `inlong/orca-2.4-base` as the clean upstream base when classifying fork
   changes.
 
+## 2026-10-01 - Organic Sharp-Tip Contact Controls
+
+Status: `Uncommitted`
+
+Type: Organic support contact geometry
+
+- Add Organic-only controls for the convex-tip angle mask and local XY/Z
+  contact clearances. Defaults are a 45-degree interior tip angle, 50% of normal
+  XY distance, and 50% of normal top Z distance; the existing support parameter keys and normal
+  support behavior remain unchanged.
+- Keep the exception local to the sharp-tip contact footprint. Organic branch
+  collision avoidance, normal interface spacing, tree growth, and non-Organic
+  support paths continue to use their existing values.
+- Preserve printable platforms for long, narrow sharp-edge overhangs: the mask
+  widens the narrow contour to the tree-tip footprint, retains it when a
+  per-component tree reach would otherwise clip the whole platform, and still
+  applies the local collision model before extrusion.
+- Join adjacent tree-component contact footprints through a shared reach
+  envelope before interface infill is generated. This closes component-level
+  seams without changing branch growth or model collision avoidance.
+- Expose the controls in the Tree supports page, include them in preset/cache
+  invalidation, and translate the labels and tooltips for Simplified and
+  Traditional Chinese. Rebuild the POT/PO/MO resources after source updates.
+- Add configuration-boundary, cache-invalidation, and continuous sharp-tip contact
+  regressions. The targeted sharp-tip test and the full OrganicTree filter pass
+  after the implementation build.
+
 ## 2026-09-10 - Respect Printer And Material Chamber Controls
 
 Status: `Uncommitted`

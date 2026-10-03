@@ -7527,6 +7527,39 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(40.));
 
+    def = this->add("support_tip_turn_angle", coFloat);
+    def->label = L("Tip contact angle");
+    def->category = L("Support");
+    def->tooltip = L("Only sharp convex tips whose interior angle is at most this angle use the special tip contact clearances. "
+                     "The default 45° targets sharp-tip-like shapes. This affects Organic support contact areas only.");
+    def->sidetext = u8"°";
+    def->min = 0;
+    def->max = 180;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(45));
+
+    def = this->add("support_tip_xy_distance_percent", coPercent);
+    def->label = L("Tip contact XY distance");
+    def->category = L("Support");
+    def->tooltip = L("XY clearance used inside the sharp tip mask, as a percentage of the normal support XY distance. "
+                     "100% keeps the normal distance and 0% allows the contact footprint to reach the model boundary, subject to the line width and collision checks.");
+    def->sidetext = "%";
+    def->min = 0;
+    def->max = 100;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionPercent(50));
+
+    def = this->add("support_tip_z_distance_percent", coPercent);
+    def->label = L("Tip contact Z distance");
+    def->category = L("Support");
+    def->tooltip = L("Z clearance used inside the sharp tip mask, as a percentage of the normal support top Z distance. "
+                     "The value is evaluated at the sliced layer height and only affects the local tip contact footprint.");
+    def->sidetext = "%";
+    def->min = 0;
+    def->max = 100;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionPercent(50));
+
     def = this->add("tree_support_angle_slow", coFloat);
     def->label = L("Preferred Branch Angle");
     def->category = L("Support");

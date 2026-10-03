@@ -3474,7 +3474,8 @@ bool FillRectilinear::fill_surface_trapezoidal(
     polylines = intersection_pl(std::move(polylines), intersection_surface);
 
     // Remove very short segments that may cause connection issues
-    const double minlength = scale_(0.8 * this->spacing);
+    const double minlength = params.preserve_short_paths ?
+        double(SCALED_EPSILON) : scale_(0.8 * this->spacing);
     if (minlength > 0 && !polylines.empty()) {
         polylines.erase(std::remove_if(polylines.begin(), polylines.end(),
                                        [minlength](const Polyline& pl) { return pl.length() < minlength; }),

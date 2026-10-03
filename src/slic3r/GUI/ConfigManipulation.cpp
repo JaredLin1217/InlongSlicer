@@ -975,6 +975,10 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, in
     // settings specific to organic trees
     for (auto el : {"tree_support_branch_angle_organic", "tree_support_branch_distance_organic", "tree_support_branch_diameter_organic", "tree_support_tip_diameter", "tree_support_top_rate", "tree_support_branch_diameter_angle"})
         toggle_line(el, support_is_organic);
+    for (auto el : {"support_tip_turn_angle", "support_tip_xy_distance_percent", "support_tip_z_distance_percent"}) {
+        toggle_line(el, support_is_organic);
+        toggle_field(el, support_is_organic && have_support_interface);
+    }
     toggle_line("tree_support_angle_slow", support_is_organic || support_is_strong_tree);
     toggle_line("independent_support_layer_height", have_support_material);
     toggle_line("independent_support_top_contact_layer_height", have_support_material);

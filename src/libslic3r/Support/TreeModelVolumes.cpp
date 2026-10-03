@@ -304,6 +304,117 @@ const Polygons& TreeModelVolumes::getCollision(const coord_t orig_radius, LayerI
     return getCollision(orig_radius, layer_idx, min_xy_dist);
 }
 
+Polygons TreeModelVolumes::getCollisionWithoutXY(const coord_t radius, LayerIndex layer_idx) const
+{
+    Polygons collisions;
+
+    // This mirrors the layer accumulation in calculateCollision(), but keeps
+    // the current model's configured support XY term out of the result.  The
+    // current outline uses the Z-derived sharp-tail contact distance instead.
+    // It is deliberately returned by
+    // value: sharp-tail contact generation requests this only for the narrow
+    // footprint being generated and does not need another long-lived cache.
+    for (size_t outline_idx = 0; outline_idx < m_layer_outlines.size(); ++outline_idx) {
+        const auto &settings = m_layer_outlines[outline_idx].first;
+        const auto &outlines = m_layer_outlines[outline_idx].second;
+        if (layer_idx < 0 || layer_idx >= LayerIndex(outlines.size()))
+            continue;
+
+        const coord_t layer_height = settings.layer_height;
+        const int z_distance_bottom_layers = int(round(double(settings.support_bottom_distance) / double(layer_height)));
+        const int z_distance_top_layers = int(round(double(settings.support_top_distance) / double(layer_height)));
+        const bool current_outline = outline_idx == m_current_outline_idx;
+        // For the current model, sharp-tail contact clearance is derived from
+        // the configured Z gap (the legacy tree path's behavior), not from
+        // support_object_xy_distance.  Other grouped outlines keep their
+        // ordinary XY clearance.
+        const coord_t contact_distance = current_outline ? settings.support_top_distance : settings.support_xy_distance;
+
+        auto append_offset_outline = [&](LayerIndex outline_layer, coord_t extra_offset) {
+            if (outline_layer < 0 || outline_layer >= LayerIndex(outlines.size()))
+                return;
+            Polygons areas = m_machine_border;
+            append(areas, outlines[outline_layer]);
+            // The caller supplies the complete lateral offset.  For the
+            // current outline this is derived from the Z gap (sharp-tail
+            // mode); for another grouped outline it is the normal configured
+            // XY distance.
+            const coord_t offset_value = radius + extra_offset;
+            append(collisions, offset_value == 0 ? union_(areas) : offset(union_ex(areas), offset_value, ClipperLib::jtMiter, 1.2));
+        };
+
+        for (int i = -z_distance_bottom_layers; i <= 0; ++i)
+            append_offset_outline(layer_idx + i, contact_distance);
+
+        for (int i = 1; i <= z_distance_top_layers; ++i) {
+            const LayerIndex above = layer_idx + i;
+            if (above < 0 || above >= LayerIndex(outlines.size()))
+                continue;
+            // With configured XY clearance removed for the current outline,
+            // the model above still contributes the same Z-derived contact
+            // distance as the legacy sharp-tail path.
+            const coord_t required_range_x = current_outline ? contact_distance :
+                contact_distance - ((i - (z_distance_top_layers == 1 ? 0.5 : 0)) * contact_distance / z_distance_top_layers);
+            append_offset_outline(above, required_range_x);
+        }
+    }
+
+    if (layer_idx >= 0 && layer_idx < LayerIndex(m_anti_overhang.size()))
+        append(collisions, offset(union_ex(m_anti_overhang[layer_idx]), radius, ClipperLib::jtMiter, 1.2));
+
+    return union_(collisions);
+}
+
+Polygons TreeModelVolumes::getCollisionForContact(const coord_t radius, LayerIndex layer_idx,
+                                                  coord_t xy_distance, coord_t z_distance) const
+{
+    Polygons collisions;
+
+    // This is intentionally a short-lived calculation. The custom values
+    // apply only to a small sharp-tip contact footprint; the normal branch
+    // collision cache must remain keyed by the ordinary support distances.
+    for (size_t outline_idx = 0; outline_idx < m_layer_outlines.size(); ++outline_idx) {
+        const auto &settings = m_layer_outlines[outline_idx].first;
+        const auto &outlines = m_layer_outlines[outline_idx].second;
+        if (layer_idx < 0 || layer_idx >= LayerIndex(outlines.size()))
+            continue;
+
+        const coord_t layer_height = settings.layer_height;
+        const int z_distance_bottom_layers = int(round(double(settings.support_bottom_distance) / double(layer_height)));
+        const bool current_outline = outline_idx == m_current_outline_idx;
+        const coord_t contact_xy_distance = current_outline ? xy_distance : settings.support_xy_distance;
+        const coord_t contact_z_distance = current_outline ? z_distance : settings.support_top_distance;
+        const int z_distance_top_layers = int(round(double(contact_z_distance) / double(layer_height)));
+
+        auto append_offset_outline = [&](LayerIndex outline_layer, coord_t extra_offset) {
+            if (outline_layer < 0 || outline_layer >= LayerIndex(outlines.size()))
+                return;
+            Polygons areas = m_machine_border;
+            append(areas, outlines[outline_layer]);
+            const coord_t offset_value = radius + extra_offset;
+            append(collisions, offset_value == 0 ? union_(areas) :
+                offset(union_ex(areas), offset_value, ClipperLib::jtMiter, 1.2));
+        };
+
+        for (int i = -z_distance_bottom_layers; i <= 0; ++i)
+            append_offset_outline(layer_idx + i, contact_xy_distance);
+
+        for (int i = 1; i <= z_distance_top_layers; ++i) {
+            const LayerIndex above = layer_idx + i;
+            if (above < 0 || above >= LayerIndex(outlines.size()))
+                continue;
+            const coord_t required_range_x = contact_xy_distance -
+                ((i - (z_distance_top_layers == 1 ? 0.5 : 0)) * contact_xy_distance / z_distance_top_layers);
+            append_offset_outline(above, required_range_x);
+        }
+    }
+
+    if (layer_idx >= 0 && layer_idx < LayerIndex(m_anti_overhang.size()))
+        append(collisions, offset(union_ex(m_anti_overhang[layer_idx]), radius, ClipperLib::jtMiter, 1.2));
+
+    return union_(collisions);
+}
+
 // Get a collision area at a given layer for a radius that is a lower or equial to the key radius.
 // It is expected that the collision area is precalculated for a given layer at least for the radius zero.
 // Used for pushing tree supports away from object during the final Organic optimization step.

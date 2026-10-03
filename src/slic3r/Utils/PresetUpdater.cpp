@@ -989,30 +989,34 @@ void PresetUpdater::priv::check_installed_vendor_profiles() const
     for (const std::string &vendor_name : vendor_names_in(rsrc_path)) {
         if (bundles.find(vendor_name) != bundles.end())continue;
 
-        const auto is_vendor_enabled = (vendor_name == PresetBundle::INLONG_DEFAULT_BUNDLE) // always update configs from resource to vendor for INLONG_DEFAULT_BUNDLE
-                                       || (enabled_vendors.find(vendor_name) != enabled_vendors.end());
+        // Inlong's own printer bundles are part of the shipped application, not
+        // optional third-party selections.  Keep them available even when the
+        // saved model list is empty or the setup wizard was cancelled once.
+        const auto is_inlong_builtin =
+            vendor_name == PresetBundle::INLONG_DEFAULT_BUNDLE ||
+            vendor_name == "INLONG" ||
+            vendor_name == "_Infinity3DP";
+        const auto is_vendor_enabled = is_inlong_builtin ||
+                                       (enabled_vendors.find(vendor_name) != enabled_vendors.end());
         if (is_vendor_installed(vendor_name)) {
-            if (enabled_config_update) {
-                if (is_vendor_enabled) {
-                    // Inlong: whichever form of the vendor resources ships at the newer
-                    // version is the one installing lays down, and the one to judge
-                    // what is installed against.
-                    Semver resource_ver = resource_vendor_version(vendor_name);
-                    // Inlong: a vendor installed as a preset cache has no profile
-                    // beside it; the version it was installed at is in the cache.
-                    Semver vendor_ver = installed_vendor_version(vendor_name);
+            if (is_vendor_enabled) {
+                // A build's bundled profiles are local resources, so compare
+                // them regardless of the OTA preference.  OTA only controls
+                // network updates, not the profiles shipped with this build.
+                Semver resource_ver = resource_vendor_version(vendor_name);
+                // A cache-only installation carries its version in the cache.
+                Semver vendor_ver = installed_vendor_version(vendor_name);
 
-                    if (vendor_ver < resource_ver) {
-                        BOOST_LOG_TRIVIAL(info) << "[Inlong Updater]:found vendor " << vendor_name << " newer version "
-                                                << resource_ver.to_string() << " from resource, old version " << vendor_ver.to_string();
-                        bundles.insert(vendor_name);
-                    }
-                } else {
-                    // need to be removed because not installed
-                    remove_installed_vendor(vendor_name);
+                if (vendor_ver < resource_ver) {
+                    BOOST_LOG_TRIVIAL(info) << "[Inlong Updater]:found vendor " << vendor_name << " newer version "
+                                            << resource_ver.to_string() << " from resource, old version " << vendor_ver.to_string();
+                    bundles.insert(vendor_name);
                 }
-            } else {
-                // need to be removed because not installed
+            } else if (enabled_config_update) {
+                // With OTA enabled, keep the previous cleanup behavior for
+                // optional third-party bundles.  When OTA is disabled, leave
+                // existing profiles untouched so a saved selection cannot be
+                // turned into a default-only preset set on the next launch.
                 remove_installed_vendor(vendor_name);
             }
         } else if (is_vendor_enabled) {

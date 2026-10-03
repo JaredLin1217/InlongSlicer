@@ -76,6 +76,12 @@ struct FillParams
 
     // For Concentric infill, to switch between Classic and Arachne.
     bool        use_arachne{ false };
+    // Keep short clipped support-contact paths at sharp tips. Ordinary model
+    // infill keeps its minimum-length cleanup unchanged.
+    bool        preserve_short_paths{ false };
+    // For organic support contacts using concentric infill, connect adjacent
+    // rings only when the short bridge stays inside the same safe footprint.
+    bool        connect_concentric_loops{ false };
     // Fill the final narrow center left by classic concentric paths. Raft-only.
     bool        fill_concentric_gaps{ false };
     // Layer height for Concentric infill with Arachne.
