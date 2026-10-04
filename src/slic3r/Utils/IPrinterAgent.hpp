@@ -11,6 +11,10 @@
 #define ORCA_NETWORK_ERR_CAP_NOT_AVAILABLE -7020 // a translation exists; this printer lacks the capability
 #include <string>
 #include <memory>
+#include <vector>
+#include <functional>
+#include <utility>
+#include <nlohmann/json.hpp>
 
 namespace Slic3r {
 
@@ -41,6 +45,28 @@ enum class FilamentSyncMode {
     none = 0,     ///< Filament synchronization not supported
     subscription, ///< Real-time push updates via subscription (e.g., MQTT)
     pull          ///< On-demand fetch via REST API (blocking call)
+};
+
+struct PrinterConnectionParams {
+    std::string dev_id;
+    std::string host;
+    std::string port;
+    std::string username;
+    std::string password;
+    bool use_ssl = false;
+    std::string ca_file;
+};
+
+// Camera transport reported by a printer agent.  Keep this in the common
+// agent interface so GUI controllers and plugin implementations share the
+// same enum without depending on a concrete transport implementation.
+enum class CameraStreamMode {
+    none = 0,
+    http,
+    https,
+    rtsp,
+    webrtc,
+    http_snapshot
 };
 
 /**
@@ -84,10 +110,102 @@ public:
      */
     virtual int send_message(std::string dev_id, std::string json_str, int qos, int flag) = 0;
 
+    // Printer-dialect commands.  Agents that do not speak this dialect keep
+    // the explicit unsupported result; BBL and plugin agents override the
+    // commands they implement.
+    virtual int command_ams_refresh_rfid(std::string, int, int, int, bool) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
+    virtual int command_ams_calibrate(std::string, int, int, bool) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
+    virtual int command_ams_select_tray(std::string, std::string, int, bool) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
+    virtual int command_start_camera(std::string) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
+    virtual int command_xyz_abs(std::string dev_id, int sequence_id, bool lan_mode)
+    {
+        nlohmann::json j;
+        j["print"]["command"] = "gcode_line";
+        j["print"]["param"] = "G90 \n";
+        j["print"]["sequence_id"] = std::to_string(sequence_id);
+        return lan_mode ? send_message_to_printer(std::move(dev_id), j.dump(), 0, 0)
+                        : send_message(std::move(dev_id), j.dump(), 0, 0);
+    }
+    virtual int command_auto_leveling(std::string dev_id, int sequence_id, bool lan_mode)
+    {
+        nlohmann::json j;
+        j["print"]["command"] = "gcode_line";
+        j["print"]["param"] = "G29 \n";
+        j["print"]["sequence_id"] = std::to_string(sequence_id);
+        return lan_mode ? send_message_to_printer(std::move(dev_id), j.dump(), 0, 0)
+                        : send_message(std::move(dev_id), j.dump(), 0, 0);
+    }
+    virtual int command_go_home(std::string dev_id, bool is_printing, bool supports_mqtt_homing, int sequence_id, bool lan_mode)
+    {
+        nlohmann::json j;
+        j["print"]["sequence_id"] = std::to_string(sequence_id);
+        if (supports_mqtt_homing)
+            j["print"]["command"] = "back_to_center";
+        else {
+            j["print"]["command"] = "gcode_line";
+            j["print"]["param"] = is_printing ? "G28 X\n" : "G28 \n";
+        }
+        return lan_mode ? send_message_to_printer(std::move(dev_id), j.dump(), 0, 0)
+                        : send_message(std::move(dev_id), j.dump(), 0, 0);
+    }
+    virtual int command_set_bed(std::string dev_id, int temp, bool supports_mqtt_bed_ctrl, int sequence_id, bool lan_mode)
+    {
+        nlohmann::json j;
+        j["print"]["sequence_id"] = std::to_string(sequence_id);
+        if (supports_mqtt_bed_ctrl) {
+            j["print"]["command"] = "set_bed_temp";
+            j["print"]["temp"] = temp;
+        } else {
+            j["print"]["command"] = "gcode_line";
+            j["print"]["param"] = std::string("M140 S") + std::to_string(temp) + "\n";
+        }
+        return lan_mode ? send_message_to_printer(std::move(dev_id), j.dump(), 0, 0)
+                        : send_message(std::move(dev_id), j.dump(), 0, 0);
+    }
+    virtual int command_set_nozzle(std::string dev_id, int temp, int sequence_id, bool lan_mode)
+    {
+        nlohmann::json j;
+        j["print"]["command"] = "gcode_line";
+        j["print"]["param"] = std::string("M104 S") + std::to_string(temp) + "\n";
+        j["print"]["sequence_id"] = std::to_string(sequence_id);
+        return lan_mode ? send_message_to_printer(std::move(dev_id), j.dump(), 0, 0)
+                        : send_message(std::move(dev_id), j.dump(), 0, 0);
+    }
+    virtual int command_axis_control(std::string dev_id, std::string axis, double unit, double input_val, int speed,
+                                     bool is_core_xy, bool supports_mqtt_axis_control, int sequence_id, bool lan_mode)
+    {
+        (void) supports_mqtt_axis_control;
+        double value = input_val;
+        if (!is_core_xy && (axis == "Y" || axis == "Z"))
+            value = -input_val;
+        if (axis != "X" && axis != "Y" && axis != "Z" && axis != "E")
+            return -1;
+        const std::string value_str = std::to_string(value * unit);
+        const std::string gcode = axis == "E"
+            ? "M83 \nG0 " + axis + value_str + " F" + std::to_string(speed) + "\n"
+            : "G91 \nG1 " + axis + value_str + " F" + std::to_string(speed) + "\nG90 \n";
+        nlohmann::json j;
+        j["print"]["command"] = "gcode_line";
+        j["print"]["param"] = gcode;
+        j["print"]["sequence_id"] = std::to_string(sequence_id);
+        return lan_mode ? send_message_to_printer(std::move(dev_id), j.dump(), 0, 0)
+                        : send_message(std::move(dev_id), j.dump(), 0, 0);
+    }
+
+    virtual std::string default_lan_username() const { return {}; }
+
     /**
      * Establish a direct LAN connection to a printer.
      */
-    virtual int connect_printer(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl) = 0;
+    virtual int connect_printer(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl)
+    {
+        (void) dev_id; (void) dev_ip; (void) username; (void) password; (void) use_ssl;
+        return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED;
+    }
+    virtual int connect_printer(const PrinterConnectionParams& params)
+    {
+        return connect_printer(params.dev_id, params.host, params.username, params.password, params.use_ssl);
+    }
 
     /**
      * Tear down the active LAN printer connection.
@@ -105,12 +223,12 @@ public:
     /**
      * Validate current user certificates for the printer.
      */
-    virtual int check_cert() = 0;
+    virtual int check_cert() { return BAMBU_NETWORK_SUCCESS; }
 
     /**
      * Install or refresh device certificate for LAN TLS.
      */
-    virtual void install_device_cert(std::string dev_id, bool lan_only) = 0;
+    virtual void install_device_cert(std::string, bool) {}
 
     // ========================================================================
     // Discovery
@@ -126,7 +244,7 @@ public:
     /**
      * Ping the binding endpoint to check printer readiness.
      */
-    virtual int ping_bind(std::string ping_code) = 0;
+    virtual int ping_bind(std::string) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
 
     /**
      * Perform binding detection/handshake on a LAN printer.
@@ -136,23 +254,23 @@ public:
     /**
      * Execute the multi-stage printer binding workflow.
      */
-    virtual int bind(std::string dev_ip, std::string dev_id, std::string dev_model, std::string sec_link, std::string timezone, bool improved, OnUpdateStatusFn update_fn) = 0;
+    virtual int bind(std::string, std::string, std::string, std::string, std::string, bool, OnUpdateStatusFn) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
 
     /**
      * Remove the association between account and printer.
      */
-    virtual int unbind(std::string dev_id) = 0;
+    virtual int unbind(std::string) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
 
     /**
      * Request a one-time bind ticket from the server.
      */
-    virtual int request_bind_ticket(std::string* ticket) = 0;
+    virtual int request_bind_ticket(std::string*) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
 
     /**
      * Fetch the cloud snapshot image captured at a print failure.
      * Returns 0 if the request was dispatched; the image body arrives via callback(body, http_status).
      */
-    virtual int get_hms_snapshot(std::string dev_id, std::string file_name, std::function<void(std::string, int)> callback) = 0;
+    virtual int get_hms_snapshot(std::string, std::string, std::function<void(std::string, int)>) { return ORCA_NETWORK_ERR_CMD_NOT_SUPPORTED; }
 
     /**
      * Register callback for fatal HTTP errors.
@@ -289,7 +407,11 @@ public:
      * Should only be called when get_filament_sync_mode() returns FilamentSyncMode::pull.
      * Populates the MachineObject's DevFilaSystem with fetched filament data.
      */
-    virtual bool fetch_filament_info(std::string dev_id) { return false; }
+    virtual bool fetch_filament_info(std::string dev_id) { (void) dev_id; return false; }
+    virtual bool fetch_filament_info(std::string dev_id, FilamentSyncMode) { return fetch_filament_info(std::move(dev_id)); }
+    virtual CameraStreamMode get_camera_stream_mode() const { return CameraStreamMode::none; }
+    virtual std::string get_local_camera_stream_url() const { return {}; }
+    virtual std::string get_camera_url() const { return {}; }
 
     /**
      * Translate one filament id across the printer boundary.

@@ -136,8 +136,13 @@ int MoonrakerPrinterAgent::send_message_to_printer(std::string dev_id, std::stri
     return handle_request(dev_id, json_str);
 }
 
-int MoonrakerPrinterAgent::connect_printer(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl)
+int MoonrakerPrinterAgent::connect_printer(const PrinterConnectionParams& params)
 {
+    std::string dev_id = params.dev_id;
+    std::string dev_ip = params.host;
+    std::string username = params.username;
+    std::string password = params.password;
+    bool use_ssl = params.use_ssl;
     if (dev_id.empty() || dev_ip.empty()) {
         BOOST_LOG_TRIVIAL(error) << "MoonrakerPrinterAgent: connect_printer missing dev_id or dev_ip";
         return BAMBU_NETWORK_ERR_INVALID_HANDLE;
@@ -148,7 +153,7 @@ int MoonrakerPrinterAgent::connect_printer(std::string dev_id, std::string dev_i
     uint64_t gen;
     {
         std::lock_guard<std::recursive_mutex> lock(connect_mutex);
-        init_device_info(dev_id, dev_ip, username, password, use_ssl);
+        init_device_info(dev_id, dev_ip, username, password, use_ssl, params.port);
         gen = ++connect_generation;
         base_url = device_info.base_url;
         api_key  = device_info.api_key;
@@ -174,6 +179,13 @@ int MoonrakerPrinterAgent::connect_printer(std::string dev_id, std::string dev_i
     }
 
     return BAMBU_NETWORK_SUCCESS;
+}
+
+int MoonrakerPrinterAgent::connect_printer(std::string dev_id, std::string dev_ip,
+                                           std::string username, std::string password, bool use_ssl)
+{
+    return connect_printer(PrinterConnectionParams{std::move(dev_id), std::move(dev_ip), {},
+                                                   std::move(username), std::move(password), use_ssl, {}});
 }
 
 int MoonrakerPrinterAgent::disconnect_printer()
@@ -578,7 +590,7 @@ void MoonrakerPrinterAgent::build_ams_payload(int ams_count, int max_lane_index,
     }
 }
 
-bool MoonrakerPrinterAgent::fetch_filament_info(std::string dev_id)
+bool MoonrakerPrinterAgent::fetch_filament_info(std::string dev_id, FilamentSyncMode /*sync_mode*/)
 {
     std::vector<AmsTrayData> trays;
     int max_lane_index = 0;
@@ -1089,7 +1101,9 @@ int MoonrakerPrinterAgent::handle_request(const std::string& dev_id, const std::
     return BAMBU_NETWORK_SUCCESS;
 }
 
-bool MoonrakerPrinterAgent::init_device_info(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl)
+bool MoonrakerPrinterAgent::init_device_info(const std::string& dev_id, const std::string& dev_ip,
+                                             const std::string& username, const std::string& password,
+                                             bool use_ssl, const std::string& port)
 {
     device_info         = MoonrakerDeviceInfo{};
     auto* preset_bundle = GUI::wxGetApp().preset_bundle;
@@ -1104,12 +1118,21 @@ bool MoonrakerPrinterAgent::init_device_info(std::string dev_id, std::string dev
     device_info.api_key    = password;
     device_info.model_name = printer_cfg.opt_string("printer_model");
     device_info.model_id   = preset.get_printer_type(preset_bundle);
-    device_info.base_url   = use_ssl ? "https://" + dev_ip : "http://" + dev_ip;
+    device_info.base_url   = normalize_base_url(use_ssl, dev_ip, port);
     device_info.dev_id     = dev_id;
     device_info.version    = "";
     device_info.dev_name   = device_info.dev_id;
 
     return true;
+}
+
+bool MoonrakerPrinterAgent::init_device_info(std::string dev_id, std::string dev_ip,
+                                             std::string username, std::string password, bool use_ssl)
+{
+    return init_device_info(static_cast<const std::string&>(dev_id),
+                            static_cast<const std::string&>(dev_ip),
+                            static_cast<const std::string&>(username),
+                            static_cast<const std::string&>(password), use_ssl, {});
 }
 
 bool MoonrakerPrinterAgent::fetch_device_info(const std::string&   base_url,
@@ -2151,6 +2174,14 @@ void MoonrakerPrinterAgent::perform_connection_async(const std::string& dev_id, 
 bool MoonrakerPrinterAgent::is_numeric(const std::string& value)
 {
     return !value.empty() && std::all_of(value.begin(), value.end(), [](unsigned char c) { return std::isdigit(c) != 0; });
+}
+
+std::string MoonrakerPrinterAgent::normalize_base_url(bool use_ssl, const std::string& host, const std::string& port)
+{
+    std::string value = host;
+    if (!boost::istarts_with(value, "http://") && !boost::istarts_with(value, "https://"))
+        value = (use_ssl ? "https://" : "http://") + value;
+    return normalize_base_url(std::move(value), port);
 }
 
 std::string MoonrakerPrinterAgent::normalize_base_url(std::string host, const std::string& port)

@@ -1,12 +1,35 @@
+#include <cmath>
+#include <cassert>
+#include <algorithm>
+#include <functional>
+#include <iterator>
+#include <cstdint>
+#include <memory>
+#include <cstdio>
+#include <cctype>
+#include <limits>
+#include <math.h>
+#include <Eigen/Geometry>
+#include <Eigen/Core>
 #include <numeric>
 #include "Emboss.hpp"
+#include <optional>
 #include <stdio.h>
 #include <numeric>
 #include <cstdlib>
 #include <boost/nowide/convert.hpp>
 #include <boost/log/trivial.hpp>
 #include <ClipperUtils.hpp> // union_ex + for boldness(polygon extend(offset))
+#include "ExPolygon.hpp"
+#include <vector>
+#include "AABBTreeIndirect.hpp"
+#include <utility>
+#include "EmbossShape.hpp"
+#include <string>
 #include "IntersectionPoints.hpp"
+#include "Polygon.hpp"
+#include "TextConfiguration.hpp"
+#include "Point.hpp"
 
 #define STB_TRUETYPE_IMPLEMENTATION // force following include to generate implementation
 #include "imgui/imstb_truetype.h" // stbtt_fontinfo
@@ -81,7 +104,7 @@ fontinfo_opt load_font_info(const unsigned char *data, unsigned int index = 0);
 std::optional<Glyph> get_glyph(const stbtt_fontinfo &font_info, int unicode_letter, float flatness);
 
 // take glyph from cache
-const Glyph* get_glyph(int unicode, const FontFile &font, const FontProp &font_prop,
+const Glyph* get_glyph(int unicode, const FontFile &font, const FontProp &font_prop, 
         Glyphs &cache, fontinfo_opt &font_info_opt);
 
 // scale and convert float to int coordinate
@@ -106,14 +129,14 @@ struct SpikeDesc
     double cos_angle; // speed up to skip acos
 
     // Half of Wanted bevel size
-    double half_bevel;
+    double half_bevel; 
 
     /// <summary>
     /// Calculate spike description
     /// </summary>
     /// <param name="bevel_size">Size of spike width after cut of the tip, has to be grater than 2.5</param>
     /// <param name="pixel_spike_length">When spike has same or more pixels with width less than 1 pixel</param>
-    SpikeDesc(double bevel_size, double pixel_spike_length = 6):
+    SpikeDesc(double bevel_size, double pixel_spike_length = 6):         
         // create min angle given by spike_length
         // Use it as minimal height of 1 pixel base spike
         cos_angle(std::fabs(std::cos(
@@ -131,7 +154,7 @@ bool remove_when_spike(Polygon &polygon, size_t index, const SpikeDesc &spike_de
 void remove_spikes_in_duplicates(ExPolygons &expolygons, const Points &duplicates);
 
 #ifdef REMOVE_SPIKES
-// Remove long sharp corners aka spikes
+// Remove long sharp corners aka spikes 
 // by adding points to bevel tip of spikes - Not printable parts
 // Try to not modify long sides of spike and add points on it's side
 void remove_spikes(Polygon &polygon, const SpikeDesc &spike_desc);
@@ -225,7 +248,7 @@ bool remove_when_spike(Slic3r::Polygon &polygon, size_t index, const SpikeDesc &
     return false;
 }
 
-void remove_spikes_in_duplicates(ExPolygons &expolygons, const Points &duplicates) {
+void remove_spikes_in_duplicates(ExPolygons &expolygons, const Points &duplicates) { 
     if (duplicates.empty())
         return;
     auto check = [](Slic3r::Polygon &polygon, const Point &d) -> bool {
@@ -272,7 +295,7 @@ fontinfo_opt load_font_info(
     if (font_offset < 0) {
         assert(false);
         // "Font index(" << index << ") doesn't exist.";
-        return {};
+        return {};        
     }
     stbtt_fontinfo font_info;
     if (stbtt_InitFont(&font_info, data, font_offset) == 0) {
@@ -285,14 +308,14 @@ fontinfo_opt load_font_info(
 
 void remove_bad(Polygons &polygons) {
     polygons.erase(
-        std::remove_if(polygons.begin(), polygons.end(),
-            [](const Polygon &p) { return p.size() < 3; }),
+        std::remove_if(polygons.begin(), polygons.end(), 
+            [](const Polygon &p) { return p.size() < 3; }), 
         polygons.end());
 }
 
 void remove_bad(ExPolygons &expolygons) {
     expolygons.erase(
-        std::remove_if(expolygons.begin(), expolygons.end(),
+        std::remove_if(expolygons.begin(), expolygons.end(), 
             [](const ExPolygon &p) { return p.contour.size() < 3; }),
         expolygons.end());
 
@@ -323,7 +346,7 @@ bool Emboss::divide_segments_for_close_point(ExPolygons &expolygons, double dist
             for (size_t index : close_lines) {
                 // skip point neighbour lines indices
                 if (index == point_index) continue;
-                if (&p != &pts.front()) {
+                if (&p != &pts.front()) { 
                     if (index == point_index - 1) continue;
                 } else if (index == (pts.size()-1)) continue;
 
@@ -343,9 +366,9 @@ bool Emboss::divide_segments_for_close_point(ExPolygons &expolygons, double dist
             ++point_index;
         }
     };
-    for (const ExPolygon &expoly : expolygons) {
+    for (const ExPolygon &expoly : expolygons) { 
         check_points(expoly.contour.points);
-        for (const Polygon &hole : expoly.holes)
+        for (const Polygon &hole : expoly.holes) 
             check_points(hole.points);
     }
 
@@ -354,9 +377,9 @@ bool Emboss::divide_segments_for_close_point(ExPolygons &expolygons, double dist
 
     // sort from biggest index to zero
     // to be able add points and not interupt indices
-    std::sort(divs.begin(), divs.end(),
+    std::sort(divs.begin(), divs.end(), 
         [](const Div &d1, const Div &d2) { return d1.second > d2.second; });
-
+    
     auto it = divs.begin();
     // divide close line
     while (it != divs.end()) {
@@ -368,7 +391,7 @@ bool Emboss::divide_segments_for_close_point(ExPolygons &expolygons, double dist
         ExPolygonsIndex id = ids.cvt(index);
         ExPolygon &expoly = expolygons[id.expolygons_index];
         Polygon &poly = id.is_contour() ? expoly.contour : expoly.holes[id.hole_index()];
-        Points &pts = poly.points;
+        Points &pts = poly.points;        
         size_t count = it2 - it;
 
         // add points into polygon to divide in place of near point
@@ -379,8 +402,8 @@ bool Emboss::divide_segments_for_close_point(ExPolygons &expolygons, double dist
             // collect points to add into polygon
             Points points;
             points.reserve(count);
-            for (; it < it2; ++it)
-                points.push_back(it->first);
+            for (; it < it2; ++it) 
+                points.push_back(it->first);            
 
             // need sort by line direction
             const Linef &line = lines[index];
@@ -404,21 +427,92 @@ bool Emboss::divide_segments_for_close_point(ExPolygons &expolygons, double dist
     return true;
 }
 
+// Clipper1's CleanPolygon(): removes vertices closer than `distance` to a neighbour or to the line through their neighbours.
+static void clean_polygon(Points &points, double distance)
+{
+    auto points_are_close = [](const Point &a, const Point &b, double dist2) {
+        const double dx = double(a.x() - b.x()), dy = double(a.y() - b.y());
+        return dx * dx + dy * dy <= dist2;
+    };
+    auto distance_from_line2 = [](const Point &pt, const Point &ln1, const Point &ln2) {
+        const double A = double(ln1.y() - ln2.y());
+        const double B = double(ln2.x() - ln1.x());
+        const double C = A * pt.x() + B * pt.y() - (A * ln1.x() + B * ln1.y());
+        return (C * C) / (A * A + B * B);
+    };
+    auto slopes_near_collinear = [&distance_from_line2](const Point &pt1, const Point &pt2, const Point &pt3, double dist2) {
+        if (std::abs(pt1.x() - pt2.x()) > std::abs(pt1.y() - pt2.y())) {
+            if ((pt1.x() > pt2.x()) == (pt1.x() < pt3.x()))
+                return distance_from_line2(pt1, pt2, pt3) < dist2;
+            if ((pt2.x() > pt1.x()) == (pt2.x() < pt3.x()))
+                return distance_from_line2(pt2, pt1, pt3) < dist2;
+            return distance_from_line2(pt3, pt1, pt2) < dist2;
+        }
+        if ((pt1.y() > pt2.y()) == (pt1.y() < pt3.y()))
+            return distance_from_line2(pt1, pt2, pt3) < dist2;
+        if ((pt2.y() > pt1.y()) == (pt2.y() < pt3.y()))
+            return distance_from_line2(pt2, pt1, pt3) < dist2;
+        return distance_from_line2(pt3, pt1, pt2) < dist2;
+    };
+
+    size_t size = points.size();
+    if (size == 0)
+        return;
+    std::vector<size_t> next(size), prev(size);
+    std::vector<char>   done(size, 0);
+    for (size_t i = 0; i < size; ++i) {
+        next[i]       = (i + 1) % size;
+        prev[next[i]] = i;
+    }
+    auto exclude = [&next, &prev, &done](size_t op) {
+        const size_t result = prev[op];
+        next[result]        = next[op];
+        prev[next[op]]      = result;
+        done[result]        = 0;
+        return result;
+    };
+    const double dist2 = distance * distance;
+    size_t       op    = 0;
+    while (! done[op] && next[op] != prev[op]) {
+        if (points_are_close(points[op], points[prev[op]], dist2)) {
+            op = exclude(op);
+            -- size;
+        } else if (points_are_close(points[prev[op]], points[next[op]], dist2)) {
+            exclude(next[op]);
+            op = exclude(op);
+            size -= 2;
+        } else if (slopes_near_collinear(points[prev[op]], points[op], points[next[op]], dist2)) {
+            op = exclude(op);
+            -- size;
+        } else {
+            done[op] = 1;
+            op       = next[op];
+        }
+    }
+    if (size < 3)
+        size = 0;
+    Points out;
+    out.reserve(size);
+    for (size_t i = 0; i < size; ++i) {
+        out.emplace_back(points[op]);
+        op = next[op];
+    }
+    points = std::move(out);
+}
+
 HealedExPolygons Emboss::heal_polygons(const Polygons &shape, bool is_non_zero, unsigned int max_iteration)
 {
     const double clean_distance = 1.415; // little grater than sqrt(2)
-    ClipperLib::PolyFillType fill_type = is_non_zero ?
-        ClipperLib::pftNonZero : ClipperLib::pftEvenOdd;
+    PolyFillType fill_type = is_non_zero ? pftNonZero : pftEvenOdd;
 
     // When edit this code check that font 'ALIENATE.TTF' and glyph 'i' still work
     // fix of self intersections
-    // http://www.angusj.com/delphi/clipper/documentation/Docs/Units/ClipperLib/Functions/SimplifyPolygon.htm
-    ClipperLib::Paths paths = ClipperLib::SimplifyPolygons(ClipperUtils::PolygonsProvider(shape), fill_type);
-    ClipperLib::CleanPolygons(paths, clean_distance);
-    Polygons polygons = to_polygons(paths);
-    polygons.erase(std::remove_if(polygons.begin(), polygons.end(),
+    Polygons polygons = union_(shape, fill_type);
+    for (Polygon &polygon : polygons)
+        clean_polygon(polygon.points, clean_distance);
+    polygons.erase(std::remove_if(polygons.begin(), polygons.end(), 
         [](const Polygon &p) { return p.size() < 3; }), polygons.end());
-
+    
     if (polygons.empty())
         return {{}, false};
 
@@ -456,8 +550,8 @@ Points get_unique_intersections(const Slic3r::IntersectionsLines &intersections)
     result.reserve(intersections.size());
     std::transform(intersections.begin(), intersections.end(), std::back_inserter(result),
         [](const Slic3r::IntersectionLines &i) { return Point(
-            std::floor(i.intersection.x()),
-            std::floor(i.intersection.y()));
+            std::floor(i.intersection.x()), 
+            std::floor(i.intersection.y())); 
         });
     // intersections should be unique poits
     std::sort(result.begin(), result.end());
@@ -518,7 +612,7 @@ Duplicates collect_duplicit_indices(const ExPolygons &expoly)
     // initialize original index locations
     std::vector<uint32_t> idx(pts.size());
     std::iota(idx.begin(), idx.end(), 0);
-    std::sort(idx.begin(), idx.end(),
+    std::sort(idx.begin(), idx.end(), 
         [&pts](uint32_t i1, uint32_t i2) { return pts[i1] < pts[i2]; });
 
     Duplicates result;
@@ -550,23 +644,23 @@ Points get_points(const Duplicates& duplicate_indices)
 
     // convert intersections into Points
     result.reserve(duplicate_indices.size());
-    std::transform(duplicate_indices.begin(), duplicate_indices.end(), std::back_inserter(result),
+    std::transform(duplicate_indices.begin(), duplicate_indices.end(), std::back_inserter(result), 
         [](const Duplicate &d) { return d.point; });
     return result;
 }
 
 bool heal_dupl_inter(ExPolygons &shape, unsigned max_iteration)
-{
+{    
     if (shape.empty()) return true;
     remove_same_neighbor(shape);
 
     // create loop permanent memory
     Polygons holes;
-    while (--max_iteration) {
+    while (--max_iteration) {        
         Duplicates duplicate_indices = collect_duplicit_indices(shape);
         //Points duplicates = collect_duplicates(to_points(shape));
         IntersectionsLines intersections = get_intersections(shape);
-
+                
         // Check whether shape is already healed
         if (intersections.empty() && duplicate_indices.empty())
             return true;
@@ -575,9 +669,9 @@ bool heal_dupl_inter(ExPolygons &shape, unsigned max_iteration)
         Points intersection_points = get_unique_intersections(intersections);
 
         if (fill_trouble_holes(holes, duplicate_points, intersection_points, shape)) {
-            holes.clear();
+            holes.clear(); 
             continue;
-        }
+        } 
 
         holes.clear();
         holes.reserve(intersections.size() + duplicate_points.size());
@@ -609,7 +703,7 @@ bool heal_dupl_inter(ExPolygons &shape, unsigned max_iteration)
         // healed in the last loop
         return true;
     }
-
+    
     #ifdef VISUALIZE_HEAL
     visualize_heal(visualize_heal_svg_filepath, shape);
     #endif // VISUALIZE_HEAL
@@ -668,14 +762,14 @@ void remove_small_islands(ExPolygons &expolygons, double minimal_area) {
         return;
 
     // remove small expolygons contours
-    auto expoly_it = std::remove_if(expolygons.begin(), expolygons.end(),
+    auto expoly_it = std::remove_if(expolygons.begin(), expolygons.end(), 
         [&minimal_area](const ExPolygon &p) { return p.contour.area() < minimal_area; });
     expolygons.erase(expoly_it, expolygons.end());
 
     // remove small holes in expolygons
     for (ExPolygon &expoly : expolygons) {
         Polygons& holes = expoly.holes;
-        auto it = std::remove_if(holes.begin(), holes.end(),
+        auto it = std::remove_if(holes.begin(), holes.end(), 
             [&minimal_area](const Polygon &p) { return -p.area() < minimal_area; });
         holes.erase(it, holes.end());
     }
@@ -686,7 +780,7 @@ std::optional<Glyph> get_glyph(const stbtt_fontinfo &font_info, int unicode_lett
 {
     int glyph_index = stbtt_FindGlyphIndex(&font_info, unicode_letter);
     if (glyph_index == 0) {
-        //wchar_t wchar = static_cast<wchar_t>(unicode_letter);
+        //wchar_t wchar = static_cast<wchar_t>(unicode_letter); 
         //<< "Character unicode letter ("
         //<< "decimal value = " << std::dec << unicode_letter << ", "
         //<< "hexadecimal value = U+" << std::hex << unicode_letter << std::dec << ", "
@@ -709,8 +803,8 @@ std::optional<Glyph> get_glyph(const stbtt_fontinfo &font_info, int unicode_lett
         flatness, &contour_lengths, &num_countour_int, font_info.userdata);
     if (!points) return glyph; // no valid flattening
     ScopeGuard sg2([&contour_lengths, &points]() {
-        free(contour_lengths);
-        free(points);
+        free(contour_lengths); 
+        free(points); 
     });
 
     size_t   num_contour = static_cast<size_t>(num_countour_int);
@@ -729,9 +823,9 @@ std::optional<Glyph> get_glyph(const stbtt_fontinfo &font_info, int unicode_lett
         --length;
         Points pts;
         pts.reserve(length);
-        for (int i = 0; i < length; ++i)
+        for (int i = 0; i < length; ++i) 
             pts.emplace_back(to_point(points[pi++]));
-
+        
         // last point is first point --> closed contour
         assert(pts.front() == to_point(points[pi]));
         ++pi;
@@ -767,7 +861,7 @@ const Glyph* get_glyph(
     if (!is_valid(font, font_index)) return nullptr;
 
     if (!font_info_opt.has_value()) {
-
+        
         font_info_opt  = load_font_info(font.data->data(), font_index);
         // can load font info?
         if (!font_info_opt.has_value()) return nullptr;
@@ -785,7 +879,7 @@ const Glyph* get_glyph(
     if (!glyph_opt.has_value()) return nullptr;
 
     Glyph &glyph = *glyph_opt;
-    if (font_prop.char_gap.has_value())
+    if (font_prop.char_gap.has_value()) 
         glyph.advance_width += *font_prop.char_gap;
 
     // scale glyph size
@@ -845,7 +939,7 @@ std::optional<std::wstring> Emboss::get_font_path(const std::wstring &font_face_
 
     // Open Windows font registry key
     result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, fontRegistryPath, 0, KEY_READ, &hKey);
-    if (result != ERROR_SUCCESS) return {};
+    if (result != ERROR_SUCCESS) return {};    
 
     DWORD maxValueNameSize, maxValueDataSize;
     result = RegQueryInfoKey(hKey, 0, 0, 0, 0, 0, 0, 0, &maxValueNameSize, &maxValueDataSize, 0, 0);
@@ -886,7 +980,7 @@ std::optional<std::wstring> Emboss::get_font_path(const std::wstring &font_face_
     RegCloseKey(hKey);
 
     if (wsFontFile.empty()) return {};
-
+    
     // Build full font file path
     WCHAR winDir[MAX_PATH];
     GetWindowsDirectory(winDir, MAX_PATH);
@@ -916,9 +1010,9 @@ EmbossStyles Emboss::get_font_list_by_register() {
     result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, fontRegistryPath, 0, KEY_READ, &hKey);
     if (result != ERROR_SUCCESS) {
         assert(false);
-        //std::wcerr << L"Can not Open register key (" << fontRegistryPath << ")"
+        //std::wcerr << L"Can not Open register key (" << fontRegistryPath << ")" 
         //    << L", function 'RegOpenKeyEx' return code: " << result <<  std::endl;
-        return {};
+        return {}; 
     }
 
     DWORD maxValueNameSize, maxValueDataSize;
@@ -927,7 +1021,7 @@ EmbossStyles Emboss::get_font_list_by_register() {
     if (result != ERROR_SUCCESS) {
         assert(false);
         // Can not earn query key, function 'RegQueryInfoKey' return code: result
-        return {};
+        return {}; 
     }
 
     // Build full font file path
@@ -984,7 +1078,7 @@ int CALLBACK EnumFamCallBack(const LOGFONT    *lplf,
     UNREFERENCED_PARAMETER(lpntm);
 }
 
-EmbossStyles Emboss::get_font_list_by_enumeration() {
+EmbossStyles Emboss::get_font_list_by_enumeration() {   
 
     HDC                       hDC = GetDC(NULL);
     std::vector<std::wstring> font_names;
@@ -995,7 +1089,7 @@ EmbossStyles Emboss::get_font_list_by_enumeration() {
     EmbossStyles font_list;
     for (const std::wstring &font_name : font_names) {
         font_list.emplace_back(create_style(font_name, L""));
-    }
+    }    
     return font_list;
 }
 
@@ -1024,9 +1118,9 @@ EmbossStyles Emboss::get_font_list_by_folder() {
 }
 
 #else
-EmbossStyles Emboss::get_font_list() {
+EmbossStyles Emboss::get_font_list() { 
     // not implemented
-    return {};
+    return {}; 
 }
 
 std::optional<std::wstring> Emboss::get_font_path(const std::wstring &font_face_name){
@@ -1087,7 +1181,7 @@ std::unique_ptr<FontFile> Emboss::create_font_file(const char *file_path)
     if (size == 0) {
         assert(false);
         BOOST_LOG_TRIVIAL(error) << "Size of font file is zero. Can't read.";
-        return nullptr;
+        return nullptr;    
     }
     rewind(file);
     auto buffer = std::make_unique<std::vector<unsigned char>>(size);
@@ -1104,12 +1198,12 @@ std::unique_ptr<FontFile> Emboss::create_font_file(const char *file_path)
 #ifdef _WIN32
 static bool load_hfont(void* hfont, DWORD &dwTable, DWORD &dwOffset, size_t& size, HDC hdc = nullptr){
     bool del_hdc = false;
-    if (hdc == nullptr) {
+    if (hdc == nullptr) { 
         del_hdc = true;
         hdc = ::CreateCompatibleDC(NULL);
         if (hdc == NULL) return false;
     }
-
+    
     // To retrieve the data from the beginning of the file for TrueType
     // Collection files specify 'ttcf' (0x66637474).
     dwTable  = 0x66637474;
@@ -1159,7 +1253,7 @@ std::unique_ptr<FontFile> Emboss::create_font_file(void *hfont)
     if (size != loaded_size) {
         assert(false);
         BOOST_LOG_TRIVIAL(error) << "Different loaded(from HFONT) data size.";
-        return nullptr;
+        return nullptr;    
     }
     return create_font_file(std::move(buffer));
 }
@@ -1259,7 +1353,7 @@ HealedExPolygons union_with_delta(const ExPolygonsWithIds &shapes, float delta, 
 }
 } // namespace
 
-ExPolygons Slic3r::union_with_delta(EmbossShape &shape, float delta, unsigned max_heal_iteration)
+ExPolygons Slic3r::union_with_delta(EmbossShape &shape, float delta, unsigned max_heal_iteration) 
 {
     if (!shape.final_shape.expolygons.empty())
         return shape.final_shape;
@@ -1280,7 +1374,7 @@ void Slic3r::translate(ExPolygonsWithIds &expolygons_with_ids, const Point &p)
 BoundingBox Slic3r::get_extents(const ExPolygonsWithIds &expolygons_with_ids)
 {
     BoundingBox bb;
-    for (const ExPolygonsWithId &expolygons_with_id : expolygons_with_ids)
+    for (const ExPolygonsWithId &expolygons_with_id : expolygons_with_ids)        
         bb.merge(get_extents(expolygons_with_id.expoly));
     return bb;
 }
@@ -1322,7 +1416,7 @@ ExPolygonsWithIds Emboss::text2vshapes(FontFileWithCache &font_with_cache, const
     unsigned counter = 0;
     Point cursor(0, 0);
 
-    fontinfo_opt font_info_cache;
+    fontinfo_opt font_info_cache;  
     ExPolygonsWithIds result;
     result.reserve(text.size());
     for (wchar_t letter : text) {
@@ -1410,7 +1504,7 @@ bool Emboss::is_italic(const FontFile &font, unsigned int font_index)
     const char* value = stbtt_GetFontNameString(info, &length,
                                                STBTT_PLATFORM_ID_MICROSOFT,
                                                STBTT_MS_EID_UNICODE_BMP,
-                                               STBTT_MS_LANG_ENGLISH,
+                                               STBTT_MS_LANG_ENGLISH,                            
                                                name_id);
 
     // value is big endian utf-16 i need extract only normal chars
@@ -1424,12 +1518,12 @@ bool Emboss::is_italic(const FontFile &font, unsigned int font_index)
                    [](unsigned char c) { return std::tolower(c); });
 
     const std::vector<std::string> italics({"italic", "oblique"});
-    for (const std::string &it : italics) {
-        if (value_str.find(it) != std::string::npos) {
-            return true;
+    for (const std::string &it : italics) { 
+        if (value_str.find(it) != std::string::npos) { 
+            return true; 
         }
     }
-    return false;
+    return false; 
 }
 
 std::string Emboss::create_range_text(const std::string &text,
@@ -1438,7 +1532,7 @@ std::string Emboss::create_range_text(const std::string &text,
                                       bool              *exist_unknown)
 {
     if (!is_valid(font, font_index)) return {};
-
+            
     std::wstring ws = boost::nowide::widen(text);
 
     // need remove symbols not contained in font
@@ -1455,8 +1549,8 @@ std::string Emboss::create_range_text(const std::string &text,
             int unicode = static_cast<int>(wc);
 
             // skip white spaces
-            if (unicode == '\n' ||
-                unicode == '\r' ||
+            if (unicode == '\n' || 
+                unicode == '\r' || 
                 unicode == '\t') return true;
 
             // is duplicit?
@@ -1514,8 +1608,8 @@ indexed_triangle_set polygons2model_unique(
         auto p2 = projection.create_front_back(p);
         front_points.push_back(p2.first.cast<float>());
         back_points.push_back(p2.second.cast<float>());
-    }
-
+    }    
+    
     // insert back points, front are already in
     result.vertices.insert(result.vertices.end(),
                            std::make_move_iterator(back_points.begin()),
@@ -1526,7 +1620,7 @@ indexed_triangle_set polygons2model_unique(
         result.indices.emplace_back(t.x(), t.z(), t.y());
     // bottom triangles - use CW
     for (const Vec3i32 &t : shape_triangles)
-        result.indices.emplace_back(t.x() + count_point,
+        result.indices.emplace_back(t.x() + count_point, 
                                     t.y() + count_point,
                                     t.z() + count_point);
 
@@ -1537,7 +1631,7 @@ indexed_triangle_set polygons2model_unique(
         uint32_t polygon_points = polygon.points.size();
         // previous index
         uint32_t prev = polygon_offset + polygon_points - 1;
-        for (uint32_t p = 0; p < polygon_points; ++p) {
+        for (uint32_t p = 0; p < polygon_points; ++p) { 
             uint32_t index = polygon_offset + p;
             add_quad(prev, index, result, count_point);
             prev = index;
@@ -1548,7 +1642,7 @@ indexed_triangle_set polygons2model_unique(
     for (const ExPolygon &expolygon : shape2d) {
         add_quads(expolygon.contour);
         for (const Polygon &hole : expolygon.holes) add_quads(hole);
-    }
+    }   
 
     return result;
 }
@@ -1571,7 +1665,7 @@ indexed_triangle_set polygons2model_duplicit(
     back_points.reserve(count_point);
 
     uint32_t max_index = std::numeric_limits<uint32_t>::max();
-    for (uint32_t i = 0; i < changes.size(); ++i) {
+    for (uint32_t i = 0; i < changes.size(); ++i) { 
         uint32_t index = changes[i];
         if (max_index != std::numeric_limits<uint32_t>::max() &&
             index <= max_index) continue; // duplicit point
@@ -1584,8 +1678,8 @@ indexed_triangle_set polygons2model_duplicit(
         front_points.push_back(p2.first.cast<float>());
         back_points.push_back(p2.second.cast<float>());
     }
-    assert(max_index+1 == count_point);
-
+    assert(max_index+1 == count_point);    
+    
     // insert back points, front are already in
     result.vertices.insert(result.vertices.end(),
                            std::make_move_iterator(back_points.begin()),
@@ -1627,7 +1721,7 @@ indexed_triangle_set polygons2model_duplicit(
 indexed_triangle_set Emboss::polygons2model(const ExPolygons &shape2d,
                                             const IProjection &projection)
 {
-    Points points = to_points(shape2d);
+    Points points = to_points(shape2d);    
     Points duplicits = collect_duplicates(points);
     return (duplicits.empty()) ?
         polygons2model_unique(shape2d, projection, points) :
@@ -1640,7 +1734,7 @@ std::pair<Vec3d, Vec3d> Emboss::ProjectZ::create_front_back(const Point &p) cons
     return std::make_pair(front, project(front));
 }
 
-Vec3d Emboss::ProjectZ::project(const Vec3d &point) const
+Vec3d Emboss::ProjectZ::project(const Vec3d &point) const 
 {
     Vec3d res = point; // copy
     res.z() = m_depth;
@@ -1652,13 +1746,13 @@ std::optional<Vec2d> Emboss::ProjectZ::unproject(const Vec3d &p, double *depth) 
 }
 
 
-Vec3d Emboss::suggest_up(const Vec3d normal, double up_limit)
+Vec3d Emboss::suggest_up(const Vec3d normal, double up_limit) 
 {
     // Normal must be 1
     assert(is_approx(normal.squaredNorm(), 1.));
 
     // wanted up direction of result
-    Vec3d wanted_up_side =
+    Vec3d wanted_up_side = 
         (std::fabs(normal.z()) > up_limit)?
         Vec3d::UnitY() : Vec3d::UnitZ();
 
@@ -1682,7 +1776,7 @@ std::optional<float> Emboss::calc_up(const Transform3d &tr, double up_limit)
     assert(is_approx(suggested.squaredNorm(), 1.));
 
     Vec3d up = tr_linear.col(1); // tr * UnitY()
-    up.normalize();
+    up.normalize();    
     Matrix3d m;
     m.row(0) = up;
     m.row(1) = suggested;
@@ -1897,7 +1991,7 @@ PolygonPoints Emboss::sample_slice(const TextLine &slice, const BoundingBoxes &b
             continue;
         else if (bb.min.x() < 0)
             ++first_right_index;
-        else
+        else 
             break;
 
     PolygonPoints samples(bbs.size());
@@ -1933,7 +2027,7 @@ PolygonPoints Emboss::sample_slice(const TextLine &slice, const BoundingBoxes &b
     }else{
         // only left side exists
         shapes_x_cursor = 0;
-        cursor = slice.start; // copy
+        cursor = slice.start; // copy    
     }
     is_reverse = false;
     for (size_t index_plus_one = first_right_index; index_plus_one > 0; --index_plus_one) {
@@ -1956,8 +2050,8 @@ float get_align_y_offset(FontProp::VerticalAlign align, unsigned count_lines, co
     switch (align) {
     case FontProp::VerticalAlign::bottom: return line_height * (count_lines - 1);
     case FontProp::VerticalAlign::top: return -ascent;
-    case FontProp::VerticalAlign::center:
-    default:
+    case FontProp::VerticalAlign::center: 
+    default: 
         return -line_center + line_height * (count_lines - 1) / 2.;
     }
 }
@@ -2003,7 +2097,7 @@ void align_shape(ExPolygonsWithIds &shapes, const std::wstring &text, const Font
 
     // Align x line by line
     Point offset(
-        get_align_x_offset(prop.align.first, shape_bb, get_line_bb(0)),
+        get_align_x_offset(prop.align.first, shape_bb, get_line_bb(0)), 
         y_offset);
     for (size_t i = 0; i < shapes.size(); ++i) {
         wchar_t letter = text[i];
@@ -2031,7 +2125,7 @@ void remove_spikes(Polygon &polygon, const SpikeDesc &spike_desc)
     enum class Type {
         add, // Move with point B on A-side and add new point on C-side
         move, // Only move with point B
-        erase // left only points A and C without move
+        erase // left only points A and C without move 
     };
     struct SpikeHeal
     {
@@ -2116,7 +2210,7 @@ void remove_spikes(Polygon &polygon, const SpikeDesc &spike_desc)
             // move point B on A-side and add point on C-side
             heal.type = Type::add;
             heal.b    = a_side();
-            heal.add  = c_side();
+            heal.add  = c_side();           
         }
         heals.push_back(heal);
     }
@@ -2156,7 +2250,7 @@ void remove_spikes(Polygon &polygon, const SpikeDesc &spike_desc)
             pts.erase(pts.begin() + h.index);
             break;
         case Type::move:
-            pts[h.index] = h.b;
+            pts[h.index] = h.b; 
             break;
         default: break;
         }
@@ -2174,7 +2268,7 @@ void remove_spikes(ExPolygons &expolygons, const SpikeDesc &spike_desc)
 {
     for (ExPolygon &expolygon : expolygons) {
         remove_spikes(expolygon.contour, spike_desc);
-        remove_spikes(expolygon.holes, spike_desc);
+        remove_spikes(expolygon.holes, spike_desc);    
     }
     remove_bad(expolygons);
 }

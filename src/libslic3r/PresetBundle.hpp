@@ -273,6 +273,14 @@ public:
                                     const std::string &source_file,
                                     ForwardCompatibilitySubstitutionRule compatibility_rule,
                                     std::string &error, bool allow_source_manifest = true);
+    // Resolve a named system preset through the installed/bundled vendor tree.
+    bool resolve_system_preset(DynamicPrintConfig &config, Preset::Type type, const std::string &name,
+                               ForwardCompatibilitySubstitutionRule compatibility_rule, std::string &error);
+
+    // Keys persisted by a project as explicitly different from its system
+    // preset, plus the bookkeeping fields required to resolve inheritance.
+    static std::set<std::string> project_different_keys(const std::string &different_settings);
+    static void convert_filament_preset_name(const std::string &machine_name, std::string &filament_name);
 
     // Load selections (current print, current filaments, current printer) from config.ini
     // This is done just once on application start up.
@@ -397,8 +405,14 @@ public:
     // printer, minus the alias shadowing exclusions the Inlong filament library records in
     // Preset::m_excluded_from.
     std::vector<Preset *> get_filament_presets_for_machine(const std::string &printer_type,
-                                                           const std::string &nozzle_diameter_str,
-                                                           bool               include_user_presets);
+                                                             const std::string &nozzle_diameter_str,
+                                                             bool               include_user_presets);
+    // Return the filament preset's variant slot for a machine extruder/nozzle.
+    // A filament without a matching variant uses slot zero.
+    static int            get_filament_variant_index(const DynamicPrintConfig &filament_config,
+                                                     const DynamicPrintConfig &printer_config,
+                                                     int                       extruder_id,
+                                                     NozzleVolumeType          nozzle_volume_type);
     bool                  check_filament_temp_equation_by_printer_type_and_nozzle_for_mas_tray(const std::string &printer_type,
                                                                                                std::string &      nozzle_diameter_str,
                                                                                                std::string &      setting_id,
@@ -406,6 +420,15 @@ public:
                                                                                                std::string &      nozzle_temp_min,
                                                                                                std::string &      nozzle_temp_max,
                                                                                                std::string &      preset_setting_id);
+    bool                  check_filament_temp_equation_by_printer_type_and_nozzle_for_mas_tray(const std::string &printer_type,
+                                                                                               std::string &      nozzle_diameter_str,
+                                                                                               std::string &      setting_id,
+                                                                                               std::string &      tag_uid,
+                                                                                               std::string &      nozzle_temp_min,
+                                                                                               std::string &      nozzle_temp_max,
+                                                                                               std::string &      preset_setting_id,
+                                                                                               int                extruder_id,
+                                                                                               NozzleVolumeType   nozzle_volume_type);
     Preset *                    get_similar_printer_preset(std::string printer_model, std::string printer_variant);
 
     PresetCollection            prints;

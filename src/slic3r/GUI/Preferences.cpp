@@ -1,4 +1,5 @@
 #include "Preferences.hpp"
+#include "CloudProvider.hpp"
 #include "OptionsGroup.hpp"
 #include "GUI_App.hpp"
 #include "MainFrame.hpp"
@@ -10,12 +11,61 @@
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Format/DRC.hpp"
 #include "libslic3r/CAD/SketchEngine.hpp"
+#include <wx/gdicmn.h>
+#include <wx/arrstr.h>
+#include "slic3r/GUI/Widgets/Label.hpp"
+#include <wx/event.h>
+#include <wx/dcclient.h>
+#include "slic3r/GUI/Widgets/StateColor.hpp"
+#include <cmath>
+#include <tuple>
+#include <string>
+#include <vector>
+#include <functional>
+#include <cstdlib>
+#include <cassert>
+#include <algorithm>
+#include <wx/intl.h>
+#include <cstddef>
+#include "libslic3r/libslic3r.h"
+#include "libslic3r/Utils.hpp"
+#include "slic3r/GUI/Widgets/TextInput.hpp"
+#include <utility>
+#include "slic3r/GUI/Widgets/SpinInput.hpp"
+#include "slic3r/GUI/Widgets/CheckBox.hpp"
+#include "libslic3r/Format/bbs_3mf.hpp"
+#include <boost/lexical_cast.hpp>
+#include "slic3r/GUI/Event.hpp"
+#include <boost/log/trivial.hpp>
+#include "libslic3r/Preset.hpp"
+#include "slic3r/GUI/Widgets/Button.hpp"
+#include <wx/chartype.h>
+#include <wx/dirdlg.h>
+#include "slic3r/GUI/GUI_Utils.hpp"
+#include "slic3r/GUI/GUI.hpp"
+#include "slic3r/GUI/Widgets/TabCtrl.hpp"
+#include "slic3r/GUI/Field.hpp"
+#include <map>
+#include "slic3r/GUI/ReleaseNote.hpp"
 #include <wx/language.h>
 #include "OG_CustomCtrl.hpp"
+#include "libslic3r_version.h"
 #include "wx/graphics.h"
 #include <wx/listimpl.cpp>
 #include <wx/display.h>
+#include <wx/string.h>
+#include <wx/panel.h>
+#include <wx/utils.h>
+#include <wx/valtext.h>
+#include <wx/textctrl.h>
+#include <wx/spinctrl.h>
+#include <wx/tglbtn.h>
+#include <wx/stattext.h>
+#include <wx/treebase.h>
+#include <wx/types.h>
+#include <wx/timer.h>
 #include "NetworkTestDialog.hpp"
+#include "SceneBenchmark.hpp"
 #include "Widgets/StaticLine.hpp"
 #include "Widgets/RadioGroup.hpp"
 #include "Shortcuts.hpp"
@@ -68,7 +118,7 @@ public:
         , m_label(label)
         , m_url(url)
     {
-#ifndef __WXOSX__
+#ifndef __WXOSX__ 
         SetDoubleBuffered(true);// SetDoubleBuffered exists on Win and Linux/GTK, but is missing on OSX
 #endif
         SetBackgroundColour(parent->GetBackgroundColour());
@@ -109,7 +159,7 @@ public:
     void ReflowText()
     {
         const int clientW = GetClientSize().GetWidth();
-
+ 
         if (clientW <= 0 || (clientW == m_last_wrap_width && !m_lines.IsEmpty()))
             return;
 
@@ -140,33 +190,33 @@ public:
             }
         }
         m_lines = lines;
-
+ 
         const int lineH  = wxMax(1, wxWindow::GetCharHeight()); // GTK can return 0 from GetCharHeight() before the window is realized
         const int nLines = m_lines.IsEmpty() ? 1 : static_cast<int>(m_lines.size());
         const int totalH = static_cast<int>(nLines * lineH * 1.3);
-
+ 
         SetMinSize(wxSize(-1, totalH));
         InvalidateBestSize();
     }
-
+ 
     wxSize DoGetBestSize() const override
     {
         const int lineH  = wxMax(1, wxWindow::GetCharHeight()); // GTK can return 0 from GetCharHeight() before the window is realized
         const int nLines = m_lines.IsEmpty() ? 1 : static_cast<int>(m_lines.size());
         const int totalH = static_cast<int>(nLines * lineH * 1.3);
-
+ 
         const int clientW = GetClientSize().GetWidth();
-
+ 
         if (clientW > 0)
             return wxSize(clientW, totalH);
-
+ 
         if (m_label.IsEmpty())
             return wxSize(1, lineH);
-
+ 
         int maxW = 0;
         for (const wxString& line : wxSplit(m_label, '\n'))
             maxW = wxMax(maxW, GetTextExtent(line).GetWidth());
-
+ 
         return wxSize(wxMax(1, maxW), totalH);
     }
 
@@ -176,24 +226,24 @@ public:
         m_lines.Clear();
         InvalidateBestSize();
     }
-
+ 
 private:
     void OnPaint(wxPaintEvent& evt)
     {
         wxPaintDC dc(this);
-
+ 
         dc.SetBackground(wxBrush(GetParent() ? GetParent()->GetBackgroundColour() : *wxWHITE));
         dc.Clear();
-
-        wxColour textCol = StateColor::darkModeColorFor(m_hovered ? "#E18263" : "#363636");
-
+ 
+        wxColour textCol = StateColor::darkModeColorFor(m_hovered ? "#26A69A" : "#363636");
+ 
         dc.SetTextForeground(textCol);
         dc.SetFont(m_font);
         dc.SetBackgroundMode(wxTRANSPARENT);
-
+ 
         int lineH = dc.GetCharHeight();
         int y     = lround(lineH * 0.15);
-
+ 
         for (const wxString& line : m_lines) {
             if (!line.IsEmpty()) {
                 dc.DrawText(line, 0, y);
@@ -201,7 +251,7 @@ private:
                 if (m_hovered) {
                     int tw, th;
                     dc.GetTextExtent(line, &tw, &th);
-
+ 
                     int underlineY = y + lineH - 1; // 1 px below the baseline
                     dc.SetPen(wxPen(textCol, 1));
                     dc.DrawLine(0, underlineY, tw, underlineY);
@@ -210,7 +260,7 @@ private:
             y += lineH;
         }
     }
-
+ 
     void OnSize(wxSizeEvent& evt)
     {
         ReflowText();
@@ -226,7 +276,7 @@ private:
         }
         evt.Skip();
     }
-
+ 
     void OnLeaveWin(wxMouseEvent& evt)
     {
         if(!m_url.IsEmpty() && m_hovered){
@@ -235,13 +285,13 @@ private:
         }
         evt.Skip();
     }
-
+ 
     void OnLeftDown(wxMouseEvent& evt)
     {
         if (!m_url.IsEmpty())
             wxLaunchDefaultBrowser(m_url);
         evt.Skip();
-    }
+    } 
 };
 
 wxBoxSizer *PreferencesDialog::create_item_title(wxString title)
@@ -693,7 +743,7 @@ wxBoxSizer *PreferencesDialog::create_item_spinctrl(wxString title, wxString tit
     auto input = new SpinInput(m_parent, wxEmptyString, side_label, wxDefaultPosition, DESIGN_INPUT_SIZE, wxSP_ARROW_KEYS, min, max, stoi(app_config->get(param)));
     input->SetToolTip(tip);
 
-    // INLONG: this one is only meaningful while the dimming it controls is enabled
+    // ORCA: this one is only meaningful while the dimming it controls is enabled
     if (param == "preview_dim_previous_layers_brightness") {
         m_dim_previous_layers_brightness_input = input;
         input->Enable(app_config->get_bool("preview_dim_previous_layers"));
@@ -979,7 +1029,7 @@ wxBoxSizer* PreferencesDialog::create_item_darkmode(wxString title,wxString tool
         e.Skip();
         });
 
-
+    
     return m_sizer;
 }
 
@@ -1048,7 +1098,7 @@ wxBoxSizer *PreferencesDialog::create_item_checkbox(wxString title, wxString too
                 home->SendCloudProvidersInfo();
             }
         }
-        // INLONG: apply the preview dimming change immediately to the currently loaded preview
+        // ORCA: apply the preview dimming change immediately to the currently loaded preview
         else if (param == "preview_dim_previous_layers") {
             if (m_dim_previous_layers_brightness_input)
                 m_dim_previous_layers_brightness_input->Enable(app_config->get_bool(param));
@@ -1387,7 +1437,7 @@ wxBoxSizer *PreferencesDialog::create_item_network_plugin_version(wxString title
 wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix, wxString website_name)
 {
     wxString title = _L("Associate") + (boost::format(" %1%://") % url_prefix.c_str()).str();
-    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with InlongSlicer so that InlongSlicer can open models from") + " " + website_name;
+    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with OrcaSlicer so that Orca can open models from") + " " + website_name;
 
     std::wstring registered_bin; // not used, just here to provide a ref to check fn
     bool reg_to_current_instance = wxGetApp().check_url_association(url_prefix.ToStdWstring(), registered_bin);
@@ -1564,7 +1614,7 @@ void PreferencesDialog::on_dpi_changed(const wxRect &suggested_rect) {
                 lbl->SetSize(DESIGN_TITLE_SIZE);
                 lbl->Rescale();
             }
-
+                
             WalkControls(child, depth + 1);
         }
     };
@@ -1611,7 +1661,7 @@ void PreferencesDialog::create_items()
     auto v_gap = FromDIP(4);
 
     //////////////////////////
-    //// GENERAL TAB
+    //// GENERAL TAB 
     /////////////////////////////////////
     m_tab_index[PreferencesTab::General] = m_pref_tabs->AppendItem(_L("General"));
     f_sizers.push_back(new wxFlexGridSizer(1, 1, v_gap, 0));
@@ -1637,12 +1687,12 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_darkmode);
 #endif
 
-    auto item_single_instance  = create_item_checkbox(_L("Allow only one InlongSlicer instance"),
+    auto item_single_instance  = create_item_checkbox(_L("Allow only one OrcaSlicer instance"),
     #if __APPLE__
             _L("On OSX there is always only one instance of app running by default. However it is allowed to run multiple instances "
                 "of same app from the command line. In such case this settings will allow only one instance."),
     #else
-            _L("If this is enabled, when starting InlongSlicer and another instance of the same InlongSlicer is already running, that instance will be reactivated instead."),
+            _L("If this is enabled, when starting OrcaSlicer and another instance of the same OrcaSlicer is already running, that instance will be reactivated instead."),
     #endif
             "single_instance");
     g_sizer->Add(item_single_instance);
@@ -1670,7 +1720,7 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_project_load);
 
     auto item_backup           = create_item_backup(_L("Auto backup"), _L("Backup your project periodically to help with restoring from an occasional crash."));
-    g_sizer->Add(item_backup);
+    g_sizer->Add(item_backup); 
 
     auto item_max_recent_count = create_item_input(_L("Maximum recent files"), "", _L("Maximum count of recent files"), "max_recent_count", [](wxString value) {
         long max = 0;
@@ -1686,7 +1736,7 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_gcodes_warning);
 
     auto item_step_dialog = create_item_checkbox(
-        _L("Show options when importing STEP file"), _L("If enabled, a parameter settings dialog will appear during STEP file import."),
+        _L("Show options when importing STEP file"), _L("If enabled, a parameter settings dialog will appear during STEP file import."), 
         "enable_step_mesh_setting", wxEmptyString, "import_export#dont-show-again"
     );
     g_sizer->Add(item_step_dialog);
@@ -1719,7 +1769,7 @@ void PreferencesDialog::create_items()
     //// GENERAL > Preset
     g_sizer->Add(create_item_title(_L("Preset")), 1, wxEXPAND);
 
-    auto item_remember_printer = create_item_checkbox(_L("Remember printer configuration"), _L("If enabled, InlongSlicer will remember and switch filament/process configuration for each printer automatically."), "remember_printer_config");
+    auto item_remember_printer = create_item_checkbox(_L("Remember printer configuration"), _L("If enabled, Orca will remember and switch filament/process configuration for each printer automatically."), "remember_printer_config");
     g_sizer->Add(item_remember_printer);
 
     auto item_filament_preset_grouping = create_item_combobox(_L("Group user filament presets"), _L("Group user filament presets based on selection"),
@@ -1733,7 +1783,7 @@ void PreferencesDialog::create_items()
     });
     auto item_filament_area_height = create_item_spinctrl(_L("Optimize filaments area height for..."), "", _L("filaments"), _L("Optimizes filament area maximum height by chosen filament count."),
         "filaments_area_preferred_count", 8, 99, [this](int value) {m_filament_height_timer.StartOnce(500);});
-    g_sizer->Add(item_filament_area_height);
+    g_sizer->Add(item_filament_area_height); 
 
     auto item_shared_profiles  = create_item_checkbox(_L("Show shared profiles notification"), _L("Show a notification with a link to browse shared profiles when the selected printer is changed."), "show_shared_profiles_notification");
     g_sizer->Add(item_shared_profiles);
@@ -1824,12 +1874,15 @@ void PreferencesDialog::create_items()
 
     auto item_auto_reslice = create_item_auto_reslice(
         _L("Auto slice after changes"),
-        _L("If enabled, InlongSlicer will re-slice automatically whenever slicing-related settings change."),
+        _L("If enabled, OrcaSlicer will re-slice automatically whenever slicing-related settings change."),
         _L("Delay in seconds before auto slicing starts, allowing multiple edits to be grouped. Use 0 to slice immediately."));
     g_sizer->Add(item_auto_reslice);
 
     auto item_mix_print_high_low_temperature = create_item_checkbox(_L("Remove mixed temperature restriction"), _L("With this option enabled, you can print materials with a large temperature difference together."), "enable_high_low_temp_mixed_printing");
     g_sizer->Add(item_mix_print_high_low_temperature);
+
+    auto item_remember_print_action = create_item_checkbox(_L("Remember last print action"), _L("If enabled, OrcaSlicer will remember the last selected option in the print button's dropdown (e.g. Print, Export plate sliced file, Export G-code file) and use it as the default on next startup."), "remember_print_action");
+    g_sizer->Add(item_remember_print_action);
 
     //// CONTROL > Camera
     g_sizer->Add(create_item_title(_L("Camera")), 1, wxEXPAND);
@@ -1947,11 +2000,14 @@ void PreferencesDialog::create_items()
     );
     g_sizer->Add(item_realistic_ssao);
 
-    auto item_realistic_shadows = create_item_checkbox(
+    std::vector<wxString> ShadowsLabels = { _L("Off"), _L("Static"), _L("Orbit") };
+    std::vector<std::string> ShadowsValues = { "off", "static", "orbit" };
+    auto item_realistic_shadows = create_item_combobox(
         _L("Shadows"),
-        _L("Renders cast shadows on the plate, other objects, and each object onto itself in realistic view."),
-        SETTING_OPENGL_PHONG_BASIC_PLATE_SHADOWS
-    );
+        _L("Renders cast shadows on the plate, other objects, and each object onto itself in realistic view.\n"
+           "Static: the light stays fixed in the world, so the shadows are only recomputed when the scene changes.\n"
+           "Orbit: the light turns with the camera, recomputing the shadows every frame the camera moves."),
+        SETTING_OPENGL_REALISTIC_SHADOWS, ShadowsLabels, ShadowsValues);
     g_sizer->Add(item_realistic_shadows);
 
     //// GRAPHICS > Anti-aliasing
@@ -2024,6 +2080,26 @@ void PreferencesDialog::create_items()
     );
     g_sizer->Add(item_fps_overlay);
 
+    auto item_render_timings = create_item_checkbox(
+        _L("Show render timings"),
+        _L("Displays how many milliseconds each part of a frame that redraws the 3D scene takes, in the top-right corner of the viewport.") + "\n" +
+        _L("CPU: time spent issuing the drawing commands.") + "\n" +
+        _L("GPU: time the graphics card spent running them.") + "\n" +
+        _L("Adds a small overhead to each frame while enabled."),
+        SETTING_OPENGL_SHOW_RENDER_TIMINGS
+    );
+    g_sizer->Add(item_render_timings);
+
+    if (wxGetApp().is_editor()) {
+        auto item_benchmark = create_item_button(_L("3D scene benchmark"), _L("Run") + " " + dots, "",
+            _L("Replaces the current project with the OrcaSliced Combo, then measures the frame rate and render timings while the camera turns around it in Prepare and Preview, and while the layer slider moves through the sliced layers."),
+            [this]() {
+                EndModal(wxID_OK);
+                wxGetApp().CallAfter([] { run_scene_benchmark(); });
+            });
+        g_sizer->Add(item_benchmark);
+    }
+
     //// GRAPHICS > G-code Preview
     g_sizer->Add(create_item_title(_L("G-code Preview")), 1, wxEXPAND);
 
@@ -2060,7 +2136,7 @@ void PreferencesDialog::create_items()
         "preview_dim_previous_layers_brightness",
         0,
         99,
-        // INLONG: apply the new brightness immediately to the currently loaded preview
+        // ORCA: apply the new brightness immediately to the currently loaded preview
         [](int value) {
             if (Plater* plater = wxGetApp().plater()) {
                 if (GLCanvas3D* canvas = plater->get_preview_canvas3D()) {
@@ -2089,8 +2165,8 @@ void PreferencesDialog::create_items()
 
     auto item_region           = create_item_region_combobox(_L("Login region"), "");
     g_sizer->Add(item_region);
-
-    auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."), "stealth_mode");
+ 
+    auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."), "stealth_mode");
     g_sizer->Add(item_stealth_mode);
 
     auto item_hide_login_side_panel = create_item_checkbox(_L("Hide login side panel"), _L("Hide the login side panel on the home page."), "hide_login_side_panel");
@@ -2105,7 +2181,7 @@ void PreferencesDialog::create_items()
     //// ONLINE > Cloud Providers
     g_sizer->Add(create_item_title(_L("Cloud Providers")), 1, wxEXPAND);
 
-    auto item_bambu_cloud     = create_item_bambu_cloud(_L("Enable Bambu Cloud"), _L("Allow logging into Bambu Cloud alongside Inlong Cloud. When enabled, a Bambu login section appears on the homepage."));
+    auto item_bambu_cloud     = create_item_bambu_cloud(_L("Enable Bambu Cloud"), _L("Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."));
     g_sizer->Add(item_bambu_cloud);
 
     //// ONLINE > Update & sync
@@ -2150,7 +2226,7 @@ void PreferencesDialog::create_items()
     sizer_page->Add(g_sizer, 0, wxEXPAND);
 
     //////////////////////////
-    //// ASSOCIATE TAB
+    //// ASSOCIATE TAB 
     /////////////////////////////////////
 #ifdef _WIN32
     // MSIX: associations are declared in the package manifest and defaults are
@@ -2162,7 +2238,7 @@ void PreferencesDialog::create_items()
         g_sizer = f_sizers.back();
         g_sizer->AddGrowableCol(0, 1);
 
-        g_sizer->Add(create_item_title(_L("Associate files to InlongSlicer")), 1, wxEXPAND);
+        g_sizer->Add(create_item_title(_L("Associate files to OrcaSlicer")), 1, wxEXPAND);
 
         auto item_open_default_apps = create_item_button(
             _L("File associations for the Microsoft Store version are managed by Windows Settings."),
@@ -2179,22 +2255,22 @@ void PreferencesDialog::create_items()
     g_sizer->AddGrowableCol(0, 1);
 
     //// ASSOCIATE > Extensions
-    g_sizer->Add(create_item_title(_L("Associate files to InlongSlicer")), 1, wxEXPAND);
+    g_sizer->Add(create_item_title(_L("Associate files to OrcaSlicer")), 1, wxEXPAND);
 
-    auto item_associate_3mf    = create_item_checkbox(_L("Associate 3MF files to InlongSlicer"), _L("If enabled, this sets InlongSlicer as the default application to open 3MF files.") , "associate_3mf");
+    auto item_associate_3mf    = create_item_checkbox(_L("Associate 3MF files to OrcaSlicer"), _L("If enabled, this sets OrcaSlicer as the default application to open 3MF files.") , "associate_3mf");
     g_sizer->Add(item_associate_3mf);
 
-    auto item_associate_drc = create_item_checkbox(_L("Associate DRC files to InlongSlicer"), _L("If enabled, sets InlongSlicer as default application to open DRC files."), "associate_drc");
+    auto item_associate_drc = create_item_checkbox(_L("Associate DRC files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open DRC files."), "associate_drc");
     g_sizer->Add(item_associate_drc);
 
-    auto item_associate_stl    = create_item_checkbox(_L("Associate STL files to InlongSlicer"), _L("If enabled, this sets InlongSlicer as the default application to open STL files.") , "associate_stl");
+    auto item_associate_stl    = create_item_checkbox(_L("Associate STL files to OrcaSlicer"), _L("If enabled, this sets OrcaSlicer as the default application to open STL files.") , "associate_stl");
     g_sizer->Add(item_associate_stl);
 
-    auto item_associate_step   = create_item_checkbox(_L("Associate STEP files to InlongSlicer"), _L("If enabled, this sets InlongSlicer as the default application to open STEP files."), "associate_step");
+    auto item_associate_step   = create_item_checkbox(_L("Associate STEP files to OrcaSlicer"), _L("If enabled, this sets OrcaSlicer as the default application to open STEP files."), "associate_step");
     g_sizer->Add(item_associate_step);
 
     //// ASSOCIATE > WebLinks
-    g_sizer->Add(create_item_title(_L("Associate web links to InlongSlicer")), 1, wxEXPAND);
+    g_sizer->Add(create_item_title(_L("Associate web links to OrcaSlicer")), 1, wxEXPAND);
 
     auto associate_url_prusa   = create_item_link_association(L"prusaslicer", "Printables.com");
     g_sizer->Add(associate_url_prusa);
@@ -2226,13 +2302,13 @@ void PreferencesDialog::create_items()
 
     auto item_ams_blacklist    = create_item_checkbox(_L("Skip AMS blacklist check"), "", "skip_ams_blacklist_check");
     g_sizer->Add(item_ams_blacklist);
-
+  
     auto item_show_unsupported = create_item_checkbox(_L("Show unsupported presets"), _L("Show incompatible/unsupported presets in the printer and filament dropdown lists. These presets cannot be selected."), "show_unsupported_presets");
     g_sizer->Add(item_show_unsupported);
 
     auto item_plugin_printer_agents = create_item_checkbox(
         _L("(Experimental) Use printer agents instead of print hosts"), _L(
-            "Route print jobs for non-Bambu printers through printer plug-in agents instead of the classic print-host upload flow.\nWhen disabled, InlongSlicer uses the legacy print-host behavior."),
+            "Route print jobs for non-Bambu printers through printer plug-in agents instead of the classic print-host upload flow.\nWhen disabled, OrcaSlicer uses the legacy print-host behavior."),
         "use_printer_agents");
     g_sizer->Add(item_plugin_printer_agents);
 
@@ -2402,7 +2478,7 @@ wxBoxSizer* PreferencesDialog::create_debug_page()
                     wxGetApp().request_user_logout();
                     agent->set_country_code(country_code);
                 }
-                ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Warning"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM);  // ORCA VisibleButtons instead ButtonStyle
+                ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Warning"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM);  // ORCA VisibleButtons instead ButtonStyle 
                 confirm_dlg.update_text(_L("Cloud environment switched; please login again!"));
                 confirm_dlg.on_show();
             }

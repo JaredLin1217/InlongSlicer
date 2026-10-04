@@ -26,8 +26,9 @@ int InlongPrinterAgent::send_message(std::string dev_id, std::string json_str, i
     return BAMBU_NETWORK_SUCCESS;
 }
 
-int InlongPrinterAgent::connect_printer(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl)
+int InlongPrinterAgent::connect_printer(const PrinterConnectionParams& params)
 {
+    (void) params;
     return BAMBU_NETWORK_SUCCESS;
 }
 

@@ -3,6 +3,7 @@
 
 #include "IPrinterAgent.hpp"
 #include "ICloudServiceAgent.hpp"
+#include "bambu_networking.hpp"
 #include <string>
 #include <mutex>
 #include <memory>
@@ -28,11 +29,10 @@ public:
 
     // Communication
     int send_message(std::string dev_id, std::string json_str, int qos, int flag) override;
-    int connect_printer(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl) override;
+    int connect_printer(const PrinterConnectionParams& params) override;
     int disconnect_printer() override;
     int send_message_to_printer(std::string dev_id, std::string json_str, int qos, int flag) override;
 
-    // Certificates
     int check_cert() override;
     void install_device_cert(std::string dev_id, bool lan_only) override;
 

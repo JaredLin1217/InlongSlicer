@@ -23004,6 +23004,41 @@ void Plater::set_need_update(bool need_update)
     p->set_need_update(need_update);
 }
 
+void Plater::normalize_bed_types(bool printer_setting_changed)
+{
+    if (only_gcode_mode() || is_gcode_3mf())
+        return;
+    auto &preset_bundle = *wxGetApp().preset_bundle;
+    if (preset_bundle.printers.get_edited_preset().printer_technology() != ptFFF)
+        return;
+    const auto &printer_config = preset_bundle.printers.get_edited_preset().config;
+    const bool supports_multiple_bed_types =
+        preset_bundle.is_bbl_vendor() || printer_config.opt_bool("support_multi_bed_types");
+    const bool overrides_reset = !supports_multiple_bed_types &&
+        !p->partplate_list.check_all_plate_local_bed_type({});
+    if (overrides_reset) {
+        set_plater_dirty(true);
+        show_info(this,
+                  _L("The selected printer does not support multiple bed types.\nBed type overrides were reset to the global bed type."),
+                  _L("Plate bed types reset"));
+    }
+    if (printer_setting_changed || overrides_reset) {
+        sidebar().update_all_preset_comboboxes();
+        wxGetApp().obj_list()->update_and_show_object_settings_item();
+    }
+}
+
+UVEditorCanvas* Plater::get_uv_editor_canvas()
+{
+    // The current Inlong layout does not create the upstream UV dock.
+    return nullptr;
+}
+
+void Plater::show_uv_editor(bool)
+{
+    // Compatibility no-op for the upstream texture displacement gizmo.
+}
+
 // BBS
 //BBS: add popup logic for table object
 bool Plater::PopupObjectTable(int object_id, int volume_id, const wxPoint& position)

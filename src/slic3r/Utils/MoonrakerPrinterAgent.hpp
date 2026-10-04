@@ -3,7 +3,11 @@
 
 #include "IPrinterAgent.hpp"
 #include "ICloudServiceAgent.hpp"
+#include "bambu_networking.hpp"
 
+#include <functional>
+#include <cstdint>
+#include <atomic>
 #include <memory>
 #include <mutex>
 #include <set>
@@ -11,6 +15,7 @@
 #include <thread>
 
 #include <nlohmann/json.hpp>
+#include <vector>
 
 namespace Slic3r {
 
@@ -28,11 +33,11 @@ public:
 
     // Communication
     int send_message(std::string dev_id, std::string json_str, int qos, int flag) override;
+    int connect_printer(const PrinterConnectionParams& params) override;
     int connect_printer(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl) override;
     int disconnect_printer() override;
     int send_message_to_printer(std::string dev_id, std::string json_str, int qos, int flag) override;
 
-    // Certificates
     int check_cert() override;
     void install_device_cert(std::string dev_id, bool lan_only) override;
 
@@ -71,7 +76,7 @@ public:
 
     // Pull-mode agent (on-demand filament sync)
     FilamentSyncMode get_filament_sync_mode() const override { return FilamentSyncMode::pull; }
-    bool fetch_filament_info(std::string dev_id) override;
+    bool fetch_filament_info(std::string dev_id, FilamentSyncMode sync_mode = FilamentSyncMode::pull) override;
 
 protected:
     struct MoonrakerDeviceInfo
@@ -103,6 +108,7 @@ protected:
     void build_ams_payload(int ams_count, int max_lane_index, const std::vector<AmsTrayData>& trays);
 
     // Methods that derived classes may need to override or access
+    virtual bool init_device_info(const std::string& dev_id, const std::string& dev_ip, const std::string& username, const std::string& password, bool use_ssl, const std::string& port);
     virtual bool init_device_info(std::string dev_id, std::string dev_ip, std::string username, std::string password, bool use_ssl);
     virtual bool fetch_device_info(const std::string& base_url, const std::string& api_key, MoonrakerDeviceInfo& info, std::string& error) const;
 
@@ -111,6 +117,7 @@ protected:
 
     // Helpers
     bool        is_numeric(const std::string& value);
+    std::string normalize_base_url(bool use_ssl, const std::string& host, const std::string& port);
     std::string normalize_base_url(std::string host, const std::string& port);
     std::string sanitize_filename(const std::string& filename);
     std::string join_url(const std::string& base_url, const std::string& path) const;
@@ -128,7 +135,10 @@ private:
 
     bool fetch_object_list(const std::string& base_url, const std::string& api_key, std::set<std::string>& objects, std::string& error) const;
     bool query_printer_status(const std::string& base_url, const std::string& api_key, nlohmann::json& status, std::string& error) const;
+    bool send_gcode_sync(const std::string& dev_id, const std::string& gcode) const;
     bool send_gcode(const std::string& dev_id, const std::string& gcode) const;
+    void send_gcode_async(const std::string& dev_id, const std::string& gcode,
+                          std::function<void(bool)> on_result = {}) const;
 
     void announce_printhost_device();
     void dispatch_local_connect(int state, const std::string& dev_id, const std::string& msg);

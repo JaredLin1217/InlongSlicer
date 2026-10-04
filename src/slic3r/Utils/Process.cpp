@@ -1,5 +1,6 @@
 #include "Process.hpp"
 
+#include <cstdlib>
 #include <libslic3r/AppConfig.hpp>
 #include <libslic3r/libslic3r.h>
 
@@ -14,6 +15,11 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
+#include <vector>
+#include <string>
+#include <wx/utils.h>
+#include <wx/filedlg.h>
+#include <wx/string.h>
 
 // For starting another InlongSlicer instance on OSX.
 // Fails to compile on Windows on the build server.

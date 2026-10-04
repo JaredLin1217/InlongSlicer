@@ -2457,6 +2457,22 @@ bool GUI_App::is_blocking_printing(MachineObject *obj_)
     return false;
 }
 
+bool GUI_App::is_blocking_printing(MachineObject *obj_, const std::string& source_model)
+{
+    DeviceManager *dev = Slic3r::GUI::wxGetApp().getDeviceManager();
+    if (!dev) return true;
+    if (!obj_)
+        obj_ = dev->get_selected_machine();
+    if (!obj_)
+        return false;
+
+    const std::string target_model = obj_->printer_type;
+    if (source_model.empty() || source_model == target_model)
+        return false;
+    const std::vector<std::string> compatible = obj_->get_compatible_machine();
+    return std::find(compatible.begin(), compatible.end(), source_model) == compatible.end();
+}
+
 // If formatted for github, plaintext with OpenGL extensions enclosed into <details>.
 // Otherwise HTML formatted for the system info dialog.
 std::string GUI_App::get_gl_info(bool for_github)

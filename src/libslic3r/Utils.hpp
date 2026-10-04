@@ -1,7 +1,9 @@
 #ifndef slic3r_Utils_hpp_
 #define slic3r_Utils_hpp_
 
+#include <algorithm>
 #include <iomanip>
+#include <initializer_list>
 #include <locale>
 #include <set>
 #include <utility>
@@ -9,6 +11,7 @@
 #include <type_traits>
 #include <system_error>
 #include <regex>
+#include <string_view>
 
 #include <boost/system/error_code.hpp>
 #include <boost/algorithm/string.hpp>
@@ -224,6 +227,32 @@ extern std::vector<std::string> split_string(const std::string &str, char delimi
 // On Windows, the file explorer (or anti-virus or whatever else) often locks the file
 // for a short while, so the file may not be movable. Retry while we see recoverable errors.
 extern std::error_code rename_file(const std::string &from, const std::string &to);
+
+// Write a file through a temporary sibling and atomically replace the target.
+// The implementation lives in utils.cpp so callers in other translation units
+// need the declaration here.
+std::error_code write_file_atomically(const std::string &path,
+                                      std::initializer_list<std::string_view> chunks,
+                                      bool binary = false);
+inline std::error_code write_file_atomically(const std::string &path,
+                                             const std::string &contents,
+                                             bool binary = false)
+{
+    return write_file_atomically(path, {std::string_view(contents)}, binary);
+}
+
+// ASCII-only case-insensitive comparison used by G-code/config parsers.
+inline bool ascii_iequals(std::string_view a, std::string_view b)
+{
+    if (a.size() != b.size())
+        return false;
+    const auto lower = [](char c) {
+        return (c >= 'A' && c <= 'Z') ? static_cast<char>(c - 'A' + 'a') : c;
+    };
+    return std::equal(a.begin(), a.end(), b.begin(), [lower](char lhs, char rhs) {
+        return lower(lhs) == lower(rhs);
+    });
+}
 
 enum CopyFileResult {
 	SUCCESS = 0,

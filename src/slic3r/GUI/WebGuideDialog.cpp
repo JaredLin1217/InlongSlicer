@@ -1,12 +1,34 @@
 #include "WebGuideDialog.hpp"
 #include "ConfigWizard.hpp"
 
+#include <algorithm>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/filesystem/directory.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/bind/bind.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/nowide/fstream.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/iostreams/detail/select.hpp>
 #include <boost/log/trivial.hpp>
+#include "slic3r/GUI/Printer/PrinterFileSystem.h"
+#include <map>
+#include "slic3r/GUI/GUI.hpp"
+#include "slic3r/GUI/GUI_Utils.hpp"
+#include <memory>
+#include <exception>
+#include "slic3r/GUI/Event.hpp"
+#include "slic3r/GUI/Plater.hpp"
+#include <set>
+#include <ostream>
+#include <iterator>
+#include "slic3r/GUI/UnsavedChangesDialog.hpp"
+#include "slic3r/GUI/ParamsDialog.hpp"
+#include "libslic3r/Semver.hpp"
+#include <ios>
+#include <stdexcept>
+#include <sstream>
 #include <string.h>
 #include "I18N.hpp"
 #include "libslic3r/AppConfig.hpp"
@@ -18,10 +40,24 @@
 #include "slic3r/GUI/GUI_App.hpp"
 #include "libslic3r_version.h"
 
+#include <string>
+#include <vector>
+#include <utility>
+#include <wx/gdicmn.h>
+#include <wx/log.h>
+#include <wx/settings.h>
+#include <wx/event.h>
+#include <wx/setup.h>
+#include <unordered_set>
+#include <system_error>
 #include <wx/sizer.h>
+#include <wx/string.h>
+#include <wx/strconv.h>
 #include <wx/toolbar.h>
 #include <wx/textdlg.h>
 
+#include <wx/webview.h>
+#include <wx/utils.h>
 #include <wx/wx.h>
 #include <wx/weakref.h>
 #include <wx/display.h>
@@ -35,6 +71,7 @@
 #include <unordered_map>
 
 #include "MainFrame.hpp"
+#include "Plater.hpp"
 #include <boost/dll.hpp>
 #include <slic3r/GUI/Widgets/WebView.hpp>
 #include <slic3r/Utils/Http.hpp>
@@ -798,7 +835,7 @@ int GuideFrame::SaveProfile()
     m_MainPtr->app_config->set_bool("stealth_mode", StealthMode);
 
     //finish
-    m_MainPtr->app_config->set(std::string(m_SectionName.mb_str()), "finish", "1");
+    m_MainPtr->app_config->set(std::string(m_SectionName.mb_str()), "finish", true);
 
     m_MainPtr->app_config->save();
 
@@ -1125,6 +1162,8 @@ bool GuideFrame::run()
 
         app.app_config->set_legacy_datadir(false);
         app.update_mode();
+        if (Plater *plater = app.plater())
+            plater->normalize_bed_types(false);
         // BBS
         //app.obj_manipul()->update_ui_from_settings();
         BOOST_LOG_TRIVIAL(info) << "GuideFrame applied";
@@ -1407,21 +1446,25 @@ bool GuideFrame::BuildProfileDataFromVendors()
         // determine content wherever the vendor's copy sits.
         struct VendorSource { std::string name; boost::filesystem::path dir; std::string version; };
         std::vector<VendorSource> ordered;
-        auto add_vendor = [&ordered](const std::string& name, const boost::filesystem::path& dir) {
+        json stamps = json::array();
+        auto add_vendor = [&ordered, &stamps](const std::string& name, const boost::filesystem::path& dir) {
             // The version a load from `dir` would serve: the profile's where one
             // exists (a cache is only served while it covers the profile beside
             // it), the cache's own stamp where the cache is the whole vendor.
             // A profile without a version (blacklist.json) carries no presets
             // and is passed over.
             const boost::filesystem::path profile = dir / (name + ".json");
+            std::string version;
             if (boost::filesystem::exists(profile)) {
                 const Semver v = get_version_from_json(profile.string());
-                if (v.valid())
-                    ordered.push_back({name, dir, v.to_string()});
+                if (! v.valid())
+                    return;
+                version = v.to_string();
             } else {
-                ordered.push_back({name, dir,
-                    VendorCacheFile::peek_version((dir / (name + ".opc")).string(), name)});
+                version = VendorCacheFile::peek_version((dir / (name + ".opc")).string(), name);
             }
+            ordered.push_back({name, dir, version});
+            stamps.push_back({name, version});
         };
         const std::string filament_library(PresetBundle::INLONG_FILAMENT_LIBRARY);
         if (auto it = vendor_sources.find(filament_library); it != vendor_sources.end())
@@ -1431,9 +1474,6 @@ bool GuideFrame::BuildProfileDataFromVendors()
                 add_vendor(name, dir);
         if (ordered.empty())
             return false;
-        json stamps = json::array();
-        for (const VendorSource& v : ordered)
-            stamps.push_back({v.name, v.version});
 
         // What this function derives is a pure function of that stamped set, so
         // the derived JSON is cached whole: a fresh cache makes an open one
@@ -1460,9 +1500,9 @@ bool GuideFrame::BuildProfileDataFromVendors()
             BOOST_LOG_TRIVIAL(info) << "GuideFrame: rejecting cached profile data: " << e.what();
         }
 
-        // Each vendor comes from its preset cache where one covers it, which is
-        // what makes this worth doing instead of the scan below; loading into a
-        // bundle per vendor keeps the install order the startup path has.
+        // Load the vendors through the existing per-vendor API.  This keeps
+        // the Inlong bundle's profile/cache semantics while matching the
+        // upstream wizard's precedence and cancellation rules.
         PresetBundle bundle;
         auto load_vendor = [](PresetBundle& into, const std::string& vendor,
                               const boost::filesystem::path& dir, const PresetBundle* base) {
@@ -1471,7 +1511,7 @@ bool GuideFrame::BuildProfileDataFromVendors()
         };
         for (const VendorSource& v : ordered) {
             if (*m_cancel_token)
-                return false;   // as in the scan below: a vendor without a cache is parsed, and that takes time
+                return false;
             if (v.name == filament_library) {
                 load_vendor(bundle, v.name, v.dir, nullptr);
             } else {
@@ -1480,15 +1520,15 @@ bool GuideFrame::BuildProfileDataFromVendors()
                 bundle.merge_presets(std::move(tmp));
             }
         }
-        if (bundle.vendors.empty())
+        const std::string errors;
+        std::vector<std::string> failed;
+        if (*m_cancel_token || bundle.vendors.empty())
             return false;
         if (! BuildProfileJson(bundle, /*require_all_resource_vendors=*/false))
             return false;
 
         // Written through a temp file and moved into place, as the preset caches
-        // are: half a cache must never be readable, and the PID suffix keeps two
-        // instances from interleaving on one temp file.
-        const std::string tmp_path = cache_file.string() + "." + std::to_string(get_current_pid()) + ".tmp";
+        // are: half a cache must never be readable.
         try {
             json out;
             out["format"]  = 1;
@@ -1497,18 +1537,9 @@ bool GuideFrame::BuildProfileDataFromVendors()
             for (const char* key : { "model", "machine", "filament", "process" })
                 profile[key] = m_ProfileJson[key];
             boost::filesystem::create_directories(cache_file.parent_path());
-            {
-                boost::nowide::ofstream ofs(tmp_path, std::ios::binary | std::ios::trunc);
-                ofs << out.dump(-1, ' ', false, json::error_handler_t::ignore);
-                ofs.close();
-                if (! ofs.good())
-                    throw std::runtime_error("write failed");
-            }
-            if (const std::error_code ec = rename_file(tmp_path, cache_file.string()))
+            if (const std::error_code ec = write_file_atomically(cache_file.string(), out.dump(-1, ' ', false, json::error_handler_t::ignore), /*binary=*/true))
                 throw std::runtime_error(ec.message());
         } catch (const std::exception& e) {
-            boost::system::error_code rm;
-            boost::filesystem::remove(tmp_path, rm);
             BOOST_LOG_TRIVIAL(warning) << "GuideFrame: could not write the profile data cache: " << e.what();
         }
         return true;

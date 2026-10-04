@@ -6,6 +6,11 @@
 	"setting_id": "YYPB7F0wMvZ3d2FY",
 	"instantiation": "true",
 	"fan_min_speed": [
+		"25",
+		"25",
+		"25",
+		"25",
+		"25",
 		"25"
 	],
 	"filament_long_retractions_when_cut": [

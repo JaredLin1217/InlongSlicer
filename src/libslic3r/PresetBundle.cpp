@@ -731,6 +731,43 @@ bool PresetBundle::resolve_preset_config_type(DynamicPrintConfig &config, Preset
     return true;
 }
 
+bool PresetBundle::resolve_system_preset(DynamicPrintConfig &config, Preset::Type type,
+                                         const std::string &name,
+                                         ForwardCompatibilitySubstitutionRule compatibility_rule,
+                                         std::string &error)
+{
+    const std::string vendor_id = find_preset_vendor(name, type);
+    if (vendor_id.empty()) {
+        error = "No vendor lists the preset";
+        return false;
+    }
+    fs::path root_dir = fs::path(data_dir()) / PRESET_SYSTEM_DIR;
+    auto installed = [&vendor_id](const fs::path &root) {
+        return fs::is_regular_file(root / (vendor_id + ".json")) ||
+               fs::is_regular_file(root / (vendor_id + ".opc"));
+    };
+    if (!installed(root_dir))
+        root_dir = fs::path(resources_dir()) / PRESET_PROFILES_DIR;
+    try {
+        const PresetBundle *vendor = load_source_vendor(root_dir, vendor_id, compatibility_rule, error);
+        if (vendor == nullptr)
+            return false;
+        const PresetCollection &collection = type == Preset::TYPE_PRINTER ? vendor->printers :
+                                             type == Preset::TYPE_PRINT   ? vendor->prints : vendor->filaments;
+        const Preset *preset = collection.find_preset(name, false);
+        if (preset == nullptr) {
+            error = "Preset was not found in its vendor bundle";
+            return false;
+        }
+        config = preset->config;
+    } catch (const std::exception &ex) {
+        error = ex.what();
+        return false;
+    }
+    error.clear();
+    return true;
+}
+
 PresetBundle::PresetBundle(const PresetBundle &rhs)
 {
     *this = rhs;
@@ -4469,6 +4506,19 @@ std::vector<Preset *> PresetBundle::get_filament_presets_for_machine(const std::
     return compatible;
 }
 
+int PresetBundle::get_filament_variant_index(const DynamicPrintConfig &filament_config,
+                                             const DynamicPrintConfig &printer_config,
+                                             int extruder_id,
+                                             NozzleVolumeType nozzle_volume_type)
+{
+    const auto *extruder_types = printer_config.option<ConfigOptionEnumsGeneric>("extruder_type");
+    const ExtruderType extruder_type = extruder_types && !extruder_types->empty()
+        ? ExtruderType(extruder_types->get_at(extruder_id))
+        : etDirectDrive;
+    return std::max(0, filament_config.get_index_for_extruder(1, "", extruder_type, nozzle_volume_type,
+                                                               "filament_extruder_variant"));
+}
+
 bool PresetBundle::check_filament_temp_equation_by_printer_type_and_nozzle_for_mas_tray(
     const std::string &printer_type, std::string& nozzle_diameter_str, std::string &setting_id, std::string &tag_uid, std::string &nozzle_temp_min, std::string &nozzle_temp_max, std::string& preset_setting_id)
 {
@@ -4532,6 +4582,21 @@ bool PresetBundle::check_filament_temp_equation_by_printer_type_and_nozzle_for_m
         }
     }
     return is_equation;
+}
+
+bool PresetBundle::check_filament_temp_equation_by_printer_type_and_nozzle_for_mas_tray(
+    const std::string &printer_type, std::string& nozzle_diameter_str, std::string &setting_id, std::string &tag_uid,
+    std::string &nozzle_temp_min, std::string &nozzle_temp_max, std::string& preset_setting_id,
+    int extruder_id, NozzleVolumeType nozzle_volume_type)
+{
+    // Inlong's profile format currently has one temperature variant.  Accept
+    // the upstream extruder/nozzle context and delegate to the existing
+    // single-variant check so both callers observe the same profile rules.
+    (void) extruder_id;
+    (void) nozzle_volume_type;
+    return check_filament_temp_equation_by_printer_type_and_nozzle_for_mas_tray(
+        printer_type, nozzle_diameter_str, setting_id, tag_uid,
+        nozzle_temp_min, nozzle_temp_max, preset_setting_id);
 }
 
 Preset *PresetBundle::get_similar_printer_preset(std::string printer_model, std::string printer_variant)
@@ -4734,6 +4799,15 @@ const std::set<std::string> ignore_settings_list ={
     "inherits",
     "print_settings_id", "filament_settings_id", "printer_settings_id"
 };
+
+std::set<std::string> PresetBundle::project_different_keys(const std::string &different_settings)
+{
+    std::vector<std::string> keys;
+    Slic3r::unescape_strings_cstyle(different_settings, keys);
+    std::set<std::string> result(keys.begin(), keys.end());
+    result.insert(ignore_settings_list.begin(), ignore_settings_list.end());
+    return result;
+}
 
 DynamicPrintConfig PresetBundle::full_fff_config(bool apply_extruder, std::optional<std::vector<int>> filament_maps_new, std::optional<std::vector<int>> filament_volume_maps_new) const
 {
@@ -5285,6 +5359,16 @@ static void convert_filament_preset_name(std::string& machine_name, std::string&
             filament_name = filament_iter->second;
         }
     }
+}
+
+void PresetBundle::convert_filament_preset_name(const std::string &machine_name, std::string &filament_name)
+{
+    auto machine_iter = filament_preset_convert.find(machine_name);
+    if (machine_iter == filament_preset_convert.end())
+        return;
+    const auto filament_iter = machine_iter->second.find(filament_name);
+    if (filament_iter != machine_iter->second.end())
+        filament_name = filament_iter->second;
 }
 // Load a config file from a boost property_tree. This is a private method called from load_config_file.
 // is_external == false on if called from ConfigWizard

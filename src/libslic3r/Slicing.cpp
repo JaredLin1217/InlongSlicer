@@ -1,6 +1,13 @@
 #include <algorithm>
+#include <cmath>
+#include <cstddef>
+#include <cstdlib>
 #include <limits>
+#include <vector>
+#include <utility>
+#include <math.h>
 
+#include "Point.hpp"
 #include "libslic3r.h"
 #include "Slicing.hpp"
 #include "SlicingAdaptive.hpp"
@@ -78,14 +85,14 @@ SlicingParameters SlicingParameters::create_from_config(
     coordf_t support_material_extruder_dmr           = print_config.nozzle_diameter.get_at(object_config.support_filament.value - 1);
     coordf_t support_material_interface_extruder_dmr = print_config.nozzle_diameter.get_at(object_config.support_interface_filament.value - 1);
 
-    // INLONG: store Z distance
+    // ORCA: store Z distance
     const coordf_t support_top_z_gap    = object_config.support_top_z_distance.value;
     const coordf_t support_bottom_z_gap = object_config.support_bottom_z_distance.value;
     const coordf_t raft_z_gap           = object_config.raft_contact_distance.value;
     
 
     /* -------------------------------------------------- */
-    /*  INLONG: Zero-gap interface detection (asymmetric)   */
+    /*  ORCA: Zero-gap interface detection (asymmetric)   */
     /* -------------------------------------------------- */
 
     const bool zero_topZ_contact =
@@ -102,7 +109,7 @@ SlicingParameters SlicingParameters::create_from_config(
         (support_bottom_z_gap == 0.0 || zero_topZ_contact);
 
     const bool zero_gap_interface_raft =
-        raft_z_gap == 0.0;
+        raft_z_gap == 0.0 || zero_topZ_contact;
 
     SlicingParameters params;
 
@@ -110,7 +117,7 @@ SlicingParameters SlicingParameters::create_from_config(
     params.first_print_layer_height   = initial_layer_print_height;
     params.first_object_layer_height  = initial_layer_print_height;
     params.object_print_z_min         = 0.0;
-    // Inlong: XYZ filament compensation
+    // Orca: XYZ filament compensation
     params.object_print_z_max               = object_height * object_shrinkage_compensation.z();
     params.object_print_z_uncompensated_max = object_height;
     params.object_shrinkage_compensation_z  = object_shrinkage_compensation.z();
@@ -147,14 +154,10 @@ SlicingParameters SlicingParameters::create_from_config(
     params.max_layer_height = std::max(params.max_layer_height, params.layer_height);
 
     /* -------------------------------------------------- */
-    /*                INLONG: Gap assignment                */
+    /*                ORCA: Gap assignment                */
     /* -------------------------------------------------- */
 
-    const bool independent_top_contact_layer_height =
-        print_config.independent_support_layer_height ||
-        print_config.independent_support_top_contact_layer_height;
-
-    // INLONG: Raft contact (raft -> object)
+    // ORCA: Raft contact (raft -> object)
     if (zero_gap_interface_raft) {
         params.gap_raft_object = 0.0;
     } else {
@@ -166,7 +169,7 @@ SlicingParameters SlicingParameters::create_from_config(
         }
     }
 
-    // INLONG: BOTTOM contact (object -> support)
+    // ORCA: BOTTOM contact (object -> support)
     if (zero_gap_interface_bottom) {
         params.gap_object_support = 0.0;
     } else {
@@ -179,13 +182,13 @@ SlicingParameters SlicingParameters::create_from_config(
         }
     }
 
-    // INLONG: TOP contact (support -> object)
+    // ORCA: TOP contact (support -> object)
     if (zero_gap_interface_top) {
         params.gap_support_object = 0.0;
     } else {
         params.gap_support_object = support_top_z_gap;
 
-        if (!independent_top_contact_layer_height) {
+        if (!print_config.independent_support_layer_height) {
             params.gap_support_object =
                 std::round(params.gap_support_object / object_config.layer_height + EPSILON)
                 * object_config.layer_height;
@@ -199,18 +202,11 @@ SlicingParameters SlicingParameters::create_from_config(
     if (params.base_raft_layers > 0) {
         params.interface_raft_layers = (params.base_raft_layers + 1) / 2;
         params.base_raft_layers -= params.interface_raft_layers;
-        const auto raft_layer_height = [&print_config](coordf_t nozzle_diameter, int extruder_id) {
-            return std::clamp(
-                0.75 * nozzle_diameter,
-                min_layer_height_from_nozzle(print_config, extruder_id),
-                max_layer_height_from_nozzle(print_config, extruder_id));
-        };
-        params.base_raft_layer_height = raft_layer_height(
-            support_material_extruder_dmr, object_config.support_filament.value);
-        params.interface_raft_layer_height = raft_layer_height(
-            support_material_interface_extruder_dmr, object_config.support_interface_filament.value);
+        // Use as large as possible layer height for the intermediate raft layers.
+        params.base_raft_layer_height       = std::max(params.layer_height, 0.75 * support_material_extruder_dmr);
+        params.interface_raft_layer_height  = std::max(params.layer_height, 0.75 * support_material_interface_extruder_dmr);
         params.first_object_layer_bridging  = false;
-        params.contact_raft_layer_height = params.interface_raft_layer_height;
+        params.contact_raft_layer_height    = std::max(params.layer_height, 0.75 * support_material_interface_extruder_dmr);
         params.first_object_layer_height    = params.layer_height;
     }
 
@@ -834,7 +830,7 @@ std::vector<coordf_t> generate_object_layers(
         out.push_back(print_z);
     }
 
-    // Inlong: XYZ shrinkage compensation
+    // Orca: XYZ shrinkage compensation
     const coordf_t shrinkage_compensation_z = slicing_params.object_shrinkage_compensation_z;
     size_t idx_layer_height_profile = 0;
     // loop until we have at least one layer and the max slice_z reaches the object height
@@ -844,18 +840,18 @@ std::vector<coordf_t> generate_object_layers(
         if (idx_layer_height_profile < layer_height_profile.size()) {
             size_t next = idx_layer_height_profile + 2;
             for (;;) {
-                // Inlong: XYZ shrinkage compensation
+                // Orca: XYZ shrinkage compensation
                 if (next >= layer_height_profile.size() || slice_z < layer_height_profile[next] * shrinkage_compensation_z)
                     break;
                 idx_layer_height_profile = next;
                 next += 2;
             }
-            // Inlong: XYZ shrinkage compensation
+            // Orca: XYZ shrinkage compensation
             const coordf_t z1 = layer_height_profile[idx_layer_height_profile] * shrinkage_compensation_z;
             const coordf_t h1 = layer_height_profile[idx_layer_height_profile + 1];
             height = h1;
             if (next < layer_height_profile.size()) {
-                // Inlong: XYZ shrinkage compensation
+                // Orca: XYZ shrinkage compensation
                 const coordf_t z2 = layer_height_profile[next] * shrinkage_compensation_z;
                 const coordf_t h2 = layer_height_profile[next + 1];
                 height = lerp(h1, h2, (slice_z - z1) / (z2 - z1));

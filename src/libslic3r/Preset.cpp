@@ -973,6 +973,38 @@ void Preset::get_extruder_names_and_keysets(Type type, std::string& extruder_id_
     }
 }
 
+DynamicPrintConfig Preset::load_external_config(
+    Type type, const DynamicPrintConfig &default_config, const DynamicPrintConfig &project_config,
+    const std::set<std::string> &different_settings_list,
+    const std::function<DynamicPrintConfig *(const std::string &inherits)> &find_base,
+    t_config_option_keys *keys)
+{
+    // Start from the type default and overlay the project values, excluding
+    // connection settings which are owned by the active printer profile.
+    DynamicPrintConfig cfg(default_config);
+    auto cfg_keys = cfg.keys();
+    cfg_keys.erase(std::remove_if(cfg_keys.begin(), cfg_keys.end(), [](const std::string &key) {
+        return key == "print_host" || key == "print_host_webui" || key == "printhost_apikey" ||
+               key == "printhost_cafile" || key == "printhost_user" || key == "printhost_password" ||
+               key == "printhost_port";
+    }), cfg_keys.end());
+    cfg.apply_only(project_config, cfg_keys, true);
+
+    if (!different_settings_list.empty()) {
+        if (DynamicPrintConfig *base_config = find_base(Preset::inherits(cfg))) {
+            std::string extruder_id_name, extruder_variant_name;
+            std::set<std::string> *key_set1 = nullptr, *key_set2 = nullptr;
+            Preset::get_extruder_names_and_keysets(type, extruder_id_name, extruder_variant_name, &key_set1, &key_set2);
+            cfg.update_non_diff_values_to_base_config(*base_config, cfg_keys, different_settings_list,
+                                                      extruder_id_name, extruder_variant_name,
+                                                      *key_set1, *key_set2);
+        }
+    }
+    if (keys)
+        *keys = std::move(cfg_keys);
+    return cfg;
+}
+
 bool Preset::has_lidar(PresetBundle *preset_bundle)
 {
     bool has_lidar = false;
