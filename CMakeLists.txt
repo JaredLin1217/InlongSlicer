@@ -1292,6 +1292,10 @@ endif ()
 add_subdirectory(src)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT InlongSlicer_app_gui)
 
+if (WIN32)
+    include(cmake/InlongBuildDataDirs.cmake)
+endif ()
+
 add_dependencies(gettext_make_pot hintsToPot)
 if(TARGET InlongSlicer)
     add_dependencies(InlongSlicer gettext_po_to_mo)

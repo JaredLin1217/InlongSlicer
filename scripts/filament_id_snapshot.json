@@ -894,7 +894,8 @@
    "filaments": [
     "BBL/Generic PETG HF",
     "InlongFilamentLibrary/Generic PETG HF",
-    "Prusa/Generic PETG HF"
+    "Prusa/Generic PETG HF",
+    "Snapmaker/Generic PETG HF"
    ],
    "name": "Generic PETG HF",
    "filament_type": "PETG",
@@ -1571,6 +1572,7 @@
     "RH3D/Generic PLA",
     "Ratrig/Generic PLA",
     "SecKit/Generic PLA",
+    "Snapmaker/Generic PLA",
     "Sovol/Generic PLA",
     "Tiertime/Generic PLA",
     "UltiMaker/Generic PLA",
@@ -3979,6 +3981,7 @@
     "Qidi/Generic PLA-CF",
     "Ratrig/Generic PLA-CF",
     "SecKit/Generic PLA-CF",
+    "Snapmaker/Generic PLA-CF",
     "Tiertime/Generic PLA-CF",
     "Vzbot/Generic PLA-CF"
    ],
@@ -4301,6 +4304,7 @@
     "RH3D/Generic PETG",
     "Ratrig/Generic PETG",
     "SecKit/Generic PETG",
+    "Snapmaker/Generic PETG",
     "Sovol/Generic PETG",
     "Tiertime/Generic PETG",
     "UltiMaker/Generic PETG",
@@ -4976,6 +4980,7 @@
     "InlongFilamentLibrary/Generic PLA Silk",
     "Prusa/Generic PLA Silk",
     "Qidi/Generic PLA Silk",
+    "Snapmaker/Generic PLA Silk",
     "Sovol/Generic PLA Silk",
     "Tiertime/Generic PLA Silk"
    ],
@@ -5265,6 +5270,7 @@
     "RH3D/Generic TPU",
     "Ratrig/Generic TPU",
     "SecKit/Generic TPU",
+    "Snapmaker/Generic TPU",
     "Sovol/Generic TPU",
     "Tiertime/Generic TPU",
     "Vzbot/Generic TPU"
@@ -6129,6 +6135,7 @@
     "Flashforge/Generic PLA High Speed",
     "InlongFilamentLibrary/Generic PLA High Speed",
     "Qidi/Generic PLA High Speed",
+    "Snapmaker/Generic PLA High Speed",
     "Tiertime/Generic PLA High Speed"
    ],
    "name": "Generic PLA High Speed",
@@ -6352,6 +6359,7 @@
     "InlongArena/Generic PETG-CF",
     "InlongFilamentLibrary/Generic PETG-CF",
     "Qidi/Generic PETG-CF",
+    "Snapmaker/Generic PETG-CF",
     "Tiertime/Generic PETG-CF"
    ],
    "name": "Generic PETG-CF",
