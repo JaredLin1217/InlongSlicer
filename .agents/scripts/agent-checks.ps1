@@ -47,6 +47,16 @@ function Test-AgentSources([string]$Root) {
         if($due -lt [DateTime]::UtcNow.Date) { throw "Source requires review: $($entry.id)" }
     }
 }
+function Test-AgentProviderProject([string]$Root) {
+    # A product checkout with the v3 managed manifest is a Consumer target. It
+    # does not own the provider-only deployment catalog, regression harness,
+    # release exporter, or root agents.json. Do not turn that intentional
+    # boundary into a false "missing file" failure when Provider is requested.
+    $provider_manifest = Join-Path $Root 'agents.json'
+    $consumer_manifest = Join-Path $Root '.agents/managed.json'
+    return (Test-Path -LiteralPath $provider_manifest -PathType Leaf) -or
+        -not (Test-Path -LiteralPath $consumer_manifest -PathType Leaf)
+}
 function Test-AgentSizes([string]$Root) {
     $production=@(Get-AgentFiles $Root | Where-Object { $_ -like 'scripts/*.ps1' -and $_ -notlike 'scripts/test-*' })
     $bytes=($production|ForEach-Object { (Get-Item -LiteralPath (Resolve-SafePath $Root $_)).Length }|Measure-Object -Sum).Sum
@@ -74,6 +84,7 @@ function Test-AgentEvidence([string]$Root) {
 function Invoke-AgentChecks {
     param([string]$Root,[ValidateSet('Provider','Consumer')][string]$Scope,[ValidateSet('Changed','Checkpoint')][string]$Profile,[string[]]$Path=@())
     $started=[DateTime]::UtcNow
+    $provider_applicable = $Scope -ne 'Provider' -or (Test-AgentProviderProject $Root)
     $all=if($Scope -eq 'Provider'){ @(Get-AgentFiles $Root) }else{
         @((Read-AgentJson (Resolve-SafePath $Root '.agents/managed.json')).files.path)+@('.agents/managed.json')
     }
@@ -90,7 +101,13 @@ function Invoke-AgentChecks {
     $checks=[Collections.Generic.List[object]]::new()
     $checks.Add(@{id='syntax';command='Test-AgentSyntax';action={ Test-AgentSyntax $Root $selected }})
     $checks.Add(@{id='json-schema';command='Test-AgentSchemas';action={ Test-AgentSchemas $Root $selected }})
-    if($Profile -eq 'Checkpoint' -or @($impact|Where-Object { $_ -match '^(\.agents/|scripts/|schemas/|docs/agents/)' }).Count) {
+    if($Scope -eq 'Provider' -and -not $provider_applicable) {
+        $checks.Add(@{id='scope';command='Provider scope applicability';action={
+            'Provider scope not applicable: this checkout is an Agents v3 Consumer.'
+        }})
+    }
+    if(($Profile -eq 'Checkpoint' -or @($impact|Where-Object { $_ -match '^(\.agents/|scripts/|schemas/|docs/agents/)' }).Count) -and
+        ($Scope -ne 'Provider' -or $provider_applicable)) {
         $checks.Add(@{id='ownership';command='Test-AgentOwnership';action={ Test-AgentOwnership $Root $Scope }})
     }
     if($Profile -eq 'Checkpoint' -or @($selected|Where-Object { $_ -match 'memory|AGENTS\.md' }).Count) {
@@ -99,14 +116,14 @@ function Invoke-AgentChecks {
     if($Profile -eq 'Checkpoint' -or $selected -contains 'docs/agents/sources.json') {
         $checks.Add(@{id='sources';command='Test-AgentSources';action={ Test-AgentSources $Root }})
     }
-    if($Scope -eq 'Provider' -and ($Profile -eq 'Checkpoint' -or @($impact|Where-Object { $_ -match '^(scripts|tests|schemas|docs/agents)/' }).Count)) {
+    if($Scope -eq 'Provider' -and $provider_applicable -and ($Profile -eq 'Checkpoint' -or @($impact|Where-Object { $_ -match '^(scripts|tests|schemas|docs/agents)/' }).Count)) {
         $checks.Add(@{id='size';command='Test-AgentSizes';action={ Test-AgentSizes $Root }})
         $checks.Add(@{id='regression';command='pwsh -NoProfile -File tests/test-workflow.ps1';action={
             $out=@(& pwsh -NoProfile -File (Join-Path $Root 'tests/test-workflow.ps1') 2>&1)
             if($LASTEXITCODE -ne 0) { throw ($out -join "`n") }; $out
         }})
     }
-    if($Scope -eq 'Provider' -and $Profile -eq 'Checkpoint') {
+    if($Scope -eq 'Provider' -and $provider_applicable -and $Profile -eq 'Checkpoint') {
         $checks.Add(@{id='evidence';command='Test-AgentEvidence';action={ Test-AgentEvidence $Root }})
         $checks.Add(@{id='package';command='export-release-package.ps1';action={ & (Join-Path $Root 'scripts/export-release-package.ps1') }})
     }
@@ -125,8 +142,18 @@ function Invoke-AgentChecks {
     }
     $checks.Add(@{id='diff';command='git diff [--cached] --check -- <selected paths> (working tree and index)';action={
         if($selected.Count) {
-            $null=Invoke-AgentGit $Root (@('diff','--check','--')+$selected)
-            $null=Invoke-AgentGit $Root (@('diff','--cached','--check','--')+$selected)
+            # Provider Checkpoint selects the complete checkout. Passing tens of
+            # thousands of paths to one native Windows command exceeds the
+            # command-line boundary and can surface as a misleading native
+            # StandardOutputEncoding error. An unscoped diff is equivalent for
+            # a full checkpoint; retain path precision for Changed checks.
+            if($selected.Count -gt 1000) {
+                $null=Invoke-AgentGit $Root @('diff','--check')
+                $null=Invoke-AgentGit $Root @('diff','--cached','--check')
+            } else {
+                $null=Invoke-AgentGit $Root (@('diff','--check','--')+$selected)
+                $null=Invoke-AgentGit $Root (@('diff','--cached','--check','--')+$selected)
+            }
         }
     }})
     $receipts=[Collections.Generic.List[object]]::new(); $seen=@{}

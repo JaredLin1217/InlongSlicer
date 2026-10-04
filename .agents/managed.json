@@ -26,7 +26,7 @@
     {
       "source": "scripts/agent-checks.ps1",
       "path": ".agents/scripts/agent-checks.ps1",
-      "sha256": "e2a3b54945306207ad0e368ba386abf5b0031b5a8a7471384b02ca4aca5e61fc"
+      "sha256": "24ee8b22449a062a34915ff929c1889234436e82baab5f84c2f1fc727da7c93c"
     },
     {
       "source": "scripts/validate.ps1",
