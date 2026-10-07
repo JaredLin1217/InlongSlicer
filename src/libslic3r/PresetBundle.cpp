@@ -37,6 +37,7 @@
 #include <miniz/miniz.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
 
 namespace fs = boost::filesystem;
 
@@ -627,30 +628,11 @@ bool PresetBundle::resolve_preset_config(DynamicPrintConfig &config, Preset::Typ
             continue;
 
         try {
-            PresetBundle library_bundle;
-            const PresetBundle *base_bundle = nullptr;
-            if (vendor_id != INLONG_FILAMENT_LIBRARY &&
-                boost::filesystem::is_regular_file(root_dir / (std::string(INLONG_FILAMENT_LIBRARY) + ".json"))) {
-                library_bundle.m_preserve_vendor_source_paths = true;
-                library_bundle.load_vendor_configs_from_json(root_dir.string(), INLONG_FILAMENT_LIBRARY, LoadSystem,
-                                                             compatibility_rule, nullptr, false);
-                if (library_bundle.error_count() != 0) {
-                    error = "InlongFilamentLibrary contains invalid presets";
-                    return false;
-                }
-                base_bundle = &library_bundle;
-            }
-
-            PresetBundle source_bundle;
-            source_bundle.m_preserve_vendor_source_paths = true;
-            source_bundle.load_vendor_configs_from_json(root_dir.string(), vendor_id, LoadSystem,
-                                                        compatibility_rule, base_bundle, false);
-            if (source_bundle.error_count() != 0) {
-                error = "Vendor bundle contains invalid presets";
+            const PresetBundle *loaded = load_source_vendor(root_dir, vendor_id, compatibility_rule, error);
+            if (loaded == nullptr)
                 return false;
-            }
 
-            const Preset *resolved = find_loaded(source_bundle);
+            const Preset *resolved = find_loaded(*loaded);
             if (resolved == nullptr) {
                 if (error.empty())
                     error = "Source file is not an instantiated preset in its vendor manifest";
@@ -672,18 +654,21 @@ bool PresetBundle::resolve_preset_config(DynamicPrintConfig &config, Preset::Typ
 const PresetBundle *PresetBundle::load_source_vendor(const boost::filesystem::path &root_dir,
                                                     const std::string &vendor_id,
                                                     ForwardCompatibilitySubstitutionRule compatibility_rule,
-                                                    std::string &error)
+                                                    std::string &error, bool allow_cache)
 {
-    auto key = std::make_tuple(root_dir.string(), vendor_id, compatibility_rule);
+    auto key = std::make_tuple(root_dir.string(), vendor_id, compatibility_rule, allow_cache);
     if (auto it = m_source_vendor_bundles.find(key); it != m_source_vendor_bundles.end())
         return it->second.get();
 
     // The library loads with no base of its own, so the tree a vendor inherits from
     // is the same one that resolves the library's own presets.
+    const std::string library_name(INLONG_FILAMENT_LIBRARY);
+    const bool library_json = fs::is_regular_file(root_dir / (library_name + ".json"));
+    const bool library_cache_only = !library_json && fs::is_regular_file(root_dir / (library_name + ".opc"));
     const PresetBundle *library = nullptr;
-    if (vendor_id != INLONG_FILAMENT_LIBRARY &&
-        boost::filesystem::is_regular_file(root_dir / (std::string(INLONG_FILAMENT_LIBRARY) + ".json"))) {
-        library = load_source_vendor(root_dir, INLONG_FILAMENT_LIBRARY, compatibility_rule, error);
+    if (vendor_id != INLONG_FILAMENT_LIBRARY && (library_json || library_cache_only)) {
+        library = load_source_vendor(root_dir, INLONG_FILAMENT_LIBRARY, compatibility_rule, error,
+                                     allow_cache || library_cache_only);
         if (library == nullptr) {
             error = "InlongFilamentLibrary contains invalid presets";
             return nullptr;
@@ -692,7 +677,7 @@ const PresetBundle *PresetBundle::load_source_vendor(const boost::filesystem::pa
 
     auto bundle = std::make_unique<PresetBundle>();
     bundle->m_preserve_vendor_source_paths = true;
-    bundle->load_vendor_configs_from_json(root_dir.string(), vendor_id, LoadSystem, compatibility_rule, library, false);
+    bundle->load_vendor_configs_from_json(root_dir.string(), vendor_id, LoadSystem, compatibility_rule, library, allow_cache);
     if (bundle->error_count() != 0) {
         error = "Vendor bundle contains invalid presets";
         return nullptr;
@@ -752,8 +737,9 @@ bool PresetBundle::resolve_system_preset(DynamicPrintConfig &config, Preset::Typ
     };
     if (!installed(root_dir))
         root_dir = fs::path(resources_dir()) / PRESET_PROFILES_DIR;
+    const bool cache_only = !fs::is_regular_file(root_dir / (vendor_id + ".json"));
     try {
-        const PresetBundle *vendor = load_source_vendor(root_dir, vendor_id, compatibility_rule, error);
+        const PresetBundle *vendor = load_source_vendor(root_dir, vendor_id, compatibility_rule, error, cache_only);
         if (vendor == nullptr)
             return false;
         const PresetCollection &collection = type == Preset::TYPE_PRINTER ? vendor->printers :
@@ -2651,108 +2637,108 @@ void PresetBundle::clear_printer_hold_aliases()
 
 //BBS: add json related logic, load system presets from json
 std::pair<PresetsConfigSubstitutions, std::string> PresetBundle::load_system_presets_from_json(
-    ForwardCompatibilitySubstitutionRule compatibility_rule, bool allow_cache)
+    ForwardCompatibilitySubstitutionRule compatibility_rule, bool write_caches)
 {
-    //BBS: add config related logs
-    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(" enter, compatibility_rule %1%")%compatibility_rule;
+    fs::path dir = (fs::path(data_dir()) / PRESET_SYSTEM_DIR).make_preferred();
+    if (validation_mode)
+        dir = fs::path(data_dir()).make_preferred();
+
+    std::vector<VendorSource> sources;
+    for (const std::string &name : vendor_names_in(dir))
+        if (name == INLONG_FILAMENT_LIBRARY || !validation_mode || vendor_to_validate.empty() || name == vendor_to_validate)
+            sources.push_back({name, dir});
+
+    // Read-only loads can use installed caches, but must never create or rewrite one.
+    m_generate_vendor_caches = write_caches && (m_generate_vendor_caches || !validation_mode);
+    auto result = this->load_vendors(sources, compatibility_rule, true);
+    this->update_system_maps();
+    return result;
+}
+
+std::pair<PresetsConfigSubstitutions, std::string> PresetBundle::load_vendors(
+    const std::vector<VendorSource> &sources, ForwardCompatibilitySubstitutionRule compatibility_rule,
+    bool allow_cache, const std::atomic<bool> *cancel, std::vector<std::string> *failed)
+{
     if (compatibility_rule == ForwardCompatibilitySubstitutionRule::EnableSystemSilent)
-        // Loading system presets, don't log substitutions.
         compatibility_rule = ForwardCompatibilitySubstitutionRule::EnableSilent;
     else if (compatibility_rule == ForwardCompatibilitySubstitutionRule::EnableSilentDisableSystem)
-        // Loading system presets, throw on unknown option value.
         compatibility_rule = ForwardCompatibilitySubstitutionRule::Disable;
 
-    // Here the vendor specific read only Config Bundles are stored.
-    //BBS: change directory by design
-    boost::filesystem::path     dir = (boost::filesystem::path(data_dir()) / PRESET_SYSTEM_DIR).make_preferred();
-    if (validation_mode)
-        dir = (boost::filesystem::path(data_dir())).make_preferred();
-
     const auto load_t0 = std::chrono::steady_clock::now();
-
-    // The vendors below are loaded whole and against each other — the filament
-    // library first, then every other vendor with it as the base — so each parse
-    // is complete enough to be worth caching.
-    m_generate_vendor_caches = allow_cache && (m_generate_vendor_caches || !validation_mode);
-
-    PresetsConfigSubstitutions  substitutions;
-    std::string                 errors_cummulative;
+    const auto canceled = [cancel] { return cancel != nullptr && cancel->load(); };
+    PresetsConfigSubstitutions substitutions;
+    std::string errors_cummulative;
     bool first = true;
-    // Sorted, so any duplicate-preset warning below comes out in the same order on
-    // every run.
-    const std::set<std::string> vendor_names = vendor_names_in(dir);
-    // Separate INLONG_FILAMENT_LIBRARY from other vendors. It must be loaded
-    // first because other vendors' filaments may inherit from it via the
-    // `base_bundle` lookup in parse_subfile. The remaining vendors are
-    // independent (no cross-vendor inheritance) and can be loaded in parallel.
-    std::string inlong_lib_vendor;
-    std::vector<std::string> other_vendors;
-    other_vendors.reserve(vendor_names.size());
-    for (auto& vn : vendor_names) {
-        if (vn == INLONG_FILAMENT_LIBRARY)
-            inlong_lib_vendor = vn;
-        else if (!(validation_mode && !vendor_to_validate.empty() && vn != vendor_to_validate))
-            other_vendors.push_back(vn);
-    }
 
-    // Step 1: Load INLONG_FILAMENT_LIBRARY into `this` synchronously.
-    if (!inlong_lib_vendor.empty()) {
+    const VendorSource *library = nullptr;
+    std::vector<const VendorSource *> other_vendors;
+    other_vendors.reserve(sources.size());
+    for (const VendorSource &source : sources)
+        if (source.name == INLONG_FILAMENT_LIBRARY)
+            library = &source;
+        else
+            other_vendors.push_back(&source);
+
+    // Finish the shared inheritance base before any worker reads it.
+    if (library != nullptr && !canceled()) {
         try {
-            // Match a fresh launch before parsing: hold aliases and the error
-            // counter survive reset(), and would otherwise carry prior-cycle
-            // state into this load.
             this->clear_printer_hold_aliases();
             this->m_errors = 0;
             append(substitutions, this->load_vendor_configs_from_json(
-                dir.string(), inlong_lib_vendor, PresetBundle::LoadSystem, compatibility_rule, nullptr, allow_cache).first);
+                library->dir.string(), library->name, LoadSystem, compatibility_rule, nullptr, allow_cache).first);
             first = false;
         } catch (const std::runtime_error &err) {
             if (validation_mode)
-                throw err;
+                throw;
             errors_cummulative += err.what();
             errors_cummulative += "\n";
+            if (failed != nullptr)
+                failed->push_back(library->name);
         }
     }
 
-    // Step 2: Load remaining vendors in parallel. Each gets its own
-    // PresetBundle and uses `this` (which contains INLONG_FILAMENT_LIBRARY)
-    // as the base_bundle for cross-bundle inheritance lookups.
-    std::vector<std::unique_ptr<PresetBundle>>      parallel_bundles(other_vendors.size());
-    std::vector<PresetsConfigSubstitutions>         parallel_substitutions(other_vendors.size());
-    std::vector<std::string>                        parallel_errors(other_vendors.size());
-
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, other_vendors.size()),
-        [&](const tbb::blocked_range<size_t>& range) {
+    // Each worker owns its bundle and result slot. Only the serial merge below
+    // writes this bundle, the failure list and the cumulative error text.
+    std::vector<std::unique_ptr<PresetBundle>> parallel_bundles(other_vendors.size());
+    std::vector<PresetsConfigSubstitutions> parallel_substitutions(other_vendors.size());
+    std::vector<std::string> parallel_errors(other_vendors.size());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, other_vendors.size(), 1),
+        [&](const tbb::blocked_range<size_t> &range) {
             for (size_t i = range.begin(); i < range.end(); ++i) {
+                if (canceled())
+                    continue;
                 auto bundle = std::make_unique<PresetBundle>();
                 bundle->set_is_validation_mode(validation_mode);
                 bundle->set_generate_vendor_caches(m_generate_vendor_caches);
+                const VendorSource &source = *other_vendors[i];
                 try {
                     auto result = bundle->load_vendor_configs_from_json(
-                        dir.string(), other_vendors[i], PresetBundle::LoadSystem, compatibility_rule, this, allow_cache);
-                    parallel_substitutions[i] = std::move(result.first);
-                    parallel_bundles[i] = std::move(bundle);
+                        source.dir.string(), source.name, LoadSystem, compatibility_rule, this, allow_cache);
+                    if (!canceled()) {
+                        parallel_substitutions[i] = std::move(result.first);
+                        parallel_bundles[i] = std::move(bundle);
+                    }
                 } catch (const std::runtime_error &err) {
                     parallel_errors[i] = err.what();
                 }
             }
-        });
+        }, tbb::simple_partitioner());
 
-    // Step 3: Sequentially merge the parallel-loaded bundles into `this`.
-    // The merge order is the original vendor order so any duplicate-warning
-    // output stays stable across runs.
+    // Input order determines duplicate ownership, diagnostics and substitutions,
+    // regardless of the order the workers finish.
     for (size_t i = 0; i < other_vendors.size(); ++i) {
+        const std::string &vendor_name = other_vendors[i]->name;
         if (!parallel_errors[i].empty()) {
             if (validation_mode)
                 throw std::runtime_error(parallel_errors[i]);
             errors_cummulative += parallel_errors[i];
             errors_cummulative += "\n";
+            if (failed != nullptr)
+                failed->push_back(vendor_name);
             continue;
         }
         if (!parallel_bundles[i])
             continue;
-
-        const std::string& vendor_name = other_vendors[i];
         append(substitutions, std::move(parallel_substitutions[i]));
         std::vector<std::string> duplicates = this->merge_presets(std::move(*parallel_bundles[i]));
         first = false;
@@ -2763,25 +2749,17 @@ std::pair<PresetsConfigSubstitutions, std::string> PresetBundle::load_system_pre
                     errors_cummulative += ", ";
                 errors_cummulative += duplicates[j];
                 ++m_errors;
-                BOOST_LOG_TRIVIAL(error) << "Found duplicated preset: " + duplicates[j] + " in vendor: " + vendor_name + ": ";
+                BOOST_LOG_TRIVIAL(error) << "Found duplicated preset: " << duplicates[j] << " in vendor: " << vendor_name;
             }
         }
     }
-
-    if (first) {
-		// No config bundle loaded, reset.
-		this->reset(false);
-	}
-
-	this->update_system_maps();
+    if (first)
+        this->reset(false);
 
     const auto load_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::steady_clock::now() - load_t0).count();
-    BOOST_LOG_TRIVIAL(info) << "PresetBundle: " << vendor_names.size() << " vendor(s) loaded in " << load_ms << " ms";
-
-    //BBS: add config related logs
-    BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(" finished, errors_cummulative %1%")%errors_cummulative;
-    return std::make_pair(std::move(substitutions), errors_cummulative);
+    BOOST_LOG_TRIVIAL(info) << "PresetBundle: " << sources.size() << " vendor(s) loaded in " << load_ms << " ms";
+    return {std::move(substitutions), std::move(errors_cummulative)};
 }
 
 std::pair<PresetsConfigSubstitutions, std::string> PresetBundle::load_system_models_from_json(ForwardCompatibilitySubstitutionRule compatibility_rule)
@@ -8267,6 +8245,8 @@ bool PresetBundle::load_vendor_cache(const std::string& cache_path, const std::s
     VendorCacheData data;
     if (! VendorCacheFile::load(cache_path, expected_vendor_name, expected_vendor_version, data))
         return false;
+    if (tbb::is_current_task_group_canceling())
+        throw RuntimeError("PresetBundle: vendor cache installation canceled");
     try {
         const std::string& vendor_name = expected_vendor_name;   // VendorCacheFile::load checked they match
         this->vendors = std::move(data.vendors);
@@ -8318,6 +8298,8 @@ bool PresetBundle::load_vendor_cache(const std::string& cache_path, const std::s
         install_entries(data.machine_entries, &this->printers, false);
         return true;
     } catch (const std::exception& e) {
+        if (tbb::is_current_task_group_canceling())
+            throw;
         BOOST_LOG_TRIVIAL(warning) << "PresetBundle: rejecting vendor cache " << cache_path << ": " << e.what();
         // Restore a clean state so the caller can fall back to the JSON parse.
         this->reset(false);

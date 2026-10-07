@@ -278,11 +278,11 @@ TEST_CASE("Native command catalog covers the Add menus", "[ActionSource][SpeedDi
         CHECK(*group == *primitive_group);
     }
 
-    const std::string* handy_group = group_of("add_handy_orca_cube");
+    const std::string* handy_group = group_of("add_handy_inlong_cube");
     REQUIRE(handy_group != nullptr);
-    for (const char* key : {"add_handy_orcasliced_combo", "add_handy_orca_badge", "add_handy_orca_tolerance_test",
+    for (const char* key : {"add_handy_inlongsliced_combo", "add_handy_inlong_badge", "add_handy_inlong_tolerance_test",
                             "add_handy_3dbenchy", "add_handy_cali_cat", "add_handy_autodesk_fdm_test", "add_handy_voron_cube",
-                            "add_handy_stanford_bunny", "add_handy_orca_string_hell"}) {
+                            "add_handy_stanford_bunny", "add_handy_inlong_string_hell"}) {
         const std::string* group = group_of(key);
         INFO(key);
         REQUIRE(group != nullptr);

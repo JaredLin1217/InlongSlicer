@@ -15,6 +15,8 @@
 #include <unordered_map>
 #include <optional>
 #include <array>
+#include <atomic>
+#include <vector>
 #include <boost/filesystem/path.hpp>
 #include <unordered_set>
 
@@ -645,6 +647,18 @@ public:
     // default_filament_profile must resolve to a system filament.
     bool check_printer_default_materials() const;
 
+    // Load each vendor from its own directory. The filament library is loaded
+    // first; other vendors resolve against it in parallel and merge in input order.
+    struct VendorSource
+    {
+        std::string name;
+        boost::filesystem::path dir;
+    };
+    std::pair<PresetsConfigSubstitutions, std::string> load_vendors(
+        const std::vector<VendorSource> &vendors,
+        ForwardCompatibilitySubstitutionRule compatibility_rule, bool allow_cache,
+        const std::atomic<bool> *cancel = nullptr, std::vector<std::string> *failed = nullptr);
+
     // Merge one vendor's presets with the other vendor's presets, report duplicates.
     // Public so per-vendor-cache consumers (e.g. the setup wizard) can assemble a
     // bundle out of several per-vendor caches loaded into separate PresetBundle instances.
@@ -686,13 +700,13 @@ private:
     // Vendor trees loaded by resolve_preset_config's manifest path, so every preset
     // resolved through this bundle shares one load per source root and vendor. The
     // filament library is one such tree, shared by every vendor under its root.
-    std::map<std::tuple<std::string, std::string, ForwardCompatibilitySubstitutionRule>, std::unique_ptr<PresetBundle>>
+    std::map<std::tuple<std::string, std::string, ForwardCompatibilitySubstitutionRule, bool>, std::unique_ptr<PresetBundle>>
         m_source_vendor_bundles;
 
     const PresetBundle *load_source_vendor(const boost::filesystem::path &root_dir,
                                            const std::string &vendor_id,
                                            ForwardCompatibilitySubstitutionRule compatibility_rule,
-                                           std::string &error);
+                                           std::string &error, bool allow_cache = false);
 
     // Orca: validation only - flag any printer with two or more compatible
     // filament presets sharing one filament_id (ambiguous AMS subtype match).
@@ -700,7 +714,7 @@ private:
 
     //std::pair<PresetsConfigSubstitutions, std::string> load_system_presets(ForwardCompatibilitySubstitutionRule compatibility_rule);
     //BBS: add json related logic
-    std::pair<PresetsConfigSubstitutions, std::string> load_system_presets_from_json(ForwardCompatibilitySubstitutionRule compatibility_rule, bool allow_cache = true);
+    std::pair<PresetsConfigSubstitutions, std::string> load_system_presets_from_json(ForwardCompatibilitySubstitutionRule compatibility_rule, bool write_caches = true);
     // Update the multicolor information for filaments.
     void update_filament_multi_color();
     // Update renamed_from and alias maps of system profiles.

@@ -1324,6 +1324,7 @@ SCENARIO("MinimalPublished strips slicer tags carried by the source project", "[
         model.model_info->metadata_items[ORCA_PUBLISHED_TAG] = "1";
         model.model_info->metadata_items["Application"]     = "BambuStudio-2.0.0";
         model.model_info->metadata_items["InlongSlicer"]      = "2.1.0";
+        model.model_info->metadata_items["OrcaSlicer"]        = "2.1.0";
 
         ScopedTemporaryDir backup_dir("orca_strip_tags");
         model.set_backup_path(backup_dir.string());
@@ -1355,6 +1356,7 @@ SCENARIO("MinimalPublished strips slicer tags carried by the source project", "[
                 REQUIRE(dst_model.model_info != nullptr);
                 REQUIRE(dst_model.model_info->metadata_items.count("Application") == 0);
                 REQUIRE(dst_model.model_info->metadata_items.count("InlongSlicer") == 0);
+                REQUIRE(dst_model.model_info->metadata_items.count("OrcaSlicer") == 0);
                 // The published marker itself must survive.
                 REQUIRE(dst_model.model_info->metadata_items[ORCA_PUBLISHED_TAG] == "1");
             }

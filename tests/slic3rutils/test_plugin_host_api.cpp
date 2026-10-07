@@ -129,7 +129,7 @@ TEST_CASE("Plugin host API exposes host-owned bundle and preset surface to Pytho
     CHECK(printers.attr("find_preset")(printer_preset.name).attr("name").cast<std::string>() == printer_preset.name);
 }
 
-TEST_CASE("Plugin host API reports unavailable GUI objects before Orca app initialization", "[PluginHost][Python]")
+TEST_CASE("Plugin host API reports unavailable GUI objects before Inlong app initialization", "[PluginHost][Python]")
 {
     py::object host = import_orca_module().attr("host");
 
@@ -145,7 +145,7 @@ TEST_CASE("Plugin host API reports unavailable GUI objects before Orca app initi
     }
 }
 
-TEST_CASE("Plugin host API exposes the UI module and guards it before Orca app initialization", "[PluginHost][Python]")
+TEST_CASE("Plugin host API exposes the UI module and guards it before Inlong app initialization", "[PluginHost][Python]")
 {
     py::object host = import_orca_module().attr("host");
     REQUIRE(has_attr(host, "ui"));
@@ -177,7 +177,7 @@ TEST_CASE("Plugin host API exposes the UI module and guards it before Orca app i
         FAIL("orca.host.ui.create_dock_panel unexpectedly succeeded without a wx application");
     } catch (const py::error_already_set& error) {
         CHECK(error.matches(PyExc_RuntimeError));
-        CHECK(std::string(error.what()).find("OrcaSlicer application is not initialized") != std::string::npos);
+        CHECK(std::string(error.what()).find("InlongSlicer application is not initialized") != std::string::npos);
     }
 
     // Positional arguments follow create_window(): width and height come straight after the title.

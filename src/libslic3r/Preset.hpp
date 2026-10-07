@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <functional>
 #include <mutex>
+#include <optional>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/property_tree/ptree_fwd.hpp>
@@ -330,7 +331,8 @@ public:
 
     //BBS: add logic for only difference save
     //if parent_config is null, save all keys, otherwise, only save difference
-    void                save(DynamicPrintConfig* parent_config);
+    // Returns false when the preset file cannot be written.
+    bool                save(DynamicPrintConfig* parent_config);
     void                reload(Preset const & parent);
 
     // Return a label of this preset, consisting of a name and a "(modified)" suffix, if this preset is dirty.
@@ -492,6 +494,9 @@ std::string get_preset_canonical_name(const std::string &preset_bare_name, const
 
 // Tail segment of a canonical name — what's written to the bundle's .json filename and JSON "name" field.
 std::string get_preset_bare_name(const std::string &canonical_name);
+
+// Shared lock for user preset readers and writers. Read-only loads never create it.
+std::string user_presets_lock_path(bool read_only = false);
 
 // Resolve an origin from a directory path when the caller passes Kind::Auto.
 PresetOrigin detect_origin_from_path(const boost::filesystem::path &path, const PresetOrigin &explicit_origin = PresetOrigin());
@@ -809,6 +814,8 @@ public:
     // Return number of presets including the "- default -" preset.
     size_t          size() const                { return m_presets.size(); }
     bool            has_defaults_only() const   { return m_presets.size() <= m_num_default_presets; }
+    // Presets refused or repaired while loading this collection.
+    int             error_count() const         { return m_errors; }
 
     // For Print / Filament presets, disable those, which are not compatible with the printer.
     template<typename PreferedCondition>
@@ -898,6 +905,56 @@ protected:
     void            set_custom_preset_alias(Preset &preset);
 
 private:
+    // A preset file and its .info as read from disk, std::nullopt for one that is missing.
+    struct PresetFilesOnDisk
+    {
+        std::optional<std::string> json;
+        std::optional<std::string> info;
+
+        static PresetFilesOnDisk read(const boost::filesystem::path &file);
+        bool operator==(const PresetFilesOnDisk &rhs) const { return json == rhs.json && info == rhs.info; }
+    };
+
+    // One preset file read and flattened against the presets already in this
+    // collection, before anything the collection shares has been touched.
+    struct UserPresetLoad
+    {
+        Preset      preset;
+        // Joins the collection. A file that threw partway still joins it, without
+        // the steps that did not run.
+        bool        install { false };
+        // The whole of the load ran, so the preset is ready to be aliased.
+        bool        complete { false };
+        // A filament preset that named no compatible printer and was given one from
+        // its name, which commit writes back to its file.
+        bool        save_compatible_printers { false };
+        // Unreadable, so commit removes it and its .info file.
+        bool        discard_file { false };
+        // The .info file read beside the preset, which commit logs.
+        std::string info_file;
+        // Both files as they were before the preset was read from them. Resolve runs
+        // without the instance lock, so commit compares this with the disk under it.
+        PresetFilesOnDisk on_disk;
+        // Counted and logged by commit, in the order the directory listed the files.
+        std::vector<std::string>   errors;
+        PresetsConfigSubstitutions substitutions;
+    };
+
+    // Read and flatten one preset file. It reads only, and resolves against the presets
+    // loaded before this pass, never another file of the same pass, so the files of a
+    // pass are independent of each other.
+    UserPresetLoad  resolve_user_preset(const boost::filesystem::path &file, const std::string &canonical_name,
+                                        const PresetOrigin &load_origin, ForwardCompatibilitySubstitutionRule substitution_rule,
+                                        const std::string &extruder_id_name, const std::string &extruder_variant_name,
+                                        std::set<std::string> *key_set1, std::set<std::string> *key_set2) const;
+
+    // Install one resolved preset. The collection, its alias maps, the error count
+    // and the preset files on disk are touched here and only here.
+    void            commit_user_preset(UserPresetLoad &&loaded, std::deque<Preset> &presets_loaded,
+                                       PresetsConfigSubstitutions &substitutions,
+                                       const std::function<void(Preset&)> &preset_loaded_fn,
+                                       bool read_only);
+
     std::string canonical_preset_name(const std::string &name, const PresetOrigin &load_origin = PresetOrigin()) const;
 
     // Comparator that sorts "Generic " prefixed presets before others, then alphabetically within each group.
@@ -1064,7 +1121,7 @@ public:
 
     //BBS: change to json format
     //void                save() { this->config.save(this->file); }
-    void                save(DynamicPrintConfig* parent_config) { this->config.save_to_json(this->file, std::string("Physical_Printer"), std::string("User"), std::string(SLIC3R_VERSION)); }
+    void                save(DynamicPrintConfig* parent_config);
     void                save(const std::string& file_name_from, const std::string& file_name_to);
 
     void                update_from_preset(const Preset& preset);

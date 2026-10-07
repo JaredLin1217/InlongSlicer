@@ -4322,26 +4322,6 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
             GCodeProcessor::reserved_tag(
                 GCodeProcessor::ETags::Estimated_Printing_Time_Placeholder)
             .c_str());
-      file.write("\n");
-      if (!skip_config_block) {
-          file.write("; CONFIG_BLOCK_START\n");
-          std::string full_config;
-          append_full_config(print, full_config);
-          if (!full_config.empty())
-            file.write(full_config);
-
-          // Inlong: write compatible info
-          int first_layer_bed_temperature = get_bed_temperature(0, true, print.config().curr_bed_type);
-          file.write_format("; first_layer_bed_temperature = %d\n", first_layer_bed_temperature);
-          file.write_format("; bed_shape = %s\n", print.full_print_config().opt_serialize("printable_area").c_str());
-          file.write_format("; first_layer_temperature = %d\n", print.config().nozzle_temperature_initial_layer.get_at(0));
-          file.write_format("; first_layer_height = %.3f\n", print.config().initial_layer_print_height.value);
-
-            //SF TODO
-//          file.write_format("; variable_layer_height = %d\n", print.ad.adaptive_layer_height ? 1 : 0);
-
-          file.write("; CONFIG_BLOCK_END\n\n");
-      } // !skip_config_block
     }
     file.write("\n");
 

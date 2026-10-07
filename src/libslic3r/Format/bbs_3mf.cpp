@@ -7082,6 +7082,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                     // and import the geometry silently instead of showing a baked-in "old version"
                     // popup, and no version marker survives to seed a later re-save.
                     metadata_item_map.erase(BBL_APPLICATION_TAG);
+                    metadata_item_map.erase(INLONGSLICER_TAG);
                     metadata_item_map.erase(ORCASLICER_TAG);
                     metadata_item_map.erase(BBS_3MF_VERSION);
                     metadata_item_map.erase(BBS_3MF_VERSION1);

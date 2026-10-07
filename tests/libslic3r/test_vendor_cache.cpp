@@ -865,7 +865,7 @@ TEST_CASE("a vendor that fails to load is left out, reported, and the others sti
 TEST_CASE("a filament library that fails partway is reported, and vendors inheriting from it are left out", "[VendorCache]")
 {
     InstallDirs dirs;
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     write_lib_tree(dirs.system, "1.0.0", "20");
     std::ofstream((dirs.system / (lib + ".json")).string())
         << R"({"version":"1.0.0","name":")" << lib << R"(","filament_list":[)"
@@ -981,7 +981,7 @@ TEST_CASE("filaments merged from several vendors come out generic first, then by
 TEST_CASE("a vendor read while the filament library loads resolves against it, from JSON and from its cache", "[VendorCache]")
 {
     InstallDirs dirs;
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     write_lib_tree(dirs.system, "1.0.0", "20");
     write_vendor_with_lib_filament(dirs.system, "Acme", "1.0.0");
     auto load = [&] {

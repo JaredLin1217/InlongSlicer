@@ -516,6 +516,8 @@ TEST_CASE("The estimated printing time comment stays near the end of the file", 
     REQUIRE(config_block_end != std::string::npos);
     REQUIRE(filament_stats != std::string::npos);
     REQUIRE(time_comment != std::string::npos);
+    CHECK(gcode.find("; CONFIG_BLOCK_START") == gcode.rfind("; CONFIG_BLOCK_START"));
+    CHECK(config_block_end == gcode.rfind("; CONFIG_BLOCK_END"));
     CHECK(filament_stats > config_block_end);
     CHECK(time_comment > filament_stats);
 

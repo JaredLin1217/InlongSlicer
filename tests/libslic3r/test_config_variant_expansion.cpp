@@ -12,8 +12,32 @@
 #include <catch2/catch_approx.hpp>
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/Preset.hpp"
+#include "libslic3r/Slicing.hpp"
 
 using namespace Slic3r;
+
+TEST_CASE("Raft base and contact layers obey their assigned nozzle limits", "[ConfigVariants][Slicing][Regression]")
+{
+    PrintConfig print_config;
+    print_config.initial_layer_print_height.value = 0.2;
+    print_config.nozzle_diameter.values = {0.6, 0.8};
+    print_config.min_layer_height.values = {0.05, 0.08};
+    print_config.max_layer_height.values = {0.35, 0.25};
+    PrintObjectConfig object_config;
+    object_config.layer_height.value = 0.2;
+    object_config.enable_support.value = true;
+    object_config.raft_layers.value = 5;
+    object_config.support_filament.value = 1;
+    object_config.support_interface_filament.value = 2;
+
+    const SlicingParameters params = SlicingParameters::create_from_config(
+        print_config, object_config, 20., {1}, Vec3d::Ones());
+    REQUIRE_THAT(params.base_raft_layer_height, Catch::Matchers::WithinAbs(0.35, EPSILON));
+    REQUIRE_THAT(params.interface_raft_layer_height, Catch::Matchers::WithinAbs(0.25, EPSILON));
+    REQUIRE_THAT(params.contact_raft_layer_height, Catch::Matchers::WithinAbs(0.25, EPSILON));
+    REQUIRE(params.raft_layers() == 5);
+    REQUIRE_THAT(params.raft_contact_top_z, Catch::Matchers::WithinAbs(1.3, EPSILON));
+}
 
 namespace {
 

@@ -71,7 +71,7 @@
     {
       "source": "docs/agents/sources.json",
       "path": ".agents/docs/agents/sources.json",
-      "sha256": "39c398a576495c600042c3359e5b07b5ab2d4be892f67697ffece2c7e762afa4"
+      "sha256": "489b90dee7998d4f9a3d422f3c13b3015764b893546b13fa43216b6d380775e5"
     },
     {
       "source": "docs/runbooks/agents-operator-guide.md",

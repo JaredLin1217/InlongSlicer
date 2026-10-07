@@ -1037,6 +1037,24 @@ TEST_CASE("SupportMaterial: Organic support body can use an independent output g
     }
 }
 
+TEST_CASE("Independent top contact preserves its gap without changing bottom contact synchronization", "[SupportMaterial][OrganicTree][Regression]")
+{
+    const bool independent_body = GENERATE(false, true);
+    const bool independent_contact = GENERATE(false, true);
+    CAPTURE(independent_body, independent_contact);
+    DynamicPrintConfig config = organic_support_config(independent_body, independent_contact, 0.2, 0.17);
+    config.set_deserialize_strict("support_bottom_z_distance", "0.17");
+    Print print;
+    init_and_process_print({TestMesh::overhang}, print, config);
+
+    const SlicingParameters &params = print.objects().front()->slicing_parameters();
+    const double expected_top = independent_body || independent_contact ? 0.17 : 0.2;
+    const double expected_bottom = independent_body ? 0.17 : 0.2;
+    REQUIRE_THAT(params.gap_support_object, Catch::Matchers::WithinAbs(expected_top, EPSILON));
+    REQUIRE_THAT(params.gap_object_support, Catch::Matchers::WithinAbs(expected_bottom, EPSILON));
+    REQUIRE_FALSE(nonempty_support_layers(print).empty());
+}
+
 TEST_CASE("SupportMaterial: Organic sub-minimum contact remainder is merged into a valid output layer", "[SupportMaterial][OrganicTree]")
 {
     DynamicPrintConfig baseline_config = organic_support_config(

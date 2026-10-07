@@ -6129,7 +6129,7 @@ namespace {
 // Writes each vendor's preset cache into dir, then deletes its profile JSONs: what a release build installs.
 void reduce_vendors_to_caches(const fs::path &dir, const std::vector<std::string> &vendor_ids)
 {
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     PresetBundle      library;
     if (fs::exists(dir / (lib + ".json"))) {
         library.set_generate_vendor_caches(true);
@@ -6154,7 +6154,7 @@ void reduce_vendors_to_caches(const fs::path &dir, const std::vector<std::string
 // The filament library with one abstract base filament, and an "Acme" vendor whose one filament inherits it.
 void write_library_and_acme_filament(const fs::path &root)
 {
-    const std::string lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     fs::create_directories(root / lib / "filament");
     std::ofstream((root / (lib + ".json")).string())
         << R"({"version":"1.0.0","name":")" << lib << R"(",)"
@@ -6224,7 +6224,7 @@ TEST_CASE("A vendor updated over the air resolves against the library installed 
     write_library_and_acme_filament(temp_dir.path() / "resources" / PRESET_PROFILES_DIR);
     // The release install, then an update that brings Acme back as JSONs while the library stays a cache.
     write_library_and_acme_filament(system);
-    reduce_vendors_to_caches(system, {PresetBundle::ORCA_FILAMENT_LIBRARY, "Acme"});
+    reduce_vendors_to_caches(system, {PresetBundle::INLONG_FILAMENT_LIBRARY, "Acme"});
     write_library_and_acme_filament(temp_dir.path() / "update");
     fs::copy_file(temp_dir.path() / "update" / "Acme.json", system / "Acme.json");
     fs::create_directories(system / "Acme" / "filament");

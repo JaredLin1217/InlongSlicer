@@ -4,9 +4,9 @@
     {
       "id": "model",
       "url": "https://developers.openai.com/api/docs/guides/latest-model",
-      "checked": "2026-09-05",
+      "checked": "2026-10-07",
       "refresh_interval_days": 30,
-      "next_review_due": "2026-10-05",
+      "next_review_due": "2026-11-06",
       "boundary": "GPT-6 prompting guidance; API parameters are not Codex settings.",
       "drift_risk": "Model guidance and hosted controls can change.",
       "topics": [
@@ -17,9 +17,9 @@
     {
       "id": "configuration",
       "url": "https://learn.chatgpt.com/docs/config-file/config-reference",
-      "checked": "2026-09-05",
+      "checked": "2026-10-07",
       "refresh_interval_days": 30,
-      "next_review_due": "2026-10-05",
+      "next_review_due": "2026-11-06",
       "boundary": "Project settings only; preserve user permissions and global settings.",
       "drift_risk": "CLI and desktop versions may expose different keys.",
       "topics": [
