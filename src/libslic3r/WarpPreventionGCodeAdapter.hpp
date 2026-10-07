@@ -10,7 +10,7 @@
 namespace Slic3r {
 
 class GCodeWriter;
-struct PrintConfig;
+class PrintConfig;
 
 struct WarpPreventionPathContext
 {
