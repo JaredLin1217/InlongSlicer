@@ -1,14 +1,10 @@
 #ifndef slic3r_SupportCommon_hpp_
 #define slic3r_SupportCommon_hpp_
 
-#include "../Layer.hpp"
 #include "../Polygon.hpp"
 #include "../Print.hpp"
 #include "libslic3r/PrintConfig.hpp"
-#include "libslic3r/Slicing.hpp"
 #include "libslic3r/ExtrusionEntity.hpp"
-#include "libslic3r/Flow.hpp"
-#include "libslic3r/Fill/FillBase.hpp"
 #include "SupportLayer.hpp"
 #include "SupportParameters.hpp"
 #include <utility>
@@ -16,6 +12,10 @@
 #include <vector>
 
 #include <memory>
+
+namespace Slic3r { class Fill; }
+namespace Slic3r { class Flow; }
+namespace Slic3r { struct SlicingParameters; }
 
 namespace Slic3r {
 

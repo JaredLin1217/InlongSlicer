@@ -16,10 +16,6 @@
 #include "GUI_App.hpp"
 #include "GUI_Preview.hpp"
 #include "MainFrame.hpp"
-#include "format.hpp"
-#include "Widgets/ProgressDialog.hpp"
-#include "Widgets/RoundedRectangle.hpp"
-#include "Widgets/StaticBox.hpp"
 
 #include <wx/progdlg.h>
 #include <wx/clipbrd.h>
@@ -29,15 +25,23 @@
 #include <algorithm>
 #include <optional>
 #include "Plater.hpp"
-#include "BitmapCache.hpp"
 
 #include "DeviceCore/DevFilaSystem.h"
 #include "DeviceCore/DevFilaSwitch.h"
 #include "DeviceCore/DevMappingNozzle.h"
-#include "DeviceCore/DevNozzleRack.h" // Orca: full type for GetNozzleSystem()->GetNozzleRack()->IsSupported()
+#include "DeviceCore/DevNozzleRack.h" // Inlong: full type for GetNozzleSystem()->GetNozzleRack()->IsSupported()
 
 #include "DeviceTab/wgtDeviceNozzleSelect.h"
 #include "DeviceTab/wgtMsgPanel.h"
+#include "slic3r/GUI/DeviceCore/DevExtruderSystem.h"
+#include "slic3r/GUI/DeviceCore/DevNozzleSystem.h"
+#include "slic3r/GUI/DeviceCore/DevUtil.h"
+#include "libslic3r/PresetBundle.hpp"
+#include "libslic3r/PrintConfig.hpp"
+#include "libslic3r/ProjectTask.hpp"
+#include "slic3r/GUI/DeviceManager.hpp"
+#include "slic3r/GUI/Widgets/Label.hpp"
+#include "slic3r/GUI/wxExtensions.hpp"
 
 namespace Slic3r::GUI {
 
@@ -67,7 +71,7 @@ void AmsMapingPopup::update(MachineObject* obj,
                             bool use_dynamic_switch,
                             std::optional<PrintFromType> print_type)
 {
-    if (!obj) { return; } // Orca: guard before use (REF logs before its null check)
+    if (!obj) { return; } // Inlong: guard before use (REF logs before its null check)
 
     BOOST_LOG_TRIVIAL(info) << "ams_mapping total count " << obj->GetFilaSystem()->GetAmsCount();
 
@@ -180,7 +184,7 @@ void AmsMapingPopup::update(MachineObject* obj,
     Refresh();
 }
 
-// Orca: the kept fila model has no tray-level ams_type; the owning AMS type is passed in
+// Inlong: the kept fila model has no tray-level ams_type; the owning AMS type is passed in
 // (DevAms::GetAmsType() for AMS trays, DevAmsType::EXT_SPOOL for the virtual/ext slots).
 static std::optional<TrayData> sGetTrayData(DevAmsTray* tray,
                                             const std::string& ams_id_str,
@@ -313,7 +317,8 @@ void AmsMapingPopup::update_mapping_items(MachineObject* obj, const std::vector<
 
         if (m_show_type == ShowType::LEFT_AND_RIGHT_DYNAMIC) {
             auto sizer_mapping_list = new wxBoxSizer(wxHORIZONTAL);
-            const auto& shown_name = td_opt->ams_id == VIRTUAL_TRAY_MAIN_ID ? "Ext-R" : "Ext-L";
+            // TRN Short labels of the external spool of the right and left nozzle
+            const auto& shown_name = td_opt->ams_id == VIRTUAL_TRAY_MAIN_ID ? _L("Ext-R") : _L("Ext-L");
             auto ams_mapping_item_container = new MappingContainer(m_right_marea_panel, shown_name, 1);
             ams_mapping_item_container->SetName(m_right_marea_panel->GetName());
             ams_mapping_item_container->SetSizer(sizer_mapping_list);
@@ -486,11 +491,11 @@ void AmsMapingPopup::update_ams_tips(MachineObject* obj)
         m_ams_tips_msg_panel->Clear();
         if (nozzle_nums == 2 && m_show_type != ShowType::LEFT_AND_RIGHT) {
             m_ams_tips_msg_panel->AddMessage(_L("To learn about the filaments matching rules."),
-                                             "#FF6F00", ""); // Orca: dropped vendor help link
+                                             "#FF6F00", ""); // Inlong: dropped vendor help link
         }
 
         if (obj && obj->GetFilaSwitch()->IsInstalled()) {
-            const auto& msg = _L("External spools is not supported since Filament Track Switch has been installed. If you want to use external spool, please uninstall it.");
+            const auto& msg = _L("External spools are not supported since Filament Track Switch has been installed. If you want to use an external spool, please uninstall it.");
             m_ams_tips_msg_panel->AddMessage(msg, "#FF6F00", "");
         }
 
@@ -502,7 +507,7 @@ void AmsMapingPopup::update_ams_tips(MachineObject* obj)
 
 void AmsMapingPopup::update_rack_select(MachineObject* obj, bool use_dynamic_switch, std::optional<PrintFromType> print_from_type)
 {
-    // Orca: MachineObject has no GetNozzleRack() convenience; route through the nozzle system instead.
+    // Inlong: MachineObject has no GetNozzleRack() convenience; route through the nozzle system instead.
     m_rack = obj ? obj->GetNozzleSystem()->GetNozzleRack() : nullptr;
 
     bool show_rack_select_area = false;
@@ -568,11 +573,11 @@ void AmsMapingPopup::add_ams_mapping(std::vector<TrayData> tray_data,
         m_mapping_item->send_win = send_win;
         m_mapping_item->m_ams_id = tray_data[i].ams_id;
         m_mapping_item->m_slot_id = tray_data[i].slot_id;
-        // Orca: transition_tridid here has no total-extruder-count overload; label the virtual (ext)
+        // Inlong: transition_tridid here has no total-extruder-count overload; label the virtual (ext)
         // slots Ext-R / Ext-L inline in the two-nozzle left+right views (matches that overload's result).
         if ((m_show_type == ShowType::LEFT_AND_RIGHT || m_show_type == ShowType::LEFT_AND_RIGHT_DYNAMIC)
             && (tray_data[i].id == VIRTUAL_TRAY_MAIN_ID || tray_data[i].id == VIRTUAL_TRAY_DEPUTY_ID)) {
-            m_mapping_item->set_tray_index(tray_data[i].id == VIRTUAL_TRAY_MAIN_ID ? wxString("Ext-R") : wxString("Ext-L"));
+            m_mapping_item->set_tray_index(tray_data[i].id == VIRTUAL_TRAY_MAIN_ID ? _L("Ext-R") : _L("Ext-L"));
         } else {
             m_mapping_item->set_tray_index(wxGetApp().transition_tridid(tray_data[i].id));
         }
@@ -591,7 +596,7 @@ void AmsMapingPopup::add_ams_mapping(std::vector<TrayData> tray_data,
                     can_pick_the_item = !devPrinterUtil::IsVirtualSlot(m_mapping_item->m_ams_id);
                     if (!can_pick_the_item) {
                         item_tooltip_msg = _L(
-                            "External spools is not supported since Filament Track Switch has been installed. If you want to use external spool, please uninstall it.");
+                            "External spools are not supported since Filament Track Switch has been installed. If you want to use an external spool, please uninstall it.");
                     }
                 }
             }
@@ -608,7 +613,7 @@ void AmsMapingPopup::add_ams_mapping(std::vector<TrayData> tray_data,
                         can_pick_the_item = !devPrinterUtil::IsVirtualSlot(m_mapping_item->m_ams_id);
                         if (!can_pick_the_item) {
                             item_tooltip_msg = _L(
-                                "External spools is not supported since Filament Track Switch has been installed. If you want to use external spool, please uninstall it.");
+                                "External spools are not supported since Filament Track Switch has been installed. If you want to use an external spool, please uninstall it.");
                         }
                     } else if (m_show_type != ShowType::RIGHT && m_show_type != ShowType::LEFT_AND_RIGHT) {
                         can_pick_the_item = false;
@@ -702,7 +707,7 @@ void AmsMapingPopup::add_ext_ams_mapping(TrayData tray_data, MappingItem* item)
         });
     }
 
-    item->set_tray_index("Ext");
+    item->set_tray_index(_L("Ext"));
 }
 
 } // namespace Slic3r::GUI

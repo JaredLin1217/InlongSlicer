@@ -49,8 +49,14 @@
 #include "libslic3r.h"
 #include "Utils.hpp"
 #include "Time.hpp"
+#include "InstanceLock.hpp"
+
+#include <sstream>
 #include "PlaceholderParser.hpp"
 #include "libslic3r/GCode/Thumbnails.hpp"
+
+namespace fs = boost::filesystem;
+using json = nlohmann::json;
 
 using boost::property_tree::ptree;
 
@@ -867,7 +873,7 @@ bool is_compatible_with_printer(const PresetWithVendorProfile &preset, const Pre
     return is_compatible_with_printer(preset, active_printer, &config);
 }
 
-// ORCA: see the header. The CLI resolves --load-settings into bare DynamicPrintConfigs and has no
+// INLONG: see the header. The CLI resolves --load-settings into bare DynamicPrintConfigs and has no
 // Preset objects to hand; without this it would have to reimplement the policy or build the shells
 // at every call site.
 bool is_compatible_with_printer(const DynamicPrintConfig &preset_config, Preset::Type preset_type,
@@ -1133,6 +1139,7 @@ static std::vector<std::string> s_Preset_print_options{
     "infill_lock_depth",
     "skin_infill_depth",
     "skin_infill_density",
+    "infill_complete_top",
     "align_infill_direction_to_model",
     "extra_solid_infills",
     "center_of_surface_pattern",
@@ -2007,7 +2014,7 @@ int PresetCollection::get_differed_values_to_update(Preset& preset, std::map<std
                 key_values[option] = opt_src->serialize();
         }
 
-        // Orca: force-emit nullable filament override keys whenever they hold a nil ("off")
+        // Inlong: force-emit nullable filament override keys whenever they hold a nil ("off")
         // value, even when the diff dropped them because the parent is nil too. Otherwise the
         // key is absent from the synced profile and the cloud re-materializes it against the
         // option's non-nil default (e.g. filament_retract_before_wipe -> 100%), silently
@@ -2846,7 +2853,7 @@ std::pair<Preset*, bool> PresetCollection::load_external_preset(
         preset.filament_id = filament_id;
     else {
         if (!inherits.empty()) {
-            // Orca: resolve via find_preset2 so a renamed/removed-and-matched parent still
+            // Inlong: resolve via find_preset2 so a renamed/removed-and-matched parent still
             // yields its filament_id (external presets store a full config, so the dangling
             // "inherits" itself is normalized on the next load_presets pass).
             Preset *parent = this->find_preset2(inherits, true);
@@ -3115,7 +3122,7 @@ void PresetCollection::save_current_preset(const std::string &new_name, bool det
     if (!final_inherits.empty()) {
         parent_preset = this->find_preset2(final_inherits, true);
         if (parent_preset) {
-            // Orca: take the saved diff against the resolved parent (renamed / library-matched).
+            // Inlong: take the saved diff against the resolved parent (renamed / library-matched).
             Preset::normalize_inherits(this->get_selected_preset().config, parent_preset);
             if (this->get_selected_preset().base_id.empty()) {
                 this->get_selected_preset().base_id = parent_preset->setting_id;
@@ -3449,7 +3456,7 @@ Preset* PresetCollection::find_preset2(const std::string& name, bool auto_match/
     auto preset = find_preset(name, false, true);
     if (preset == nullptr) {
         if (auto_match) {
-            //Orca: one more try, find the most likely preset in InlongFilamentLibrary
+            //Inlong: one more try, find the most likely preset in InlongFilamentLibrary
             if (name.find("Generic") != std::string::npos) {
                 // The regex pattern matches an optional prefix ending in '_' then "Generic" followed by the material name.
                 static const std::regex re(R"(^(?:.*?\b(?:\w+_)?)(Generic)\b\s+([^@]+?)\s*(?:@.*)?$)");
@@ -3631,7 +3638,7 @@ void add_correct_opts_to_diff(const std::string &opt_key, t_config_option_keys& 
         const bool is_new_index = i > opt_init_max_id;
         int init_id = is_new_index ? 0 : i;
         if (is_new_index) {
-            // Orca: intentional divergence from upstream. Any new vector index (at or
+            // Inlong: intentional divergence from upstream. Any new vector index (at or
             // beyond the reference vector's length) is flagged dirty unconditionally --
             // independent of its value and nil-state -- so preset dirty-detection notices
             // per-extruder/filament entries added by growth (e.g. extruder count). This

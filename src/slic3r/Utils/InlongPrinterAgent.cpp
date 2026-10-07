@@ -1,6 +1,8 @@
 #include "InlongPrinterAgent.hpp"
 #include "NetworkAgentFactory.hpp"
 
+namespace Slic3r { class ICloudServiceAgent; }
+
 namespace Slic3r {
 
 const std::string InlongPrinterAgent_VERSION = "0.0.1";

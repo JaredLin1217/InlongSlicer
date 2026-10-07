@@ -37,6 +37,14 @@
 #include <tbb/parallel_for.h>
 #include <tbb/parallel_for_each.h>
 #include <tbb/spin_mutex.h>
+#include <vector>
+#include <utility>
+#include <unordered_set>
+#include <tuple>
+#include "libslic3r/BoundingBox.hpp"
+#include "libslic3r/Config.hpp"
+#include "libslic3r/MultiMaterialSegmentation.hpp"
+#include "libslic3r/Slicing.hpp"
 
 #if defined(TREE_SUPPORT_SHOW_ERRORS) && defined(_WIN32)
     #define TREE_SUPPORT_SHOW_ERRORS_WIN32
@@ -403,7 +411,7 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
 {
     std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> grouped_meshes;
 
-    // Orca: Recompute static mesh-group state for this support generation pass.
+    // Inlong: Recompute static mesh-group state for this support generation pass.
     TreeSupportSettings::zero_top_z_gap = false;
 
     //FIXME this is ugly, it does not belong here.
@@ -2488,7 +2496,7 @@ static Point move_inside_if_outside(const Polygons &polygons, Point from, int di
             coord_t safe_movement_distance =
                 (current_elem.use_min_xy_dist ? config.xy_min_distance : config.xy_distance) +
                 (std::min(config.z_distance_top_layers, config.z_distance_bottom_layers) > 0 ? config.min_feature_size : 0);
-            // Orca:
+            // Inlong:
             // safe_movement_distance is used as the safe_offset_inc() step, so keep it non-zero
             // to preserve branch movement with zero-clearance support settings.
             if (safe_movement_distance == 0)
@@ -3817,7 +3825,7 @@ static std::pair<float, float> extrude_branch(
             nprev = v1;
             float radius     = unscaled<float>(support_element_radius(config, prev));
             if (has_root && prev.state.layer_idx == 0) {
-                // Orca: Buildplate roots need a flat foot. A rounded cap can extend far
+                // Inlong: Buildplate roots need a flat foot. A rounded cap can extend far
                 // below the bed and make the first layer slice cut unrelated trunk geometry.
                 const Vec3f normal(0.f, 0.f, 1.f);
                 const Vec3f bottom_center(float(p1.x()), float(p1.y()), 0.f);
@@ -4030,7 +4038,7 @@ static void organic_smooth_branches_avoid_collisions(
     static constexpr const double max_nudge_smoothing = 0.2;
     static constexpr const size_t num_iter = 100; // 1000;
 
-    // Orca: 
+    // Inlong:
     // Collision and Laplacian smoothing run iteratively; keep each candidate reachable from linked upper/lower layers to avoid accumulated drift.
     auto limit_candidate_to_linked_layers = [&collision_spheres, &linear_data_layers, &config](const size_t collision_sphere_id, Vec2d candidate) {
         auto constrain_to_anchor = [](Vec2d candidate, const Vec2d &current_pos, const Vec2d &anchor, double allowed_shift) {

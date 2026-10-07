@@ -6,7 +6,7 @@
 #include "NetworkAgent.hpp"
 #include "../GUI/Jobs/ProgressIndicator.hpp"
 #include "../GUI/PartPlate.hpp"
-#include "json_diff.hpp"
+#include <nlohmann/json.hpp>
 #include "libslic3r/CutUtils.hpp"
 #include "libslic3r/ClipperUtils.hpp"
 #include "libslic3r/Utils.hpp"
@@ -58,6 +58,10 @@
 #include "slic3r/GUI/OpenGLManager.hpp"
 #include <utility>
 #include "slic3r/GUI/Jobs/PrintJob.hpp"
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
+using json = nlohmann::json;
 
 namespace Slic3r {
 namespace GUI {

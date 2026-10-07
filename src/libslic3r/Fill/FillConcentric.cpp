@@ -21,6 +21,7 @@
 #include <libslic3r/ShortestPath.hpp>
 #include <utility>
 #include <vector>
+#include "libslic3r/ExtrusionEntity.hpp"
 
 namespace Slic3r {
 

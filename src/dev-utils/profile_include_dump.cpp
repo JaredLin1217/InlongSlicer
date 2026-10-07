@@ -26,6 +26,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "libslic3r/PrintConfig.hpp"
 
 using namespace Slic3r;
 namespace fs = boost::filesystem;
@@ -135,8 +136,8 @@ void load_vendor(PresetBundle &bundle, const std::string &dir, const std::string
     const auto          rule = ForwardCompatibilitySubstitutionRule::EnableSilent;
     PresetBundle        library;
     const PresetBundle *base = nullptr;
-    if (fs::is_regular_file(fs::path(dir) / (std::string(PresetBundle::ORCA_FILAMENT_LIBRARY) + ".json"))) {
-        library.load_vendor_configs_from_json(dir, PresetBundle::ORCA_FILAMENT_LIBRARY, PresetBundle::LoadSystem, rule, nullptr, false);
+    if (fs::is_regular_file(fs::path(dir) / (std::string(PresetBundle::INLONG_FILAMENT_LIBRARY) + ".json"))) {
+        library.load_vendor_configs_from_json(dir, PresetBundle::INLONG_FILAMENT_LIBRARY, PresetBundle::LoadSystem, rule, nullptr, false);
         base = &library;
     }
     if (!from_cache) {

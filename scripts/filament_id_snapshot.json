@@ -82,6 +82,14 @@
    "filament_type": "ABS",
    "filament_vendor": "InfiMech"
   },
+  "OF0g2qrF": {
+   "filaments": [
+    "Pragostroj/Pragostroj hips"
+   ],
+   "name": "Pragostroj hips",
+   "filament_type": "HIPS",
+   "filament_vendor": "Pragostroj"
+  },
   "OF0gGRWk": {
    "filaments": [
     "InlongFilamentLibrary/Panchroma PLA Glow",
@@ -558,14 +566,6 @@
    "name": "Bambu PPA-CF",
    "filament_type": "PPA-CF",
    "filament_vendor": "Bambu Lab"
-  },
-  "OF54SvEe": {
-   "filaments": [
-    "Prusa/Prusament PA-CF"
-   ],
-   "name": "Prusament PA-CF",
-   "filament_type": "PA11-CF",
-   "filament_vendor": "Prusa Polymers"
   },
   "OF55gCS3": {
    "filaments": [
@@ -4056,6 +4056,14 @@
    "filament_type": "HPP4GF25",
    "filament_vendor": "iQ Materials"
   },
+  "OFXNhQHm": {
+   "filaments": [
+    "Pragostroj/Pragostroj PETG"
+   ],
+   "name": "Pragostroj PETG",
+   "filament_type": "PETG",
+   "filament_vendor": "Pragostroj"
+  },
   "OFXSvqOX": {
    "filaments": [
     "Snapmaker/Snapmaker TPU 95A HF"
@@ -5671,6 +5679,14 @@
    "filament_type": "ABS",
    "filament_vendor": "WonderMaker"
   },
+  "OFjKU9JG": {
+   "filaments": [
+    "Pragostroj/Pragostroj PLAP"
+   ],
+   "name": "Pragostroj PLAP",
+   "filament_type": "PLA",
+   "filament_vendor": "Pragostroj"
+  },
   "OFjLAYgO": {
    "filaments": [
     "Anycubic/Anycubic PEBA"
@@ -5769,14 +5785,6 @@
    "name": "Generic CoPE",
    "filament_type": "CoPE",
    "filament_vendor": "Generic"
-  },
-  "OFjz0a3m": {
-   "filaments": [
-    "Prusa/Prusament PC-CF"
-   ],
-   "name": "Prusament PC-CF",
-   "filament_type": "PC-CF",
-   "filament_vendor": "Prusa Polymers"
   },
   "OFk8t9mz": {
    "filaments": [
@@ -6432,6 +6440,14 @@
    "name": "CR-PLA",
    "filament_type": "PLA",
    "filament_vendor": "Creality"
+  },
+  "OFp4bAZ8": {
+   "filaments": [
+    "Pragostroj/Pragostroj PP"
+   ],
+   "name": "Pragostroj PP",
+   "filament_type": "PP",
+   "filament_vendor": "Pragostroj"
   },
   "OFp57RRC": {
    "filaments": [
@@ -7485,6 +7501,14 @@
    "name": "SeeMeCNC TPU",
    "filament_type": "TPU",
    "filament_vendor": "SeeMeCNC"
+  },
+  "OFyKW1DX": {
+   "filaments": [
+    "Pragostroj/Fillamentum PLA Concret Grey"
+   ],
+   "name": "Fillamentum PLA Concret Grey",
+   "filament_type": "PLA",
+   "filament_vendor": "Fillamentum"
   },
   "OFyLWVF3": {
    "filaments": [

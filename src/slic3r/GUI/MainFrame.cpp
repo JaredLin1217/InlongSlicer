@@ -1,5 +1,52 @@
 #include "MainFrame.hpp"
 
+#include <wx/event.h>
+#include "slic3r/GUI/Event.hpp"
+#include <wx/gdicmn.h>
+#include <wx/dcclient.h>
+#include "libslic3r/Utils.hpp"
+#include "slic3r/GUI/GUI_Utils.hpp"
+#include <wx/filehistory.h>
+#include "slic3r/GUI/BBLTopbar.hpp"
+#include "libslic3r/Format/bbs_3mf.hpp"
+#include <boost/lexical_cast.hpp>
+#include <optional>
+#include "slic3r/GUI/GLToolbar.hpp"
+#include "libslic3r/Preset.hpp"
+#include <functional>
+#include <wx/busycursor.h>
+#include <cstddef>
+#include "slic3r/GUI/Project.hpp"
+#include <wx/bookctrl.h>
+#include "slic3r/GUI/LazyPage.hpp"
+#include "slic3r/GUI/Monitor.hpp"
+#include "slic3r/GUI/PrinterWebView.hpp"
+#include "slic3r/GUI/MultiMachinePage.hpp"
+#include "slic3r/GUI/CalibrationPanel.hpp"
+#include "slic3r/GUI/ReleaseNote.hpp"
+#include "slic3r/GUI/GUI.hpp"
+#include <vector>
+#include "libslic3r/PublishSettings.hpp"
+#include "libslic3r/Config.hpp"
+#include "slic3r/GUI/Widgets/StateColor.hpp"
+#include <wx/colour.h>
+#include "slic3r/GUI/FilamentGroupPopup.hpp"
+#include "slic3r/GUI/Widgets/SideMenuPopup.hpp"
+#include <utility>
+#include "libslic3r/libslic3r.h"
+#include <nlohmann/json.hpp>
+#include <algorithm>
+#include <wx/dirdlg.h>
+#include <exception>
+#include <wx/filedlg.h>
+#include "slic3r/GUI/Lazy.hpp"
+#include <wx/filefn.h>
+#include <string>
+#include <sstream>
+#include <wx/base64.h>
+#include <ctime>
+#include <boost/filesystem/operations.hpp>
+#include "slic3r/GUI/calib_dlg.hpp"
 #include <wx/panel.h>
 #include <wx/textentry.h>
 #include <wx/notebook.h>
@@ -84,7 +131,26 @@
 #include <wx/glcanvas.h>
 #endif // __WXGTK__
 #include <slic3r/GUI/CreatePresetsDialog.hpp>
+#include "libslic3r/AppConfig.hpp"
+#include "libslic3r/Model.hpp"
+#include "slic3r/GUI/DeviceManager.hpp"
+#include "slic3r/GUI/Gizmos/GLGizmosManager.hpp"
+#include "slic3r/GUI/IdleScheduler.hpp"
+#include "slic3r/GUI/ImGuiWrapper.hpp"
+#include "slic3r/GUI/Jobs/Worker.hpp"
+#include "slic3r/GUI/KeyChord.hpp"
+#include "slic3r/GUI/ParamsPanel.hpp"
+#include "slic3r/GUI/Tabbook.hpp"
+#include "slic3r/GUI/Widgets/SideButton.hpp"
+#include "slic3r/plugin/host/PluginPages.hpp"
+#include "slic3r/Utils/NetworkAgent.hpp"
+#include <wx/defs.h>
+#include <cassert>
+#include <wx/display.h>
+#include <wx/window.h>
 
+
+using json = nlohmann::json;
 
 namespace Slic3r {
 namespace GUI {
@@ -795,7 +861,7 @@ bool MainFrame::handle_global_shortcut(const KeyChord& chord)
             m_plater->sidebar().can_search();
         return false;
     case Shortcut::Preferences:
-        // Orca: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
+        // Inlong: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
         wxGetApp().open_preferences();
         plater()->get_current_canvas3D()->force_set_focus();
         break;
@@ -869,7 +935,7 @@ DiffPresetDialog* MainFrame::make_diff_dialog()
 
 #ifdef __WXMSW__
 
-// Orca: Fix maximized window overlaps taskbar when taskbar auto hide is enabled (#8085)
+// Inlong: Fix maximized window overlaps taskbar when taskbar auto hide is enabled (#8085)
 // Adopted from https://gist.github.com/MortenChristiansen/6463580
 static void AdjustWorkingAreaForAutoHide(const HWND hWnd, MINMAXINFO* mmi)
 {
@@ -1197,6 +1263,10 @@ void MainFrame::shutdown()
     m_plugin_pages.shutdown();
     if (m_plater != nullptr)
         m_plater->remove_dock_panes();
+#ifdef SLIC3R_CAD
+    if (DesignPanel* design = DesignPanel::if_built())
+        design->shutdown();
+#endif
 #ifdef __WXGTK__
     // Edge panels are child windows — wxWidgets destroys them automatically.
     m_edge_bottom = nullptr;
@@ -1320,6 +1390,23 @@ void MainFrame::show_option(bool show)
     }
 }
 
+void MainFrame::set_undo_redo_enabled(bool undo, bool redo)
+{
+#ifndef __APPLE__
+    m_topbar->EnableUndoRedo(undo, redo);
+#else
+    (void) undo; (void) redo;   // macOS has no top bar; Edit asks the tab when it opens
+#endif
+}
+
+#ifdef SLIC3R_CAD
+DesignPanel* MainFrame::shown_design_panel() const
+{
+    DesignPanel* design = DesignPanel::if_built();
+    return (design != nullptr && m_design_page != nullptr && m_design_page->IsShownOnScreen()) ? design : nullptr;
+}
+#endif
+
 void MainFrame::init_tabpanel() {
     // wxNB_NOPAGETHEME: Disable Windows Vista theme for the Notebook background. The theme performance is terrible on
     // Windows 10 with multiple high resolution displays connected.
@@ -1385,6 +1472,11 @@ void MainFrame::init_tabpanel() {
             m_topbar->DisableUndoRedoItems();
         }
 #endif
+#ifdef SLIC3R_CAD
+        // Design keeps its own history, and the top bar's Undo/Redo drive it while it is shown.
+        if (m_design_page != nullptr && panel == m_design_page)
+            DesignPanel::ensure()->update_undo_redo_buttons();
+#endif
 
         if (panel)
             panel->SetFocus();
@@ -1411,8 +1503,9 @@ void MainFrame::init_tabpanel() {
 #ifdef SLIC3R_CAD
     // The experimental feature is off by default, and when it is off the page is never
     // created, so the tab does not appear at all (the preference takes effect on the next
-    // start, like the other feature toggles).
-    if (wxGetApp().is_enable_cad_feature()) {
+    // start, like the other feature toggles). Nor in the G-code viewer, which has no Design tab to put
+    // it in — and no business opening a control socket onto one.
+    if (wxGetApp().is_enable_cad_feature() && wxGetApp().is_editor()) {
         // Experimental and heavy enough that building it unasked would cost more than it saves.
         m_design_page = new LazyPage<DesignPanel>(this, TAB_ID_DESIGN, -1);
         m_lazy_pages.push_back(m_design_page);
@@ -2210,7 +2303,7 @@ wxBoxSizer* MainFrame::create_side_tools()
 
                 p->append_button(send_gcode_btn);
 
-                // Orca: when the printer accepts a .gcode.3mf (the "Support 3MF as gcode" option),
+                // Inlong: when the printer accepts a .gcode.3mf (the "Support 3MF as gcode" option),
                 // also offer exporting the sliced .gcode.3mf bundle
                 const auto& printer_config = wxGetApp().preset_bundle->printers.get_edited_preset().config;
                 const auto* use_3mf_opt    = printer_config.option<ConfigOptionBool>("use_3mf");
@@ -2653,6 +2746,9 @@ void MainFrame::on_dpi_changed(const wxRect& suggested_rect)
     MonitorPanel::when_built([](MonitorPanel& monitor) { monitor.msw_rescale(); });
     MultiMachinePage::when_built([](MultiMachinePage& multi_machine) { multi_machine.msw_rescale(); });
     CalibrationPanel::when_built([](CalibrationPanel& calibration) { calibration.msw_rescale(); });
+#ifdef SLIC3R_CAD
+    DesignPanel::when_built([](DesignPanel& design) { design.msw_rescale(); });
+#endif
 
     // BBS
 #if 0
@@ -2717,6 +2813,9 @@ void MainFrame::on_sys_color_changed()
     wxGetApp().plater()->sys_color_changed();
     MonitorPanel::when_built([](MonitorPanel& monitor) { monitor.on_sys_color_changed(); });
     CalibrationPanel::when_built([](CalibrationPanel& calibration) { calibration.on_sys_color_changed(); });
+#ifdef SLIC3R_CAD
+    DesignPanel::when_built([](DesignPanel& design) { design.on_sys_color_changed(); });
+#endif
     // update Tabs
     for (auto tab : wxGetApp().tabs_list)
         tab->sys_color_changed();
@@ -3051,12 +3150,28 @@ void MainFrame::init_menubar_as_editor()
 #ifndef __APPLE__
         // BBS undo
         append_shortcut_item(editMenu, Shortcut::Undo, true, _L("Undo"),
-            _L("Undo"), [this](wxCommandEvent&) { m_plater->undo(); },
-            "menu_undo", nullptr, [this](){return m_plater->can_undo(); }, this);
+            _L("Undo"), [this](wxCommandEvent&) {
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) { dp->menu_undo_redo(false); return; }
+#endif
+                m_plater->undo(); },
+            "menu_undo", nullptr, [this](){
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) return dp->menu_can_undo_redo(false);
+#endif
+                return m_plater->can_undo(); }, this);
         // BBS redo
         append_shortcut_item(editMenu, Shortcut::Redo, true, _L("Redo"),
-            _L("Redo"), [this](wxCommandEvent&) { m_plater->redo(); },
-            "menu_redo", nullptr, [this](){return m_plater->can_redo(); }, this);
+            _L("Redo"), [this](wxCommandEvent&) {
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) { dp->menu_undo_redo(true); return; }
+#endif
+                m_plater->redo(); },
+            "menu_redo", nullptr, [this](){
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) return dp->menu_can_undo_redo(true);
+#endif
+                return m_plater->can_redo(); }, this);
         editMenu->AppendSeparator();
         // BBS Cut TODO
         append_shortcut_item(editMenu, Shortcut::Cut, true, _L("Cut"),
@@ -3103,8 +3218,15 @@ void MainFrame::init_menubar_as_editor()
                 if (handle_key_event(e)) {
                     return;
                 }
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) { dp->menu_undo_redo(false); return; }
+#endif
                 m_plater->undo(); },
-            "", nullptr, [this](){return m_plater->can_undo(); }, this);
+            "", nullptr, [this](){
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) return dp->menu_can_undo_redo(false);
+#endif
+                return m_plater->can_undo(); }, this);
         // BBS redo
         append_shortcut_item(editMenu, Shortcut::Redo, false, _L("Redo"),
             _L("Redo"), [this, handle_key_event](wxCommandEvent&) {
@@ -3115,8 +3237,15 @@ void MainFrame::init_menubar_as_editor()
                 if (handle_key_event(e)) {
                     return;
                 }
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) { dp->menu_undo_redo(true); return; }
+#endif
                 m_plater->redo(); },
-            "", nullptr, [this](){return m_plater->can_redo(); }, this);
+            "", nullptr, [this](){
+#ifdef SLIC3R_CAD
+                if (DesignPanel* dp = shown_design_panel()) return dp->menu_can_undo_redo(true);
+#endif
+                return m_plater->can_redo(); }, this);
         editMenu->AppendSeparator();
         // BBS Cut TODO
         append_shortcut_item(editMenu, Shortcut::Cut, false, _L("Cut"),
@@ -3312,6 +3441,10 @@ void MainFrame::init_menubar_as_editor()
             viewMenu, wxID_ANY, _L("Reset Window Layout"), _L("Reset to default window layout"),
             [this](wxCommandEvent&) { m_plater->reset_window_layout(); }, "", this,
             [this]() {
+#ifdef SLIC3R_CAD
+                if (shown_design_panel() != nullptr)
+                    return true;
+#endif
                 return is_prepare_or_preview_tab() && m_plater->is_sidebar_enabled();
             },
             this);
@@ -3418,7 +3551,7 @@ void MainFrame::init_menubar_as_editor()
     append_shortcut_item(
         m_topbar->GetTopMenu(), Shortcut::Preferences, true, _L("Preferences"), "",
         [](wxCommandEvent &) {
-            // Orca: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
+            // Inlong: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
             wxGetApp().open_preferences();
         },
         "", nullptr, []() { return true; }, this);
@@ -3435,7 +3568,7 @@ void MainFrame::init_menubar_as_editor()
     append_menu_item(
         top_menu, wxID_ANY, _L("Preset Bundle") + "\t", "",
         [this](wxCommandEvent &) {
-            // Orca: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
+            // Inlong: Use GUI_App::open_preferences instead of direct call so windows associations are updated on exit
             wxGetApp().open_presetbundledialog();
             plater()->get_current_canvas3D()->force_set_focus();
         },
@@ -3597,7 +3730,7 @@ void MainFrame::init_menubar_as_editor()
         [this]() {return m_plater->is_view3D_shown();; }, this);
 
     // Flowrate (with submenu)
-    // ORCA: Flow rate (Wizard Dialog)
+    // INLONG: Flow rate (Wizard Dialog)
     append_menu_item(calib_menu, wxID_ANY, _L("Flow ratio"), _L("Flow Rate Calibration"),
         [this](wxCommandEvent&) { run_calibration(CalibKind::FlowRatio); }, "", nullptr,
         [this]() {return m_plater->is_view3D_shown();; }, this);

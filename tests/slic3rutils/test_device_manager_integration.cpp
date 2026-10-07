@@ -7,8 +7,8 @@
 #include "slic3r/Utils/IPrinterAgent.hpp"
 #include "slic3r/Utils/CloudProvider.hpp"
 #include <slic3r/Utils/NetworkAgent.hpp>
-#include <slic3r/Utils/OrcaCloudServiceAgent.hpp>
-#include <slic3r/Utils/OrcaPrinterAgent.hpp>
+#include <slic3r/Utils/InlongCloudServiceAgent.hpp>
+#include <slic3r/Utils/InlongPrinterAgent.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -22,10 +22,10 @@ using json = nlohmann::json;
 
 namespace {
 
-class StubCloudAgent final : public OrcaCloudServiceAgent
+class StubCloudAgent final : public InlongCloudServiceAgent
 {
 public:
-    StubCloudAgent() : OrcaCloudServiceAgent("") {}
+    StubCloudAgent() : InlongCloudServiceAgent("") {}
 
     int get_user_print_info(unsigned int* http_code, std::string* http_body) override
     {
@@ -39,11 +39,11 @@ public:
     std::string get_user_name() override { return "integration-test-user"; }
 };
 
-class TestPrinterAgent final : public OrcaPrinterAgent
+class TestPrinterAgent final : public InlongPrinterAgent
 {
 public:
     explicit TestPrinterAgent(std::string id)
-        : OrcaPrinterAgent(""), m_info{std::move(id), "Integration Test Agent", "1.0", "test agent"}
+        : InlongPrinterAgent(""), m_info{std::move(id), "Integration Test Agent", "1.0", "test agent"}
     {
     }
 

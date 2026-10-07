@@ -1,5 +1,33 @@
 #include "GLGizmoBrimEars.hpp"
 #include <glad/gl.h>
+#include "libslic3r/Color.hpp"
+#include "slic3r/GUI/Selection.hpp"
+#include "slic3r/GUI/3DScene.hpp"
+#include "libslic3r/CutUtils.hpp"
+#include <string>
+#include "slic3r/GUI/Gizmos/GLGizmoBase.hpp"
+#include "slic3r/GUI/GLModel.hpp"
+#include <memory>
+#include "slic3r/GUI/MeshUtils.hpp"
+#include "libslic3r/TriangleMesh.hpp"
+#include <utility>
+#include "slic3r/GUI/Event.hpp"
+#include "libslic3r/Utils.hpp"
+#include "libslic3r/Point.hpp"
+#include "libslic3r/BrimEarsPoint.hpp"
+#include "libslic3r/Geometry.hpp"
+#include <limits>
+#include <vector>
+#include <imgui.h>
+#include "libslic3r/PrintConfig.hpp"
+#include "libslic3r/Config.hpp"
+#include "libslic3r/Polygon.hpp"
+#include "libslic3r/libslic3r.h"
+#include "libslic3r/MultiPoint.hpp"
+#include "libslic3r/TriangleMeshSlicer.hpp"
+#include "libslic3r/Model.hpp"
+#include "slic3r/GUI/SceneRaycaster.hpp"
+#include <map>
 #include "slic3r/GUI/GLCanvas3D.hpp"
 #include "slic3r/GUI/GUI.hpp"
 #include "slic3r/GUI/Camera.hpp"
@@ -10,6 +38,15 @@
 #include "libslic3r/ClipperUtils.hpp"
 #include "libslic3r/ExPolygon.hpp"
 #include "GLGizmoUtils.hpp"
+#include "libslic3r/MultiMaterialSegmentation.hpp"
+#include "libslic3r/ObjectID.hpp"
+#include "libslic3r/Preset.hpp"
+#include "libslic3r/PresetBundle.hpp"
+#include "slic3r/GUI/GLSelectionRectangle.hpp"
+#include "slic3r/GUI/GLShader.hpp"
+#include "slic3r/GUI/I18N.hpp"
+#include "slic3r/GUI/ImGuiWrapper.hpp"
+#include "slic3r/GUI/ObjectDataViewModel.hpp"
 
 namespace Slic3r { namespace GUI {
 

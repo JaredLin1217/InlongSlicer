@@ -9,7 +9,6 @@
 #include "GUI_App.hpp"
 #include "GUI_Preview.hpp"
 #include "MainFrame.hpp"
-#include "format.hpp"
 #include "Widgets/ProgressDialog.hpp"
 #include "Widgets/RoundedRectangle.hpp"
 #include "Widgets/StaticBox.hpp"
@@ -37,6 +36,66 @@
 #include "BackgroundSlicingProcess.hpp"   // complete type for background_process().get_current_gcode_result()
 #include "DeviceCore/DevStorage.h"
 
+#include <wx/event.h>
+#include <string>
+#include "libslic3r/PrintConfig.hpp"
+#include <cassert>
+#include <vector>
+#include "slic3r/GUI/GUI_Utils.hpp"
+#include <wx/gdicmn.h>
+#include "slic3r/GUI/AmsMappingPopup.hpp"
+#include "libslic3r/ProjectTask.hpp"
+#include <wx/panel.h>
+#include "slic3r/GUI/wxExtensions.hpp"
+#include "slic3r/GUI/Widgets/TextInput.hpp"
+#include "slic3r/GUI/PrePrintChecker.hpp"
+#include "slic3r/GUI/DeviceTab/uiAMSBestPositionPopup.hpp"
+#include <wx/anybutton.h>
+#include "slic3r/GUI/Widgets/Button.hpp"
+#include <memory>
+#include "slic3r/GUI/BBLStatusBarPrint.hpp"
+#include "slic3r/GUI/Widgets/HyperLink.hpp"
+#include "slic3r/GUI/DeviceCore/DevDefs.h"
+#include <wx/busycursor.h>
+#include <boost/log/trivial.hpp>
+#include <cstdio>
+#include <cstddef>
+#include "libslic3r/Config.hpp"
+#include <nlohmann/json.hpp>
+#include <exception>
+#include <cstdlib>
+#include <map>
+#include <ctime>
+#include <set>
+#include "slic3r/GUI/DeviceManager.hpp"
+#include <optional>
+#include <cmath>
+#include "libslic3r/GCode/GCodeProcessor.hpp"
+#include <wx/chartype.h>
+#include <unordered_set>
+#include "libslic3r/CommonDefs.hpp"
+#include "slic3r/GUI/ReleaseNote.hpp"
+#include <boost/algorithm/string/case_conv.hpp>
+#include "slic3r/GUI/Widgets/StateColor.hpp"
+#include <wx/dcclient.h>
+#include "libslic3r/Print.hpp"
+#include <wx/dialog.h>
+#include <utility>
+#include "slic3r/GUI/Monitor.hpp"
+#include <ostream>
+#include "slic3r/GUI/Jobs/PrintJob.hpp"
+#include "slic3r/GUI/MsgDialog.hpp"
+#include "slic3r/GUI/Jobs/Worker.hpp"
+#include <wx/arrstr.h>
+#include "slic3r/GUI/Auxiliary.hpp"
+#include <cstring>
+#include "libslic3r/PrintBase.hpp"
+#include "slic3r/GUI/PartPlate.hpp"
+#include "slic3r/GUI/3DScene.hpp"
+#include <wx/image.h>
+#include <wx/dcmemory.h>
+#include <wx/dc.h>
+#include "slic3r/GUI/Widgets/DropDown.hpp"
 #include <wx/progdlg.h>
 #include <wx/clipbrd.h>
 #include <wx/dcgraph.h>
@@ -48,6 +107,25 @@
 #include "Notebook.hpp"
 #include "BitmapCache.hpp"
 #include "BindDialog.hpp"
+#include "slic3r/GUI/DeviceCore/DevUtil.h"
+#include "libslic3r/AppConfig.hpp"
+#include "libslic3r/Format/bbs_3mf.hpp"
+#include "libslic3r/GCode/ThumbnailData.hpp"
+#include "libslic3r/GCode/ToolOrdering.hpp"
+#include "libslic3r/Preset.hpp"
+#include "libslic3r/PresetBundle.hpp"
+#include "slic3r/GUI/Jobs/BindJob.hpp"
+#include "slic3r/GUI/Tabbook.hpp"
+#include "slic3r/GUI/Widgets/ComboBox.hpp"
+#include "slic3r/GUI/Widgets/PopupWindow.hpp"
+#include "slic3r/Utils/NetworkAgent.hpp"
+#include <boost/filesystem.hpp>
+
+using json = nlohmann::json;
+
+namespace Slic3r { class PrintBase; }
+
+namespace fs = boost::filesystem;
 
 namespace Slic3r { namespace GUI {
 
@@ -92,7 +170,7 @@ std::string get_nozzle_volume_type_cloud_string(NozzleVolumeType nozzle_volume_t
 static int s_nozzle_mapping_last_request_time = 0;
 
 std::vector<wxString> SelectMachineDialog::MACHINE_BED_TYPE_STRING;
-std::vector<string> SelectMachineDialog::MachineBedTypeString;
+std::vector<std::string> SelectMachineDialog::MachineBedTypeString;
 void                SelectMachineDialog::init_machine_bed_types()
 {
     if (MACHINE_BED_TYPE_STRING.size() == 0) {
@@ -333,7 +411,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     m_text_printer_msg_tips->Hide();
     m_text_printer_msg_tips->GetAlignment();
 
-    // Orca: best-position "recommended arrangement saves X" clickable tip. Hidden unless the
+    // Inlong: best-position "recommended arrangement saves X" clickable tip. Hidden unless the
     // printer has a filament switcher and a better arrangement exists; click opens the best-position popup.
     m_saveTimeText = new Label(m_basic_panel, wxEmptyString);
     m_saveTimeText->SetForegroundColour(wxColour("#FF6F00"));
@@ -607,7 +685,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
         ops_auto, "nozzle_offset_cali"
     );
 
-    // Orca: PA-profile-sharing toggle (extrude_cali_manual_mode). On = nozzles/filaments of the
+    // Inlong: PA-profile-sharing toggle (extrude_cali_manual_mode). On = nozzles/filaments of the
     // same type share one PA profile; shown only for pa_mode printers with Flow Dynamics Cali off.
     auto option_pa_value = new PrintOption(
         m_options_other,
@@ -949,7 +1027,7 @@ void SelectMachineDialog::update_select_layout(MachineObject *obj)
     if (obj && obj->get_printer_arch() == PrinterArch::ARCH_I3) { m_checkbox_list["timelapse"]->setValue("off"); } /*off timelapse on selected for n series by zhimin.zeng*/
     save_option_vals(obj);
 
-    // Orca: pa_value visibility depends on the freshly-loaded flow_cali value, so recompute it
+    // Inlong: pa_value visibility depends on the freshly-loaded flow_cali value, so recompute it
     // after load_option_vals and re-run the grid layout.
     update_pa_value_option(obj);
     update_options_layout();
@@ -1043,7 +1121,7 @@ void SelectMachineDialog::sync_ams_mapping_result(std::vector<FilamentInfo> &res
     if (result.empty()) {
         BOOST_LOG_TRIVIAL(info) << "ams_mapping result is empty";
         for (auto it = m_materialList.begin(); it != m_materialList.end(); it++) {
-            wxString ams_id = "Ext";//
+            wxString ams_id = _L("Ext");//
             wxColour ams_col = wxColour(0xCE, 0xCE, 0xCE);
             it->second->item->set_ams_info(ams_col, ams_id);
             it->second->item->set_nozzle_info(get_mapped_nozzle_str(it->first));
@@ -1067,7 +1145,7 @@ void SelectMachineDialog::sync_ams_mapping_result(std::vector<FilamentInfo> &res
 
                 if (f->tray_id == VIRTUAL_TRAY_MAIN_ID || f->tray_id == VIRTUAL_TRAY_DEPUTY_ID)
                 {
-                    ams_id = "Ext";
+                    ams_id = _L("Ext");
                 }else if (f->tray_id >= 0) {
                     ams_id = wxGetApp().transition_tridid(f->tray_id);
                 } else {
@@ -1639,7 +1717,7 @@ bool SelectMachineDialog::CheckErrorDynamicSwitchNozzle(MachineObject* obj_)
 void SelectMachineDialog::clear_nozzle_mapping()
 {
     m_nozzle_mapping_result.clear();
-    // Orca: no BBS get_current_machine(); use the selected device (same accessor get_mapped_nozzles uses).
+    // Inlong: no BBS get_current_machine(); use the selected device (same accessor get_mapped_nozzles uses).
     DeviceManager* dev = wxGetApp().getDeviceManager();
     if (MachineObject* obj_ = dev ? dev->get_selected_machine() : nullptr)
         obj_->get_nozzle_mapping_result()->Clear();
@@ -1649,7 +1727,7 @@ void SelectMachineDialog::update_pa_value_option(MachineObject *obj)
 {
     auto it = m_checkbox_list.find("pa_value");
     if (it == m_checkbox_list.end()) return;
-    // Orca: the PA-profile-sharing toggle only applies when the printer advertises pa_mode support
+    // Inlong: the PA-profile-sharing toggle only applies when the printer advertises pa_mode support
     // and Flow Dynamics Calibration is set to off (mirrors the device's own gate for the switch).
     const bool show_pa = obj && obj->is_support_pa_mode
         && m_checkbox_list["flow_cali"]->IsShown()
@@ -1663,7 +1741,7 @@ void SelectMachineDialog::on_flow_cali_option_changed()
     MachineObject* obj_ = dev ? dev->get_selected_machine() : nullptr;
     if (!obj_) return;
 
-    // Orca: the PA-profile-sharing toggle is shown only while Flow Dynamics Calibration is off,
+    // Inlong: the PA-profile-sharing toggle is shown only while Flow Dynamics Calibration is off,
     // so its visibility must track flow_cali changes (for every pa_mode printer, rack or not).
     update_pa_value_option(obj_);
     update_options_layout();
@@ -1680,7 +1758,7 @@ void SelectMachineDialog::on_flow_cali_option_changed()
 
 void SelectMachineDialog::on_pa_value_option_changed()
 {
-    // Orca: the PA-sharing value feeds the printer-side rack nozzle-mapping request (V0), so a
+    // Inlong: the PA-sharing value feeds the printer-side rack nozzle-mapping request (V0), so a
     // change must invalidate the cached mapping and let the next status poll re-request it.
     DeviceManager* dev  = wxGetApp().getDeviceManager();
     MachineObject* obj_ = dev ? dev->get_selected_machine() : nullptr;
@@ -1781,7 +1859,7 @@ bool SelectMachineDialog::CheckErrorSyncNozzleMappingResultV0(MachineObject* obj
     const auto& obj_nozzle_mapping_ptr = obj_->get_nozzle_mapping_result();
     if (!obj_nozzle_mapping_ptr->HasResult()) {
         if (time(nullptr) - s_nozzle_mapping_last_request_time > 10) { // avoid too many requests
-            // Orca: PA-profile-sharing value from the send-dialog toggle (On = share -> 0, Off -> 1).
+            // Inlong: PA-profile-sharing value from the send-dialog toggle (On = share -> 0, Off -> 1).
             // Only pa_mode-capable printers honor the toggle; others keep the prior default (1) so this
             // feature changes nothing for them (matches the print-command gate in on_send_print).
             const int pa_value = obj_->is_support_pa_mode ? ((m_checkbox_list["pa_value"]->getValue() == "on") ? 0 : 1) : 1;
@@ -1930,7 +2008,7 @@ bool SelectMachineDialog::CheckWarningFilamentCrossExtruder(MachineObject* obj_)
     return true;
 }
 
-// ===== Orca: pre-send checks + AMS best-position popup =====
+// ===== Inlong: pre-send checks + AMS best-position popup =====
 
 bool SelectMachineDialog::CheckWarningSmartNozzleBlobAuto(MachineObject* obj_)
 {
@@ -1989,7 +2067,7 @@ wxString SelectMachineDialog::FormatTime(float totalSeconds)
     return wxString::Format("%ds", seconds);
 }
 
-// Orca: estimated filament-change time gap (actual vs. sliced) for the current AMS arrangement. Inlines
+// Inlong: estimated filament-change time gap (actual vs. sliced) for the current AMS arrangement. Inlines
 // REF's calc_filament_change_gap_for_assignment (a thin wrapper over simulate_filament_change_time, which
 // Orca keeps) so no libslic3r change is needed. std::nullopt unless a filament switcher is installed.
 std::optional<float> SelectMachineDialog::get_filament_change_gap_time(MachineObject* obj_) const
@@ -2034,7 +2112,7 @@ std::optional<float> SelectMachineDialog::get_filament_change_gap_time(MachineOb
     params.selector_unload_time = params.standard_unload_time * 0.5;
 
     int group_count = group_of_filaments.empty() ? 0 : *std::max_element(group_of_filaments.begin(), group_of_filaments.end()) + 1;
-    // Orca: kept device model has no ams_preload_version; assume no AMS pre-load (conservative).
+    // Inlong: kept device model has no ams_preload_version; assume no AMS pre-load (conservative).
     std::vector<bool> ams_preload_enabled(group_count, false);
 
     try {
@@ -2185,7 +2263,7 @@ void SelectMachineDialog::on_reselect_dialog_btn_clicked(wxMouseEvent&)
 
 void SelectMachineDialog::update_best_pos_dialog(wxCommandEvent& evt)
 {
-    if (!m_best_pos_dialog) return; // Orca: only relevant while the popup is open
+    if (!m_best_pos_dialog) return; // Inlong: only relevant while the popup is open
     DeviceManager* dev = wxGetApp().getDeviceManager();
     MachineObject* obj_ = dev ? dev->get_selected_machine() : nullptr;
     if (!obj_) return;
@@ -2273,7 +2351,7 @@ void SelectMachineDialog::show_status(PrintDialogStatus status, std::vector<wxSt
         Enable_Refresh_Button(true);
         Enable_Send_Button(false);
     } else if (status == PrintStatusNozzleDiameterMismatch) {
-        // Orca: overridable — a non-standard nozzle is a valid reason to differ. Send is gated on
+        // Inlong: overridable — a non-standard nozzle is a valid reason to differ. Send is gated on
         // the acknowledgement checkbox added to the message board below (add_with_checkbox), which
         // is enabled only while the user's acknowledgement still matches the current mismatch.
         Enable_Refresh_Button(true);
@@ -2531,7 +2609,7 @@ bool SelectMachineDialog::is_blocking_printing(MachineObject* obj_)
 
     if (source_model != target_model) {
         std::vector<std::string> compatible_machine = obj_->get_compatible_machine();
-        vector<std::string>::iterator it = find(compatible_machine.begin(), compatible_machine.end(), source_model);
+        const auto it = std::find(compatible_machine.begin(), compatible_machine.end(), source_model);
         if (it == compatible_machine.end()) {
             return true;
         }
@@ -2665,8 +2743,8 @@ void SelectMachineDialog::on_ok_btn(wxCommandEvent &event)
     std::vector<ConfirmBeforeSendInfo> confirm_text;
 
     // check more than one using in same external spool
-    std::unordered_set<string> main_external_spool_filas;
-    std::unordered_set<string> deputy_external_spool_filas;
+    std::unordered_set<std::string> main_external_spool_filas;
+    std::unordered_set<std::string> deputy_external_spool_filas;
     for (const auto& mapping_info : m_ams_mapping_result) {
         if (mapping_info.ams_id == VIRTUAL_AMS_MAIN_ID_STR){
             main_external_spool_filas.insert(mapping_info.filament_id);
@@ -3181,7 +3259,7 @@ void SelectMachineDialog::update_timelapse_folder_btn_icon()
 
 void SelectMachineDialog::show_timelapse_folder_popup()
 {
-    // Orca: this popup is an Orca-themed implementation (RadioBox + Label, mirroring the
+    // Inlong: this popup is an Orca-themed implementation (RadioBox + Label, mirroring the
     // SendToPrinter storage selector) rather than a straight port of the upstream widget.
     if (m_timelapse_storage_popup && m_timelapse_storage_popup->IsShown()) {
         m_timelapse_storage_popup->Dismiss();
@@ -3299,7 +3377,7 @@ void SelectMachineDialog::start_timelapse_storage_check(MachineObject* obj)
     if (!obj) { on_send_print(); return; }
 
     // get total layer count from the sliced result
-    // Orca: PrintStatistics::Mode has no per-layer time vector (unlike the reference), so
+    // Inlong: PrintStatistics::Mode has no per-layer time vector (unlike the reference), so
     // derive the timelapse layer count from the sliced print objects instead.
     m_timelapse_total_layer = 0;
     if (m_print_type == PrintFromType::FROM_NORMAL) {
@@ -3760,7 +3838,7 @@ void SelectMachineDialog::on_refresh(wxCommandEvent &event)
 void SelectMachineDialog::on_set_finish_mapping(wxCommandEvent &evt)
 {
     auto selection_data = evt.GetString();
-    auto selection_data_arr = wxSplit(selection_data.ToStdString(), '|');
+    auto selection_data_arr = wxSplit(selection_data, '|');
 
     BOOST_LOG_TRIVIAL(info) << "The ams mapping selection result: data is " << selection_data;
 
@@ -4273,9 +4351,9 @@ static wxString _check_kval_not_default(const MachineObject* obj, const std::vec
 
         wxString ams_name;
         if (info.tray_id == VIRTUAL_TRAY_MAIN_ID) {
-            ams_name = "Right-Ext";
+            ams_name = _L("Right-Ext");
         } else if (info.tray_id == VIRTUAL_TRAY_DEPUTY_ID) {
-            ams_name = "Left-Ext";
+            ams_name = _L("Left-Ext");
         } else {
             ams_name = wxGetApp().transition_tridid(info.tray_id);
         }
@@ -4373,7 +4451,7 @@ static std::unordered_multimap<int, NozzleDef> s_get_slicing_extuder_nozzles()
                         used_extuder_nozzles.insert({ physical_idx, nozzle_data });
                     }
                 } else {
-                    // Orca: a by-object plate with several objects produces no plate-level nozzle
+                    // Inlong: a by-object plate with several objects produces no plate-level nozzle
                     // grouping, so the used flows are unknown; skip the check for this extruder
                     // rather than blocking the print.
                     BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": no nozzle group result, nozzle check skipped for extruder " << logic_extruder_idx;
@@ -4480,7 +4558,7 @@ void SelectMachineDialog::CheckWarningRackStatus(MachineObject* obj_)
 
         // check if unreliable nozzle maybe used
         if (need_nozzle.second > installed_reliable_count && nozzle_sys->HasUnreliableNozzles()) {
-            // Orca: text-only warning; this message board has no refresh / don't-show-again buttons.
+            // Inlong: text-only warning; this message board has no refresh / don't-show-again buttons.
             show_status(PrintDialogStatus::PrintStatusHasUnreliableNozzleWarning,
                         { _L("The reported hotend information may be unreliable.") + " " + _L("Please refresh the nozzle information and try again.") });
         }
@@ -4588,7 +4666,7 @@ bool SelectMachineDialog::CheckErrorExtruderNozzleWithSlicing(MachineObject* obj
 
                     msg_params.emplace_back(_L("Tips: If you changed your nozzle of your printer lately, please go to 'Device -> Printer parts' to change your nozzle setting."));
 
-                    // Orca: non-blocking. A diameter that differs from the one the printer
+                    // Inlong: non-blocking. A diameter that differs from the one the printer
                     // remembers is legitimate with a non-standard nozzle, so the print is held back
                     // only by the acknowledgement checkbox shown in the message board, not by a
                     // disabled Send outright. Keep checking the remaining extruders.
@@ -4636,7 +4714,7 @@ static wxString _get_ext_loc_str(const std::unordered_set<int>& extruders, int t
 void SelectMachineDialog::update_show_status(MachineObject* obj_)
 {
     m_pre_print_checker.clear();
-    // Orca: re-raised by CheckErrorExtruderNozzleWithSlicing() below if the mismatch is still there,
+    // Inlong: re-raised by CheckErrorExtruderNozzleWithSlicing() below if the mismatch is still there,
     // so an early return from this pass cannot leave a stale warning behind.
     m_nozzle_diameter_mismatch_msg.clear();
 
@@ -4845,7 +4923,7 @@ void SelectMachineDialog::update_show_status(MachineObject* obj_)
 
     if (m_print_type == PrintFromType::FROM_NORMAL)
     {
-        // Orca: blocking hardness gate on the mounted nozzles; the rack extruder is instead judged
+        // Inlong: blocking hardness gate on the mounted nozzles; the rack extruder is instead judged
         // per dispatch-mapped nozzle in the blacklist loop below, as a non-blocking caution.
         const auto &used_nozzle_idxes = _get_used_nozzle_idxes();
         for (const auto &extder : obj_->GetExtderSystem()->GetExtruders()) {
@@ -4897,7 +4975,7 @@ void SelectMachineDialog::update_show_status(MachineObject* obj_)
     // both self-clear on the next status refresh.
     if (DevPrinterConfigUtil::support_print_check_firmware_for_tpu_left(obj_->printer_type)) {
         // Read the raw string members fila.ams_id/fila.slot_id — an int round-trip would throw on
-        // an unmapped filament. Orca: the jump-to-upgrade button styling is not ported.
+        // an unmapped filament. Inlong: the jump-to-upgrade button styling is not ported.
         bool has_tpu_left = false;
         for (const auto& fila : m_ams_mapping_result) {
             const auto& ams_id  = fila.ams_id;
@@ -5113,7 +5191,7 @@ void SelectMachineDialog::update_show_status(MachineObject* obj_)
 
     /*Check high temperture slicing*/
     if (m_print_type == PrintFromType::FROM_NORMAL) {
-        std::set<string>  high_temp_filaments;
+        std::set<std::string> high_temp_filaments;
         std::unordered_set<int> known_fila_soften_extruders;
         std::unordered_set<int> unknown_fila_soften_extruders;
         auto preset_full_config = wxGetApp().preset_bundle->full_config();
@@ -5385,7 +5463,7 @@ void SelectMachineDialog::change_materialitem_tip(bool no_ams_only_ext)
         int       id   = iter->first;
         Material *item = iter->second;
         if (item) {
-            if (no_ams_only_ext && item->item->m_ams_name == "Ext") {
+            if (no_ams_only_ext && item->item->m_ams_name == _L("Ext")) {
                 item->item->SetToolTip(wxEmptyString);
             }
             else {
@@ -5601,7 +5679,7 @@ void SelectMachineDialog::reset_and_sync_ams_list()
         m_filament_panel_sizer->Layout();
     }
 
-    // Orca: a filament switch feeds both extruders, so the per-nozzle material items collapse into
+    // Inlong: a filament switch feeds both extruders, so the per-nozzle material items collapse into
     // the single panel. Reposition once the selected machine's switch state is known (no-op otherwise).
     DeviceManager* dev = wxGetApp().getDeviceManager();
     update_material_item_pos(dev ? dev->get_selected_machine() : nullptr);
@@ -5609,7 +5687,7 @@ void SelectMachineDialog::reset_and_sync_ams_list()
     // reset_ams_material();//show "-"
 }
 
-// Orca: collapse the per-nozzle material items into the single panel when the printer has one
+// Inlong: collapse the per-nozzle material items into the single panel when the printer has one
 // extruder or a filament switch (both feed a single logical mapping surface); otherwise keep the
 // left/right split. Early-returns unless an item is actually in the wrong panel.
 void SelectMachineDialog::update_material_item_pos(MachineObject* obj_)
@@ -5709,7 +5787,7 @@ void SelectMachineDialog::clone_thumbnail_data() {
     while (iter != m_materialList.end()) {
         Material *    item = iter->second;
         MaterialItem *m    = item->item;
-        // Orca: key the preview colours by filament slot, as m_cur_colors_in_thumbnail and
+        // Inlong: key the preview colours by filament slot, as m_cur_colors_in_thumbnail and
         // SyncAmsInfoDialog already do, so recompute_mixed_slot_colors() below can look a mixed
         // slot's component colours up by id (BBS keys this array by list position).
         if (item->id >= m_preview_colors_in_thumbnail.size()) {
@@ -6342,7 +6420,7 @@ void SelectMachineDialog::UpdateStatusCheckWarning_ExtensionTool(MachineObject* 
                 {
                     show_status(PrintDialogStatus::PrintStatusToolHeadCoolingFanWarning,
                                 { _L("Install toolhead enhanced cooling fan to prevent filament softening.")},
-                                "https://www.orcaslicer.com/wiki/"); // Orca: neutral wiki link (vendor URL removed)
+                                "https://www.orcaslicer.com/wiki/"); // Inlong: neutral wiki link (vendor URL removed)
                     return;
                 }
             }
@@ -7088,7 +7166,7 @@ void PrinterInfoBox::Create()
 
 void PrinterInfoBox::OnBtnQuestionClicked(wxCommandEvent& event)
 {
-    wxLaunchDefaultBrowser(wxT("https://www.orcaslicer.com/wiki/")); // Orca: neutral wiki link (vendor URL removed)
+    wxLaunchDefaultBrowser(wxT("https://www.orcaslicer.com/wiki/")); // Inlong: neutral wiki link (vendor URL removed)
 }
 
 

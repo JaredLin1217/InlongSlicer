@@ -264,7 +264,8 @@ AboutDialog::AboutDialog()
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
         auto          version_string = std::string(SoftFever_VERSION); // _L("Inlong Slicer ") + " " + std::string(SoftFever_VERSION);
         wxStaticText* version = new wxStaticText(this, wxID_ANY, version_string.c_str(), wxDefaultPosition, wxDefaultSize);
-        wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format("Build %s", build_commit_label), wxDefaultPosition, wxDefaultSize);
+        // TRN %s is the commit the application was built from
+        wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format(_L("Build %s"), build_commit_label), wxDefaultPosition, wxDefaultSize);
         credits_string->SetFont(_build_string_font);
         wxFont version_font = GetFont();
         version_font = version_font.Scaled(1.85f); // SetPointSize(20) not works on macOS because it uses a 72 PPI reference
@@ -286,7 +287,7 @@ AboutDialog::AboutDialog()
 
     std::vector<wxString> text_list;
     text_list.push_back(_L("Open-source slicing stands on a tradition of collaboration and attribution. Slic3r, created by Alessandro Ranellucci and the RepRap community, laid the foundation. PrusaSlicer by Prusa Research built on that work, Bambu Studio forked from PrusaSlicer, and SuperSlicer extended it with community-driven enhancements. Each project carried the work of its predecessors forward, crediting those who came before."));
-    text_list.push_back(_L("InlongSlicer is based on OrcaSlicer and is maintained for Inlong-specific bug fixes, printer profiles, workflow integration, and further development."));
+    text_list.push_back(_L("InlongSlicer is based on InlongSlicer and is maintained for Inlong-specific bug fixes, printer profiles, workflow integration, and further development."));
     text_list.push_back(_L("InlongSlicer is free software licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). The software is provided without warranty; users are responsible for evaluating suitability, print results, and related risks."));
 
     text_sizer->Add( 0, 0, 0, wxTOP, FromDIP(33));

@@ -38,12 +38,16 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 
+namespace fs = boost::filesystem;
+
 // Mark string for localization and translate.
 #define L(s) Slic3r::I18N::translate(s)
 
 // Store the print/filament/printer presets into a "presets" subdirectory of the Slic3rPE config dir.
 // This breaks compatibility with the upstream Slic3r if the --datadir is used to switch between the two versions.
 //#define SLIC3R_PROFILE_USE_PRESETS_SUBDIR
+
+using json = nlohmann::json;
 
 namespace Slic3r {
 
@@ -1565,7 +1569,6 @@ bool PresetBundle::apply_vendor_config(
     const std::string& preferred_printer_variant,
     const std::string& preferred_filament)
 {
-    namespace fs = boost::filesystem;
 
     // Get current configuration from AppConfig
     const auto old_vendors = app_config->vendors();
@@ -3600,6 +3603,24 @@ void PresetBundle::export_selections(AppConfig &config)
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": printer %1%, print %2%, filaments[0] %3% ")%printers.get_selected_preset_name() % prints.get_selected_preset_name() %filament_presets[0];
 }
 
+// Preserve metadata only for existing colour slots; new slots get false/empty defaults.
+static void resize_mixed_filament_metadata(DynamicPrintConfig &config, size_t old_slot_count, size_t new_slot_count)
+{
+    auto resize = [old_slot_count, new_slot_count](auto *opt) {
+        if (opt) {
+            opt->values.resize(std::min(old_slot_count, opt->values.size()));
+            opt->values.resize(new_slot_count);
+        }
+    };
+    resize(config.option<ConfigOptionBools>("filament_is_mixed"));
+    resize(config.option<ConfigOptionStrings>("filament_mixed_components"));
+    resize(config.option<ConfigOptionStrings>("filament_mixed_sublayer_ratios"));
+    resize(config.option<ConfigOptionBools>("filament_mixed_gradient"));
+    resize(config.option<ConfigOptionStrings>("filament_mixed_gradient_range"));
+    resize(config.option<ConfigOptionStrings>("filament_mixed_gradient_curve"));
+    resize(config.option<ConfigOptionBools>("filament_mixed_gradient_per_part"));
+}
+
 void PresetBundle::set_num_filaments(unsigned int n, std::string new_color)
 {
     unsigned old_filament_count = this->filament_presets.size();
@@ -3632,22 +3653,7 @@ void PresetBundle::set_num_filaments(unsigned int n, std::string new_color)
     filament_volume_map->values.resize(n, static_cast<int>(NozzleVolumeType::nvtStandard));
     ams_multi_color_filment.resize(n);
 
-    // Mixed-color metadata is a parallel per-filament array set, so it has to grow and shrink
-    // with the filament count exactly like filament_colour above.
-    if (auto* opt = project_config.option<ConfigOptionBools>("filament_is_mixed"))
-        opt->values.resize(n, false);
-    if (auto* opt = project_config.option<ConfigOptionStrings>("filament_mixed_components"))
-        opt->values.resize(n, std::string{});
-    if (auto* opt = project_config.option<ConfigOptionStrings>("filament_mixed_sublayer_ratios"))
-        opt->values.resize(n, std::string{});
-    if (auto* opt = project_config.option<ConfigOptionBools>("filament_mixed_gradient"))
-        opt->values.resize(n, false);
-    if (auto* opt = project_config.option<ConfigOptionStrings>("filament_mixed_gradient_range"))
-        opt->values.resize(n, std::string{});
-    if (auto* opt = project_config.option<ConfigOptionStrings>("filament_mixed_gradient_curve"))
-        opt->values.resize(n, std::string{});
-    if (auto* opt = project_config.option<ConfigOptionBools>("filament_mixed_gradient_per_part"))
-        opt->values.resize(n, false);
+    resize_mixed_filament_metadata(project_config, old_slot_count, n);
 
     //BBS set new filament color to new_color
     if (!new_color.empty()) {
@@ -3759,18 +3765,19 @@ bool PresetBundle::is_mixed_filament(size_t idx) const
 
 size_t PresetBundle::num_mixed_filaments() const
 {
-    auto *opt = project_config.option<ConfigOptionBools>("filament_is_mixed");
-    return opt == nullptr ? 0 : size_t(std::count(opt->values.begin(), opt->values.end(), true));
+    const auto *opt = project_config.option<ConfigOptionBools>("filament_is_mixed");
+    if (opt == nullptr)
+        return 0;
+    const size_t slot_count = project_config.option<ConfigOptionStrings>("filament_colour")->values.size();
+    return size_t(std::count(opt->values.begin(), opt->values.begin() + std::min(slot_count, opt->values.size()), true));
 }
 
-// Counted off the mixed flags, not filament_presets: that list is topped up to the nozzle count on
-// its own, so it can sit a slot ahead of the arrays that describe slots. Unlike the sibling
-// physical_filament_config_indices(), which bounds by filament_presets, this ignores that top-up.
+// Colours describe actual slots; filament_presets can be topped up to the nozzle count alone.
+// Imported projects may have fewer mixed flags than slots. Missing flags mean physical filaments.
 size_t PresetBundle::num_physical_filaments() const
 {
-    const auto *opt = project_config.option<ConfigOptionBools>("filament_is_mixed");
-    return opt == nullptr ? filament_presets.size()
-                          : size_t(std::count(opt->values.begin(), opt->values.end(), false));
+    const auto *colors = project_config.option<ConfigOptionStrings>("filament_colour");
+    return colors->values.size() - num_mixed_filaments();
 }
 
 std::vector<size_t> PresetBundle::physical_filament_config_indices() const
@@ -5681,6 +5688,9 @@ void PresetBundle::load_config_file_config(const std::string &name_or_path, bool
         // Load the project config values. In published mode only the plate/bed geometry keys
         // cross over (the receiver must not inherit the author's filament/purge data).
         this->project_config.apply_only(config, is_published ? s_project_options_published : s_project_options);
+        // Older projects inherit one-element mixed defaults, regardless of their filament count.
+        if (!is_published)
+            resize_mixed_filament_metadata(this->project_config, num_filaments, num_filaments);
 
         break;
     }

@@ -10,7 +10,6 @@
 #include "Print.hpp"
 #include "ShortestPath.hpp"
 #include "SupportCommon.hpp"
-#include "SVG.hpp"
 #include "TreeSupportCommon.hpp"
 #include "TreeSupport.hpp"
 #include "TreeSupport3D.hpp"
@@ -28,6 +27,18 @@
 #include <boost/log/trivial.hpp>
 #include <algorithm>
 #include <memory>
+#include <vector>
+#include <unordered_set>
+#include <utility>
+#include <tuple>
+#include <unordered_map>
+#include <tbb/concurrent_unordered_map.h>
+#include "libslic3r/BoundingBox.hpp"
+#include "libslic3r/Config.hpp"
+#include "libslic3r/ExtrusionEntityCollection.hpp"
+#include "libslic3r/Fill/Lightning/Layer.hpp"
+#include "libslic3r/Model.hpp"
+#include "libslic3r/SurfaceCollection.hpp"
 
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795
@@ -1390,7 +1401,7 @@ static void make_perimeter_and_infill(ExtrusionEntitiesPtr& dst, const ExPolygon
         }
     }
 
-    // Orca: Some entities are direct paths, so check the type before testing for an empty collection.
+    // Inlong: Some entities are direct paths, so check the type before testing for an empty collection.
     dst.erase(std::remove_if(dst.begin(), dst.end(), [](ExtrusionEntity *entity) {
         return entity != nullptr && entity->is_collection() && static_cast<ExtrusionEntityCollection *>(entity)->empty();
     }), dst.end());
@@ -1718,7 +1729,7 @@ void TreeSupport::generate_toolpaths()
                         filler_support->angle = Geometry::deg2rad(object_config.support_angle.value);
 
                         Polygons loops = to_polygons(poly);
-                        //ORCA: Group base per area as no_sort to keep outline->fill together.
+                        //INLONG: Group base per area as no_sort to keep outline->fill together.
                         std::unique_ptr<ExtrusionEntityCollection> base_eec = std::make_unique<ExtrusionEntityCollection>();
                         base_eec->no_sort = true;
                         ExtrusionEntitiesPtr &base_dst = base_eec->entities;
@@ -1728,7 +1739,7 @@ void TreeSupport::generate_toolpaths()
                                                                        m_support_params, true, false);
                         }
                         else {
-                            //ORCA: Force base walls before infill to keep outline->fill order.
+                            //INLONG: Force base walls before infill to keep outline->fill order.
                             if (need_infill && m_support_params.base_fill_pattern != ipLightning) {
                                 // allow infill-only mode if support is thick enough (so min_wall_count is 0);
                                 // otherwise must draw 1 wall
@@ -1745,7 +1756,7 @@ void TreeSupport::generate_toolpaths()
                             }
                         }
 
-                        //ORCA: Emit lightning infill per base area to avoid interleaving across islands.
+                        //INLONG: Emit lightning infill per base area to avoid interleaving across islands.
                         if (m_support_params.base_fill_pattern == ipLightning) {
                             double print_z = ts_layer->print_z;
                             auto lightning_layer_mapping = printZ_to_lightninglayer.find(print_z);
@@ -1780,7 +1791,7 @@ void TreeSupport::generate_toolpaths()
                             }
                         }
 
-                        //ORCA: Keep per-area base paths grouped for outline->fill preservation.
+                        //INLONG: Keep per-area base paths grouped for outline->fill preservation.
                         if (!base_eec->empty())
                             ts_layer->support_fills.entities.push_back(base_eec.release());
                     }
@@ -2013,7 +2024,7 @@ Polygons TreeSupport::get_trim_support_regions(
     static const double no_overlap_xy_gap = 0.2f;
     double gap_xy_scaled = scale_(gap_xy);
     SupportLayer& support_layer = *support_layer_ptr;
-    auto m_print_config = object.print()->config();
+    const PrintConfig& print_config = object.print()->config();
 
     size_t idx_object_layer_overlapping = size_t(-1);
 
@@ -2060,7 +2071,7 @@ Polygons TreeSupport::get_trim_support_regions(
             const Layer& object_layer = *object.layers()[i];
             bool some_region_overlaps = false;
             for (LayerRegion* region : object_layer.regions()) {
-                coordf_t bridging_height = region->region().bridging_height_avg(m_print_config);
+                coordf_t bridging_height = region->region().bridging_height_avg(print_config);
                 if (object_layer.print_z - bridging_height > support_layer.print_z + gap_extra_above - EPSILON)
                     break;
                 some_region_overlaps = true;
@@ -2555,7 +2566,7 @@ void TreeSupport::draw_circles()
                     ts_layer->base_areas = std::move(expanded_base_areas);
                 }
 
-                // Orca: Final tree base polygons may be too close above model surfaces.
+                // Inlong: Final tree base polygons may be too close above model surfaces.
                 // Enforce bottom Z clearance for non-contact support layers as well.
                 if (!ts_layer->base_areas.empty()) {
                     const Polygons trimming = get_trim_support_regions(

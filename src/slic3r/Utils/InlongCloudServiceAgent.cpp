@@ -41,6 +41,7 @@
 #include <wx/utils.h>
 
 #include "slic3r/plugin/PluginDescriptor.hpp"
+#include "libslic3r/PresetBundle.hpp"
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -61,7 +62,7 @@ using json = nlohmann::json;
 namespace Slic3r {
 
 namespace {
-constexpr const char* INLONG_DEFAULT_API_URL   = "api.orcaslicer.com";
+constexpr const char* INLONG_DEFAULT_API_URL   = "https://api.orcaslicer.com";
 constexpr const char* INLONG_DEFAULT_AUTH_URL  = "https://auth.orcaslicer.com";
 constexpr const char* INLONG_DEFAULT_CLOUD_URL = "https://cloud.orcaslicer.com";
 // Public client key used by InlongSlicer to identify itself to the compatible backend.
@@ -83,6 +84,7 @@ constexpr const char* INLONG_UNSUBSCRIBE_PLUGINS = "/api/v1/plugins/subscription
 constexpr const char* INLONG_PLUGINS_MINE        = "/api/v1/plugins/mine";
 constexpr const char* INLONG_PLUGINS_BASE        = "/api/v1/plugins";
 constexpr const char* INLONG_PLUGIN_DOWNLOAD_URL = "/api/v1/plugins/download";
+constexpr const char* INLONG_CLOUD_PRINTER       = "/api/v1/printers";
 
 constexpr const char* INLONG_CLOUD_LOGIN_PATH = "/orcaslicer-login";
 
@@ -260,7 +262,7 @@ std::string sha256_base64url(const std::string& input)
 
 std::string os_machine_id()
 {
-    // Orca: OS-level identifiers that live outside data_dir, so a copied data_dir
+    // Inlong: OS-level identifiers that live outside data_dir, so a copied data_dir
     // on another machine yields a different key and the stored refresh
     // token silently fails to decrypt (forcing a normal sign-in).
 #if defined(__linux__)

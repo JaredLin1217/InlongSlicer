@@ -155,6 +155,26 @@
 #include "PluginsDialog.hpp"
 #include "SpeedDialDialog.hpp"
 #include "TerminalDialog.hpp"
+#include "libslic3r/Format/STEP.hpp"
+#include "libslic3r/Semver.hpp"
+#include "slic3r/GUI/ActionRegistry.hpp"
+#include "slic3r/GUI/Camera.hpp"
+#include "slic3r/GUI/ConfigWizard.hpp"
+#include "slic3r/GUI/Gizmos/GLGizmosManager.hpp"
+#include "slic3r/GUI/HttpServer.hpp"
+#include "slic3r/GUI/ImGuiWrapper.hpp"
+#include "slic3r/GUI/ParamsDialog.hpp"
+#include "slic3r/GUI/ParamsPanel.hpp"
+#include "slic3r/GUI/PartPlate.hpp"
+#include "slic3r/GUI/Widgets/Button.hpp"
+#include "slic3r/GUI/wxExtensions.hpp"
+#include "slic3r/plugin/host/PluginPages.hpp"
+#include <wx/defs.h>
+#include "slic3r/GUI/Widgets/WebView.hpp"
+#include <cwchar>
+#include <wx/dataview.h>
+#include <wx/itemattr.h>
+#include <wx/version.h>
 
 //#ifdef WIN32
 //#include "BaseException.h"
@@ -183,6 +203,7 @@ typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS2)(
 #endif
 #ifdef _WIN32
 #include <boost/dll/runtime_symbol_info.hpp>
+#include <direct.h>
 #endif
 
 #ifdef WIN32
@@ -203,8 +224,10 @@ typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS2)(
     #include <gtk/gtk.h>
 #endif
 
+namespace fs = boost::filesystem;
 using namespace std::literals;
 namespace pt = boost::property_tree;
+using json = nlohmann::json;
 
 struct StaticBambuLib
 {
@@ -403,7 +426,7 @@ public:
         }
     }
 
-    // Orca: keep the splash alive until it is explicitly destroyed.
+    // Inlong: keep the splash alive until it is explicitly destroyed.
     // wxSplashScreen installs an application-wide event filter that calls
     // Close() (which Destroy()s the window) on ANY key press or mouse-button
     // down. Since startup keeps the splash up across the whole load_presets()
@@ -1017,7 +1040,7 @@ void GUI_App::post_init()
         });
     }
 
-    // Orca: notify users upgrading from a pre-2.4.0 version that profile syncing
+    // Inlong: notify users upgrading from a pre-2.4.0 version that profile syncing
     // moved from Bambu Cloud to Inlong Cloud.
     if (is_editor() && m_last_config_version && m_last_config_version->valid()
         && *m_last_config_version < Semver(2, 4, 0)) {
@@ -2258,7 +2281,7 @@ void GUI_App::init_networking_callbacks()
 
                                 obj->set_online_state(true);
                             } else if (state == ConnectStatus::ConnectStatusFailed) {
-                                // Orca: only update status if same device id
+                                // Inlong: only update status if same device id
                                 if (m_device_manager->selected_machine != dev_id) return;
 
                                 m_device_manager->set_selected_machine("");
@@ -2372,7 +2395,7 @@ void GUI_App::init_networking_callbacks()
 
                 if (MachineObject* obj = m_device_manager->get_my_machine(dev_id)) {
                     obj->parse_json("lan", msg);
-                    // Orca: skip it if it doesn't support subscription based filament sync
+                    // Inlong: skip it if it doesn't support subscription based filament sync
                     if (this->m_device_manager->get_selected_machine() == obj &&
                         m_agent->get_filament_sync_mode() == FilamentSyncMode::subscription) {
                         GUI::wxGetApp().sidebar().load_ams_list(obj);
@@ -2449,7 +2472,7 @@ bool GUI_App::is_blocking_printing(MachineObject *obj_)
 
     if (source_model != target_model) {
         std::vector<std::string>      compatible_machine = obj_->get_compatible_machine();
-        vector<std::string>::iterator it                 = find(compatible_machine.begin(), compatible_machine.end(), source_model);
+        const auto it = std::find(compatible_machine.begin(), compatible_machine.end(), source_model);
         if (it == compatible_machine.end()) {
             return true;
         }
@@ -2588,7 +2611,7 @@ void GUI_App::init_app_config()
 	// Mac : "~/Library/Application Support/Slic3r"
 
     if (data_dir().empty()) {
-        // Orca: check if data_dir folder exists in application folder use it if it exists
+        // Inlong: check if data_dir folder exists in application folder use it if it exists
         // Note:wxStandardPaths::Get().GetExecutablePath() return following paths
         // Unix: /usr/local/bin/exename
         // Windows: "C:\Programs\AppFolder\exename.exe"
@@ -2663,7 +2686,7 @@ void GUI_App::init_app_config()
 	if (m_app_conf_exists) {
         std::string error = app_config->load();
         if (!error.empty()) {
-            // Orca: if the config file is corrupted, we will show a error dialog and create a default config file.
+            // Inlong: if the config file is corrupted, we will show a error dialog and create a default config file.
             m_config_corrupted = true;
 
         }
@@ -2795,7 +2818,7 @@ int GUI_App::OnExit()
         m_agent = nullptr;
     }
 
-    // Orca: clean up encrypted bbl network log file if plugin is used
+    // Inlong: clean up encrypted bbl network log file if plugin is used
     // No point to keep them as they are encrypted and can't be used for debugging
     try {
         auto              log_folder  = boost::filesystem::path(data_dir()) / "log";
@@ -3037,6 +3060,21 @@ bool GUI_App::on_init_inner()
             d->EndModal(wxID_ABORT);
     });
 
+#ifdef __APPLE__
+    // A quit request from the Dock, a logout or a restart ends with AppKit calling exit() right after this event, so
+    // OnExit() and ~GUI_App() never run. Shut the plugins and Python down here as ~GUI_App() does. Left to
+    // PluginManager's static destructor, the shutdown locks hook state that has already been destroyed and aborts.
+    // Unload the Bambu network plugin too. Its static destructors abort if its agent's threads are still running.
+    wxGetApp().Bind(wxEVT_END_SESSION, [this](wxCloseEvent &e) {
+        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << "received wxEVT_END_SESSION";
+        stop_sync_user_preset();
+        Slic3r::NetworkAgent::unload_network_module();
+        Slic3r::PluginManager::instance().shutdown();
+        Slic3r::PythonInterpreter::instance().shutdown();
+        e.Skip();
+    });
+#endif
+
     // Verify resources path
     const wxString resources_dir = from_u8(Slic3r::resources_dir());
     wxCHECK_MSG(wxDirExists(resources_dir), false,
@@ -3129,7 +3167,7 @@ bool GUI_App::on_init_inner()
      // Inform wxWidgets 3.3's dark mode system so it tracks NppDarkMode's state.
      // Must be called before NppDarkMode::InitDarkMode() so that NppDarkMode's
      // SetPreferredAppMode(ForceDark) overrides the AllowDark state set here.
-     // Orca: todo switch to native dark mode support in wxWidgets and remove NppDarkMode
+     // Inlong: todo switch to native dark mode support in wxWidgets and remove NppDarkMode
      MSWEnableDarkMode(DarkMode_Auto);
      NppDarkMode::InitDarkMode(init_dark_color_mode, init_sys_menu_enabled);
 #endif // __WINDOWS__
@@ -3157,7 +3195,7 @@ bool GUI_App::on_init_inner()
     }
 #endif
 
-    // Orca: we allow user to pin the version of plugin, so we don't need to remove old networking plugins when the app version is updated
+    // Inlong: we allow user to pin the version of plugin, so we don't need to remove old networking plugins when the app version is updated
     //
     // if (m_last_config_version) {
     //     int last_major = m_last_config_version->maj();
@@ -3176,12 +3214,12 @@ bool GUI_App::on_init_inner()
     //     }
     // }
 
-    //Orca: write InlongSlicer version
+    //Inlong: write InlongSlicer version
     if(app_config->get("version") != SoftFever_VERSION) {
         app_config->set("version", SoftFever_VERSION);
     }
 
-    // Orca: use wxWeakRef to provent wild pointer.
+    // Inlong: use wxWeakRef to provent wild pointer.
     wxWeakRef<SplashScreen> scrn = nullptr;
     if (app_config->get("show_splash_screen") == "true") {
         // Detect position (display) to show the splash screen
@@ -3342,7 +3380,7 @@ bool GUI_App::on_init_inner()
 
 
 
-    // Orca: select network plugin version based on configured version string
+    // Inlong: select network plugin version based on configured version string
     std::string configured_version = app_config->get_network_plugin_version();
     BOOST_LOG_TRIVIAL(info) << "Network plugin mode: "
         << (use_legacy_network_plugin() ? ("legacy (version: " + std::string(BAMBU_NETWORK_AGENT_VERSION_LEGACY) + ")") : ("modern (version: " + configured_version + ")"));
@@ -3928,7 +3966,7 @@ bool GUI_App::on_init_network(bool try_backup)
         std::string country_code = app_config->get_country_code();
         m_agent->set_country_code(country_code);
         m_agent->start();
-        // Orca: disable Bambu telemetry up-front (before any login) so it never starts.
+        // Inlong: disable Bambu telemetry up-front (before any login) so it never starts.
         check_track_enable();
     }
 
@@ -3946,7 +3984,7 @@ bool GUI_App::on_init_network(bool try_backup)
             bbl.init_log();
             bbl.set_cert_file(resources_dir() + "/cert", "slicer_base64.cer");
             bbl.set_country_code(app_config->get_country_code());
-            // Orca: disable Bambu telemetry before start() so the DLL never spins up tracking
+            // Inlong: disable Bambu telemetry before start() so the DLL never spins up tracking
             // workers. This covers the case where the BBL plugin is loaded for LAN discovery
             // but the user has not registered BBL_CLOUD_PROVIDER (so m_agent->track_enable
             // would not reach this DLL instance).
@@ -4096,7 +4134,7 @@ void GUI_App::switch_printer_agent()
 
     // The factory caches agents per ID, so an identical pointer means the agent type is unchanged.
     if (m_agent->get_printer_agent() == new_printer_agent) {
-        // Orca: the agent type is unchanged (e.g. switching between two Moonraker/Klipper
+        // Inlong: the agent type is unchanged (e.g. switching between two Moonraker/Klipper
         // printer presets), so the selected machine and the agent's cached device_info still
         // point at the previously active printer preset. Re-select the machine when the new
         // preset targets a different host, otherwise filament sync keeps hitting the old
@@ -5772,7 +5810,7 @@ void GUI_App::on_user_login_handle(wxCommandEvent &evt)
 
 void GUI_App::check_track_enable()
 {
-    // Orca: telemetry only exists on the BBL cloud agent; always disable it.
+    // Inlong: telemetry only exists on the BBL cloud agent; always disable it.
     if (m_agent) {
         m_agent->track_enable(false);
         m_agent->track_remove_files();
@@ -5938,7 +5976,7 @@ std::string detect_updater_os_info()
     if (description.empty())
         description = wxGetOsDescription();
 
-    //Orca: workaround: wxGetOsVersion can't recognize Windows 11
+    //Inlong: workaround: wxGetOsVersion can't recognize Windows 11
     // For Windows, use actual version numbers to properly detect Windows 11
     // Windows 11 starts at build 22000
 #if defined(_WIN32)
@@ -6681,7 +6719,7 @@ void GUI_App::reload_settings()
             restore_snapshot(preset_bundle->filaments, filament_snap, "filament");
             restore_snapshot(preset_bundle->printers, printer_snap, "printer");
 
-            // Orca: settings changed, refresh ui to reflect the new preset values
+            // Inlong: settings changed, refresh ui to reflect the new preset values
             mainframe->update_side_preset_ui();
             for (auto tab : tabs_list) {
                 tab->reload_config();
@@ -8162,7 +8200,7 @@ bool GUI_App::load_language(wxString language, bool initial)
         message += _L("\nYou may need to reconfigure the missing locales, likely by running the \"locale-gen\" and \"dpkg-reconfigure locales\" commands.\n");
 #endif
         if (initial)
-        	message + "\n\nApplication will close.";
+            message += "\n\n" + _L("Application will close.");
         wxMessageBox(message, _L("Inlong Slicer - Switching language failed"), wxOK | wxICON_ERROR);
         if (initial)
 			std::exit(EXIT_FAILURE);
@@ -8891,7 +8929,7 @@ void GUI_App::load_current_presets(bool active_preset_combox/*= false*/, bool ch
 
     auto& edited_printer_preset = preset_bundle->printers.get_edited_preset();
     PrinterTechnology printer_technology = edited_printer_preset.printer_technology();
-    // ORCA: Sync filament count with the printer's nozzle count before loading presets for multi-tool printers.
+    // INLONG: Sync filament count with the printer's nozzle count before loading presets for multi-tool printers.
     // This ensures filament_presets vector is properly sized when combo boxes are created/updated.
     if (printer_technology == ptFFF && !edited_printer_preset.config.opt_bool("single_extruder_multi_material")) {
         auto* nozzle_diameter = edited_printer_preset.config.option<ConfigOptionFloats>("nozzle_diameter");
@@ -8944,7 +8982,7 @@ std::map<std::string, std::string> GUI_App::get_delete_cache_presets_lock()
 
 void GUI_App::process_delete_presets()
 {
-    std::map<string, string> delete_cache_presets = get_delete_cache_presets_lock();
+    std::map<std::string, std::string> delete_cache_presets = get_delete_cache_presets_lock();
     for (auto it = delete_cache_presets.begin(); it != delete_cache_presets.end();) {
         if (it->first.empty()) continue;
         std::string del_setting_id = it->first;
@@ -9967,7 +10005,7 @@ bool is_soluble_filament(int extruder_id)
     return support_option->get_at(0);
 };
 
-bool has_filaments(const std::vector<string>& model_filaments) {
+bool has_filaments(const std::vector<std::string>& model_filaments) {
     auto &filament_presets = Slic3r::GUI::wxGetApp().preset_bundle->filament_presets;
     if (!Slic3r::GUI::wxGetApp().plater()) return false;
     auto model_objects = Slic3r::GUI::wxGetApp().plater()->model().objects;
@@ -10002,7 +10040,7 @@ bool is_support_filament(int extruder_id, bool strict_check)
     Slic3r::ConfigOptionBools *support_option = dynamic_cast<Slic3r::ConfigOptionBools *>(filament->config.option("filament_is_support"));
 
     if(!strict_check &&(filament_type == "PETG" || filament_type == "PLA")) {
-        std::vector<string> model_filaments;
+        std::vector<std::string> model_filaments;
         if (filament_type == "PETG")
             model_filaments.emplace_back("PLA");
         else {

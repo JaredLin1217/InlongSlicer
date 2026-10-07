@@ -20,6 +20,39 @@
 #include <glad/gl.h>
 
 #include <boost/log/trivial.hpp>
+#include <string>
+#include "slic3r/GUI/Gizmos/GLGizmoPainterBase.hpp"
+#include <utility>
+#include "slic3r/GUI/Gizmos/GLGizmoBase.hpp"
+#include "libslic3r/Format/bbs_3mf.hpp"
+#include <imgui.h>
+#include <vector>
+#include "libslic3r/PrintConfig.hpp"
+#include <math.h>
+#include "libslic3r/Point.hpp"
+#include "libslic3r/TriangleMesh.hpp"
+#include "libslic3r/TriangleSelector.hpp"
+#include "slic3r/GUI/Event.hpp"
+#include <wx/busycursor.h>
+#include <memory>
+#include <mutex>
+#include "slic3r/GUI/GLModel.hpp"
+#include "libslic3r/ExtrusionEntity.hpp"
+#include "slic3r/GUI/3DScene.hpp"
+#include <wx/event.h>
+#include "libslic3r/Color.hpp"
+#include "libslic3r/Config.hpp"
+#include "libslic3r/CutUtils.hpp"
+#include "libslic3r/ExtrusionEntityCollection.hpp"
+#include "libslic3r/ObjectID.hpp"
+#include "libslic3r/Preset.hpp"
+#include "libslic3r/PresetBundle.hpp"
+#include "libslic3r/Print.hpp"
+#include "slic3r/GUI/Gizmos/GLGizmosCommon.hpp"
+#include "slic3r/GUI/Gizmos/GLGizmosManager.hpp"
+#include "slic3r/GUI/I18N.hpp"
+#include "slic3r/GUI/Selection.hpp"
+#include "slic3r/GUI/GUI_Utils.hpp"
 
 namespace Slic3r::GUI {
 
