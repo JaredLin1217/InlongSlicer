@@ -1,0 +1,133 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "inlong-infinity-bridge-defaults-20261009",
+  "key": "inlong-infinity-external-bridge-defaults",
+  "type": "fact",
+  "conclusion": "The INLONG and _Infinity3DP vendor manifests declare nine common process templates. Their shipped external bridge defaults are bridge_flow = 1.05 and bridge_density = 105%. Update these shared templates rather than duplicating default overrides into each selectable process. Internal bridge settings remain unchanged, and test_inlong_profile_gcode.py checks manifest-driven inheritance and this separation.",
+  "scope": "INLONG and Infinity3DP shipped process profiles",
+  "modules": [
+    "printer-profiles"
+  ],
+  "tags": [
+    "bridge",
+    "defaults",
+    "inheritance",
+    "INLONG",
+    "Infinity3DP"
+  ],
+  "files": [
+    "resources/profiles/INLONG.json",
+    "resources/profiles/_Infinity3DP.json",
+    "scripts/tests/test_inlong_profile_gcode.py",
+    "resources/profiles/INLONG/process/process_common.json",
+    "resources/profiles/INLONG/process/sc_process_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/X1_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/X3_common.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_common.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG.json",
+      "sha256": "ede6b98475764afafe7bc150b4a9e8a0915ba9f3ac064c21d985908932825d40",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Declared process_list and vendor identity"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP.json",
+      "sha256": "de7af616e52c7bcc6435443e748da460780d52321579305ae00ad702fab44968",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Declared process_list and vendor identity"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_inlong_profile_gcode.py",
+      "sha256": "a71ab9aec55ba0c24560f8046e822357382185908fe8eccd5e94eae1a1402129",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Manifest-driven resolve helper and the two bridge default regression tests"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/process_common.json",
+      "sha256": "7cc56ee4b67c2defb5638e85d845ba4afb3fe6b0dd5d0677d921de10c8d3b1ec",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_process_common.json",
+      "sha256": "93a43d7d8499a56a83d7a910c3461024b350e755b2c9f073749463d5a8702fde",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+      "sha256": "eb4a35c5ede71dadeb6b84f84ac07fce99aca9db1d26f93e7dc8085af3074f27",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+      "sha256": "5d5ba45c792e35bca546f0db1617c08a2414405db1f173e896781147d8485d4f",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_common.json",
+      "sha256": "6b6313112ed72ca37d38ee6578c38fa3d2cb7d2111c87aedd10a34e5982ecc94",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_common.json",
+      "sha256": "2d5a16540a405b0eeccf38974965a5ce8626e7673f272ae28532d2e9c19b2e60",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+      "sha256": "d6ae51828b7c76c78019957d47cd2b361e3be1679678e5cce76af88197e1e88a",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_common.json",
+      "sha256": "d9e290ef214cbc89cbc9b412bda2362920ac97d5da62545f0af93d92f4dbde7a",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+      "sha256": "0fdef11f13ca4197ebfa3a7879a5ab0b4af47ee53c008d0b468fc3b610f670b7",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Common process profile: bridge_flow, bridge_density and preserved internal settings"
+    }
+  ],
+  "verified_utc": "2026-10-08T22:46:53.1847443+00:00",
+  "verification": {
+    "method": "Semantic template review, exact two-key edit comparison, manifest-driven regression tests and native preset loading",
+    "summary": "The new external-default regression failed for all 46 declared process profiles before the update, then both bridge tests and all profile regression tests passed (14 tests total). Both vendors passed extra profile checks with zero errors/warnings and the built native profile validator in isolated byte-identical fixtures. Nine profile files changed only bridge_flow and bridge_density; 37 other process JSON files and 53 pre-existing worktree edits stayed unchanged. Source commit values are checkout anchors, not a claim that these new snapshot bytes were committed.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

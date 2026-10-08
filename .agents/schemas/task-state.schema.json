@@ -1,93 +1,396 @@
 {
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "id",
-    "objective",
-    "latest_adjustment",
-    "boundaries",
-    "completed",
-    "open_issues",
-    "next_steps",
-    "source_commit",
-    "updated_utc",
-    "files"
-  ],
-  "properties": {
-    "schema_version": {
-      "const": "agents-task/v3"
-    },
-    "id": {
-      "type": "string",
-      "pattern": "^[A-Za-z0-9_-]+$"
-    },
-    "objective": {
-      "type": "string",
-      "minLength": 1
-    },
-    "latest_adjustment": {
-      "type": "string",
-      "minLength": 1
-    },
-    "boundaries": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "completed": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "open_issues": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "next_steps": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "source_commit": {
-      "type": "string",
-      "minLength": 1
-    },
-    "updated_utc": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "files": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "path",
-          "sha256"
-        ],
-        "properties": {
-          "path": {
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "id",
+        "objective",
+        "latest_adjustment",
+        "boundaries",
+        "completed",
+        "open_issues",
+        "next_steps",
+        "source_commit",
+        "updated_utc",
+        "files"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "agents-task/v3"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "latest_adjustment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "boundaries": {
+          "type": "array",
+          "items": {
             "type": "string",
             "minLength": 1
-          },
-          "sha256": {
-            "type": "string",
-            "pattern": "^([a-f0-9]{64}|missing)$"
           }
+        },
+        "completed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "open_issues": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "next_steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_commit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "updated_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^([a-f0-9]{64}|missing)$"
+              }
+            }
+          }
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema"
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "id",
+        "revision",
+        "status",
+        "objective",
+        "latest_adjustment",
+        "acceptance_criteria",
+        "requirements",
+        "boundaries",
+        "completed",
+        "open_issues",
+        "next_steps",
+        "knowledge_ids",
+        "validation_receipts",
+        "external_actions",
+        "git",
+        "files",
+        "updated_utc",
+        "completed_utc",
+        "migrated_from"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "agents-task/v4"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "active",
+            "completed"
+          ]
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "latest_adjustment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "revision",
+              "recorded_utc",
+              "objective",
+              "adjustment",
+              "acceptance_criteria"
+            ],
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "recorded_utc": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "objective": {
+                "type": "string",
+                "minLength": 1
+              },
+              "adjustment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "acceptance_criteria": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "boundaries": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "completed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "open_issues": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "next_steps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "knowledge_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        },
+        "validation_receipts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256",
+              "input_digest",
+              "result"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "input_digest": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "result": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "needs_review",
+                  "not_applicable"
+                ]
+              }
+            }
+          }
+        },
+        "external_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "action",
+              "status",
+              "observed_utc",
+              "evidence"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]+$"
+              },
+              "action": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "enum": [
+                  "planned",
+                  "completed",
+                  "failed"
+                ]
+              },
+              "observed_utc": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "git": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "head",
+            "index_digest",
+            "worktree_status"
+          ],
+          "properties": {
+            "head": {
+              "type": "string",
+              "pattern": "^([a-f0-9]{40}|unborn)$"
+            },
+            "index_digest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "worktree_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^([a-f0-9]{64}|missing)$"
+              }
+            }
+          }
+        },
+        "updated_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "migrated_from": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "archived_path": {
+                  "type": "string",
+                  "pattern": "^\\.agents/runtime/runs/run-[a-f0-9]{32}/task/legacy-v3\\.json$"
+                }
+              }
+            }
+          ]
         }
       }
     }
-  },
+  ],
   "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

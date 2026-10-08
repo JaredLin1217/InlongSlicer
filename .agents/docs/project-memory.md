@@ -1,7 +1,22 @@
-# Project Memory
-Checked-in target recall for verified lessons that must survive task boundaries.
-- Policy: `.agents/docs/agents/workflows.yaml`
-- Contract: `.agents/docs/agents/knowledge-footprint.yaml`
-- Index: `.agents/docs/memory/index.md`
-- Details: `docs/memory/entries/`
-Read the index first and open at most the relevant detail entries. Memory complements Codex memory but never replaces `AGENTS.md`, canonical policy, approval, or current evidence. Add only verified, reusable, target-specific lessons with source commit, content hash, checked time, update trigger, supersession, boundary, and source references. Mark overdue, conflicting, or superseded lessons stale until reverified.
+# Project memory
+
+Use the deployed project-memory skill and resolve tools through
+`.agents/managed.json`. Run `.agents/scripts/project-memory.ps1 -Action Recall
+-Query <terms>` before relying on a previous finding. Add `-Expand` when source
+and verification details are needed; an index is never an authority.
+
+Reviewed reusable findings use immutable v4 JSON records under
+`docs/memory/entries/`, with source locators, hashes, verification and freshness.
+Older Markdown entries in that directory are historical references only. They
+are not automatically promoted or treated as verified current knowledge.
+Reinspect their original sources before preparing a reviewed replacement.
+
+Keep assumptions and unfinished work in registered `.agents/runtime/runs/`
+payloads. Save task revisions through `.agents/scripts/task-state.ps1` with
+acceptance criteria and an expected revision. Resume rechecks actual Git and
+files; it never authorizes replaying an external action.
+
+Follow `.agents/docs/runbooks/agents-operator-guide.md` for migration and the
+versioned `.agents/docs/agents/runtime-policy.json` for normal retention.
+Do not edit native/global Codex memory or settings, and do not automatically
+share project knowledge.

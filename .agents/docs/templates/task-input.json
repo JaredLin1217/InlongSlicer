@@ -1,0 +1,9 @@
+{
+ "id":"example-task",
+ "objective":"Describe the current authorized outcome",
+ "latest_adjustment":"Record the latest user correction or unchanged requirement",
+ "acceptance_criteria":["Describe observable acceptance evidence"],
+ "boundaries":["AGENTS.md"],
+ "completed":[],"open_issues":[],"next_steps":["Inspect relevant current files"],
+ "knowledge_ids":[],"validation_receipts":[],"external_actions":[]
+}

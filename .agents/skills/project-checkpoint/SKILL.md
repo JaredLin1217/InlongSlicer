@@ -1,24 +1,32 @@
 ---
 name: project-checkpoint
-description: Validate changes, prepare evidence, or safely deploy and roll back owned AI Agents files.
+description: Validate affected work, persist checkpoint evidence, or safely deploy and roll back owned AI Agents files.
 ---
 
-Use the unified validator: Provider for this distribution, Consumer for installed
-rules. Changed checks affected files; Checkpoint checks the owned boundary once.
-Run product tests when warranted even if not registered here. Passing tests do
-not guarantee all future tasks.
+# Project checkpoint
 
-Deploy from a validated Provider using `deploy-agents-workflow.ps1 -TargetPath
-<authorized path> -LayoutProfile root-layout|dot-agents-layout -DryRun`. Review
-the plan; pass its digest as `-ExpectedPlanDigest` on the write call. Conflicts
-stop before writes. Never adopt arbitrary existing files as owned. Only reviewed
-ownership with known original hashes permits deletion.
+Use validate.ps1: Provider for this distribution, Consumer for installed rules.
+Changed checks affected files; Checkpoint checks the complete owned boundary once.
+Run warranted product tests through registered project wrappers. A saved receipt
+precedes output and reports passed, failed, needs_review or not_applicable.
+Check passed separately from release_ready: missing/stale release evidence remains
+needs_review. RequireReleaseReady fails the publication gate. No composite score,
+model-accuracy guarantee or inferred test exemption is provided.
 
-Backups and journals stay in ignored target runtime state. Rollback uses the exact
-transaction ID and verifies current owned hashes before restoring. Interrupted
-journals block deployment until reconciled. Memory, local configuration and product
-files are not deployment assets.
+Capture official evidence only from clean committed source using the collector;
+verify its schema and content digest after generation. Commit only the declared
+evidence path in the evidence commit. Read the operator guide for that sequence.
+Current remote state, permissions and side effects always need fresh checks.
+Do not nest another Provider validator or collector inside the regression suite.
 
-Capture release evidence from committed source. Do not nest validation inside
-tests or the collector. Evidence-only commits may touch only the declared evidence
-path. Current permissions and remote state always require fresh checks.
+Deploy from a validated Provider to an authorized existing target. DryRun returns
+an exact digest without state writes. Review conflicts, operations and ownership;
+apply with ExpectedPlanDigest. Both layouts retain explicit ownership. Modified
+managed files or unowned existing files stop writes; never force adoption. Consumer
+business code, README, knowledge and local Codex settings are outside deployment.
+
+Rollback uses the transaction ID and validates current hashes and original bytes
+before writes. Journals/backups are registered and pinned in the target runtime.
+Interrupted transactions block new deployment, including no-ops. Reconcile or
+roll back before retirement. Keep rollback dependencies until explicitly retired
+with a reviewed reason. Read project-runtime when cleaning or recovering locks.

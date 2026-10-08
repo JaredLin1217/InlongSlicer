@@ -118,7 +118,9 @@ std::map<std::string, std::vector<SimpleSettingData>>  SettingsFactory::OBJECT_C
                     {"support_interface_top_layers", "",24},{"support_interface_bottom_layers", "",25},{"support_interface_spacing", "",26},{"support_bottom_interface_spacing", "",27},
                     {"support_top_contact_pattern", "",28},{"support_top_contact_spacing", "",29},{"support_bottom_contact_pattern", "",30},{"support_bottom_contact_spacing", "",31},
                     {"support_object_xy_distance", "",32}, {"bridge_no_support", "",33},{"max_bridge_length", "",34},{"support_critical_regions_only", "",35},{"support_remove_small_overhang","",36},
-                    {"support_object_first_layer_gap","",37}
+                    {"support_object_first_layer_gap","",37},
+                    {"support_top_contact_wall_count", "",38},{"support_bottom_contact_wall_count", "",39},
+                    {"support_top_interface_wall_count", "",40},{"support_bottom_interface_wall_count", "",41}
                     }},
     { L("Speed"), {{"support_speed", "",12}, {"support_interface_speed", "",13}
                   }}

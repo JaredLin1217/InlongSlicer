@@ -6,22 +6,35 @@
 # to core.autocrlf=true, so keep these LF whatever the platform.
 *.sh text eol=lf
 
-# AI Agents v3: preserve exact bytes for managed content hashes.
+# AI Agents 4.0: preserve exact bytes for managed content hashes.
 /AGENTS.md -text
 /.agents/skills/project-memory/SKILL.md -text
 /.agents/skills/project-checkpoint/SKILL.md -text
+/.agents/skills/project-runtime/SKILL.md -text
 /.agents/scripts/agent-core.ps1 -text
 /.agents/scripts/agent-checks.ps1 -text
 /.agents/scripts/validate.ps1 -text
 /.agents/scripts/resolve-agent-context.ps1 -text
 /.agents/scripts/project-memory.ps1 -text
 /.agents/scripts/task-state.ps1 -text
+/.agents/scripts/agent-runtime.ps1 -text
+/.agents/scripts/runtime-artifacts.ps1 -text
+/.agents/scripts/agent-memory.ps1 -text
+/.agents/scripts/agent-tasks.ps1 -text
+/.agents/scripts/project-hooks.ps1 -text
 /.agents/schemas/knowledge.schema.json -text
 /.agents/schemas/task-state.schema.json -text
 /.agents/schemas/managed.schema.json -text
 /.agents/schemas/sources.schema.json -text
+/.agents/schemas/runtime-artifact.schema.json -text
+/.agents/schemas/runtime-policy.schema.json -text
+/.agents/schemas/validation-report.schema.json -text
 /.agents/docs/agents/sources.json -text
+/.agents/docs/agents/runtime-policy.json -text
 /.agents/docs/runbooks/agents-operator-guide.md -text
+/.agents/docs/templates/codex-hooks.json -text
+/.agents/docs/templates/task-input.json -text
+/.agents/docs/templates/knowledge-entry.json -text
 /.agents/.gitignore -text
 /.agents/managed.json -text
 

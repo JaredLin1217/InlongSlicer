@@ -184,6 +184,10 @@ struct SupportParameters {
         this->interface_pattern = object_config.support_interface_pattern;
         this->top_contact_pattern = support_contact_pattern_or_interface(object_config.support_top_contact_pattern, this->interface_pattern);
         this->bottom_contact_pattern = support_contact_pattern_or_interface(object_config.support_bottom_contact_pattern, this->interface_pattern);
+        this->top_contact_wall_count = std::max(0, object_config.support_top_contact_wall_count.value);
+        this->bottom_contact_wall_count = std::max(0, object_config.support_bottom_contact_wall_count.value);
+        this->top_interface_wall_count = std::max(0, object_config.support_top_interface_wall_count.value);
+        this->bottom_interface_wall_count = std::max(0, object_config.support_bottom_interface_wall_count.value);
 
         const double top_contact_config_spacing = support_contact_spacing_or_interface(
             object_config.support_top_contact_spacing.value, object_config.support_interface_spacing.value);
@@ -353,6 +357,10 @@ struct SupportParameters {
     coordf_t 				bottom_interface_density;
     // Density of the first bottom contact layer.
     coordf_t 				bottom_contact_density;
+    int                     top_contact_wall_count;
+    int                     bottom_contact_wall_count;
+    int                     top_interface_wall_count;
+    int                     bottom_interface_wall_count;
     // Density of the raft interface and contact layers.
     coordf_t 				raft_interface_density;
     coordf_t 				support_spacing;

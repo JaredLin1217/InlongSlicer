@@ -44,17 +44,54 @@ function Read-AgentJson {
     if ($SchemaPath -and -not (Test-Json -Json $text -SchemaFile $SchemaPath -ErrorAction Stop)) {
         throw "Schema validation failed: $Path"
     }
-    return ConvertFrom-Json -InputObject $text -AsHashtable -Depth 80 -ErrorAction Stop
+    $options=@{InputObject=$text;AsHashtable=$true;Depth=80;ErrorAction='Stop'}
+    if((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) { $options.DateKind='String' }
+    return ConvertFrom-Json @options
 }
 function Write-AgentJson {
-    param([string]$Path, $Value, [switch]$NoClobber)
-    $parent = Split-Path -Parent $Path
-    [IO.Directory]::CreateDirectory($parent) | Out-Null
-    $temp = "$Path.$([guid]::NewGuid().ToString('N')).tmp"
+    param([string]$Path, $Value, [switch]$NoClobber, [string]$Root,[byte[]]$Bytes)
+    $Path = [IO.Path]::GetFullPath($Path)
+    if (-not $Root) {
+        if ($Path.Replace('\','/') -match '^(.*)/\.agents/runtime/') { $Root=$Matches[1] }
+        else { try { $Root=Get-AgentRoot (Split-Path -Parent $Path) } catch { $Root=Get-AgentRoot } }
+    }
+    $Root=[IO.Path]::GetFullPath($Root)
+    $relative=[IO.Path]::GetRelativePath($Root,$Path).Replace('\','/')
+    $null=Resolve-SafePath $Root $relative
+    $stageRoot=Resolve-SafePath $Root '.agents/runtime/state/staging'
+    $journalRoot=Resolve-SafePath $Root '.agents/runtime/ledger/writes'
+    [IO.Directory]::CreateDirectory($stageRoot) | Out-Null
+    [IO.Directory]::CreateDirectory($journalRoot) | Out-Null
+    $id=[guid]::NewGuid().ToString('N')
+    $temp=Resolve-SafePath $Root ".agents/runtime/state/staging/$id.tmp"
+    $text=(($Value | ConvertTo-Json -Depth 80).Replace("`r`n","`n") + "`n")
+    $raw=$PSBoundParameters.ContainsKey('Bytes')
+    $digest=if($raw){[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($Bytes)).ToLowerInvariant()}else{Get-TextHash $text}
+    # Immutable, flushed journal frames bootstrap atomic writes without recursively staging the journal itself.
+    $start=@{schema_version='agents-write/v4';id=$id;phase='started';destination=$relative;
+        staging=".agents/runtime/state/staging/$id.tmp";sha256=$digest;utc=[DateTimeOffset]::UtcNow.ToString('o')}
+    Write-AgentJournalFrame (Join-Path $journalRoot "$id.start.json") $start
+    $outcome='failed'
     try {
-        [IO.File]::WriteAllText($temp, (($Value | ConvertTo-Json -Depth 80).Replace("`r`n","`n") + "`n"), [Text.UTF8Encoding]::new($false))
+        [IO.Directory]::CreateDirectory((Split-Path -Parent $Path)) | Out-Null
+        if($raw) { [IO.File]::WriteAllBytes($temp,$Bytes) }
+        else { [IO.File]::WriteAllText($temp, $text, [Text.UTF8Encoding]::new($false)) }
         [IO.File]::Move($temp, $Path, -not $NoClobber)
-    } finally { if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp } }
+        $outcome='committed'
+    } finally {
+        if (Test-Path -LiteralPath $temp) { $null=Resolve-SafePath $Root $start.staging; Remove-Item -LiteralPath $temp }
+        Write-AgentJournalFrame (Join-Path $journalRoot "$id.end.json") @{
+            schema_version='agents-write/v4';id=$id;phase=$outcome;destination=$relative;sha256=$digest;
+            staging_removed=$true;utc=[DateTimeOffset]::UtcNow.ToString('o')}
+    }
+}
+function Write-AgentJournalFrame {
+    param([string]$Path,$Value)
+    $stream=[IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::Read)
+    try {
+        $bytes=[Text.Encoding]::UTF8.GetBytes((($Value|ConvertTo-Json -Depth 80 -Compress)+"`n"))
+        $stream.Write($bytes,0,$bytes.Length); $stream.Flush($true)
+    } finally { $stream.Dispose() }
 }
 function Get-AgentHash {
     param([string]$Path)
@@ -65,6 +102,22 @@ function Get-TextHash {
     param([string]$Text)
     return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($Text))).ToLowerInvariant()
 }
+function ConvertTo-AgentCanonicalValue($Value) {
+    if($Value -is [Collections.IDictionary]) {
+        $ordered=[ordered]@{};$keys=[string[]]@($Value.Keys);[Array]::Sort($keys,[StringComparer]::Ordinal)
+        foreach($key in $keys) { $ordered[$key]=ConvertTo-AgentCanonicalValue $Value[$key] }
+        return $ordered
+    }
+    if($Value -is [Collections.IEnumerable] -and $Value -isnot [string]) {
+        $items=@(foreach($item in $Value) { ConvertTo-AgentCanonicalValue $item })
+        return ,$items
+    }
+    return $Value
+}
+function ConvertTo-AgentCanonicalJson($Value) {
+    return ConvertTo-Json -InputObject (ConvertTo-AgentCanonicalValue $Value) -Depth 80 -Compress
+}
+function Get-AgentIds($Items) { foreach($item in $Items) { $item.id } }
 function Invoke-AgentGit {
     param([string]$Root, [string[]]$Arguments)
     $out = @(& git -c core.quotepath=false -c core.longpaths=true -C $Root @Arguments 2>&1)

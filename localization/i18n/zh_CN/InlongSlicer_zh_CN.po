@@ -17762,6 +17762,30 @@ msgstr "物体正下方第一层支撑接触层的线条图案。默认跟随接
 msgid "Bottom contact pattern"
 msgstr "底部接触面图案"
 
+msgid "Top contact wall loops"
+msgstr "顶部支撑接触层墙数"
+
+msgid "Bottom contact wall loops"
+msgstr "底部支撑接触层墙数"
+
+msgid "Top interface wall loops"
+msgstr "顶部支撑面墙数"
+
+msgid "Bottom interface wall loops"
+msgstr "底部支撑面墙数"
+
+msgid "Number of perimeter walls on the support contact layer directly below the object. Walls grow inward without changing the support footprint or the XY/Z gaps. Zero disables these walls; the selected contact pattern still fills the interior."
+msgstr "物体正下方支撑接触层的外围墙数。墙线向内生成，不改变支撑范围或 XY/Z 间距。设为 0 可关闭外墙；内部仍使用指定的接触层图案填充。"
+
+msgid "Number of perimeter walls on the support contact layer directly above the object. Walls grow inward without changing the support footprint or the XY/Z gaps. Zero disables these walls; the selected contact pattern still fills the interior."
+msgstr "物体正上方支撑接触层的外围墙数。墙线向内生成，不改变支撑范围或 XY/Z 间距。设为 0 可关闭外墙；内部仍使用指定的接触层图案填充。"
+
+msgid "Number of perimeter walls on the support interface layers below the top contact layer. Walls grow inward without changing the support footprint or the XY/Z gaps. Zero disables these walls; the selected interface pattern still fills the interior."
+msgstr "顶部支撑接触层下方各支撑面的外围墙数。墙线向内生成，不改变支撑范围或 XY/Z 间距。设为 0 可关闭外墙；内部仍使用指定的支撑面图案填充。"
+
+msgid "Number of perimeter walls on the support interface layers above the bottom contact layer. Walls grow inward without changing the support footprint or the XY/Z gaps. Zero disables these walls; the selected interface pattern still fills the interior."
+msgstr "底部支撑接触层上方各支撑面的外围墙数。墙线向内生成，不改变支撑范围或 XY/Z 间距。设为 0 可关闭外墙；内部仍使用指定的支撑面图案填充。"
+
 msgid "Line pattern of the first support interface layer directly above the object. Default follows the interface pattern."
 msgstr "物体正上方第一层支撑接触层的线条图案。默认跟随接触层图案。"
 

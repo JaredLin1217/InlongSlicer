@@ -107,10 +107,12 @@ void append_concentric_center_paths(
 
         // A narrow diagonal region may miss the axis-aligned probes.
         Polylines medial_lines;
-        region.medial_axis(
-            std::max<double>(SCALED_EPSILON, 0.05 * line_width),
-            2. * line_width,
-            &medial_lines);
+        const double minimum_width = std::max<double>(SCALED_EPSILON, 0.05 * line_width);
+        // Subtracting loop coverage may leave near-coincident vertices and
+        // unprintably thin slivers. Remove those before building a Voronoi
+        // diagram; an opening stays inside the original center candidate.
+        for (const ExPolygon &medial_region : opening_ex({region}, 0.5f * float(minimum_width)))
+            medial_region.medial_axis(minimum_width, 2. * line_width, &medial_lines);
         medial_lines.erase(
             std::remove_if(medial_lines.begin(), medial_lines.end(), [](const Polyline &polyline) {
                 return !polyline.is_valid() || polyline.length() <= SCALED_EPSILON;

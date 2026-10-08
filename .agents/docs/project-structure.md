@@ -1,6 +1,6 @@
 # InlongSlicer Project Structure
 
-This repository is an InlongSlicer product checkout and an AI Agents v3
+This repository is an InlongSlicer product checkout and an AI Agents v4
 consumer. It is not an Agents distribution provider.
 
 ## Governance Layout
@@ -9,12 +9,20 @@ consumer. It is not an Agents distribution provider.
 - `.agents/managed.json` records the deployed version and owned file hashes.
 - `.agents/scripts/validate.ps1 -Scope Consumer -Profile Checkpoint` checks
   the installed rules without running Provider-only checks.
+- `pwsh -NoProfile -File scripts/check-agents-guidance.ps1` checks project-owned
+  guidance entry points, resource references and retired operational instructions.
 - `.agents/skills/` contains project-local skills, including the Inlong
   branding migration guardrails.
 - `.agents/docs/runbooks/` contains operator procedures.
-- `.agents/docs/memory/index.md` and `docs/memory/entries/` contain target-owned,
-  historical project memory. Recheck sources before reusing historical facts;
-  new verified entries use JSON under `docs/memory/entries/`.
+- `docs/memory/entries/*.json` contains immutable, reviewed project knowledge.
+  Recall checks sources through the project-memory tool; generated indexes are
+  advisory. Older Markdown entries are historical references, not active rules
+  or proof of current verification.
+- `.agents/runtime/runs/` holds registered temporary payloads, `state/` holds
+  recovery pointers and locks, and `ledger/` retains provenance and deletion
+  records. Inspect and preview cleanup; never clear the runtime root.
+- `.agents/docs/templates/codex-hooks.json` is an optional template. Deployment
+  does not activate native hooks or change local/global Codex settings.
 - `tests/AGENTS.md` adds valid test-scope rules and is not a competing root
   layout.
 - Deployment does not replace product files, local configuration, project
@@ -60,3 +68,9 @@ Do not deploy or check in `.agents/runtime/`, `.workflow/`, live thread IDs,
 context indexes, provider session/history, secrets, `.git/`, or generated build
 output. Target-owned dirty product files remain protected during Agents
 maintenance.
+
+Agents-created test copies, diagnostics and backups are disposable only after
+checking their provenance, current hashes, active users and recovery dependencies.
+Installed applications, user data, source fixtures and uncommitted product changes
+are not cleanup targets. Explicit user-directed legacy cleanup must record its
+reviewed scope and deletions separately from the normal runtime retention policy.

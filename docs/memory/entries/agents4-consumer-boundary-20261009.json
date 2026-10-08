@@ -1,0 +1,68 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "agents4-consumer-boundary-20261009",
+  "key": "inlong-agents-consumer-boundary",
+  "type": "fact",
+  "conclusion": "InlongSlicer uses the Agents 4.0 dot-layout Consumer deployment. Resolve owned helpers through .agents/managed.json and use Consumer validation plus scripts/check-agents-guidance.ps1 for project guidance. Native hooks remain optional and inactive after deployment. Historical Markdown knowledge is reference material, not verified active rules; reviewed durable findings use immutable v4 JSON entries.",
+  "scope": "InlongSlicer project governance",
+  "modules": [
+    "project-governance"
+  ],
+  "tags": [
+    "agents4",
+    "consumer",
+    "guidance",
+    "runtime"
+  ],
+  "files": [
+    ".agents/managed.json",
+    ".agents/docs/project-structure.md",
+    ".agents/docs/project-memory.md",
+    "scripts/check-agents-guidance.ps1"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/managed.json",
+      "sha256": "248e2617edb52dc8d5f9e024cdcf145fde180011be7a5d0f796f09d63edd5806",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "version, layout and managed asset ownership"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/docs/project-structure.md",
+      "sha256": "c9c7b450fa50341f9878185a520e4a987677297edb4233a5ca73bcf4e6705cb5",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Governance Layout and Runtime And Local State"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/docs/project-memory.md",
+      "sha256": "bfb1fcd74f945d4325ea676816cf4b5152482c2c92831aa57ca7e00c7d63eb1d",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Project Memory rules and historical knowledge boundary"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/check-agents-guidance.ps1",
+      "sha256": "153bfd0993f4f8d3f33c13dd6f95ef5a32fed6a05d855c0a3db1c67911b45254",
+      "commit": "83b592cbb790e9230538be6e9363814de1e9687b",
+      "locator": "Consumer ownership, shared entry-point and retired-guidance assertions"
+    }
+  ],
+  "verified_utc": "2026-10-08T21:58:44.0199187Z",
+  "verification": {
+    "method": "Source inspection, semantic scope review, Consumer Changed checks and the project guidance audit",
+    "summary": "Managed deployment is version 4.0.0 with 29 hash-owned assets. Consumer Changed passed all six applicable checks. Guidance audit passed for 20,806 tracked source paths and four rule entry points. Checkout commit values are anchors only; the snapshot hashes verify current uncommitted bytes. No product functional-test exemption or active-hook enforcement is inferred.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

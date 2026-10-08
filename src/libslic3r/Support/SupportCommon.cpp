@@ -656,7 +656,11 @@ static void append_narrow_contact_paths(
     const coord_t minimum_width = width_correction + SCALED_EPSILON;
     const coord_t maximum_width = std::max<coord_t>(
         minimum_width, line_width / 2);
-    for (const ExPolygon &region : narrow_remaining) {
+    // Wall/infill subtraction may leave nanometre-wide slivers or holes.
+    // They cannot carry positive flow and can produce an invalid Voronoi
+    // diagram. Opening at the minimum printable width only removes them;
+    // it never widens the contact footprint or restores occupied material.
+    for (const ExPolygon &region : opening_ex(narrow_remaining, 0.5f * float(minimum_width))) {
 
         ThickPolylines medial;
         region.medial_axis(
@@ -680,6 +684,92 @@ static void append_narrow_contact_paths(
             [](const ThickPolyline &path) { return !path.is_valid(); }), medial.end());
         if (!medial.empty())
             variable_width(medial, role, flow, dst);
+    }
+}
+
+void fill_support_interface_with_walls(
+    ExtrusionEntitiesPtr &dst,
+    const ExPolygons     &regions,
+    Fill                 *filler,
+    const FillParams     &fill_params,
+    ExtrusionRole         role,
+    const Flow           &flow,
+    int                   wall_count,
+    bool                  preserve_narrow_regions)
+{
+    if (regions.empty())
+        return;
+    const size_t first_entity = dst.size();
+    wall_count = std::max(0, wall_count);
+    const float spacing = float(flow.scaled_spacing());
+    const float half_width = 0.5f * float(flow.scaled_width());
+    ExPolygons fill_regions;
+    for (const ExPolygon &region : regions) {
+        int generated_walls = 0;
+        for (; generated_walls < wall_count; ++ generated_walls) {
+            ExPolygons centers = offset_ex(region, -half_width - generated_walls * spacing);
+            if (centers.empty())
+                break;
+            Polylines walls;
+            for (const Polygon &polygon : to_polygons(std::move(centers)))
+                walls.emplace_back(polygon.split_at_index(0));
+            // Support height modulation consumes paths, not model-wall loop
+            // entities. These paths remain closed and keep their support role.
+            extrusion_entities_append_paths(dst, std::move(walls), role,
+                flow.mm3_per_mm(), flow.width(), flow.height());
+        }
+        if (generated_walls == 0)
+            fill_regions.push_back(region);
+        else
+            // Fill::fill_surface applies another half-spacing inset. Keep its
+            // first centerline one normal spacing from the innermost wall;
+            // do not print the original outer concentric ring a second time.
+            expolygons_append(fill_regions, offset_ex(region,
+                -half_width - (generated_walls - 0.5f) * spacing));
+    }
+    const size_t first_fill = dst.size();
+    const ExPolygons narrow_fill_regions = preserve_narrow_regions ? fill_regions : ExPolygons{};
+    fill_expolygons_generate_paths(dst, std::move(fill_regions), filler, fill_params,
+        float(fill_params.density), role, flow);
+    if (first_fill > first_entity && dst.size() > first_fill) {
+        // Offset contours alone do not guarantee the normal wall/fill spacing
+        // at concave corners: rectilinear end connections may cut that corner.
+        // Clip only interior paths against the actual walls, not the footprint.
+        Polygons wall_keepout;
+        for (size_t idx = first_entity; idx < first_fill; ++idx)
+            dst[idx]->polygons_covered_by_spacing(wall_keepout, 1.f);
+        wall_keepout = offset(union_(wall_keepout), 0.5f * spacing - float(SCALED_EPSILON));
+        ExtrusionEntitiesPtr clipped;
+        for (size_t idx = first_fill; idx < dst.size(); ++idx) {
+            const auto *path = dynamic_cast<const ExtrusionPath*>(dst[idx]);
+            assert(path != nullptr);
+            for (Polyline &fragment : diff_pl(Polylines{path->polyline.to_polyline()}, wall_keepout))
+                if (fragment.is_valid())
+                    clipped.emplace_back(new ExtrusionPath(Polyline3(std::move(fragment)), *path));
+            delete dst[idx];
+        }
+        dst.resize(first_fill);
+        append(dst, std::move(clipped));
+    }
+    if (preserve_narrow_regions) {
+        // Preserve thin original contacts as well as an interior remainder
+        // that collapses after the requested walls. Coverage includes the new
+        // walls, so the fallback cannot duplicate their material.
+        const size_t first_narrow = dst.size();
+        append_narrow_contact_paths(dst, regions, first_entity, role, flow);
+        append_narrow_contact_paths(dst, narrow_fill_regions, first_entity, role, flow);
+        // variable_width() may return a closed ExtrusionLoop for a thin annulus.
+        // Support height modulation requires paths; retain every segment's flow.
+        ExtrusionEntitiesPtr narrow_paths;
+        for (size_t idx = first_narrow; idx < dst.size(); ++idx)
+            if (auto *loop = dynamic_cast<ExtrusionLoop*>(dst[idx])) {
+                for (ExtrusionPath &path : loop->paths)
+                    narrow_paths.emplace_back(new ExtrusionPath(std::move(path)));
+                delete loop;
+            } else
+                narrow_paths.emplace_back(dst[idx]);
+        dst.resize(first_narrow);
+        append(dst, std::move(narrow_paths));
     }
 }
 
@@ -1619,6 +1709,33 @@ static void modulate_extrusion_by_overlapping_layers(
         // The extrusions do not overlap with any other extrusion.
         return;
 
+    // Walls use the nominal flow, but narrow contact gap fill has variable
+    // widths. Modulating the whole vector with its first path's flow would
+    // widen those thin paths again. Process consecutive homogeneous runs while
+    // retaining their original order and every segment's extrusion parameters.
+    auto same_flow = [](const ExtrusionEntity *lhs, const ExtrusionEntity *rhs) {
+        const auto *a = dynamic_cast<const ExtrusionPath*>(lhs);
+        const auto *b = dynamic_cast<const ExtrusionPath*>(rhs);
+        assert(a != nullptr && b != nullptr);
+        return a->role() == b->role() && a->width == b->width &&
+               a->height == b->height && a->mm3_per_mm == b->mm3_per_mm;
+    };
+    if (std::any_of(extrusions_in_out.begin() + 1, extrusions_in_out.end(),
+                    [&](const ExtrusionEntity *entity) { return !same_flow(extrusions_in_out.front(), entity); })) {
+        ExtrusionEntitiesPtr source = std::move(extrusions_in_out);
+        extrusions_in_out.clear();
+        for (size_t first = 0; first < source.size();) {
+            size_t last = first + 1;
+            while (last < source.size() && same_flow(source[first], source[last]))
+                ++last;
+            ExtrusionEntitiesPtr run(source.begin() + first, source.begin() + last);
+            modulate_extrusion_by_overlapping_layers(run, this_layer, overlapping_layers);
+            append(extrusions_in_out, std::move(run));
+            first = last;
+        }
+        return;
+    }
+
     // Get the initial extrusion parameters.
     ExtrusionPath *extrusion_path_template = dynamic_cast<ExtrusionPath*>(extrusions_in_out.front());
     assert(extrusion_path_template != nullptr);
@@ -2186,13 +2303,20 @@ void generate_support_toolpaths(
             const bool bottom_interfaces = support_params.num_bottom_interface_layers > 0;
             const bool top_contact_matches_interface =
                 support_params.top_contact_fill_pattern == support_params.interface_fill_pattern &&
-                std::abs(support_params.top_contact_density - support_params.top_interface_density) < EPSILON;
+                std::abs(support_params.top_contact_density -
+                    (!interface_layer.empty() && interface_layer.layer->layer_type == SupporLayerType::BottomInterface ?
+                     support_params.bottom_interface_density : support_params.top_interface_density)) < EPSILON &&
+                support_params.top_contact_wall_count ==
+                    (!interface_layer.empty() && interface_layer.layer->layer_type == SupporLayerType::BottomInterface ?
+                     support_params.bottom_interface_wall_count : support_params.top_interface_wall_count);
             const bool bottom_contact_matches_interface =
                 support_params.bottom_contact_fill_pattern == support_params.interface_fill_pattern &&
-                std::abs(support_params.bottom_contact_density - support_params.bottom_interface_density) < EPSILON;
+                std::abs(support_params.bottom_contact_density - support_params.bottom_interface_density) < EPSILON &&
+                support_params.bottom_contact_wall_count == support_params.bottom_interface_wall_count;
             const bool top_bottom_contacts_match =
                 support_params.top_contact_fill_pattern == support_params.bottom_contact_fill_pattern &&
-                std::abs(support_params.top_contact_density - support_params.bottom_contact_density) < EPSILON;
+                std::abs(support_params.top_contact_density - support_params.bottom_contact_density) < EPSILON &&
+                support_params.top_contact_wall_count == support_params.bottom_contact_wall_count;
             if (!top_interfaces) {
                 // If no top interface layers were requested, we treat the contact layer exactly as a generic base layer.
                 // Don't merge the raft contact layer though.
@@ -2313,6 +2437,10 @@ void generate_support_toolpaths(
                         interface_layer_type == InterfaceLayerType::TopContact ? support_params.top_contact_pattern :
                         interface_layer_type == InterfaceLayerType::BottomContact ? support_params.bottom_contact_pattern :
                         support_params.interface_pattern;
+                    const InfillPattern fill_pattern = raft_contact ? support_params.raft_interface_fill_pattern :
+                        interface_layer_type == InterfaceLayerType::TopContact ? support_params.top_contact_fill_pattern :
+                        interface_layer_type == InterfaceLayerType::BottomContact ? support_params.bottom_contact_fill_pattern :
+                        support_params.interface_fill_pattern;
                     filler->angle = interface_as_base ?
                             // If zero interface layers are configured, use the same angle as for the base layers.
                             angles[support_layer_id % angles.size()] :
@@ -2346,7 +2474,7 @@ void generate_support_toolpaths(
                     // this, only raft contact layers fill the remainder and
                     // the model-side contact platform has a longitudinal gap.
                     const bool fill_concentric_contact_gaps =
-                        pattern == ipConcentric;
+                        fill_pattern == ipConcentric;
                     Polygons interface_fill_polygons = layer_ex.polygons_to_extrude();
                     if (organic_tree && !interface_as_base && !interface_fill_polygons.empty()) {
                         // Tree contact regions can be split by sub-nozzle
@@ -2366,33 +2494,22 @@ void generate_support_toolpaths(
                     }
                     const ExtrusionRole interface_role = interface_as_base ?
                         ExtrusionRole::erSupportMaterial : ExtrusionRole::erSupportMaterialInterface;
-                    const size_t first_contact_entity = layer_ex.extrusions.size();
                     ExPolygons fill_regions = union_safety_offset_ex(std::move(interface_fill_polygons));
-                    const ExPolygons narrow_contact_regions = fill_regions;
-                    fill_expolygons_generate_paths(
-                        // Destination
-                        layer_ex.extrusions,
-                        // Regions to fill
-                        std::move(fill_regions),
-                        // Filler and its parameters
-                        filler, float(density),
-                        // Extrusion parameters
-                        interface_role, interface_flow,
-                        fill_concentric_contact_gaps,
-                        organic_tree && !interface_as_base,
-                        organic_tree && !interface_as_base &&
-                            pattern == ipConcentric);
-                    const bool no_native_contact_paths =
-                        layer_ex.extrusions.size() == first_contact_entity;
-                    if (organic_tree && !interface_as_base &&
-                        (pattern == ipConcentric ||
-                         (pattern == ipRectilinear && no_native_contact_paths)))
-                        append_narrow_contact_paths(
-                            layer_ex.extrusions,
-                            narrow_contact_regions,
-                            first_contact_entity,
-                            interface_role,
-                            interface_flow);
+                    const int wall_count = raft_contact || interface_as_base ? 0 :
+                        interface_layer_type == InterfaceLayerType::TopContact ? support_params.top_contact_wall_count :
+                        interface_layer_type == InterfaceLayerType::BottomContact ? support_params.bottom_contact_wall_count :
+                        bottom_interface ? support_params.bottom_interface_wall_count : support_params.top_interface_wall_count;
+                    FillParams fill_params;
+                    fill_params.density = density;
+                    fill_params.dont_adjust = true;
+                    fill_params.fill_concentric_gaps = fill_concentric_contact_gaps;
+                    fill_params.preserve_short_paths = organic_tree && !interface_as_base;
+                    fill_params.connect_concentric_loops = organic_tree && !interface_as_base && fill_pattern == ipConcentric;
+                    if (fill_concentric_contact_gaps)
+                        fill_params.flow = interface_flow;
+                    fill_support_interface_with_walls(layer_ex.extrusions, fill_regions, filler, fill_params,
+                        interface_role, interface_flow, wall_count,
+                        organic_tree && !interface_as_base && (fill_pattern == ipConcentric || fill_pattern == ipRectilinear));
                 }
             };
             extrude_interface(top_contact_layer,    raft_layer ? InterfaceLayerType::RaftContact : top_interfaces ? InterfaceLayerType::TopContact : InterfaceLayerType::InterfaceAsBase);

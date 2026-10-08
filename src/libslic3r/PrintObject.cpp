@@ -120,6 +120,8 @@ using namespace std::literals;
 
 namespace Slic3r {
 
+static void enhance_surface_features(PrintObject &object, const std::function<void()> &throw_if_canceled);
+
 // Constructor is called from the main thread, therefore all Model / ModelObject / ModelIntance data are valid.
 PrintObject::PrintObject(Print* print, ModelObject* model_object, const Transform3d& trafo, PrintInstances&& instances) :
     PrintObjectBaseWithState(print, model_object),
@@ -807,6 +809,14 @@ void PrintObject::prepare_infill()
     this->bridge_over_infill();
     m_print->throw_if_canceled();
 
+    // Inject feature walls after shell/bridge expansion, but before combination.
+    // Running this in horizontal shell discovery lets later bridge processing
+    // fill their occupied area again. Combining first instead lets thick infill
+    // extruded on a later layer pass through enhanced walls on lower layers.
+    // Reserve the occupied area before computing the multi-layer intersection.
+    enhance_surface_features(*this, [this]() { m_print->throw_if_canceled(); });
+    m_print->throw_if_canceled();
+
     // combine fill surfaces to honor the "infill every N layers" option
     this->combine_infill();
     m_print->throw_if_canceled();
@@ -1274,6 +1284,9 @@ bool PrintObject::invalidate_state_by_config_options(
             || opt_key == "top_one_wall_type"
             || opt_key == "min_width_top_surface"
             || opt_key == "only_one_wall_first_layer"
+            || opt_key == "surface_feature_enhance_mode"
+            || opt_key == "top_feature_embed_layers"
+            || opt_key == "bottom_feature_extend_layers"
             || opt_key == "extra_perimeters_on_overhangs"
             || opt_key == "detect_overhang_wall"
             || opt_key == "initial_layer_line_width"
@@ -1369,6 +1382,10 @@ bool PrintObject::invalidate_state_by_config_options(
             || opt_key == "support_interface_top_layers"
             || opt_key == "support_interface_bottom_layers"
             || opt_key == "support_interface_pattern"
+            || opt_key == "support_top_contact_wall_count"
+            || opt_key == "support_bottom_contact_wall_count"
+            || opt_key == "support_top_interface_wall_count"
+            || opt_key == "support_bottom_interface_wall_count"
             || opt_key == "support_interface_loop_pattern"
             || opt_key == "support_interface_filament"
             || opt_key == "support_interface_not_for_body"
@@ -1650,6 +1667,15 @@ bool PrintObject::invalidate_step(PrintObjectStep step)
 		invalidated |= this->invalidate_steps({ posPrepareInfill, posInfill, posIroning, posContouring, posSimplifyPath, posSimplifyInfill });
         invalidated |= m_print->invalidate_steps({ psSkirtBrim });
     } else if (step == posPrepareInfill) {
+        // Surface enhancement injects walls while preparing fill surfaces. A
+        // prepare-only reslice must start with pristine walls and fill regions,
+        // not with the paths (and holes) left by the previous enhancement pass.
+        // invalidate_steps() below does not recursively propagate dependencies.
+        for (size_t region_id = 0; region_id < this->num_printing_regions(); ++region_id)
+            if (this->printing_region(region_id).config().surface_feature_enhance_mode) {
+                invalidated |= this->invalidate_step(posPerimeters);
+                break;
+            }
         invalidated |= this->invalidate_steps({ posInfill, posIroning, posContouring, posSimplifyPath, posSimplifyInfill });
     } else if (step == posInfill) {
         invalidated |= this->invalidate_steps({ posIroning, posContouring, posSimplifyInfill });
@@ -4234,6 +4260,314 @@ void PrintObject::clip_fill_surfaces()
 #endif
         }
         m_print->throw_if_canceled();
+    }
+}
+
+// Preserve collections, ordering and complete loops when clipping paths. Only
+// a genuinely cut loop becomes open paths; keeping whole loops lets the normal
+// seam and perimeter consumers handle the projected contour continuously.
+template<class Transform>
+static void transform_feature_entity(const ExtrusionEntity &entity, ExtrusionEntityCollection &destination,
+                                     const Transform &transform, bool preserve_nonplanar)
+{
+    if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection*>(&entity)) {
+        ExtrusionEntityCollection result;
+        result.no_sort = collection->no_sort;
+        if (!collection->can_reverse())
+            result.set_reverse();
+        for (const ExtrusionEntity *child : collection->entities)
+            transform_feature_entity(*child, result, transform, preserve_nonplanar);
+        if (!result.empty())
+            destination.append(std::move(result));
+    } else if (const auto *loop = dynamic_cast<const ExtrusionLoop*>(&entity)) {
+        ExtrusionPaths paths;
+        bool intact = true;
+        for (const ExtrusionPath &path : loop->paths)
+            intact = transform(path, paths) && intact;
+        if (paths.empty())
+            return;
+        if (intact) {
+            ExtrusionLoop result(*loop);
+            result.paths = std::move(paths);
+            destination.append(std::move(result));
+        } else
+            destination.append(std::move(paths));
+    } else if (const auto *multi = dynamic_cast<const ExtrusionMultiPath*>(&entity)) {
+        ExtrusionPaths paths;
+        bool intact = true;
+        for (const ExtrusionPath &path : multi->paths)
+            intact = transform(path, paths) && intact;
+        if (paths.empty())
+            return;
+        if (intact) {
+            ExtrusionMultiPath result(*multi);
+            result.paths = std::move(paths);
+            destination.append(std::move(result));
+        } else
+            destination.append(std::move(paths));
+    } else if (const auto *path = dynamic_cast<const ExtrusionPath*>(&entity)) {
+        // Non-planar paths carry extra Z data that cannot be discarded by XY
+        // clipping. Their unchanged clones are also protected during planning.
+        if (path->z_contoured) {
+            if (preserve_nonplanar)
+                destination.append(entity);
+        }
+        else {
+            ExtrusionPaths paths;
+            transform(*path, paths);
+            destination.append(std::move(paths));
+        }
+    } else if (preserve_nonplanar)
+        destination.append(entity);
+}
+
+// Reinforce the outline of an adjacent feature inside the sliced model. Keep
+// this separate from horizontal shell discovery: evstAll already discovers
+// solid shells elsewhere, but still needs feature paths (including gap fill).
+static void enhance_surface_features(PrintObject &object, const std::function<void()> &throw_if_canceled)
+{
+    if (object.print()->config().spiral_mode)
+        return;
+
+    const LayerPtrs &layers = object.layers();
+    for (size_t region_id = 0; region_id < object.num_printing_regions(); ++region_id) {
+        const PrintRegionConfig &config = object.printing_region(region_id).config();
+        const int top_layers = std::max(0, config.top_feature_embed_layers.value);
+        const int bottom_layers = std::max(0, config.bottom_feature_extend_layers.value);
+        if (!config.surface_feature_enhance_mode || (top_layers == 0 && bottom_layers == 0))
+            continue;
+
+        auto feature_area = [](const LayerRegion &region, bool top) {
+            ExPolygons feature;
+            // Typed slices retain the actual exterior classification even if
+            // the configured shell count converted a fill surface to internal.
+            for (const Surface &surface : region.slices.surfaces)
+                if ((top && surface.surface_type == stTop) ||
+                    (!top && (surface.surface_type == stBottom || surface.surface_type == stBottomBridge)))
+                    feature.emplace_back(surface.expolygon);
+            if (feature.empty())
+                return feature;
+            const coord_t width = std::max(region.flow(frPerimeter).scaled_width(),
+                                           region.flow(frExternalPerimeter).scaled_width());
+            return offset_ex(union_ex(feature), float(width * (std::max(1, region.region().config().wall_loops.value) + 1)));
+        };
+
+        // Snapshot before modifying any layer. Otherwise overlapping top/bottom
+        // windows would copy newly injected paths and exceed the chosen depth.
+        std::vector<ExtrusionEntityCollection> original_perimeters, original_thin_fills;
+        std::vector<ExPolygons> sliced_areas;
+        original_perimeters.reserve(layers.size());
+        original_thin_fills.reserve(layers.size());
+        sliced_areas.reserve(layers.size());
+        for (const Layer *layer : layers) {
+            throw_if_canceled();
+            const LayerRegion &region = *layer->regions()[region_id];
+            original_perimeters.emplace_back(region.perimeters);
+            original_thin_fills.emplace_back(region.thin_fills);
+            sliced_areas.emplace_back(union_ex(to_expolygons(region.slices.surfaces)));
+        }
+
+        struct Projection {
+            size_t source_idx;
+            ExPolygons area;
+        };
+        std::vector<std::vector<Projection>> projections(layers.size());
+        for (size_t trigger = 0; trigger < layers.size(); ++trigger) {
+            throw_if_canceled();
+            const LayerRegion &region = *layers[trigger]->regions()[region_id];
+            if (top_layers > 0 && trigger + 1 < layers.size()) {
+                const ExPolygons feature = feature_area(region, true);
+                if (!feature.empty())
+                    for (int step = 0; step < top_layers && size_t(step) <= trigger; ++step)
+                        projections[trigger - size_t(step)].push_back({trigger + 1, feature});
+            }
+            if (bottom_layers > 0 && trigger > 0) {
+                const ExPolygons feature = feature_area(region, false);
+                if (!feature.empty())
+                    for (int step = 0; step < bottom_layers && trigger + size_t(step) < layers.size(); ++step)
+                        projections[trigger + size_t(step)].push_back({trigger - 1, feature});
+            }
+        }
+
+        for (size_t target_idx = 0; target_idx < layers.size(); ++target_idx) {
+            auto &requests = projections[target_idx];
+            if (requests.empty())
+                continue;
+            throw_if_canceled();
+            LayerRegion &target = *layers[target_idx]->regions()[region_id];
+
+            // Resolve overlapping windows deterministically. The closest real
+            // feature wins; later requests cannot cut or duplicate its paths.
+            const auto distance = [target_idx](size_t source) {
+                return source > target_idx ? source - target_idx : target_idx - source;
+            };
+            std::stable_sort(requests.begin(), requests.end(), [&](const Projection &a, const Projection &b) {
+                return distance(a.source_idx) < distance(b.source_idx);
+            });
+            ExtrusionEntityCollection projected_perimeters, projected_thin_fills;
+            Polygons reserved_spacing;
+            const auto protect_nonplanar = [&](const ExtrusionPath &path) {
+                if (path.z_contoured)
+                    path.polygons_covered_by_spacing(reserved_spacing, float(SCALED_EPSILON));
+            };
+            for_each_extrusion_path(original_perimeters[target_idx], protect_nonplanar);
+            for_each_extrusion_path(original_thin_fills[target_idx], protect_nonplanar);
+            reserved_spacing = union_(reserved_spacing);
+
+            for (const Projection &request : requests) {
+                const ExPolygons allowed = intersection_ex(request.area, sliced_areas[target_idx], ApplySafetyOffset::Yes);
+                if (allowed.empty())
+                    continue;
+                // Cache per width for Arachne. Only earlier projected features
+                // (and protected non-planar paths) are blockers here, never the
+                // old target wall beads: coverage does not imply alignment.
+                std::map<float, Polygons> centerline_domains;
+                const float height = float(layers[target_idx]->height);
+                const auto domain_for_width = [&](float width) -> const Polygons& {
+                    auto domain = centerline_domains.find(width);
+                    if (domain == centerline_domains.end()) {
+                        const Flow flow(width, height, 0.f);
+                        Polygons area = to_polygons(offset_ex(allowed, -float(scale_(width * 0.5f))));
+                        if (!reserved_spacing.empty())
+                            area = diff(area, offset(reserved_spacing, 0.5f * float(flow.scaled_spacing())));
+                        domain = centerline_domains.emplace(width, std::move(area)).first;
+                    }
+                    return domain->second;
+                };
+                const auto project_path = [&](const ExtrusionPath &source, ExtrusionPaths &paths) {
+                    throw_if_canceled();
+                    if (source.z_contoured || source.is_force_no_extrusion() ||
+                        (!is_perimeter(source.role()) && source.role() != erGapFill))
+                        return false;
+                    const float width_correction = height * float(1. - 0.25 * PI);
+                    if (source.width <= width_correction + float(EPSILON))
+                        return false;
+                    const Polyline line = source.polyline.to_polyline();
+                    const Polygons &nominal_domain = domain_for_width(source.width);
+                    const bool nominal_intact = diff_pl(Polylines{line}, nominal_domain).empty();
+                    // Elephant-foot compensation or a locally narrower target
+                    // can move the boundary without removing the feature's
+                    // centerline. Reduce bead width before discarding its path;
+                    // never relax the destination shape or print vanishing flow.
+                    const float minimum_width = std::max(0.5f * source.width, width_correction + float(EPSILON));
+                    const Polygons &minimum_domain = nominal_intact ? nominal_domain : domain_for_width(minimum_width);
+                    const bool intact = nominal_intact || diff_pl(Polylines{line}, minimum_domain).empty();
+                    const Polylines fragments = intact ? Polylines{line} : intersection_pl(Polylines{line}, minimum_domain);
+                    for (const Polyline &fragment : fragments) {
+                        if (!fragment.is_valid())
+                            continue;
+                        float width = source.width;
+                        if (!nominal_intact && !diff_pl(Polylines{fragment}, nominal_domain).empty()) {
+                            float lo = minimum_width, hi = source.width;
+                            // Find the widest full bead that fits this entire
+                            // fragment. The existing extrusion-path machinery
+                            // supports the resulting variable widths and flow.
+                            while (hi - lo > 0.0005f) {
+                                throw_if_canceled();
+                                const float mid = 0.5f * (lo + hi);
+                                if (diff_pl(Polylines{fragment}, domain_for_width(mid)).empty())
+                                    lo = mid;
+                                else
+                                    hi = mid;
+                            }
+                            width = lo;
+                        }
+                        const Flow flow(width, height, 0.f);
+                        ExtrusionPath copy(Polyline3(fragment), source);
+                        copy.width = flow.width();
+                        copy.height = flow.height();
+                        copy.mm3_per_mm = flow.mm3_per_mm();
+                        if (is_bridge(copy.role()))
+                            copy.set_extrusion_role(erPerimeter);
+                        paths.emplace_back(std::move(copy));
+                    }
+                    return intact;
+                };
+                ExtrusionEntityCollection new_perimeters, new_thin_fills;
+                for (const ExtrusionEntity *entity : original_perimeters[request.source_idx].entities)
+                    transform_feature_entity(*entity, new_perimeters, project_path, false);
+                for (const ExtrusionEntity *entity : original_thin_fills[request.source_idx].entities)
+                    transform_feature_entity(*entity, new_thin_fills, project_path, false);
+                new_perimeters.polygons_covered_by_spacing(reserved_spacing, float(SCALED_EPSILON));
+                new_thin_fills.polygons_covered_by_spacing(reserved_spacing, float(SCALED_EPSILON));
+                reserved_spacing = union_(reserved_spacing);
+                projected_perimeters.append(std::move(new_perimeters.entities));
+                projected_thin_fills.append(std::move(new_thin_fills.entities));
+            }
+
+            if (projected_perimeters.empty() && projected_thin_fills.empty())
+                continue;
+            Polygons projected_spacing, projected_covered;
+            projected_perimeters.polygons_covered_by_spacing(projected_spacing, float(SCALED_EPSILON));
+            projected_thin_fills.polygons_covered_by_spacing(projected_spacing, float(SCALED_EPSILON));
+            projected_perimeters.polygons_covered_by_width(projected_covered, float(SCALED_EPSILON));
+            projected_thin_fills.polygons_covered_by_width(projected_covered, float(SCALED_EPSILON));
+            projected_spacing = union_(projected_spacing);
+            projected_covered = union_(projected_covered);
+
+            // Replace conflicting original wall portions, using the normal
+            // bead spacing on both sides rather than allowing double extrusion.
+            // Paths from the same source retain their legitimate mutual overlap.
+            std::map<coord_t, Polygons> wall_keepouts;
+            const auto trim_original = [&](const ExtrusionPath &source, ExtrusionPaths &paths) {
+                throw_if_canceled();
+                if (source.z_contoured) {
+                    paths.push_back(source);
+                    return true;
+                }
+                const Flow flow = is_bridge(source.role()) ? Flow::bridging_flow(source.width, 0.f) :
+                    Flow(source.width, source.height, 0.f);
+                const coord_t spacing = flow.scaled_spacing();
+                auto keepout = wall_keepouts.find(spacing);
+                if (keepout == wall_keepouts.end())
+                    keepout = wall_keepouts.emplace(spacing,
+                        offset(projected_spacing, 0.5f * float(spacing))).first;
+                const Polyline line = source.polyline.to_polyline();
+                const bool intact = intersection_pl(Polylines{line}, keepout->second).empty();
+                const Polylines fragments = intact ? Polylines{line} : diff_pl(Polylines{line}, keepout->second);
+                for (const Polyline &fragment : fragments)
+                    if (fragment.is_valid())
+                        paths.emplace_back(Polyline3(fragment), source);
+                return intact;
+            };
+            Polygons old_covered;
+            original_perimeters[target_idx].polygons_covered_by_width(old_covered, float(SCALED_EPSILON));
+            original_thin_fills[target_idx].polygons_covered_by_width(old_covered, float(SCALED_EPSILON));
+            ExtrusionEntityCollection perimeters, thin_fills;
+            perimeters.no_sort = target.perimeters.no_sort;
+            thin_fills.no_sort = target.thin_fills.no_sort;
+            for (const ExtrusionEntity *entity : original_perimeters[target_idx].entities)
+                transform_feature_entity(*entity, perimeters, trim_original, true);
+            for (const ExtrusionEntity *entity : original_thin_fills[target_idx].entities)
+                transform_feature_entity(*entity, thin_fills, trim_original, true);
+            perimeters.append(std::move(projected_perimeters.entities));
+            thin_fills.append(std::move(projected_thin_fills.entities));
+            target.perimeters.swap(perimeters);
+            target.thin_fills.swap(thin_fills);
+
+            // Refill freed wall bands, not the entire model. Keep exterior
+            // surface types and metadata; former internal walls remain solid.
+            Polygons new_covered;
+            target.perimeters.polygons_covered_by_width(new_covered, float(SCALED_EPSILON));
+            target.thin_fills.polygons_covered_by_width(new_covered, float(SCALED_EPSILON));
+            const SurfaceCollection old_fill = std::move(target.fill_surfaces);
+            target.fill_surfaces.clear();
+            for (const Surface &surface : old_fill.surfaces)
+                target.fill_surfaces.append(diff_ex(ExPolygons{surface.expolygon}, projected_covered, ApplySafetyOffset::Yes), surface);
+            const ExPolygons freed = intersection_ex(diff_ex(old_covered, union_(new_covered)), sliced_areas[target_idx]);
+            const ExPolygons refill_area = diff_ex(freed, to_polygons(old_fill.surfaces));
+            for (const Surface &surface : target.slices.surfaces) {
+                Surface refill(surface);
+                if (refill.surface_type == stInternal)
+                    refill.surface_type = stInternalSolid;
+                target.fill_surfaces.append(intersection_ex(refill_area, ExPolygons{surface.expolygon}), refill);
+            }
+            // Gap-fill generation uses these cached domains too. Leaving the
+            // original perimeter-era domains would hide the freed wall bands
+            // from it, even though the new fill surfaces include those bands.
+            target.fill_expolygons = diff_ex(union_ex(target.fill_expolygons, freed), projected_covered);
+            target.fill_no_overlap_expolygons = diff_ex(union_ex(target.fill_no_overlap_expolygons, freed), projected_covered);
+        }
     }
 }
 

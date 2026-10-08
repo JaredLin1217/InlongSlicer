@@ -1,0 +1,41 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -Command '& { $r = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 1 }; $m = Join-Path $r \".agents/managed.json\"; $p = \"scripts/project-hooks.ps1\"; if (Test-Path -LiteralPath $m) { $f = @((Get-Content -Raw -LiteralPath $m | ConvertFrom-Json).files | Where-Object source -EQ $p); if ($f.Count -ne 1) { exit 1 }; $p = $f[0].path }; & (Join-Path $r $p) -Root $r }'",
+            "commandWindows": "pwsh -NoProfile -Command \"& { $r = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 1 }; $m = Join-Path $r '.agents/managed.json'; $p = 'scripts/project-hooks.ps1'; if (Test-Path -LiteralPath $m) { $f = @((Get-Content -Raw -LiteralPath $m | ConvertFrom-Json).files | Where-Object source -EQ $p); if ($f.Count -ne 1) { exit 1 }; $p = $f[0].path }; & (Join-Path $r $p) -Root $r }\"",
+            "timeout": 20,
+            "additionalContextLimit": 1800
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -Command '& { $r = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 1 }; $m = Join-Path $r \".agents/managed.json\"; $p = \"scripts/project-hooks.ps1\"; if (Test-Path -LiteralPath $m) { $f = @((Get-Content -Raw -LiteralPath $m | ConvertFrom-Json).files | Where-Object source -EQ $p); if ($f.Count -ne 1) { exit 1 }; $p = $f[0].path }; & (Join-Path $r $p) -Root $r }'",
+            "commandWindows": "pwsh -NoProfile -Command \"& { $r = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 1 }; $m = Join-Path $r '.agents/managed.json'; $p = 'scripts/project-hooks.ps1'; if (Test-Path -LiteralPath $m) { $f = @((Get-Content -Raw -LiteralPath $m | ConvertFrom-Json).files | Where-Object source -EQ $p); if ($f.Count -ne 1) { exit 1 }; $p = $f[0].path }; & (Join-Path $r $p) -Root $r }\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -Command '& { $r = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 1 }; $m = Join-Path $r \".agents/managed.json\"; $p = \"scripts/project-hooks.ps1\"; if (Test-Path -LiteralPath $m) { $f = @((Get-Content -Raw -LiteralPath $m | ConvertFrom-Json).files | Where-Object source -EQ $p); if ($f.Count -ne 1) { exit 1 }; $p = $f[0].path }; & (Join-Path $r $p) -Root $r }'",
+            "commandWindows": "pwsh -NoProfile -Command \"& { $r = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 1 }; $m = Join-Path $r '.agents/managed.json'; $p = 'scripts/project-hooks.ps1'; if (Test-Path -LiteralPath $m) { $f = @((Get-Content -Raw -LiteralPath $m | ConvertFrom-Json).files | Where-Object source -EQ $p); if ($f.Count -ne 1) { exit 1 }; $p = $f[0].path }; & (Join-Path $r $p) -Root $r }\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  }
+}

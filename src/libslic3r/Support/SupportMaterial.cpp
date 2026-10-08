@@ -2915,7 +2915,13 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::raft_and_intermediate_supp
                 intermediate_layers.push_back(&layer_new);
             }
             // Emit all intermediate support layers synchronized with object layers up to extr2z.
-            for (; idx_layer_object < object.layers().size() && object.layers()[idx_layer_object]->print_z < extr2z + EPSILON; ++ idx_layer_object) {
+            const bool unassigned_top_contact = !m_slicing_params.zero_gap_interface_top &&
+                extr2->layer_type == SupporLayerType::TopContact && extr2->height == 0.;
+            // A deferred top contact owns its print plane. An intermediate
+            // layer at that same Z would leave it with zero extrusion height
+            // when only independent top-contact height is enabled.
+            const coordf_t intermediate_end_z = extr2z + (unassigned_top_contact ? -EPSILON : EPSILON);
+            for (; idx_layer_object < object.layers().size() && object.layers()[idx_layer_object]->print_z < intermediate_end_z; ++ idx_layer_object) {
                 SupportGeneratorLayer &layer_new = layer_storage.allocate(SupporLayerType::Intermediate);
                 layer_new.print_z  = object.layers()[idx_layer_object]->print_z;
                 layer_new.height   = object.layers()[idx_layer_object]->height;
@@ -2923,7 +2929,7 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::raft_and_intermediate_supp
                 assert(intermediate_layers.empty() || intermediate_layers.back()->print_z < layer_new.print_z + EPSILON);
                 intermediate_layers.push_back(&layer_new);
             }
-            if (!m_slicing_params.zero_gap_interface_top && extr2->layer_type == SupporLayerType::TopContact && extr2->height == 0.) {
+            if (unassigned_top_contact) {
                 const coordf_t top_contact_bottom_z = intermediate_layers.empty() ? extr1z : std::max(extr1z, intermediate_layers.back()->print_z);
                 extr2->height = extr2z - top_contact_bottom_z;
                 extr2->bottom_z = top_contact_bottom_z;

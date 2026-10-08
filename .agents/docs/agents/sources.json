@@ -3,11 +3,11 @@
   "sources": [
     {
       "id": "model",
-      "url": "https://developers.openai.com/api/docs/guides/latest-model",
-      "checked": "2026-10-07",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "checked": "2026-10-08",
       "refresh_interval_days": 30,
-      "next_review_due": "2026-11-06",
-      "boundary": "GPT-6 prompting guidance; API parameters are not Codex settings.",
+      "next_review_due": "2026-11-07",
+      "boundary": "GPT-6.1 Sol is the review model. Responses API for tool calls; API reasoning controls are separate from Codex host settings.",
       "drift_risk": "Model guidance and hosted controls can change.",
       "topics": [
         "model",
@@ -17,9 +17,9 @@
     {
       "id": "configuration",
       "url": "https://learn.chatgpt.com/docs/config-file/config-reference",
-      "checked": "2026-10-07",
+      "checked": "2026-10-08",
       "refresh_interval_days": 30,
-      "next_review_due": "2026-11-06",
+      "next_review_due": "2026-11-07",
       "boundary": "Project settings only; preserve user permissions and global settings.",
       "drift_risk": "CLI and desktop versions may expose different keys.",
       "topics": [
@@ -29,9 +29,9 @@
     {
       "id": "skills",
       "url": "https://learn.chatgpt.com/docs/build-skills",
-      "checked": "2026-09-05",
+      "checked": "2026-10-08",
       "refresh_interval_days": 90,
-      "next_review_due": "2026-12-04",
+      "next_review_due": "2027-01-06",
       "boundary": "Use native progressive disclosure; skills do not add tool authority.",
       "drift_risk": "Skill metadata limits and discovery may change.",
       "topics": [
@@ -41,9 +41,9 @@
     {
       "id": "memory",
       "url": "https://learn.chatgpt.com/docs/customization/memories",
-      "checked": "2026-09-05",
+      "checked": "2026-10-08",
       "refresh_interval_days": 90,
-      "next_review_due": "2026-12-04",
+      "next_review_due": "2027-01-06",
       "boundary": "Native memory is not the sole durable store or a guarantee of recall.",
       "drift_risk": "Generation availability and scope may change.",
       "topics": [
@@ -53,14 +53,52 @@
     {
       "id": "subagents",
       "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
-      "checked": "2026-09-05",
+      "checked": "2026-10-08",
       "refresh_interval_days": 90,
-      "next_review_due": "2026-12-04",
+      "next_review_due": "2027-01-06",
       "boundary": "Delegate only with current authorization and available tools; count worker usage.",
       "drift_risk": "Available tools and host concurrency differ.",
       "topics": [
         "subagents"
       ]
+    },
+    {
+      "checked": "2026-10-08",
+      "boundary": "Family guidance is a starting point; Astra observations are not measured Sol results.",
+      "refresh_interval_days": 30,
+      "drift_risk": "Family/model-specific prompting guidance may change.",
+      "topics": [
+        "prompting",
+        "model"
+      ],
+      "url": "https://developers.openai.com/api/docs/guides/latest-model",
+      "id": "prompting",
+      "next_review_due": "2026-11-07"
+    },
+    {
+      "checked": "2026-10-08",
+      "boundary": "Keep mandatory project conventions in versioned rules; respect native discovery and instruction priority.",
+      "refresh_interval_days": 90,
+      "drift_risk": "Native loading behavior depends on host version.",
+      "topics": [
+        "rules"
+      ],
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
+      "id": "agents-md",
+      "next_review_due": "2027-01-06"
+    },
+    {
+      "checked": "2026-10-08",
+      "boundary": "JSON event interface and native trust review; advisory templates do not parse full transcripts or enforce isolation.",
+      "refresh_interval_days": 30,
+      "drift_risk": "Hooks schema and local/cloud support can change.",
+      "topics": [
+        "hooks",
+        "recovery"
+      ],
+      "url": "https://learn.chatgpt.com/docs/hooks",
+      "id": "hooks",
+      "next_review_due": "2026-11-07"
     }
   ]
 }

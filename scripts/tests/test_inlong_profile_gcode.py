@@ -66,6 +66,26 @@ class TestInlongProfileGcode(unittest.TestCase):
                 with self.subTest(brand=brand, profile=name):
                     self.assertEqual(resolve(profiles, name)['name'], name)
 
+    def test_all_processes_inherit_approved_external_bridge_defaults(self):
+        for brand, (_, profiles) in self.vendors.items():
+            processes = {name: data for name, data in profiles.items() if data['type'] == 'process'}
+            self.assertTrue(processes)
+            for name in processes:
+                with self.subTest(brand=brand, process=name):
+                    process = resolve(profiles, name)
+                    self.assertEqual(process['bridge_flow'], '1.05')
+                    self.assertEqual(process['bridge_density'], '105%')
+
+    def test_external_bridge_defaults_preserve_internal_bridge_settings(self):
+        for brand, (_, profiles) in self.vendors.items():
+            for name, data in profiles.items():
+                if data['type'] != 'process':
+                    continue
+                with self.subTest(brand=brand, process=name):
+                    process = resolve(profiles, name)
+                    self.assertEqual(process['internal_bridge_flow'], '0.99')
+                    self.assertEqual(process.get('internal_bridge_density', '100%'), '100%')
+
     def test_printer_defaults_and_compatibility_references_exist(self):
         for brand, name, printer in self.printers():
             profiles = self.vendors[brand][1]

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "id", "run_id", "task_id", "creator", "purpose", "category", "path", "created_utc", "completed_utc", "expires_utc", "status", "sha256", "items", "dependencies", "retain_reasons", "deleted_utc"],
+  "properties": {
+    "schema_version": {"const": "agents-artifact/v4"},
+    "id": {"type": "string", "pattern": "^artifact-[a-f0-9]{32}$"},
+    "run_id": {"type": "string", "pattern": "^run-[a-f0-9]{32}$"},
+    "task_id": {"type": "string"}, "creator": {"type": "string", "minLength": 1}, "purpose": {"type": "string", "minLength": 1},
+    "category": {"enum": ["scratch", "package", "validation", "task", "backup"]},
+    "path": {"type": "string", "pattern": "^\\.agents/runtime/runs/run-[a-f0-9]{32}/.+"},
+    "created_utc": {"type": "string", "format": "date-time"},
+    "completed_utc": {"type": ["string", "null"], "format": "date-time"},
+    "expires_utc": {"type": ["string", "null"], "format": "date-time"},
+    "deleted_utc": {"type": ["string", "null"], "format": "date-time"},
+    "status": {"enum": ["active", "completed", "failed", "interrupted", "deleted"]},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "items": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path", "kind", "sha256"], "properties": {
+      "path": {"type": "string"}, "kind": {"enum": ["file", "directory"]}, "sha256": {"type": "string", "pattern": "^([a-f0-9]{64})?$"}
+    }}},
+    "dependencies": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^artifact-[a-f0-9]{32}$"}},
+    "retain_reasons": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  }
+}

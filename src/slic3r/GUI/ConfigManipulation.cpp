@@ -1033,6 +1033,13 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, in
         "support_top_contact_pattern", "support_bottom_contact_pattern", "support_bottom_contact_spacing" })
         toggle_field(el, have_support_material && have_support_interface);
 
+    for (auto el : {"support_top_contact_wall_count", "support_top_interface_wall_count"})
+        toggle_field(el, have_support_material && config->opt_int("support_interface_top_layers") > 0);
+    const int bottom_interface_layers = config->opt_int("support_interface_bottom_layers") < 0 ?
+        config->opt_int("support_interface_top_layers") : config->opt_int("support_interface_bottom_layers");
+    for (auto el : {"support_bottom_contact_wall_count", "support_bottom_interface_wall_count"})
+        toggle_field(el, have_support_material && bottom_interface_layers > 0);
+
     bool can_ironing_support = have_raft || (have_support_material && config->opt_int("support_interface_top_layers") > 0);
     toggle_field("support_ironing", can_ironing_support);
     bool has_support_ironing = can_ironing_support && config->opt_bool("support_ironing");

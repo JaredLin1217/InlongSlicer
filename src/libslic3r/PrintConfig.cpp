@@ -7381,6 +7381,46 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(-1));
 
+    def = this->add("support_top_contact_wall_count", coInt);
+    def->label = L("Top contact wall loops");
+    def->category = L("Support");
+    def->tooltip = L("Number of perimeter walls on the support contact layer directly below the object. "
+                     "Walls grow inward without changing the support footprint or the XY/Z gaps. "
+                     "Zero disables these walls; the selected contact pattern still fills the interior.");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(1));
+
+    def = this->add("support_bottom_contact_wall_count", coInt);
+    def->label = L("Bottom contact wall loops");
+    def->category = L("Support");
+    def->tooltip = L("Number of perimeter walls on the support contact layer directly above the object. "
+                     "Walls grow inward without changing the support footprint or the XY/Z gaps. "
+                     "Zero disables these walls; the selected contact pattern still fills the interior.");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(1));
+
+    def = this->add("support_top_interface_wall_count", coInt);
+    def->label = L("Top interface wall loops");
+    def->category = L("Support");
+    def->tooltip = L("Number of perimeter walls on the support interface layers below the top contact layer. "
+                     "Walls grow inward without changing the support footprint or the XY/Z gaps. "
+                     "Zero disables these walls; the selected interface pattern still fills the interior.");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(1));
+
+    def = this->add("support_bottom_interface_wall_count", coInt);
+    def->label = L("Bottom interface wall loops");
+    def->category = L("Support");
+    def->tooltip = L("Number of perimeter walls on the support interface layers above the bottom contact layer. "
+                     "Walls grow inward without changing the support footprint or the XY/Z gaps. "
+                     "Zero disables these walls; the selected interface pattern still fills the interior.");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(1));
+
     def = this->add("support_interface_speed", coFloats);
     def->label = L("Support interface");
     def->category = L("Speed");

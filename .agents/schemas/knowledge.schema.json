@@ -1,94 +1,370 @@
 {
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "id",
-    "type",
-    "conclusion",
-    "scope",
-    "sources",
-    "verified_utc",
-    "verification",
-    "status",
-    "supersedes",
-    "sensitive"
-  ],
-  "properties": {
-    "schema_version": {
-      "const": "agents-knowledge/v3"
-    },
-    "id": {
-      "type": "string",
-      "pattern": "^[A-Za-z0-9_-]+$"
-    },
-    "type": {
-      "enum": [
-        "fact",
-        "decision",
-        "lesson"
-      ]
-    },
-    "conclusion": {
-      "type": "string",
-      "minLength": 1
-    },
-    "scope": {
-      "type": "string",
-      "minLength": 1
-    },
-    "sources": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "path",
-          "sha256",
-          "commit"
-        ],
-        "properties": {
-          "path": {
-            "type": "string",
-            "minLength": 1
-          },
-          "sha256": {
-            "type": "string",
-            "pattern": "^[a-f0-9]{64}$"
-          },
-          "commit": {
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "id",
+        "type",
+        "conclusion",
+        "scope",
+        "sources",
+        "verified_utc",
+        "verification",
+        "status",
+        "supersedes",
+        "sensitive"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "agents-knowledge/v3"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "type": {
+          "enum": [
+            "fact",
+            "decision",
+            "lesson"
+          ]
+        },
+        "conclusion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256",
+              "commit"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "commit": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "verified_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verification": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "active",
+            "conflicted",
+            "superseded"
+          ]
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
             "type": "string",
             "minLength": 1
           }
+        },
+        "sensitive": {
+          "const": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema"
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "id",
+        "key",
+        "type",
+        "conclusion",
+        "scope",
+        "modules",
+        "tags",
+        "files",
+        "sources",
+        "verified_utc",
+        "verification",
+        "freshness",
+        "status",
+        "supersedes",
+        "retracts",
+        "sensitive",
+        "reusable"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "agents-knowledge/v4"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "fact",
+            "decision",
+            "lesson"
+          ]
+        },
+        "conclusion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "modules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "files": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "path",
+                  "sha256",
+                  "commit",
+                  "locator"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "file_snapshot"
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "commit": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "url",
+                  "snapshot_path",
+                  "sha256",
+                  "content_sha256",
+                  "locator",
+                  "checked_utc",
+                  "review_after_utc"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "official_document"
+                  },
+                  "url": {
+                    "type": "string",
+                    "pattern": "^https://(developers\\.openai\\.com|platform\\.openai\\.com|learn\\.chatgpt\\.com)/"
+                  },
+                  "snapshot_path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "content_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "checked_utc": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "review_after_utc": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "path",
+                  "sha256",
+                  "locator",
+                  "explicit"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "user_decision"
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "explicit": {
+                    "const": true
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "verified_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "summary",
+            "result",
+            "reviewed_by"
+          ],
+          "properties": {
+            "method": {
+              "type": "string",
+              "minLength": 1
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "result": {
+              "const": "passed"
+            },
+            "reviewed_by": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "freshness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review_after_utc"
+          ],
+          "properties": {
+            "review_after_utc": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "active",
+            "conflicted",
+            "superseded",
+            "retracted"
+          ]
+        },
+        "supersedes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        },
+        "retracts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        },
+        "sensitive": {
+          "const": false
+        },
+        "reusable": {
+          "const": true
         }
       }
-    },
-    "verified_utc": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "verification": {
-      "type": "string",
-      "minLength": 1
-    },
-    "status": {
-      "enum": [
-        "active",
-        "conflicted",
-        "superseded"
-      ]
-    },
-    "supersedes": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "sensitive": {
-      "const": false
     }
-  },
+  ],
   "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

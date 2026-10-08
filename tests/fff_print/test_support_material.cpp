@@ -15,10 +15,12 @@
 #include "libslic3r/Thread.hpp"
 
 #include <cmath>
+#include <functional>
 #include <limits>
 #include <map>
 #include <mutex>
 #include <set>
+#include <sstream>
 #include <vector>
 
 #include "test_helpers.hpp" // get access to init_print, etc
@@ -2352,20 +2354,29 @@ TEST_CASE("A bottom interface is produced for every support style on a forced mo
 
 TEST_CASE("Bottom interface spacing controls bottom interface density for every support style", "[SupportMaterial]")
 {
+    const int wall_count = GENERATE(0, 1);
     auto [type, style] = GENERATE(table<const char *, const char *>({
         { "normal(auto)", "default" },     { "tree(auto)", "tree_slim" },
         { "tree(auto)",   "tree_strong" }, { "tree(auto)", "tree_hybrid" },
         { "tree(auto)",   "organic" },
     }));
-    CAPTURE(style);
+    CAPTURE(style, wall_count);
     const TriangleMesh model = support_capital();
-    auto len = [&model](const char *support_type, const char *support_style, double spacing) {
+    auto len = [&model, wall_count](const char *support_type, const char *support_style, double spacing) {
         return support_interface_extrusion_length(slice({ model }, {
             { "enable_support", 1 }, { "layer_height", 0.2 }, { "support_on_build_plate_only", 0 },
             { "support_type", support_type }, { "support_style", support_style }, { "support_interface_top_layers", 0 },
-            { "support_interface_bottom_layers", 6 }, { "support_bottom_interface_spacing", spacing } }));
+            { "support_interface_bottom_layers", 6 }, { "support_bottom_interface_spacing", spacing },
+            { "support_top_contact_wall_count", wall_count }, { "support_bottom_contact_wall_count", wall_count },
+            { "support_top_interface_wall_count", wall_count }, { "support_bottom_interface_wall_count", wall_count } }));
     };
-    REQUIRE(len(type, style, 0.0) > len(type, style, 4.0) * 1.5);
+    const double dense_length = len(type, style, 0.0);
+    const double sparse_length = len(type, style, 4.0);
+    CAPTURE(dense_length, sparse_length);
+    // Without fixed-length walls, retain the interior density ratio check.
+    // With walls, their spacing-independent length dilutes this ratio, but
+    // the denser interior must still produce more extrusion in every style.
+    REQUIRE(dense_length > sparse_length * (wall_count == 0 ? 1.5 : 1.0));
 }
 
 // Interface and base flows are identical in width and rate unless a separate support-interface
@@ -2382,4 +2393,333 @@ TEST_CASE("Bottom-only support interface keeps the dense interface density", "[S
     });
     SupportParameters sp(*print.objects().front());
     REQUIRE(sp.bottom_interface_density > sp.support_density);
+}
+
+TEST_CASE("Contact and interface wall settings default to one and reach the support planner",
+          "[SupportMaterial][ContactWalls]")
+{
+    auto config = DynamicPrintConfig::full_print_config();
+    for (const char *key : {"support_top_contact_wall_count", "support_bottom_contact_wall_count",
+                            "support_top_interface_wall_count", "support_bottom_interface_wall_count"}) {
+        CAPTURE(key);
+        REQUIRE(config.opt_int(key) == 1);
+    }
+    config.set_deserialize_strict({{"support_top_contact_wall_count", 0}, {"support_bottom_contact_wall_count", 2},
+                                   {"support_top_interface_wall_count", 3}, {"support_bottom_interface_wall_count", 4}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    const SupportParameters params(*print.objects().front());
+    CHECK(params.top_contact_wall_count == 0);
+    CHECK(params.bottom_contact_wall_count == 2);
+    CHECK(params.top_interface_wall_count == 3);
+    CHECK(params.bottom_interface_wall_count == 4);
+    const std::string output = gcode(print);
+    for (const auto &[key, value] : std::vector<std::pair<std::string, int>>{
+             {"support_top_contact_wall_count", 0}, {"support_bottom_contact_wall_count", 2},
+             {"support_top_interface_wall_count", 3}, {"support_bottom_interface_wall_count", 4}})
+        CHECK_THAT(output, Catch::Matchers::ContainsSubstring("; " + key + " = " + std::to_string(value)));
+}
+
+TEST_CASE("Support interface walls grow inward and reserve their interior for every fill pattern",
+          "[SupportMaterial][ContactWalls][Regression]")
+{
+    const int wall_count = GENERATE(0, 1, 3);
+    const InfillPattern pattern = GENERATE(ipRectilinear, ipConcentric, ipGrid);
+    const double density = GENERATE(0.5, 1.0);
+    CAPTURE(wall_count, pattern, density);
+    ExPolygon region = rectangular_area(0., 0., 30., 20.);
+    Polygon hole = rectangular_area(11., 7., 19., 13.).contour;
+    hole.make_clockwise();
+    region.holes.emplace_back(std::move(hole));
+    const Flow flow(0.6f, 0.3f, 0.6f);
+    auto filler = std::unique_ptr<Fill>(Fill::new_from_type(pattern));
+    filler->set_bounding_box(get_extents(region));
+    filler->spacing = flow.spacing();
+    filler->angle = 0.;
+    FillParams fill_params;
+    fill_params.density = density;
+    fill_params.dont_adjust = true;
+    fill_params.fill_concentric_gaps = pattern == ipConcentric;
+    fill_params.preserve_short_paths = true;
+    fill_params.connect_concentric_loops = pattern == ipConcentric;
+    fill_params.flow = flow;
+    ExtrusionEntityCollection paths;
+    fill_support_interface_with_walls(paths.entities, ExPolygons{region}, filler.get(), fill_params,
+        erSupportMaterialInterface, flow, wall_count, pattern == ipConcentric);
+    REQUIRE(paths.entities.size() > size_t(2 * wall_count));
+    Polygons wall_keepout;
+    for (int wall = 0; wall < wall_count; ++wall)
+        for (int contour = 0; contour < 2; ++contour) {
+            const auto *path = dynamic_cast<const ExtrusionPath*>(paths.entities[size_t(2 * wall + contour)]);
+            REQUIRE(path != nullptr);
+            CHECK(path->polyline.first_point() == path->polyline.last_point());
+            const double inset = 0.5 * flow.width() + wall * flow.spacing();
+            const BoundingBox bbox = get_extents(path->polyline.to_polyline());
+            CHECK_THAT(unscale<double>(bbox.min.x()), Catch::Matchers::WithinAbs(contour == 0 ? inset : 11. - inset, 0.0001));
+            Polygons covered;
+            path->polygons_covered_by_width(covered, 1.f);
+            CHECK_THAT(area(diff_ex(covered, ExPolygons{region})) * SCALING_FACTOR * SCALING_FACTOR,
+                       Catch::Matchers::WithinAbs(0., 0.001));
+            path->polygons_covered_by_spacing(wall_keepout, 1.f);
+            CHECK(path->role() == erSupportMaterialInterface);
+        }
+    wall_keepout = offset(union_(wall_keepout), 0.5f * float(flow.scaled_spacing()) - 2.f * SCALED_EPSILON);
+    double conflicts = 0.;
+    for (size_t i = size_t(2 * wall_count); i < paths.entities.size(); ++i)
+        for_each_extrusion_path(*paths.entities[i], [&](const ExtrusionPath &path) {
+            for (const Polyline &line : intersection_pl(Polylines{path.polyline.to_polyline()}, wall_keepout))
+                conflicts += unscale<double>(line.length());
+            CHECK(path.mm3_per_mm > 0.);
+            CHECK(path.role() == erSupportMaterialInterface);
+        });
+    CHECK_THAT(conflicts, Catch::Matchers::WithinAbs(0., 0.01));
+}
+
+TEST_CASE("Contact and interface wall counts remain independent even with matching patterns and density",
+          "[SupportMaterial][ContactWalls][Regression]")
+{
+    const bool bottom = GENERATE(false, true);
+    const bool organic = GENERATE(false, true);
+    const int contact_walls = GENERATE(0, 1, 3);
+    const int interface_walls = GENERATE(0, 1, 2);
+    CAPTURE(bottom, organic, contact_walls, interface_walls);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({{"enable_support", true}, {"support_type", organic ? "tree(auto)" : "normal(auto)"},
+                                   {"support_style", organic ? "organic" : "grid"},
+                                   {"layer_height", 0.2}, {"initial_layer_print_height", 0.2},
+                                   {"support_interface_top_layers", 3}, {"support_interface_bottom_layers", 3},
+                                   {"support_interface_pattern", "rectilinear"}, {"support_interface_spacing", 0.0},
+                                   {"support_bottom_interface_spacing", 0.0}, {"support_top_contact_spacing", 0.0},
+                                   {"support_bottom_contact_spacing", 0.0}, {"support_top_contact_wall_count", contact_walls},
+                                   {"support_bottom_contact_wall_count", contact_walls},
+                                   {"support_top_interface_wall_count", interface_walls},
+                                   {"support_bottom_interface_wall_count", interface_walls}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    object.clear_support_layers();
+    object.add_support_layer(0, 0, 0.2, 1.0);
+    const ExPolygon contact_region = rectangular_area(0., 0., 20., 15.);
+    const ExPolygon interface_region = rectangular_area(30., 0., 50., 15.);
+    SupportGeneratorLayer contact, interface;
+    contact.layer_type = bottom ? SupporLayerType::BottomContact : SupporLayerType::TopContact;
+    interface.layer_type = bottom ? SupporLayerType::BottomInterface : SupporLayerType::TopInterface;
+    contact.print_z = interface.print_z = 1.0;
+    contact.height = interface.height = 0.2;
+    contact.bottom_z = interface.bottom_z = 0.8;
+    contact.polygons = to_polygons(contact_region);
+    interface.polygons = to_polygons(interface_region);
+    SupportParameters params(object);
+    generate_support_toolpaths(object.support_layers(), object.config(), params, object.slicing_parameters(), {},
+        bottom ? SupportGeneratorLayersPtr{&contact} : SupportGeneratorLayersPtr{},
+        bottom ? SupportGeneratorLayersPtr{} : SupportGeneratorLayersPtr{&contact}, {}, {&interface}, {});
+    size_t contact_count = 0, interface_count = 0;
+    for_each_extrusion_path(object.support_layers().front()->support_fills, [&](const ExtrusionPath &path) {
+        if (path.polyline.first_point() != path.polyline.last_point())
+            return;
+        const Point first = path.polyline.to_polyline().first_point();
+        contact_count += contact_region.contains(first);
+        interface_count += interface_region.contains(first);
+    });
+    CHECK(contact_count == size_t(contact_walls));
+    CHECK(interface_count == size_t(interface_walls));
+}
+
+TEST_CASE("Requested support walls retain sub-line-width contact regions",
+          "[SupportMaterial][ContactWalls][Regression]")
+{
+    const int wall_count = GENERATE(0, 1, 3);
+    const Flow flow(0.6f, 0.2f, 0.6f);
+    const ExPolygon strip = rectangular_area(0., 0., 20., 0.25);
+    auto filler = std::unique_ptr<Fill>(Fill::new_from_type(ipConcentric));
+    filler->set_bounding_box(get_extents(strip));
+    filler->spacing = flow.spacing();
+    FillParams fill_params;
+    fill_params.density = 1.0;
+    fill_params.dont_adjust = true;
+    fill_params.fill_concentric_gaps = true;
+    fill_params.preserve_short_paths = true;
+    fill_params.flow = flow;
+    ExtrusionEntityCollection paths;
+    fill_support_interface_with_walls(paths.entities, {strip}, filler.get(), fill_params,
+        erSupportMaterialInterface, flow, wall_count, true);
+    REQUIRE_FALSE(paths.empty());
+    double length = 0.;
+    for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+        length += unscale<double>(path.polyline.length());
+        CHECK(path.width <= 0.25f + float(EPSILON));
+        CHECK(path.mm3_per_mm > 0.);
+        CHECK_THAT(path.mm3_per_mm, Catch::Matchers::WithinRel(Flow(path.width, path.height, 0.f).mm3_per_mm(), 0.00001));
+    });
+    CHECK(length > 19.);
+    Polygons covered;
+    paths.polygons_covered_by_width(covered, 1.f);
+    CHECK_THAT(area(diff_ex(covered, ExPolygons{strip})) * SCALING_FACTOR * SCALING_FACTOR,
+               Catch::Matchers::WithinAbs(0., 0.001));
+}
+
+TEST_CASE("Changing each support wall setting invalidates support but preserves model paths",
+          "[SupportMaterial][ContactWalls][Regression]")
+{
+    Model model;
+    Print print;
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({{"enable_support", true}, {"support_interface_top_layers", 4},
+                                   {"support_interface_bottom_layers", 4}});
+    init_print({TestMesh::overhang}, print, model, config);
+    print.process();
+    for (const char *key : {"support_top_contact_wall_count", "support_bottom_contact_wall_count",
+                            "support_top_interface_wall_count", "support_bottom_interface_wall_count"}) {
+        CAPTURE(key);
+        REQUIRE(print.get_object(0)->is_step_done(posSupportMaterial));
+        config.set_deserialize_strict(key, "2");
+        REQUIRE(print.apply(model, config) == PrintBase::APPLY_STATUS_INVALIDATED);
+        REQUIRE_FALSE(print.get_object(0)->is_step_done(posSupportMaterial));
+        REQUIRE(print.get_object(0)->is_step_done(posPerimeters));
+        REQUIRE(print.get_object(0)->is_step_done(posInfill));
+        print.validate();
+        print.process();
+        CHECK(print.get_object(0)->is_step_done(posSupportMaterial));
+    }
+}
+
+TEST_CASE("Support walls and narrow gap fill retain their widths across overlapping contact heights",
+          "[SupportMaterial][ContactWalls][OrganicTree][Regression]")
+{
+    const int walls = GENERATE(0, 1, 3);
+    const bool overlapping = GENERATE(false, true);
+    CAPTURE(walls, overlapping);
+    auto config = organic_support_config(true, true, 0.2, 0.2);
+    config.set_deserialize_strict({{"support_top_contact_pattern", "concentric"},
+                                   {"support_top_contact_spacing", 0.0}, {"support_top_contact_wall_count", walls}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    object.clear_support_layers();
+    const ExPolygon wide = rectangular_area(0., 0., 20., 15.);
+    const ExPolygon narrow = rectangular_area(30., 0., 50., 0.15);
+    SupportGeneratorLayer lower, contact;
+    lower.layer_type = contact.layer_type = SupporLayerType::TopContact;
+    lower.print_z = 0.9;
+    lower.height = contact.height = 0.2;
+    lower.bottom_z = 0.7;
+    lower.polygons = to_polygons(rectangular_area(-5., -5., 55., 20.));
+    contact.print_z = 1.0;
+    contact.bottom_z = 0.8;
+    contact.polygons = to_polygons(ExPolygons{wide, narrow});
+    SupportGeneratorLayersPtr contacts;
+    if (overlapping) {
+        object.add_support_layer(0, 0, lower.height, lower.print_z);
+        contacts.push_back(&lower);
+    }
+    object.add_support_layer(int(object.support_layer_count()), 0, contact.height, contact.print_z);
+    contacts.push_back(&contact);
+    SupportParameters params(object);
+    generate_support_toolpaths(object.support_layers(), object.config(), params, object.slicing_parameters(), {},
+        {}, contacts, {}, {}, {});
+    double narrow_length = 0.;
+    for_each_extrusion_path(object.support_layers().back()->support_fills, [&](const ExtrusionPath &path) {
+        if (path.polyline.to_polyline().first_point().x() > scale_(25.)) {
+            CHECK(path.width <= 0.15f + float(EPSILON));
+            CHECK_THAT(path.height, Catch::Matchers::WithinAbs(overlapping ? 0.1 : 0.2, 0.00001));
+            CHECK_THAT(path.mm3_per_mm, Catch::Matchers::WithinRel(Flow(path.width, path.height, 0.f).mm3_per_mm(), 0.00001));
+            narrow_length += unscale<double>(path.polyline.length());
+        }
+    });
+    CHECK(narrow_length > 19.);
+}
+
+TEST_CASE("Sub-line-width contact rings stay compatible with support height modulation",
+          "[SupportMaterial][ContactWalls][Regression]")
+{
+    const Flow flow(0.6f, 0.2f, 0.6f);
+    ExPolygon ring = rectangular_area(0., 0., 20., 15.);
+    Polygon hole = rectangular_area(0.25, 0.25, 19.75, 14.75).contour;
+    hole.make_clockwise();
+    ring.holes.push_back(std::move(hole));
+    auto filler = std::unique_ptr<Fill>(Fill::new_from_type(ipConcentric));
+    filler->set_bounding_box(get_extents(ring));
+    filler->spacing = flow.spacing();
+    FillParams fill_params;
+    fill_params.density = 1.0;
+    fill_params.dont_adjust = true;
+    fill_params.flow = flow;
+    fill_params.fill_concentric_gaps = true;
+    ExtrusionEntityCollection paths;
+    fill_support_interface_with_walls(paths.entities, {ring}, filler.get(), fill_params,
+        erSupportMaterialInterface, flow, 1, true);
+    REQUIRE_FALSE(paths.empty());
+    for (const ExtrusionEntity *entity : paths.entities) {
+        const auto *path = dynamic_cast<const ExtrusionPath*>(entity);
+        REQUIRE(path != nullptr);
+        CHECK(path->mm3_per_mm > 0.);
+        CHECK_THAT(path->mm3_per_mm, Catch::Matchers::WithinRel(Flow(path->width, path->height, 0.f).mm3_per_mm(), 0.00001));
+    }
+}
+
+TEST_CASE("Every support style applies contact and interface walls on their respective layers",
+          "[SupportMaterial][ContactWalls][Regression]")
+{
+    auto [type, style] = GENERATE(table<const char *, const char *>({
+        {"normal(auto)", "grid"}, {"normal(auto)", "snug"}, {"tree(auto)", "organic"},
+        {"tree(auto)", "tree_slim"}, {"tree(auto)", "tree_strong"}, {"tree(auto)", "tree_hybrid"}}));
+    const bool bottom = GENERATE(false, true);
+    const int contact_walls = GENERATE(0, 2);
+    const bool independent_top_contact = GENERATE(false, true);
+    const int interface_walls = contact_walls == 0 ? 2 : 0;
+    CAPTURE(type, style, bottom, contact_walls, interface_walls, independent_top_contact);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({{"enable_support", true}, {"support_type", type}, {"support_style", style},
+                                   {"layer_height", 0.2}, {"initial_layer_print_height", 0.2},
+                                   {"support_on_build_plate_only", false}, {"support_interface_pattern", "rectilinear"},
+                                   {"support_top_contact_pattern", "rectilinear"},
+                                   {"support_bottom_contact_pattern", "rectilinear"},
+                                   {"support_interface_top_layers", bottom ? 0 : 4},
+                                   {"support_interface_bottom_layers", bottom ? 6 : 0},
+                                   {"support_top_contact_wall_count", contact_walls},
+                                   {"support_bottom_contact_wall_count", contact_walls},
+                                   {"support_top_interface_wall_count", interface_walls},
+                                   {"support_bottom_interface_wall_count", interface_walls},
+                                   {"independent_support_layer_height", false},
+                                   {"independent_support_top_contact_layer_height", independent_top_contact}});
+    Print print;
+    try {
+        // Use a horizontal, wide ceiling: a tapered overhang's highest
+        // footprint may be too narrow to carry even one full-width wall.
+        init_and_process_print({support_capital()}, print, config);
+    } catch (const std::exception &error) {
+        FAIL(error.what());
+    }
+    std::map<double, size_t> walls_by_layer;
+    std::function<void(const ExtrusionEntity&, size_t&)> count_walls;
+    count_walls = [&](const ExtrusionEntity &entity, size_t &walls) {
+        if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection*>(&entity)) {
+            for (const ExtrusionEntity *child : collection->entities)
+                count_walls(*child, walls);
+        } else if (entity.role() == erSupportMaterialInterface && entity.first_point() == entity.last_point())
+            ++walls;
+    };
+    for (const SupportLayer *layer : print.objects().front()->support_layers()) {
+        bool has_interface = false;
+        for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+            has_interface |= path.role() == erSupportMaterialInterface;
+        });
+        if (has_interface)
+            count_walls(layer->support_fills, walls_by_layer[layer->print_z]);
+    }
+    std::ostringstream layer_details;
+    for (const SupportLayer *layer : print.objects().front()->support_layers())
+        if (walls_by_layer.count(layer->print_z)) {
+            layer_details << "Z=" << layer->print_z << " height=" << layer->height << " walls=" << walls_by_layer.at(layer->print_z);
+            layer_details << "; ";
+        }
+    INFO(layer_details.str());
+    REQUIRE(walls_by_layer.size() >= 2);
+    const double contact_z = bottom ? walls_by_layer.begin()->first : walls_by_layer.rbegin()->first;
+    CHECK((walls_by_layer.at(contact_z) > 0) == (contact_walls > 0));
+    size_t other_walls = 0;
+    for (const auto &[z, walls] : walls_by_layer)
+        if (z != contact_z)
+            other_walls += walls;
+    CHECK((other_walls > 0) == (interface_walls > 0));
 }

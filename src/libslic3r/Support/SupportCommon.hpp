@@ -15,6 +15,7 @@
 
 namespace Slic3r { class Fill; }
 namespace Slic3r { class Flow; }
+namespace Slic3r { struct FillParams; }
 namespace Slic3r { struct SlicingParameters; }
 
 namespace Slic3r {
@@ -91,6 +92,18 @@ SupportGeneratorLayersPtr generate_raft_base(
 	SupportGeneratorLayerStorage    &layer_storage);
 
 void tree_supports_generate_paths(ExtrusionEntitiesPtr &dst, const Polygons &polygons, const Flow &flow, const SupportParameters &support_params);
+
+// Add inward perimeter walls and fill only their interior. The same planner
+// serves normal, organic and non-organic tree contact/interface regions.
+void fill_support_interface_with_walls(
+    ExtrusionEntitiesPtr &dst,
+    const ExPolygons     &regions,
+    Fill                 *filler,
+    const FillParams     &fill_params,
+    ExtrusionRole         role,
+    const Flow           &flow,
+    int                   wall_count,
+    bool                  preserve_narrow_regions = false);
 
 void fill_expolygons_with_sheath_generate_paths(
     ExtrusionEntitiesPtr &dst,

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "days", "clock", "protected", "outside_scope"],
+  "properties": {
+    "schema_version": {"const": "agents-runtime-policy/v4"},
+    "days": {"type": "object", "additionalProperties": false, "required": ["scratch", "package", "validation", "task", "backup"], "properties": {
+      "scratch": {"const": 7}, "package": {"const": 7}, "validation": {"const": 30}, "task": {"const": 90}, "backup": {"const": 7}
+    }},
+    "clock": {"type": "string", "minLength": 1},
+    "protected": {"type": "array", "items": {"type": "string"}},
+    "outside_scope": {"type": "array", "items": {"type": "string"}}
+  }
+}

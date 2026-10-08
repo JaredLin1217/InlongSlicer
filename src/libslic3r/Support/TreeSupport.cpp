@@ -1624,7 +1624,7 @@ void TreeSupport::generate_toolpaths()
                         m_support_params.bottom_contact_pattern, area_group.interface_id);
                     if (area_group.type != SupportLayer::BaseType) {
                         // interface
-                        if (layer_id == 0) {
+                        if (layer_id == 0 && area_group.interface_as_base) {
                             Flow flow = m_raft_layers == 0 ? m_object->print()->brim_flow() : support_flow;
                             ExtrusionRole brim_role = (area_group.type == SupportLayer::RoofType && !area_group.interface_as_base) ?
                                 erSupportMaterialInterface : erSupportMaterial;
@@ -1659,10 +1659,17 @@ void TreeSupport::generate_toolpaths()
                                 area_group.from_manual_contact, poly,
                                 ts_layer->manual_contact_regions, interface_base_flow))
                             continue;
-                        // generate a perimeter first to support interface better
                         ExtrusionEntityCollection* temp_support_fills = new ExtrusionEntityCollection();
-                        make_perimeter_and_infill(temp_support_fills->entities, poly, 1, interface_base_flow, interface_role,
-                            filler_Roof1stLayer.get(), top_contact_density, false);
+                        if (interface_as_base)
+                            make_perimeter_and_infill(temp_support_fills->entities, poly, 1, interface_base_flow, interface_role,
+                                filler_Roof1stLayer.get(), top_contact_density, false);
+                        else {
+                            fill_params.fill_concentric_gaps = m_support_params.top_contact_fill_pattern == ipConcentric;
+                            fill_params.flow = interface_base_flow;
+                            fill_support_interface_with_walls(temp_support_fills->entities, ExPolygons{poly},
+                                filler_Roof1stLayer.get(), fill_params, interface_role, interface_base_flow,
+                                m_support_params.top_contact_wall_count, fill_params.fill_concentric_gaps);
+                        }
                         temp_support_fills->no_sort = true; // make sure loops are first
                         if (!temp_support_fills->entities.empty())
                             ts_layer->support_fills.entities.push_back(temp_support_fills);
@@ -1688,8 +1695,14 @@ void TreeSupport::generate_toolpaths()
 
                         Flow interface_base_flow = interface_as_base ? support_flow : interface_flow;
                         ExtrusionRole interface_role = interface_as_base ? erSupportMaterial : erSupportMaterialInterface;
-                        fill_expolygons_generate_paths(ts_layer->support_fills.entities, polys,
-                            filler_floor, fill_params, interface_role, interface_base_flow);
+                        fill_params.fill_concentric_gaps =
+                            (bottom_contact_layer ? m_support_params.bottom_contact_fill_pattern :
+                             m_support_params.interface_fill_pattern) == ipConcentric;
+                        fill_params.flow = interface_base_flow;
+                        fill_support_interface_with_walls(ts_layer->support_fills.entities, polys,
+                            filler_floor, fill_params, interface_role, interface_base_flow,
+                            interface_as_base ? 0 : bottom_contact_layer ? m_support_params.bottom_contact_wall_count :
+                            m_support_params.bottom_interface_wall_count, !interface_as_base && fill_params.fill_concentric_gaps);
                     } else if (area_group.type == SupportLayer::RoofType) {
                         // roof_areas
                         bool interface_as_base = area_group.interface_as_base;
@@ -1707,8 +1720,12 @@ void TreeSupport::generate_toolpaths()
 
                         Flow interface_base_flow = interface_as_base ? support_flow : interface_flow;
                         ExtrusionRole interface_role = interface_as_base ? erSupportMaterial : erSupportMaterialInterface;
-                        fill_expolygons_generate_paths(ts_layer->support_fills.entities, polys, filler_interface.get(), fill_params, interface_role,
-                                                       interface_base_flow);
+                        fill_params.fill_concentric_gaps = m_support_params.interface_fill_pattern == ipConcentric;
+                        fill_params.flow = interface_base_flow;
+                        fill_support_interface_with_walls(ts_layer->support_fills.entities, polys, filler_interface.get(),
+                            fill_params, interface_role, interface_base_flow,
+                            interface_as_base ? 0 : m_support_params.top_interface_wall_count,
+                            !interface_as_base && fill_params.fill_concentric_gaps);
                     }
                     else {
                         // base_areas
@@ -2288,7 +2305,7 @@ void TreeSupport::draw_circles()
                     // INLONG: support_top_contact belongs to the printable roof layer
                     // nearest to the object. The remaining roof layers below it are
                     // regular top interfaces.
-                    else if (obj_layer_nr > 0 && node.support_roof_layers_below == 1 &&
+                    else if (obj_layer_nr > 0 && node.support_roof_layers_below > 0 && node.distance_to_top == 0 &&
                              (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON &&
                              node.is_sharp_tail == false)
                     {
@@ -2301,7 +2318,7 @@ void TreeSupport::draw_circles()
                         max_layers_above_roof1 = std::max(max_layers_above_roof1, node.dist_mm_to_top);
                     }
                     // INLONG: Roof layers must also fit inside the mm cap.
-                    else if (obj_layer_nr > 0 && node.support_roof_layers_below > 1 &&
+                    else if (obj_layer_nr > 0 && node.support_roof_layers_below > 0 && node.distance_to_top > 0 &&
                              (node.dist_mm_to_top - this->top_z_distance) < top_interface_height + EPSILON &&
                              node.is_sharp_tail == false)
                     {
@@ -2648,6 +2665,13 @@ void TreeSupport::draw_circles()
                 contact_layer->manual_contact_regions = src_layer->manual_contact_regions;
                 contact_layer->manual_roof_regions = src_layer->manual_roof_regions;
                 contact_layer->support_type = src_layer->support_type;
+
+                // Only the newly added upper layer is the model contact. The
+                // original footprint now belongs to the interface below it;
+                // keep its polygon storage stable for the existing area pointers.
+                for (auto &area_group : src_layer->area_groups)
+                    if (area_group.type == SupportLayer::Roof1stLayer)
+                        area_group.type = SupportLayer::RoofType;
 
                 for (auto &expoly : contact_layer->roof_1st_layer) {
                     contact_layer->area_groups.emplace_back(&expoly, SupportLayer::Roof1stLayer, m_slicing_params.gap_support_object);

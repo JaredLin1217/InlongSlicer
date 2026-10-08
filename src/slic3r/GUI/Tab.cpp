@@ -3220,8 +3220,10 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(L("Support contact layer"), L"param_support");
         optgroup->append_single_option_line("support_top_contact_pattern", "support_settings_advanced#interface-pattern");
+        optgroup->append_single_option_line("support_top_contact_wall_count", "support_settings_advanced#support-wall-loops");
         optgroup->append_single_option_line("support_top_contact_spacing", "support_settings_advanced#interface-spacing");
         optgroup->append_single_option_line("support_bottom_contact_pattern", "support_settings_advanced#interface-pattern");
+        optgroup->append_single_option_line("support_bottom_contact_wall_count", "support_settings_advanced#support-wall-loops");
         optgroup->append_single_option_line("support_bottom_contact_spacing", "support_settings_advanced#interface-spacing");
 
         //optgroup = page->new_optgroup(L("Options for support material and raft"));
@@ -3237,6 +3239,8 @@ void TabPrint::build()
         optgroup->append_single_option_line("support_interface_top_layers", "support_settings_advanced#interface-layers");
         optgroup->append_single_option_line("support_interface_bottom_layers", "support_settings_advanced#interface-layers");
         optgroup->append_single_option_line("support_interface_pattern", "support_settings_advanced#interface-pattern");
+        optgroup->append_single_option_line("support_top_interface_wall_count", "support_settings_advanced#support-wall-loops");
+        optgroup->append_single_option_line("support_bottom_interface_wall_count", "support_settings_advanced#support-wall-loops");
         optgroup->append_single_option_line("support_interface_spacing", "support_settings_advanced#interface-spacing");
         optgroup->append_single_option_line("support_bottom_interface_spacing", "support_settings_advanced#interface-spacing");
         optgroup->append_single_option_line("support_expansion", "support_settings_advanced#normal-support-expansion");
