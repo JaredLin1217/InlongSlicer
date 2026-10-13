@@ -1,0 +1,56 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-grid-stability-performance-20261013",
+  "key": "organic-support-belt-floor-grid",
+  "type": "fact",
+  "conclusion": "Organic branch topology and independent output layers use different Z grids: clip output slices and propagated roots using belt-floor polygons evaluated at each output layer's physical print_z, not the topology cache index, and keep a positive regular height for negative-Z layer zero. Parallel overhang sampling can emit tips and roofs onto shared lower layers; quantized tip deduplication must publish layer-local candidates in stable source-layer order rather than mutex acquisition order. Otherwise even fresh slices with identical settings can generate different support geometry, and support-only re-slices differ from a fresh slice.",
+  "scope": "InlongSlicer",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "belt",
+    "layer-height",
+    "determinism",
+    "reslice",
+    "parallelism"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_print.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "5a7ad1174fae59838299c7a0c0ea9f355c89ca8250616f30955776eb622fbf09",
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "locator": "RichInterfacePlacer::PendingPlacement, generate_initial_areas ordered publication, OrganicSupportLayerPlan::legacy and organic_draw_branches output_belt_floors"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "4eb0305d262d7e507e120df101603e58bb3574ffdb140778bf2e5031ac783650",
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "locator": "A support-only change on a belt purge print matches a fresh slice; Belt supports reach the belt under a leading overhang"
+    }
+  ],
+  "verified_utc": "2026-10-13T14:45:11.038475+00:00",
+  "verification": {
+    "method": "Semantic source review, rebuilt Windows Release tests and repeated output comparison",
+    "summary": "Reviewed the physical output-layer belt floors, positive negative-Z layer-zero height and stable source-layer candidate publication. Branch batches retain source branch publication order and tree-layer unions own independent outputs. The rebuilt support-only belt reslice and leading-overhang coverage tests passed 108 assertions in two test cases. The rebuilt randomized support suite passed 17752 assertions in 75 cases. No claim is made that the uncommitted snapshots belong to the checkout anchor.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-belt-support-grid-and-stable-placement"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

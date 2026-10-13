@@ -1,0 +1,59 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "support-memory-allowance-20261013",
+  "key": "support-optional-memory-allowance",
+  "type": "fact",
+  "conclusion": "SupportCacheBudget derives optional support working-storage allowances from physical and live available RAM, reserves system and working headroom, disables extras at 4 GiB or less or under pressure, and shares estimated temporary reservations across concurrent trees using SupportBatchBudget RAII. It does not cap mandatory model storage or enforce a process RSS limit.",
+  "scope": "libslic3r.support",
+  "modules": [
+    "Support"
+  ],
+  "tags": [
+    "memory",
+    "performance",
+    "contract"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCacheBudget.hpp",
+    "src/libslic3r/Support/SupportCacheBudget.cpp",
+    "tests/libslic3r/test_support_cache_budget.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCacheBudget.hpp",
+      "sha256": "1c3869d671138ec62cb5c15465a5d58157a19345ba24a8f8aede43f8b451a23a",
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "locator": "support_cache_budget and SupportBatchBudget policy; hardware-capacity and reservation property tests"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCacheBudget.cpp",
+      "sha256": "4acdc6c2db24a9f6059a2ffbc1ce32575de12a5daadbd4913e1bb657a0337162",
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "locator": "support_cache_budget and SupportBatchBudget policy; hardware-capacity and reservation property tests"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_support_cache_budget.cpp",
+      "sha256": "00087f782dbc44b00844159d118e48a264b7ebbaae4df9d435c071af9701c1e9",
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "locator": "support_cache_budget and SupportBatchBudget policy; hardware-capacity and reservation property tests"
+    }
+  ],
+  "verified_utc": "2026-10-13T14:31:58.817198+00:00",
+  "verification": {
+    "method": "Native C++ budget property tests and semantic source review",
+    "summary": "Reviewed the proportional allowance, low/unknown-memory fallback and process-shared reservation release. Four test cases with 74 assertions passed for simulated capacities from 2 to 128 GiB. This establishes policy properties, not physical hardware or total-memory guarantees.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

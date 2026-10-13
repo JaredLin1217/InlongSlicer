@@ -59,6 +59,7 @@ add_executable(${_TEST_NAME}_tests
     test_lay_on_face.cpp
     test_model.cpp
     test_utils.cpp
+    test_support_cache_budget.cpp
     test_miniz_extension.cpp
     test_timeutils.cpp
     test_voronoi.cpp

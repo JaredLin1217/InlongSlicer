@@ -10,6 +10,8 @@
 #include "../Point.hpp"
 
 #include <cmath>
+#include <chrono>
+#include <cstdlib>
 #include <boost/container/static_vector.hpp>
 #include <boost/log/trivial.hpp>
 
@@ -197,6 +199,9 @@ std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> generate_interfa
     std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> base_and_interface_layers;
 
     if (! intermediate_layers.empty() && support_params.has_interfaces()) {
+        const auto profile_started = std::chrono::steady_clock::now();
+        const bool legacy_interface = support_params.support_style != smsTreeOrganic ||
+                                      std::getenv("INLONG_SUPPORT_LEGACY_INTERFACE") != nullptr;
         // For all intermediate layers, collect top contact surfaces, which are not further than support_material_interface_layers.
         BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_interface_layers() in parallel - start";
         const bool                 snug_supports          = support_params.support_style == smsSnug;
@@ -225,7 +230,7 @@ std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> generate_interfa
         const auto closing_distance      = smoothing_distance; // scaled<float>(config.support_material_closing_radius.value);
         // Insert a new layer into base_interface_layers, if intersection with base exists.
         // INLONG: regularize top and bottom interfaces with separate minimum island radii.
-        auto insert_layer = [&layer_storage, smooth_supports, closing_distance, smoothing_distance, minimum_island_radius_top, minimum_island_radius_bottom](
+        auto insert_layer = [&layer_storage, legacy_interface, smooth_supports, closing_distance, smoothing_distance, minimum_island_radius_top, minimum_island_radius_bottom](
                 SupportGeneratorLayer &intermediate_layer, Polygons &bottom, Polygons &&top, SupportGeneratorLayer *top_interface_layer,
                 const Polygons *subtract, SupporLayerType type) -> SupportGeneratorLayer* {
             bool has_top_interface = top_interface_layer && ! top_interface_layer->polygons.empty();
@@ -234,6 +239,11 @@ std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> generate_interfa
             auto regularize = [&](Polygons polys, coordf_t minimum_island_radius) -> Polygons {
                 if (polys.empty())
                     return polys;
+                // Remove intersecting contours before expanding closed paths.
+                // Otherwise the same overlapping roof fragments are expanded
+                // independently and only merged by the expensive offset stage.
+                if (smooth_supports && !legacy_interface)
+                    polys = union_(polys);
                 return smooth_supports ?
                     smooth_outward(closing(std::move(polys), closing_distance + minimum_island_radius, closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance) :
                     union_safety_offset(std::move(polys));
@@ -387,6 +397,7 @@ std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> generate_interfa
         interface_layers      = merge_remove_empty(interface_layers,      top_interface_layers);
         base_interface_layers = merge_remove_empty(base_interface_layers, top_base_interface_layers);
         BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_interface_layers() in parallel - end";
+        BOOST_LOG_TRIVIAL(info) << "Organic interface profiling: " << std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_started).count() << " seconds";
     }
 
     return base_and_interface_layers;
@@ -1011,7 +1022,8 @@ void fill_expolygons_with_sheath_generate_paths(
     bool                     with_sheath,
     bool                     no_sort,
     bool                     fill_concentric_gaps,
-    bool                     connect_support_zigzag)
+    bool                     connect_support_zigzag,
+    bool                     respect_extrusion_width)
 {
     if (polygons.empty())
         return;
@@ -1031,7 +1043,16 @@ void fill_expolygons_with_sheath_generate_paths(
         }
     }
     else {
-        fill_expolygons_generate_paths(dst, closing_ex(polygons, float(SCALED_EPSILON)), filler, fill_params, density, role, flow);
+        ExPolygons fill_regions = closing_ex(polygons, float(SCALED_EPSILON));
+        if (respect_extrusion_width) {
+            // Fill::fill_surface() insets by half the reference line spacing.
+            // Keep that spacing for aligned support rows, but reserve the
+            // complete bead width at the collision-trimmed boundary.
+            const double extra_inset = std::max(0., 0.5 * (flow.width() - filler->spacing));
+            if (extra_inset > EPSILON)
+                fill_regions = offset_ex(fill_regions, float(-scale_(extra_inset)));
+        }
+        fill_expolygons_generate_paths(dst, std::move(fill_regions), filler, fill_params, density, role, flow);
         return;
     }
 
@@ -2615,7 +2636,8 @@ void generate_support_toolpaths(
                         ExtrusionRole::erSupportMaterial, flow,
                         support_params, sheath, no_sort, false,
                         support_body_uses_zigzag_connections(
-                            config.support_base_pattern, density, is_tree(config.support_type)));
+                            config.support_base_pattern, density, is_tree(config.support_type)),
+                        !is_tree(config.support_type));
             }
 
             // Merge base_interface_layers to base_layers to avoid unneccessary retractions

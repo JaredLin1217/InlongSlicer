@@ -26,6 +26,7 @@
 #include "libslic3r/Support/SupportParameters.hpp"
 #include "libslic3r/Support/SupportLayer.hpp"
 #include "SupportCommon.hpp"
+#include "SupportCacheBudget.hpp"
 #include "TriangleMeshSlicer.hpp"
 #include "TreeSupport.hpp"
 #include "I18N.hpp"
@@ -33,6 +34,9 @@
 #include <cassert>
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
+#include <fstream>
+#include <thread>
 #include <optional>
 #include <stdio.h>
 #include <string>
@@ -43,6 +47,7 @@
 #include <tbb/parallel_for.h>
 #include <tbb/parallel_for_each.h>
 #include <tbb/spin_mutex.h>
+#include <tbb/task_arena.h>
 #include <vector>
 #include <utility>
 #include <unordered_set>
@@ -4612,6 +4617,32 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
         generate_support_toolpaths(print_object.support_layers(), print_object.config(), support_params, print_object.slicing_parameters(),
             raft_layers, bottom_contacts, top_contacts, intermediate_layers, interface_layers, base_interface_layers);
 
+        // Optional local profiling payload, inactive in ordinary slicing.
+        if (const char *profile_path = std::getenv("INLONG_SUPPORT_SHAPE_PROFILE_PATH")) {
+            std::ofstream profile(profile_path, std::ios::binary);
+            auto write = [&profile](const auto &value) {
+                profile.write(reinterpret_cast<const char *>(&value), sizeof(value));
+            };
+            auto write_polygon = [&write](const Polygon &polygon) {
+                write(uint32_t(polygon.size()));
+                for (const Point &point : polygon.points) {
+                    write(int64_t(point.x()));
+                    write(int64_t(point.y()));
+                }
+            };
+            write(uint32_t(print_object.support_layers().size()));
+            for (const SupportLayer *layer : print_object.support_layers()) {
+                write(layer->print_z);
+                write(layer->height);
+                write(uint32_t(layer->support_islands.size()));
+                for (const ExPolygon &island : layer->support_islands) {
+                    write_polygon(island.contour);
+                    write(uint32_t(island.holes.size()));
+                    for (const Polygon &hole : island.holes)
+                        write_polygon(hole);
+                }
+            }
+        }
         auto t_end = std::chrono::high_resolution_clock::now();
         BOOST_LOG_TRIVIAL(info) << "Total time of organic tree support: " << 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_end - t_start).count() << " ms";
  #if 0
@@ -4697,6 +4728,7 @@ void organic_draw_branches(
 
     std::function<void()>            throw_on_cancel)
 {
+    const auto profile_start = std::chrono::steady_clock::now();
     // All SupportElements are put into a layer independent storage to improve parallelization.
     std::vector<std::pair<SupportElement*, int>> elements_with_link_down;
     std::vector<size_t>                          linear_data_layers;
@@ -4742,6 +4774,8 @@ void organic_draw_branches(
     throw_on_cancel();
 
     organic_smooth_branches_avoid_collisions(print_object, volumes, config, move_bounds, elements_with_link_down, linear_data_layers, throw_on_cancel);
+    const auto profile_smoothed = std::chrono::steady_clock::now();
+    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: smoothing " << std::chrono::duration<double>(profile_smoothed - profile_start).count() << " seconds";
 
     // Reduce memory footprint. After this point only finalize_interface_and_support_areas() will use volumes and from that only collisions with zero radius will be used.
     volumes.clear_all_but_object_collision();
@@ -4966,341 +5000,425 @@ void organic_draw_branches(
 
     MeshSlicingParams mesh_slicing_params;
     mesh_slicing_params.mode = MeshSlicingParams::SlicingMode::Positive;
+    const auto profile_planned = std::chrono::steady_clock::now();
 
+
+    struct BranchResult {
+        LayerIndex layer_begin{-1};
+        std::vector<Polygons> slices;
+        std::vector<Polygons> bottom_contacts;
+    };
+    const bool legacy_scheduling = std::getenv("INLONG_SUPPORT_LEGACY_SCHEDULING") != nullptr;
     tbb::parallel_for(tbb::blocked_range<size_t>(0, trees.size(), 1),
-        [&trees, &volumes, &config, &slicing_params, &move_bounds, &mesh_slicing_params, &interface_placer, &layer_plan, &output_collisions, &belt_floors, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
-            indexed_triangle_set    partial_mesh;
-            std::vector<float>      slice_z;
-            std::vector<Polygons>   bottom_contacts;
-            for (size_t tree_id = range.begin(); tree_id < range.end(); ++ tree_id) {
+        [&](const tbb::blocked_range<size_t> &range) {
+            for (size_t tree_id = range.begin(); tree_id < range.end(); ++tree_id) {
                 Tree &tree = trees[tree_id];
-                for (const Branch &branch : tree.branches) {
-                    // Triangulate the tube.
-                    partial_mesh.clear();
-                    std::pair<float, float> zspan = extrude_branch(branch.path, config, slicing_params, move_bounds, branch.has_root, partial_mesh);
-                    LayerIndex layer_begin;
-                    LayerIndex layer_end;
-                    if (layer_plan.independent()) {
-                        layer_begin = layer_plan.at_or_above_slice_z(zspan.first);
-                        layer_end   = layer_plan.above_slice_z(zspan.second);
-                        if (branch.has_root) {
-                            const coordf_t root_z = layer_z(slicing_params, config, branch.path.front()->state.layer_idx);
-                            const LayerIndex root_idx = layer_plan.find_exact(root_z);
-                            if (root_idx >= 0)
-                                layer_begin = std::min(layer_begin, root_idx);
-                        }
-                        if (branch.has_tip) {
-                            const coordf_t tip_z = layer_z(slicing_params, config, branch.path.back()->state.layer_idx);
-                            const LayerIndex tip_idx = layer_plan.find_exact(tip_z);
-                            if (tip_idx >= 0)
-                                layer_end = std::max(layer_end, tip_idx + 1);
-                        }
-                        layer_begin = std::clamp<LayerIndex>(layer_begin, 0, LayerIndex(layer_plan.size()));
-                        layer_end   = std::clamp<LayerIndex>(layer_end, layer_begin, LayerIndex(layer_plan.size()));
-                    } else {
-                        layer_begin = branch.has_root ?
-                            branch.path.front()->state.layer_idx :
-                            std::min(branch.path.front()->state.layer_idx, layer_idx_ceil(slicing_params, config, zspan.first));
-                        layer_end = (branch.has_tip ?
-                            branch.path.back()->state.layer_idx :
-                            std::max(branch.path.back()->state.layer_idx, layer_idx_floor(slicing_params, config, zspan.second))) + 1;
-                    }
-                    if (layer_begin >= layer_end)
-                        continue;
-                    slice_z.clear();
-                    for (LayerIndex layer_idx = layer_begin; layer_idx < layer_end; ++ layer_idx) {
-                        const double print_z  = layer_plan.independent() ? layer_plan[size_t(layer_idx)].print_z : layer_z(slicing_params, config, layer_idx);
-                        const double bottom_z = layer_plan.independent() ? layer_plan[size_t(layer_idx)].bottom_z :
-                            (layer_idx > 0 ? layer_z(slicing_params, config, layer_idx - 1) : 0.);
-                        slice_z.emplace_back(float(0.5 * (bottom_z + print_z)));
-                    }
-
-                    std::vector<Polygons> slices = slice_mesh(partial_mesh, slice_z, mesh_slicing_params, throw_on_cancel);
-
-                    // INLONG: guard against empty slices from meshing.
-                    if (slices.empty())
-                        continue;
-
-                    bottom_contacts.clear();
-                    // INLONG: trim tiny fragments to reduce degenerate polygon booleans.
-                    const double tiny_area = tiny_area_threshold();
-                    //FIXME parallelize?
-                    for (LayerIndex i = 0; i < LayerIndex(slices.size()); ++i) {
-                        // INLONG: safety offset when trimming collision/bed to improve robustness.
-                        const Polygons &collision = layer_plan.independent() ?
-                            output_collisions[size_t(layer_begin + i)] : volumes.getCollision(0, layer_begin + i, true);
-                        slices[i] = diff_clipped(slices[i], collision, ApplySafetyOffset::Yes); // FIXME parent_uses_min || draw_area.element->state.use_min_xy_dist);
-                        slices[i] = intersection(slices[i], volumes.m_bed_area, ApplySafetyOffset::Yes);
-                        // Belt floor: clip branch slices against the belt surface plane.
-                        LayerIndex belt_idx = layer_begin + i;
-                        if (belt_idx < LayerIndex(belt_floors.size()) && !belt_floors[belt_idx].empty())
-                            slices[i] = diff(slices[i], belt_floors[belt_idx]);
-                        remove_small(slices[i], tiny_area);
-                    }
-
-                    size_t num_empty = 0;
-
-                    if (slices.front().empty()) {
-                        // Some of the initial layers are empty.
-                        num_empty = std::find_if(slices.begin(), slices.end(), [](auto &s) { return !s.empty(); }) - slices.begin();
-                    }
-
-                    // INLONG: trim leading empty slices to keep layer indices aligned.
-                    if (num_empty >= slices.size())
-                        continue;
-
-                    if (num_empty > 0) {
-                        slices.erase(slices.begin(), slices.begin() + num_empty);
-                        layer_begin += LayerIndex(num_empty);
-                    }
-
-                    // INLONG: use the trimmed front slice as the contact reference.
-                    Polygons slice_front_contact = slices.front();
-
-                    if (branch.has_root) {
-                        if (branch.path.front()->state.to_model_gracious) {
-                            if (config.settings.support_floor_layers > 0) {
-                                // If bottom Z gap is non-zero, keep bottom contacts even when not touching the model.
-                                Polygons contacts;
-
-                                // INLONG: non-zero bottom Z should not be clipped by placeable areas.
-                                if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
-                                    contacts = slice_front_contact;
-                                else {
-                                    const LayerIndex source_layer = layer_plan.independent() ?
-                                        layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
-                                    Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
-                                    contacts = intersection_clipped(slice_front_contact, placeable, ApplySafetyOffset::Yes);
+                for (size_t batch_begin = 0; batch_begin < tree.branches.size();) {
+                    // Reserve a conservative per-branch allowance across every
+                    // concurrently rasterized tree. Low/unknown availability
+                    // uses the original streaming order with one branch.
+                    constexpr size_t branch_allowance = size_t(8) << 20;
+                    const size_t desired = std::min<size_t>(64, tree.branches.size() - batch_begin);
+                    SupportBatchBudget budget(legacy_scheduling ? 0 : desired * branch_allowance, support_memory_snapshot());
+                    const size_t batch_size = std::min(desired, std::max<size_t>(1, budget.bytes() / branch_allowance));
+                    std::vector<BranchResult> results(batch_size);
+                    auto rasterize = [&](const tbb::blocked_range<size_t> &branches) {
+                        indexed_triangle_set partial_mesh;
+                        std::vector<float> slice_z;
+                        std::vector<Polygons> bottom_contacts;
+                        for (size_t branch_id = branches.begin(); branch_id < branches.end(); ++branch_id) {
+                            const Branch &branch = tree.branches[batch_begin + branch_id];
+                            BranchResult &result = results[branch_id];
+                            // Triangulate the tube.
+                            partial_mesh.clear();
+                            std::pair<float, float> zspan = extrude_branch(branch.path, config, slicing_params, move_bounds, branch.has_root, partial_mesh);
+                            LayerIndex layer_begin;
+                            LayerIndex layer_end;
+                            if (layer_plan.independent()) {
+                                layer_begin = layer_plan.at_or_above_slice_z(zspan.first);
+                                layer_end   = layer_plan.above_slice_z(zspan.second);
+                                if (branch.has_root) {
+                                    const coordf_t root_z = layer_z(slicing_params, config, branch.path.front()->state.layer_idx);
+                                    const LayerIndex root_idx = layer_plan.find_exact(root_z);
+                                    if (root_idx >= 0)
+                                        layer_begin = std::min(layer_begin, root_idx);
                                 }
-
-                                remove_small(contacts, tiny_area);
-
-                                // INLONG: ensure bottom contacts exist if clipping removed them.
-                                if (contacts.empty() && config.support_rests_on_model && layer_begin > 0 && !slice_front_contact.empty())
-                                    contacts = slice_front_contact;
-                                if (!contacts.empty())
-                                    bottom_contacts.emplace_back(std::move(contacts));
+                                if (branch.has_tip) {
+                                    const coordf_t tip_z = layer_z(slicing_params, config, branch.path.back()->state.layer_idx);
+                                    const LayerIndex tip_idx = layer_plan.find_exact(tip_z);
+                                    if (tip_idx >= 0)
+                                        layer_end = std::max(layer_end, tip_idx + 1);
+                                }
+                                layer_begin = std::clamp<LayerIndex>(layer_begin, 0, LayerIndex(layer_plan.size()));
+                                layer_end   = std::clamp<LayerIndex>(layer_end, layer_begin, LayerIndex(layer_plan.size()));
+                            } else {
+                                layer_begin = branch.has_root ?
+                                    branch.path.front()->state.layer_idx :
+                                    std::min(branch.path.front()->state.layer_idx, layer_idx_ceil(slicing_params, config, zspan.first));
+                                layer_end = (branch.has_tip ?
+                                    branch.path.back()->state.layer_idx :
+                                    std::max(branch.path.back()->state.layer_idx, layer_idx_floor(slicing_params, config, zspan.second))) + 1;
                             }
-                        } else if (layer_begin > 0 && (belt_floors.empty() || num_empty == 0)) {
-                            // Belt-floor clipping makes initial slices empty often; without this
-                            // gate, "verylost" branches propagate rest_support down to layer 0 and
-                            // OOM on tall belt prints.
-                            // Drop down areas that do rest non - gracefully on the model to ensure the branch actually rests on something.
-                            struct BottomExtraSlice {
-                                Polygons polygons;
-                                double   area;
-                            };
-                            std::vector<BottomExtraSlice>   bottom_extra_slices;
-                            Polygons                        rest_support;
-                            coord_t                         bottom_radius = support_element_radius(config, *branch.path.front());
-                            // Belt printer (GeneratorOnly belt floor): the tilted belt surface is the
-                            // build surface, so a branch should terminate ON the belt with a thin tip,
-                            // not stamp its full footprint straight down to Z=0 and weld neighbouring
-                            // branches into a solid floor slab. m_belt_floor is only populated in that
-                            // mode, so it doubles as the gate (no effect on other printer types).
-                            const bool                      belt_mode = !belt_floors.empty();
-                            // Don't propagate further than 1.5 * bottom radius.
-                            //LayerIndex                      layers_propagate_max = 2 * bottom_radius / config.layer_height;
-                            LayerIndex                      layers_propagate_max = 5 * bottom_radius / config.layer_height;
-                            LayerIndex                      layer_bottommost = 0;
-                            if (!branch.path.front()->state.verylost || belt_mode) {
-                                if (layer_plan.independent()) {
-                                    const coordf_t max_drop = unscaled<coordf_t>(5 * bottom_radius);
-                                    layer_bottommost = layer_begin;
-                                    while (layer_bottommost > 0 &&
-                                           layer_plan[size_t(layer_begin)].print_z - layer_plan[size_t(layer_bottommost - 1)].print_z <= max_drop + EPSILON)
-                                        --layer_bottommost;
-                                } else {
-                                    layer_bottommost = std::max(0, layer_begin - layers_propagate_max);
-                                }
+                            if (layer_begin >= layer_end)
+                                continue;
+                            slice_z.clear();
+                            for (LayerIndex layer_idx = layer_begin; layer_idx < layer_end; ++ layer_idx) {
+                                const double print_z  = layer_plan.independent() ? layer_plan[size_t(layer_idx)].print_z : layer_z(slicing_params, config, layer_idx);
+                                const double bottom_z = layer_plan.independent() ? layer_plan[size_t(layer_idx)].bottom_z :
+                                    (layer_idx > 0 ? layer_z(slicing_params, config, layer_idx - 1) : 0.);
+                                slice_z.emplace_back(float(0.5 * (bottom_z + print_z)));
                             }
-                            double                          support_area_min_radius = M_PI * sqr(double(config.branch_radius));
-                            double                          support_area_stop = std::max(0.2 * M_PI * sqr(double(bottom_radius)), 0.5 * support_area_min_radius);
-                             // Only propagate until the rest area is smaller than this threshold.
-                            //double                          support_area_min = 0.1 * support_area_min_radius;
-                            for (LayerIndex layer_idx = layer_begin - 1; layer_idx >= layer_bottommost; -- layer_idx) {
-                                LayerIndex collision_layer = (layer_idx == layer_begin - 1) ? layer_begin : layer_idx;
-                                Polygons collision;
-                                if (layer_plan.independent()) {
-                                    const OrganicSupportLayerPlanEntry &entry = layer_plan[size_t(collision_layer)];
-                                    for (LayerIndex source_idx = entry.source_layer_begin; source_idx <= entry.source_layer_end; ++source_idx)
-                                        append(collision, volumes.getCollision(0, source_idx, false));
-                                    if (!collision.empty())
-                                        collision = union_(collision);
-                                } else {
-                                    collision = volumes.getCollision(0, collision_layer, false);
-                                }
-                                rest_support = diff_clipped(rest_support.empty() ? slice_front_contact : rest_support, collision, ApplySafetyOffset::Yes);
-                                // Belt floor: clip propagated support at belt surface.
-                                bool belt_cut = false;
-                                if (layer_idx < LayerIndex(belt_floors.size()) && !belt_floors[layer_idx].empty()) {
-                                    double area_before = area(rest_support);
-                                    rest_support = diff(rest_support, belt_floors[layer_idx]);
-                                    // The belt counts as "reached" only when it actually removes part
-                                    // of this branch's footprint. The belt half-plane is non-empty at
-                                    // every near-belt layer, so testing non-emptiness alone would
-                                    // terminate a laterally-distant branch ~1 layer above true contact,
-                                    // leaving a gap. Require a real area reduction instead.
-                                    belt_cut = belt_mode && area(rest_support) < area_before - tiny_area;
-                                }
-                                remove_small(rest_support, tiny_area);
-                                double rest_support_area = area(rest_support);
-                                if (rest_support_area < support_area_stop)
-                                    // Don't propagate a fraction of the tree contact surface.
-                                    break;
-                                bottom_extra_slices.push_back({ rest_support, rest_support_area });
-                                // Belt mode: once the belt surface actually starts cutting this branch
-                                // it has reached the belt — keep this last (belt-clipped) slice as the
-                                // contact and stop, rather than stamping the footprint further down.
-                                if (belt_cut)
-                                    break;
-                            }
-                            // Now remove those bottom slices that are not supported at all.
-#if 0
-                            while (! bottom_extra_slices.empty()) {
-                                const LayerIndex output_layer = layer_begin - LayerIndex(bottom_extra_slices.size());
-                                const LayerIndex source_layer = layer_plan.independent() ?
-                                    layer_plan[size_t(output_layer)].source_layer_end : output_layer;
-                                Polygons this_bottom_contacts = intersection_clipped(
-                                    bottom_extra_slices.back().polygons, volumes.getPlaceableAreas(0, source_layer, [] {}));
-                                if (area(this_bottom_contacts) < support_area_min)
-                                    bottom_extra_slices.pop_back();
-                                else {
-                                    // At least a fraction of the tree bottom is considered to be supported.
-                                    if (config.settings.support_floor_layers > 0)
-                                        // Turn this fraction of the tree bottom into a contact layer.
-                                        bottom_contacts.emplace_back(std::move(this_bottom_contacts));
-                                    break;
-                                }
-                            }
-#endif
-                            // Belt mode: no solid support-floor pad under these branches — it is what
-                            // welds neighbouring belt-terminating branches into the dense Z=0 slab.
-                            // They simply taper out onto the tilted belt as distributed thin contacts.
-                            if (!belt_mode && config.settings.support_floor_layers > 0) {
-                                Polygons contacts;
-                                if (!bottom_extra_slices.empty()) {
-                                    const int contact_idx = int(bottom_extra_slices.size()) - 1; // Use the lowest contact slice as the footprint.
 
-                                    // INLONG: non-zero bottom Z should not be clipped by placeable areas.
-                                    if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
-                                        contacts = intersection_clipped(bottom_extra_slices[contact_idx].polygons, Polygons{volumes.m_bed_area}, ApplySafetyOffset::Yes);
-                                    else {
-                                        const LayerIndex source_layer = layer_plan.independent() ?
-                                            layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
-                                        Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
-                                        contacts = intersection_clipped(bottom_extra_slices[contact_idx].polygons, placeable, ApplySafetyOffset::Yes);
+                            std::vector<Polygons> slices = slice_mesh(partial_mesh, slice_z, mesh_slicing_params, throw_on_cancel);
+
+                            // INLONG: guard against empty slices from meshing.
+                            if (slices.empty())
+                                continue;
+
+                            bottom_contacts.clear();
+                            // INLONG: trim tiny fragments to reduce degenerate polygon booleans.
+                            const double tiny_area = tiny_area_threshold();
+                            //FIXME parallelize?
+                            for (LayerIndex i = 0; i < LayerIndex(slices.size()); ++i) {
+                                // INLONG: safety offset when trimming collision/bed to improve robustness.
+                                const Polygons &collision = layer_plan.independent() ?
+                                    output_collisions[size_t(layer_begin + i)] : volumes.getCollision(0, layer_begin + i, true);
+                                slices[i] = diff_clipped(slices[i], collision, ApplySafetyOffset::Yes); // FIXME parent_uses_min || draw_area.element->state.use_min_xy_dist);
+                                slices[i] = intersection(slices[i], volumes.m_bed_area, ApplySafetyOffset::Yes);
+                                // Belt floor: clip branch slices against the belt surface plane.
+                                LayerIndex belt_idx = layer_begin + i;
+                                if (belt_idx < LayerIndex(belt_floors.size()) && !belt_floors[belt_idx].empty())
+                                    slices[i] = diff(slices[i], belt_floors[belt_idx]);
+                                remove_small(slices[i], tiny_area);
+                            }
+
+                            size_t num_empty = 0;
+
+                            if (slices.front().empty()) {
+                                // Some of the initial layers are empty.
+                                num_empty = std::find_if(slices.begin(), slices.end(), [](auto &s) { return !s.empty(); }) - slices.begin();
+                            }
+
+                            // INLONG: trim leading empty slices to keep layer indices aligned.
+                            if (num_empty >= slices.size())
+                                continue;
+
+                            if (num_empty > 0) {
+                                slices.erase(slices.begin(), slices.begin() + num_empty);
+                                layer_begin += LayerIndex(num_empty);
+                            }
+
+                            // INLONG: use the trimmed front slice as the contact reference.
+                            Polygons slice_front_contact = slices.front();
+
+                            if (branch.has_root) {
+                                if (branch.path.front()->state.to_model_gracious) {
+                                    if (config.settings.support_floor_layers > 0) {
+                                        // If bottom Z gap is non-zero, keep bottom contacts even when not touching the model.
+                                        Polygons contacts;
+
+                                        // INLONG: non-zero bottom Z should not be clipped by placeable areas.
+                                        if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
+                                            contacts = slice_front_contact;
+                                        else {
+                                            const LayerIndex source_layer = layer_plan.independent() ?
+                                                layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
+                                            Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
+                                            contacts = intersection_clipped(slice_front_contact, placeable, ApplySafetyOffset::Yes);
+                                        }
+
+                                        remove_small(contacts, tiny_area);
+
+                                        // INLONG: ensure bottom contacts exist if clipping removed them.
+                                        if (contacts.empty() && config.support_rests_on_model && layer_begin > 0 && !slice_front_contact.empty())
+                                            contacts = slice_front_contact;
+                                        if (!contacts.empty())
+                                            bottom_contacts.emplace_back(std::move(contacts));
                                     }
-                                } else {
-                                    // Fallback: use the current contact slice when no propagation happened.
-                                    if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
-                                        contacts = slice_front_contact;
-                                    else {
-                                        const LayerIndex source_layer = layer_plan.independent() ?
-                                            layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
-                                        Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
-                                        contacts = intersection_clipped(slice_front_contact, placeable, ApplySafetyOffset::Yes);
+                                } else if (layer_begin > 0 && (belt_floors.empty() || num_empty == 0)) {
+                                    // Belt-floor clipping makes initial slices empty often; without this
+                                    // gate, "verylost" branches propagate rest_support down to layer 0 and
+                                    // OOM on tall belt prints.
+                                    // Drop down areas that do rest non - gracefully on the model to ensure the branch actually rests on something.
+                                    struct BottomExtraSlice {
+                                        Polygons polygons;
+                                        double   area;
+                                    };
+                                    std::vector<BottomExtraSlice>   bottom_extra_slices;
+                                    Polygons                        rest_support;
+                                    coord_t                         bottom_radius = support_element_radius(config, *branch.path.front());
+                                    // Belt printer (GeneratorOnly belt floor): the tilted belt surface is the
+                                    // build surface, so a branch should terminate ON the belt with a thin tip,
+                                    // not stamp its full footprint straight down to Z=0 and weld neighbouring
+                                    // branches into a solid floor slab. m_belt_floor is only populated in that
+                                    // mode, so it doubles as the gate (no effect on other printer types).
+                                    const bool                      belt_mode = !belt_floors.empty();
+                                    // Don't propagate further than 1.5 * bottom radius.
+                                    //LayerIndex                      layers_propagate_max = 2 * bottom_radius / config.layer_height;
+                                    LayerIndex                      layers_propagate_max = 5 * bottom_radius / config.layer_height;
+                                    LayerIndex                      layer_bottommost = 0;
+                                    if (!branch.path.front()->state.verylost || belt_mode) {
+                                        if (layer_plan.independent()) {
+                                            const coordf_t max_drop = unscaled<coordf_t>(5 * bottom_radius);
+                                            layer_bottommost = layer_begin;
+                                            while (layer_bottommost > 0 &&
+                                                   layer_plan[size_t(layer_begin)].print_z - layer_plan[size_t(layer_bottommost - 1)].print_z <= max_drop + EPSILON)
+                                                --layer_bottommost;
+                                        } else {
+                                            layer_bottommost = std::max(0, layer_begin - layers_propagate_max);
+                                        }
                                     }
+                                    double                          support_area_min_radius = M_PI * sqr(double(config.branch_radius));
+                                    double                          support_area_stop = std::max(0.2 * M_PI * sqr(double(bottom_radius)), 0.5 * support_area_min_radius);
+                                     // Only propagate until the rest area is smaller than this threshold.
+                                    //double                          support_area_min = 0.1 * support_area_min_radius;
+                                    for (LayerIndex layer_idx = layer_begin - 1; layer_idx >= layer_bottommost; -- layer_idx) {
+                                        LayerIndex collision_layer = (layer_idx == layer_begin - 1) ? layer_begin : layer_idx;
+                                        Polygons collision;
+                                        if (layer_plan.independent()) {
+                                            const OrganicSupportLayerPlanEntry &entry = layer_plan[size_t(collision_layer)];
+                                            for (LayerIndex source_idx = entry.source_layer_begin; source_idx <= entry.source_layer_end; ++source_idx)
+                                                append(collision, volumes.getCollision(0, source_idx, false));
+                                            if (!collision.empty())
+                                                collision = union_(collision);
+                                        } else {
+                                            collision = volumes.getCollision(0, collision_layer, false);
+                                        }
+                                        rest_support = diff_clipped(rest_support.empty() ? slice_front_contact : rest_support, collision, ApplySafetyOffset::Yes);
+                                        // Belt floor: clip propagated support at belt surface.
+                                        bool belt_cut = false;
+                                        if (layer_idx < LayerIndex(belt_floors.size()) && !belt_floors[layer_idx].empty()) {
+                                            double area_before = area(rest_support);
+                                            rest_support = diff(rest_support, belt_floors[layer_idx]);
+                                            // The belt counts as "reached" only when it actually removes part
+                                            // of this branch's footprint. The belt half-plane is non-empty at
+                                            // every near-belt layer, so testing non-emptiness alone would
+                                            // terminate a laterally-distant branch ~1 layer above true contact,
+                                            // leaving a gap. Require a real area reduction instead.
+                                            belt_cut = belt_mode && area(rest_support) < area_before - tiny_area;
+                                        }
+                                        remove_small(rest_support, tiny_area);
+                                        double rest_support_area = area(rest_support);
+                                        if (rest_support_area < support_area_stop)
+                                            // Don't propagate a fraction of the tree contact surface.
+                                            break;
+                                        bottom_extra_slices.push_back({ rest_support, rest_support_area });
+                                        // Belt mode: once the belt surface actually starts cutting this branch
+                                        // it has reached the belt — keep this last (belt-clipped) slice as the
+                                        // contact and stop, rather than stamping the footprint further down.
+                                        if (belt_cut)
+                                            break;
+                                    }
+                                    // Now remove those bottom slices that are not supported at all.
+        #if 0
+                                    while (! bottom_extra_slices.empty()) {
+                                        const LayerIndex output_layer = layer_begin - LayerIndex(bottom_extra_slices.size());
+                                        const LayerIndex source_layer = layer_plan.independent() ?
+                                            layer_plan[size_t(output_layer)].source_layer_end : output_layer;
+                                        Polygons this_bottom_contacts = intersection_clipped(
+                                            bottom_extra_slices.back().polygons, volumes.getPlaceableAreas(0, source_layer, [] {}));
+                                        if (area(this_bottom_contacts) < support_area_min)
+                                            bottom_extra_slices.pop_back();
+                                        else {
+                                            // At least a fraction of the tree bottom is considered to be supported.
+                                            if (config.settings.support_floor_layers > 0)
+                                                // Turn this fraction of the tree bottom into a contact layer.
+                                                bottom_contacts.emplace_back(std::move(this_bottom_contacts));
+                                            break;
+                                        }
+                                    }
+        #endif
+                                    // Belt mode: no solid support-floor pad under these branches — it is what
+                                    // welds neighbouring belt-terminating branches into the dense Z=0 slab.
+                                    // They simply taper out onto the tilted belt as distributed thin contacts.
+                                    if (!belt_mode && config.settings.support_floor_layers > 0) {
+                                        Polygons contacts;
+                                        if (!bottom_extra_slices.empty()) {
+                                            const int contact_idx = int(bottom_extra_slices.size()) - 1; // Use the lowest contact slice as the footprint.
+
+                                            // INLONG: non-zero bottom Z should not be clipped by placeable areas.
+                                            if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
+                                                contacts = intersection_clipped(bottom_extra_slices[contact_idx].polygons, Polygons{volumes.m_bed_area}, ApplySafetyOffset::Yes);
+                                            else {
+                                                const LayerIndex source_layer = layer_plan.independent() ?
+                                                    layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
+                                                Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
+                                                contacts = intersection_clipped(bottom_extra_slices[contact_idx].polygons, placeable, ApplySafetyOffset::Yes);
+                                            }
+                                        } else {
+                                            // Fallback: use the current contact slice when no propagation happened.
+                                            if (config.support_rests_on_model && config.z_distance_bottom_layers > 0 && layer_begin > 0)
+                                                contacts = slice_front_contact;
+                                            else {
+                                                const LayerIndex source_layer = layer_plan.independent() ?
+                                                    layer_plan[size_t(layer_begin)].source_layer_end : layer_begin;
+                                                Polygons placeable = volumes.getPlaceableAreas(0, source_layer, [] {});
+                                                contacts = intersection_clipped(slice_front_contact, placeable, ApplySafetyOffset::Yes);
+                                            }
+                                        }
+
+                                        remove_small(contacts, tiny_area);
+
+                                        if (!contacts.empty())
+                                            bottom_contacts.emplace_back(std::move(contacts));
+
+                                        // INLONG: ensure bottom contacts exist if clipping removed them.
+                                        if (bottom_contacts.empty() && config.support_rests_on_model && layer_begin > 0 && !slice_front_contact.empty())
+                                            bottom_contacts.emplace_back(slice_front_contact);
+                                    }
+                                    layer_begin -= LayerIndex(bottom_extra_slices.size());
+                                    slices.insert(slices.begin(), bottom_extra_slices.size(), {});
+                                    auto it_dst = slices.begin();
+                                    for (auto it_src = bottom_extra_slices.rbegin(); it_src != bottom_extra_slices.rend(); ++ it_src)
+                                        *it_dst ++ = std::move(it_src->polygons);
                                 }
 
-                                remove_small(contacts, tiny_area);
-
-                                if (!contacts.empty())
-                                    bottom_contacts.emplace_back(std::move(contacts));
-
-                                // INLONG: ensure bottom contacts exist if clipping removed them.
-                                if (bottom_contacts.empty() && config.support_rests_on_model && layer_begin > 0 && !slice_front_contact.empty())
+                                // INLONG: retain bottom contacts even when no placeable areas intersect.
+                                // Skipped in belt mode (m_belt_floor populated) so we don't re-introduce a
+                                // solid floor pad for branches that terminate on the tilted belt surface.
+                                if (belt_floors.empty() &&
+                                    branch.has_root && config.support_rests_on_model && branch.path.front()->state.layer_idx > 0 &&
+                                    config.settings.support_floor_layers > 0 && config.z_distance_bottom_layers > 0 &&
+                                    bottom_contacts.empty() && !slice_front_contact.empty())
                                     bottom_contacts.emplace_back(slice_front_contact);
+
                             }
-                            layer_begin -= LayerIndex(bottom_extra_slices.size());
-                            slices.insert(slices.begin(), bottom_extra_slices.size(), {});
-                            auto it_dst = slices.begin();
-                            for (auto it_src = bottom_extra_slices.rbegin(); it_src != bottom_extra_slices.rend(); ++ it_src)
-                                *it_dst ++ = std::move(it_src->polygons);
+                            // INLONG: bottom contacts provide the footprint; interface layers are built later.
+
+                            result.layer_begin = layer_begin;
+                            result.slices = std::move(slices);
+                            result.bottom_contacts = std::move(bottom_contacts);
+                        }
+                    };
+                    if (batch_size == 1)
+                        rasterize(tbb::blocked_range<size_t>(0, 1));
+                    else
+                        tbb::parallel_for(tbb::blocked_range<size_t>(0, batch_size, 4), rasterize);
+                    // Publication remains in the exact source branch order,
+                    // including roof recovery and the order of polygon unions.
+                    for (size_t branch_id = 0; branch_id < batch_size; ++branch_id) {
+                        BranchResult &result = results[branch_id];
+                        if (result.layer_begin < 0)
+                            continue;
+                        const Branch &branch = tree.branches[batch_begin + branch_id];
+                        LayerIndex layer_begin = result.layer_begin;
+                        LayerIndex layer_end = 0;
+                        std::vector<Polygons> &slices = result.slices;
+                        std::vector<Polygons> &bottom_contacts = result.bottom_contacts;
+                        recover_pending_branch_roofs(interface_placer, branch.path, layer_begin, layer_plan, slices);
+
+                        while (! slices.empty() && slices.back().empty()) {
+                            slices.pop_back();
                         }
 
-                        // INLONG: retain bottom contacts even when no placeable areas intersect.
-                        // Skipped in belt mode (m_belt_floor populated) so we don't re-introduce a
-                        // solid floor pad for branches that terminate on the tilted belt surface.
-                        if (belt_floors.empty() &&
-                            branch.has_root && config.support_rests_on_model && branch.path.front()->state.layer_idx > 0 &&
-                            config.settings.support_floor_layers > 0 && config.z_distance_bottom_layers > 0 &&
-                            bottom_contacts.empty() && !slice_front_contact.empty())
-                            bottom_contacts.emplace_back(slice_front_contact);
+                        // INLONG: recompute layer_end after trimming trailing empty slices.
+                        layer_end = layer_begin + LayerIndex(slices.size());
 
-                    }
-                    // INLONG: bottom contacts provide the footprint; interface layers are built later.
+                        if (layer_begin < layer_end) {
+                            LayerIndex new_begin = tree.first_layer_id == -1 ? layer_begin : std::min(tree.first_layer_id, layer_begin);
+                            LayerIndex new_end   = tree.first_layer_id == -1 ? layer_end : std::max(tree.first_layer_id + LayerIndex(tree.slices.size()), layer_end);
+                            size_t     new_size  = size_t(new_end - new_begin);
+                            if (tree.first_layer_id == -1) {
+                            } else if (tree.slices.capacity() < new_size) {
+                                std::vector<Slice> new_slices;
+                                new_slices.reserve(new_size);
+                                if (LayerIndex dif = tree.first_layer_id - new_begin; dif > 0)
+                                    new_slices.insert(new_slices.end(), dif, {});
+                                append(new_slices, std::move(tree.slices));
+                                tree.slices.swap(new_slices);
+                            } else if (LayerIndex dif = tree.first_layer_id - new_begin; dif > 0)
+                                tree.slices.insert(tree.slices.begin(), tree.first_layer_id - new_begin, {});
+                            tree.slices.insert(tree.slices.end(), new_size - tree.slices.size(), {});
+                            for (LayerIndex i = layer_begin; i != layer_end; ++ i) {
+                                int j = i - layer_begin;
+                                Polygons &src = slices[j];
+                                bool has_bottom_contacts = j < int(bottom_contacts.size()) && !bottom_contacts[j].empty();
 
-                    recover_pending_branch_roofs(interface_placer, branch.path, layer_begin, layer_plan, slices);
-
-                    while (! slices.empty() && slices.back().empty()) {
-                        slices.pop_back();
-                    }
-
-                    // INLONG: recompute layer_end after trimming trailing empty slices.
-                    layer_end = layer_begin + LayerIndex(slices.size());
-
-                    if (layer_begin < layer_end) {
-                        LayerIndex new_begin = tree.first_layer_id == -1 ? layer_begin : std::min(tree.first_layer_id, layer_begin);
-                        LayerIndex new_end   = tree.first_layer_id == -1 ? layer_end : std::max(tree.first_layer_id + LayerIndex(tree.slices.size()), layer_end);
-                        size_t     new_size  = size_t(new_end - new_begin);
-                        if (tree.first_layer_id == -1) {
-                        } else if (tree.slices.capacity() < new_size) {
-                            std::vector<Slice> new_slices;
-                            new_slices.reserve(new_size);
-                            if (LayerIndex dif = tree.first_layer_id - new_begin; dif > 0)
-                                new_slices.insert(new_slices.end(), dif, {});
-                            append(new_slices, std::move(tree.slices));
-                            tree.slices.swap(new_slices);
-                        } else if (LayerIndex dif = tree.first_layer_id - new_begin; dif > 0)
-                            tree.slices.insert(tree.slices.begin(), tree.first_layer_id - new_begin, {});
-                        tree.slices.insert(tree.slices.end(), new_size - tree.slices.size(), {});
-                        for (LayerIndex i = layer_begin; i != layer_end; ++ i) {
-                            int j = i - layer_begin;
-                            Polygons &src = slices[j];
-                            bool has_bottom_contacts = j < int(bottom_contacts.size()) && !bottom_contacts[j].empty();
-
-                            // INLONG: preserve bottom contacts even if base polygons are empty.
-                            if (!src.empty() || has_bottom_contacts) {
-                                Slice &dst = tree.slices[i - new_begin];
-                                if (++ dst.num_branches > 1) {
-                                    if (!src.empty())
-                                        append(dst.polygons, std::move(src));
-                                    if (has_bottom_contacts)
-                                        append(dst.bottom_contacts, std::move(bottom_contacts[j]));
-                                } else {
-                                    if (!src.empty())
-                                        dst.polygons = std::move(src);
-                                    if (has_bottom_contacts)
-                                        dst.bottom_contacts = std::move(bottom_contacts[j]);
+                                // INLONG: preserve bottom contacts even if base polygons are empty.
+                                if (!src.empty() || has_bottom_contacts) {
+                                    Slice &dst = tree.slices[i - new_begin];
+                                    if (++ dst.num_branches > 1) {
+                                        if (!src.empty())
+                                            append(dst.polygons, std::move(src));
+                                        if (has_bottom_contacts)
+                                            append(dst.bottom_contacts, std::move(bottom_contacts[j]));
+                                    } else {
+                                        if (!src.empty())
+                                            dst.polygons = std::move(src);
+                                        if (has_bottom_contacts)
+                                            dst.bottom_contacts = std::move(bottom_contacts[j]);
+                                    }
                                 }
                             }
-                        }
 
-                        tree.first_layer_id = new_begin;
+                            tree.first_layer_id = new_begin;
+                        }
                     }
+                    batch_begin += batch_size;
+                    throw_on_cancel();
                 }
             }
         }, tbb::simple_partitioner());
 
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, trees.size(), 1),
-        [&trees, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
-        for (size_t tree_id = range.begin(); tree_id < range.end(); ++ tree_id) {
-            Tree &tree = trees[tree_id];
-            for (Slice &slice : tree.slices)
-                if (slice.num_branches > 1) {
-                    // INLONG: avoid union_ on empty containers.
-                    if (!slice.polygons.empty())
-                        slice.polygons = union_(slice.polygons);
-                    if (!slice.bottom_contacts.empty())
-                        slice.bottom_contacts = union_(slice.bottom_contacts);
+    const auto profile_rasterized = std::chrono::steady_clock::now();
+    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: rasterization " << std::chrono::duration<double>(profile_rasterized - profile_planned).count() << " seconds";
 
-                    slice.num_branches = 1;
-                }
-
-            throw_on_cancel();
+    // A large tree may hold almost every branch. Schedule its layer unions
+    // separately: each layer owns its output and keeps the original input order.
+    size_t union_count = 0;
+    size_t largest_input = 0;
+    for (const Tree &tree : trees)
+        for (const Slice &slice : tree.slices)
+            if (slice.num_branches > 1) {
+                ++union_count;
+                size_t vertices = 0;
+                for (const Polygon &polygon : slice.polygons)
+                    vertices += polygon.size();
+                for (const Polygon &polygon : slice.bottom_contacts)
+                    vertices += polygon.size();
+                largest_input = std::max(largest_input, vertices);
+            }
+    const size_t estimated_worker_bytes = std::max<size_t>(size_t(1) << 20, largest_input * 256);
+    const size_t requested_workers = std::max(1u, std::thread::hardware_concurrency());
+    const size_t job_bytes = union_count * sizeof(Slice *);
+    const SupportMemorySnapshot memory = support_memory_snapshot();
+    SupportBatchBudget union_budget(job_bytes + requested_workers * estimated_worker_bytes, memory);
+    const bool legacy_unions = std::getenv("INLONG_SUPPORT_LEGACY_SCHEDULING") != nullptr;
+    const size_t union_workers = legacy_unions || union_budget.bytes() <= job_bytes ? 1 :
+        std::max<size_t>(1, (union_budget.bytes() - job_bytes) / estimated_worker_bytes);
+    auto merge_slice = [&throw_on_cancel](Slice &slice) {
+        if (slice.num_branches > 1) {
+            if (!slice.polygons.empty())
+                slice.polygons = union_(slice.polygons);
+            if (!slice.bottom_contacts.empty())
+                slice.bottom_contacts = union_(slice.bottom_contacts);
+            slice.num_branches = 1;
         }
-    }, tbb::simple_partitioner());
+        throw_on_cancel();
+    };
+    if (union_workers <= 1) {
+        // No extra job list or concurrent union temporaries under pressure.
+        for (Tree &tree : trees)
+            for (Slice &slice : tree.slices)
+                merge_slice(slice);
+    } else {
+        std::vector<Slice *> jobs;
+        jobs.reserve(union_count);
+        for (Tree &tree : trees)
+            for (Slice &slice : tree.slices)
+                if (slice.num_branches > 1)
+                    jobs.push_back(&slice);
+        tbb::task_arena arena{int(std::min(requested_workers, union_workers))};
+        arena.execute([&] {
+            tbb::parallel_for(tbb::blocked_range<size_t>(0, jobs.size(), 1), [&](const tbb::blocked_range<size_t> &range) {
+                for (size_t idx = range.begin(); idx < range.end(); ++idx)
+                    merge_slice(*jobs[idx]);
+            });
+        });
+    }
+    const auto profile_united = std::chrono::steady_clock::now();
+    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: tree-layer unions " << std::chrono::duration<double>(profile_united - profile_rasterized).count()
+                            << " seconds, jobs " << union_count << ", workers " << union_workers << ", reserved bytes " << union_budget.bytes();
 
     size_t num_layers = 0;
     for (Tree &tree : trees)
@@ -5390,6 +5508,7 @@ void organic_draw_branches(
         }
     }, tbb::simple_partitioner());
 
+    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: final polygon assembly " << std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_united).count() << " seconds";
 }
 
 } // namespace TreeSupport3D

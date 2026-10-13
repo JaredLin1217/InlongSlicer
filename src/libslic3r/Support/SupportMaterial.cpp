@@ -1435,7 +1435,6 @@ struct SlicesMarginCache
 // BBS
 static const double length_thresh_well_supported = scale_(6);  // min: 6mm
 static const double area_thresh_well_supported = SQ(length_thresh_well_supported);  // min: 6x6=36mm^2
-static const double sharp_tail_xy_gap = 0.2f;
 static const double no_overlap_xy_gap = 0.2f;
 static const double sharp_tail_max_support_height = 16.f;
 
@@ -3079,10 +3078,11 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::raft_and_intermediate_supp
             // Emit all intermediate support layers synchronized with object layers up to extr2z.
             const bool unassigned_top_contact = !m_slicing_params.zero_gap_interface_top &&
                 extr2->layer_type == SupporLayerType::TopContact && extr2->height == 0.;
-            // A deferred top contact owns its print plane. An intermediate
-            // layer at that same Z would leave it with zero extrusion height
-            // when only independent top-contact height is enabled.
-            const coordf_t intermediate_end_z = extr2z + (unassigned_top_contact ? -EPSILON : EPSILON);
+            // A deferred top contact owns its print plane. Reserve its minimum
+            // printable height instead of emitting a synchronized body layer
+            // that would leave a zero or sub-minimum contact remainder.
+            const coordf_t intermediate_end_z = unassigned_top_contact ?
+                extr2z - m_support_params.support_layer_height_min + EPSILON : extr2z + EPSILON;
             for (; idx_layer_object < object.layers().size() && object.layers()[idx_layer_object]->print_z < intermediate_end_z; ++ idx_layer_object) {
                 SupportGeneratorLayer &layer_new = layer_storage.allocate(SupporLayerType::Intermediate);
                 layer_new.print_z  = object.layers()[idx_layer_object]->print_z;
@@ -3376,7 +3376,9 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
                 if (support_layer.print_z < object_layer.print_z && support_layer.print_z > object_layer.print_z - object_lh)
                     return true;
 
-                if (support_layer.print_z > object_layer.print_z && support_layer.bottom_z < object_layer.print_z - EPSILON)
+                // Bottom contacts store the model-facing Z in bottom_z. That
+                // includes the contact gap, which is not extruded material.
+                if (support_layer.print_z > object_layer.print_z && support_layer.bottom_print_z() < object_layer.print_z - EPSILON)
                     return true;
 
                 return false;
@@ -3400,11 +3402,12 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
 
                     bool is_overlap = is_layers_overlap(support_layer, object_layer);
                     for (const ExPolygon& expoly : object_layer.lslices) {
-                        // BBS
-                        bool is_sharptail = !intersection_ex({ expoly }, object_layer.sharp_tails).empty();
-                        coordf_t trimming_offset = is_sharptail ? scale_(sharp_tail_xy_gap) :
-                                                   is_overlap ? gap_xy_scaled :
-                                                   scale_(no_overlap_xy_gap);
+                        // Sharp-tail detection selects support regions; it
+                        // must not replace normal support's configured XY
+                        // clearance with a fixed value. Organic tip clearance
+                        // is handled separately by the tree-support planner.
+                        coordf_t trimming_offset = is_overlap ? gap_xy_scaled :
+                            std::min<coordf_t>(gap_xy_scaled, scale_(no_overlap_xy_gap));
                         polygons_append(polygons_trimming, offset({ expoly }, trimming_offset, SUPPORT_SURFACES_OFFSET_PARAMETERS));
                     }
                 }
@@ -3420,7 +3423,8 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
                             some_region_overlaps = true;
 
                             bool is_overlap = is_layers_overlap(support_layer, object_layer, bridging_height);
-                            coordf_t trimming_offset = is_overlap ? gap_xy_scaled : scale_(no_overlap_xy_gap);
+                            coordf_t trimming_offset = is_overlap ? gap_xy_scaled :
+                                std::min<coordf_t>(gap_xy_scaled, scale_(no_overlap_xy_gap));
                             polygons_append(polygons_trimming, 
                                 offset(region->fill_surfaces.filter_by_type(stBottomBridge), trimming_offset, SUPPORT_SURFACES_OFFSET_PARAMETERS));
                             if (region->region().config().detect_overhang_wall.value)

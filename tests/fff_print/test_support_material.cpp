@@ -35,6 +35,117 @@
 using namespace Slic3r::Test;
 using namespace Slic3r;
 
+TEST_CASE("Normal support honors the configured XY clearance through its full extrusion height",
+          "[SupportMaterial][NormalSupport][Regression]")
+{
+    const double xy_gap = GENERATE(0., 0.4, 0.8);
+    const char *style = GENERATE("grid", "snug");
+    CAPTURE(xy_gap, style);
+    TriangleMesh mesh = make_cube(60.f, 12.f, 3.f);
+    mesh.translate(-30.f, -6.f, -1.5f);
+    const double angle = Geometry::deg2rad(30.);
+    Matrix3d rotation;
+    rotation << 1., 0., 0., 0., std::cos(angle), -std::sin(angle),
+                0., std::sin(angle), std::cos(angle);
+    mesh.transform(rotation);
+    mesh.translate(0.f, 0.f, float(-mesh.bounding_box().min.z()));
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        {"enable_support", true}, {"support_type", "normal(auto)"}, {"support_style", style},
+        {"layer_height", 0.2}, {"initial_layer_print_height", 0.2}, {"nozzle_diameter", "0.4"},
+        {"min_layer_height", "0.05"}, {"max_layer_height", "0.3"},
+        {"support_top_z_distance", 0.17}, {"support_bottom_z_distance", 0.17},
+        {"support_object_xy_distance", xy_gap}, {"support_object_first_layer_gap", xy_gap},
+        {"support_threshold_angle", 30}, {"bridge_no_support", false},
+        {"support_interface_top_layers", 4}, {"support_interface_bottom_layers", 2},
+        {"independent_support_layer_height", true}, {"independent_support_top_contact_layer_height", true}
+    });
+    Print print;
+    init_and_process_print({mesh}, print, config);
+    const PrintObject &object = *print.objects().front();
+    size_t checked_paths = 0;
+    double intruding_length = 0.;
+    double longest_intrusion = 0.;
+    std::string worst_intrusion;
+    for (const SupportLayer *support_layer : object.support_layers())
+        for_each_extrusion_path(support_layer->support_fills, [&](const ExtrusionPath &path) {
+            if (path.is_force_no_extrusion() || path.mm3_per_mm <= 0.)
+                return;
+            const double bottom_z = support_layer->print_z - path.height;
+            for (const Layer *model_layer : object.layers()) {
+                if (model_layer->print_z <= bottom_z + EPSILON ||
+                    model_layer->bottom_z() >= support_layer->print_z - EPSILON)
+                    continue;
+                ++checked_paths;
+                const Polygons keepout = offset(model_layer->lslices,
+                    scale_(xy_gap + 0.5 * path.width - 0.005), jtRound, scale_(0.001));
+                for (const Polyline &clipped : intersection_pl(
+                        Polylines{path.polyline.to_polyline()}, keepout)) {
+                    const double length = unscale<double>(clipped.length());
+                    intruding_length += length;
+                    if (length > longest_intrusion) {
+                        longest_intrusion = length;
+                        worst_intrusion = "support_z=" + std::to_string(support_layer->print_z) +
+                            ", height=" + std::to_string(path.height) + ", width=" + std::to_string(path.width) +
+                            ", model_z=" + std::to_string(model_layer->print_z) +
+                            ", role=" + std::to_string(path.role()) +
+                            ", clipped_y=" + std::to_string(unscale<double>(clipped.first_point().y())) +
+                            ".." + std::to_string(unscale<double>(clipped.last_point().y()));
+                    }
+                }
+            }
+        });
+    REQUIRE(checked_paths > 0);
+    CAPTURE(intruding_length, longest_intrusion, worst_intrusion);
+    REQUIRE_THAT(intruding_length, Catch::Matchers::WithinAbs(0., 0.001));
+}
+
+TEST_CASE("Normal top contacts retain the configured Z gap with independent heights",
+          "[SupportMaterial][NormalSupport][Regression]")
+{
+    const bool independent_body = GENERATE(false, true);
+    const bool independent_contact = GENERATE(false, true);
+    CAPTURE(independent_body, independent_contact);
+    TriangleMesh mesh = make_cube(8.f, 8.f, 12.f);
+    mesh.translate(16.f, 16.f, 0.f);
+    TriangleMesh cap = make_cube(40.f, 40.f, 2.f);
+    cap.translate(0.f, 0.f, 12.f);
+    mesh.merge(cap);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        {"enable_support", true}, {"support_type", "normal(auto)"}, {"support_style", "default"},
+        {"layer_height", 0.2}, {"initial_layer_print_height", 0.2}, {"nozzle_diameter", "0.4"},
+        {"min_layer_height", "0.05"}, {"max_layer_height", "0.3"},
+        {"support_top_z_distance", 0.17}, {"support_bottom_z_distance", 0.17},
+        {"support_object_xy_distance", 0.4}, {"support_threshold_angle", 30},
+        {"bridge_no_support", false}, {"support_interface_top_layers", 4},
+        {"independent_support_layer_height", independent_body},
+        {"independent_support_top_contact_layer_height", independent_contact}
+    });
+    Print print;
+    init_and_process_print({mesh}, print, config);
+    double top_z = 0.;
+    for (const SupportLayer *layer : print.objects().front()->support_layers())
+        for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+            if (path.role() == erSupportMaterialInterface) {
+                top_z = std::max(top_z, layer->print_z);
+                CHECK(path.height > 0.);
+            }
+        });
+    REQUIRE(top_z > 0.);
+    double minimum_top_height = std::numeric_limits<double>::infinity();
+    for (const SupportLayer *layer : print.objects().front()->support_layers())
+        if (std::abs(layer->print_z - top_z) < EPSILON)
+            for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+                if (path.role() == erSupportMaterialInterface)
+                    minimum_top_height = std::min(minimum_top_height, double(path.height));
+            });
+    CAPTURE(minimum_top_height);
+    REQUIRE(minimum_top_height >= 0.05 - EPSILON);
+    const double expected_gap = independent_body || independent_contact ? 0.17 : 0.2;
+    REQUIRE_THAT(12. - top_z, Catch::Matchers::WithinAbs(expected_gap, EPSILON));
+}
+
 namespace {
 
 DynamicPrintConfig organic_support_config(
@@ -437,10 +548,18 @@ TreeSupportMetrics process_tree_support(
     const tbb::global_control single_thread(
         tbb::global_control::max_allowed_parallelism, 1);
     Print print;
-    init_and_process_print(
-        {suspended_tree_platform()}, print,
+    Model model;
+    init_print({suspended_tree_platform()}, print, model,
         classic_tree_support_config(style, maximum_angle, preferred_angle));
-    return tree_support_metrics(print);
+    TreeSupportMetrics metrics;
+    // Support nodes are transient and are released after the support step.
+    // Capture them once circles are drawn, before toolpaths clear the cache.
+    print.set_status_callback([&](const PrintBase::SlicingStatus &status) {
+        if (status.percent == 70 && !print.get_object(0)->is_step_done(posSupportMaterial))
+            metrics = tree_support_metrics(print);
+    });
+    print.process();
+    return metrics;
 }
 
 } // namespace
@@ -538,13 +657,24 @@ TEST_CASE("Changing the strong tree preferred angle invalidates support once", "
     Print print;
     DynamicPrintConfig preferred_10 = classic_tree_support_config("tree_strong", 30., 10.);
     init_print({suspended_tree_platform()}, print, model, preferred_10);
+    std::shared_ptr<TreeSupportData> observed_cache;
+    std::vector<TreeNodeSignatureEntry> observed_signature;
+    size_t support_passes = 0;
+    print.set_status_callback([&](const PrintBase::SlicingStatus &status) {
+        if (status.percent == 70 && !print.get_object(0)->is_step_done(posSupportMaterial)) {
+            observed_cache = print.get_object(0)->alloc_tree_support_preview_cache();
+            observed_signature = tree_support_metrics(print).node_signature;
+            ++support_passes;
+        }
+    });
     print.process();
 
     REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
     const std::shared_ptr<TreeSupportData> first_cache =
-        print.get_object(0)->alloc_tree_support_preview_cache();
+        observed_cache;
     const std::vector<TreeNodeSignatureEntry> first_signature =
-        tree_support_metrics(print).node_signature;
+        observed_signature;
+    REQUIRE(support_passes == 1);
 
     DynamicPrintConfig preferred_25 = classic_tree_support_config("tree_strong", 30., 25.);
     const PrintBase::ApplyStatus changed_status = print.apply(model, preferred_25);
@@ -555,16 +685,19 @@ TEST_CASE("Changing the strong tree preferred angle invalidates support once", "
     print.process();
     REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
     const std::shared_ptr<TreeSupportData> second_cache =
-        print.get_object(0)->alloc_tree_support_preview_cache();
+        observed_cache;
     const std::vector<TreeNodeSignatureEntry> second_signature =
-        tree_support_metrics(print).node_signature;
+        observed_signature;
+    REQUIRE(support_passes == 2);
     REQUIRE(second_cache != first_cache);
     REQUIRE(second_signature != first_signature);
 
     const PrintBase::ApplyStatus unchanged_status = print.apply(model, preferred_25);
     REQUIRE(unchanged_status != PrintBase::APPLY_STATUS_INVALIDATED);
     REQUIRE(print.objects().front()->is_step_done(posSupportMaterial));
-    REQUIRE(print.get_object(0)->alloc_tree_support_preview_cache() == second_cache);
+    print.process();
+    REQUIRE(support_passes == 2);
+    REQUIRE(observed_cache == second_cache);
 }
 
 TEST_CASE("Explicit rectilinear support uses alternating end connections", "[SupportMaterial][NormalSupport]")
