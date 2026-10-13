@@ -1,0 +1,118 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-local-install-packages-20261014",
+  "key": "windows-native-install-output-contract",
+  "type": "fact",
+  "conclusion": "The default Windows CMake install prefix is build/InlongSlicer. The install_only_inlong target writes build/InlongSlicer_InlongOnly, rejects other output paths, removes the previous filtered output, and copies Release EXE/DLL files, bundled Python, runtime libraries and non-profile resources. Its nine allowed profile roots are InlongFilamentLibrary, INLONG, _Infinity3DP, user, their three vendor manifest JSON files, blacklist.json and hotend.stl. Pages 21 and 24 load the shared guide/21/common.js printer selector; patch that shared implementation in the filtered output, rather than page-specific initialization stubs. The full guide resources and source JS remain unchanged. prepare_empty_data_dirs and direct install hooks reset data_dir in the configured Release binary folder and both local package folders, including incremental no-op builds. Preserve needed portable user settings before invoking these native targets. Local package generation does not itself publish a release or prove committed-source release readiness.",
+  "scope": "Default Windows native CMake local package outputs",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "Windows",
+    "install",
+    "install-only-inlong",
+    "portable-settings",
+    "profiles"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "src/CMakeLists.txt",
+    "build_win.bat",
+    "cmake/InlongBuildDataDirs.cmake",
+    "cmake/ResetBuildDataDirs.cmake",
+    "cmake/InstallOnlyInlong.cmake",
+    "resources/web/guide/21/common.js",
+    "resources/web/guide/21/index.html",
+    "resources/web/guide/24/index.html",
+    "scripts/tests/test_build_data_dirs.py"
+  ],
+  "sources": [
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "ad43d4d50c67d0c0c4487c8e74a64d902a6de5e4b70da5b6d7c16e8f1026eae7"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "src/CMakeLists.txt",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "build_win.bat",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "728b0b0f3a95788b054bd870fdb04429b12bf9d76ebc535d0da7c73fb1299f67"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "cmake/InlongBuildDataDirs.cmake",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "cmake/ResetBuildDataDirs.cmake",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/common.js",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "5cfd8c068ec3003d60467da8b3d2820d8c443cf0e3f2fe77247696e1712e9364"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/index.html",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/24/index.html",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f"
+    },
+    {
+      "commit": "0937423de7ffb30fc0cac6f92c2f4092be8b3262",
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_build_data_dirs.py",
+      "locator": "Native build/install recipe, default prefix, binary/Python installation, portable reset hooks, or filtered package copy and guide-patching contract",
+      "sha256": "33693bf82dac6c76cec5c95157c5c343cbe64083da4aee23c76af904144ed8d9"
+    }
+  ],
+  "verified_utc": "2026-10-13T20:35:45.9876624+00:00",
+  "verification": {
+    "reviewed_by": "Codex root agent",
+    "method": "Current source review, native Release install and install_only_inlong execution, failed original-script regression, 14 packaging/web tests with Node vendor-order evaluation, installed binary/profile hashes and hidden launcher/Python smoke",
+    "summary": "Both requested native targets exited 0 after correcting the filtered guide patch location. The unchanged new native fixture failed on the old hook and passed after the fix; all 14 affected build-data-dir and web contract tests passed, including Node vendor filtering/order. Both primary EXE/DLL and Python executable hashes match build/src/Release; nine current process defaults match source with organic branch diameter 3.0 mm. The filtered package has exactly nine allowed profile roots; both installed data_dir folders are empty. Two installed launchers exited 0 with run-local --datadir and --help, and both bundled Python runtimes exited 0. All pre-existing source hashes and user setting backup hashes were preserved. The checkout contains uncommitted product work; commit fields are checkout anchors only.",
+    "result": "passed"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

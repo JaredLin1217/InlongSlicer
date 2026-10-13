@@ -1,5 +1,7 @@
 """Keep build and install data directories empty without touching other data."""
+import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -17,7 +19,7 @@ INSTALL_ONLY = ROOT / 'cmake' / 'InstallOnlyInlong.cmake'
 @unittest.skipUnless(CMAKE, 'CMake is not available')
 class TestBuildDataDirs(unittest.TestCase):
     def setUp(self):
-        scratch = ROOT / 'build'
+        scratch = Path(os.environ.get('INLONG_TEST_SCRATCH', ROOT / 'build'))
         scratch.mkdir(exist_ok=True)
         self.temporary = tempfile.TemporaryDirectory(prefix='data-dir-test-', dir=scratch)
         self.addCleanup(self.temporary.cleanup)
@@ -163,7 +165,7 @@ include("{MODULE.as_posix()}")
                 self.run_cmake('--install', self.build, '--config', 'Release')
                 self.assert_empty(paths)
 
-    def test_inlong_only_install_outputs_an_empty_data_directory(self):
+    def prepare_inlong_only_fixture(self):
         profiles = self.source / 'resources' / 'profiles'
         for directory in ('InlongFilamentLibrary', 'INLONG', '_Infinity3DP', 'user'):
             (profiles / directory).mkdir(parents=True)
@@ -173,12 +175,57 @@ include("{MODULE.as_posix()}")
         python = self.build / 'src' / 'Release' / 'python'
         python.mkdir(parents=True)
         (python / 'python.exe').write_text('fixture', encoding='utf-8')
+        return self.build / 'InlongSlicer_InlongOnly'
+
+    def install_only(self):
         output = self.build / 'InlongSlicer_InlongOnly'
-        self.populate([output / 'data_dir'])
         self.run_cmake(f'-DSOURCE_ROOT={self.source}', f'-DBUILD_ROOT={self.build}',
                        '-DCONFIG=Release', '-DSLIC3R_APP_KEY=InlongSlicer',
                        f'-DOUTPUT_DIR={output}', '-P', INSTALL_ONLY)
+
+    def test_inlong_only_install_outputs_an_empty_data_directory(self):
+        output = self.prepare_inlong_only_fixture()
+        self.populate([output / 'data_dir'])
+        self.install_only()
         self.assert_empty([output / 'data_dir'])
+
+    def test_inlong_only_install_filters_the_shared_printer_selector(self):
+        output = self.prepare_inlong_only_fixture()
+        originals = {}
+        for relative in ('21/common.js', '21/21.js', '21/index.html',
+                         '24/24.js', '24/index.html'):
+            source = ROOT / 'resources/web/guide' / relative
+            destination = self.source / 'resources/web/guide' / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            originals[relative] = source.read_bytes()
+            destination.write_bytes(originals[relative])
+        self.install_only()
+        installed = output / 'resources/web/guide/21/common.js'
+        selector = installed.read_text(encoding='utf-8')
+        self.assertIn('INLONG_ONLY_GUIDE_VENDOR_ORDER', selector)
+        for relative, original in originals.items():
+            with self.subTest(relative=relative):
+                self.assertEqual((self.source / 'resources/web/guide' / relative).read_bytes(), original)
+                if relative != '21/common.js':
+                    self.assertEqual((output / 'resources/web/guide' / relative).read_bytes(), original)
+
+        node = shutil.which('node')
+        if node:
+            # Exercise vendor filtering/order without the selector's DOM rendering.
+            block = re.search(r"pModel=pVal\['model'\];.*?let nTotal=pModel.length;",
+                              selector, re.DOTALL)
+            self.assertIsNotNone(block)
+            vendors = ['Other', 'Infinity3DP', 'Custom', '_Infinity3DP', 'INLONG']
+            model = [{'vendor': vendor} for vendor in vendors]
+            program = ('const pVal={model:' + json.dumps(model) + '}; let pModel;\n' +
+                       block.group(0) + '\nconsole.log(JSON.stringify(pModel.map(i=>i.vendor)));')
+            result = subprocess.run([node, '-e', program], capture_output=True, text=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            ordered = json.loads(result.stdout)
+            self.assertEqual(ordered[0], 'INLONG')
+            self.assertEqual(set(ordered[1:3]), {'Infinity3DP', '_Infinity3DP'})
+            self.assertEqual(ordered[-1], 'Other')
+            self.assertNotIn('Custom', ordered)
 
 
 if __name__ == '__main__':

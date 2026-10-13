@@ -100,8 +100,8 @@ foreach(resource_entry IN LISTS resource_entries)
     endif()
 endforeach()
 
-inlong_only_patch_guide_js("${OUTPUT_DIR}/resources/web/guide/21/21.js")
-inlong_only_patch_guide_js("${OUTPUT_DIR}/resources/web/guide/24/24.js")
+# Both printer-selection pages load this shared model-list implementation.
+inlong_only_patch_guide_js("${OUTPUT_DIR}/resources/web/guide/21/common.js")
 
 set(output_profiles_dir "${OUTPUT_DIR}/resources/profiles")
 file(MAKE_DIRECTORY "${output_profiles_dir}")
