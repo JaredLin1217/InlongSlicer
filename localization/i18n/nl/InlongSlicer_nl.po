@@ -10452,7 +10452,7 @@ msgstr "Opnieuw laden mislukt"
 msgid "Associate"
 msgstr "Associeer"
 
-msgid "with InlongSlicer so that Orca can open models from"
+msgid "with InlongSlicer so that Inlong can open models from"
 msgstr ""
 
 msgid "Current Association: "

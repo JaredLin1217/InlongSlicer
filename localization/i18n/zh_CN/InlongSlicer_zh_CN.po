@@ -9857,7 +9857,7 @@ msgstr "重新加载失败"
 msgid "Associate"
 msgstr "相关的"
 
-msgid "with InlongSlicer so that Orca can open models from"
+msgid "with InlongSlicer so that Inlong can open models from"
 msgstr ""
 
 msgid "Current Association: "

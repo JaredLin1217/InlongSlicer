@@ -9617,7 +9617,7 @@ msgstr "Neuladen fehlgeschlagen"
 msgid "Associate"
 msgstr "Zuordnen"
 
-msgid "with InlongSlicer so that Orca can open models from"
+msgid "with InlongSlicer so that Inlong can open models from"
 msgstr ""
 
 msgid "Current Association: "

@@ -6896,7 +6896,7 @@ TEST_CASE("The vendor and filament scans read the bundled vendors that ship as t
     ScopedTemporaryDir temp_dir;
     const fs::path     profiles = temp_dir.path() / "resources" / PRESET_PROFILES_DIR;
     ScopedResourcesDir scoped_resources(temp_dir.path() / "resources");
-    const std::string  lib(PresetBundle::ORCA_FILAMENT_LIBRARY);
+    const std::string  lib(PresetBundle::INLONG_FILAMENT_LIBRARY);
     fs::create_directories(profiles / lib / "filament");
     std::ofstream((profiles / (lib + ".json")).string())
         << R"({"version":"1.0.0","name":")" << lib << R"(",)"

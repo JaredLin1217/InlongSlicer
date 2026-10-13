@@ -9719,7 +9719,7 @@ msgstr "Перезапуск не удался"
 msgid "Associate"
 msgstr "Ассоциация"
 
-msgid "with InlongSlicer so that Orca can open models from"
+msgid "with InlongSlicer so that Inlong can open models from"
 msgstr ""
 
 msgid "Current Association: "

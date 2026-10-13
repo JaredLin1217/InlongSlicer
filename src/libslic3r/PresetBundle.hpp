@@ -671,7 +671,11 @@ private:
     // the vendor profile there. False, with this bundle left clean, when there
     // is no usable cache and the vendor has to be parsed. This is how
     // load_vendor_configs_from_json reads a cache.
-    bool load_vendor_cache(const boost::filesystem::path& dir, const std::string& vendor_name, const PresetBundle* base_bundle);
+    bool load_vendor_cache(const boost::filesystem::path& dir, const std::string& vendor_name,
+                           const PresetBundle* base_bundle, LoadConfigBundleAttributes flags);
+    bool load_vendor_cache_impl(const std::string& cache_path, const std::string& vendor_name,
+                                const Semver& version, const PresetBundle* base_bundle,
+                                LoadConfigBundleAttributes flags);
 
     // Load one source-form preset entry into this bundle: resolve `inherits`
     // and `include`, flatten, validate and register the preset. Returns the

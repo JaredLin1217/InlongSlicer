@@ -9695,7 +9695,7 @@ msgstr "再読み込み失敗"
 msgid "Associate"
 msgstr "関連付け"
 
-msgid "with InlongSlicer so that Orca can open models from"
+msgid "with InlongSlicer so that Inlong can open models from"
 msgstr ""
 
 msgid "Current Association: "

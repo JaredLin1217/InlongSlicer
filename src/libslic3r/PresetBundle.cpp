@@ -7403,11 +7403,13 @@ std::pair<PresetsConfigSubstitutions, size_t> PresetBundle::load_vendor_configs_
         // Reset this bundle, delete user profile files if SaveImported.
         this->reset(flags.has(LoadConfigBundleAttribute::SaveImported));
 
-    // Orca: only a whole-vendor load has a cache — the vendor-only and filament-only
-    // scans want a slice of one. Validation reads the JSONs whatever is cached.
+    // Whole-vendor loads use their cache. Partial scans prefer JSON, but must also
+    // work when a packaged vendor ships only its cache. Validation still reads JSON.
     const boost::filesystem::path dir_path(dir);
     const bool cacheable = allow_cache && flags.has(LoadConfigBundleAttribute::LoadSystem) && ! flags.has(LoadConfigBundleAttribute::LoadFilamentOnly);
-    if (cacheable && ! validation_mode && this->load_vendor_cache(dir_path, vendor_name, base_bundle)) {
+    const bool scan_cache = allow_cache && ! boost::filesystem::exists(dir_path / (vendor_name + ".json"))
+        && (flags.has(LoadConfigBundleAttribute::LoadVendorOnly) || flags.has(LoadConfigBundleAttribute::LoadFilamentOnly));
+    if ((cacheable || scan_cache) && ! validation_mode && this->load_vendor_cache(dir_path, vendor_name, base_bundle, flags)) {
         size_t presets_loaded = 0;
         for (const PresetCollection* coll : std::initializer_list<const PresetCollection*>{
                  &this->prints, &this->sla_prints, &this->filaments, &this->sla_materials, &this->printers })
@@ -8516,7 +8518,8 @@ bool BundleMetadata::save_to_json(const std::string& path) const
 // ---- Per-vendor preset cache: install into this bundle -------------------
 // The file format itself lives in PresetCacheFormat.cpp (VendorCacheFile).
 
-bool PresetBundle::load_vendor_cache(const boost::filesystem::path& dir, const std::string& vendor_name, const PresetBundle* base_bundle)
+bool PresetBundle::load_vendor_cache(const boost::filesystem::path& dir, const std::string& vendor_name,
+                                    const PresetBundle* base_bundle, LoadConfigBundleAttributes flags)
 {
     // A vendor is loaded from where it is installed and nowhere else; resources
     // reaches the app by being installed into `dir` first. The cache there is
@@ -8526,11 +8529,19 @@ bool PresetBundle::load_vendor_cache(const boost::filesystem::path& dir, const s
     const boost::filesystem::path profile = dir / (vendor_name + ".json");
     const Semver version = boost::filesystem::exists(profile) ? get_version_from_json(profile.string())
                                                               : Semver::inf();
-    return this->load_vendor_cache((dir / (vendor_name + ".opc")).string(), vendor_name, version, base_bundle);
+    return this->load_vendor_cache_impl((dir / (vendor_name + ".opc")).string(), vendor_name, version, base_bundle, flags);
 }
 
 bool PresetBundle::load_vendor_cache(const std::string& cache_path, const std::string& expected_vendor_name,
                                      const Semver& expected_vendor_version, const PresetBundle* base_bundle)
+{
+    return this->load_vendor_cache_impl(cache_path, expected_vendor_name, expected_vendor_version,
+                                       base_bundle, LoadConfigBundleAttribute::LoadSystem);
+}
+
+bool PresetBundle::load_vendor_cache_impl(const std::string& cache_path, const std::string& expected_vendor_name,
+                                         const Semver& expected_vendor_version, const PresetBundle* base_bundle,
+                                         LoadConfigBundleAttributes flags)
 {
     // What this bundle had counted before the cache was tried. The caller
     // measures its own parse against this same baseline, so a rejection must
@@ -8545,6 +8556,10 @@ bool PresetBundle::load_vendor_cache(const std::string& cache_path, const std::s
         throw RuntimeError("PresetBundle: vendor cache installation canceled");
     try {
         const std::string& vendor_name = expected_vendor_name;   // VendorCacheFile::load checked they match
+        if (flags.has(LoadConfigBundleAttribute::LoadVendorOnly)) {
+            this->vendors.insert(data.vendors.begin(), data.vendors.end());
+            return true;
+        }
         this->vendors = std::move(data.vendors);
 
         // What the parse counted before install took over; install recounts its
@@ -8578,20 +8593,22 @@ bool PresetBundle::load_vendor_cache(const std::string& cache_path, const std::s
             const std::set<std::string>* retain_configs = is_from_lib ? nullptr : &inherited;
             for (const CachedPreset& entry : entries) {
                 const std::string reason = load_vendor_preset(entry, path, vendor_name,
-                    base_bundle, LoadConfigBundleAttribute::LoadSystem, substitution_context, substitutions,
+                    base_bundle, flags, substitution_context, substitutions,
                     configs, include_maps, filament_id_maps, presets, count, is_from_lib, retain_configs, &included);
                 if (! reason.empty())
                     throw std::runtime_error("entry " + entry.name + " failed to install: " + reason);
             }
         };
-        install_entries(data.process_entries, &this->prints, false);
+        if (! flags.has(LoadConfigBundleAttribute::LoadFilamentOnly))
+            install_entries(data.process_entries, &this->prints, false);
         const bool is_inlong_lib = vendor_name == INLONG_FILAMENT_LIBRARY;
         install_entries(data.filament_entries, &this->filaments, is_inlong_lib);
         if (is_inlong_lib) {
             m_config_maps      = configs;
             m_filament_id_maps = filament_id_maps;
         }
-        install_entries(data.machine_entries, &this->printers, false);
+        if (! flags.has(LoadConfigBundleAttribute::LoadFilamentOnly))
+            install_entries(data.machine_entries, &this->printers, false);
         return true;
     } catch (const std::exception& e) {
         if (tbb::is_current_task_group_canceling())
