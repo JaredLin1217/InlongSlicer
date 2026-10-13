@@ -29,8 +29,8 @@
 #include <wx/string.h>
 #include "MainFrame.hpp"
 #include <miniz.h>
-#include <InlongCloudServiceAgent.hpp>
 #include <wx/event.h>
+#include <InlongCloudServiceAgent.hpp>
 #include <wx/utils.h>
 
 using json = nlohmann::json;
@@ -207,6 +207,31 @@ void PresetBundleDialog::create()
     app_config = get_app_config();
     create_webview("web/dialog/PresetBundleDialog/index.html", _L("Preset Bundle"),
                    wxSize(820, 660), wxSize(640, 640));
+}
+
+nlohmann::json PresetBundleDialog::localized_strings() const
+{
+    return {
+        {"refresh", _u8L("Refresh")},
+        {"name", _u8L("Name")},
+        {"type", _u8L("Type")},
+        {"version", _u8L("Version")},
+        {"update", _u8L("Update")},
+        {"export_presets", _u8L("Export Presets")},
+        {"close", _u8L("Close")},
+        {"open_folder", _u8L("Open folder in explorer")},
+        {"delete_bundle", _u8L("Delete bundle")},
+        {"unsubscribe_bundle", _u8L("Unsubscribe bundle")},
+        {"update_available", _u8L("Update available")},
+        {"unauthorized_bundle", _u8L("Unauthorized bundle")},
+        {"open_in_browser", _u8L("Open this bundle in your browser")},
+        {"type_subscribed", _u8L("Subscribed")},
+        {"type_local", _u8L("Local")},
+        {"type_default", _u8L("Default")},
+        {"printer", _u8L("Printer")},
+        {"filament", _u8L("Filament")},
+        {"process", _u8L("Process")},
+    };
 }
 
 bool PresetBundleDialog::DeleteBundleById(const wxString& id)
@@ -414,3 +439,4 @@ void PresetBundleDialog::OpenBundleOnCloud(const std::string& id)
     wxLaunchDefaultBrowser(wxString::FromUTF8(inlong_agent->get_bundle_url(id)));
 }
 }} // namespace Slic3r::GUI
+

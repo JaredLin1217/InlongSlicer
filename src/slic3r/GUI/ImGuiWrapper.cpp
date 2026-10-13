@@ -66,7 +66,6 @@
 #include <nanosvg/nanosvg.h>
 #include <nanosvg/nanosvgrast.h>
 #include "OpenGLManager.hpp"
-#include "GUI_App.hpp"
 
 namespace Slic3r {
 namespace GUI {
@@ -3188,12 +3187,12 @@ void ImGuiWrapper::init_style()
 
     // ComboBox items
     set_color(ImGuiCol_Header, COL_ORANGE_DARK);
-    set_color(ImGuiCol_HeaderHovered,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.50f))); // ORCA Use orca color for headers
-    set_color(ImGuiCol_HeaderActive,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.75f)));  // ORCA Use orca color for headers
+    set_color(ImGuiCol_HeaderHovered,	to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.50f))); // ORCA Use orca color for headers
+    set_color(ImGuiCol_HeaderActive,	to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.75f)));  // ORCA Use orca color for headers
 
     // Slider
-    set_color(ImGuiCol_SliderGrab,			to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.50f))); // ORCA Use orca color for slider thumbs
-    set_color(ImGuiCol_SliderGrabActive,	to_ImVec4(to_rgba(ColorRGB::ORCA(), 0.75f))); // ORCA Use orca color for slider thumbs
+    set_color(ImGuiCol_SliderGrab,			to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.50f))); // ORCA Use orca color for slider thumbs
+    set_color(ImGuiCol_SliderGrabActive,	to_ImVec4(to_rgba(ColorRGB::INLONG(), 0.75f))); // ORCA Use orca color for slider thumbs
 
     // Separator
     set_color(ImGuiCol_Separator, COL_BLUE_LIGHT);

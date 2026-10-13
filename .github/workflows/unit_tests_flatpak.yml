@@ -31,9 +31,9 @@ jobs:
         shell: bash
         run: |
           tar -xf flatpak-test-asset.tar
-          # Recreate the stable module symlink so /run/build/OrcaSlicer resolves.
-          d=$(ls -d .flatpak-builder/build/OrcaSlicer-* | tail -1)
-          ln -sfn "$(basename "$d")" .flatpak-builder/build/OrcaSlicer
+          # Recreate the stable module symlink so /run/build/InlongSlicer resolves.
+          d=$(ls -d .flatpak-builder/build/InlongSlicer-* | tail -1)
+          ln -sfn "$(basename "$d")" .flatpak-builder/build/InlongSlicer
           # The runtime + SDK + the llvm extension the app metadata references,
           # which `flatpak build` mounts; best-effort, the image may have them.
           flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -44,12 +44,12 @@ jobs:
           flatpak build --die-with-parent --share=network \
             --bind-mount=/run/build="$PWD/.flatpak-builder/build" \
             flatpak_app \
-            bash -c 'cd /run/build/OrcaSlicer && scripts/run_unit_tests.sh build_flatpak/tests'
+            bash -c 'cd /run/build/InlongSlicer && scripts/run_unit_tests.sh build_flatpak/tests'
       - name: Collect test results
         if: always()
         shell: bash
         run: |
-          d=$(ls -d .flatpak-builder/build/OrcaSlicer-* 2>/dev/null | tail -1 || true)
+          d=$(ls -d .flatpak-builder/build/InlongSlicer-* 2>/dev/null | tail -1 || true)
           [ -n "$d" ] && [ -f "$d/ctest_results.xml" ] && cp "$d/ctest_results.xml" ctest_results.xml || true
       - name: Upload Test Results
         if: always()

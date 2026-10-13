@@ -50,6 +50,9 @@ add_subdirectory("{(ROOT / 'tests' / 'cli').as_posix()}" cli)
                 'cli_strict_mode': 'test_cli_strict.sh',
                 'cli_project_missing_keys': 'test_cli_project_missing_keys.sh',
                 'cli_malformed_input': 'test_cli_malformed_input.sh',
+                'cli_empty_project_config': 'test_cli_empty_project_config.sh',
+                'cli_arrange_rotations': 'test_cli_arrange_rotations.sh',
+                'cli_no_suitable_objects': 'test_cli_no_suitable_objects.sh',
             }
             self.assertEqual({test['name'] for test in tests}, set(expected))
             for test in tests:
@@ -61,7 +64,7 @@ add_subdirectory("{(ROOT / 'tests' / 'cli').as_posix()}" cli)
                     properties = {prop['name']: prop['value'] for prop in test['properties']}
                     self.assertIn('RequiresApp', properties['LABELS'])
                     self.assertEqual(properties['SKIP_RETURN_CODE'], 77)
-                    self.assertEqual(properties['TIMEOUT'], 900)
+                    self.assertEqual(properties['TIMEOUT'], 300 if test['name'] == 'cli_empty_project_config' else 900)
 
 
 if __name__ == '__main__':

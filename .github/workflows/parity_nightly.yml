@@ -126,7 +126,7 @@ jobs:
       # The AppImage ships only packed preset caches, so profiles and the CLI
       # option surface come from the sources the build was made from
       - &checkout-slicer
-        name: Check out OrcaSlicer at the build's commit
+        name: Check out InlongSlicer at the build's commit
         uses: actions/checkout@v7
         with:
           ref: ${{ needs.build.outputs.head_sha }}
@@ -141,7 +141,7 @@ jobs:
         run: |
           set -euo pipefail
           gh run download "${{ needs.build.outputs.run_id }}" --dir appimage \
-            --pattern "OrcaSlicer_Linux_ubuntu_2404*"
+            --pattern "InlongSlicer_Linux_ubuntu_2404*"
           appimage=$(find appimage -name "*.AppImage" ! -name "*aarch64*" | head -1)
           [ -n "$appimage" ] || { echo "no x86_64 AppImage in run ${{ needs.build.outputs.run_id }}"; exit 1; }
           chmod +x "$appimage"
@@ -156,7 +156,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            libopengl0 libglu1-mesa libgl1 libegl1 libwebkit2gtk-4.1-0
+            libopengl0 libgl1 libegl1 libwebkit2gtk-4.1-0
 
       - uses: actions/setup-python@v6
         with:
@@ -224,7 +224,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             xvfb xdotool imagemagick openbox mesa-utils \
-            libopengl0 libglu1-mesa libgl1 libegl1 libwebkit2gtk-4.1-0
+            libopengl0 libgl1 libegl1 libwebkit2gtk-4.1-0
 
       - name: Run the parity harness
         run: |

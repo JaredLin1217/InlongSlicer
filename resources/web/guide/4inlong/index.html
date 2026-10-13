@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="4inlong.css" />
 <script type="text/javascript" src="../../include/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="../js/json2.js"></script>	
-<script type="text/javascript" src="../../data/text.js"></script>	
+<script type="text/javascript" src="../../include/i18n.js"></script>	
 <script type="text/javascript" src="../js/globalapi.js"></script>	
 <script type="text/javascript" src="../js/common.js"></script>
 <script type="text/javascript" src="4inlong.js"></script>
@@ -34,8 +34,9 @@
 	
 </div>
 <div id="AcceptArea">
-	<div class="ButtonStyleRegular ButtonTypeChoice trans" tid="t8" id="PreBtn"  onclick="window.history.back()">Back</div>
-	<div class="ButtonStyleConfirm ButtonTypeChoice trans" tid="t9" id="GotoNetPluginBtn"  onclick="GotoNetPluginPage()">Next</div>	
+	<div class="ButtonStyleRegular ButtonTypeChoice" id="PreBtn" onclick="window.history.back()" data-i18n="back">Back</div>
+	<div class="ButtonStyleConfirm ButtonTypeChoice" id="GotoNetPluginBtn" onclick="GotoNetPluginPage()" data-i18n="next">Next</div>	
 </div>	
 </body>
 </html>
+

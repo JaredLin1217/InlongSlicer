@@ -108,6 +108,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
   },
+  "OF0kP94Y": {
+   "filaments": [
+    "FELIX Printers/Food Thin Plastic Syringe"
+   ],
+   "name": "Food Thin Plastic Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
+  },
   "OF0omtEb": {
    "filaments": [
     "Snapmaker/Fiberon ASA-CF08"
@@ -149,6 +157,14 @@
    "filament_type": "ABS",
    "filament_vendor": "QIDI"
   },
+  "OF0xT5HR": {
+   "filaments": [
+    "FELIX Printers/Food Very Thick Stainless Steel Syringe"
+   ],
+   "name": "Food Very Thick Stainless Steel Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
+  },
   "OF0yFLkY": {
    "filaments": [
     "Anycubic/Anycubic ASA"
@@ -163,6 +179,20 @@
    ],
    "name": "Generic PETG Basic",
    "filament_type": "PETG",
+   "filament_vendor": "Generic"
+  },
+  "OF17qLwN": {
+   "filaments": [
+    "FELIX Printers/FELIX PETG Brass"
+   ],
+   "name": "FELIX PETG Brass",
+   "filament_type": "PETG",
+   "filament_vendor": "FELIX Printers"
+  },
+  "OF1BMUQW": {
+   "filaments": [],
+   "name": "fdm_filament_pvb",
+   "filament_type": "PVB",
    "filament_vendor": "Generic"
   },
   "OF1N1qMK": {
@@ -208,6 +238,14 @@
    "name": "QIDI ASA-CF",
    "filament_type": "ASA-CF",
    "filament_vendor": "QIDI"
+  },
+  "OF1XcHqz": {
+   "filaments": [
+    "FELIX Printers/Food Very Thin Plastic Syringe"
+   ],
+   "name": "Food Very Thin Plastic Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
   },
   "OF1d7c3A": {
    "filaments": [
@@ -430,6 +468,14 @@
    "name": "InfiMech PLA Hyper",
    "filament_type": "PLA",
    "filament_vendor": "InfiMech"
+  },
+  "OF40XIE8": {
+   "filaments": [
+    "FELIX Printers/Food Thin Stainless Steel Syringe"
+   ],
+   "name": "Food Thin Stainless Steel Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
   },
   "OF43Raws": {
    "filaments": [
@@ -858,6 +904,14 @@
    "filament_type": "PHA",
    "filament_vendor": "Generic"
   },
+  "OF7CzDzq": {
+   "filaments": [
+    "FELIX Printers/FELIX Wood  Brass"
+   ],
+   "name": "FELIX Wood  Brass",
+   "filament_type": "PLA",
+   "filament_vendor": "FELIX Printers"
+  },
   "OF7H3VJM": {
    "filaments": [
     "InlongFilamentLibrary/eSUN PLA-Marble"
@@ -949,6 +1003,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Anycubic"
   },
+  "OF8FP7CM": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA TitanX ABS Brass"
+   ],
+   "name": "FORMFUTURA TitanX ABS Brass",
+   "filament_type": "ABS",
+   "filament_vendor": "FORMFUTURA"
+  },
   "OF8GnyFU": {
    "filaments": [
     "Creality/Hyper ABS"
@@ -980,6 +1042,12 @@
    "name": "Flashforge HS PLA Burnt Ti",
    "filament_type": "PLA",
    "filament_vendor": "Flashforge"
+  },
+  "OF8O6WG6": {
+   "filaments": [],
+   "name": "fdm_filament_pccf",
+   "filament_type": "PC-CF",
+   "filament_vendor": "Generic"
   },
   "OF8Tlg47": {
    "filaments": [
@@ -1039,6 +1107,20 @@
    "filament_type": "PETG",
    "filament_vendor": "Eryone"
   },
+  "OF8lb7Zg": {
+   "filaments": [],
+   "name": "fdm_filament_asa",
+   "filament_type": "ASA",
+   "filament_vendor": "Generic"
+  },
+  "OF8sLgrm": {
+   "filaments": [
+    "FELIX Printers/FELIX Premium PLA Brass"
+   ],
+   "name": "FELIX Premium PLA Brass",
+   "filament_type": "PLA",
+   "filament_vendor": "FELIX Printers"
+  },
   "OF8tPByX": {
    "filaments": [
     "BBL/Generic PPA-CF",
@@ -1056,6 +1138,12 @@
    "name": "Artillery PETG Basic",
    "filament_type": "PETG Basic",
    "filament_vendor": "Artillery"
+  },
+  "OF8yxKvf": {
+   "filaments": [],
+   "name": "fdm_filament_pla",
+   "filament_type": "PLA",
+   "filament_vendor": "Generic"
   },
   "OF95DqoF": {
    "filaments": [
@@ -1200,6 +1288,14 @@
    "filament_type": "PLA",
    "filament_vendor": "QIDI"
   },
+  "OFASY29j": {
+   "filaments": [
+    "FELIX Printers/Food Very Thin Stainless Steel Syringe"
+   ],
+   "name": "Food Very Thin Stainless Steel Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
+  },
   "OFAZllAN": {
    "filaments": [
     "Artillery/Artillery PLA-CF"
@@ -1240,6 +1336,14 @@
    "name": "FilAr PLA Marron Oxido",
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
+  },
+  "OFAzgHcF": {
+   "filaments": [
+    "FELIX Printers/Food Medium Plastic Syringe"
+   ],
+   "name": "Food Medium Plastic Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
   },
   "OFB5SmWk": {
    "filaments": [
@@ -1298,6 +1402,14 @@
    "name": "Elegoo PLA+",
    "filament_type": "PLA",
    "filament_vendor": "Elegoo"
+  },
+  "OFBfbmtb": {
+   "filaments": [
+    "Anker/AnkerMake PLA+ Metallic"
+   ],
+   "name": "AnkerMake PLA+ Metallic",
+   "filament_type": "PLA",
+   "filament_vendor": "AnkerMake"
   },
   "OFBlFMVp": {
    "filaments": [
@@ -1375,6 +1487,12 @@
    "name": "HP Ultra PLA",
    "filament_type": "PLA",
    "filament_vendor": "Creality"
+  },
+  "OFCK7aDj": {
+   "filaments": [],
+   "name": "fdm_filament_food",
+   "filament_type": "PVB",
+   "filament_vendor": "Generic"
   },
   "OFCSyK66": {
    "filaments": [
@@ -1473,6 +1591,14 @@
    "filament_type": "PLA",
    "filament_vendor": "FlyingBear"
   },
+  "OFDCDwNQ": {
+   "filaments": [
+    "FELIX Printers/Ultrafuse ABS Fusion+ Hardened Steel"
+   ],
+   "name": "Ultrafuse ABS Fusion+ Hardened Steel",
+   "filament_type": "ABS",
+   "filament_vendor": "Ultrafuse"
+  },
   "OFDDdgHM": {
    "filaments": [
     "Flashforge/Flashforge PLA LITE"
@@ -1560,6 +1686,7 @@
     "Flashforge/Generic PLA",
     "FlyingBear/Generic PLA",
     "Ginger Additive/Generic PLA",
+    "IdeaFormer/Generic PLA",
     "InfiMech/Generic PLA",
     "InlongArena/Generic PLA",
     "InlongFilamentLibrary/Generic PLA",
@@ -1567,6 +1694,7 @@
     "Lulzbot/Generic PLA",
     "Peopoly/Generic PLA",
     "Phrozen/Generic PLA",
+    "Printcepts/Generic PLA",
     "Prusa/Generic PLA",
     "Qidi/Generic PLA",
     "RH3D/Generic PLA",
@@ -1704,6 +1832,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Snapmaker"
   },
+  "OFEUX7D3": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA AppoloX ASA Brass"
+   ],
+   "name": "FORMFUTURA AppoloX ASA Brass",
+   "filament_type": "ASA",
+   "filament_vendor": "FORMFUTURA"
+  },
   "OFEWYR89": {
    "filaments": [
     "Anker/Generic PLA+",
@@ -1833,6 +1969,14 @@
    "name": "Generic TPU 64D",
    "filament_type": "TPU",
    "filament_vendor": "Generic"
+  },
+  "OFF6vK3j": {
+   "filaments": [
+    "FELIX Printers/FELIX FLEX  Brass"
+   ],
+   "name": "FELIX FLEX  Brass",
+   "filament_type": "FLEX",
+   "filament_vendor": "FELIX Printers"
   },
   "OFF9OKoY": {
    "filaments": [
@@ -2172,6 +2316,12 @@
    "filament_type": "PLA",
    "filament_vendor": "SUNLU"
   },
+  "OFI26O53": {
+   "filaments": [],
+   "name": "fdm_filament_pet",
+   "filament_type": "PETG",
+   "filament_vendor": "Generic"
+  },
   "OFIBXa0k": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PLA-mate Rojo"
@@ -2317,6 +2467,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Flashforge"
   },
+  "OFJDz9xO": {
+   "filaments": [
+    "FELIX Printers/Food Very Thin Stainless Steel  Syringe "
+   ],
+   "name": "Food Very Thin Stainless Steel  Syringe ",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
+  },
   "OFJHBEGD": {
    "filaments": [],
    "name": "DREMC PLA+ HS",
@@ -2439,6 +2597,14 @@
    "filament_type": "ABS",
    "filament_vendor": "Overture"
   },
+  "OFKDOyNK": {
+   "filaments": [
+    "Anker/AnkerMake PLA+ Matte"
+   ],
+   "name": "AnkerMake PLA+ Matte",
+   "filament_type": "PLA",
+   "filament_vendor": "AnkerMake"
+  },
   "OFKIQO2W": {
    "filaments": [
     "Qidi/QIDI PLA Rapido"
@@ -2454,6 +2620,12 @@
    "name": "FilAr PLA Gris Plata",
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
+  },
+  "OFKQ6RhU": {
+   "filaments": [],
+   "name": "fdm_filament_flex",
+   "filament_type": "FLEX",
+   "filament_vendor": "Generic"
   },
   "OFKTGKJU": {
    "filaments": [
@@ -2552,6 +2724,14 @@
    "name": "Panchroma PLA Marble",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
+  },
+  "OFKwdz3w": {
+   "filaments": [
+    "FELIX Printers/FELIX Wood Brass"
+   ],
+   "name": "FELIX Wood Brass",
+   "filament_type": "PLA",
+   "filament_vendor": "FELIX Printers"
   },
   "OFL9aRjN": {
    "filaments": [
@@ -2906,6 +3086,12 @@
    "filament_type": "PETG",
    "filament_vendor": "FilAr"
   },
+  "OFNYizSv": {
+   "filaments": [],
+   "name": "fdm_filament_pa11cf",
+   "filament_type": "PA11-CF",
+   "filament_vendor": "Generic"
+  },
   "OFNemJM6": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PLA Cobre"
@@ -3213,6 +3399,14 @@
    "filament_type": "ABS-CF",
    "filament_vendor": "Eryone"
   },
+  "OFQ3GEWL": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA Aquasolve PVA Hardened Steel"
+   ],
+   "name": "FORMFUTURA Aquasolve PVA Hardened Steel",
+   "filament_type": "PVA",
+   "filament_vendor": "FORMFUTURA"
+  },
   "OFQ3e56w": {
    "filaments": [
     "BBL/Bambu PLA Galaxy",
@@ -3343,6 +3537,14 @@
    "filament_type": "PA6-CF",
    "filament_vendor": "Anycubic"
   },
+  "OFQo5ZHk": {
+   "filaments": [
+    "FELIX Printers/FELIX PETG Hardened Steel"
+   ],
+   "name": "FELIX PETG Hardened Steel",
+   "filament_type": "PETG",
+   "filament_vendor": "FELIX Printers"
+  },
   "OFQyyO0l": {
    "filaments": [
     "Flashforge/Polymaker CoPA"
@@ -3366,6 +3568,12 @@
    "name": "QIDI TPU 95A-HF",
    "filament_type": "TPU",
    "filament_vendor": "QIDI"
+  },
+  "OFR5hJyS": {
+   "filaments": [],
+   "name": "fdm_filament_tpu",
+   "filament_type": "TPU",
+   "filament_vendor": "Generic"
   },
   "OFRJ325z": {
    "filaments": [
@@ -3513,6 +3721,14 @@
    "name": "Arena PLA Matte",
    "filament_type": "PLA",
    "filament_vendor": "Inlong Arena"
+  },
+  "OFSOY4F3": {
+   "filaments": [
+    "FELIX Printers/FELIX FLEX Hardened Steel"
+   ],
+   "name": "FELIX FLEX Hardened Steel",
+   "filament_type": "FLEX",
+   "filament_vendor": "FELIX Printers"
   },
   "OFSa39yP": {
    "filaments": [
@@ -3706,6 +3922,14 @@
    "filament_type": "PC",
    "filament_vendor": "Creality"
   },
+  "OFUG6JEQ": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA TitanX ABS Hardened Steel"
+   ],
+   "name": "FORMFUTURA TitanX ABS Hardened Steel",
+   "filament_type": "ABS",
+   "filament_vendor": "FORMFUTURA"
+  },
   "OFUH1aee": {
    "filaments": [
     "Volumic/Volumic FLEX93 Ultra (Performance)"
@@ -3762,6 +3986,14 @@
    "name": "eSUN ASA+",
    "filament_type": "ASA",
    "filament_vendor": "eSUN"
+  },
+  "OFUuZlQL": {
+   "filaments": [
+    "Anker/AnkerMake PLA+ Basic"
+   ],
+   "name": "AnkerMake PLA+ Basic",
+   "filament_type": "PLA",
+   "filament_vendor": "AnkerMake"
   },
   "OFUyDDNv": {
    "filaments": [
@@ -4080,6 +4312,14 @@
    "filament_type": "PETG",
    "filament_vendor": "Elas"
   },
+  "OFXW3h11": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA ePLA Hardened Steel"
+   ],
+   "name": "FORMFUTURA ePLA Hardened Steel",
+   "filament_type": "PLA",
+   "filament_vendor": "FORMFUTURA"
+  },
   "OFXW4CDh": {
    "filaments": [
     "Ratrig/Generic PCTG BigNozzle"
@@ -4301,12 +4541,14 @@
     "Flashforge/Generic PETG",
     "FlyingBear/Generic PETG",
     "Ginger Additive/Generic PETG",
+    "IdeaFormer/Generic PETG",
     "InfiMech/Generic PETG",
     "InlongArena/Generic PETG",
     "InlongFilamentLibrary/Generic PETG",
     "LONGER/Generic PETG",
     "Lulzbot/Generic PETG",
     "Peopoly/Generic PETG",
+    "Printcepts/Generic PETG",
     "Prusa/Generic PETG",
     "Qidi/Generic PETG",
     "RH3D/Generic PETG",
@@ -5335,6 +5577,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Creality"
   },
+  "OFguQdOr": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA AppoloX ASA Hardened Steel"
+   ],
+   "name": "FORMFUTURA AppoloX ASA Hardened Steel",
+   "filament_type": "ASA",
+   "filament_vendor": "FORMFUTURA"
+  },
   "OFgyPlwU": {
    "filaments": [
     "Snapmaker/Snapmaker TPU High-Flow"
@@ -5533,6 +5783,14 @@
    "filament_type": "PET-GF",
    "filament_vendor": "QIDI"
   },
+  "OFi00jWL": {
+   "filaments": [
+    "FELIX Printers/FELIX Premium PLA Hardened Steel"
+   ],
+   "name": "FELIX Premium PLA Hardened Steel",
+   "filament_type": "PLA",
+   "filament_vendor": "FELIX Printers"
+  },
   "OFi5RSve": {
    "filaments": [
     "Creality/eSUN PLA-LW"
@@ -5728,6 +5986,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Anycubic"
   },
+  "OFjXHG0Z": {
+   "filaments": [
+    "FELIX Printers/Food Thick Stainless Steel Syringe"
+   ],
+   "name": "Food Thick Stainless Steel Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
+  },
   "OFjb0wos": {
    "filaments": [
     "InlongFilamentLibrary/Panchroma PLA Metallic",
@@ -5888,6 +6154,15 @@
    "filament_type": "PA-GF",
    "filament_vendor": "Eryone"
   },
+  "OFkrxQC4": {
+   "filaments": [
+    "IdeaFormer/eSUN PLA",
+    "Printcepts/eSUN PLA"
+   ],
+   "name": "eSUN PLA",
+   "filament_type": "PLA",
+   "filament_vendor": "eSUN"
+  },
   "OFks6esg": {
    "filaments": [
     "Creality/EN-PLA+"
@@ -5903,6 +6178,14 @@
    "name": "Artillery PVA",
    "filament_type": "PVA",
    "filament_vendor": "Artillery"
+  },
+  "OFkxTGQc": {
+   "filaments": [
+    "Anker/AnkerMake PLA+ Silk"
+   ],
+   "name": "AnkerMake PLA+ Silk",
+   "filament_type": "PLA",
+   "filament_vendor": "AnkerMake"
   },
   "OFkzr35f": {
    "filaments": [
@@ -6618,6 +6901,14 @@
    "filament_type": "PET",
    "filament_vendor": "INLONG"
   },
+  "OFqZSD1S": {
+   "filaments": [
+    "FELIX Printers/Food Medium Stainless Steel Syringe"
+   ],
+   "name": "Food Medium Stainless Steel Syringe",
+   "filament_type": "PVB",
+   "filament_vendor": "FELIX Printers"
+  },
   "OFqcL5UF": {
    "filaments": [
     "Qidi/QIDI Support For PET/PA"
@@ -6650,6 +6941,12 @@
    "name": "Panchroma CoPE",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
+  },
+  "OFrAD92c": {
+   "filaments": [],
+   "name": "fdm_filament_pa",
+   "filament_type": "PA",
+   "filament_vendor": "Generic"
   },
   "OFrFBEfd": {
    "filaments": [
@@ -6798,6 +7095,14 @@
    "filament_type": "HIPS",
    "filament_vendor": "INLONG"
   },
+  "OFsMMDMp": {
+   "filaments": [
+    "FELIX Printers/FELIX Wood Hardened Steel"
+   ],
+   "name": "FELIX Wood Hardened Steel",
+   "filament_type": "PLA",
+   "filament_vendor": "FELIX Printers"
+  },
   "OFsMtR0D": {
    "filaments": [
     "_Infinity3DP/Infinity3DP VXL"
@@ -6927,6 +7232,12 @@
    "name": "FDplast SBS",
    "filament_type": "SBS",
    "filament_vendor": "FDplast"
+  },
+  "OFtcKVgP": {
+   "filaments": [],
+   "name": "fdm_filament_pc",
+   "filament_type": "PC",
+   "filament_vendor": "Generic"
   },
   "OFtefokm": {
    "filaments": [
@@ -7093,6 +7404,14 @@
    "filament_type": "TPU",
    "filament_vendor": "Generic"
   },
+  "OFumEwBr": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA Aquasolve PVA Brass"
+   ],
+   "name": "FORMFUTURA Aquasolve PVA Brass",
+   "filament_type": "PVA",
+   "filament_vendor": "FORMFUTURA"
+  },
   "OFurdQxc": {
    "filaments": [
     "InlongFilamentLibrary/FilAr PETG Magenta"
@@ -7173,6 +7492,12 @@
    "name": "COEX PETG",
    "filament_type": "PETG",
    "filament_vendor": "COEX 3D"
+  },
+  "OFvVOjhV": {
+   "filaments": [],
+   "name": "fdm_filament_abs",
+   "filament_type": "ABS",
+   "filament_vendor": "Generic"
   },
   "OFvVy7yo": {
    "filaments": [
@@ -7403,6 +7728,14 @@
    "filament_type": "PLA",
    "filament_vendor": "Overture"
   },
+  "OFxCURdg": {
+   "filaments": [
+    "Anker/AnkerMake PLA+ Glitter"
+   ],
+   "name": "AnkerMake PLA+ Glitter",
+   "filament_type": "PLA",
+   "filament_vendor": "AnkerMake"
+  },
   "OFxDHUX8": {
    "filaments": [
     "SeeMeCNC/SeeMeCNC PETG"
@@ -7453,6 +7786,20 @@
    "name": "PolyTerra PLA Marble",
    "filament_type": "PLA",
    "filament_vendor": "Polymaker"
+  },
+  "OFxkoKWD": {
+   "filaments": [],
+   "name": "fdm_filament_pva",
+   "filament_type": "PVA",
+   "filament_vendor": "Generic"
+  },
+  "OFxrIB3K": {
+   "filaments": [
+    "FELIX Printers/FORMFUTURA ePLA Brass"
+   ],
+   "name": "FORMFUTURA ePLA Brass",
+   "filament_type": "PLA",
+   "filament_vendor": "FORMFUTURA"
   },
   "OFy02QHU": {
    "filaments": [
@@ -7646,6 +7993,14 @@
    "name": "AliZ PLA",
    "filament_type": "PLA",
    "filament_vendor": "Aliz"
+  },
+  "OFyzD9L0": {
+   "filaments": [
+    "FELIX Printers/Ultrafuse ABS Fusion+ Brass"
+   ],
+   "name": "Ultrafuse ABS Fusion+ Brass",
+   "filament_type": "ABS",
+   "filament_vendor": "Ultrafuse"
   },
   "OFz2b3Y3": {
    "filaments": [

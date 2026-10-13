@@ -68,3 +68,4 @@ software.
 This is a practical licensing summary, not legal advice. The authoritative
 license text is [LICENSE.txt](LICENSE.txt) together with the notices preserved
 in the source tree.
+

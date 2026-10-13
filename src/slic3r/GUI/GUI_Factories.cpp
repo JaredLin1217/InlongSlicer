@@ -120,7 +120,8 @@ std::map<std::string, std::vector<SimpleSettingData>>  SettingsFactory::OBJECT_C
                     {"support_object_xy_distance", "",32}, {"bridge_no_support", "",33},{"max_bridge_length", "",34},{"support_critical_regions_only", "",35},{"support_remove_small_overhang","",36},
                     {"support_object_first_layer_gap","",37},
                     {"support_top_contact_wall_count", "",38},{"support_bottom_contact_wall_count", "",39},
-                    {"support_top_interface_wall_count", "",40},{"support_bottom_interface_wall_count", "",41}
+                    {"support_top_interface_wall_count", "",40},{"support_bottom_interface_wall_count", "",41},
+                    {"leading_brim_length", "",42},{"extra_brim_width", "",43}
                     }},
     { L("Speed"), {{"support_speed", "",12}, {"support_interface_speed", "",13}
                   }}
@@ -151,6 +152,9 @@ std::map<std::string, std::vector<SimpleSettingData>> SettingsFactory::PART_CATE
        {"sparse_infill_density", "", 1},
        {"fill_multiline", "", 1},
        {"sparse_infill_pattern", "", 1},
+       {"tpms_adaptive", "", 1},
+       {"tpms_interior_density", "", 1},
+       {"tpms_adaptive_gradient", "", 1},
        {"sparse_infill_smooth_factor", "", 1},
        {"lateral_lattice_angle_1", "", 1},
        {"lateral_lattice_angle_2", "", 1},
@@ -2672,3 +2676,4 @@ void MenuFactory::sys_color_changed(wxMenuBar* menubar)
 
 } //namespace GUI
 } //namespace Slic3r
+
