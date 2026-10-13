@@ -1,0 +1,56 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-belt-support-grid-and-stable-placement",
+  "key": "organic-support-belt-floor-grid",
+  "type": "fact",
+  "conclusion": "Organic branch topology and independent output layers use different Z grids: clip output slices and propagated roots using belt-floor polygons evaluated at each output layer's physical print_z, not the topology cache index, and keep a positive regular height for negative-Z layer zero. Parallel overhang sampling can emit tips and roofs onto shared lower layers; quantized tip deduplication must publish layer-local candidates in stable source-layer order rather than mutex acquisition order. Otherwise even fresh slices with identical settings can generate different support geometry, and support-only re-slices differ from a fresh slice.",
+  "scope": "InlongSlicer",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "belt",
+    "layer-height",
+    "determinism",
+    "reslice",
+    "parallelism"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_print.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "be8aa189b4dd4f7be032d682c2540055d1a2a93db693a8f185f53fcfe968d835",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc",
+      "locator": "RichInterfacePlacer::PendingPlacement, generate_initial_areas ordered publication, OrganicSupportLayerPlan::legacy and organic_draw_branches output_belt_floors"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "4eb0305d262d7e507e120df101603e58bb3574ffdb140778bf2e5031ac783650",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc",
+      "locator": "A support-only change on a belt purge print matches a fresh slice; Belt supports reach the belt under a leading overhang"
+    }
+  ],
+  "verified_utc": "2026-10-13T10:12:00Z",
+  "verification": {
+    "method": "Semantic source review, Windows Release build and rebuilt FFF regression tests",
+    "summary": "Verified the working-tree snapshots based on the checkout anchor above; the anchor does not assert that these edited bytes are committed. The strengthened support-only regression compares complete non-comment G-code from a single-worker fresh slice with 2- and 4-worker re-slices, on synchronized and independent support output plans, and confirms that model slice/perimeter caches remain valid: 44 assertions passed. The randomized belt, support, contact-wall, surface-feature and purge suite passed 61 cases and 6238 assertions, including the 8-configuration belt-floor coverage regression. Expensive clipping and sampling remain parallel; only ordered publication and deduplication are serialized. Temporary diagnostic writes were removed from the tests.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-belt-floor-output-grid"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

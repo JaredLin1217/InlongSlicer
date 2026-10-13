@@ -1308,17 +1308,40 @@ static std::optional<std::pair<Point, size_t>> polyline_sample_next_point_at_dis
 
 class RichInterfacePlacer : public InterfacePlacer {
 public:
+    // Each overhang layer computes its own output in parallel. Publishing in
+    // source-layer order makes cross-layer tip deduplication deterministic.
+    struct PendingPlacement {
+        struct Roof {
+            Polygons polygons;
+            size_t   layer_idx;
+            size_t   dtt_roof;
+        };
+        struct Tip {
+            std::pair<Point, LineStatus> point;
+            LayerIndex layer_idx;
+            size_t     dont_move_until;
+            bool       roof;
+            size_t     roof_recovery_dtt;
+            bool       skip_ovalisation;
+            bool       roof_already_generated;
+        };
+        std::vector<Roof> roofs;
+        std::vector<Tip>  tips;
+    };
+
     RichInterfacePlacer(
         const InterfacePlacer        &interface_placer,
         const TreeModelVolumes       &volumes,
         bool                          force_tip_to_roof,
         size_t                        num_support_layers,
-        std::vector<SupportElements> &move_bounds)
+        std::vector<SupportElements> &move_bounds,
+        PendingPlacement            *pending = nullptr)
     :
         InterfacePlacer(interface_placer),
-        volumes(volumes), force_tip_to_roof(force_tip_to_roof), move_bounds(move_bounds)
+        volumes(volumes), force_tip_to_roof(force_tip_to_roof), move_bounds(move_bounds), m_pending(pending)
     {
-        m_already_inserted.assign(num_support_layers, {});
+        if (m_pending == nullptr)
+            m_already_inserted.assign(num_support_layers, {});
         this->min_xy_dist = this->config.xy_distance >= this->config.xy_min_distance;
         m_base_radius = scaled<coord_t>(0.01);
         m_base_circle = Polygon{ make_circle(m_base_radius, SUPPORT_TREE_CIRCLE_RESOLUTION) };
@@ -1330,6 +1353,39 @@ public:
     bool                                                min_xy_dist;
 
 public:
+    void add_roof(Polygons &&polygons, size_t layer_idx, size_t dtt_roof)
+    {
+        if (m_pending != nullptr) {
+            m_pending->roofs.push_back({std::move(polygons), layer_idx, dtt_roof});
+        } else {
+            InterfacePlacer::add_roof(std::move(polygons), layer_idx, dtt_roof);
+        }
+    }
+
+    void add_roofs(std::vector<Polygons> &&roofs, size_t layer_idx)
+    {
+        for (size_t idx = 0; idx < roofs.size(); ++idx)
+            if (!roofs[idx].empty())
+                this->add_roof(std::move(roofs[idx]), layer_idx - idx, idx);
+    }
+
+    void add_roof_build_plate(Polygons &&polygons, size_t dtt_roof)
+    {
+        this->add_roof(std::move(polygons), 0,
+            std::min(dtt_roof, this->support_parameters.num_top_interface_layers));
+    }
+
+    void publish(PendingPlacement &&pending)
+    {
+        assert(m_pending == nullptr);
+        for (PendingPlacement::Roof &roof : pending.roofs)
+            this->add_roof(std::move(roof.polygons), roof.layer_idx, roof.dtt_roof);
+        for (const PendingPlacement::Tip &tip : pending.tips)
+            this->add_point_as_influence_area(tip.point, tip.layer_idx, tip.dont_move_until,
+                tip.roof, tip.roof_recovery_dtt, tip.skip_ovalisation, tip.roof_already_generated);
+        pending = PendingPlacement{};
+    }
+
     // called by sample_overhang_area()
     void add_points_along_lines(
         // Insert points (tree tips or top contact interfaces) along these lines.
@@ -1456,6 +1512,11 @@ private:
             tree_supports_show_error("Unable to add tip. Some overhang may not be supported correctly."sv, true);
             return;
         }
+        if (m_pending != nullptr) {
+            m_pending->tips.push_back({p, insert_layer, dont_move_until, roof,
+                roof_recovery_dtt, skip_ovalisation, roof_already_generated});
+            return;
+        }
         Polygons circle{ m_base_circle };
         circle.front().translate(p.first);
         {
@@ -1491,6 +1552,7 @@ private:
 
     // Outputs
     std::vector<SupportElements>                       &move_bounds;
+    PendingPlacement                                  *m_pending;
 
     // Temps
     coord_t m_base_radius;
@@ -2004,14 +2066,16 @@ static void generate_initial_areas(
                         &sharp_tail_overhangs[overhang_idx] : nullptr });
     }
 
-    RichInterfacePlacer rich_interface_placer{ interface_placer, volumes, force_tip_to_roof, num_support_layers, move_bounds };
+    std::vector<RichInterfacePlacer::PendingPlacement> placements(raw_overhangs.size());
 
     tbb::parallel_for(tbb::blocked_range<size_t>(0, raw_overhangs.size()),
-        [&volumes, &config, &print_object, &raw_overhangs, &mesh_group_settings,
+        [&volumes, &config, &print_object, &raw_overhangs, &mesh_group_settings, &interface_placer, &move_bounds, &placements,
          z_distance_delta,
          min_xy_dist, roof_enabled, num_support_roof_layers, extra_outset, circle_length_to_half_linewidth_change, connect_length,
-         &rich_interface_placer, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
+         force_tip_to_roof, num_support_layers, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
         for (size_t raw_overhang_idx = range.begin(); raw_overhang_idx < range.end(); ++ raw_overhang_idx) {
+            RichInterfacePlacer rich_interface_placer{ interface_placer, volumes, force_tip_to_roof,
+                num_support_layers, move_bounds, &placements[raw_overhang_idx] };
             size_t           layer_idx    = raw_overhangs[raw_overhang_idx].layer_idx;
             const Polygons  &overhang_raw = *raw_overhangs[raw_overhang_idx].areas;
             const Polygons  *sharp_tail_raw = raw_overhangs[raw_overhang_idx].sharp_tail_areas;
@@ -2355,6 +2419,17 @@ static void generate_initial_areas(
             }
         }
     });
+
+    // A tip can descend onto a layer also targeted by another overhang. A mutex
+    // only prevented races; the first arriving candidate still changed which
+    // point survived quantized deduplication, and hence the entire tree. Keep
+    // the expensive clipping/sampling parallel, but commit those outputs in
+    // the same order as a single-worker run, including the roof polygon order.
+    RichInterfacePlacer rich_interface_placer{ interface_placer, volumes, force_tip_to_roof, num_support_layers, move_bounds };
+    for (RichInterfacePlacer::PendingPlacement &placement : placements) {
+        rich_interface_placer.publish(std::move(placement));
+        throw_on_cancel();
+    }
 
     finalize_raft_contact(print_object, raft_contact_layer_idx, interface_placer.top_contacts_mutable(), move_bounds);
 }

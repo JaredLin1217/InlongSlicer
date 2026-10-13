@@ -13,6 +13,7 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/catch_message.hpp>
+#include <tbb/global_control.h>
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/libslic3r.h"
 #include <cstddef>
@@ -26,6 +27,7 @@
 #include <catch2/catch_all.hpp>
 
 #include "libslic3r/Print.hpp"
+#include "libslic3r/Thread.hpp"
 #include "libslic3r/Layer.hpp"
 #include "libslic3r/BuildVolume.hpp"
 #include "libslic3r/Support/TreeModelVolumes.hpp"
@@ -1196,11 +1198,17 @@ TEST_CASE("Switching a sliced project from belt to non-belt matches a fresh slic
 
 TEST_CASE("A support-only change on a belt purge print matches a fresh slice", "[Print][belt][PurgeTower][Regression]")
 {
+    const bool independent_support = GENERATE(false, true);
+    const size_t workers = GENERATE(size_t(2), size_t(4));
+    CAPTURE(independent_support, workers);
+    // The worker-naming barrier needs the unrestricted pool on first use.
+    name_tbb_thread_pool_threads_set_locale();
+    tbb::global_control parallel_workers(tbb::global_control::max_allowed_parallelism, workers);
     // Snapping the purge prism onto the parts' layer grid shifts every object's layers by
     // up to half a layer. A support-only change reruns support generation without
     // reslicing, so the cached belt floor and the global Z offset have to carry the
     // snap too, or the supports land on the pre-snap grid.
-    auto make_config = [](bool support) {
+    auto make_config = [independent_support](bool support) {
         DynamicPrintConfig config = multifilament_config(2, {
             { "belt_printer",               1 },
             { "belt_slice_rotation",        "x" },
@@ -1220,6 +1228,9 @@ TEST_CASE("A support-only change on a belt purge print matches a fresh slice", "
             { "enable_support", support ? 1 : 0 },
             { "support_type",   "tree(auto)" },
             { "support_style",  "organic" },
+            { "support_top_z_distance", 0.2 },
+            { "independent_support_layer_height", independent_support ? 1 : 0 },
+            { "independent_support_top_contact_layer_height", 0 },
         });
         return config;
     };
@@ -1235,6 +1246,10 @@ TEST_CASE("A support-only change on a belt purge print matches a fresh slice", "
 
     std::string fresh;
     {
+        // Candidate placement must not depend on which worker reaches a shared
+        // output layer first. Compare a single-worker fresh slice with a
+        // multi-worker support-only rerun on both support output layer plans.
+        tbb::global_control single_worker(tbb::global_control::max_allowed_parallelism, 1);
         Print print;
         Model model;
         build(print, model, make_config(true));
@@ -1248,6 +1263,11 @@ TEST_CASE("A support-only change on a belt purge print matches a fresh slice", "
     REQUIRE(! gcode(print).empty());
     // Support only: posSlice stays valid, posSupportMaterial reruns.
     print.apply(model, make_config(true));
+    for (const PrintObject *object : print.objects()) {
+        CHECK(object->is_step_done(posSlice));
+        CHECK(object->is_step_done(posPerimeters));
+        CHECK_FALSE(object->is_step_done(posSupportMaterial));
+    }
     CHECK(gcode_body(gcode(print)) == fresh);
 }
 
