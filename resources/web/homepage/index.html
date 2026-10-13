@@ -15,7 +15,7 @@
 
 <link rel="stylesheet" type="text/css" href="../include/swiper/swiper-bundle.min.css" />
 <script type="text/javascript" src="../include/swiper/swiper-bundle.min.js"></script>
-<script type="text/javascript" src="../data/text.js"></script>
+<script type="text/javascript" src="../include/i18n.js"></script>
 
 <script type="text/javascript" src="js/home.js"></script>
 </head>
@@ -46,7 +46,7 @@
 				<svg class="SectionChevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 					<path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
-				<span class="SectionLabel trans" tid="inlong6">Bambu Cloud</span>
+				<span class="SectionLabel trans" >Bambu Cloud</span>
 				<span id="BambuStatusDot"></span>
 			</div>
 
@@ -58,7 +58,7 @@
 					</span>
 					<span class="AccountText">
 						<span id="BambuUserName" class="AccountName"></span>
-						<span class="AccountSecondary trans" tid="inlong8">Not signed in</span>
+						<span class="AccountSecondary trans" data-i18n="not_signed_in">Not signed in</span>
 					</span>
 					<span class="AccountSignIn" data-i18n="login">Login</span>
 					<svg class="AccountChevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -88,7 +88,7 @@
 	<div id="BtnArea">
 	    <div menu="recent" class="BtnItem BtnItemSelected" onClick="GotoMenu('recent')">
 			<div class="BtnIcon "><img class="LeftIcon" src="img/i2.png" /></div>
-			<div class="trans" tid="t28">recent</div>
+			<div class="trans" data-i18n="recent">recent</div>
 		</div>
 	    <div class="BtnItem BtnShortcut" onClick="OpenUrlInLocalBrowser('https://cloud.orcaslicer.com')">
 			<div class="BtnIcon "><img class="ShortcutBrandIcon" src="../image/logo.png" /></div>
@@ -223,7 +223,7 @@
 		</div>
 		<div id="CT_Folder_Bar" class="CT_Item " onClick="OnExploreRecentFile()" >
 			<div class="CT_Icon CT_Explore"></div>
-			<div class="CT_Text trans" tid="t89">open in explorer </div>
+			<div class="CT_Text trans" data-i18n="open_containing_folder">open in explorer </div>
 		</div>
     </div>
 

@@ -12921,11 +12921,11 @@ msgstr "至少要选择一款耗材丝。"
 msgid "Do you want to use the default filament?"
 msgstr "你希望使用默认的耗材丝列表吗？"
 
-msgid "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
-msgstr "这将禁用所有云功能，包括 Orca Cloud 配置文件同步。希望完全离线工作的用户可以启用此选项。"
+msgid "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
+msgstr "这将禁用所有云功能，包括 Inlong Cloud 配置文件同步。希望完全离线工作的用户可以启用此选项。"
 
-msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."
-msgstr "注意：启用局域网模式后，您的用户配置文件将不会备份到 Orca Cloud。"
+msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
+msgstr "注意：启用局域网模式后，您的用户配置文件将不会备份到 Inlong Cloud。"
 
 # AI Translated
 msgid "Enable Stealth Mode."

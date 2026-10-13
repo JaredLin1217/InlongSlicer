@@ -12676,11 +12676,11 @@ msgstr "Es muss mindestens ein Filament ausgewählt sein."
 msgid "Do you want to use the default filament?"
 msgstr "Möchten Sie das Standard-Filament verwenden?"
 
-msgid "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
-msgstr "Dies deaktiviert alle Cloud-Funktionen, einschließlich der Profil-Synchronisierung mit Orca Cloud. Benutzer, die es vorziehen, vollständig offline zu arbeiten, können diese Option aktivieren."
+msgid "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
+msgstr "Dies deaktiviert alle Cloud-Funktionen, einschließlich der Profil-Synchronisierung mit Inlong Cloud. Benutzer, die es vorziehen, vollständig offline zu arbeiten, können diese Option aktivieren."
 
-msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."
-msgstr "Hinweis: Wenn der Unsichtbare Modus aktiviert ist, werden Ihre Benutzerprofile nicht in Orca Cloud gesichert."
+msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
+msgstr "Hinweis: Wenn der Unsichtbare Modus aktiviert ist, werden Ihre Benutzerprofile nicht in Inlong Cloud gesichert."
 
 msgid "Enable Stealth Mode."
 msgstr ""

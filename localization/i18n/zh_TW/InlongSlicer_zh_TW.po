@@ -12608,7 +12608,7 @@ msgid "parse json failed"
 msgstr "解析 json 失敗"
 
 msgid "Loading…"
-msgstr ""
+msgstr "載入中…"
 
 msgid "Welcome to Inlong Slicer"
 msgstr "歡迎使用 Inlong Slicer"
@@ -12630,7 +12630,7 @@ msgid "Printer Selection"
 msgstr "選擇列印裝置"
 
 msgid "Vendors"
-msgstr ""
+msgstr "廠商"
 
 # AI Translated
 msgid "Custom Printer"
@@ -12640,35 +12640,35 @@ msgid "Create"
 msgstr "建立"
 
 msgid "Check for new printers"
-msgstr ""
+msgstr "檢查新列印裝置"
 
 msgid "At least one printer must be selected."
 msgstr "至少需要選擇一款列印裝置。"
 
 msgid "New printers found"
-msgstr ""
+msgstr "找到新的列印裝置"
 
 #, c-format, boost-format
 msgid "New printer vendors installed: %s"
-msgstr ""
+msgstr "新安裝的列印裝置廠商：%s"
 
 msgid "New printer vendors were found, but installation was cancelled."
-msgstr ""
+msgstr "找到了新的列印裝置廠商，但已取消安裝。"
 
 msgid "No new printers found."
-msgstr ""
+msgstr "未找到新的列印裝置。"
 
 msgid "Filament Selection"
 msgstr "選擇線材"
 
 msgid "System Filaments"
-msgstr ""
+msgstr "系統線材"
 
 msgid "Custom Filaments"
-msgstr ""
+msgstr "自訂線材"
 
 msgid "Create New"
-msgstr ""
+msgstr "新增"
 
 msgid "Filament type"
 msgstr "線材類型"
@@ -12677,19 +12677,19 @@ msgid "Vendor"
 msgstr "廠牌"
 
 msgid "No items"
-msgstr ""
+msgstr "沒有項目"
 
 msgid "Filter items"
-msgstr ""
+msgstr "篩選項目"
 
 msgid "Checked"
-msgstr ""
+msgstr "已勾選"
 
 msgid "Unchecked"
-msgstr ""
+msgstr "未勾選"
 
 msgid "Select filtered"
-msgstr ""
+msgstr "選擇篩選結果"
 
 msgid "Clear all"
 msgstr "清空"
@@ -12700,23 +12700,23 @@ msgstr "至少要選擇一款線材。"
 msgid "Do you want to use the default filament?"
 msgstr "你希望使用預設的線材列表嗎？"
 
-msgid "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
-msgstr "這會停用所有雲端功能，包括 Orca Cloud 設定檔同步。偏好完全離線工作的使用者可以啟用此選項。"
+msgid "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
+msgstr "這會停用所有雲端功能，包括 Inlong Cloud 設定檔同步。偏好完全離線工作的使用者可以啟用此選項。"
 
-msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."
-msgstr "注意：啟用無痕模式時，您的使用者設定檔將不會備份到 Orca Cloud。"
+msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
+msgstr "注意：啟用無痕模式時，您的使用者設定檔將不會備份到 Inlong Cloud。"
 
 msgid "Enable Stealth Mode."
-msgstr ""
+msgstr "啟用無痕模式。"
 
 msgid "Proprietary Plugins"
-msgstr ""
+msgstr "專有外掛程式"
 
 msgid "Some printer vendors require proprietary plugins for communication with their printers. Please select the corresponding plugin if you use such printers."
-msgstr ""
+msgstr "部分列印裝置廠商需要專有外掛程式才能與設備通訊。如果您使用這類設備，請選擇對應的外掛程式。"
 
 msgid "Please be aware that these plugins are not developed or maintained by InlongSlicer. They should be used at your own discretion and risk."
-msgstr ""
+msgstr "請注意，這些外掛程式並非由 InlongSlicer 開發或維護。請自行判斷是否使用並承擔風險。"
 
 msgid "Install Bambu Network plug-in"
 msgstr "安裝 Bambu 網路外掛"
@@ -30413,40 +30413,40 @@ msgid "Edit Project Info"
 msgstr "編輯專案資訊"
 
 msgid "Model Information"
-msgstr ""
+msgstr "模型資訊"
 
 msgid "Accessories"
-msgstr ""
+msgstr "附件"
 
 msgid "Profile Information"
-msgstr ""
+msgstr "設定檔資訊"
 
 msgid "Model name"
-msgstr ""
+msgstr "模型名稱"
 
 msgid "Created by"
-msgstr ""
+msgstr "建立者"
 
 msgid "Remixed by"
-msgstr ""
+msgstr "修改者"
 
 msgid "Shared by"
-msgstr ""
+msgstr "分享者"
 
 msgid "Model description"
-msgstr ""
+msgstr "模型說明"
 
 msgid "BOM"
-msgstr ""
+msgstr "物料清單"
 
 msgid "Profile name"
-msgstr ""
+msgstr "設定檔名稱"
 
 msgid "Profile Author"
-msgstr ""
+msgstr "設定檔作者"
 
 msgid "Profile description"
-msgstr ""
+msgstr "設定檔說明"
 
 # AI Translated
 msgid "Purge Mode Settings"
@@ -30880,7 +30880,7 @@ msgid "Click an island on the canvas first, in Island mode."
 msgstr ""
 
 msgid "Not signed in"
-msgstr ""
+msgstr "未登入"
 
 msgid "Bambu Network plug-in not detected. Click <a>here</a> to install it."
 msgstr "沒有發現 Bambu 網路外掛，請<a>下載</a>並安裝。"

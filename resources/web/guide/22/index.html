@@ -9,10 +9,9 @@
 <link rel="stylesheet" type="text/css" href="../22/common.css" /> <!-- INLONG use common sources for setup guide and standalone dialog -->
 <link rel="stylesheet" type="text/css" href="22.css" />
 <link rel="stylesheet" type="text/css" href="../css/dark.css" />
-<script type="text/javascript" src="test.js"></script>
 <script type="text/javascript" src="../../include/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="../js/json2.js"></script>
-<script type="text/javascript" src="../../data/text.js"></script>
+<script type="text/javascript" src="../../include/i18n.js"></script>
 <script type="text/javascript" src="../js/globalapi.js"></script>
 <script type="text/javascript" src="../js/common.js"></script>
 <script type="text/javascript" src="../22/common.js"></script> <!-- INLONG use common sources for setup guide and standalone dialog -->
@@ -49,7 +48,7 @@
 		</div>
 		<div class="cbr-content thin-scroll" id="FilatypeList">
 			<div class="CValues">
-				<label><input type="checkbox" class="trans" tid="t11" onClick="ChooseAllFilament()" /><span class="trans" tid="t11">all</span></label>
+				<label><input type="checkbox" class="trans" onClick="ChooseAllFilament()" /><span class="trans" data-i18n="all">all</span></label>
 			</div>
 			<div class="cbr-no-items" data-i18n="no_items">No items</div>
 		</div>
@@ -88,14 +87,14 @@
 			</div>
 			<div class="list-item-count"></div>
 			<div class="cbr-filter-btns">
-				<span class="cbr-filter-mode-filter  trans">Select filtered</span>
-				<span class="cbr-filter-mode-visible trans">Select visible</span>
-				<div class="ButtonStyleConfirm ButtonTypeWindow  trans" tid="t11" onClick="SelectAllFilament(1)">all</div>
-				<div class="ButtonStyleRegular ButtonTypeWindow  trans" tid="t12" onClick="SelectAllFilament(0)">Clear all</div>
+				<span class="cbr-filter-mode-filter" data-i18n="select_filtered">Select filtered</span>
+				<span class="cbr-filter-mode-visible" data-i18n="select_visible">Select visible</span>
+				<div class="ButtonStyleConfirm ButtonTypeWindow  trans" data-i18n="all" onClick="SelectAllFilament(1)">all</div>
+				<div class="ButtonStyleRegular ButtonTypeWindow  trans" data-i18n="clear_all" onClick="SelectAllFilament(0)">Clear all</div>
 			</div>
 		</div>
 		<div class="cbr-content thin-scroll" id="ItemBlockArea">
-			<!-- <label class="MItem"><input type="checkbox" class="trans" tid="t11" onClick="SelectAllFilament()" /><span class="trans" tid="t11">all</span></label> -->
+			<!-- <label class="MItem"><input type="checkbox" class="trans" onClick="SelectAllFilament()" /><span class="trans" data-i18n="all">all</span></label> -->
 			<div class="cbr-no-items" data-i18n="no_items">No items</div>
 		</div>
 	</div>
@@ -103,9 +102,9 @@
 
 </div>
 <div id="AcceptArea">
-	<div class="ButtonStyleRegular ButtonTypeChoice trans" tid="t8" id="PreBtn"  onclick="ReturnPreviewPage()">Back</div>
-	<div class="ButtonStyleRegular ButtonTypeChoice trans" tid="t25" id="AcceptBtn"  onclick="FinishGuide()">finish</div>
-	<div class="ButtonStyleConfirm ButtonTypeChoice trans" tid="t9" id="GotoNetPluginBtn"  onclick="GotoNetPluginPage()">Next</div>
+	<div class="ButtonStyleRegular ButtonTypeChoice trans" data-i18n="back" id="PreBtn"  onclick="ReturnPreviewPage()">Back</div>
+	<div class="ButtonStyleRegular ButtonTypeChoice trans" data-i18n="finish" id="AcceptBtn"  onclick="FinishGuide()">finish</div>
+	<div class="ButtonStyleConfirm ButtonTypeChoice trans" data-i18n="next" id="GotoNetPluginBtn"  onclick="GotoNetPluginPage()">Next</div>
 </div>
 <div id="NoticeMask">
 </div>

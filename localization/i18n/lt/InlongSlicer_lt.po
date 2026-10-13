@@ -12767,11 +12767,11 @@ msgstr "Turi būti pasirinkta bent viena gija."
 msgid "Do you want to use the default filament?"
 msgstr "Ar norite naudoti numatytąją giją?"
 
-msgid "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
-msgstr "Išjungia visas debesijos funkcijas, įskaitant „Orca Cloud“ profilių sinchronizavimą. Naudotojai, kurie nori dirbti visiškai neprisijungę prie tinklo, gali įjungti šią parinktį."
+msgid "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
+msgstr "Išjungia visas debesijos funkcijas, įskaitant „Inlong Cloud“ profilių sinchronizavimą. Naudotojai, kurie nori dirbti visiškai neprisijungę prie tinklo, gali įjungti šią parinktį."
 
-msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."
-msgstr "Pastaba: kai įjungtas slaptas režimas, jūsų naudotojo profilių atsarginės kopijos nebus kuriamos „Orca Cloud“ debesyje."
+msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
+msgstr "Pastaba: kai įjungtas slaptas režimas, jūsų naudotojo profilių atsarginės kopijos nebus kuriamos „Inlong Cloud“ debesyje."
 
 msgid "Enable Stealth Mode."
 msgstr "Įjungti slaptą režimą."

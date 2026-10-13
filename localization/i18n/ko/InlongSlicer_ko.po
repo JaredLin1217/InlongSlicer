@@ -13000,11 +13000,11 @@ msgstr "하나 이상의 필라멘트를 선택해야 합니다."
 msgid "Do you want to use the default filament?"
 msgstr "기본 필라멘트를 사용하시겠습니까?"
 
-msgid "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
-msgstr "이 옵션은 Orca Cloud 프로필 동기화를 포함한 모든 클라우드 기능을 비활성화합니다. 완전히 오프라인으로 작업하려는 사용자는 이 옵션을 활성화할 수 있습니다."
+msgid "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
+msgstr "이 옵션은 Inlong Cloud 프로필 동기화를 포함한 모든 클라우드 기능을 비활성화합니다. 완전히 오프라인으로 작업하려는 사용자는 이 옵션을 활성화할 수 있습니다."
 
-msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."
-msgstr "참고: 스텔스 모드를 활성화하면 사용자 프로필이 Orca Cloud에 백업되지 않습니다."
+msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
+msgstr "참고: 스텔스 모드를 활성화하면 사용자 프로필이 Inlong Cloud에 백업되지 않습니다."
 
 msgid "Enable Stealth Mode."
 msgstr ""

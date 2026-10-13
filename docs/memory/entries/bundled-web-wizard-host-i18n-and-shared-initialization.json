@@ -1,0 +1,118 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "bundled-web-wizard-host-i18n-and-shared-initialization",
+  "key": "bundled-web-wizard-initialization-contract",
+  "type": "fact",
+  "conclusion": "Bundled web pages translate through resources/web/include/i18n.js, data-i18n keys, and the host gettext dictionary ORCA_UI_STRINGS. Missing legacy text.js references or redundant declarations can abort initialization before RequestProfile. Printer pages 21 and 24 load guide/21/common.js and initialize its globals once; material pages 22 and 23 use guide/22/common.js without overriding its selection functions. Selection submits full preset names from filalist through save_userguide_filaments. Simplified and Traditional Chinese catalogs must cover the host keys used by static markup and dynamic controls.",
+  "scope": "InlongSlicer bundled web wizard and preset dialogs",
+  "modules": [
+    "webguide",
+    "localization",
+    "presets"
+  ],
+  "tags": [
+    "wizard",
+    "filament",
+    "translation",
+    "merge-recovery"
+  ],
+  "files": [
+    "resources/web/include/i18n.js",
+    "resources/web/guide/21/index.html",
+    "resources/web/guide/24/index.html",
+    "resources/web/guide/22/index.html",
+    "resources/web/guide/23/index.html",
+    "resources/web/guide/22/common.js",
+    "src/slic3r/GUI/WebGuideDialog.cpp",
+    "localization/i18n/zh_TW/InlongSlicer_zh_TW.po",
+    "localization/i18n/zh_CN/InlongSlicer_zh_CN.po",
+    "scripts/tests/test_web_ui_contracts.py"
+  ],
+  "sources": [
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/include/i18n.js",
+      "kind": "file_snapshot",
+      "sha256": "3dde0309ef7756adc987e264db14735a5300ce63759a89bd046da7380eec12fa",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/21/index.html",
+      "kind": "file_snapshot",
+      "sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/24/index.html",
+      "kind": "file_snapshot",
+      "sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/22/index.html",
+      "kind": "file_snapshot",
+      "sha256": "85a2bb3caf06a42cffd36f974b6e57ad6d29fb23c0760322e4d75a16a5a02967",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/23/index.html",
+      "kind": "file_snapshot",
+      "sha256": "f72521b882c7c49fe3b7a2f3a2abf5d15cdab95d732245c089e6085a9cccdfff",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/22/common.js",
+      "kind": "file_snapshot",
+      "sha256": "c6ddf9a26f72da5bfd2c1a7c6f39945094f8ec04393c4d76129e4d3b6f27bed8",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "guide_strings host dictionary",
+      "path": "src/slic3r/GUI/WebGuideDialog.cpp",
+      "kind": "file_snapshot",
+      "sha256": "f459160c9c660cec677d66ba4548600d415fcad15a50ee2146805c51ccddc07d",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "Host-referenced wizard, homepage and project labels",
+      "path": "localization/i18n/zh_TW/InlongSlicer_zh_TW.po",
+      "kind": "file_snapshot",
+      "sha256": "2fd357210c05caf5499c8037fed604c49361faad5982ecb5b45203f616679afc",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "Host-referenced wizard, homepage and project labels",
+      "path": "localization/i18n/zh_CN/InlongSlicer_zh_CN.po",
+      "kind": "file_snapshot",
+      "sha256": "38e352e4e4b057513cbd88f568109743d8df3b5c052386d17b0fd592cf14280c",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    },
+    {
+      "locator": "TestWebUiContracts initialization, catalog and shared-logic regression checks",
+      "path": "scripts/tests/test_web_ui_contracts.py",
+      "kind": "file_snapshot",
+      "sha256": "fa05ed43642cf8bce35cb0c9c277cda8b8e5f5e37943cbb7e9342b72045ad62e",
+      "commit": "df1db59066b9ee2ac97fa56448fd25b6fed255bc"
+    }
+  ],
+  "verified_utc": "2026-10-13T11:13:44.9297448+00:00",
+  "verification": {
+    "summary": "Reviewed active script imports and inline declarations against the shared implementations. Headless Edge passed 34 scenarios using compiled Chinese catalogs and repository vendor fixtures: 10 printer models, 18 INLONG materials and 14 Infinity3DP materials; rendering, default selection, filtered selection, complete preset-name submission and Escape handling passed. Eight web/profile regression tests passed. Native profile validation passed for both vendors. Runtime receipts are supplemental; the listed source snapshots support the durable conclusion.",
+    "reviewed_by": "Codex primary agent",
+    "result": "passed",
+    "method": "Semantic review, compiled gettext browser integration and static regression tests"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

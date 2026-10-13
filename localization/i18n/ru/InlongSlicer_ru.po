@@ -12797,10 +12797,10 @@ msgstr "Должен быть выбран хотя бы один материа
 msgid "Do you want to use the default filament?"
 msgstr "Выбрать материалы по умолчанию?"
 
-msgid "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
+msgid "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
 msgstr ""
 
-msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."
+msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
 msgstr ""
 
 msgid "Enable Stealth Mode."

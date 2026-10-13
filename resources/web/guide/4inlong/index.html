@@ -17,20 +17,20 @@
 </head>
 <body onLoad="OnInit()">
 <div id="Title">
-	<div class="trans" tid="inlong3">Stealth Mode</div>
+	<div class="trans" data-i18n="stealth_mode">Stealth Mode</div>
 </div>
 <div id="Content">
 
     <div id="FeatureText">
-		<div><a tid="inlong4" class="trans TextS1">This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.</a></div>
+		<div><a data-i18n="stealth_mode_desc" class="trans TextS1">This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option.</a></div>
 			<br/>
-			<div><a tid="inlong12" class="trans TextS2">Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud.</a></div>
+			<div><a data-i18n="stealth_mode_note" class="trans TextS2">Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud.</a></div>
     </div>
 	
 	
 	<!-- Inlong use label tag to allow checkbox to toggle when user clicked to text -->
-	<label id="CheckArea"><input id="StealthMode" onClick="SendStealthModeCheck()" type="checkbox"><a tid="inlong5" class="trans TextS1">Enable Stealth Mode.</a></label>
-	<div id="RestartText" tid="t70" class="trans" ></div>
+	<label id="CheckArea"><input id="StealthMode" onClick="SendStealthModeCheck()" type="checkbox"><a data-i18n="enable_stealth_mode" class="trans TextS1">Enable Stealth Mode.</a></label>
+	<div id="RestartText"  class="trans" ></div>
 	
 </div>
 <div id="AcceptArea">

@@ -12912,11 +12912,11 @@ msgstr "Musí být vybraný alespoň jeden Filament."
 msgid "Do you want to use the default filament?"
 msgstr "Chcete použít výchozí Filament?"
 
-msgid "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
-msgstr "Tím se vypnou všechny cloudové funkce včetně synchronizace profilů s Orca Cloud. Uživatelé, kteří chtějí pracovat zcela offline, mohou tuto možnost zapnout."
+msgid "This disables all cloud features, including Inlong Cloud profile syncing. Users who prefer to work entirely offline can enable this option."
+msgstr "Tím se vypnou všechny cloudové funkce včetně synchronizace profilů s Inlong Cloud. Uživatelé, kteří chtějí pracovat zcela offline, mohou tuto možnost zapnout."
 
-msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."
-msgstr "Poznámka: Je-li Stealth režim zapnut, nebudou vaše uživatelské profily zálohovány do Orca Cloud."
+msgid "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Inlong Cloud."
+msgstr "Poznámka: Je-li Stealth režim zapnut, nebudou vaše uživatelské profily zálohovány do Inlong Cloud."
 
 msgid "Enable Stealth Mode."
 msgstr ""
