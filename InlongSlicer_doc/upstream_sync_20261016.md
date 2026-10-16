@@ -100,12 +100,51 @@ build was run after restoration.
 
 The native build uses the existing Windows dependency prefix, with at most three
 parallel compiler jobs. It does not establish a clean third-party dependency
-rebuild, macOS or Linux runtime compatibility, actual NSIS packaging, execution
-of `install` or `install_only_inlong`, full manual GUI behavior, live cloud
+rebuild, macOS or Linux runtime compatibility, actual NSIS packaging,
+full manual GUI behavior, live cloud
 authentication, or unattended release publication. Native suites are selected
 for affected slicing, profiles, core and GUI logic; they are not the entire
 upstream test inventory. Build warnings and earlier repaired failures are
 retained in the logs. The built executable records the pre-commit dirty source
-version because compilation precedes the local merge commit.
+version because compilation precedes the local merge commit. The installation
+follow-up below rebuilt from the clean committed merge source.
 
 One root agent performed this task; no worker agents were spawned.
+
+## Windows installation follow-up
+
+Both `cmake --build build --config Release --target install` and
+`cmake --build build --config Release --target install_only_inlong` completed
+successfully from clean source commit
+`bc4d9aa5de8c6d6de7333898d024342a15197bc6`. Existing dependencies were reused;
+the full target also built the remaining configured test and utility targets.
+This establishes compilation of those additional targets, not execution of
+their test cases. The build retains linker warnings, including LNK4098 in the
+auxiliary `texture_unwrap_dump` target.
+
+The full output at `build/InlongSlicer` contains 14,756 profile-related files.
+The filtered output at `build/InlongSlicer_InlongOnly` contains 734. Every file
+matches its intended source bytes, and the filtered profile roots and shared
+guide patch match the existing target contract. Both outputs' application and
+DLL hashes match the Release build. Bundled Python/SSL imports and application
+`--help` succeed with run-local data directories and a child PATH restricted to
+the output and Windows system directories. No manual GUI or NSIS test is claimed.
+
+The full CMake install overlays existing resources. The first comparison found
+1,685 pre-existing files absent from current source, with no missing or modified
+current-source files. Every extra file was hash-verified and archived under the
+protected runtime backup before reconciling the output. Their earlier source
+provenance was not established; no unknown content was discarded. The subsequent
+exact comparison passes. The filtered target recreates its output and needed no
+such reconciliation. No canonical profile or product-code changes were made.
+
+All 791 task-start portable files were restored with matching hashes and exact
+file sets after both targets and smoke checks. The other two portable directories
+remain empty. Evidence, binary hashes, source anchors and receipt references are
+recorded in `upstream_install_verification_20261016.json`; detailed runtime logs
+and rollback bytes are protected in
+`.agents/runtime/runs/run-149bf9fd21a145fabd9b01ca45cf2254`.
+
+Consumer Changed and Checkpoint pass. The separate release-ready invocation
+rejects Consumer scope with `RequireReleaseReady requires a Provider Checkpoint`.
+These local installation results do not establish Provider release readiness.

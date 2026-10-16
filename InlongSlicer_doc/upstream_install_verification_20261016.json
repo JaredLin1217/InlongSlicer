@@ -1,0 +1,282 @@
+{
+  "passed": true,
+  "source_commit": "bc4d9aa5de8c6d6de7333898d024342a15197bc6",
+  "completed_utc": "2026-10-16T11:33:54.520045+00:00",
+  "outputs": [
+    {
+      "output": "full",
+      "path": "build\\InlongSlicer",
+      "profile_files": 14756,
+      "profiles_match_source": true,
+      "profile_digest": "9269bb7d139d7a12e80e955c4e269c1274e5b5bb3ef83cc9ae5c1bddc61f822f",
+      "binaries": {
+        "inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+      },
+      "python_sha256": "863d24081ed3d43d8a202d44be98ecf94e96bc4b9b3f094f0ac71632d9c309e5",
+      "python_ssl_smoke_passed": true,
+      "cli_help_passed": true,
+      "guide_contract_passed": true,
+      "portable_data_initially_empty": true
+    },
+    {
+      "output": "inlong_only",
+      "path": "build\\InlongSlicer_InlongOnly",
+      "profile_files": 734,
+      "profiles_match_source": true,
+      "profile_digest": "024ec15775a1f3058d1f4f2733f5990f9900fe52cd6918de95b140d75cc2f0df",
+      "binaries": {
+        "inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+      },
+      "python_sha256": "863d24081ed3d43d8a202d44be98ecf94e96bc4b9b3f094f0ac71632d9c309e5",
+      "python_ssl_smoke_passed": true,
+      "cli_help_passed": true,
+      "guide_contract_passed": true,
+      "portable_data_initially_empty": true
+    }
+  ],
+  "worker_usage": {
+    "root_agents": 1,
+    "subagents": 0
+  },
+  "limits": [
+    "No NSIS installer generation or manual GUI launch",
+    "Existing dependency prefix reused",
+    "No claim of Provider release readiness"
+  ],
+  "settings_restoration": {
+    "passed": true,
+    "restored_files": 791,
+    "archived_newer_files": 0,
+    "exact_file_sets_and_hashes_match": true,
+    "completed_utc": "2026-10-16T11:34:25.521820+00:00"
+  },
+  "pre_existing_extras": {
+    "passed": true,
+    "archived_files": 1685,
+    "source_files_changed": 0,
+    "matches_original_source_blob": 0,
+    "all_extras_preserved_with_verified_hashes": true,
+    "archive": ".agents\\runtime\\runs\\run-149bf9fd21a145fabd9b01ca45cf2254\\backup\\pre-existing-extra-profiles"
+  },
+  "builds": [
+    {
+      "log": ".agents/runtime/runs/run-149bf9fd21a145fabd9b01ca45cf2254/validation/build-install.log",
+      "configuration": "Release",
+      "parallel": 3,
+      "started_utc": "2026-10-16T11:07:30.2288660+00:00",
+      "exit_code": 0,
+      "source_commit": "bc4d9aa5de8c6d6de7333898d024342a15197bc6",
+      "target": "install",
+      "finished_utc": "2026-10-16T11:24:51.2335456+00:00",
+      "log_sha256": "829ee5b4c11b5a9f9679ce29ed4485f602903c27e9d437e83b5dae3b26420d36"
+    },
+    {
+      "log": ".agents/runtime/runs/run-149bf9fd21a145fabd9b01ca45cf2254/validation/build-install_only_inlong.log",
+      "configuration": "Release",
+      "parallel": 3,
+      "started_utc": "2026-10-16T11:24:51.4840940+00:00",
+      "exit_code": 0,
+      "source_commit": "bc4d9aa5de8c6d6de7333898d024342a15197bc6",
+      "target": "install_only_inlong",
+      "finished_utc": "2026-10-16T11:25:43.9485418+00:00",
+      "log_sha256": "3c378275737af9fb6489786adcc8a2a74f5246e0af787ac24f22d71c38999e59"
+    }
+  ],
+  "consumer_receipts": {
+    "consumer-changed": {
+      "schema_version": "agents-validation/v4",
+      "run_id": "run-c4dfbe53e4c74aadb452a1ba1946d8e2",
+      "receipt_path": ".agents/runtime/runs/run-c4dfbe53e4c74aadb452a1ba1946d8e2/validation/report.json",
+      "started_utc": "2026-10-16T11:11:12.7341808+00:00",
+      "finished_utc": "2026-10-16T11:12:03.9748948+00:00",
+      "scope": "Consumer",
+      "profile": "Changed",
+      "input_digest": "fbf7f2373131c684ead94cd9bc108b56a09846ebd058eb8fd9588189ab38fae6",
+      "paths": [],
+      "host": {
+        "powershell": "7.6.5",
+        "git": "git version 2.51.0.windows.2"
+      },
+      "checks": [
+        {
+          "id": "syntax",
+          "command": "Test-AgentSyntax",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 36,
+          "retry_count": 0,
+          "details": []
+        },
+        {
+          "id": "json-schema",
+          "command": "Test-AgentSchemas",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 18,
+          "retry_count": 0,
+          "details": []
+        },
+        {
+          "id": "diff",
+          "command": "git diff --check (working tree and index)",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 6,
+          "retry_count": 0,
+          "details": []
+        }
+      ],
+      "result": "passed",
+      "passed": true,
+      "release_ready": false,
+      "require_release_ready": false
+    },
+    "consumer-checkpoint": {
+      "schema_version": "agents-validation/v4",
+      "run_id": "run-a663f461d1fd47c281f4c36bbb8210ef",
+      "receipt_path": ".agents/runtime/runs/run-a663f461d1fd47c281f4c36bbb8210ef/validation/report.json",
+      "started_utc": "2026-10-16T11:19:41.0870971+00:00",
+      "finished_utc": "2026-10-16T11:20:08.5961062+00:00",
+      "scope": "Consumer",
+      "profile": "Checkpoint",
+      "input_digest": "febf8dac8165f549b9cba706eccf61168f3c2fe22ea0b49cf63ce2700d3988e8",
+      "paths": [
+        "AGENTS.md",
+        ".agents/skills/project-memory/SKILL.md",
+        ".agents/skills/project-checkpoint/SKILL.md",
+        ".agents/scripts/agent-core.ps1",
+        ".agents/scripts/agent-checks.ps1",
+        ".agents/scripts/validate.ps1",
+        ".agents/scripts/resolve-agent-context.ps1",
+        ".agents/scripts/project-memory.ps1",
+        ".agents/scripts/task-state.ps1",
+        ".agents/schemas/knowledge.schema.json",
+        ".agents/schemas/task-state.schema.json",
+        ".agents/schemas/managed.schema.json",
+        ".agents/schemas/sources.schema.json",
+        ".agents/docs/agents/sources.json",
+        ".agents/docs/runbooks/agents-operator-guide.md",
+        ".agents/.gitignore",
+        ".agents/skills/project-runtime/SKILL.md",
+        ".agents/scripts/agent-runtime.ps1",
+        ".agents/scripts/runtime-artifacts.ps1",
+        ".agents/scripts/agent-memory.ps1",
+        ".agents/scripts/agent-tasks.ps1",
+        ".agents/scripts/project-hooks.ps1",
+        ".agents/schemas/runtime-artifact.schema.json",
+        ".agents/schemas/runtime-policy.schema.json",
+        ".agents/schemas/validation-report.schema.json",
+        ".agents/docs/agents/runtime-policy.json",
+        ".agents/docs/templates/codex-hooks.json",
+        ".agents/docs/templates/task-input.json",
+        ".agents/docs/templates/knowledge-entry.json",
+        ".agents/managed.json"
+      ],
+      "host": {
+        "git": "git version 2.51.0.windows.2",
+        "powershell": "7.6.5"
+      },
+      "checks": [
+        {
+          "id": "syntax",
+          "command": "Test-AgentSyntax",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 379,
+          "retry_count": 0,
+          "details": []
+        },
+        {
+          "id": "json-schema",
+          "command": "Test-AgentSchemas",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 691,
+          "retry_count": 0,
+          "details": []
+        },
+        {
+          "id": "ownership",
+          "command": "Test-AgentOwnership",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 556,
+          "retry_count": 0,
+          "details": []
+        },
+        {
+          "id": "knowledge",
+          "command": "Test-AgentKnowledge",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 3583,
+          "retry_count": 0,
+          "details": []
+        },
+        {
+          "id": "sources",
+          "command": "Test-AgentSources",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 143,
+          "retry_count": 0,
+          "details": []
+        },
+        {
+          "id": "diff",
+          "command": "git diff --check (working tree and index)",
+          "result": "passed",
+          "exit_code": 0,
+          "duration_ms": 1396,
+          "retry_count": 0,
+          "details": []
+        }
+      ],
+      "result": "passed",
+      "passed": true,
+      "release_ready": false,
+      "require_release_ready": false
+    },
+    "release-gate": {
+      "schema_version": "agents-validation/v4",
+      "run_id": "run-53f6ab5955864a3c82b6dcf62f26c282",
+      "receipt_path": ".agents/runtime/runs/run-53f6ab5955864a3c82b6dcf62f26c282/validation/report.json",
+      "started_utc": "2026-10-16T11:14:46.3181361+00:00",
+      "finished_utc": "2026-10-16T11:15:34.3427960+00:00",
+      "scope": "Consumer",
+      "profile": "Checkpoint",
+      "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "paths": [],
+      "host": {
+        "powershell": "7.6.5",
+        "git": "git version 2.51.0.windows.2"
+      },
+      "checks": [
+        {
+          "result": "failed",
+          "exit_code": 1,
+          "id": "fatal",
+          "retry_count": 0,
+          "command": "checkpoint setup/integrity",
+          "details": [
+            "RequireReleaseReady requires a Provider Checkpoint."
+          ],
+          "duration_ms": 0
+        }
+      ],
+      "result": "failed",
+      "passed": false,
+      "release_ready": false,
+      "require_release_ready": true
+    }
+  },
+  "recipe_sources": {
+    "CMakeLists.txt": "046cb944d0452e28ee112166950fe23d3a15bb1cfbf891f961251f4daef7ecac",
+    "src/CMakeLists.txt": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a",
+    "cmake/InstallOnlyInlong.cmake": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+    "cmake/InlongBuildDataDirs.cmake": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe",
+    "cmake/ResetBuildDataDirs.cmake": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b"
+  }
+}

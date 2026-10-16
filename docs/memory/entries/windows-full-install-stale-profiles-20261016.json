@@ -1,0 +1,69 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-full-install-stale-profiles-20261016",
+  "key": "windows-full-install-overlay-stale-profile-reconciliation",
+  "type": "lesson",
+  "conclusion": "A successful Windows full CMake install overlays resources and does not ensure the installed profile file set equals current source. A verified install from bc4d9aa5de retained 1685 pre-existing extra files; all current-source files were already present and byte-identical. Archive and hash-verify extra output files before reconciling, preserve unknown provenance, and recheck exact output/source file sets. The Inlong-only target recreates its directory and had 734 matching profile-related files; the reconciled full output had 14756. Preserve portable settings before both targets and verify exact restoration afterward. These are local install checks, not Provider release readiness.",
+  "scope": "Default Windows full and Inlong-only CMake installation outputs",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "install",
+    "stale-output",
+    "profiles",
+    "settings-preservation"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "cmake/InstallOnlyInlong.cmake",
+    "InlongSlicer_doc/upstream_sync_20261016.md",
+    "InlongSlicer_doc/upstream_install_verification_20261016.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "046cb944d0452e28ee112166950fe23d3a15bb1cfbf891f961251f4daef7ecac",
+      "commit": "bc4d9aa5de8c6d6de7333898d024342a15197bc6",
+      "locator": "Reviewed Windows resource install/recreation recipe or durable measured installation verification; commit is the checkout anchor for new documentation snapshots"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+      "commit": "bc4d9aa5de8c6d6de7333898d024342a15197bc6",
+      "locator": "Reviewed Windows resource install/recreation recipe or durable measured installation verification; commit is the checkout anchor for new documentation snapshots"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_sync_20261016.md",
+      "sha256": "ad75081b85e887a8b0a92399c4dac580a6c1851ae47391addedd88e077af623c",
+      "commit": "bc4d9aa5de8c6d6de7333898d024342a15197bc6",
+      "locator": "Reviewed Windows resource install/recreation recipe or durable measured installation verification; commit is the checkout anchor for new documentation snapshots"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_install_verification_20261016.json",
+      "sha256": "b64f4545bb0e4f8a573c7358b8bb41731702a21502f4f543c53edde9b7394714",
+      "commit": "bc4d9aa5de8c6d6de7333898d024342a15197bc6",
+      "locator": "Reviewed Windows resource install/recreation recipe or durable measured installation verification; commit is the checkout anchor for new documentation snapshots"
+    }
+  ],
+  "verified_utc": "2026-10-16T11:35:44.766235+00:00",
+  "verification": {
+    "result": "passed",
+    "summary": "Both native targets exited zero; exact profile-file comparisons, EXE/DLL hashes, restricted-PATH Python/SSL and CLI smoke checks passed. All 791 original settings files and exact file sets were restored. Every extra output byte was preserved. Source/doc snapshots were reviewed; new documentation is not claimed to be in the checkout-anchor commit yet.",
+    "reviewed_by": "Codex root agent",
+    "method": "Current recipe review and native install output/hash/smoke verification"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
