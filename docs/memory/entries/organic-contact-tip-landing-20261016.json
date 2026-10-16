@@ -1,0 +1,61 @@
+{
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "id": "organic-contact-tip-landing-20261016",
+  "tags": [
+    "branch-continuation",
+    "model-landing",
+    "local-tip-clearance",
+    "regression"
+  ],
+  "type": "fact",
+  "sources": [
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "locator": "RichInterfacePlacer tip initialization, sloped-model branch continuation regression, and original-project validation evidence",
+      "kind": "file_snapshot",
+      "sha256": "3d36249d076244c3500fcd13a3a8366f5df10f75674ff519fc13e4c8570d3ac9"
+    },
+    {
+      "path": "tests/fff_print/test_support_material.cpp",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "locator": "RichInterfacePlacer tip initialization, sloped-model branch continuation regression, and original-project validation evidence",
+      "kind": "file_snapshot",
+      "sha256": "ab016b837d1ce0c178e2f5a8092403c483f2553a5dd071566a59bfdfacd5c8e6"
+    },
+    {
+      "path": "docs/evidence/benchy-organic-branch-continuation-20261016.md",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "locator": "RichInterfacePlacer tip initialization, sloped-model branch continuation regression, and original-project validation evidence",
+      "kind": "file_snapshot",
+      "sha256": "4ae7960ee97236e3dad200a81d2a740bcd1ccaba9d7f96b3301a1cb0a93e1c07"
+    }
+  ],
+  "scope": "Organic support contact tip classification and branch continuity",
+  "retracts": [],
+  "schema_version": "agents-knowledge/v4",
+  "sensitive": false,
+  "verification": {
+    "summary": "Reviewed contact tip initialization: local collision clearance is not proof of a flat landing. Removed CONTACT_TO_MODEL from the gracious flag while retaining normal branch collision clipping, local tip footprint rules, and the previous roof stack correction. The rebuilt affected native suite passed84cases18107assertions, including a prior-algorithm failing sloped-landing fixture and checks of actual consecutive-layer branch material. Original Benchy re-slice exit0:30failed candidates became0warnings, identical configuration and model extrusion geometry, preserved four-plane roof stack. Full findings are in docs/evidence/benchy-organic-branch-continuation-20261016.md. Source hashes bind reviewed worktree bytes; the commit is only a checkout anchor.",
+    "result": "passed",
+    "method": "Counterexample diagnostics, native red-to-green regression and original-project re-slice",
+    "reviewed_by": "Codex root agent"
+  },
+  "reusable": true,
+  "conclusion": "A locally collision-safe CONTACT_TO_MODEL candidate does not establish a flat model landing. Only avoidance-classified gracious candidates and build-plate candidates set to_model_gracious during organic tip initialization. Otherwise ordinary collision-based model-resting propagation must remain available for inclined surfaces; forcing flat-landing avoidance can delete valid tips and emit failed influence-area expansion warnings. Preserve normal branch clearances and the separate local contact-footprint exception.",
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/benchy-organic-branch-continuation-20261016.md"
+  ],
+  "key": "organic-contact-tip-landing-classification",
+  "supersedes": [],
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "verified_utc": "2026-10-16T13:16:52.6749507+00:00"
+}

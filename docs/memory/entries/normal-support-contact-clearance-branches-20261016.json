@@ -1,0 +1,121 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "normal-support-contact-clearance-branches-20261016",
+  "key": "normal-support-contact-distance-contract",
+  "type": "fact",
+  "conclusion": "Normal support must clip by its full deposited Z span, not a bottom contact coordinate that includes an air gap. Sharp-tail detection must not replace the requested normal XY gap with a fixed 0.2 mm; near-Z guard clearance is capped by the configured XY gap. Normal support without a sheath reserves complete bead width while retaining its reference fill pitch. Synchronized body layers with independently placed top contacts reserve the minimum printable contact height, preserving the requested contact print plane. G-code print Z is the extrusion top plane: compute nominal top contact gap from the model underside, or subtract model path height from its print Z before measuring a bead envelope; do not count a model layer height twice. With both independent height flags enabled the tested 0.17 mm top gap is retained, while fully synchronized support may quantize a requested gap to object layers. Organic tip XY/Z percentages are applied by the organic planner and are not normal-support distance overrides.",
+  "scope": "Normal support contact geometry and gap interpretation",
+  "modules": [
+    "Support",
+    "NormalSupport"
+  ],
+  "tags": [
+    "support",
+    "contact",
+    "XY-clearance",
+    "Z-gap",
+    "independent-heights",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportMaterial.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/SupportCommon.hpp",
+    "src/libslic3r/Support/SupportLayer.hpp",
+    "src/libslic3r/Fill/FillBase.cpp",
+    "src/libslic3r/Slicing.cpp",
+    "src/libslic3r/Flow.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "src/slic3r/GUI/ConfigManipulation.cpp",
+    "tests/fff_print/test_support_material.cpp"
+  ],
+  "sources": [
+    {
+      "path": "src/libslic3r/Support/SupportMaterial.cpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "946a539039e52b276b7c69c08981c873d454267a0e9429e974d459eadd01590c"
+    },
+    {
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "767850bfd86c4ebec1cbf0c806d0796bc614e3f4853e38c714885ac9474096da"
+    },
+    {
+      "path": "src/libslic3r/Support/SupportCommon.hpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "a3c0963c8e6d9d2b8bb60ed48244fd756924fa3c548d9d7e24c7b455f97eb40a"
+    },
+    {
+      "path": "src/libslic3r/Support/SupportLayer.hpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "af9fe91c80b052bba6645c7d9861e0452734daa2b4dcd2c0941bb8a129a7f463"
+    },
+    {
+      "path": "src/libslic3r/Fill/FillBase.cpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "980ab01ad1fa353174fade2c3e899edfc338bddb493f042a9d528945d857c5a5"
+    },
+    {
+      "path": "src/libslic3r/Slicing.cpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "2f2a395a7e14c0d4ced04a654828425953641ab7c65c98856eeac0fb5d214a8f"
+    },
+    {
+      "path": "src/libslic3r/Flow.cpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "69ee6437e86e8f2a585a82cd6b1bb71a88fbddd3605e40feb27b595bb26113a6"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0"
+    },
+    {
+      "path": "src/slic3r/GUI/ConfigManipulation.cpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "163c6874b94568716c65c1d2fdda9120a242e11f341ee7cd41621078cd5dde95"
+    },
+    {
+      "path": "tests/fff_print/test_support_material.cpp",
+      "locator": "Normal support contact-height and collision-span implementation, bead-width filling, gap and flow definitions, organic-only tip controls, or behavior-based support regressions",
+      "commit": "2728ec8e40f0c51e3c841c2885bda30f4d41160d",
+      "kind": "file_snapshot",
+      "sha256": "ab016b837d1ce0c178e2f5a8092403c483f2553a5dd071566a59bfdfacd5c8e6"
+    }
+  ],
+  "verified_utc": "2026-10-16T13:16:52.6749507+00:00",
+  "verification": {
+    "summary": "Reviewed contact tip initialization: local collision clearance is not proof of a flat landing. Removed CONTACT_TO_MODEL from the gracious flag while retaining normal branch collision clipping, local tip footprint rules, and the previous roof stack correction. The rebuilt affected native suite passed84cases18107assertions, including a prior-algorithm failing sloped-landing fixture and checks of actual consecutive-layer branch material. Original Benchy re-slice exit0:30failed candidates became0warnings, identical configuration and model extrusion geometry, preserved four-plane roof stack. Full findings are in docs/evidence/benchy-organic-branch-continuation-20261016.md. Source hashes bind reviewed worktree bytes; the commit is only a checkout anchor.",
+    "result": "passed",
+    "method": "Source delta review, failing baseline regression and affected native suite",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "normal-support-contact-clearance-benchy-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

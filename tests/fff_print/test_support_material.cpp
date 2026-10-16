@@ -4,6 +4,11 @@
 #include <cstdint>
 #include <map>
 #include <tbb/global_control.h>
+#include <boost/core/null_deleter.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
+#include <boost/make_shared.hpp>
 
 #include "libslic3r/GCodeReader.hpp"
 #include "libslic3r/GCode/ConflictChecker.hpp"
@@ -1134,6 +1139,114 @@ TEST_CASE("SupportMaterial: Organic top contact can use an exact independent hei
     REQUIRE(std::any_of(layers.begin(), layers.end(), [](const SupportLayer *layer) {
         return !is_on_regular_grid(layer->print_z, 0.2);
     }));
+}
+
+TEST_CASE("Organic contact tips continue over a sloped model landing",
+          "[SupportMaterial][OrganicTree][Regression]")
+{
+    constexpr double pyramid_height = 20., ceiling_bottom = 30.;
+    constexpr double top_gap = 0.255, bottom_gap = 0.2, max_support_height = 0.45;
+    constexpr int roof_layers = 4;
+    TriangleMesh model = make_pyramid(60.f, float(pyramid_height));
+    TriangleMesh ceiling = make_cube(20., 20., 2.);
+    const BoundingBoxf3 base = model.bounding_box();
+    const Vec3d center = base.center();
+    ceiling.translate(float(center.x() - 10.), float(center.y() - 10.), float(ceiling_bottom));
+    model.merge(ceiling);
+
+    DynamicPrintConfig config = organic_support_config(true, true, 0.3, top_gap, 0.05, max_support_height);
+    config.set_deserialize_strict({
+        {"support_on_build_plate_only", false},
+        {"support_interface_top_layers", roof_layers},
+        {"support_bottom_z_distance", bottom_gap},
+        {"support_interface_spacing", 0.4},
+        {"support_top_contact_pattern", "concentric"},
+        {"support_top_contact_spacing", 0.05},
+        {"support_line_width", "102%"},
+        {"tree_support_branch_diameter_organic", 3.},
+        {"tree_support_tip_diameter", 2.},
+        {"tree_support_branch_distance_organic", 1.},
+        {"tree_support_branch_angle_organic", 30.},
+        {"support_tip_turn_angle", 45.},
+        {"support_tip_xy_distance_percent", "50%"},
+        {"support_tip_z_distance_percent", "50%"},
+        {"max_bridge_length", 0.},
+        {"support_remove_small_overhang", false}
+    });
+    std::ostringstream messages;
+    using LogSink = boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend>;
+    const auto sink = boost::make_shared<LogSink>();
+    sink->locked_backend()->add_stream(boost::shared_ptr<std::ostream>(&messages, boost::null_deleter()));
+    boost::log::core::get()->add_sink(sink);
+    struct RemoveSink {
+        boost::shared_ptr<LogSink> sink;
+        ~RemoveSink() { boost::log::core::get()->remove_sink(sink); }
+    } remove_sink{sink};
+
+    Print print;
+    init_and_process_print({std::move(model)}, print, config);
+    sink->flush();
+    const auto layers = nonempty_support_layers(print);
+    REQUIRE(layers.size() > size_t(roof_layers));
+    const double body_top_limit = ceiling_bottom - top_gap - roof_layers * max_support_height;
+    REQUIRE(std::any_of(layers.begin(), layers.end(), [=](const SupportLayer *layer) {
+        return layer->print_z > pyramid_height && layer->print_z < body_top_limit;
+    }));
+    // Above the pyramid and below the interface stack every emitted branch
+    // island must overlap material on the preceding output plane.
+    for (size_t idx = 1; idx < layers.size(); ++idx) {
+        const SupportLayer &layer = *layers[idx];
+        if (layer.print_z - layer.height <= pyramid_height + bottom_gap || layer.print_z >= body_top_limit)
+            continue;
+        for (const ExPolygon &island : layer.support_islands) {
+            CAPTURE(layer.print_z);
+            CHECK_FALSE(intersection(to_polygons(island), to_polygons(layers[idx - 1]->support_islands)).empty());
+        }
+    }
+    INFO(messages.str());
+    CHECK(messages.str().find("Influence area could not be increased") == std::string::npos);
+    CHECK(messages.str().find("No valid placement found") == std::string::npos);
+}
+
+TEST_CASE("Organic independent roof layers preserve a continuous interface footprint",
+          "[SupportMaterial][OrganicTree][Regression]")
+{
+    const bool independent_body = GENERATE(false, true);
+    const double top_gap = GENERATE(0.2, 0.255);
+    CAPTURE(independent_body, top_gap);
+    DynamicPrintConfig config = organic_support_config(independent_body, true, 0.3, top_gap, 0.05, 0.45);
+    config.set_deserialize_strict({
+        {"support_interface_top_layers", 4},
+        {"support_interface_not_for_body", true},
+        {"support_interface_spacing", 0.4},
+        {"support_interface_pattern", "rectilinear"},
+        {"support_top_contact_pattern", "concentric"},
+        {"support_top_contact_spacing", 0.05},
+        {"max_bridge_length", 0.},
+        {"support_remove_small_overhang", false},
+        {"support_line_width", "0.612"},
+        {"tree_support_branch_diameter_organic", 3.},
+        {"tree_support_tip_diameter", 2.}
+    });
+    Print print;
+    init_and_process_print({suspended_tree_platform()}, print, config);
+    const std::vector<const SupportLayer *> layers = nonempty_support_layers(print);
+    REQUIRE(layers.size() >= 4);
+    // Only the footprint actually selected by the overhang detector is part of
+    // this contract. The entire model underside need not require support.
+    const Polygons core = offset(to_polygons(layers.back()->support_islands), -scaled<double>(0.15));
+    REQUIRE_FALSE(core.empty());
+    const double core_area = area(core);
+    for (size_t depth = 0; depth < 4; ++depth) {
+        const SupportLayer &layer = *layers[layers.size() - 1 - depth];
+        Polygons covered;
+        layer.support_fills.polygons_covered_by_width(covered, 1.f);
+        const double coverage = area(intersection(covered, core)) / core_area;
+        const double footprint = area(intersection(to_polygons(layer.support_islands), core)) / core_area;
+        CAPTURE(depth, layer.print_z, coverage, footprint);
+        CHECK(footprint > 0.9);
+        CHECK(coverage > 0.35);
+    }
 }
 
 TEST_CASE("SupportMaterial: Organic support body can use an independent output grid", "[SupportMaterial][OrganicTree]")

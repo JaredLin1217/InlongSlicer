@@ -1510,7 +1510,10 @@ private:
     void add_point_as_influence_area(std::pair<Point, LineStatus> p, LayerIndex insert_layer, size_t dont_move_until, bool roof, size_t roof_recovery_dtt, bool skip_ovalisation, bool roof_already_generated = false)
     {
         bool to_bp = p.second == LineStatus::TO_BP || p.second == LineStatus::TO_BP_SAFE;
-        bool gracious = to_bp || p.second == LineStatus::CONTACT_TO_MODEL || p.second == LineStatus::TO_MODEL_GRACIOUS || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE;
+        // Local contact clearance only proves that a tip fits. A flat model
+        // landing must be established by the ordinary avoidance classification;
+        // otherwise propagate it using the non-gracious branch collision path.
+        bool gracious = to_bp || p.second == LineStatus::TO_MODEL_GRACIOUS || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE;
         bool safe_radius = p.second == LineStatus::TO_BP_SAFE || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE;
         if (! config.support_rests_on_model && ! to_bp) {
             BOOST_LOG_TRIVIAL(warning) << "Tried to add an invalid support point";
@@ -4912,6 +4915,7 @@ void organic_draw_branches(
         support_params.independent_top_contact_layer_height;
     bool use_independent_output = requested_independent_output;
     bool use_exact_top_contact  = support_params.independent_top_contact_layer_height;
+    std::vector<LayerIndex> contact_output_indices(top_contacts.size(), -1);
     std::string fallback_reason;
     if (use_exact_top_contact) {
         for (size_t contact_idx = 0; contact_idx < top_contacts.size(); ++contact_idx) {
@@ -4935,6 +4939,9 @@ void organic_draw_branches(
                 slicing_params, config, move_bounds.size(), top_contacts, mandatory_source_layers,
                 preserve_source_grid, fallback_reason)) {
             OrganicSupportLayerPlan candidate = std::move(*independent_plan);
+            for (size_t idx = 0; idx < top_contacts.size(); ++idx)
+                if (top_contacts[idx] != nullptr)
+                    contact_output_indices[idx] = candidate.find_exact(top_contacts[idx]->print_z);
             SupportGeneratorLayersPtr &top_interfaces = interface_placer.top_interfaces_mutable();
             SupportGeneratorLayersPtr &top_base_interfaces = interface_placer.top_base_interfaces_mutable();
             const bool remapped =
@@ -4970,6 +4977,18 @@ void organic_draw_branches(
         intermediate_layers.assign(move_bounds.size(), nullptr);
         BOOST_LOG_TRIVIAL(warning) << "Organic independent layer planning could not satisfy the configured layer-height constraints; using the legacy synchronized layer plan. Reason: "
                                    << (fallback_reason.empty() ? "unspecified planning failure" : fallback_reason);
+    }
+
+    for (InterfacePlacer::PendingInterface &roof : interface_placer.take_pending_interfaces()) {
+        LayerIndex output_idx = LayerIndex(roof.layer_idx);
+        if (layer_plan.independent()) {
+            const size_t contact_idx = roof.layer_idx + roof.dtt_roof;
+            if (contact_idx < contact_output_indices.size() && contact_output_indices[contact_idx] >= 0)
+                output_idx = std::max<LayerIndex>(0, contact_output_indices[contact_idx] - LayerIndex(roof.dtt_roof));
+            else
+                output_idx = layer_plan.at_or_below(layer_z(slicing_params, config, roof.layer_idx));
+        }
+        interface_placer.add_roof(std::move(roof.polygons), size_t(output_idx), roof.dtt_roof);
     }
 
     std::vector<Polygons> output_collisions;

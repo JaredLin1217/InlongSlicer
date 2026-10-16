@@ -731,7 +731,8 @@ public:
     InterfacePlacer(const InterfacePlacer& rhs) :
         slicing_parameters(rhs.slicing_parameters), support_parameters(rhs.support_parameters), config(rhs.config),
         layer_storage(rhs.layer_storage), top_contacts(rhs.top_contacts), top_interfaces(rhs.top_interfaces), top_base_interfaces(rhs.top_base_interfaces),
-        layer_initializer(rhs.layer_initializer), allow_independent_contact_adjustment(rhs.allow_independent_contact_adjustment)
+        layer_initializer(rhs.layer_initializer), allow_independent_contact_adjustment(rhs.allow_independent_contact_adjustment),
+        pending_interfaces(rhs.pending_interfaces), defer_interfaces(rhs.defer_interfaces)
     {}
 
     const SlicingParameters    &slicing_parameters;
@@ -746,6 +747,21 @@ public:
         layer_initializer = std::move(initializer);
     }
     void use_legacy_contact_layers() { allow_independent_contact_adjustment = false; }
+
+    struct PendingInterface {
+        Polygons polygons;
+        size_t layer_idx;
+        size_t dtt_roof;
+    };
+
+    // Keep each footprint's distance from its contact until the physical output
+    // grid is known. Aggregating by topology Z loses that relationship when an
+    // exact contact introduces or removes an output plane.
+    std::vector<PendingInterface> take_pending_interfaces()
+    {
+        defer_interfaces = false;
+        return std::move(*pending_interfaces);
+    }
 
 public:
     // Insert the contact layer and some of the interface and base interface layers below.
@@ -776,6 +792,11 @@ public:
     {
         assert(support_parameters.has_top_contacts);
         assert(dtt_roof <= support_parameters.num_top_interface_layers);
+        if (defer_interfaces && dtt_roof > 0 &&
+            (support_parameters.organic_independent_layer_height || support_parameters.independent_top_contact_layer_height)) {
+            pending_interfaces->push_back({std::move(new_roofs), insert_layer_idx, dtt_roof});
+            return;
+        }
         // INLONG: Reserve one top interface layer but only when top base-interface layers exist.
         // This prevents all interface layers from being classified as base-interface layers
         // and preserves correct top contact and interface behavior.
@@ -818,6 +839,8 @@ private:
     SupportGeneratorLayersPtr                          &top_base_interfaces;
     std::function<void(SupportGeneratorLayer &, size_t)> layer_initializer;
     bool allow_independent_contact_adjustment{true};
+    std::shared_ptr<std::vector<PendingInterface>> pending_interfaces{std::make_shared<std::vector<PendingInterface>>()};
+    bool defer_interfaces{true};
 
     // Mutexes, guards
     std::mutex                                          m_mutex_layer_storage;
