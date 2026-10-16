@@ -1,0 +1,95 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "perimeter-wall-order-brim-20261017",
+  "key": "classic-arachne-wall-order-brim-contract",
+  "type": "fact",
+  "conclusion": "At upstream 0acf1e6680, Classic and Arachne respect wall sequence/direction on thin and narrow tube walls, including shared odd centre lines. Inner/Outer/Inner has no third wall to sandwich on a narrow hole: print the hole, contour and shared middle/gap fill in the tested order. Positive-width explicit outer, outer-and-inner and belt leading-edge brims force outer walls first on layer zero; auto/ear/painted brims do not. Invalidate perimeters when brim_type or brim_width changes that outer-first decision. Preserve the belt leading-edge case when porting the common helper. The seven imported behavioral fixtures and existing belt/support fixtures passed on Windows. This is a version-bound source/fixture contract, not a GUI or cross-platform claim.",
+  "scope": "Classic/Arachne perimeter order and brim invalidation at 0acf1e6680",
+  "modules": [
+    "Perimeters",
+    "Arachne",
+    "upstream-sync"
+  ],
+  "tags": [
+    "wall-order",
+    "direction",
+    "brim",
+    "belt",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Arachne/WallToolPaths.cpp",
+    "src/libslic3r/PerimeterGenerator.cpp",
+    "src/libslic3r/PerimeterGenerator.hpp",
+    "src/libslic3r/PrintObject.cpp",
+    "tests/fff_print/test_perimeters.cpp",
+    "docs/evidence/upstream-perimeter-order-verification-20261017.json",
+    "InlongSlicer_doc/upstream_perimeter_order_sync_20261017.md"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Arachne/WallToolPaths.cpp",
+      "sha256": "bba13d93dbe197eef445da74dea9c01766ed7719f79410dc24be762cac5df3ab",
+      "commit": "221f64e30554c377fc7bf22478522bbe768dd88e",
+      "locator": "Reviewed perimeter logic, executed wall-order/brim fixtures or durable native evidence; pre-merge checkout anchor"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PerimeterGenerator.cpp",
+      "sha256": "b508fce90b18dd1d07d91aabd6aeef988d04e72a9857e4af1b6da60350acbc3d",
+      "commit": "221f64e30554c377fc7bf22478522bbe768dd88e",
+      "locator": "Reviewed perimeter logic, executed wall-order/brim fixtures or durable native evidence; pre-merge checkout anchor"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PerimeterGenerator.hpp",
+      "sha256": "a2b2e3af7236169df18af9c9c889df07b93717002271fd6deb16cefc9b23b943",
+      "commit": "221f64e30554c377fc7bf22478522bbe768dd88e",
+      "locator": "Reviewed perimeter logic, executed wall-order/brim fixtures or durable native evidence; pre-merge checkout anchor"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PrintObject.cpp",
+      "sha256": "6c7b25432a8f3f76b508ac201acc6b41af6b8848a11cb1f1436e57825e0f229c",
+      "commit": "221f64e30554c377fc7bf22478522bbe768dd88e",
+      "locator": "Reviewed perimeter logic, executed wall-order/brim fixtures or durable native evidence; pre-merge checkout anchor"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_perimeters.cpp",
+      "sha256": "3e79b2e5b1a331517213584c5e1b46cfd22385ac19580ab39d259d069ecd5644",
+      "commit": "221f64e30554c377fc7bf22478522bbe768dd88e",
+      "locator": "Reviewed perimeter logic, executed wall-order/brim fixtures or durable native evidence; pre-merge checkout anchor"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-perimeter-order-verification-20261017.json",
+      "sha256": "8e9a1c6f1ee603b215bd6881e0755001dd06806122004c23486cd74332ee21bf",
+      "commit": "221f64e30554c377fc7bf22478522bbe768dd88e",
+      "locator": "Reviewed perimeter logic, executed wall-order/brim fixtures or durable native evidence; pre-merge checkout anchor"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_perimeter_order_sync_20261017.md",
+      "sha256": "1ac8b3da23e7b9f509141b4510f29d9cedf077bf58052a64a76c967d8eda4a70",
+      "commit": "221f64e30554c377fc7bf22478522bbe768dd88e",
+      "locator": "Reviewed perimeter logic, executed wall-order/brim fixtures or durable native evidence; pre-merge checkout anchor"
+    }
+  ],
+  "verified_utc": "2026-10-16T22:21:34.973638+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Source delta and conflict review, Windows FFF/JUnit regressions, disposable DLL linking and fresh three-project comparison",
+    "summary": "23 perimeter/belt cases and 6319 assertions passed. The combined final-statistics regression passed one case / 138 assertions. Current settings, installed binaries and protected support/X2 source files remain unchanged. Exact project command/motion/config flags are retained in durable evidence. Formatting-only cleanup and reused GUI archive are explicitly disclosed; no release-readiness claim."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

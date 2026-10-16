@@ -1,0 +1,396 @@
+{
+  "captured_utc": "2026-10-16T22:21:34.973638+00:00",
+  "task_start": "b186cf39341272ee53c39184a90f09a6abb4979b",
+  "statistics_merge": "221f64e30554c377fc7bf22478522bbe768dd88e",
+  "upstream": "0acf1e6680813e6ec942e4f283904930ece15a7c",
+  "upstream_commits_since_task_start": [
+    "0acf1e6680813e6ec942e4f283904930ece15a7c Fix wall order on narrow tube walls and under outer brims, and test wall order and direction (#16421)",
+    "c6804fbb6836493c71d3669e0404ddb85e7d2f6e fix: print statistics placeholders fail in custom G-code (#16348)"
+  ],
+  "source_snapshots": [
+    {
+      "path": "src/libslic3r/Arachne/WallToolPaths.cpp",
+      "sha256": "bba13d93dbe197eef445da74dea9c01766ed7719f79410dc24be762cac5df3ab"
+    },
+    {
+      "path": "src/libslic3r/PerimeterGenerator.cpp",
+      "sha256": "b508fce90b18dd1d07d91aabd6aeef988d04e72a9857e4af1b6da60350acbc3d"
+    },
+    {
+      "path": "src/libslic3r/PerimeterGenerator.hpp",
+      "sha256": "a2b2e3af7236169df18af9c9c889df07b93717002271fd6deb16cefc9b23b943"
+    },
+    {
+      "path": "src/libslic3r/PrintObject.cpp",
+      "sha256": "6c7b25432a8f3f76b508ac201acc6b41af6b8848a11cb1f1436e57825e0f229c"
+    },
+    {
+      "path": "tests/fff_print/test_perimeters.cpp",
+      "sha256": "3e79b2e5b1a331517213584c5e1b46cfd22385ac19580ab39d259d069ecd5644"
+    }
+  ],
+  "statistics_sources_still_identical": [
+    {
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "72b0e6c2b6dba43995bdab19b97318c2a463655814d148fbb8df6d2c123e4265"
+    },
+    {
+      "path": "src/libslic3r/GCode/GCodeProcessor.cpp",
+      "sha256": "34f494701836b9a27a558127ea6de5b1fb2a98f03d70a13a39be86020866336e"
+    },
+    {
+      "path": "src/libslic3r/GCode/GCodeProcessor.hpp",
+      "sha256": "94fd3c158cfc32b50e931ff180ede2940e40c7c271b8904409c018b5b28ee081"
+    },
+    {
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "5d47b8dd9e7b7f7b49257601a5e924e7f081790b409dc7c2150962372ec901aa"
+    }
+  ],
+  "conflicts": [
+    {
+      "path": "src/libslic3r/PerimeterGenerator.cpp",
+      "hunks": 3,
+      "resolution": "Retained INLONG comment identity and all incoming narrow-hole logic; leading-edge belt brim remains included in the common outer-first helper"
+    }
+  ],
+  "native_build": {
+    "log_sha256": "209155deff3f1a5dfe793ecb04edebc6de601ebf68aac52b60e3aff83f6b34f2",
+    "exit_code": 0,
+    "target": "fff_print_tests",
+    "executable_sha256": "2306b5b041fada4ecadaad779e561ceecfe453c67e394d3abf5aaae5bfd5be09",
+    "completed_utc": "2026-10-16T22:14:30.2437622+00:00",
+    "started_utc": "2026-10-16T22:13:20.1401251+00:00"
+  },
+  "disposable_app_link": {
+    "exit_code": 0,
+    "log_sha256": "4096bec2423885485ed0e0bbb373011f5307ddcc685b1f7ca8a01face9dd1df8",
+    "method": "Direct MSBuild app project; references, pre-build and post-build events disabled; disposable output",
+    "started_utc": "2026-10-16T22:14:58.1650049+00:00",
+    "dll_sha256": "2048f75149b9dd9971d6cf23139fff0f7b00ed07953810161ea65817b59c36d2",
+    "output": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-merged\\",
+    "completed_utc": "2026-10-16T22:15:53.0680518+00:00"
+  },
+  "tests": {
+    "perimeter": {
+      "seed": 20261017,
+      "filter": "[Perimeters],A support-only change on a belt purge print matches a fresh slice,Belt supports reach the belt under a leading overhang",
+      "executable_sha256": "2306b5b041fada4ecadaad779e561ceecfe453c67e394d3abf5aaae5bfd5be09",
+      "seconds": 108.2736141,
+      "log_sha256": "e178893f174d945ff17b305e8bcf1893d524b259886ffdf21241c69ccb1d592a",
+      "native_exit_code": 0,
+      "junit_sha256": "250e59f7e0438a7869e4fd8f99732040b4519a2fb35109118a5049a2c2d765f6",
+      "assertions": 6319,
+      "passed_cases": 23,
+      "executed_cases": [
+        "A thin wall hole is printed before the contour unless the outer walls go first",
+        "Loops waiting for the infill are extruded after it",
+        "A wall loop out of reach of the layer below waits for the infill",
+        "A wall loop out of reach of the layer below waits for the infill/a loop alongside a supported wall is not held back",
+        "A wall loop out of reach of the layer below waits for the infill/switched off, no loop is held back",
+        "Only one wall on top surfaces drops inner walls only where a top fill replaces them",
+        "Only one wall on the first layer needs a bottom shell",
+        "Inner/Outer/Inner prints the hole of a narrow tube wall first and the middle last",
+        "Top surface density does not affect a slice without a top shell",
+        "Top surface expansion only acts where there is a top fill",
+        "Top surface expansion only acts where there is a top fill/no top shell layers",
+        "Top surface expansion only acts where there is a top fill/zero top surface density",
+        "Top surface expansion only acts where there is a top fill/with a top fill the same expansion does change the slice",
+        "Reverse on even reverses the tube walls of every other layer",
+        "Fuzzy skin leaves the walls of a bridge smooth",
+        "Fuzzy skin leaves the walls over an empty layer smooth",
+        "Only one wall on top surfaces keeps the inner walls of narrow walls away from the top surface",
+        "A brim against the outer walls makes the first layer print them first",
+        "A support-only change on a belt purge print matches a fresh slice",
+        "Holes run against the wall direction",
+        "Unsupported wall loops are extruded after the walls that anchor them",
+        "Unsupported wall loops are extruded after the walls that anchor them/the held back loops run innermost first",
+        "Unsupported wall loops are extruded after the walls that anchor them/switched off, the configured wall order is left alone",
+        "A hole whose outer wall touches the contour's runs with it",
+        "Each side of a tube wall prints its walls in the wall sequence order",
+        "A lower layer sliver too thin to print does not support the wall above it",
+        "Classic top expansion preserves inner walls that are only partly under a top surface",
+        "Changing the brim updates the wall order of the first layer",
+        "Belt supports reach the belt under a leading overhang",
+        "Belt supports reach the belt under a leading overhang/normal(auto) / default / independent=0",
+        "Belt supports reach the belt under a leading overhang/normal(auto) / default / independent=1",
+        "Belt supports reach the belt under a leading overhang/tree(auto) / default / independent=0",
+        "Belt supports reach the belt under a leading overhang/tree(auto) / default / independent=1",
+        "Belt supports reach the belt under a leading overhang/tree(auto) / organic / independent=0",
+        "Belt supports reach the belt under a leading overhang/tree(auto) / organic / independent=1",
+        "Belt supports reach the belt under a leading overhang/tree(auto) / tree_hybrid / independent=0",
+        "Belt supports reach the belt under a leading overhang/tree(auto) / tree_hybrid / independent=1",
+        "Tube walls run in the wall direction and hole walls against it"
+      ]
+    },
+    "combined-statistics": {
+      "native_exit_code": 0,
+      "log_sha256": "310fdff06606be9e2ac43fbd4fb24fe0bebc43e0c5f40aff468f5ed554564f8b",
+      "seed": 20261017,
+      "junit_sha256": "12aa7a5cd53a44630ce83df47dac96779c5ef6db44bae3c110fc195815ece3db",
+      "executable_sha256": "2306b5b041fada4ecadaad779e561ceecfe453c67e394d3abf5aaae5bfd5be09",
+      "filter": "Print statistics in custom G-code match the final print statistics",
+      "seconds": 1.7348285,
+      "assertions": 138,
+      "passed_cases": 1,
+      "executed_cases": [
+        "Print statistics in custom G-code match the final print statistics"
+      ]
+    }
+  },
+  "post_build_formatting_only": {
+    "path": "src\\libslic3r\\PerimeterGenerator.cpp",
+    "lines": [
+      2802
+    ],
+    "before_sha256": "31ebc4f490edb4d761c159fb50d781bc71bc902c7c2fd37a8cbf26e64c111fe4",
+    "after_sha256": "b508fce90b18dd1d07d91aabd6aeef988d04e72a9857e4af1b6da60350acbc3d",
+    "change": "Only one leading indentation prefix changed; every C++ token and every other byte is identical. Existing native tests and binaries remain behaviorally applicable."
+  },
+  "projects": [
+    {
+      "name": "benchy",
+      "seconds": 22.723790599993663,
+      "ordered_commands": 811657,
+      "program_sha256": "10d85ea481a361e5dde24dab976ece21b5b20abf334ad8f05190d98a098612e6",
+      "annotated_motion_sha256": "2855fc0f2bc4600e9590d3a9bd5bd2d5bdc6daf67062b91a3f0afc4bd07b2a27",
+      "baseline_equality": {
+        "command_count": true,
+        "program_sha256": true,
+        "annotated_motion_sha256": true,
+        "configuration": true
+      },
+      "known_initialization_warning_events": 5,
+      "geometry_failure_messages": [],
+      "native": {
+        "label": "benchy-perimeters",
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-merged\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\benchy-perimeters-data",
+          "--slice",
+          "0",
+          "--debug",
+          "3",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\benchy-perimeters",
+          "--logfile",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\validation\\benchy-perimeters-native.log",
+          "C:\\Users\\v_jar\\Downloads\\3DBenchy.3mf"
+        ],
+        "native_waited": true,
+        "exit_code": 0,
+        "seconds": 22.723790599993663,
+        "peak_rss_bytes": 1687564288,
+        "min_available_ram_bytes": 17532956672,
+        "started_utc": "2026-10-16T22:17:26.966090+00:00",
+        "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+        "input_unchanged": true,
+        "dll_sha256": "2048f75149b9dd9971d6cf23139fff0f7b00ed07953810161ea65817b59c36d2",
+        "gcodes": [
+          {
+            "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\benchy-perimeters\\plate_1.gcode",
+            "bytes": 26276597,
+            "sha256": "fa2b57e25c756b78631d7c573beba85085fa6b4d936457163116065b514b7994"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vulcan600",
+      "seconds": 32.33311410000897,
+      "ordered_commands": 1211052,
+      "program_sha256": "502e3a741d9543effa46c76d7714653b272ad5557b3b245278a1bcb5b91ce79d",
+      "annotated_motion_sha256": "a625c07a4d5d7a4515bb5862b9c0a6cde5dfba733d8fe3fb55661fcf127b1b8c",
+      "baseline_equality": {
+        "command_count": true,
+        "program_sha256": true,
+        "annotated_motion_sha256": true,
+        "configuration": true
+      },
+      "known_initialization_warning_events": 5,
+      "geometry_failure_messages": [],
+      "native": {
+        "label": "vulcan600-perimeters",
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-merged\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\vulcan600-perimeters-data",
+          "--slice",
+          "0",
+          "--debug",
+          "3",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\vulcan600-perimeters",
+          "--logfile",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\validation\\vulcan600-perimeters-native.log",
+          "C:\\Users\\v_jar\\Downloads\\Vulcan600培训用档案.3mf"
+        ],
+        "native_waited": true,
+        "exit_code": 0,
+        "seconds": 32.33311410000897,
+        "peak_rss_bytes": 3405963264,
+        "min_available_ram_bytes": 15687917568,
+        "started_utc": "2026-10-16T22:17:49.808709+00:00",
+        "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+        "input_unchanged": true,
+        "dll_sha256": "2048f75149b9dd9971d6cf23139fff0f7b00ed07953810161ea65817b59c36d2",
+        "gcodes": [
+          {
+            "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\vulcan600-perimeters\\plate_1.gcode",
+            "bytes": 40695996,
+            "sha256": "da72cbb357e6123f9087ab7c9d26784a091611f637ad3878b109ed4f651b6d55"
+          }
+        ]
+      }
+    },
+    {
+      "name": "x2",
+      "seconds": 58.88903449999634,
+      "ordered_commands": 1348868,
+      "program_sha256": "85a83db6cf785247766968e98c17b0add33aa6ca4e65337f836007507680d51c",
+      "annotated_motion_sha256": "e2587a6070e2c549889c9e082d5e43e2745eed48d5a06c39c52a29aa1b070081",
+      "baseline_equality": {
+        "command_count": true,
+        "program_sha256": true,
+        "annotated_motion_sha256": true,
+        "configuration": true
+      },
+      "known_initialization_warning_events": 5,
+      "geometry_failure_messages": [],
+      "native": {
+        "label": "x2-perimeters",
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-merged\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\x2-perimeters-data",
+          "--slice",
+          "0",
+          "--debug",
+          "3",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\x2-perimeters",
+          "--logfile",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\validation\\x2-perimeters-native.log",
+          "C:\\Users\\v_jar\\Downloads\\X2培训用档案.3mf"
+        ],
+        "native_waited": true,
+        "exit_code": 0,
+        "seconds": 58.88903449999634,
+        "peak_rss_bytes": 2769928192,
+        "min_available_ram_bytes": 16224636928,
+        "started_utc": "2026-10-16T22:18:22.269322+00:00",
+        "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+        "input_unchanged": true,
+        "dll_sha256": "2048f75149b9dd9971d6cf23139fff0f7b00ed07953810161ea65817b59c36d2",
+        "gcodes": [
+          {
+            "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\x2-perimeters\\plate_1.gcode",
+            "bytes": 40363175,
+            "sha256": "0e008a28cd4f17a13a8008ea6550f5bbc62c2c7cde5ea2eaf592973257161252"
+          }
+        ]
+      }
+    }
+  ],
+  "all_commands_motion_config_match": true,
+  "feature_geometry_comparison": null,
+  "branding": {
+    "filename_hit_count": 33,
+    "filename_classification": {
+      "documentation_or_skill_reference": 22,
+      "false_positive_Canvas": 2,
+      "dependency_download": 1,
+      "plugin_ABI_or_sandbox": 8
+    },
+    "content_hit_categories": {
+      "existing_implementation_reference_no_new_added_hit": 2507,
+      "existing_documentation_fixture_or_tooling_reference": 2874,
+      "legacy_import_or_producer_compatibility": 379,
+      "dependency_or_vendor_reference": 27,
+      "upstream_plugin_abi_or_example": 139,
+      "allowed_service_protocol_or_wiki": 66
+    },
+    "new_added_orca_hits": [],
+    "brand_color_exit": 0,
+    "scope": "Required source scans, excluding Git, native build output, dependency build output, bundled plugins and registered Agents runtime payloads",
+    "limit": "Historical compatibility, producer detection, external service, dependency and implementation references retained; no claim that all old Orca words are product identity."
+  },
+  "protected_slicing_sources": [
+    {
+      "path": "src/libslic3r/Geometry/MedialAxis.cpp",
+      "sha256": "80de3617e2008435ca0c7ba1917a49c8a0cf535a5d030e8145555d0ff1522538"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.cpp",
+      "sha256": "a948b527c45e033afc21ab2426df71fb633f128398323a224ebd5ac1309a6ef9"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.hpp",
+      "sha256": "684e891875394cbbfd4b35a9016725a7b879164be77a1dfe1e5cf758ad97bddd"
+    },
+    {
+      "path": "tests/libslic3r/test_voronoi.cpp",
+      "sha256": "1ad0ad88579389cd9fb33bf3a52bceaf89b11c983d16dae30fbe67b0fbc45738"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f"
+    }
+  ],
+  "portable_settings": [
+    {
+      "path": "build/src/Release/data_dir",
+      "files": 835,
+      "exact_file_set_and_hashes_unchanged": true
+    },
+    {
+      "path": "build/InlongSlicer/data_dir",
+      "files": 0,
+      "exact_file_set_and_hashes_unchanged": true
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/data_dir",
+      "files": 0,
+      "exact_file_set_and_hashes_unchanged": true
+    }
+  ],
+  "installed_binaries_unchanged": [
+    {
+      "path": "build/src/Release/inlong-slicer.exe",
+      "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+    },
+    {
+      "path": "build/src/Release/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    },
+    {
+      "path": "build/InlongSlicer/inlong-slicer.exe",
+      "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+    },
+    {
+      "path": "build/InlongSlicer/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/inlong-slicer.exe",
+      "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    }
+  ],
+  "profiles_and_version_label_unchanged": true,
+  "agents_used": 1,
+  "task_native_slices": 6,
+  "push_performed": false,
+  "install_performed": false,
+  "runtime": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4",
+  "limits": [
+    "Windows focused core/FFF builds and disposable DLL links were verified. Existing GUI archive reused: new public declarations only add nonvirtual/free functions and append enum values; existing class layout/value ordering is unchanged. No new GUI-library build, manual GUI, macOS or Linux execution claimed.",
+    "One whitespace-only leading indentation was corrected after native compilation; the recorded one-line edit changes no C++ token or behavior, so existing native verification is reused.",
+    "Native logs retain five known initialization/compatibility warning events per project. Existing compiler/dependency warnings remain. Timings are validation observations, not speed benchmarks.",
+    "The second fetched snapshot 0acf1e6680 is the selected integration boundary; later remote movement is outside this run. Consumer evidence is not Provider publication readiness."
+  ]
+}
