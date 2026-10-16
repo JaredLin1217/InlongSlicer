@@ -1,0 +1,136 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-local-install-contract-20261017",
+  "key": "windows-native-install-output-contract",
+  "type": "fact",
+  "conclusion": "The default Windows CMake install prefix is build/InlongSlicer. The install_only_inlong target writes build/InlongSlicer_InlongOnly, rejects other output paths, removes the previous filtered output, and copies Release EXE/DLL files, bundled Python, runtime libraries and non-profile resources. Its nine allowed profile roots are InlongFilamentLibrary, INLONG, _Infinity3DP, user, their three vendor manifest JSON files, blacklist.json and hotend.stl. Pages 21 and 24 load the shared guide/21/common.js printer selector; patch that shared implementation in the filtered output, rather than page-specific initialization stubs. The full guide resources and source JS remain unchanged. prepare_empty_data_dirs and direct install hooks reset data_dir in the configured Release binary folder and both local package folders, including incremental no-op builds. Preserve needed portable user settings before invoking these native targets. Local package generation does not itself publish a release or prove committed-source release readiness.",
+  "scope": "Default Windows native CMake local package outputs",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "Windows",
+    "install",
+    "install-only-inlong",
+    "portable-settings",
+    "profiles"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "build_win.bat",
+    "cmake/InlongBuildDataDirs.cmake",
+    "cmake/InstallOnlyInlong.cmake",
+    "cmake/ResetBuildDataDirs.cmake",
+    "docs/evidence/upstream-windows-install-contract-review-20261017.json",
+    "resources/web/guide/21/common.js",
+    "resources/web/guide/21/index.html",
+    "resources/web/guide/24/index.html",
+    "scripts/tests/test_build_data_dirs.py",
+    "scripts/tests/test_build_win_installer.py",
+    "src/CMakeLists.txt"
+  ],
+  "sources": [
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "src/CMakeLists.txt",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "build_win.bat",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "a561ab71d9a01a76567cdc7cd37c3fa2ce8c0f5c9112fad7b4533d54d4de3554"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "cmake/InlongBuildDataDirs.cmake",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "cmake/ResetBuildDataDirs.cmake",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/common.js",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "b0d346607c907cd2b9dfdf2c27e3e12b9f82929bcd8f6c321f4aa356f3e2090e"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/index.html",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/24/index.html",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_build_data_dirs.py",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "sha256": "33693bf82dac6c76cec5c95157c5c343cbe64083da4aee23c76af904144ed8d9"
+    },
+    {
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "sha256": "1e67dcdd220fa0ca4de7faf9d0e80c7e4a1d2f1d62ff63f17793f4ffa07a863f",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed",
+      "path": "scripts/tests/test_build_win_installer.py",
+      "kind": "file_snapshot"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-windows-install-contract-review-20261017.json",
+      "sha256": "393a0a27bc87beb597e092c46b7a82b789afff3bbcdcf60866763c98aabf5a5b",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Apple-only CMake delta, unchanged Windows contracts and historical evidence, eleven passing disposable fixture/dry-run tests; no new installation"
+    }
+  ],
+  "verified_utc": "2026-10-16T21:17:32.322055+00:00",
+  "verification": {
+    "method": "Exact CMake delta review, unchanged-source hash review and disposable packaging/installer CLI tests",
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "summary": "Only the APPLE/Xcode launcher branch changed. All Windows helper, guide and test sources and historical installation evidence still match their prior hashes. Eleven disposable tests passed. No native install or live settings reset occurred. Prior measured output counts remain historical, not a fresh package or release-readiness claim. Source commit fields are pre-merge checkout anchors."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "windows-local-install-contract-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

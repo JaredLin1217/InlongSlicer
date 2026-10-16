@@ -1,0 +1,112 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "upstream-main-integration-20261017",
+  "key": "upstream-main-6d40-integration-verification",
+  "type": "fact",
+  "conclusion": "On 2026-10-17 the OrcaSlicer remote had main as its default branch and no master. The reviewed ten-commit integration ending at 6d40ec93f6 preserves Inlong identity, adds lazy PNG/texture-picker loading, extended-length Windows archive paths and GUI layout fixes, and fixes empty support collections and misplaced tree extra walls. It removes the unconditional organic double-wall override above 100 mm while retaining local multi-island generation, normal contact-clearance and X2 fixes. Profiles and five protected support/X2 source files are unchanged. Windows Release builds and native regressions passed; all three supplied projects have identical complete ordered commands, annotated motion and emitted configuration to the latest fixed pre-merge candidate. Installed DLLs remain unchanged. An independent old-runtime GUI startup changed two preferences and added a log; those current changes were retained and backed up rather than overwritten. For native validation, use explicit test data directories, library/test targets and direct app linking to disposable output with references/build events disabled, avoiding portable-data reset targets. Interactive GUI/macOS behavior and Provider publication readiness were not established.",
+  "scope": "Version-bound Windows integration of upstream main at 6d40ec93f6",
+  "modules": [
+    "upstream-sync",
+    "branding",
+    "build",
+    "tests"
+  ],
+  "tags": [
+    "Windows",
+    "upstream",
+    "extended-path",
+    "texture-library",
+    "settings-preservation"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "src/libslic3r/PNGReadWrite.cpp",
+    "src/libslic3r/utils.cpp",
+    "src/slic3r/plugin/PluginFsUtils.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport.hpp",
+    "docs/evidence/upstream-sync-verification-20261017.json",
+    "InlongSlicer_doc/upstream_sync_20261017.md"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PNGReadWrite.cpp",
+      "sha256": "11beabe5fb2bdb7e4a4b50e2ff463cf25553384ad74239b92d9569bc7b415b26",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/utils.cpp",
+      "sha256": "a9870ee1ba3489dac6e8dd2e5998fbc722cba2f4ae87e52c0caa462e10b15920",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/plugin/PluginFsUtils.cpp",
+      "sha256": "4a8dd108fdf967e50e651a0975c7903f1a5dadabfcabf8ed42381161bb8fd54b",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "fa823c0d9caa08efa8e79ccef905bd3be78ddbd72eeb0dec70f5e36998ade45d",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "fed229ff0b3e2c7ac6a606901760dc6ffb5ca2a7b2ea7a2972468e628becc434",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.hpp",
+      "sha256": "2cae88c07844389b2414f0101534b77b49d707682b129a5c9c6517d4d70b9743",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-sync-verification-20261017.json",
+      "sha256": "d1a1a96b39424ffec395ca4c36dcbab75773756756f6149f02ee1c3a21c47095",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_sync_20261017.md",
+      "sha256": "37d254f25e8a0980a9fbd251ed0f974513fcf80dd9450e80f6402e089f6d7f9e",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Exact reviewed merge-worktree source or durable native validation; pre-merge checkout anchor does not claim that new bytes were committed yet"
+    }
+  ],
+  "verified_utc": "2026-10-16T21:43:40.520636+00:00",
+  "verification": {
+    "method": "Live Git refs and conflict review, native Release builds, focused Catch2 and packaging tests, three fresh native slices, command/configuration hashes and preservation snapshots",
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "summary": "123 core cases / 8775 assertions and eight plugin cases / 33 assertions passed on the first candidate; the relevant source hashes remain identical. Eleven packaging contracts passed. The final affected support suite and all three supplied-project slices passed after the additional support commit. Raw logs, command/configuration comparisons and source hashes are retained. Existing compilation and initialization warning events are disclosed; no warning-free, interactive GUI, macOS, install or Provider release-readiness claim is made."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

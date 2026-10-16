@@ -1,0 +1,79 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-full-install-stale-profiles-upstream-20261017",
+  "key": "windows-full-install-overlay-stale-profile-reconciliation",
+  "type": "lesson",
+  "conclusion": "A successful Windows full CMake install overlays resources and does not ensure the installed profile file set equals current source. The historical 2026-10-16 verified install from bc4d9aa5de retained 1685 pre-existing extra files; all current-source files were already present and byte-identical. Archive and hash-verify extra output files before reconciling, preserve unknown provenance, and recheck exact output/source file sets. The Inlong-only target recreates its directory and had 734 matching profile-related files; the reconciled full output had 14756. Preserve portable settings before both targets and verify exact restoration afterward. These are local install checks, not Provider release readiness.",
+  "scope": "Default Windows full and Inlong-only CMake installation outputs",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "install",
+    "stale-output",
+    "profiles",
+    "settings-preservation"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "InlongSlicer_doc/upstream_install_verification_20261016.json",
+    "InlongSlicer_doc/upstream_sync_20261016.md",
+    "cmake/InstallOnlyInlong.cmake",
+    "docs/evidence/upstream-windows-install-contract-review-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_sync_20261016.md",
+      "sha256": "ad75081b85e887a8b0a92399c4dac580a6c1851ae47391addedd88e077af623c",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_install_verification_20261016.json",
+      "sha256": "b64f4545bb0e4f8a573c7358b8bb41731702a21502f4f543c53edde9b7394714",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Current source-contract review or unchanged historical verification; checkout anchor does not assert that new worktree bytes are committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-windows-install-contract-review-20261017.json",
+      "sha256": "393a0a27bc87beb597e092c46b7a82b789afff3bbcdcf60866763c98aabf5a5b",
+      "commit": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+      "locator": "Apple-only CMake delta, unchanged Windows contracts and historical evidence, eleven passing disposable fixture/dry-run tests; no new installation"
+    }
+  ],
+  "verified_utc": "2026-10-16T21:17:32.322055+00:00",
+  "verification": {
+    "method": "Exact CMake delta review, unchanged-source hash review and disposable packaging/installer CLI tests",
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "summary": "Only the APPLE/Xcode launcher branch changed. All Windows helper, guide and test sources and historical installation evidence still match their prior hashes. Eleven disposable tests passed. No native install or live settings reset occurred. Prior measured output counts remain historical, not a fresh package or release-readiness claim. Source commit fields are pre-merge checkout anchors."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "windows-full-install-stale-profiles-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -1,0 +1,67 @@
+{
+  "reviewed_utc": "2026-10-16T21:17:32.322055+00:00",
+  "checkout_anchor": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+  "cmake_delta": "Only the Xcode compiler-launcher block inside the existing APPLE branch was added. Removing that exact block reproduces HEAD:CMakeLists.txt byte-for-byte after newline normalization.",
+  "windows_install_rules_changed": false,
+  "new_native_install_performed": false,
+  "unchanged_source_and_historical_evidence": [
+    {
+      "path": "InlongSlicer_doc/upstream_install_verification_20261016.json",
+      "sha256": "b64f4545bb0e4f8a573c7358b8bb41731702a21502f4f543c53edde9b7394714"
+    },
+    {
+      "path": "InlongSlicer_doc/upstream_sync_20261016.md",
+      "sha256": "ad75081b85e887a8b0a92399c4dac580a6c1851ae47391addedd88e077af623c"
+    },
+    {
+      "path": "build_win.bat",
+      "sha256": "a561ab71d9a01a76567cdc7cd37c3fa2ce8c0f5c9112fad7b4533d54d4de3554"
+    },
+    {
+      "path": "cmake/InlongBuildDataDirs.cmake",
+      "sha256": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe"
+    },
+    {
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755"
+    },
+    {
+      "path": "cmake/ResetBuildDataDirs.cmake",
+      "sha256": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b"
+    },
+    {
+      "path": "resources/web/guide/21/common.js",
+      "sha256": "b0d346607c907cd2b9dfdf2c27e3e12b9f82929bcd8f6c321f4aa356f3e2090e"
+    },
+    {
+      "path": "resources/web/guide/21/index.html",
+      "sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73"
+    },
+    {
+      "path": "resources/web/guide/24/index.html",
+      "sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f"
+    },
+    {
+      "path": "scripts/tests/test_build_data_dirs.py",
+      "sha256": "33693bf82dac6c76cec5c95157c5c343cbe64083da4aee23c76af904144ed8d9"
+    },
+    {
+      "path": "scripts/tests/test_build_win_installer.py",
+      "sha256": "1e67dcdd220fa0ca4de7faf9d0e80c7e4a1d2f1d62ff63f17793f4ffa07a863f"
+    },
+    {
+      "path": "src/CMakeLists.txt",
+      "sha256": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a"
+    }
+  ],
+  "cmake_sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104",
+  "disposable_contract_tests": {
+    "cases": 11,
+    "exit_code": 0,
+    "completed_utc": "2026-10-16T21:15:56.2933075+00:00",
+    "log_sha256": "28b551ef45bd7a2d3c56e26c20278440e61349ae00fc693073c2a69166ffc148",
+    "started_utc": "2026-10-16T21:14:21.0150757+00:00",
+    "method": "Disposable fixtures and installer CLI dry runs; no installation"
+  },
+  "historical_output_scope": "The 2026-10-16 native installation counts, restoration checks and stale-file reconciliation remain historical observations; this review does not regenerate or certify current package outputs."
+}

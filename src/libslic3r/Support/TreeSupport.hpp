@@ -137,7 +137,6 @@ struct SupportNode
     TreeNodeType   type            = eCircle;
     bool           is_corner       = false;
     bool           is_processed    = false;
-    bool           need_extra_wall = false;
     bool           is_sharp_tail   = false;
     bool           from_support_enforcer = false;
     bool           valid = true;

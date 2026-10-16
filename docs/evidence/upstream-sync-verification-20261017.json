@@ -1,0 +1,959 @@
+{
+  "captured_utc": "2026-10-16T21:43:40.177219+00:00",
+  "checkout_anchor": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+  "upstream": "6d40ec93f680ec32ca97c15c05eff79df0eb7a9d",
+  "upstream_branch": "main",
+  "requested_branch": "master",
+  "requested_branch_exists": false,
+  "upstream_remote": "https://github.com/OrcaSlicer/OrcaSlicer.git",
+  "integration_base": "109d09e0b8a25490ee0394f55769b1d735c36bba",
+  "incoming_commit_count": 10,
+  "incoming_commits": [
+    "6d40ec93f680ec32ca97c15c05eff79df0eb7a9d Fix missing tree support paths and misplaced extra walls (#16549)",
+    "82aee1abdd5c475cff4e3adcb9d8d56078df2c10 Cache compiles in the macOS build script, including Xcode builds (#16553)",
+    "cefdd9b609bb63e6dc43d2b2f5b645867cd1d862 fix: max filepath length on windows (#16552)",
+    "caade80624c82b32df0a9e9d5c5ab11f4d3e9003 Keep the texture picker from stalling on open (#16547)",
+    "cbd8ce98d5b5c044ab4cbda2479c0f5e77490e3f Keep the texture picker redrawing while thumbnails load",
+    "99714afc4c4a5729d900a3b08abd71784bd029ae Keep picker thumbnails from retaining full-size texture decodes",
+    "3d07663ab2c7a2511b6e3926ac112b663a1d0a30 Merge branch 'main' into fix/texture-picker-lazy-png-header",
+    "29b6bbb8c9f4c45c893ee7bb3e37ff2754729f68 Keep Slice and Print Visible When Plugin Page Tabs Overflow (#16541)",
+    "8b6c074c69ca81071e06bcd4105fa325d54e6ad8 Fix publish dialog tab clipping and extruder switch distortion (#16543)",
+    "4149401c535ba6aa3da0df79f5bf9a52faa5de7f Keep the texture picker from stalling on open"
+  ],
+  "merge_parents": [
+    "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+    "6d40ec93f680ec32ca97c15c05eff79df0eb7a9d"
+  ],
+  "source_snapshots": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104"
+    },
+    {
+      "path": "build_release_macos.sh",
+      "sha256": "dd0bb16c81b1d3250f01f45f3d8ae3f41c16bbbaf2a709283fc1698a95f5cfd5"
+    },
+    {
+      "path": "src/libslic3r/PNGReadWrite.cpp",
+      "sha256": "11beabe5fb2bdb7e4a4b50e2ff463cf25553384ad74239b92d9569bc7b415b26"
+    },
+    {
+      "path": "src/libslic3r/PNGReadWrite.hpp",
+      "sha256": "f537ebdda060b723fefee1eb7e8af702615f081fb2c0c9ef93686a7bdb4a3f7b"
+    },
+    {
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "fa823c0d9caa08efa8e79ccef905bd3be78ddbd72eeb0dec70f5e36998ade45d"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "fed229ff0b3e2c7ac6a606901760dc6ffb5ca2a7b2ea7a2972468e628becc434"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport.hpp",
+      "sha256": "2cae88c07844389b2414f0101534b77b49d707682b129a5c9c6517d4d70b9743"
+    },
+    {
+      "path": "src/libslic3r/TextureDisplacement.cpp",
+      "sha256": "1c321e60c92d90eafef7aa213b49b215527bef7d7428dd8a0d1a91be6d8d33ce"
+    },
+    {
+      "path": "src/libslic3r/TextureDisplacement.hpp",
+      "sha256": "254277c9ca85a7237eeec37f969d0f933d93797392bc77c6c070b3414824efb2"
+    },
+    {
+      "path": "src/libslic3r/Utils.hpp",
+      "sha256": "58972b4d59a1641ca988f579a903d543cb651baec9bbcbdf01696cef6f8f02ec"
+    },
+    {
+      "path": "src/libslic3r/miniz_extension.cpp",
+      "sha256": "8f32c67ea6dfcbe971dd3ba97cdbfee067948527cad7f1566bbee34848cea475"
+    },
+    {
+      "path": "src/libslic3r/miniz_extension.hpp",
+      "sha256": "a51ee5e8e6f1cf9e88409ee0bf408f2ad0eace85a371c8d4cfdbc44ef06be71e"
+    },
+    {
+      "path": "src/libslic3r/utils.cpp",
+      "sha256": "a9870ee1ba3489dac6e8dd2e5998fbc722cba2f4ae87e52c0caa462e10b15920"
+    },
+    {
+      "path": "src/slic3r/GUI/Gizmos/GLGizmoTextureDisplacement.cpp",
+      "sha256": "4cef8a580f308e6f1cb8103cefeed9a2ac0b2ec7e2487fccee3058ab95191a87"
+    },
+    {
+      "path": "src/slic3r/GUI/MainFrame.cpp",
+      "sha256": "ff00c68f9191ec9d7cdcc9e3bce1ed706bae79a7f61e6b060cc40bcdc7708d88"
+    },
+    {
+      "path": "src/slic3r/GUI/Notebook.hpp",
+      "sha256": "4a8425bb4dbd3160a699fabbb1a47f7b04cc5e73e36ccea40b051eccdc9c4908"
+    },
+    {
+      "path": "src/slic3r/GUI/PublishSettingsDialog.cpp",
+      "sha256": "066f49f45e01ccd6512e57cc5fb5cb609ddf0a89cb1037f470003f92275c2ae1"
+    },
+    {
+      "path": "src/slic3r/GUI/TextureLibrary.cpp",
+      "sha256": "9b5a9fe5d87c8bf3747f38d08bab6a74956cdd2cde994efd5a29bec3f0684b5e"
+    },
+    {
+      "path": "src/slic3r/GUI/Widgets/TabCtrl.cpp",
+      "sha256": "7f2350ad97c25728b48e1a937b9686e6e8ab63c2fd95694d4a9257d64ae92e43"
+    },
+    {
+      "path": "src/slic3r/plugin/PluginFsUtils.cpp",
+      "sha256": "4a8dd108fdf967e50e651a0975c7903f1a5dadabfcabf8ed42381161bb8fd54b"
+    },
+    {
+      "path": "src/slic3r/plugin/host/PluginPages.cpp",
+      "sha256": "9454e8db41077bbc4e8e294387117533bd8a4a8af35fa499d7828508101305ea"
+    },
+    {
+      "path": "tests/libslic3r/test_miniz_extension.cpp",
+      "sha256": "d7d71fb1788b35a5ba7fbeea3bc8a5f635baa162828252f8a29a288b1d5c1382"
+    },
+    {
+      "path": "tests/libslic3r/test_png_read_write.cpp",
+      "sha256": "ab4a3df81ea942914f41ca5cc1c9638bfcd86add60c63957c32b9288fa58dd31"
+    },
+    {
+      "path": "tests/libslic3r/test_utils.cpp",
+      "sha256": "9fe03c485b770be6544ad224d3c4e9c706a800c8749e496260da9da624ab02e9"
+    },
+    {
+      "path": "tests/slic3rutils/test_plugin_install.cpp",
+      "sha256": "f66820f831223f270c22ba21ca7ef99631d4b24762479a8fae9e0f73045937f6"
+    }
+  ],
+  "conflicts": [
+    {
+      "path": "CMakeLists.txt",
+      "resolution": "Retained Inlong status identity and imported the upstream APPLE/Xcode compiler launcher block"
+    },
+    {
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "resolution": "Imported removal of unconditional tall-organic double walls; kept local multi-island path generation and normal contact-gap fixes"
+    }
+  ],
+  "local_additions": [
+    "Two PNG header-probe regressions (valid header with corrupt pixels, truncated headers)",
+    "Inlong name in the new macOS cache comment",
+    "Reviewed immutable knowledge migrations and verification evidence"
+  ],
+  "native_build": {
+    "started_utc": "2026-10-16T21:29:11.5573160+00:00",
+    "targets": [
+      "libslic3r_tests",
+      "slic3rutils_tests"
+    ],
+    "log_sha256": "222b59cd6884e69b3568134d9741f34b6147bf38d11a3cf42b2c32bdb84f712e",
+    "completed_utc": "2026-10-16T21:35:03.6907274+00:00",
+    "executables": [
+      {
+        "sha256": "7485b489f3e8accbb03ebd58eb14217f4939c08126a349a3a835e53b2dfcb6f4",
+        "path": "build/tests/libslic3r/Release/libslic3r_tests.exe"
+      },
+      {
+        "sha256": "58e6bc847cc8cd654e49b77abcee8a2a2ff45896b595df4968ff0627d9df2d1d",
+        "path": "build/tests/slic3rutils/Release/slic3rutils_tests.exe"
+      }
+    ],
+    "exit_code": 0,
+    "upstream": "6d40ec93f680ec32ca97c15c05eff79df0eb7a9d"
+  },
+  "disposable_app_build": {
+    "log_sha256": "c9c0a5333e0d06cec2d066b141698063df412dc450603da9645f934a8f19fa15",
+    "started_utc": "2026-10-16T21:34:52.7843317+00:00",
+    "exit_code": 0,
+    "dll_sha256": "3cbe89898b901346099ffba804dda937de64f2e5be38e6642756880f78ef2003",
+    "output": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-latest\\",
+    "method": "Direct MSBuild app project; references, pre-build and post-build events disabled; disposable output",
+    "completed_utc": "2026-10-16T21:35:42.2304271+00:00"
+  },
+  "final_support_build": {
+    "log_sha256": "2cee42c45a696406d909357428195264ff07ced668e93c7244d526efed2de48d",
+    "completed_utc": "2026-10-16T21:37:47.9394979+00:00",
+    "target": "fff_print_tests",
+    "started_utc": "2026-10-16T21:35:35.8880286+00:00",
+    "exit_code": 0,
+    "executable_sha256": "aed29f2a33670f5119b7a96286ad33482ffbd489754213888d00b655d07a07c5"
+  },
+  "initial_82aee_build": {
+    "cmake_pid": 24832,
+    "observed_start_utc": "2026-10-16T21:02:52.7735820Z",
+    "configuration": "Release",
+    "targets": [
+      "libslic3r_tests",
+      "slic3rutils_tests"
+    ],
+    "exit_code": 0,
+    "observed_completed_utc": "2026-10-16T21:25:54.2162554+00:00",
+    "log_sha256": "964c8d681330bb57a2709a59044b02d6bc7af2c4aabff2d118d3485bf426271d",
+    "executables": [
+      {
+        "path": "build/tests/libslic3r/Release/libslic3r_tests.exe",
+        "sha256": "fc469fdbce9673da16cc2c02ddc5bf8275d642c5fcc786c902738ed003e23550"
+      },
+      {
+        "path": "build/tests/slic3rutils/Release/slic3rutils_tests.exe",
+        "sha256": "86ff80b5c5ddc69908390a7d19e3474a5d4a4529446cc408c325bd7ad04d49de"
+      }
+    ]
+  },
+  "initial_82aee_slicing": {
+    "projects": [
+      {
+        "name": "benchy",
+        "input": "3DBenchy.3mf",
+        "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+        "seconds": 20.742305099993246,
+        "peak_rss_gib": 1.569488525390625,
+        "exit_code": 0,
+        "gcode": {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\benchy-merged\\plate_1.gcode",
+          "bytes": 26276597,
+          "sha256": "755ee785e62f7a37b10297d4c748f7230cf9df4ea16e0b40069c59b38153c0ef"
+        },
+        "ordered_commands": 811657,
+        "program_sha256": "10d85ea481a361e5dde24dab976ece21b5b20abf334ad8f05190d98a098612e6",
+        "annotated_motion_sha256": "2855fc0f2bc4600e9590d3a9bd5bd2d5bdc6daf67062b91a3f0afc4bd07b2a27",
+        "baseline_equality": {
+          "command_count": true,
+          "program_sha256": true,
+          "annotated_motion_sha256": true,
+          "configuration": true
+        },
+        "known_warning_events": [
+          {
+            "severity": "warning",
+            "category": "cli_startup_banner",
+            "source": "src/InlongSlicer.cpp:1467",
+            "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-merged\\resources/profiles/BBL/machine_full/Infinity3DP X600HD 0.6mm nozzle.json "
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-merged\\resources/profiles/BBL/process_full/X600HD_Layer: 0.30mm.json "
+          },
+          {
+            "severity": "warning",
+            "category": "missing_project_filament_colors",
+            "source": "src/InlongSlicer.cpp:3929",
+            "message": "no filament colors found in projects"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_nozzle_metadata_fallback",
+            "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+            "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+          }
+        ],
+        "geometry_failure_messages": [],
+        "log_sha256": "c8281156e08b525d9732a33eb64e9d0ed09be2a47ed1c486a46b206aa883cd01",
+        "fresh_native_slice": true
+      },
+      {
+        "name": "vulcan600",
+        "input": "Vulcan600培训用档案.3mf",
+        "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+        "seconds": 30.926209400000516,
+        "peak_rss_gib": 3.155200958251953,
+        "exit_code": 0,
+        "gcode": {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\vulcan600-merged\\plate_1.gcode",
+          "bytes": 40695996,
+          "sha256": "42086909a2b36b6acd469f91c525472e3a924fbd7f91a386edb2ab41bd3a99da"
+        },
+        "ordered_commands": 1211052,
+        "program_sha256": "502e3a741d9543effa46c76d7714653b272ad5557b3b245278a1bcb5b91ce79d",
+        "annotated_motion_sha256": "a625c07a4d5d7a4515bb5862b9c0a6cde5dfba733d8fe3fb55661fcf127b1b8c",
+        "baseline_equality": {
+          "command_count": true,
+          "program_sha256": true,
+          "annotated_motion_sha256": true,
+          "configuration": true
+        },
+        "known_warning_events": [
+          {
+            "severity": "warning",
+            "category": "cli_startup_banner",
+            "source": "src/InlongSlicer.cpp:1467",
+            "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-merged\\resources/profiles/BBL/machine_full/Vulcan600 0.6mm nozzle.json "
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-merged\\resources/profiles/BBL/process_full/Layer: 0.25mm.json "
+          },
+          {
+            "severity": "warning",
+            "category": "missing_project_filament_colors",
+            "source": "src/InlongSlicer.cpp:3929",
+            "message": "no filament colors found in projects"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_nozzle_metadata_fallback",
+            "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+            "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+          }
+        ],
+        "geometry_failure_messages": [],
+        "log_sha256": "5dfac78c1b23026a881e24e37ba1aa4cc947152d17ae1b4f62cad45d8445173c",
+        "fresh_native_slice": true
+      },
+      {
+        "name": "x2",
+        "input": "X2培训用档案.3mf",
+        "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+        "seconds": 54.25208199999179,
+        "peak_rss_gib": 2.660858154296875,
+        "exit_code": 0,
+        "gcode": {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\x2-merged\\plate_1.gcode",
+          "bytes": 40363175,
+          "sha256": "ad5fb59eb84bde0b8ef2c1476b37a1624d2158c419b096582ddbeeec750bf3cf"
+        },
+        "ordered_commands": 1348868,
+        "program_sha256": "85a83db6cf785247766968e98c17b0add33aa6ca4e65337f836007507680d51c",
+        "annotated_motion_sha256": "e2587a6070e2c549889c9e082d5e43e2745eed48d5a06c39c52a29aa1b070081",
+        "baseline_equality": {
+          "command_count": true,
+          "program_sha256": true,
+          "annotated_motion_sha256": true,
+          "configuration": true
+        },
+        "known_warning_events": [
+          {
+            "severity": "warning",
+            "category": "cli_startup_banner",
+            "source": "src/InlongSlicer.cpp:1467",
+            "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-merged\\resources/profiles/BBL/machine_full/Infinity3DP X2 0.4mm nozzle.json "
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-merged\\resources/profiles/BBL/process_full/X2_Layer: 0.20mm.json "
+          },
+          {
+            "severity": "warning",
+            "category": "missing_project_filament_colors",
+            "source": "src/InlongSlicer.cpp:3929",
+            "message": "no filament colors found in projects"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_nozzle_metadata_fallback",
+            "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+            "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+          }
+        ],
+        "geometry_failure_messages": [],
+        "log_sha256": "677161d50f2e4608eb2847fd871b9531f777ef88ea2bd354ccca4fae699d6f39",
+        "fresh_native_slice": true
+      }
+    ],
+    "all_complete": true,
+    "all_commands_motion_and_config_match": true,
+    "baseline": "Previously verified latest X2-fixed candidate, subsequently committed in 2407aade57",
+    "warnings_scope": "Info-level complete native logs; five known initialization/compatibility warning events per project matched to reviewed sources. Geometry failure strings absent. This is not a fresh warning-only duplicate run or a claim of warning-free logs.",
+    "native_log_level": 3,
+    "agent_count": 1,
+    "sequential_slices": 3
+  },
+  "remerge": "Final live upstream observation found 6d40ec93f6. All 22 owned staged files and full patch were backed up before restarting the pending merge. Identical file bytes were checked and original timestamps restored to preserve valid incremental build reuse. No unverified source was substituted.",
+  "initial_verified_sources_still_identical": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104"
+    },
+    {
+      "path": "build_release_macos.sh",
+      "sha256": "dd0bb16c81b1d3250f01f45f3d8ae3f41c16bbbaf2a709283fc1698a95f5cfd5"
+    },
+    {
+      "path": "src/libslic3r/PNGReadWrite.cpp",
+      "sha256": "11beabe5fb2bdb7e4a4b50e2ff463cf25553384ad74239b92d9569bc7b415b26"
+    },
+    {
+      "path": "src/libslic3r/PNGReadWrite.hpp",
+      "sha256": "f537ebdda060b723fefee1eb7e8af702615f081fb2c0c9ef93686a7bdb4a3f7b"
+    },
+    {
+      "path": "src/libslic3r/TextureDisplacement.cpp",
+      "sha256": "1c321e60c92d90eafef7aa213b49b215527bef7d7428dd8a0d1a91be6d8d33ce"
+    },
+    {
+      "path": "src/libslic3r/TextureDisplacement.hpp",
+      "sha256": "254277c9ca85a7237eeec37f969d0f933d93797392bc77c6c070b3414824efb2"
+    },
+    {
+      "path": "src/libslic3r/Utils.hpp",
+      "sha256": "58972b4d59a1641ca988f579a903d543cb651baec9bbcbdf01696cef6f8f02ec"
+    },
+    {
+      "path": "src/libslic3r/miniz_extension.cpp",
+      "sha256": "8f32c67ea6dfcbe971dd3ba97cdbfee067948527cad7f1566bbee34848cea475"
+    },
+    {
+      "path": "src/libslic3r/miniz_extension.hpp",
+      "sha256": "a51ee5e8e6f1cf9e88409ee0bf408f2ad0eace85a371c8d4cfdbc44ef06be71e"
+    },
+    {
+      "path": "src/libslic3r/utils.cpp",
+      "sha256": "a9870ee1ba3489dac6e8dd2e5998fbc722cba2f4ae87e52c0caa462e10b15920"
+    },
+    {
+      "path": "src/slic3r/GUI/Gizmos/GLGizmoTextureDisplacement.cpp",
+      "sha256": "4cef8a580f308e6f1cb8103cefeed9a2ac0b2ec7e2487fccee3058ab95191a87"
+    },
+    {
+      "path": "src/slic3r/GUI/MainFrame.cpp",
+      "sha256": "ff00c68f9191ec9d7cdcc9e3bce1ed706bae79a7f61e6b060cc40bcdc7708d88"
+    },
+    {
+      "path": "src/slic3r/GUI/Notebook.hpp",
+      "sha256": "4a8425bb4dbd3160a699fabbb1a47f7b04cc5e73e36ccea40b051eccdc9c4908"
+    },
+    {
+      "path": "src/slic3r/GUI/PublishSettingsDialog.cpp",
+      "sha256": "066f49f45e01ccd6512e57cc5fb5cb609ddf0a89cb1037f470003f92275c2ae1"
+    },
+    {
+      "path": "src/slic3r/GUI/TextureLibrary.cpp",
+      "sha256": "9b5a9fe5d87c8bf3747f38d08bab6a74956cdd2cde994efd5a29bec3f0684b5e"
+    },
+    {
+      "path": "src/slic3r/GUI/Widgets/TabCtrl.cpp",
+      "sha256": "7f2350ad97c25728b48e1a937b9686e6e8ab63c2fd95694d4a9257d64ae92e43"
+    },
+    {
+      "path": "src/slic3r/plugin/PluginFsUtils.cpp",
+      "sha256": "4a8dd108fdf967e50e651a0975c7903f1a5dadabfcabf8ed42381161bb8fd54b"
+    },
+    {
+      "path": "src/slic3r/plugin/host/PluginPages.cpp",
+      "sha256": "9454e8db41077bbc4e8e294387117533bd8a4a8af35fa499d7828508101305ea"
+    },
+    {
+      "path": "tests/libslic3r/test_miniz_extension.cpp",
+      "sha256": "d7d71fb1788b35a5ba7fbeea3bc8a5f635baa162828252f8a29a288b1d5c1382"
+    },
+    {
+      "path": "tests/libslic3r/test_png_read_write.cpp",
+      "sha256": "ab4a3df81ea942914f41ca5cc1c9638bfcd86add60c63957c32b9288fa58dd31"
+    },
+    {
+      "path": "tests/libslic3r/test_utils.cpp",
+      "sha256": "9fe03c485b770be6544ad224d3c4e9c706a800c8749e496260da9da624ab02e9"
+    },
+    {
+      "path": "tests/slic3rutils/test_plugin_install.cpp",
+      "sha256": "f66820f831223f270c22ba21ca7ef99631d4b24762479a8fae9e0f73045937f6"
+    }
+  ],
+  "final_support_delta_brand_review": {
+    "new_orca_identity_hits": 0,
+    "palette_or_profile_changes": false
+  },
+  "tests": {
+    "core": {
+      "passed_cases": 123,
+      "assertions": 8775,
+      "test_log_sha256": "3a0aa462d7de9dcaf691e20f1c4465165102d45ab26575e2c5a61ce3dccf0acc",
+      "executable_sha256": "fc469fdbce9673da16cc2c02ddc5bf8275d642c5fcc786c902738ed003e23550",
+      "native_exit_code": 0,
+      "seconds": 4.3186132,
+      "seed": 20261017,
+      "filter": "[Utils],[MinizExtension],[PNG],[TextureDisplacement],[Voronoi][Regression]",
+      "temp": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\t"
+    },
+    "plugins": {
+      "passed_cases": 8,
+      "assertions": 33,
+      "seconds": 0.2518564,
+      "test_log_sha256": "c6c689248cbb477be68b6c3580941a95dc082707b3bc3cfd5513fe70dcb37c06",
+      "native_exit_code": 0,
+      "temp": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\t",
+      "seed": 20261017,
+      "executable_sha256": "86ff80b5c5ddc69908390a7d19e3474a5d4a4529446cc408c325bd7ad04d49de",
+      "filter": "[PluginInstall]"
+    },
+    "packaging_contracts": {
+      "passed_cases": 11,
+      "exit_code": 0,
+      "completed_utc": "2026-10-16T21:15:56.2933075+00:00",
+      "log_sha256": "28b551ef45bd7a2d3c56e26c20278440e61349ae00fc693073c2a69166ffc148",
+      "started_utc": "2026-10-16T21:14:21.0150757+00:00",
+      "method": "Disposable fixtures and installer CLI dry runs; no installation"
+    },
+    "final_support": {
+      "seed": 20261017,
+      "filter": "[SupportMaterial],[TreeSupport],[Support],A support-only change on a belt purge print matches a fresh slice",
+      "executable_sha256": "aed29f2a33670f5119b7a96286ad33482ffbd489754213888d00b655d07a07c5",
+      "test_log_sha256": "b9ba6ee706387c18e2afe564ab2d9b3ca33edc44c7529fa26466e2691997ab04",
+      "native_exit_code": 0,
+      "seconds": 155.1446272,
+      "temp": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\t",
+      "assertions": 18107,
+      "passed_cases": 84
+    },
+    "scope": "Core/plugin/packaging checks belong to the first 82aee candidate. Their affected source hashes did not change after the additional three-file support commit. The final support suite and all three native slices verify the final tip."
+  },
+  "three_project_slicing": {
+    "projects": [
+      {
+        "name": "benchy",
+        "input": "3DBenchy.3mf",
+        "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+        "seconds": 100.79554170000483,
+        "peak_rss_gib": 1.548980712890625,
+        "exit_code": 0,
+        "gcode": {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\benchy-latest\\plate_1.gcode",
+          "bytes": 26276597,
+          "sha256": "3b4c38128c1fe756f733104054671f47311349e789e651fd3fe679ba0b6bc859"
+        },
+        "ordered_commands": 811657,
+        "program_sha256": "10d85ea481a361e5dde24dab976ece21b5b20abf334ad8f05190d98a098612e6",
+        "annotated_motion_sha256": "2855fc0f2bc4600e9590d3a9bd5bd2d5bdc6daf67062b91a3f0afc4bd07b2a27",
+        "baseline_equality": {
+          "command_count": true,
+          "program_sha256": true,
+          "annotated_motion_sha256": true,
+          "configuration": true
+        },
+        "known_warning_events": [
+          {
+            "severity": "warning",
+            "category": "cli_startup_banner",
+            "source": "src/InlongSlicer.cpp:1467",
+            "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-latest\\resources/profiles/BBL/machine_full/Infinity3DP X600HD 0.6mm nozzle.json "
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-latest\\resources/profiles/BBL/process_full/X600HD_Layer: 0.30mm.json "
+          },
+          {
+            "severity": "warning",
+            "category": "missing_project_filament_colors",
+            "source": "src/InlongSlicer.cpp:3929",
+            "message": "no filament colors found in projects"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_nozzle_metadata_fallback",
+            "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+            "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+          }
+        ],
+        "geometry_failure_messages": [],
+        "log_sha256": "92804dfea9ec527d22e3a3823e72df6563f51697846388a9e214616643cb6b54",
+        "fresh_native_slice": true
+      },
+      {
+        "name": "vulcan600",
+        "input": "Vulcan600培训用档案.3mf",
+        "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+        "seconds": 31.150673600001028,
+        "peak_rss_gib": 3.2078399658203125,
+        "exit_code": 0,
+        "gcode": {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\vulcan600-latest\\plate_1.gcode",
+          "bytes": 40695996,
+          "sha256": "5dfc360eada4329b2275bba6319ae1e264e3ae9f169791e006fa97071ce97e93"
+        },
+        "ordered_commands": 1211052,
+        "program_sha256": "502e3a741d9543effa46c76d7714653b272ad5557b3b245278a1bcb5b91ce79d",
+        "annotated_motion_sha256": "a625c07a4d5d7a4515bb5862b9c0a6cde5dfba733d8fe3fb55661fcf127b1b8c",
+        "baseline_equality": {
+          "command_count": true,
+          "program_sha256": true,
+          "annotated_motion_sha256": true,
+          "configuration": true
+        },
+        "known_warning_events": [
+          {
+            "severity": "warning",
+            "category": "cli_startup_banner",
+            "source": "src/InlongSlicer.cpp:1467",
+            "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-latest\\resources/profiles/BBL/machine_full/Vulcan600 0.6mm nozzle.json "
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-latest\\resources/profiles/BBL/process_full/Layer: 0.25mm.json "
+          },
+          {
+            "severity": "warning",
+            "category": "missing_project_filament_colors",
+            "source": "src/InlongSlicer.cpp:3929",
+            "message": "no filament colors found in projects"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_nozzle_metadata_fallback",
+            "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+            "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+          }
+        ],
+        "geometry_failure_messages": [],
+        "log_sha256": "b0474bfb1c47017eb68a324905510062e7ad27be8f9051d030efc7abfa717720",
+        "fresh_native_slice": true
+      },
+      {
+        "name": "x2",
+        "input": "X2培训用档案.3mf",
+        "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+        "seconds": 62.70815580000635,
+        "peak_rss_gib": 2.639892578125,
+        "exit_code": 0,
+        "gcode": {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\x2-latest\\plate_1.gcode",
+          "bytes": 40363175,
+          "sha256": "09c7eb795949caf0d04c381d8c46f58569c6ec0e5e4f87b683d5f405e8068738"
+        },
+        "ordered_commands": 1348868,
+        "program_sha256": "85a83db6cf785247766968e98c17b0add33aa6ca4e65337f836007507680d51c",
+        "annotated_motion_sha256": "e2587a6070e2c549889c9e082d5e43e2745eed48d5a06c39c52a29aa1b070081",
+        "baseline_equality": {
+          "command_count": true,
+          "program_sha256": true,
+          "annotated_motion_sha256": true,
+          "configuration": true
+        },
+        "known_warning_events": [
+          {
+            "severity": "warning",
+            "category": "cli_startup_banner",
+            "source": "src/InlongSlicer.cpp:1467",
+            "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-latest\\resources/profiles/BBL/machine_full/Infinity3DP X2 0.4mm nozzle.json "
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_bbl_compatibility_lookup",
+            "source": "src/InlongSlicer.cpp:2747,2771",
+            "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-325d0712ef36435483924c90535320a9\\work\\app-latest\\resources/profiles/BBL/process_full/X2_Layer: 0.20mm.json "
+          },
+          {
+            "severity": "warning",
+            "category": "missing_project_filament_colors",
+            "source": "src/InlongSlicer.cpp:3929",
+            "message": "no filament colors found in projects"
+          },
+          {
+            "severity": "warning",
+            "category": "legacy_nozzle_metadata_fallback",
+            "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+            "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+          }
+        ],
+        "geometry_failure_messages": [],
+        "log_sha256": "a394ec81fc3b6a03e14616bb0881176e5f71f62d8a9b118357bba0978da9e2be",
+        "fresh_native_slice": true
+      }
+    ],
+    "all_complete": true,
+    "all_commands_motion_and_config_match": true,
+    "baseline": "Previously verified latest X2-fixed candidate, subsequently committed in 2407aade57",
+    "warnings_scope": "Info-level complete native logs; five known initialization/compatibility warning events per project matched to reviewed sources. Geometry failure strings absent. This is not a fresh warning-only duplicate run or a claim of warning-free logs.",
+    "native_log_level": 3,
+    "agent_count": 1,
+    "sequential_slices": 3
+  },
+  "branding": {
+    "new_orca_identity_hits": [],
+    "content_hit_categories": {
+      "existing_implementation_reference_no_new_added_hit": 2507,
+      "existing_documentation_fixture_or_tooling_reference": 2867,
+      "legacy_import_or_producer_compatibility": 377,
+      "allowed_service_protocol_or_wiki": 66,
+      "upstream_plugin_abi_or_example": 139,
+      "dependency_or_vendor_reference": 27
+    },
+    "content_hit_count": 5983,
+    "scan_scope": "Required source scans excluding Git, build, dependency-build, bundled plugins and registered Agents runtime payloads",
+    "scan_limit": "All remaining hits predate this merge. Existing implementation references are retained for provenance/compatibility; the scan does not claim all historical references are product identity.",
+    "brand_color_check": {
+      "command": [
+        "C:\\Users\\v_jar\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "scripts/check_inlong_brand_colors.py"
+      ],
+      "exit_code": 0,
+      "seconds": 5.528160799993202,
+      "log": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/brand-color-check.log"
+    },
+    "macos_script_syntax": {
+      "command": [
+        "C:/Program Files/Git/bin/bash.exe",
+        "-n",
+        "build_release_macos.sh"
+      ],
+      "exit_code": 0,
+      "seconds": 2.0149563000013586,
+      "log": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/macos-script-syntax.log"
+    }
+  },
+  "protected_slicing_sources": [
+    {
+      "path": "src/libslic3r/Geometry/MedialAxis.cpp",
+      "sha256": "80de3617e2008435ca0c7ba1917a49c8a0cf535a5d030e8145555d0ff1522538"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.cpp",
+      "sha256": "a948b527c45e033afc21ab2426df71fb633f128398323a224ebd5ac1309a6ef9"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.hpp",
+      "sha256": "684e891875394cbbfd4b35a9016725a7b879164be77a1dfe1e5cf758ad97bddd"
+    },
+    {
+      "path": "tests/libslic3r/test_voronoi.cpp",
+      "sha256": "1ad0ad88579389cd9fb33bf3a52bceaf89b11c983d16dae30fbe67b0fbc45738"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f"
+    }
+  ],
+  "curated_profiles_unchanged": true,
+  "portable_settings": [
+    {
+      "path": "build/src/Release/data_dir",
+      "initial_files": 833,
+      "current_files": 834,
+      "exact_file_set_and_hashes_unchanged": false,
+      "changed_files_retained": [
+        "InlongSlicer.conf",
+        "InlongSlicer.conf.bak"
+      ],
+      "added_files_retained": [
+        "log/debug_Sat_Oct_17_05_41_08_34120.log.0"
+      ],
+      "removed_files": []
+    },
+    {
+      "path": "build/InlongSlicer/data_dir",
+      "initial_files": 0,
+      "current_files": 0,
+      "exact_file_set_and_hashes_unchanged": true,
+      "changed_files_retained": [],
+      "added_files_retained": [],
+      "removed_files": []
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/data_dir",
+      "initial_files": 0,
+      "current_files": 0,
+      "exact_file_set_and_hashes_unchanged": true,
+      "changed_files_retained": [],
+      "added_files_retained": [],
+      "removed_files": []
+    }
+  ],
+  "concurrent_gui_observation": {
+    "user_confirmation": "pending",
+    "native_test_dll_sha256": "3cbe89898b901346099ffba804dda937de64f2e5be38e6642756880f78ef2003",
+    "gui_pid": 34120,
+    "backup_artifact": "artifact-1662a230a4ca422885bdb50024164a17",
+    "files": [
+      {
+        "sha256": "5184c2720a0c1ad5f6026bb97650ce245c8167454ba59872f1123a4567ed2f97",
+        "path": "InlongSlicer.conf"
+      },
+      {
+        "sha256": "5184c2720a0c1ad5f6026bb97650ce245c8167454ba59872f1123a4567ed2f97",
+        "path": "InlongSlicer.conf.bak"
+      },
+      {
+        "sha256": "702be214dd8851ee353ea6adc271967e5ec290a63949347708c672084644b60e",
+        "path": "startup-34120.log"
+      }
+    ],
+    "gui_build": "bc4d9aa5de",
+    "current_settings_retained": true,
+    "restoration_performed": false,
+    "observed_utc": "2026-10-16T21:43:06.8790666+00:00",
+    "gui_executable": "build/src/Release/inlong-slicer.exe",
+    "gui_local_time": "2026-10-17 05:41:08"
+  },
+  "installed_dlls_unchanged": {
+    "build/src/Release/InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b",
+    "build/InlongSlicer/InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b",
+    "build/InlongSlicer_InlongOnly/InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+  },
+  "prior_push": {
+    "upstream_merge_included": false,
+    "non_force_push_exit_code": 0,
+    "observed_utc": "2026-10-16T20:59:54.0937095+00:00",
+    "user_exception_authorization": "Current direct user reply: allow this exception push for 2407aade57/d9e9b2e576",
+    "target": "origin/feature/inlong-slicer-initial",
+    "remote_head": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+    "remote_verified": true,
+    "local_head": "d9e9b2e576c5a4bea9e09fa8c433d97807484ff7",
+    "release_ready": false
+  },
+  "merge_pushed": false,
+  "native_install_performed": false,
+  "agents_used": 1,
+  "fresh_native_slices": 6,
+  "limitations": [
+    "Windows Release native compilation and CLI slicing were verified; interactive texture-picker/tab-layout behavior was not manually exercised.",
+    "macOS shell syntax passed; no macOS/Xcode host or actual cache-hit build was available.",
+    "Compiler/dependency warnings remain in unchanged code, including C4805 in PresetBundle.cpp/InlongSlicer.cpp, C5051 in TextureToColor.cpp, C4996 in test_vendor_cache.cpp, and deprecated OCCT aliases. Full build logs are retained. Native test negative fixtures deliberately emit errors while passing.",
+    "Final validation slices overlapped native test compilation/execution. Their elapsed times are not controlled performance benchmarks.",
+    "Complete native slicing logs retain five known compatibility/initialization warnings per project; the results are not claimed warning-free.",
+    "The referenced Codex chat could not be read from connected hosts; conclusions use current repository, runtime receipts and fresh native tests instead.",
+    "This is a local Consumer integration, not Provider release readiness. The merge is not pushed or installed."
+  ],
+  "runtime_run": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9",
+  "runtime_logs": [
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/benchy-latest-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/benchy-latest-native.log",
+      "sha256": "92804dfea9ec527d22e3a3823e72df6563f51697846388a9e214616643cb6b54"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/benchy-merged-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/benchy-merged-native.log",
+      "sha256": "c8281156e08b525d9732a33eb64e9d0ed09be2a47ed1c486a46b206aa883cd01"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/brand-color-check.log",
+      "sha256": "b1ecb13ff032d4ba532380598acec95c0b9f6ea96715eb1e7ececa7beb54d5b0"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/core-tests.log",
+      "sha256": "3a0aa462d7de9dcaf691e20f1c4465165102d45ab26575e2c5a61ce3dccf0acc"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/final-support-build.log",
+      "sha256": "2cee42c45a696406d909357428195264ff07ced668e93c7244d526efed2de48d"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/latest-app-build.log",
+      "sha256": "c9c0a5333e0d06cec2d066b141698063df412dc450603da9645f934a8f19fa15"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/latest-merge.log",
+      "sha256": "60a5728d6894ec0ad83be98ba910f68e6dd1c0f130e0ac4cba74f11932b9d708"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/latest-native-build.log",
+      "sha256": "222b59cd6884e69b3568134d9741f34b6147bf38d11a3cf42b2c32bdb84f712e"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/macos-script-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/merge.log",
+      "sha256": "85381f3a475c72ae6b60d82ca535a69dcc48e48bcab0581f644de1403a773e06"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/merged-app-build.log",
+      "sha256": "6ec28a91425385eb4e0a99cc501040d294a5278925b1a5f8604090a87ed134a9"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/native-build.log",
+      "sha256": "964c8d681330bb57a2709a59044b02d6bc7af2c4aabff2d118d3485bf426271d"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/packaging-contract-tests.log",
+      "sha256": "28b551ef45bd7a2d3c56e26c20278440e61349ae00fc693073c2a69166ffc148"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/plugins-tests.log",
+      "sha256": "c6c689248cbb477be68b6c3580941a95dc082707b3bc3cfd5513fe70dcb37c06"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/support-tests.log",
+      "sha256": "b9ba6ee706387c18e2afe564ab2d9b3ca33edc44c7529fa26466e2691997ab04"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/support-wrong-target-tests.log",
+      "sha256": "a79015a73dce07378e7012f87661d32706aaa26d4216777e8d8d7b6384865aaf"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/vulcan600-latest-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/vulcan600-latest-native.log",
+      "sha256": "b0474bfb1c47017eb68a324905510062e7ad27be8f9051d030efc7abfa717720"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/vulcan600-merged-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/vulcan600-merged-native.log",
+      "sha256": "5dfac78c1b23026a881e24e37ba1aa4cc947152d17ae1b4f62cad45d8445173c"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/x2-latest-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/x2-latest-native.log",
+      "sha256": "a394ec81fc3b6a03e14616bb0881176e5f71f62d8a9b118357bba0978da9e2be"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/x2-merged-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-325d0712ef36435483924c90535320a9/validation/x2-merged-native.log",
+      "sha256": "677161d50f2e4608eb2847fd871b9531f777ef88ea2bd354ccca4fae699d6f39"
+    }
+  ]
+}

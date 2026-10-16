@@ -53,6 +53,28 @@ TEST_CASE("A whole PNG decodes", "[PNG]") {
     CHECK(grey.buf.size() == 24 * 16);
 }
 
+TEST_CASE("PNG metadata probing does not decode pixel data", "[PNG]") {
+    std::vector<uint8_t> bytes = encoded_png(24, 16);
+    REQUIRE(png::is_decodable_8bit_png(buf_of(bytes, bytes.size())));
+
+    // Keep the PNG header and first IDAT header intact, but corrupt its pixel
+    // payload. The texture picker's cheap metadata probe must still succeed;
+    // the full decoder remains responsible for refusing invalid pixel data.
+    const std::vector<uint8_t> idat{'I', 'D', 'A', 'T'};
+    const auto chunk = std::search(bytes.begin(), bytes.end(), idat.begin(), idat.end());
+    REQUIRE(chunk != bytes.end());
+    std::fill(chunk + 4, bytes.end(), uint8_t(0xA5));
+    CHECK(png::is_decodable_8bit_png(buf_of(bytes, bytes.size())));
+    png::ImageGreyscale grey;
+    CHECK_FALSE(png::decode_png(buf_of(bytes, bytes.size()), grey));
+}
+
+TEST_CASE("PNG metadata probing refuses truncated headers", "[PNG]") {
+    const std::vector<uint8_t> bytes = encoded_png(24, 16);
+    const size_t size = GENERATE(size_t(0), size_t(4), size_t(16));
+    CHECK_FALSE(png::is_decodable_8bit_png(buf_of(bytes, size)));
+}
+
 TEST_CASE("A truncated PNG is refused instead of crashing", "[PNG]") {
     const std::vector<uint8_t> bytes = encoded_png(64, 64);
 
