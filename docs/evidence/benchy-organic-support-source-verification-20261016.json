@@ -1,0 +1,166 @@
+{
+  "evidence_kind": "InlongSlicer product verification; not Agents Provider release evidence",
+  "captured_utc": "2026-10-16T13:26:16.4349772+00:00",
+  "source_commit": "17782d700c763a3a013b78c7775aa815524bb519",
+  "source_tree": "93ebaa922e9fe902bcb9aecc423da0f2524cff41",
+  "clean_source_at_capture": true,
+  "tested_source_matches_committed_content": true,
+  "source_files": [
+    {
+      "path": "docs/evidence/benchy-organic-branch-continuation-20261016.md",
+      "git_blob": "62517882758413b7e1f50adefd2407d30390a924",
+      "worktree_sha256": "4ae7960ee97236e3dad200a81d2a740bcd1ccaba9d7f96b3301a1cb0a93e1c07"
+    },
+    {
+      "path": "docs/evidence/benchy-organic-interface-remapping-20261016.md",
+      "git_blob": "55dea3c1904ff7facc0c1be4233665dd2ac6b934",
+      "worktree_sha256": "3155411053be9004597cd938eb33ad8bf41a1e8add05cb4d684e7fa859923cec"
+    },
+    {
+      "path": "docs/memory/entries/normal-support-contact-clearance-benchy-20261016.json",
+      "git_blob": "cb33b96102bbd1e17221aae53fb94fc7030951d8",
+      "worktree_sha256": "d71485bb12e96e2d1ae44c3c5ba9aa823775fec1bc432fed4a978329e9e1f086"
+    },
+    {
+      "path": "docs/memory/entries/normal-support-contact-clearance-branches-20261016.json",
+      "git_blob": "a39f77d94fef4028afba91fd8713ceeffc449abb",
+      "worktree_sha256": "1af4d3bcf673245de3546411882bb916b91283b61059a5e8216c6f92dacdb32e"
+    },
+    {
+      "path": "docs/memory/entries/organic-contact-tip-landing-20261016.json",
+      "git_blob": "81a9f89f776ce998e22d45c08ccac07707450b1f",
+      "worktree_sha256": "e2243b9ab57f3af2dee3a256c343ac208a3aaac292e662b96bb0e7e04f7e2dbe"
+    },
+    {
+      "path": "docs/memory/entries/organic-support-grid-stability-benchy-20261016.json",
+      "git_blob": "dd5d1c12737e1ffcdf3f00415f487f6109993b73",
+      "worktree_sha256": "0177ac97f4488c92be3c098908798e51f4644a73c256f1b2077c5c4ecddd5cc7"
+    },
+    {
+      "path": "docs/memory/entries/organic-support-grid-stability-branches-20261016.json",
+      "git_blob": "4d2b5ef261417591df3cbbb0ea61c5de11eb3ac6",
+      "worktree_sha256": "c8c1194190bb8bb86116741d9744b7be7a15a34ec51038546ea466939210a3ac"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "git_blob": "f3db944aecc3f71193f6dea00f63b84995599fb8",
+      "worktree_sha256": "3d36249d076244c3500fcd13a3a8366f5df10f75674ff519fc13e4c8570d3ac9"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "git_blob": "a5e728be63722f4e79f67af60d34678c220629ab",
+      "worktree_sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0"
+    },
+    {
+      "path": "tests/fff_print/test_support_material.cpp",
+      "git_blob": "517c1eb579b50d117dbf5ae0f42caa043512a4e1",
+      "worktree_sha256": "ab016b837d1ce0c178e2f5a8092403c483f2553a5dd071566a59bfdfacd5c8e6"
+    }
+  ],
+  "native_tests": {
+    "execution": "Completed before commit; unchanged tested bytes verified again after commit",
+    "filter": "[SupportMaterial],[TreeSupport],[Support],A support-only change on a belt purge print matches a fresh slice",
+    "exit_code": 0,
+    "cases": 84,
+    "assertions": 18107,
+    "random_seed": 20261016,
+    "seconds": 372.5609475,
+    "test_executable_sha256": "d1d51fd94f3cfed1558844437e3c0fe2ff798f0f5d10a3249dc5aaecbdaa140b",
+    "old_algorithm_regression_exit_code": 42,
+    "old_algorithm_failure": "Expected counterexample for sloped model landing"
+  },
+  "original_project_slice": {
+    "exit_code": 0,
+    "failed_branch_candidates_before": 30,
+    "failed_branch_warnings_after": 0,
+    "invalid_placement_warnings": 0,
+    "uninitialized_warnings": 0,
+    "same_configuration": true,
+    "model_extrusion_geometry_unchanged": true,
+    "expected_changed_roles": [
+      "Support",
+      "Support interface",
+      "Skirt",
+      "Brim"
+    ],
+    "global_print_planes": 1114,
+    "release_dll_sha256": "040476e09b065225614deed5ce4e3f093edcb659059cc15f28b570e0e993f2c6",
+    "output_gcode_sha256": "ba1c2372c76c695f890c9b736f4c31c44a5040d8e8bb5083106bdf1fc64c6893"
+  },
+  "consumer_checkpoint": {
+    "result": "passed",
+    "input_digest": "febf8dac8165f549b9cba706eccf61168f3c2fe22ea0b49cf63ce2700d3988e8",
+    "release_ready": false,
+    "checks": [
+      {
+        "id": "syntax",
+        "result": "passed"
+      },
+      {
+        "id": "json-schema",
+        "result": "passed"
+      },
+      {
+        "id": "ownership",
+        "result": "passed"
+      },
+      {
+        "id": "knowledge",
+        "result": "passed"
+      },
+      {
+        "id": "sources",
+        "result": "passed"
+      },
+      {
+        "id": "diff",
+        "result": "passed"
+      }
+    ],
+    "reuse": "Unchanged owned inputs confirmed by SHA-256 digest; no duplicate checkpoint checks"
+  },
+  "runtime_receipts": [
+    {
+      "path": ".agents/runtime/runs/run-25e0017a1dd046f6b25e541fdf44de2d/validation/final-source-and-native-evidence.json",
+      "sha256": "d2c44ebb4496ad58921f58d7f63568461f698f2750f890b8f375a47cb6c0b1f3"
+    },
+    {
+      "path": ".agents/runtime/runs/run-25e0017a1dd046f6b25e541fdf44de2d/validation/branch-fixed-regressions-result.json",
+      "sha256": "60391c92ec37c042641df9918be3c06235218208002835cc5feb6e189356b9c3"
+    },
+    {
+      "path": ".agents/runtime/runs/run-25e0017a1dd046f6b25e541fdf44de2d/validation/branch-fixed-regressions.log",
+      "sha256": "f738ac7cdf4bf7bf4527d7e5af6d51b75a2b307a866d1da8644b26a3f99e77a9"
+    },
+    {
+      "path": ".agents/runtime/runs/run-25e0017a1dd046f6b25e541fdf44de2d/validation/branch-red-result.json",
+      "sha256": "4a456b36f93cedae26bf9609cc2b651a41aff05dcf33db4a590a7ff4bdc18b5e"
+    },
+    {
+      "path": ".agents/runtime/runs/run-25e0017a1dd046f6b25e541fdf44de2d/validation/full-slice-branch-result.json",
+      "sha256": "ce2c95e4d2ed77831c0e98bd9b22aa9d34a231e27fea92d55ec0339ea81b7c84"
+    },
+    {
+      "path": ".agents/runtime/runs/run-25e0017a1dd046f6b25e541fdf44de2d/validation/motion-and-coverage.json",
+      "sha256": "30f3a641a1f6efd3e81c6772c6b6fd478cfe292feda96b407307dbb8a860541b"
+    },
+    {
+      "path": ".agents/runtime/runs/run-25e0017a1dd046f6b25e541fdf44de2d/validation/fixed-slice-result.json",
+      "sha256": "ea12a4c680f8e885a23e3f106866d198feb6a4b30cd1e040f311d469ac81a061"
+    },
+    {
+      "path": ".agents/runtime/runs/run-c593b6fbc67c4247b902cd2d1a537542/validation/report.json",
+      "sha256": "0c0197e0c524e3203e4c76025577675f7e1161c9116d40f9f9e731f768f04720"
+    }
+  ],
+  "limits": [
+    "Isolated Release DLL and native tests were built; installed application was not replaced.",
+    "No physical print measurement or new installer qualification.",
+    "Consumer product evidence does not establish Provider release readiness.",
+    "Runtime payloads are retained locally by policy; durable findings are in the two accompanying reports."
+  ],
+  "worker_usage": {
+    "root_agents": 1,
+    "subagents": 0
+  }
+}
