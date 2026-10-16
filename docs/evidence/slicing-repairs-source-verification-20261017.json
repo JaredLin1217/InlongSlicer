@@ -1,0 +1,383 @@
+{
+  "evidence_kind": "InlongSlicer product committed-source verification; not Agents Provider release evidence",
+  "captured_utc": "2026-10-16T20:55:37.972323+00:00",
+  "source_commit": "2407aade573c755b22e8acf3e1fb9e88c2ff8af9",
+  "source_tree": "5aae00fe0db42e58200db0f66b1b9708cea140c3",
+  "clean_source_at_capture": true,
+  "tested_source_matches_committed_content": true,
+  "source_files": [
+    {
+      "path": "src/libslic3r/Geometry/MedialAxis.cpp",
+      "git_blob": "37083547f1635019b614a93a4e97d4b100ee1835",
+      "worktree_sha256": "80de3617e2008435ca0c7ba1917a49c8a0cf535a5d030e8145555d0ff1522538",
+      "committed_blob_sha256": "f1a84c56ed55394153c67859932b2be7fe628b340b3f4f109b04b4cc3ad0f975",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.cpp",
+      "git_blob": "bb43694a9f83a957843bc70208b536a4fd1bc404",
+      "worktree_sha256": "a948b527c45e033afc21ab2426df71fb633f128398323a224ebd5ac1309a6ef9",
+      "committed_blob_sha256": "bbacdd7a4c30fb93f61c949435fe2141f09765b8f59c81cde03eee75834ee6ad",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.hpp",
+      "git_blob": "74aaff00f1e4e84cad2abe9072ed0320513d0f48",
+      "worktree_sha256": "684e891875394cbbfd4b35a9016725a7b879164be77a1dfe1e5cf758ad97bddd",
+      "committed_blob_sha256": "23689dbd90bf1570cb8dfbe5e7e86305ce0ee5130acac76e7ea8f074bedfcd24",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "git_blob": "0713bdd3ce7ac52e20feba3cc7bcedef80652cc4",
+      "worktree_sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+      "committed_blob_sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "tests/libslic3r/test_voronoi.cpp",
+      "git_blob": "573e8b4d98d18623d6474620b30be5e291e4b7f1",
+      "worktree_sha256": "1ad0ad88579389cd9fb33bf3a52bceaf89b11c983d16dae30fbe67b0fbc45738",
+      "committed_blob_sha256": "d5e52a60bb297238a2eca0fdad84baa4b7285f384018d74355cd85d34c75aa45",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "git_blob": "d392720ceacfe3488ec26b5321dceeb55a400149",
+      "worktree_sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "committed_blob_sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/evidence/benchy-slicing-performance-verification-20261016.json",
+      "git_blob": "5e48138eb6493bf821cf254c155518e16904d713",
+      "worktree_sha256": "04bc9ca135b0138b0388df733d96240de3e0863394f242beb07b2b35187e8c3e",
+      "committed_blob_sha256": "ca325790ad832badb74ff804b65df31b360c9bc613434b5bba745b6265d98d23",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/evidence/three-project-slicing-log-audit-20261016.json",
+      "git_blob": "302a2cb493fa956ed8c3e3c3a9fd7c6254d6c86f",
+      "worktree_sha256": "b2ce8b697dd7588d0a87b829646f36c8b13c1b0310fecc35b7d077a9ec19a50b",
+      "committed_blob_sha256": "90b3a1592510aa47ebcfe1f390e933654af173ff5753f00ec4bbe34dc4789b04",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/evidence/three-project-slicing-log-audit-20261016.md",
+      "git_blob": "7e1d9c2b9ff17c3cd47287e31ff26b51f0186a15",
+      "worktree_sha256": "1947baa4be9d21694bf1eb46e9d5c657aa57002c028ec35e2022a97a0c72c45d",
+      "committed_blob_sha256": "3e1bee6f69366b73a7b3f5477875d5b8a774293c02335e7083195fbb5e7a7312",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/evidence/x2-voronoi-repair-20261016.md",
+      "git_blob": "6dd638711fd5501e7e4bab414e624d7b993fc680",
+      "worktree_sha256": "385da9e5d53147c4ec74b3328788b8986ecc15044d470472ac3fa35a53dd418e",
+      "committed_blob_sha256": "48cd4ceb27f14993e20d5db35d1d9b902e75ca5f98fbafa2e0cd5269b2fc4a47",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/evidence/x2-voronoi-repair-verification-20261016.json",
+      "git_blob": "6b8e3a7f735d68bea36b0dea4893dd45a1e75e2c",
+      "worktree_sha256": "2f0e076ea027c3524ddbab3a8ccf5d49fd8584e641839a8f2eeacc88f7ecbf7f",
+      "committed_blob_sha256": "b38af3616341dcc8931f7613f05ab45752dc9f0ddfe80b36c53256c9d2035feb",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/organic-contact-tip-landing-benchy-performance-20261016.json",
+      "git_blob": "98d406f8cb3a866c5ab28429feb28e1d2e5f7ee1",
+      "worktree_sha256": "287b879b4d09ce37e21a3d6407e30a4c744d1ab5ace8aa91834f06a6492cdbd0",
+      "committed_blob_sha256": "287b879b4d09ce37e21a3d6407e30a4c744d1ab5ace8aa91834f06a6492cdbd0",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/organic-support-grid-stability-benchy-performance-20261016.json",
+      "git_blob": "ea28988ce2126f9420cc949a531d281a15c6e282",
+      "worktree_sha256": "29b57bc63aeade96e410e23716be7d5263dafa5bdccc7f0ccd0a2fb76ce06b97",
+      "committed_blob_sha256": "29b57bc63aeade96e410e23716be7d5263dafa5bdccc7f0ccd0a2fb76ce06b97",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/organic-support-slicing-profile-benchy-20261016.json",
+      "git_blob": "d3c81399998a8b5cc7c6ba64459d8f47f22212f8",
+      "worktree_sha256": "bf9dfc97d7ad2cada9fe72401bb478ffaacbf61b700dd1f7a21a96823eaab2d7",
+      "committed_blob_sha256": "bf9dfc97d7ad2cada9fe72401bb478ffaacbf61b700dd1f7a21a96823eaab2d7",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/three-project-native-warning-audit-20261016.json",
+      "git_blob": "62ec21a4da58e6ab3f7fbd931d1f9c556e68c1fa",
+      "worktree_sha256": "45c5b6e1cb68ca4466c46e93cd8e4e017d23238f585c037c548c29ab401cbc59",
+      "committed_blob_sha256": "45c5b6e1cb68ca4466c46e93cd8e4e017d23238f585c037c548c29ab401cbc59",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/x2-voronoi-medial-axis-repair-20261016.json",
+      "git_blob": "22ddd36adc0a75c408aa67725b60dd8c856d6817",
+      "worktree_sha256": "62a308f52d5f7b35ac17c64638b12fb9bac67ad9792bd2e4dbd5154d232497b3",
+      "committed_blob_sha256": "62a308f52d5f7b35ac17c64638b12fb9bac67ad9792bd2e4dbd5154d232497b3",
+      "git_filtered_worktree_matches_commit": true
+    }
+  ],
+  "line_ending_binding": "Native tests bind exact worktree SHA-256 bytes. Git blob IDs bind that same content through repository text filters; committed blob SHA-256 is recorded separately where line endings differ.",
+  "native_tests_reuse": "Completed before source commit. Exact tested sources, executables, native outputs and receipts were rechecked unchanged before committing; native source hashes were rechecked after committing.",
+  "native_tests": {
+    "geometry": {
+      "executable_sha256": "4ccb4db9bd6290bba1a25c1e7f19d6c5882acb5913696861cc59142ceffa351b",
+      "seconds": 0.0764745,
+      "filter": "[Voronoi],[VoronoiOffset],[Geometry],[Arachne]",
+      "native_exit_code": 0,
+      "passed_cases": 44,
+      "existing_expected_failure_cases": 1,
+      "expected_failure": "Existing hidden Voronoi NaN coordinates 12139 test, marked [!mayfail] upstream"
+    },
+    "support": {
+      "seconds": 146.6496861,
+      "native_exit_code": 0,
+      "executable_sha256": "8b2706b7201fae595b16726d6f0cf02cfbb35c6e32520e3f6de3fe92c274118b",
+      "filter": "[SupportMaterial],[TreeSupport],[Support],A support-only change on a belt purge print matches a fresh slice",
+      "cases": 84,
+      "assertions": 18107
+    }
+  },
+  "fixed_dll_sha256": "4e9835048b06aaa1610486459dd212227d0ddcf82b73ae29f3e957fdd174c533",
+  "projects": [
+    {
+      "name": "x2",
+      "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+      "exit_code": 0,
+      "warnings": 5,
+      "errors": 0,
+      "geometry_warnings": 0,
+      "geometry_errors": 0,
+      "command_count": 1348868,
+      "same_baseline_commands": false,
+      "same_baseline_motion_annotations": false,
+      "same_baseline_configuration": true,
+      "same_repeat": true
+    },
+    {
+      "name": "benchy",
+      "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+      "exit_code": 0,
+      "warnings": 5,
+      "errors": 0,
+      "geometry_warnings": 0,
+      "geometry_errors": 0,
+      "command_count": 811657,
+      "same_baseline_commands": true,
+      "same_baseline_motion_annotations": true,
+      "same_baseline_configuration": true,
+      "same_repeat": true
+    },
+    {
+      "name": "vulcan600",
+      "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+      "exit_code": 0,
+      "warnings": 5,
+      "errors": 0,
+      "geometry_warnings": 0,
+      "geometry_errors": 0,
+      "command_count": 1211052,
+      "same_baseline_commands": true,
+      "same_baseline_motion_annotations": true,
+      "same_baseline_configuration": true,
+      "same_repeat": true
+    }
+  ],
+  "x2_path_change_summary": {
+    "method": "Align annotated commands within matching layers, avoiding shifted line indices.",
+    "command_count": 1348868,
+    "changed_layer_count": 14,
+    "changed_layers": [
+      [
+        149,
+        15.5
+      ],
+      [
+        283,
+        28.9
+      ],
+      [
+        287,
+        29.3
+      ],
+      [
+        289,
+        29.5
+      ],
+      [
+        999,
+        112.1
+      ],
+      [
+        1721,
+        191.7
+      ],
+      [
+        1805,
+        200.1
+      ],
+      [
+        1925,
+        212.1
+      ],
+      [
+        1983,
+        217.9
+      ],
+      [
+        1985,
+        218.1
+      ],
+      [
+        2059,
+        225.5
+      ],
+      [
+        2093,
+        228.9
+      ],
+      [
+        2095,
+        229.1
+      ],
+      [
+        2107,
+        230.3
+      ]
+    ],
+    "changed_role_records_before_and_after": {
+      "Support interface": 636
+    },
+    "model_extrusions_identical": true,
+    "changed_model_layers": [],
+    "changed_command_layers": [
+      {
+        "layer": 283,
+        "z": 28.9
+      },
+      {
+        "layer": 287,
+        "z": 29.3
+      },
+      {
+        "layer": 289,
+        "z": 29.5
+      },
+      {
+        "layer": 999,
+        "z": 112.1
+      },
+      {
+        "layer": 1721,
+        "z": 191.7
+      },
+      {
+        "layer": 1805,
+        "z": 200.1
+      },
+      {
+        "layer": 1925,
+        "z": 212.1
+      },
+      {
+        "layer": 1983,
+        "z": 217.9
+      },
+      {
+        "layer": 1985,
+        "z": 218.1
+      },
+      {
+        "layer": 2059,
+        "z": 225.5
+      },
+      {
+        "layer": 2095,
+        "z": 229.1
+      }
+    ]
+  },
+  "performance_limit": "Local collision reuse preserves Benchy commands but the earlier overlapping trial ranges do not establish a stable significant speedup or halving.",
+  "consumer_checkpoint": {
+    "receipt_path": ".agents/runtime/runs/run-0e32722857c74de7bb99ac3ee9d261a0/validation/report.json",
+    "reuse": "Exact owned-input digest rechecked after source commit; no unchanged checks repeated",
+    "receipt_sha256": "59c5d8bfaa3698153c0b21911fc707aebb707ec4f32360b4607585bce9f8f602",
+    "result": "passed",
+    "input_digest": "febf8dac8165f549b9cba706eccf61168f3c2fe22ea0b49cf63ce2700d3988e8",
+    "checks": [
+      {
+        "id": "syntax",
+        "result": "passed"
+      },
+      {
+        "id": "json-schema",
+        "result": "passed"
+      },
+      {
+        "id": "ownership",
+        "result": "passed"
+      },
+      {
+        "id": "knowledge",
+        "result": "passed"
+      },
+      {
+        "id": "sources",
+        "result": "passed"
+      },
+      {
+        "id": "diff",
+        "result": "passed"
+      }
+    ],
+    "release_ready": false
+  },
+  "native_runtime_receipts": [
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/fixed-geometry-tests-result.json",
+      "sha256": "e01f1397786ca847c2791d23cba1c99454ed158f1a4cbaa01cad01f307e140e8"
+    },
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/fixed-support-tests-result.json",
+      "sha256": "729e344fa54f8512e63243c4d6e256412b9f73b16dbc2254898a1da37595200c"
+    },
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/regression-before.log",
+      "sha256": "fbaec998cabb77b9aabb4e9d8bbf54a1fea8bed18536fd6e9040e124f6b5d241"
+    },
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/regression-before-result.json",
+      "sha256": "b7df94943bc5722481ee836e370b9f35a9ce5809b99ea1750e080bf758a65ff4"
+    },
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/fixed-geometry-tests.log",
+      "sha256": "3cd6f4e3a3b485edfa603be030384b65bf590ca454469aa4ae7cdaadabe33ca7"
+    },
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/fixed-support-tests.log",
+      "sha256": "aade1a6acacfdec4022a0784db3f3a92da0ef48552d91ce532f2b2e0b4ea12e0"
+    },
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/x2-path-difference.json",
+      "sha256": "afa4dd8065c9dce1fa0a43c780593cb83209166d409e35d9f4641bb5e87a9596"
+    },
+    {
+      "path": ".agents/runtime/runs/run-cb5f41021b254606a10d628c6f3f75c4/validation/verification.json",
+      "sha256": "2f0e076ea027c3524ddbab3a8ccf5d49fd8584e641839a8f2eeacc88f7ecbf7f"
+    }
+  ],
+  "known_limits": [
+    "Five existing initialization/metadata warnings remain per native slice.",
+    "Geometry suite includes one existing expected upstream NaN failure.",
+    "No installation or physical print was performed.",
+    "The performance change does not establish a stable substantial speedup or halving.",
+    "Publication RequireReleaseReady accepts only Provider Checkpoint; this installed project is a Consumer and is not Provider-release-ready."
+  ],
+  "worker_usage": {
+    "root_agents": 1,
+    "subagents": 0
+  },
+  "content_digest_sha256": "83d0bdabe586f5da958f5ad2c88291f9963bc941358ad53fe6ac75f857124fac"
+}
