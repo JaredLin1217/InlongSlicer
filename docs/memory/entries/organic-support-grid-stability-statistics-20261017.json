@@ -1,0 +1,98 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-grid-stability-statistics-20261017",
+  "key": "organic-support-belt-floor-grid",
+  "type": "fact",
+  "conclusion": "Organic branch topology and independent output layers use different Z grids: clip output slices and propagated roots using belt-floor polygons evaluated at each output layer's physical print_z, not the topology cache index, and keep a positive regular height for negative-Z layer zero. Parallel overhang sampling can emit tips and roofs onto shared lower layers; quantized tip deduplication must publish layer-local candidates in stable source-layer order rather than mutex acquisition order. Otherwise even fresh slices with identical settings can generate different support geometry, and support-only re-slices differ from a fresh slice. Lower continuous roof footprints must retain their parent contact and depth until the output grid is known, then map to contact output index minus depth. Flooring aggregated topology-Z interface layers can omit a complete interface immediately below an exact contact. Preserve source-index placement on synchronized fallback.",
+  "scope": "InlongSlicer",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "belt",
+    "layer-height",
+    "determinism",
+    "reslice",
+    "parallelism",
+    "interface-continuity",
+    "contact-relative-depth"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_print.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/benchy-organic-interface-remapping-20261016.md",
+    "docs/evidence/benchy-slicing-performance-20261016.md",
+    "docs/evidence/upstream-gcode-statistics-verification-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "RichInterfacePlacer::PendingPlacement, generate_initial_areas ordered publication, OrganicSupportLayerPlan::legacy and organic_draw_branches output_belt_floors"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "5d47b8dd9e7b7f7b49257601a5e924e7f081790b409dc7c2150962372ec901aa",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "A support-only change on a belt purge print matches a fresh slice; Belt supports reach the belt under a leading overhang"
+    },
+    {
+      "locator": "Contact-relative deferred organic interfaces, selected roof-footprint and toolpath coverage regression, and original Benchy verification",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp"
+    },
+    {
+      "locator": "Contact-relative deferred organic interfaces, selected roof-footprint and toolpath coverage regression, and original Benchy verification",
+      "sha256": "ab016b837d1ce0c178e2f5a8092403c483f2553a5dd071566a59bfdfacd5c8e6",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp"
+    },
+    {
+      "locator": "Contact-relative deferred organic interfaces, selected roof-footprint and toolpath coverage regression, and original Benchy verification",
+      "sha256": "3155411053be9004597cd938eb33ad8bf41a1e8add05cb4d684e7fa859923cec",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-organic-interface-remapping-20261016.md"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Source change, exact-path checks and retained native regression result"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+      "sha256": "8c3671fdf5fac4c71ec181acbd05a6697dfa52fe06a79aad13d5afb6de3f5a84",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Executed unchanged belt/support Print fixtures, three fresh baseline-equivalent native slices and protected source hashes; pre-merge checkout anchor"
+    }
+  ],
+  "verified_utc": "2026-10-16T22:10:51.505305+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact test_print diff review, unchanged organic source/fixture hashes and executed Print regressions",
+    "summary": "Only test_print.cpp changed, by adding an unrelated final-statistics placeholder regression. The existing belt/support fixtures and all other five source/evidence hashes remain unchanged. The 81-case / 6471-assertion focused suite includes those Print fixtures and passed. All three fresh supplied-project command, annotated-motion and configuration hashes match the latest fixed baseline, with no previous branch/geometry failure strings. Historical performance medians remain 2026-10-16 observations and do not describe a new controlled benchmark. Source commit fields are checkout anchors."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-grid-stability-benchy-performance-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -1,0 +1,85 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "upstream-print-statistics-placeholders-20261017",
+  "key": "gcode-export-final-statistics-placeholder-contract",
+  "type": "fact",
+  "conclusion": "Upstream c6804fbb68 makes eight final print-statistics placeholders available in custom G-code through reserved tags resolved after complete export: used_filament, print_time, normal_print_time, silent_print_time, total_weight, total_cost, total_wipe_tower_cost and total_wipe_tower_filament. Values match PrintStatistics::config used by filename_format; numeric values use two decimal places. Both reserved-tag tables include the new tags. Running extruded_* totals remain numeric and unchanged. The imported regression covers file header, machine start and machine end for Bambu and non-Bambu layouts. The Windows focused export/processor/statistics/timing suite and fresh three-project command/path/configuration equality passed. No GUI, cross-platform or Provider release-readiness claim is made.",
+  "scope": "Version-bound G-code final-statistics export contract at c6804fbb68",
+  "modules": [
+    "GCode",
+    "upstream-sync"
+  ],
+  "tags": [
+    "placeholders",
+    "print-statistics",
+    "post-processing",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/GCode/GCodeProcessor.cpp",
+    "src/libslic3r/GCode/GCodeProcessor.hpp",
+    "tests/fff_print/test_print.cpp",
+    "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+    "InlongSlicer_doc/upstream_gcode_statistics_sync_20261017.md"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "72b0e6c2b6dba43995bdab19b97318c2a463655814d148fbb8df6d2c123e4265",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Reviewed imported implementation, executed regression or durable native validation; commit is the pre-merge checkout anchor, not proof new bytes were already committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode/GCodeProcessor.cpp",
+      "sha256": "34f494701836b9a27a558127ea6de5b1fb2a98f03d70a13a39be86020866336e",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Reviewed imported implementation, executed regression or durable native validation; commit is the pre-merge checkout anchor, not proof new bytes were already committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode/GCodeProcessor.hpp",
+      "sha256": "94fd3c158cfc32b50e931ff180ede2940e40c7c271b8904409c018b5b28ee081",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Reviewed imported implementation, executed regression or durable native validation; commit is the pre-merge checkout anchor, not proof new bytes were already committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "5d47b8dd9e7b7f7b49257601a5e924e7f081790b409dc7c2150962372ec901aa",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Reviewed imported implementation, executed regression or durable native validation; commit is the pre-merge checkout anchor, not proof new bytes were already committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+      "sha256": "8c3671fdf5fac4c71ec181acbd05a6697dfa52fe06a79aad13d5afb6de3f5a84",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Reviewed imported implementation, executed regression or durable native validation; commit is the pre-merge checkout anchor, not proof new bytes were already committed"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_gcode_statistics_sync_20261017.md",
+      "sha256": "c85e455dba2cd714d01cf857be335c9408a274f4df4e198131fc40b287814f1b",
+      "commit": "b186cf39341272ee53c39184a90f09a6abb4979b",
+      "locator": "Reviewed imported implementation, executed regression or durable native validation; commit is the pre-merge checkout anchor, not proof new bytes were already committed"
+    }
+  ],
+  "verified_utc": "2026-10-16T22:05:39.673328+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Current source diff, native FFF regression/JUnit, disposable app linking and three fresh native slices",
+    "summary": "81 focused cases and 6471 assertions passed, including the imported statistics regression. All three complete command, annotated-motion and configuration comparisons match the previous fixed baseline. Original current settings and installed binaries are unchanged. Existing warnings and platform/GUI limits are explicitly retained."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

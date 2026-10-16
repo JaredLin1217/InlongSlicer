@@ -1,0 +1,356 @@
+{
+  "captured_utc": "2026-10-16T22:05:39.673328+00:00",
+  "checkout_anchor": "b186cf39341272ee53c39184a90f09a6abb4979b",
+  "upstream": "c6804fbb6836493c71d3669e0404ddb85e7d2f6e",
+  "branch": "main",
+  "master_exists": false,
+  "incoming_commits": [
+    "c6804fbb6836493c71d3669e0404ddb85e7d2f6e fix: print statistics placeholders fail in custom G-code (#16348)"
+  ],
+  "conflicts": [],
+  "source_snapshots": [
+    {
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "72b0e6c2b6dba43995bdab19b97318c2a463655814d148fbb8df6d2c123e4265"
+    },
+    {
+      "path": "src/libslic3r/GCode/GCodeProcessor.cpp",
+      "sha256": "34f494701836b9a27a558127ea6de5b1fb2a98f03d70a13a39be86020866336e"
+    },
+    {
+      "path": "src/libslic3r/GCode/GCodeProcessor.hpp",
+      "sha256": "94fd3c158cfc32b50e931ff180ede2940e40c7c271b8904409c018b5b28ee081"
+    },
+    {
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "5d47b8dd9e7b7f7b49257601a5e924e7f081790b409dc7c2150962372ec901aa"
+    }
+  ],
+  "native_build": {
+    "executable_sha256": "908cadc4020797fbc3eb02472ba1d0ab289c7663ad9ac6ebab797720262854e4",
+    "log_sha256": "fb9f7a1eec2ca14db742e9085674a58017bf9ef92dce1faeee78489eda412300",
+    "exit_code": 0,
+    "completed_utc": "2026-10-16T22:01:28.6503309+00:00",
+    "target": "fff_print_tests",
+    "started_utc": "2026-10-16T21:55:39.1354518+00:00"
+  },
+  "disposable_app_link": {
+    "log_sha256": "19042b059ec80466a84ec63a7d000a3afdf4b78e730804a8f96ae7aba197d0c5",
+    "exit_code": 0,
+    "output": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-latest\\",
+    "dll_sha256": "ff9678248e6db8b8ef6c5e0c0d01a9d3581b2443edab6a8c2e26d610d84efa51",
+    "method": "Direct MSBuild app project; references, pre-build and post-build events disabled; disposable output",
+    "started_utc": "2026-10-16T22:00:20.8719143+00:00",
+    "completed_utc": "2026-10-16T22:02:29.1522505+00:00"
+  },
+  "tests": {
+    "filter": "[Print],[GCodeProcessor],[GCodeTiming],[GCodeStatistics]",
+    "native_exit_code": 0,
+    "seconds": 142.4984246,
+    "log_sha256": "d22872f1704f194da62c991dc8ab1e0e85790f40373fad1487e113e89ed685d3",
+    "junit_sha256": "2e4a193b4db986afdc8f3a46e093e5b85dd1e45d70b49bbc34ae0114713edd14",
+    "executable_sha256": "908cadc4020797fbc3eb02472ba1d0ab289c7663ad9ac6ebab797720262854e4",
+    "seed": 20261017,
+    "assertions": 6471,
+    "passed_cases": 81,
+    "new_regression_present_in_junit": true,
+    "new_regression_name": "Print statistics in custom G-code match the final print statistics"
+  },
+  "projects": [
+    {
+      "name": "benchy",
+      "seconds": 23.86746450001374,
+      "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+      "ordered_commands": 811657,
+      "program_sha256": "10d85ea481a361e5dde24dab976ece21b5b20abf334ad8f05190d98a098612e6",
+      "annotated_motion_sha256": "2855fc0f2bc4600e9590d3a9bd5bd2d5bdc6daf67062b91a3f0afc4bd07b2a27",
+      "baseline_equality": {
+        "command_count": true,
+        "program_sha256": true,
+        "annotated_motion_sha256": true,
+        "configuration": true
+      },
+      "known_initialization_warning_events": 5,
+      "geometry_failure_messages": [],
+      "native": {
+        "label": "benchy-latest",
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-latest\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\benchy-latest-data",
+          "--slice",
+          "0",
+          "--debug",
+          "3",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\benchy-latest",
+          "--logfile",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\validation\\benchy-latest-native.log",
+          "C:\\Users\\v_jar\\Downloads\\3DBenchy.3mf"
+        ],
+        "native_waited": true,
+        "exit_code": 0,
+        "seconds": 23.86746450001374,
+        "peak_rss_bytes": 1727315968,
+        "min_available_ram_bytes": 18914385920,
+        "started_utc": "2026-10-16T22:03:13.442834+00:00",
+        "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+        "input_unchanged": true,
+        "dll_sha256": "ff9678248e6db8b8ef6c5e0c0d01a9d3581b2443edab6a8c2e26d610d84efa51",
+        "gcodes": [
+          {
+            "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\benchy-latest\\plate_1.gcode",
+            "bytes": 26276597,
+            "sha256": "a88ce5f52b132336f5981445412224c1056b07dd1d54b8b4d4a9c2c9f73a6b81"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vulcan600",
+      "seconds": 33.004814699990675,
+      "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+      "ordered_commands": 1211052,
+      "program_sha256": "502e3a741d9543effa46c76d7714653b272ad5557b3b245278a1bcb5b91ce79d",
+      "annotated_motion_sha256": "a625c07a4d5d7a4515bb5862b9c0a6cde5dfba733d8fe3fb55661fcf127b1b8c",
+      "baseline_equality": {
+        "command_count": true,
+        "program_sha256": true,
+        "annotated_motion_sha256": true,
+        "configuration": true
+      },
+      "known_initialization_warning_events": 5,
+      "geometry_failure_messages": [],
+      "native": {
+        "label": "vulcan600-latest",
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-latest\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\vulcan600-latest-data",
+          "--slice",
+          "0",
+          "--debug",
+          "3",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\vulcan600-latest",
+          "--logfile",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\validation\\vulcan600-latest-native.log",
+          "C:\\Users\\v_jar\\Downloads\\Vulcan600培训用档案.3mf"
+        ],
+        "native_waited": true,
+        "exit_code": 0,
+        "seconds": 33.004814699990675,
+        "peak_rss_bytes": 3434573824,
+        "min_available_ram_bytes": 17230352384,
+        "started_utc": "2026-10-16T22:03:37.425763+00:00",
+        "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+        "input_unchanged": true,
+        "dll_sha256": "ff9678248e6db8b8ef6c5e0c0d01a9d3581b2443edab6a8c2e26d610d84efa51",
+        "gcodes": [
+          {
+            "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\vulcan600-latest\\plate_1.gcode",
+            "bytes": 40695996,
+            "sha256": "5912a00d45d61927b6cbc72eda847f9890d5af5e6846629236c27a44b82e6be3"
+          }
+        ]
+      }
+    },
+    {
+      "name": "x2",
+      "seconds": 64.98878459999105,
+      "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+      "ordered_commands": 1348868,
+      "program_sha256": "85a83db6cf785247766968e98c17b0add33aa6ca4e65337f836007507680d51c",
+      "annotated_motion_sha256": "e2587a6070e2c549889c9e082d5e43e2745eed48d5a06c39c52a29aa1b070081",
+      "baseline_equality": {
+        "command_count": true,
+        "program_sha256": true,
+        "annotated_motion_sha256": true,
+        "configuration": true
+      },
+      "known_initialization_warning_events": 5,
+      "geometry_failure_messages": [],
+      "native": {
+        "label": "x2-latest",
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\app-latest\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\x2-latest-data",
+          "--slice",
+          "0",
+          "--debug",
+          "3",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\x2-latest",
+          "--logfile",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\validation\\x2-latest-native.log",
+          "C:\\Users\\v_jar\\Downloads\\X2培训用档案.3mf"
+        ],
+        "native_waited": true,
+        "exit_code": 0,
+        "seconds": 64.98878459999105,
+        "peak_rss_bytes": 2797342720,
+        "min_available_ram_bytes": 17754591232,
+        "started_utc": "2026-10-16T22:04:10.568238+00:00",
+        "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+        "input_unchanged": true,
+        "dll_sha256": "ff9678248e6db8b8ef6c5e0c0d01a9d3581b2443edab6a8c2e26d610d84efa51",
+        "gcodes": [
+          {
+            "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-81cf153b81114b5398a62074617cb7b4\\work\\x2-latest\\plate_1.gcode",
+            "bytes": 40363175,
+            "sha256": "db66bc1fd46cfa2dc0f6d15756c62094e914e6212d23263db1878f01566cdd16"
+          }
+        ]
+      }
+    }
+  ],
+  "branding": {
+    "filename_hit_count": 33,
+    "filename_classification": {
+      "documentation_or_skill_reference": 22,
+      "plugin_ABI_or_sandbox": 8,
+      "false_positive_Canvas": 2,
+      "dependency_download": 1
+    },
+    "content_hit_categories": {
+      "existing_implementation_reference_no_new_added_hit": 2507,
+      "existing_documentation_fixture_or_tooling_reference": 2873,
+      "allowed_service_protocol_or_wiki": 66,
+      "legacy_import_or_producer_compatibility": 377,
+      "dependency_or_vendor_reference": 27,
+      "upstream_plugin_abi_or_example": 139
+    },
+    "new_added_orca_hits": [],
+    "brand_color_exit": 0,
+    "scope": "Required source scans, excluding Git, native build output, dependency build output, bundled plugins and registered Agents runtime payloads",
+    "limit": "Historical compatibility, producer detection, external service, dependency and implementation references retained; no claim that all old Orca words are product identity."
+  },
+  "profiles_and_version_label_unchanged": true,
+  "protected_support_and_x2_sources": [
+    {
+      "path": "src/libslic3r/Geometry/MedialAxis.cpp",
+      "sha256": "80de3617e2008435ca0c7ba1917a49c8a0cf535a5d030e8145555d0ff1522538"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.cpp",
+      "sha256": "a948b527c45e033afc21ab2426df71fb633f128398323a224ebd5ac1309a6ef9"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.hpp",
+      "sha256": "684e891875394cbbfd4b35a9016725a7b879164be77a1dfe1e5cf758ad97bddd"
+    },
+    {
+      "path": "tests/libslic3r/test_voronoi.cpp",
+      "sha256": "1ad0ad88579389cd9fb33bf3a52bceaf89b11c983d16dae30fbe67b0fbc45738"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f"
+    }
+  ],
+  "portable_settings": [
+    {
+      "path": "build/src/Release/data_dir",
+      "files": 835,
+      "exact_file_set_and_hashes_unchanged": true
+    },
+    {
+      "path": "build/InlongSlicer/data_dir",
+      "files": 0,
+      "exact_file_set_and_hashes_unchanged": true
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/data_dir",
+      "files": 0,
+      "exact_file_set_and_hashes_unchanged": true
+    }
+  ],
+  "installed_binaries_unchanged": [
+    {
+      "path": "build/src/Release/inlong-slicer.exe",
+      "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+    },
+    {
+      "path": "build/src/Release/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    },
+    {
+      "path": "build/InlongSlicer/inlong-slicer.exe",
+      "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+    },
+    {
+      "path": "build/InlongSlicer/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/inlong-slicer.exe",
+      "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    }
+  ],
+  "agents_used": 1,
+  "native_slices": 3,
+  "push_performed": false,
+  "install_performed": false,
+  "runtime": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4",
+  "limitations": [
+    "Focused Windows core/FFF build and disposable app linking were verified. The previous GUI archive was reused: no GUI source changed and the public-header delta only appends six ETags enumerators without changing existing values or class layout. No new GUI-library/full GUI rebuild or manual GUI test is claimed.",
+    "No macOS/Linux execution or installation was performed. This is Consumer validation, not Provider release readiness.",
+    "Existing compiler/dependency warnings remain in unchanged code. Passing native test negative fixtures may log errors. Each full slicing log retains five known initialization/compatibility warnings.",
+    "Fresh slices overlapped native regression execution; their durations are validation observations, not a controlled speed benchmark."
+  ],
+  "logs": [
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/benchy-latest-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/benchy-latest-native.log",
+      "sha256": "9178011bb161226453086f81d4f97331ba8a214c5de2eb7e8127f19a57bbb026"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/brand-color-check.log",
+      "sha256": "b1ecb13ff032d4ba532380598acec95c0b9f6ea96715eb1e7ececa7beb54d5b0"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/export-tests.log",
+      "sha256": "d22872f1704f194da62c991dc8ab1e0e85790f40373fad1487e113e89ed685d3"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/fetch.log",
+      "sha256": "2d4210da7526b7e92f870e020a613ed0f8aeb4457c60d3305504a2fa303a0ba6"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/latest-app-build.log",
+      "sha256": "19042b059ec80466a84ec63a7d000a3afdf4b78e730804a8f96ae7aba197d0c5"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/merge.log",
+      "sha256": "7a5b9d3131a3a305bb238779816fbb3e79e51685f2a8a94648d4423474b6c5fb"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/native-build.log",
+      "sha256": "fb9f7a1eec2ca14db742e9085674a58017bf9ef92dce1faeee78489eda412300"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/vulcan600-latest-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/vulcan600-latest-native.log",
+      "sha256": "d86b9f690cfc5f4f0e4410484821050ce6962e1b24007a2e678ed91155620cb0"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/x2-latest-console.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".agents/runtime/runs/run-81cf153b81114b5398a62074617cb7b4/validation/x2-latest-native.log",
+      "sha256": "004d6f2940dc0321742052d6aca44bf6e55fca1db50ddfd41b822d2e47327397"
+    }
+  ]
+}
