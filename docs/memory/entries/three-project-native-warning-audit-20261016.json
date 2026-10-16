@@ -1,0 +1,87 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "three-project-native-warning-audit-20261016",
+  "key": "windows-cli-native-slicing-warning-audit",
+  "type": "fact",
+  "conclusion": "For the recorded latest local candidate and three input hashes, six awaited fresh Windows native slices all exited 0 and produced G-code, but warning-free verification failed. Benchy and Vulcan600 each emit five initialization, metadata and compatibility warnings. X2 additionally emits 47 missing-Voronoi-vertex retry warnings, six post-rotation errors and one MedialAxis error after morphological closing; counts repeat exactly. All ordered commands, motion annotations and emitted configuration agree between each pair of runs. Native exit 0 does not establish geometry validity. Windows CLI result.json emission is Linux-guarded, so audit native logging and source severity rather than relying on a nonexistent structured warning array. Exact affected layers and a geometry repair remain unverified.",
+  "scope": "Version-bound three supplied 3MF projects and Windows CLI warning audit",
+  "modules": [
+    "CLI",
+    "Geometry",
+    "Support"
+  ],
+  "tags": [
+    "windows",
+    "native-slicing",
+    "warnings",
+    "voronoi",
+    "medial-axis"
+  ],
+  "files": [
+    "src/InlongSlicer.cpp",
+    "src/libslic3r/Geometry/Voronoi.cpp",
+    "src/libslic3r/Geometry/MedialAxis.cpp",
+    "src/libslic3r/MultiNozzleUtils.cpp",
+    "docs/evidence/three-project-slicing-log-audit-20261016.md",
+    "docs/evidence/three-project-slicing-log-audit-20261016.json"
+  ],
+  "sources": [
+    {
+      "locator": "Reviewed warning severity, Windows CLI result guard, or six-run reproducible slicing evidence",
+      "sha256": "f56b2b84eb85331c59accc4c280568d69f4346ad23bf3362dbb69dd2ae8221f1",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "kind": "file_snapshot",
+      "path": "src/InlongSlicer.cpp"
+    },
+    {
+      "locator": "Reviewed warning severity, Windows CLI result guard, or six-run reproducible slicing evidence",
+      "sha256": "f35f8f670394b78d920b47a302a5ac68a77f319f6e5e6b6980d111f13d65f4ce",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Geometry/Voronoi.cpp"
+    },
+    {
+      "locator": "Reviewed warning severity, Windows CLI result guard, or six-run reproducible slicing evidence",
+      "sha256": "96e8c3a282a4665494e49891aaf6d5533c2df833ed676c157abe661088b9130e",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Geometry/MedialAxis.cpp"
+    },
+    {
+      "locator": "Reviewed warning severity, Windows CLI result guard, or six-run reproducible slicing evidence",
+      "sha256": "afe620feb6cdde3790b29bf88b344548eb60a7020bb0e68d8183366b43655859",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/MultiNozzleUtils.cpp"
+    },
+    {
+      "locator": "Reviewed warning severity, Windows CLI result guard, or six-run reproducible slicing evidence",
+      "sha256": "1947baa4be9d21694bf1eb46e9d5c657aa57002c028ec35e2022a97a0c72c45d",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "kind": "file_snapshot",
+      "path": "docs/evidence/three-project-slicing-log-audit-20261016.md"
+    },
+    {
+      "locator": "Reviewed warning severity, Windows CLI result guard, or six-run reproducible slicing evidence",
+      "sha256": "b2ce8b697dd7588d0a87b829646f36c8b13c1b0310fecc35b7d077a9ec19a50b",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "kind": "file_snapshot",
+      "path": "docs/evidence/three-project-slicing-log-audit-20261016.json"
+    }
+  ],
+  "verified_utc": "2026-10-16T15:10:01.6714811+00:00",
+  "verification": {
+    "method": "Six native slices, exact command and annotated-motion comparison, full log/severity audit and source review",
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "summary": "Every native process was awaited and emitted one complete G-code; unchanged original input hashes, empty captured console streams and equal rerun commands/configuration were verified. The finding is verified, while zero-error/warning product acceptance failed. X2 geometry errors are reproduced and unrepaired; no exact layer is claimed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

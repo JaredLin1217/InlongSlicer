@@ -460,6 +460,28 @@ MedialAxis::MedialAxis(double min_width, double max_width, const ExPolygon &expo
 
 void MedialAxis::build(ThickPolylines* polylines)
 {
+    // Integer clipping may leave nanometre edges between nearly collinear
+    // vertices. They cannot carry printable flow, but may defeat even the
+    // rotation repair. Preserve valid input exactly; normalize only a diagram
+    // with a diagnosed issue, within both the geometric and printable-width
+    // tolerances, and accept the replacement only after validating it.
+    const double cleanup_tolerance = std::min<double>(SCALED_EPSILON, 0.01 * m_min_width);
+    if (cleanup_tolerance > 0. && std::any_of(m_lines.begin(), m_lines.end(),
+            [cleanup_tolerance](const Line &line) {
+                return (line.b - line.a).cast<double>().squaredNorm() < cleanup_tolerance * cleanup_tolerance;
+            })) {
+        VD original;
+        original.construct_voronoi(m_lines.begin(), m_lines.end(), false);
+        if (VD::detect_known_issues(original, m_lines.begin(), m_lines.end()) != VD::IssueType::NO_ISSUE_DETECTED) {
+            Lines cleaned = to_lines(m_expolygon.simplify(cleanup_tolerance));
+            if (!cleaned.empty()) {
+                VD normalized;
+                normalized.construct_voronoi(cleaned.begin(), cleaned.end(), false);
+                if (VD::detect_known_issues(normalized, cleaned.begin(), cleaned.end()) == VD::IssueType::NO_ISSUE_DETECTED)
+                    m_lines = std::move(cleaned);
+            }
+        }
+    }
     m_vd.construct_voronoi(m_lines.begin(), m_lines.end());
 
     // For several ExPolygons in SPE-1729, an invalid Voronoi diagram was produced that wasn't fixable by rotating input data.

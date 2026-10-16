@@ -1,0 +1,483 @@
+{
+  "captured_utc": "2026-10-16T15:09:24.646235+00:00",
+  "checkout_anchor": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+  "candidate_dll_sha256": "858ff538cc66521c133148473cd3b4f265fa1d83df833bf33d99e3783a95f779",
+  "tree_support_source_sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+  "workers": 1,
+  "slicing_invocations": 6,
+  "all_slices_completed": true,
+  "zero_warnings_and_errors": false,
+  "method": "Fresh sequential native slices at info level 3, then repeated at warning level 2; all nonempty level-2 messages mapped to reviewed source severity. Stdout and stderr retained. Six processes awaited. Input hashes and rerun G-code command/configuration equality checked.",
+  "limitations": [
+    "Windows native CLI result.json emission is Linux-only; warnings were audited through complete native logs and source severity.",
+    "Warnings/errors are log event counts, not counts of distinct defective regions.",
+    "The CLI applies its normal system-preset refresh/missing-key migration; each emitted refresh is retained below. No explicit printer, quality, material or model overrides were passed.",
+    "Existing installed executables and live user configuration were not used or updated.",
+    "The X2 geometry diagnostics do not identify the affected layer or XY location. No geometry repair or warning suppression was performed."
+  ],
+  "projects": [
+    {
+      "name": "benchy",
+      "project": "C:\\Users\\v_jar\\Downloads\\3DBenchy.3mf",
+      "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+      "primary_seconds": 23.377827399992384,
+      "repeat_seconds": 16.914239400008228,
+      "native_exit_code": 0,
+      "plate_count": 1,
+      "peak_rss_gib": 1.5750465393066406,
+      "min_available_ram_gib": 16.70261001586914,
+      "warnings": 5,
+      "errors": 0,
+      "warning_free": false,
+      "messages": [
+        {
+          "severity": "warning",
+          "category": "cli_startup_banner",
+          "source": "src/InlongSlicer.cpp:1467",
+          "count": 1,
+          "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev",
+          "primary_log_lines": [
+            1
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "source": "src/InlongSlicer.cpp:2747,2771",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\app\\resources/profiles/BBL/machine_full/Infinity3DP X600HD 0.6mm nozzle.json",
+          "primary_log_lines": [
+            245
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "source": "src/InlongSlicer.cpp:2747,2771",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\app\\resources/profiles/BBL/process_full/X600HD_Layer: 0.30mm.json",
+          "primary_log_lines": [
+            246
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "missing_project_filament_colors",
+          "source": "src/InlongSlicer.cpp:3929",
+          "count": 1,
+          "message": "no filament colors found in projects",
+          "primary_log_lines": [
+            407
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_nozzle_metadata_fallback",
+          "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+          "count": 1,
+          "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types",
+          "primary_log_lines": [
+            433
+          ]
+        }
+      ],
+      "branch_failure_messages": [],
+      "primary_log_lines": 514,
+      "severity_message_count": 5,
+      "logs": [
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/benchy-native.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/benchy-console.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/benchy-severity-native.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/benchy-severity-console.log"
+      ],
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\benchy\\plate_1.gcode",
+          "bytes": 26276597,
+          "sha256": "6d59e2b262c7c0a60e8201217aa602818cd07b4455970cebac50fdadfbe69d88"
+        }
+      ],
+      "repeat_equality": {
+        "same_commands": true,
+        "same_motion_annotations": true,
+        "same_emitted_configuration": true
+      },
+      "commands": 811657,
+      "native_preset_refreshes": [
+        "CLI: machine_max_junction_deviation from 'Infinity3DP X600HD 0.6mm nozzle': 0.01,0.01,0.01,0.01 -> 0.01,0.01,0.01,0.01",
+        "CLI: silent_mode from 'Infinity3DP X600HD 0.6mm nozzle': (missing) -> 0",
+        "CLI: plugins from 'X600HD_Layer: 0.30mm': (missing) -> "
+      ]
+    },
+    {
+      "name": "vulcan600",
+      "project": "C:\\Users\\v_jar\\Downloads\\Vulcan600培训用档案.3mf",
+      "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+      "primary_seconds": 31.612533199979225,
+      "repeat_seconds": 29.599677399994107,
+      "native_exit_code": 0,
+      "plate_count": 1,
+      "peak_rss_gib": 3.1690711975097656,
+      "min_available_ram_gib": 15.355167388916016,
+      "warnings": 5,
+      "errors": 0,
+      "warning_free": false,
+      "messages": [
+        {
+          "severity": "warning",
+          "category": "cli_startup_banner",
+          "source": "src/InlongSlicer.cpp:1467",
+          "count": 1,
+          "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev",
+          "primary_log_lines": [
+            1
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "source": "src/InlongSlicer.cpp:2747,2771",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\app\\resources/profiles/BBL/machine_full/Vulcan600 0.6mm nozzle.json",
+          "primary_log_lines": [
+            167
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "source": "src/InlongSlicer.cpp:2747,2771",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\app\\resources/profiles/BBL/process_full/Layer: 0.25mm.json",
+          "primary_log_lines": [
+            168
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "missing_project_filament_colors",
+          "source": "src/InlongSlicer.cpp:3929",
+          "count": 1,
+          "message": "no filament colors found in projects",
+          "primary_log_lines": [
+            310
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_nozzle_metadata_fallback",
+          "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+          "count": 1,
+          "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types",
+          "primary_log_lines": [
+            336
+          ]
+        }
+      ],
+      "branch_failure_messages": [],
+      "primary_log_lines": 423,
+      "severity_message_count": 5,
+      "logs": [
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/vulcan600-native.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/vulcan600-console.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/vulcan600-severity-native.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/vulcan600-severity-console.log"
+      ],
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\vulcan600\\plate_1.gcode",
+          "bytes": 40695996,
+          "sha256": "7009e0de94540acd9e76e63b48178dc70c1279f25f322e15b3a31a6e5c1c5f95"
+        }
+      ],
+      "repeat_equality": {
+        "same_commands": true,
+        "same_motion_annotations": true,
+        "same_emitted_configuration": true
+      },
+      "commands": 1211052,
+      "native_preset_refreshes": [
+        "CLI: belt_frame_tilt_angle from 'Vulcan600 0.6mm nozzle': (missing) -> 45",
+        "CLI: belt_frame_tilt_decouple from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: belt_printer from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: belt_printer_infinite_y from 'Vulcan600 0.6mm nozzle': (missing) -> 1",
+        "CLI: belt_slice_rotation from 'Vulcan600 0.6mm nozzle': (missing) -> x",
+        "CLI: belt_slice_rotation_angle from 'Vulcan600 0.6mm nozzle': (missing) -> 45",
+        "CLI: belt_support_floor_offset from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: build_plate_tilt_x from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: build_plate_tilt_y from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: enable_belt_purge_tower from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: gcode_remap_x from 'Vulcan600 0.6mm nozzle': (missing) -> pos_x",
+        "CLI: gcode_remap_y from 'Vulcan600 0.6mm nozzle': (missing) -> pos_y",
+        "CLI: gcode_remap_z from 'Vulcan600 0.6mm nozzle': (missing) -> pos_z",
+        "CLI: imex_carriage_margin from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: imex_firmware_managed_zones from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: imex_gantry_count from 'Vulcan600 0.6mm nozzle': (missing) -> 1",
+        "CLI: imex_mode_active_tools from 'Vulcan600 0.6mm nozzle': (missing) -> ",
+        "CLI: imex_mode_gcodes from 'Vulcan600 0.6mm nozzle': (missing) -> ",
+        "CLI: imex_mode_names from 'Vulcan600 0.6mm nozzle': (missing) -> ",
+        "CLI: imex_nozzle_clearance_x from 'Vulcan600 0.6mm nozzle': (missing) -> 30",
+        "CLI: imex_nozzle_clearance_y from 'Vulcan600 0.6mm nozzle': (missing) -> 30",
+        "CLI: imex_tool_layout from 'Vulcan600 0.6mm nozzle': (missing) -> front-left",
+        "CLI: imex_tools_per_gantry from 'Vulcan600 0.6mm nozzle': (missing) -> 2",
+        "CLI: imex_viz_theme from 'Vulcan600 0.6mm nozzle': (missing) -> standard",
+        "CLI: is_imex from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: machine_max_acceleration_e from 'Vulcan600 0.6mm nozzle': 6000,6000 -> 6000,6000,6000,6000",
+        "CLI: machine_max_acceleration_extruding from 'Vulcan600 0.6mm nozzle': 10000,10000 -> 10000,10000,10000,10000",
+        "CLI: machine_max_acceleration_retracting from 'Vulcan600 0.6mm nozzle': 10000,10000 -> 10000,10000,10000,10000",
+        "CLI: machine_max_acceleration_travel from 'Vulcan600 0.6mm nozzle': 10000,10000 -> 10000,10000,10000,10000",
+        "CLI: machine_max_acceleration_x from 'Vulcan600 0.6mm nozzle': 10000,10000 -> 10000,10000,10000,10000",
+        "CLI: machine_max_acceleration_y from 'Vulcan600 0.6mm nozzle': 10000,10000 -> 10000,10000,10000,10000",
+        "CLI: machine_max_acceleration_z from 'Vulcan600 0.6mm nozzle': 1000,1000 -> 1000,1000,1000,1000",
+        "CLI: machine_max_jerk_e from 'Vulcan600 0.6mm nozzle': 4,4 -> 4,4,4,4",
+        "CLI: machine_max_jerk_x from 'Vulcan600 0.6mm nozzle': 9,9 -> 9,9,9,9",
+        "CLI: machine_max_jerk_y from 'Vulcan600 0.6mm nozzle': 9,9 -> 9,9,9,9",
+        "CLI: machine_max_jerk_z from 'Vulcan600 0.6mm nozzle': 4,4 -> 4,4,4,4",
+        "CLI: machine_max_junction_deviation from 'Vulcan600 0.6mm nozzle': 0.01,0.01 -> 0.01,0.01,0.01,0.01",
+        "CLI: machine_max_speed_e from 'Vulcan600 0.6mm nozzle': 55,55 -> 55,55,55,55",
+        "CLI: machine_max_speed_x from 'Vulcan600 0.6mm nozzle': 1000,1000 -> 1000,1000,1000,1000",
+        "CLI: machine_max_speed_y from 'Vulcan600 0.6mm nozzle': 1000,1000 -> 1000,1000,1000,1000",
+        "CLI: machine_max_speed_z from 'Vulcan600 0.6mm nozzle': 100,100 -> 100,100,100,100",
+        "CLI: silent_mode from 'Vulcan600 0.6mm nozzle': (missing) -> 0",
+        "CLI: belt_purge_tower_object from 'Layer: 0.25mm': (missing) -> 0",
+        "CLI: belt_purge_tower_width from 'Layer: 0.25mm': (missing) -> 35",
+        "CLI: bridge_density from 'Layer: 0.25mm': 100% -> 105%",
+        "CLI: bridge_flow from 'Layer: 0.25mm': 0.99 -> 1.05",
+        "CLI: extra_brim_width from 'Layer: 0.25mm': (missing) -> 0",
+        "CLI: imex_head_filament_map from 'Layer: 0.25mm': (missing) -> ",
+        "CLI: imex_parallel_mode from 'Layer: 0.25mm': (missing) -> primary",
+        "CLI: infill_complete_top from 'Layer: 0.25mm': (missing) -> 0",
+        "CLI: leading_brim_length from 'Layer: 0.25mm': (missing) -> 0",
+        "CLI: plugins from 'Layer: 0.25mm': (missing) -> ",
+        "CLI: support_bottom_contact_wall_count from 'Layer: 0.25mm': (missing) -> 1",
+        "CLI: support_bottom_interface_wall_count from 'Layer: 0.25mm': (missing) -> 1",
+        "CLI: support_top_contact_wall_count from 'Layer: 0.25mm': (missing) -> 1",
+        "CLI: support_top_interface_wall_count from 'Layer: 0.25mm': (missing) -> 1",
+        "CLI: tpms_adaptive from 'Layer: 0.25mm': (missing) -> disabled",
+        "CLI: tpms_adaptive_gradient from 'Layer: 0.25mm': (missing) -> linear",
+        "CLI: tpms_interior_density from 'Layer: 0.25mm': (missing) -> 5%",
+        "CLI: tree_support_branch_diameter_organic from 'Layer: 0.25mm': 2 -> 3"
+      ]
+    },
+    {
+      "name": "x2",
+      "project": "C:\\Users\\v_jar\\Downloads\\X2培训用档案.3mf",
+      "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+      "primary_seconds": 52.451930300012464,
+      "repeat_seconds": 53.033924500021385,
+      "native_exit_code": 0,
+      "plate_count": 1,
+      "peak_rss_gib": 2.6268043518066406,
+      "min_available_ram_gib": 15.830619812011719,
+      "warnings": 52,
+      "errors": 7,
+      "warning_free": false,
+      "messages": [
+        {
+          "severity": "warning",
+          "category": "cli_startup_banner",
+          "source": "src/InlongSlicer.cpp:1467",
+          "count": 1,
+          "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev",
+          "primary_log_lines": [
+            1
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "source": "src/InlongSlicer.cpp:2747,2771",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\app\\resources/profiles/BBL/machine_full/Infinity3DP X2 0.4mm nozzle.json",
+          "primary_log_lines": [
+            177
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "source": "src/InlongSlicer.cpp:2747,2771",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\app\\resources/profiles/BBL/process_full/X2_Layer: 0.20mm.json",
+          "primary_log_lines": [
+            178
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "missing_project_filament_colors",
+          "source": "src/InlongSlicer.cpp:3929",
+          "count": 1,
+          "message": "no filament colors found in projects",
+          "primary_log_lines": [
+            385
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_nozzle_metadata_fallback",
+          "source": "src/libslic3r/MultiNozzleUtils.cpp:914",
+          "count": 1,
+          "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types",
+          "primary_log_lines": [
+            411
+          ]
+        },
+        {
+          "severity": "warning",
+          "category": "missing_voronoi_vertex_retry",
+          "source": "src/libslic3r/Geometry/Voronoi.cpp:39",
+          "count": 47,
+          "message": "Detected missing Voronoi vertex, input polygons will be rotated back and forth.",
+          "primary_log_lines": [
+            489,
+            490,
+            491,
+            492,
+            493,
+            494,
+            495,
+            497,
+            499,
+            500,
+            501,
+            502,
+            503,
+            504,
+            505,
+            506,
+            507,
+            508,
+            509,
+            510,
+            512,
+            513,
+            514,
+            515,
+            516,
+            517,
+            518,
+            519,
+            520,
+            521,
+            522,
+            523,
+            524,
+            525,
+            526,
+            527,
+            528,
+            530,
+            531,
+            532,
+            533,
+            534,
+            535,
+            536,
+            538,
+            541,
+            542
+          ]
+        },
+        {
+          "severity": "error",
+          "category": "missing_voronoi_vertex_after_rotation",
+          "source": "src/libslic3r/Geometry/Voronoi.cpp:54",
+          "count": 6,
+          "message": "Detected missing Voronoi vertex even after the rotation of input.",
+          "primary_log_lines": [
+            496,
+            498,
+            511,
+            529,
+            537,
+            539
+          ]
+        },
+        {
+          "severity": "error",
+          "category": "invalid_medial_axis_after_closing",
+          "source": "src/libslic3r/Geometry/MedialAxis.cpp:474",
+          "count": 1,
+          "message": "MedialAxis - Invalid Voronoi diagram even after morphological closing.",
+          "primary_log_lines": [
+            540
+          ]
+        }
+      ],
+      "branch_failure_messages": [],
+      "primary_log_lines": 563,
+      "severity_message_count": 59,
+      "logs": [
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/x2-native.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/x2-console.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/x2-severity-native.log",
+        ".agents/runtime/runs/run-961ca6884f174742b74f4d590c84c9ea/validation/x2-severity-console.log"
+      ],
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-961ca6884f174742b74f4d590c84c9ea\\work\\x2\\plate_1.gcode",
+          "bytes": 40363180,
+          "sha256": "339ff89c943c994227e79000bdcc96b3ba467708b713789d7d33f1a8d769bae4"
+        }
+      ],
+      "repeat_equality": {
+        "same_commands": true,
+        "same_motion_annotations": true,
+        "same_emitted_configuration": true
+      },
+      "commands": 1348868,
+      "native_preset_refreshes": [
+        "CLI: belt_frame_tilt_angle from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 45",
+        "CLI: belt_frame_tilt_decouple from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: belt_printer from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: belt_printer_infinite_y from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 1",
+        "CLI: belt_slice_rotation from 'Infinity3DP X2 0.4mm nozzle': (missing) -> x",
+        "CLI: belt_slice_rotation_angle from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 45",
+        "CLI: belt_support_floor_offset from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: build_plate_tilt_x from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: build_plate_tilt_y from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: enable_belt_purge_tower from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: gcode_remap_x from 'Infinity3DP X2 0.4mm nozzle': (missing) -> pos_x",
+        "CLI: gcode_remap_y from 'Infinity3DP X2 0.4mm nozzle': (missing) -> pos_y",
+        "CLI: gcode_remap_z from 'Infinity3DP X2 0.4mm nozzle': (missing) -> pos_z",
+        "CLI: imex_carriage_margin from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: imex_firmware_managed_zones from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: imex_gantry_count from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 1",
+        "CLI: imex_mode_active_tools from 'Infinity3DP X2 0.4mm nozzle': (missing) -> ",
+        "CLI: imex_mode_gcodes from 'Infinity3DP X2 0.4mm nozzle': (missing) -> ",
+        "CLI: imex_mode_names from 'Infinity3DP X2 0.4mm nozzle': (missing) -> ",
+        "CLI: imex_nozzle_clearance_x from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 30",
+        "CLI: imex_nozzle_clearance_y from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 30",
+        "CLI: imex_tool_layout from 'Infinity3DP X2 0.4mm nozzle': (missing) -> front-left",
+        "CLI: imex_tools_per_gantry from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 2",
+        "CLI: imex_viz_theme from 'Infinity3DP X2 0.4mm nozzle': (missing) -> standard",
+        "CLI: is_imex from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: machine_max_junction_deviation from 'Infinity3DP X2 0.4mm nozzle': 0.01,0.01 -> 0.01,0.01",
+        "CLI: silent_mode from 'Infinity3DP X2 0.4mm nozzle': (missing) -> 0",
+        "CLI: belt_purge_tower_object from 'X2_Layer: 0.20mm': (missing) -> 0",
+        "CLI: belt_purge_tower_width from 'X2_Layer: 0.20mm': (missing) -> 35",
+        "CLI: bridge_density from 'X2_Layer: 0.20mm': 100% -> 105%",
+        "CLI: bridge_flow from 'X2_Layer: 0.20mm': 0.99 -> 1.05",
+        "CLI: extra_brim_width from 'X2_Layer: 0.20mm': (missing) -> 0",
+        "CLI: imex_head_filament_map from 'X2_Layer: 0.20mm': (missing) -> ",
+        "CLI: imex_parallel_mode from 'X2_Layer: 0.20mm': (missing) -> primary",
+        "CLI: infill_complete_top from 'X2_Layer: 0.20mm': (missing) -> 0",
+        "CLI: leading_brim_length from 'X2_Layer: 0.20mm': (missing) -> 0",
+        "CLI: plugins from 'X2_Layer: 0.20mm': (missing) -> ",
+        "CLI: support_bottom_contact_wall_count from 'X2_Layer: 0.20mm': (missing) -> 1",
+        "CLI: support_bottom_interface_wall_count from 'X2_Layer: 0.20mm': (missing) -> 1",
+        "CLI: support_tip_turn_angle from 'X2_Layer: 0.20mm': (missing) -> 45",
+        "CLI: support_tip_xy_distance_percent from 'X2_Layer: 0.20mm': (missing) -> 50%",
+        "CLI: support_tip_z_distance_percent from 'X2_Layer: 0.20mm': (missing) -> 50%",
+        "CLI: support_top_contact_wall_count from 'X2_Layer: 0.20mm': (missing) -> 1",
+        "CLI: support_top_interface_wall_count from 'X2_Layer: 0.20mm': (missing) -> 1",
+        "CLI: tpms_adaptive from 'X2_Layer: 0.20mm': (missing) -> disabled",
+        "CLI: tpms_adaptive_gradient from 'X2_Layer: 0.20mm': (missing) -> linear",
+        "CLI: tpms_interior_density from 'X2_Layer: 0.20mm': (missing) -> 5%",
+        "CLI: tree_support_branch_diameter_angle from 'X2_Layer: 0.20mm': 2 -> 3",
+        "CLI: tree_support_branch_diameter_organic from 'X2_Layer: 0.20mm': 2 -> 3"
+      ]
+    }
+  ]
+}

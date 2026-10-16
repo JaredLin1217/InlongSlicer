@@ -1,0 +1,90 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "x2-voronoi-medial-axis-repair-20261016",
+  "key": "windows-cli-native-slicing-warning-audit",
+  "type": "fact",
+  "conclusion": "The recorded X2 Voronoi and MedialAxis errors are caused by invalid diagrams around nanometre clipping edges and by reconstructed diagrams exposing stale local storage after a rotation repair. MedialAxis conditionally normalizes only diagnosed invalid input containing sub-tolerance edges, within min(SCALED_EPSILON, 1% of minimum printable width), and validates the replacement before use. Every Voronoi construction overload clears prior repaired storage. Two regression cases fail before repair and pass afterward. Six fixed native slices of X2, Benchy and Vulcan600 have zero geometry warnings/errors and five existing CLI initialization/metadata compatibility warnings each. Benchy and Vulcan600 retain identical complete commands, motion annotations and configuration. X2 actual changes occur only in support-interface commands on 11 layers, plus width annotation changes on three additional layers; model extrusion paths, other features, layer Z values and configuration remain unchanged. Windows exit 0 still does not establish warning-free geometry; inspect native logs.",
+  "scope": "Version-bound X2 nanometre contact geometry and reusable Voronoi rebuild contract",
+  "modules": [
+    "Geometry",
+    "Support",
+    "CLI"
+  ],
+  "tags": [
+    "voronoi",
+    "medial-axis",
+    "regression",
+    "windows",
+    "native-slicing",
+    "warnings"
+  ],
+  "files": [
+    "src/libslic3r/Geometry/MedialAxis.cpp",
+    "src/libslic3r/Geometry/Voronoi.cpp",
+    "src/libslic3r/Geometry/Voronoi.hpp",
+    "tests/libslic3r/test_voronoi.cpp",
+    "docs/evidence/x2-voronoi-repair-20261016.md",
+    "docs/evidence/x2-voronoi-repair-verification-20261016.json"
+  ],
+  "sources": [
+    {
+      "sha256": "80de3617e2008435ca0c7ba1917a49c8a0cf535a5d030e8145555d0ff1522538",
+      "kind": "file_snapshot",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Validated conditional input normalization, repaired-state reset, before/after native tests or six-slice exact path/configuration audit",
+      "path": "src/libslic3r/Geometry/MedialAxis.cpp"
+    },
+    {
+      "sha256": "a948b527c45e033afc21ab2426df71fb633f128398323a224ebd5ac1309a6ef9",
+      "kind": "file_snapshot",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Validated conditional input normalization, repaired-state reset, before/after native tests or six-slice exact path/configuration audit",
+      "path": "src/libslic3r/Geometry/Voronoi.cpp"
+    },
+    {
+      "sha256": "684e891875394cbbfd4b35a9016725a7b879164be77a1dfe1e5cf758ad97bddd",
+      "kind": "file_snapshot",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Validated conditional input normalization, repaired-state reset, before/after native tests or six-slice exact path/configuration audit",
+      "path": "src/libslic3r/Geometry/Voronoi.hpp"
+    },
+    {
+      "sha256": "1ad0ad88579389cd9fb33bf3a52bceaf89b11c983d16dae30fbe67b0fbc45738",
+      "kind": "file_snapshot",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Validated conditional input normalization, repaired-state reset, before/after native tests or six-slice exact path/configuration audit",
+      "path": "tests/libslic3r/test_voronoi.cpp"
+    },
+    {
+      "sha256": "385da9e5d53147c4ec74b3328788b8986ecc15044d470472ac3fa35a53dd418e",
+      "kind": "file_snapshot",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Validated conditional input normalization, repaired-state reset, before/after native tests or six-slice exact path/configuration audit",
+      "path": "docs/evidence/x2-voronoi-repair-20261016.md"
+    },
+    {
+      "sha256": "2f0e076ea027c3524ddbab3a8ccf5d49fd8584e641839a8f2eeacc88f7ecbf7f",
+      "kind": "file_snapshot",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Validated conditional input normalization, repaired-state reset, before/after native tests or six-slice exact path/configuration audit",
+      "path": "docs/evidence/x2-voronoi-repair-verification-20261016.json"
+    }
+  ],
+  "verified_utc": "2026-10-16T15:36:18.9286902+00:00",
+  "verification": {
+    "reviewed_by": "Codex root agent",
+    "summary": "Two regression cases fail with six assertions before repair. Final native geometry run exits 0 with 44 passed cases and one existing hidden upstream NaN case failing as expected; support suite passes 84 cases and 18107 assertions. All six native slices have zero geometry diagnostics and five unchanged CLI warnings. Benchy/Vulcan commands match exactly; X2 differences are restricted to Support interface, with model paths and every emitted configuration identical. Temporary diagnostics were removed and existing installed DLL hashes remain unchanged. Checkout anchors do not assert that changed source is committed.",
+    "method": "Captured 42 invalid inputs, native before/after regressions, geometry and support suites, six fresh native slices and layer-aligned command comparison",
+    "result": "passed"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "three-project-native-warning-audit-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

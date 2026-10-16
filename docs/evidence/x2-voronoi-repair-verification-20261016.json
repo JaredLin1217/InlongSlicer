@@ -1,0 +1,351 @@
+{
+  "captured_utc": "2026-10-16T15:35:47.698406+00:00",
+  "checkout_anchor": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+  "sources": [
+    {
+      "path": "src/libslic3r/Geometry/MedialAxis.cpp",
+      "sha256": "80de3617e2008435ca0c7ba1917a49c8a0cf535a5d030e8145555d0ff1522538"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.cpp",
+      "sha256": "a948b527c45e033afc21ab2426df71fb633f128398323a224ebd5ac1309a6ef9"
+    },
+    {
+      "path": "src/libslic3r/Geometry/Voronoi.hpp",
+      "sha256": "684e891875394cbbfd4b35a9016725a7b879164be77a1dfe1e5cf758ad97bddd"
+    },
+    {
+      "path": "tests/libslic3r/test_voronoi.cpp",
+      "sha256": "1ad0ad88579389cd9fb33bf3a52bceaf89b11c983d16dae30fbe67b0fbc45738"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f"
+    }
+  ],
+  "candidate_dll_sha256": "4e9835048b06aaa1610486459dd212227d0ddcf82b73ae29f3e957fdd174c533",
+  "agent_count": 1,
+  "fixed_native_slices": 6,
+  "geometry_warning_free": true,
+  "all_logs_warning_free": false,
+  "source_changes_committed": false,
+  "repair": [
+    "Validate input containing nanometre edges; condition only diagnosed invalid diagrams within geometric and printable-width bounds, and validate replacements before use.",
+    "Clear local rotation-repair storage before rebuilding each Voronoi input overload."
+  ],
+  "before": {
+    "x2_voronoi_warnings": 47,
+    "x2_geometry_errors": 7,
+    "captured_initial_invalid_contours": 42,
+    "new_regression_cases_failed": 2,
+    "failed_assertions": 6
+  },
+  "tests": {
+    "geometry": {
+      "executable_sha256": "4ccb4db9bd6290bba1a25c1e7f19d6c5882acb5913696861cc59142ceffa351b",
+      "seconds": 0.0764745,
+      "filter": "[Voronoi],[VoronoiOffset],[Geometry],[Arachne]",
+      "native_exit_code": 0,
+      "passed_cases": 44,
+      "existing_expected_failure_cases": 1,
+      "expected_failure": "Existing hidden Voronoi NaN coordinates 12139 test, marked [!mayfail] upstream"
+    },
+    "support": {
+      "seconds": 146.6496861,
+      "native_exit_code": 0,
+      "executable_sha256": "8b2706b7201fae595b16726d6f0cf02cfbb35c6e32520e3f6de3fe92c274118b",
+      "filter": "[SupportMaterial],[TreeSupport],[Support],A support-only change on a belt purge print matches a fresh slice",
+      "cases": 84,
+      "assertions": 18107
+    }
+  },
+  "installed_dlls_unchanged": {
+    "build/src/Release/InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b",
+    "build/InlongSlicer/InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b",
+    "build/InlongSlicer_InlongOnly/InlongSlicer.dll": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+  },
+  "projects": [
+    {
+      "name": "x2",
+      "input_sha256": "ea552203efa070cd53aa4f29dd8572ef5a7a97a8978a857154e41baba3c4dff9",
+      "seconds": 66.0511872000061,
+      "exit_code": 0,
+      "warnings": 5,
+      "errors": 0,
+      "geometry_warnings": 0,
+      "geometry_errors": 0,
+      "events": [
+        {
+          "severity": "warning",
+          "category": "cli_startup_banner",
+          "count": 1,
+          "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\app-fixed\\resources/profiles/BBL/machine_full/Infinity3DP X2 0.4mm nozzle.json"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\app-fixed\\resources/profiles/BBL/process_full/X2_Layer: 0.20mm.json"
+        },
+        {
+          "severity": "warning",
+          "category": "missing_project_filament_colors",
+          "count": 1,
+          "message": "no filament colors found in projects"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_nozzle_metadata_fallback",
+          "count": 1,
+          "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+        }
+      ],
+      "command_count": 1348868,
+      "same_baseline_commands": false,
+      "same_baseline_motion_annotations": false,
+      "same_baseline_configuration": true,
+      "same_repeat": true,
+      "gcode": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\x2-fixed\\plate_1.gcode",
+        "bytes": 40363175,
+        "sha256": "5e396845b0075af3413cd70420cd967686ec306d31121dc8518c7127d5f32224"
+      },
+      "full_log": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\validation\\x2-fixed-native.log",
+      "warning_error_log": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\validation\\x2-warnings-native.log"
+    },
+    {
+      "name": "benchy",
+      "input_sha256": "c65b1fcafd39c2c64ed9b906459d4c6ef2b0821b6b938e91fdfb7943bc181ea6",
+      "seconds": 16.706782399996882,
+      "exit_code": 0,
+      "warnings": 5,
+      "errors": 0,
+      "geometry_warnings": 0,
+      "geometry_errors": 0,
+      "events": [
+        {
+          "severity": "warning",
+          "category": "cli_startup_banner",
+          "count": 1,
+          "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\app-fixed\\resources/profiles/BBL/machine_full/Infinity3DP X600HD 0.6mm nozzle.json"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\app-fixed\\resources/profiles/BBL/process_full/X600HD_Layer: 0.30mm.json"
+        },
+        {
+          "severity": "warning",
+          "category": "missing_project_filament_colors",
+          "count": 1,
+          "message": "no filament colors found in projects"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_nozzle_metadata_fallback",
+          "count": 1,
+          "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+        }
+      ],
+      "command_count": 811657,
+      "same_baseline_commands": true,
+      "same_baseline_motion_annotations": true,
+      "same_baseline_configuration": true,
+      "same_repeat": true,
+      "gcode": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\benchy-fixed\\plate_1.gcode",
+        "bytes": 26276597,
+        "sha256": "6952dbaf1daf6dde2ca00f8692a2ff0c46dab3fdea0e39fd5320aade1ed717c8"
+      },
+      "full_log": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\validation\\benchy-fixed-native.log",
+      "warning_error_log": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\validation\\benchy-warnings-native.log"
+    },
+    {
+      "name": "vulcan600",
+      "input_sha256": "3152e607f007309fbe5d0e840b35ee45ff712a3a0e074d55225c23861d0a9644",
+      "seconds": 30.070763499999885,
+      "exit_code": 0,
+      "warnings": 5,
+      "errors": 0,
+      "geometry_warnings": 0,
+      "geometry_errors": 0,
+      "events": [
+        {
+          "severity": "warning",
+          "category": "cli_startup_banner",
+          "count": 1,
+          "message": "cli mode, Current Inlong Slicer Version 2.5.0-dev"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\app-fixed\\resources/profiles/BBL/machine_full/Vulcan600 0.6mm nozzle.json"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_bbl_compatibility_lookup",
+          "count": 1,
+          "message": "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\app-fixed\\resources/profiles/BBL/process_full/Layer: 0.25mm.json"
+        },
+        {
+          "severity": "warning",
+          "category": "missing_project_filament_colors",
+          "count": 1,
+          "message": "no filament colors found in projects"
+        },
+        {
+          "severity": "warning",
+          "category": "legacy_nozzle_metadata_fallback",
+          "count": 1,
+          "message": "Slic3r::MultiNozzleUtils::load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types"
+        }
+      ],
+      "command_count": 1211052,
+      "same_baseline_commands": true,
+      "same_baseline_motion_annotations": true,
+      "same_baseline_configuration": true,
+      "same_repeat": true,
+      "gcode": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\work\\vulcan600-fixed\\plate_1.gcode",
+        "bytes": 40695996,
+        "sha256": "3a9a99165e7bbeb942d305be2c42f33d684ccaa95ad53c4ecddad2383d1c1f34"
+      },
+      "full_log": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\validation\\vulcan600-fixed-native.log",
+      "warning_error_log": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-cb5f41021b254606a10d628c6f3f75c4\\validation\\vulcan600-warnings-native.log"
+    }
+  ],
+  "x2_path_change_summary": {
+    "method": "Align annotated commands within matching layers, avoiding shifted line indices.",
+    "command_count": 1348868,
+    "changed_layer_count": 14,
+    "changed_layers": [
+      [
+        149,
+        15.5
+      ],
+      [
+        283,
+        28.9
+      ],
+      [
+        287,
+        29.3
+      ],
+      [
+        289,
+        29.5
+      ],
+      [
+        999,
+        112.1
+      ],
+      [
+        1721,
+        191.7
+      ],
+      [
+        1805,
+        200.1
+      ],
+      [
+        1925,
+        212.1
+      ],
+      [
+        1983,
+        217.9
+      ],
+      [
+        1985,
+        218.1
+      ],
+      [
+        2059,
+        225.5
+      ],
+      [
+        2093,
+        228.9
+      ],
+      [
+        2095,
+        229.1
+      ],
+      [
+        2107,
+        230.3
+      ]
+    ],
+    "changed_role_records_before_and_after": {
+      "Support interface": 636
+    },
+    "model_extrusions_identical": true,
+    "changed_model_layers": [],
+    "changed_command_layers": [
+      {
+        "layer": 283,
+        "z": 28.9
+      },
+      {
+        "layer": 287,
+        "z": 29.3
+      },
+      {
+        "layer": 289,
+        "z": 29.5
+      },
+      {
+        "layer": 999,
+        "z": 112.1
+      },
+      {
+        "layer": 1721,
+        "z": 191.7
+      },
+      {
+        "layer": 1805,
+        "z": 200.1
+      },
+      {
+        "layer": 1925,
+        "z": 212.1
+      },
+      {
+        "layer": 1983,
+        "z": 217.9
+      },
+      {
+        "layer": 1985,
+        "z": 218.1
+      },
+      {
+        "layer": 2059,
+        "z": 225.5
+      },
+      {
+        "layer": 2095,
+        "z": 229.1
+      }
+    ]
+  },
+  "limitations": [
+    "Five existing initialization/metadata/compatibility warnings remain per native run.",
+    "Validation slices overlap the native support test run; timings are not controlled performance measurements.",
+    "Normal CLI preset refresh/missing-key migration is retained; no manual model, quality or material override was supplied.",
+    "No build install, install_only_inlong, commit or push was requested or performed."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-slicing-profile-benchy-20261016",
+  "key": "organic-support-benchy-contact-sampling-performance",
+  "type": "fact",
+  "conclusion": "For the recorded large Benchy on the measured 16-core Windows host, the latest support-corrected baseline takes 43.542s median over three trials; a local contact-collision reuse candidate takes 42.654s with strongly overlapping ranges, so the experiment does not establish a stable substantial total speedup or halving. Sampled CPU medians fall from 300.641 to 292.516s and initial sampling medians from 7.092 to 5.008s. All 811657 ordered printer commands, motion role/width/height annotations and emitted configuration remain identical. Initial sampling mostly spends its worker elapsed time in roof and regular component geometry/line generation. Keep reuse local to a fixed batch/layer; changing a value-returning contact arm into a separate branch also prevents copies of ordinary reference-returning avoidance polygons. Further speed work needs complete-key geometry/fill reuse and profiling of support assembly, toolpaths and non-support stages, without changing deterministic publication or contact rules.",
+  "scope": "Version-bound Benchy slicing benchmark and organic contact-sampling reuse",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "performance",
+    "profiling",
+    "path-equivalence",
+    "bounded-working-storage"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "docs/evidence/benchy-slicing-performance-20261016.md"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Local contact reuse or version-bound repeated benchmark and exact-command checks"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "commit": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+      "locator": "Local contact reuse or version-bound repeated benchmark and exact-command checks"
+    }
+  ],
+  "verified_utc": "2026-10-16T14:20:40.391416+00:00",
+  "verification": {
+    "method": "Source review, full ordered command and annotated-motion equality, repeated native slicing and affected native regressions",
+    "summary": "Preserved the committed support roof, belt grid, deterministic publication and inclined-landing behavior while reusing one local collision polygon per batch/layer and avoiding ordinary polygon copies. All three candidate slices match the latest baseline in all 811657 commands, motion annotations and emitted configuration; no failed branch warnings. The unchanged affected native tests passed 84 cases and 18107 assertions. Three-trial medians of 43.542s and 42.654s have overlapping ranges; this is not proof of a stable large total speedup or halving. Durable evidence is in docs/evidence/benchy-slicing-performance-20261016.md. File hashes bind reviewed bytes; commit fields are checkout anchors, not claims of committed changed source.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

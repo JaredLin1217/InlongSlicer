@@ -736,14 +736,17 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
 {
     const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
     const coord_t collision_radius = config.getRadius(0);
+    // Radius, layer and local clearances are identical for every sampled point.
+    // Retain only this batch's polygon instead of rebuilding it for each point.
+    const Polygons contact_collision = config.support_rests_on_model && !polylines.empty() ?
+        volumes.getCollisionForContact(collision_radius, layer_idx,
+            config.support_tip_xy_distance, config.support_tip_z_distance) : Polygons{};
 
     LineInformations result;
     for (const Polyline &line : polylines) {
         LineInformation res_line;
         for (Point p : line) {
-            if (config.support_rests_on_model && ! contains(
-                    volumes.getCollisionForContact(collision_radius, layer_idx,
-                        config.support_tip_xy_distance, config.support_tip_z_distance), p))
+            if (config.support_rests_on_model && ! contains(contact_collision, p))
                 res_line.emplace_back(p, LineStatus::CONTACT_TO_MODEL);
             else if (!config.support_rests_on_model && ! contains(
                     volumes.getAvoidance(collision_radius, layer_idx,
@@ -794,21 +797,28 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
  */
 [[nodiscard]] static bool evaluate_point_for_next_layer_function(
     const TreeModelVolumes &volumes, const TreeSupportSettings &config,
-    size_t current_layer, const std::pair<Point, LineStatus> &p)
+    size_t current_layer, const std::pair<Point, LineStatus> &p,
+    std::optional<Polygons> &contact_collision)
 {
     using AvoidanceType = TreeModelVolumes::AvoidanceType;
     const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
     if (! contains(volumes.getAvoidance(config.getRadius(0), current_layer - 1, p.second == LineStatus::TO_BP_SAFE ? AvoidanceType::FastSafe : AvoidanceType::Fast, false, min_xy_dist), p.first))
         return true;
-    if (config.support_rests_on_model && (p.second != LineStatus::TO_BP && p.second != LineStatus::TO_BP_SAFE))
-        return ! contains(
-            p.second == LineStatus::CONTACT_TO_MODEL ?
-                volumes.getCollisionForContact(config.getRadius(0), current_layer - 1,
-                    config.support_tip_xy_distance, config.support_tip_z_distance) :
+    if (config.support_rests_on_model && (p.second != LineStatus::TO_BP && p.second != LineStatus::TO_BP_SAFE)) {
+        if (p.second == LineStatus::CONTACT_TO_MODEL) {
+            if (!contact_collision)
+                contact_collision = volumes.getCollisionForContact(config.getRadius(0), current_layer - 1,
+                    config.support_tip_xy_distance, config.support_tip_z_distance);
+            return ! contains(*contact_collision, p.first);
+        }
+        // Both alternatives return references. Keep the contact value branch
+        // separate so the conditional does not copy the ordinary polygons.
+        const Polygons &forbidden =
             p.second == LineStatus::TO_MODEL_GRACIOUS || p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE ?
                 volumes.getAvoidance(config.getRadius(0), current_layer - 1, p.second == LineStatus::TO_MODEL_GRACIOUS_SAFE ? AvoidanceType::FastSafe : AvoidanceType::Fast, true, min_xy_dist) :
-                volumes.getCollision(config.getRadius(0), current_layer - 1, min_xy_dist),
-            p.first);
+                volumes.getCollision(config.getRadius(0), current_layer - 1, min_xy_dist);
+        return ! contains(forbidden, p.first);
+    }
     return false;
 }
 
@@ -1434,10 +1444,11 @@ public:
             };
 
             {
+                std::optional<Polygons> contact_collision;
                 std::pair<LineInformations, LineInformations> split =
                     // keep all lines that are still valid on the next layer
-                    split_lines(lines, [this, this_layer_idx](const std::pair<Point, LineStatus> &p)
-                        { return evaluate_point_for_next_layer_function(volumes, config, this_layer_idx, p); });
+                    split_lines(lines, [this, this_layer_idx, &contact_collision](const std::pair<Point, LineStatus> &p)
+                        { return evaluate_point_for_next_layer_function(volumes, config, this_layer_idx, p, contact_collision); });
                 LineInformations points = std::move(split.second);
                 // Not all roofs are guaranteed to actually generate lines, so filter these out and add them as points.
                 split = split_lines(split.first, evaluateRoofWillGenerate);
@@ -1739,12 +1750,13 @@ void sample_overhang_area(
                 // Next layer down the roof area would be to small so we have to insert our roof support here.
                 if (dtt_roof > 0) {
                     size_t dtt_before = dtt_roof - 1;
+                    std::optional<Polygons> contact_collision;
                     // Produce support head points supporting an interface layer: First produce the interface lines, then sample them.
                     overhang_lines = split_lines(
                         convert_lines_to_internal(interface_placer.volumes, interface_placer.config,
                             ensure_maximum_distance_polyline(generate_roof_lines(last_overhang, layer_idx - dtt_before), connect_length, 1), layer_idx - dtt_before),
-                        [&interface_placer, layer_idx, dtt_before](const std::pair<Point, LineStatus> &p)
-                            { return evaluate_point_for_next_layer_function(interface_placer.volumes, interface_placer.config, layer_idx - dtt_before, p); })
+                        [&interface_placer, layer_idx, dtt_before, &contact_collision](const std::pair<Point, LineStatus> &p)
+                            { return evaluate_point_for_next_layer_function(interface_placer.volumes, interface_placer.config, layer_idx - dtt_before, p, contact_collision); })
                         .first;
                 }
                 break;

@@ -22,6 +22,13 @@
 #include <numeric>
 #include <random>
 #include <vector>
+#include <sstream>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/utility/setup/console.hpp>
+#include "libslic3r/Geometry/MedialAxis.hpp"
+#include "libslic3r/Utils.hpp"
 
 // #define VORONOI_DEBUG_OUT
 
@@ -33,6 +40,83 @@ using namespace Slic3r;
 
 using VD = Geometry::VoronoiDiagram;
 using BoostVD = boost::polygon::voronoi_diagram<double>;
+
+TEST_CASE("Medial axes preserve printable contact paths across nanometre clipping edges", "[Voronoi][Regression]")
+{
+    // Captured from organic contact strips after integer polygon clipping.
+    // Both include a one-unit edge; the second defeats all rotation repairs.
+    const Polygon polygon = GENERATE(
+        Polygon{{-82039812,20871979}, {-82039813,20871979}, {-82023444,20889239},
+                {-82057269,20923444}, {-82061482,20873821}, {-82081617,20875534}, {-82073230,20836750}},
+        Polygon{{85967498,27175027}, {85905188,27172149}, {85900160,27281014},
+                {85811076,27189292}, {85866910,27191869}, {85889054,27171404},
+                {85889053,27171404}, {85900328,27160984}, {85905944,27155795},
+                {85905943,27155795}, {85969836,27096755}});
+    std::ostringstream diagnostics;
+    auto sink = boost::log::add_console_log(diagnostics,
+        boost::log::keywords::filter = boost::log::trivial::severity >= boost::log::trivial::warning);
+    struct RestoreLogging {
+        unsigned previous = get_logging_level();
+        decltype(sink) captured_sink;
+        ~RestoreLogging() {
+            boost::log::core::get()->remove_sink(captured_sink);
+            set_logging_level(previous);
+        }
+    } restore{get_logging_level(), sink};
+    set_logging_level(3);
+    const ExPolygon region(polygon);
+    const double min_width = 21560., max_width = 203999.;
+    ThickPolylines paths;
+    Geometry::MedialAxis(min_width, max_width, region).build(&paths);
+    INFO(diagnostics.str());
+    REQUIRE(diagnostics.str().empty());
+    REQUIRE_FALSE(paths.empty());
+    for (const ThickPolyline &path : paths) {
+        REQUIRE(path.is_valid());
+        for (const Point &point : path.points)
+            CHECK(region.contains(point));
+        for (const double width : path.width) {
+            CHECK(std::isfinite(width));
+            CHECK(width > 0.);
+            CHECK(width <= max_width);
+        }
+    }
+}
+
+TEST_CASE("Rebuilding a repaired Voronoi diagram uses only the new input", "[Voronoi][Regression]")
+{
+    const int input_kind = GENERATE(0, 1, 2);
+    const Polygon original{{-82039812,20871979}, {-82039813,20871979}, {-82023444,20889239},
+        {-82057269,20923444}, {-82061482,20873821}, {-82081617,20875534}, {-82073230,20836750}};
+    Lines original_lines = original.lines();
+    VD rebuilt;
+    rebuilt.construct_voronoi(original_lines.begin(), original_lines.end());
+    REQUIRE(rebuilt.get_state() == VD::State::REPAIR_SUCCESSFUL);
+
+    const Polygon replacement{{0,0}, {1000000,0}, {2000000,1000000}, {2000000,2000000},
+        {1000000,3000000}, {0,3000000}, {-1000000,2000000}, {-1000000,1000000}};
+    Lines lines = replacement.lines();
+    Points sites{{3000000,3000000}, {4000000,1000000}, {5000000,4000000}};
+    VD fresh;
+    if (input_kind == 0) {
+        fresh.construct_voronoi(lines.begin(), lines.end());
+        rebuilt.construct_voronoi(lines.begin(), lines.end());
+    } else if (input_kind == 1) {
+        fresh.construct_voronoi(sites.begin(), sites.end());
+        rebuilt.construct_voronoi(sites.begin(), sites.end());
+    } else {
+        fresh.construct_voronoi(sites.begin(), sites.end(), lines.begin(), lines.end());
+        rebuilt.construct_voronoi(sites.begin(), sites.end(), lines.begin(), lines.end());
+    }
+    CHECK(rebuilt.get_state() == fresh.get_state());
+    REQUIRE(rebuilt.num_cells() == fresh.num_cells());
+    REQUIRE(rebuilt.num_vertices() == fresh.num_vertices());
+    REQUIRE(rebuilt.num_edges() == fresh.num_edges());
+    for (size_t i = 0; i < fresh.vertices().size(); ++i) {
+        CHECK_THAT(rebuilt.vertices()[i].x(), Catch::Matchers::WithinAbs(fresh.vertices()[i].x(), 1e-5));
+        CHECK_THAT(rebuilt.vertices()[i].y(), Catch::Matchers::WithinAbs(fresh.vertices()[i].y(), 1e-5));
+    }
+}
 
 // https://svn.boost.org/trac10/ticket/12067
 // This bug seems to be confirmed.

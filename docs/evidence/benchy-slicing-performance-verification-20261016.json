@@ -1,0 +1,198 @@
+{
+  "evidence_kind": "Uncommitted InlongSlicer product verification; not Agents Provider release evidence",
+  "captured_utc": "2026-10-16T14:22:47.706144+00:00",
+  "checkout_anchor": "a53b59db336d3e87f0cd55206bf49ffe3e81a9f0",
+  "tested_worktree_source_sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+  "source_changes_committed": false,
+  "input_hashes_unchanged": true,
+  "installed_dlls_unchanged": [
+    {
+      "path": "build/src/Release/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    },
+    {
+      "path": "build/InlongSlicer/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    },
+    {
+      "path": "build/InlongSlicer_InlongOnly/InlongSlicer.dll",
+      "sha256": "2aeb79098ca11b08ecc1af7ad342ecb9715f84a76383492e1b9603574589274b"
+    }
+  ],
+  "sources": [
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f"
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0"
+    },
+    {
+      "path": "src/libslic3r/Support/SupportCacheBudget.hpp",
+      "sha256": "1c3869d671138ec62cb5c15465a5d58157a19345ba24a8f8aede43f8b451a23a"
+    },
+    {
+      "path": "src/libslic3r/Support/SupportCacheBudget.cpp",
+      "sha256": "4acdc6c2db24a9f6059a2ffbc1ce32575de12a5daadbd4913e1bb657a0337162"
+    },
+    {
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "ab016b837d1ce0c178e2f5a8092403c483f2553a5dd071566a59bfdfacd5c8e6"
+    },
+    {
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e"
+    },
+    {
+      "path": "docs/memory/entries/organic-support-grid-stability-benchy-performance-20261016.json",
+      "sha256": "29b57bc63aeade96e410e23716be7d5263dafa5bdccc7f0ccd0a2fb76ce06b97"
+    },
+    {
+      "path": "docs/memory/entries/organic-contact-tip-landing-benchy-performance-20261016.json",
+      "sha256": "287b879b4d09ce37e21a3d6407e30a4c744d1ab5ace8aa91834f06a6492cdbd0"
+    },
+    {
+      "path": "docs/memory/entries/organic-support-slicing-profile-benchy-20261016.json",
+      "sha256": "bf9dfc97d7ad2cada9fe72401bb478ffaacbf61b700dd1f7a21a96823eaab2d7"
+    }
+  ],
+  "native": {
+    "exit_code": 0,
+    "cases": 84,
+    "assertions": 18107,
+    "test_executable_sha256": "613ffd4399ebc71f165570235fd69025a367c04cd6fa0cecbc132ba4738126d3",
+    "candidate_dll_sha256": "858ff538cc66521c133148473cd3b4f265fa1d83df833bf33d99e3783a95f779",
+    "temporary_instrumentation_removed": true,
+    "preserved_pre_instrumentation_test_executable": true
+  },
+  "path_equivalence": {
+    "baseline": "Latest support-corrected Release explicitly selected by the user",
+    "commands": 811657,
+    "candidate_trials": 3,
+    "same_ordered_commands": true,
+    "same_role_width_height_annotations": true,
+    "same_configuration": true,
+    "failed_branch_warnings": 0
+  },
+  "performance": {
+    "baseline_median_seconds": 43.54217410000274,
+    "candidate_median_seconds": 42.65402729998459,
+    "observed_median_time_reduction_fraction": 0.020397392146252354,
+    "stable_substantial_total_speedup_established": false,
+    "halving_established": false
+  },
+  "consumer_validation": [
+    {
+      "path": ".agents/runtime/runs/run-153cdec8b214439c846780c38cf70dea/validation/report.json",
+      "sha256": "545a0e7a0695bd0c31f71e021566ebfa277a586632a9e5c9d118a7fe398561e5",
+      "input_digest": "fbf7f2373131c684ead94cd9bc108b56a09846ebd058eb8fd9588189ab38fae6",
+      "result": "passed",
+      "profile": "Changed",
+      "release_ready": false,
+      "checks": [
+        {
+          "id": "syntax",
+          "result": "passed"
+        },
+        {
+          "id": "json-schema",
+          "result": "passed"
+        },
+        {
+          "id": "diff",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": ".agents/runtime/runs/run-5f4c84def1734860bee1ce9ba6654a96/validation/report.json",
+      "sha256": "71549660ee28c8264093d2bfaf19f4a66fe37d969454616f7a4d70fccb639e7f",
+      "input_digest": "febf8dac8165f549b9cba706eccf61168f3c2fe22ea0b49cf63ce2700d3988e8",
+      "result": "passed",
+      "profile": "Checkpoint",
+      "release_ready": false,
+      "checks": [
+        {
+          "id": "syntax",
+          "result": "passed"
+        },
+        {
+          "id": "json-schema",
+          "result": "passed"
+        },
+        {
+          "id": "ownership",
+          "result": "passed"
+        },
+        {
+          "id": "knowledge",
+          "result": "passed"
+        },
+        {
+          "id": "sources",
+          "result": "passed"
+        },
+        {
+          "id": "diff",
+          "result": "passed"
+        }
+      ]
+    }
+  ],
+  "runtime_receipts": [
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/performance-summary.json",
+      "sha256": "7b463411cb0356179e99705b8b0e2945a22c0a8c73f40c333f3f6880a890a4bf"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/candidate-regressions-result.json",
+      "sha256": "7d7e0bd263c74564bca04b4abc095ee679f3c1b2d2717729364b3ed392b06ea9"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/candidate-regressions.log",
+      "sha256": "6a1070dfeee8cc75a83d60a8e5d437870ddab6157e91bcb6a04534a1a5d2d052"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/candidate-core-build-result.json",
+      "sha256": "f6b86d186ab0439d366917478b8162d1b05d70c69a9acd24f62937c5db132fdb"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/candidate-app-build-result.json",
+      "sha256": "8cf41a253393a460decb242e54216542a548bbc160533807f79a107b04869894"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/optimized-1-comparison.json",
+      "sha256": "a972d9b5d89ac6af9080b985ee4c184bc19cfe5fdbb7a85f5a8e11bbd510eaa0"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/optimized-2-comparison.json",
+      "sha256": "47d2b87bfb3819a4322e0ac0ca7a9f7a47f3b764f3600761ee2181c5f9a66acc"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/optimized-3-comparison.json",
+      "sha256": "bc9239811cbda22947cb3f01bdf27f4c376dd8ee277c1ede33bef9d4ab6a62bd"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/sampling-profile-result.json",
+      "sha256": "afb64302d765bd257b198c2c51fd6684eeca15acfa0926fbcab4901646301a83"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/sampling-profile-comparison.json",
+      "sha256": "b033519495344b63a3047aabd2e581e8eca9915d3a333d6fe4a6191b2591fa42"
+    },
+    {
+      "path": ".agents/runtime/runs/run-1b286a6590ca4fdaa79af9844420f09c/validation/profile-build-result.json",
+      "sha256": "bfe1f7419c26cafdf0b83b56aaf5c74d8ba29082cdea38079dad4f707a815756"
+    }
+  ],
+  "limits": [
+    "Three exploratory trials per variant; host activity and power/frequency state were not controlled.",
+    "GUI preview rendering and installed-application replacement were outside this task.",
+    "No twofold speedup, Provider release readiness, or 2 GiB working-set fit is claimed."
+  ],
+  "worker_usage": {
+    "root_agents": 1,
+    "subagents": 0
+  }
+}
