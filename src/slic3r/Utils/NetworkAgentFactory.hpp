@@ -18,6 +18,7 @@
 namespace Slic3r {
 static constexpr char INLONG_PRINTER_AGENT_ID[] = "inlong";
 static constexpr char BBL_PRINTER_AGENT_ID[] = "bbl";
+static constexpr char MOONRAKER_PRINTER_AGENT_ID[] = "moonraker";
 
 inline std::string canonical_printer_agent_id(const std::string& id)
 {

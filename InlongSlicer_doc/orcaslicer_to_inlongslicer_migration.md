@@ -435,6 +435,31 @@ files to make compatibility checks pass.
 
 ## Common Pitfalls
 
+### Profile Tool Compatibility During Upstream Sync
+
+The 2.5 development profile tool is available as
+`scripts/inlong_profile_tool.py`. Project check wrappers select
+`check --fork-compatible`: INLONG, _Infinity3DP, InlongArena and
+InlongFilamentLibrary retain their curated file/index order and legacy scalar
+spellings. Legacy presets without an explicit variant list retain their
+per-extruder vector layout. Explicit variant layouts, preset references, index
+coverage and deterministic identities are still checked. Run the native
+`InlongSlicer_profile_validator` as well to validate effective configurations.
+
+The strict authoring mode remains available without that flag. Do not apply
+`normalize`, `fix-variants` or `update-index` across curated bundles merely to
+satisfy upstream formatting expectations: those commands can remove fields or
+collapse values that the fork still uses. Preview transformations in disposable
+copies and review semantic differences first.
+
+When adding upstream filament-library entries, compare the incoming manifest
+with the previous upstream merge base. Add its actual new entries to the fork
+manifest; do not replace the curated fork index with the entire upstream index.
+Keep original Orca library names when composing historical reference trees for
+`legacy-compat`; they are saved inheritance identities, not current product names.
+
+### Other Pitfalls
+
 - Windows search includes `.git`, `build`, and `deps/build`; these can show old
   Orca names even when source files are clean.
 - `git status` may show old rename source names. Use `git add -A` before final

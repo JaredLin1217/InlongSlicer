@@ -1,0 +1,9 @@
+{
+	"type": "filament",
+	"name": "Goofoo PVA @System",
+	"inherits": "Goofoo PVA @base",
+	"from": "system",
+	"setting_id": "YMa60M65hfAVeriA",
+	"instantiation": "true",
+	"compatible_printers": []
+}

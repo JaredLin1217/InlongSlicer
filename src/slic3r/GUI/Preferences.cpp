@@ -117,7 +117,7 @@ public:
         , m_label(label)
         , m_url(url)
     {
-#ifndef __WXOSX__ 
+#ifndef __WXOSX__
         SetDoubleBuffered(true);// SetDoubleBuffered exists on Win and Linux/GTK, but is missing on OSX
 #endif
         SetBackgroundColour(parent->GetBackgroundColour());
@@ -158,7 +158,7 @@ public:
     void ReflowText()
     {
         const int clientW = GetClientSize().GetWidth();
- 
+
         if (clientW <= 0 || (clientW == m_last_wrap_width && !m_lines.IsEmpty()))
             return;
 
@@ -189,33 +189,33 @@ public:
             }
         }
         m_lines = lines;
- 
+
         const int lineH  = wxMax(1, wxWindow::GetCharHeight()); // GTK can return 0 from GetCharHeight() before the window is realized
         const int nLines = m_lines.IsEmpty() ? 1 : static_cast<int>(m_lines.size());
         const int totalH = static_cast<int>(nLines * lineH * 1.3);
- 
+
         SetMinSize(wxSize(-1, totalH));
         InvalidateBestSize();
     }
- 
+
     wxSize DoGetBestSize() const override
     {
         const int lineH  = wxMax(1, wxWindow::GetCharHeight()); // GTK can return 0 from GetCharHeight() before the window is realized
         const int nLines = m_lines.IsEmpty() ? 1 : static_cast<int>(m_lines.size());
         const int totalH = static_cast<int>(nLines * lineH * 1.3);
- 
+
         const int clientW = GetClientSize().GetWidth();
- 
+
         if (clientW > 0)
             return wxSize(clientW, totalH);
- 
+
         if (m_label.IsEmpty())
             return wxSize(1, lineH);
- 
+
         int maxW = 0;
         for (const wxString& line : wxSplit(m_label, '\n'))
             maxW = wxMax(maxW, GetTextExtent(line).GetWidth());
- 
+
         return wxSize(wxMax(1, maxW), totalH);
     }
 
@@ -225,24 +225,24 @@ public:
         m_lines.Clear();
         InvalidateBestSize();
     }
- 
+
 private:
     void OnPaint(wxPaintEvent& evt)
     {
         wxPaintDC dc(this);
- 
+
         dc.SetBackground(wxBrush(GetParent() ? GetParent()->GetBackgroundColour() : *wxWHITE));
         dc.Clear();
- 
+
         wxColour textCol = StateColor::darkModeColorFor(m_hovered ? "#E18263" : "#363636");
- 
+
         dc.SetTextForeground(textCol);
         dc.SetFont(m_font);
         dc.SetBackgroundMode(wxTRANSPARENT);
- 
+
         int lineH = dc.GetCharHeight();
         int y     = lround(lineH * 0.15);
- 
+
         for (const wxString& line : m_lines) {
             if (!line.IsEmpty()) {
                 dc.DrawText(line, 0, y);
@@ -250,7 +250,7 @@ private:
                 if (m_hovered) {
                     int tw, th;
                     dc.GetTextExtent(line, &tw, &th);
- 
+
                     int underlineY = y + lineH - 1; // 1 px below the baseline
                     dc.SetPen(wxPen(textCol, 1));
                     dc.DrawLine(0, underlineY, tw, underlineY);
@@ -259,7 +259,7 @@ private:
             y += lineH;
         }
     }
- 
+
     void OnSize(wxSizeEvent& evt)
     {
         ReflowText();
@@ -275,7 +275,7 @@ private:
         }
         evt.Skip();
     }
- 
+
     void OnLeaveWin(wxMouseEvent& evt)
     {
         if(!m_url.IsEmpty() && m_hovered){
@@ -284,13 +284,13 @@ private:
         }
         evt.Skip();
     }
- 
+
     void OnLeftDown(wxMouseEvent& evt)
     {
         if (!m_url.IsEmpty())
             wxLaunchDefaultBrowser(m_url);
         evt.Skip();
-    } 
+    }
 };
 
 wxBoxSizer *PreferencesDialog::create_item_title(wxString title)
@@ -587,7 +587,7 @@ wxBoxSizer *PreferencesDialog::create_item_language_combobox(wxString title, wxS
 wxBoxSizer *PreferencesDialog::create_item_region_combobox(wxString title, wxString tooltip)
 {
 
-    std::vector<wxString> Regions         = {_L("Asia-Pacific"), _L("China"), _L("Europe"), _L("North America"), _L("Others")};
+    std::vector<wxString> Regions         = {_L("Asia-Pacific"), _L("China"), _L("Europe"), _L("North America"), _L_CONTEXT("Others", "Region")};
     std::vector<wxString> local_regions = {"Asia-Pacific", "China", "Europe", "North America", "Others"};
 
     auto vlist = Regions;
@@ -645,7 +645,7 @@ wxBoxSizer *PreferencesDialog::create_item_region_combobox(wxString title, wxStr
                 combobox->SetSelection(current_region);
                 return;
             } else {
-                wxGetApp().request_user_logout();
+                wxGetApp().request_user_logout(INLONG_CLOUD_PROVIDER, /*user_initiated=*/true);
                 config->set("region", region.ToStdString());
                 auto area = config->get_country_code();
                 if (agent) {
@@ -1028,7 +1028,7 @@ wxBoxSizer* PreferencesDialog::create_item_darkmode(wxString title,wxString tool
         e.Skip();
         });
 
-    
+
     return m_sizer;
 }
 
@@ -1435,8 +1435,10 @@ wxBoxSizer *PreferencesDialog::create_item_network_plugin_version(wxString title
 #ifdef WIN32
 wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix, wxString website_name)
 {
-    wxString title = _L("Associate") + (boost::format(" %1%://") % url_prefix.c_str()).str();
-    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with InlongSlicer so that Inlong can open models from") + " " + website_name;
+    // TRN %s is a URL scheme, for example "prusaslicer".
+    wxString title = wxString::Format(_L("Associate %s://"), url_prefix);
+    // TRN The first %s is a URL scheme, for example "prusaslicer"; the second is a website name.
+    wxString tooltip = wxString::Format(_L("Associate %s:// with InlongSlicer so that Inlong can open models from %s"), url_prefix, website_name);
 
     std::wstring registered_bin; // not used, just here to provide a ref to check fn
     bool reg_to_current_instance = wxGetApp().check_url_association(url_prefix.ToStdWstring(), registered_bin);
@@ -1613,7 +1615,7 @@ void PreferencesDialog::on_dpi_changed(const wxRect &suggested_rect) {
                 lbl->SetSize(DESIGN_TITLE_SIZE);
                 lbl->Rescale();
             }
-                
+
             WalkControls(child, depth + 1);
         }
     };
@@ -1660,7 +1662,7 @@ void PreferencesDialog::create_items()
     auto v_gap = FromDIP(4);
 
     //////////////////////////
-    //// GENERAL TAB 
+    //// GENERAL TAB
     /////////////////////////////////////
     m_tab_index[PreferencesTab::General] = m_pref_tabs->AppendItem(_L("General"));
     f_sizers.push_back(new wxFlexGridSizer(1, 1, v_gap, 0));
@@ -1719,7 +1721,7 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_project_load);
 
     auto item_backup           = create_item_backup(_L("Auto backup"), _L("Backup your project periodically to help with restoring from an occasional crash."));
-    g_sizer->Add(item_backup); 
+    g_sizer->Add(item_backup);
 
     auto item_max_recent_count = create_item_input(_L("Maximum recent files"), "", _L("Maximum count of recent files"), "max_recent_count", [](wxString value) {
         long max = 0;
@@ -1735,7 +1737,7 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_gcodes_warning);
 
     auto item_step_dialog = create_item_checkbox(
-        _L("Show options when importing STEP file"), _L("If enabled, a parameter settings dialog will appear during STEP file import."), 
+        _L("Show options when importing STEP file"), _L("If enabled, a parameter settings dialog will appear during STEP file import."),
         "enable_step_mesh_setting", wxEmptyString, "import_export#dont-show-again"
     );
     g_sizer->Add(item_step_dialog);
@@ -1782,7 +1784,7 @@ void PreferencesDialog::create_items()
     });
     auto item_filament_area_height = create_item_spinctrl(_L("Optimize filaments area height for..."), "", _L("filaments"), _L("Optimizes filament area maximum height by chosen filament count."),
         "filaments_area_preferred_count", 8, 99, [this](int value) {m_filament_height_timer.StartOnce(500);});
-    g_sizer->Add(item_filament_area_height); 
+    g_sizer->Add(item_filament_area_height);
 
     auto item_shared_profiles  = create_item_checkbox(_L("Show shared profiles notification"), _L("Show a notification with a link to browse shared profiles when the selected printer is changed."), "show_shared_profiles_notification");
     g_sizer->Add(item_shared_profiles);
@@ -2169,7 +2171,7 @@ void PreferencesDialog::create_items()
 
     auto item_region           = create_item_region_combobox(_L("Login region"), "");
     g_sizer->Add(item_region);
- 
+
     auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."), "stealth_mode");
     g_sizer->Add(item_stealth_mode);
 
@@ -2230,7 +2232,7 @@ void PreferencesDialog::create_items()
     sizer_page->Add(g_sizer, 0, wxEXPAND);
 
     //////////////////////////
-    //// ASSOCIATE TAB 
+    //// ASSOCIATE TAB
     /////////////////////////////////////
 #ifdef _WIN32
     // MSIX: associations are declared in the package manifest and defaults are
@@ -2306,9 +2308,16 @@ void PreferencesDialog::create_items()
 
     auto item_ams_blacklist    = create_item_checkbox(_L("Skip AMS blacklist check"), "", "skip_ams_blacklist_check");
     g_sizer->Add(item_ams_blacklist);
-  
+
     auto item_show_unsupported = create_item_checkbox(_L("Show unsupported presets"), _L("Show incompatible/unsupported presets in the printer and filament dropdown lists. These presets cannot be selected."), "show_unsupported_presets");
     g_sizer->Add(item_show_unsupported);
+
+    auto item_export_statistics = create_item_checkbox(_L("Export statistics with G-code"),
+                                                       _L("If enabled, exporting a G-code file also writes its statistics as JSON next to it, as <name>.statistics.json, "
+                                                          "and an exported sliced 3MF file holds them inside: print time, filament and feature totals, "
+                                                          "and the same per layer and per object."),
+                                                       "export_statistics");
+    g_sizer->Add(item_export_statistics);
 
     //// DEVELOPER > Experimental Features
     g_sizer->Add(create_item_title(_L("Experimental Features")), 1, wxEXPAND);
@@ -2479,10 +2488,10 @@ wxBoxSizer* PreferencesDialog::create_debug_page()
                 AppConfig* config = GUI::wxGetApp().app_config;
                 std::string country_code = config->get_country_code();
                 if (agent) {
-                    wxGetApp().request_user_logout();
+                    wxGetApp().request_user_logout(INLONG_CLOUD_PROVIDER, /*user_initiated=*/true);
                     agent->set_country_code(country_code);
                 }
-                ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Warning"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM);  // ORCA VisibleButtons instead ButtonStyle 
+                ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Warning"), ConfirmBeforeSendDialog::VisibleButtons::ONLY_CONFIRM);  // ORCA VisibleButtons instead ButtonStyle
                 confirm_dlg.update_text(_L("Cloud environment switched; please login again!"));
                 confirm_dlg.on_show();
             }

@@ -523,6 +523,14 @@
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
   },
+  "OF4Ll1Sk": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PE-CF"
+   ],
+   "name": "Goofoo PE-CF",
+   "filament_type": "PE-CF",
+   "filament_vendor": "Goofoo"
+  },
   "OF4MZtnE": {
    "filaments": [
     "Prusa/Prusament PA11 Carbon Fiber"
@@ -696,6 +704,14 @@
    "name": "Artillery ASA",
    "filament_type": "ASA",
    "filament_vendor": "Artillery"
+  },
+  "OF5bjxyx": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PETG HF"
+   ],
+   "name": "Goofoo PETG HF",
+   "filament_type": "PETG HF",
+   "filament_vendor": "Goofoo"
   },
   "OF5c6nq3": {
    "filaments": [
@@ -987,6 +1003,14 @@
    "filament_type": "PAHT",
    "filament_vendor": "FusRock"
   },
+  "OF7skcRj": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PA-CF"
+   ],
+   "name": "Goofoo PA-CF",
+   "filament_type": "PA-CF",
+   "filament_vendor": "Goofoo"
+  },
   "OF7tt7DO": {
    "filaments": [
     "Cubicon/Cubicon PLA+"
@@ -1002,6 +1026,14 @@
    "name": "Anycubic PLA Galaxy",
    "filament_type": "PLA",
    "filament_vendor": "Anycubic"
+  },
+  "OF86rkt6": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PVA"
+   ],
+   "name": "Goofoo PVA",
+   "filament_type": "PVA",
+   "filament_vendor": "Goofoo"
   },
   "OF8FP7CM": {
    "filaments": [
@@ -1319,6 +1351,14 @@
    "name": "Arena ABS",
    "filament_type": "ABS",
    "filament_vendor": "Inlong Arena"
+  },
+  "OFAln723": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PE"
+   ],
+   "name": "Goofoo PE",
+   "filament_type": "PE",
+   "filament_vendor": "Goofoo"
   },
   "OFAnyRUI": {
    "filaments": [
@@ -2273,6 +2313,14 @@
    "filament_type": "PET",
    "filament_vendor": "eSUN"
   },
+  "OFHdIbiu": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PETG"
+   ],
+   "name": "Goofoo PETG",
+   "filament_type": "PETG",
+   "filament_vendor": "Goofoo"
+  },
   "OFHdMkee": {
    "filaments": [
     "InlongArena/Arena PLA Impact"
@@ -2315,6 +2363,14 @@
    "name": "SUNLU PLA+ 2.0",
    "filament_type": "PLA",
    "filament_vendor": "SUNLU"
+  },
+  "OFHzwmT9": {
+   "filaments": [
+    "InlongFilamentLibrary/School House Spools PLA"
+   ],
+   "name": "School House Spools PLA",
+   "filament_type": "PLA",
+   "filament_vendor": "School House Spools"
   },
   "OFI26O53": {
    "filaments": [],
@@ -2961,6 +3017,14 @@
    "name": "Anycubic TPU 95A",
    "filament_type": "TPU",
    "filament_vendor": "Anycubic"
+  },
+  "OFMNABGJ": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PLA-CF"
+   ],
+   "name": "Goofoo PLA-CF",
+   "filament_type": "PLA-CF",
+   "filament_vendor": "Goofoo"
   },
   "OFMSvS8z": {
    "filaments": [
@@ -3946,6 +4010,14 @@
    "filament_type": "PET",
    "filament_vendor": "Snapmaker"
   },
+  "OFUUiuIV": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PP-CF"
+   ],
+   "name": "Goofoo PP-CF",
+   "filament_type": "PP-CF",
+   "filament_vendor": "Goofoo"
+  },
   "OFUYCqtB": {
    "filaments": [
     "InfiMech/InfiMech PLA"
@@ -4741,6 +4813,14 @@
    "filament_type": "PC",
    "filament_vendor": "Volumic"
   },
+  "OFaOhzl8": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PP-GF"
+   ],
+   "name": "Goofoo PP-GF",
+   "filament_type": "PP-GF",
+   "filament_vendor": "Goofoo"
+  },
   "OFaP2SsH": {
    "filaments": [
     "LH/LHS ASA"
@@ -4870,6 +4950,14 @@
    "filament_type": "PETG",
    "filament_vendor": "Eryone"
   },
+  "OFc2x7Ly": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PA"
+   ],
+   "name": "Goofoo PA",
+   "filament_type": "PA",
+   "filament_vendor": "Goofoo"
+  },
   "OFc3xdm9": {
    "filaments": [
     "BBL/Overture PLA",
@@ -4971,6 +5059,14 @@
    "name": "COEX PLA PRIME",
    "filament_type": "PLA",
    "filament_vendor": "COEX 3D"
+  },
+  "OFd3PmW4": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo ABS"
+   ],
+   "name": "Goofoo ABS",
+   "filament_type": "ABS",
+   "filament_vendor": "Goofoo"
   },
   "OFd4zw5l": {
    "filaments": [
@@ -5849,6 +5945,14 @@
    "filament_type": "ABS",
    "filament_vendor": "Flashforge"
   },
+  "OFicmNhN": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PHA"
+   ],
+   "name": "Goofoo PHA",
+   "filament_type": "PHA",
+   "filament_vendor": "Goofoo"
+  },
   "OFidOgK4": {
    "filaments": [
     "Blocks/Blocks PA"
@@ -6052,6 +6156,14 @@
    "filament_type": "CoPE",
    "filament_vendor": "Generic"
   },
+  "OFk50t30": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo 95A TPU"
+   ],
+   "name": "Goofoo 95A TPU",
+   "filament_type": "TPU",
+   "filament_vendor": "Goofoo"
+  },
   "OFk8t9mz": {
    "filaments": [
     "BBL/Fiberon PETG-rCF",
@@ -6244,6 +6356,14 @@
    "filament_type": "ASA",
    "filament_vendor": "Eolas Prints"
   },
+  "OFlVOXX3": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo 90A TPU"
+   ],
+   "name": "Goofoo 90A TPU",
+   "filament_type": "TPU",
+   "filament_vendor": "Goofoo"
+  },
   "OFlfuj2k": {
    "filaments": [
     "BBL/Bambu TPU 85A"
@@ -6276,6 +6396,14 @@
    "name": "Elegoo PLA-CF",
    "filament_type": "PLA",
    "filament_vendor": "Elegoo"
+  },
+  "OFlqlUSx": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PP"
+   ],
+   "name": "Goofoo PP",
+   "filament_type": "PP",
+   "filament_vendor": "Goofoo"
   },
   "OFlsTpJG": {
    "filaments": [
@@ -6523,6 +6651,14 @@
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
   },
+  "OFnaCGQ9": {
+   "filaments": [
+    "InlongFilamentLibrary/School House Spools PETG"
+   ],
+   "name": "School House Spools PETG",
+   "filament_type": "PETG",
+   "filament_vendor": "School House Spools"
+  },
   "OFncpm7O": {
    "filaments": [
     "WonderMaker/WonderMaker PLA Silk"
@@ -6616,6 +6752,14 @@
    "filament_type": "BVOH",
    "filament_vendor": "Generic"
   },
+  "OFo6Ff38": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PETG-CF"
+   ],
+   "name": "Goofoo PETG-CF",
+   "filament_type": "PETG-CF",
+   "filament_vendor": "Goofoo"
+  },
   "OFo6n2pB": {
    "filaments": [
     "Anycubic/Anycubic PETG"
@@ -6690,6 +6834,14 @@
    "name": "Flashforge ABS-GF",
    "filament_type": "ABS-GF",
    "filament_vendor": "Flashforge"
+  },
+  "OFoq0Cmt": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PLA"
+   ],
+   "name": "Goofoo PLA",
+   "filament_type": "PLA",
+   "filament_vendor": "Goofoo"
   },
   "OForhBi4": {
    "filaments": [
@@ -6807,6 +6959,14 @@
    "name": "Arena PLA Tough",
    "filament_type": "PLA",
    "filament_vendor": "Inlong Arena"
+  },
+  "OFpta2gc": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PLA Silk"
+   ],
+   "name": "Goofoo PLA Silk",
+   "filament_type": "PLA Silk",
+   "filament_vendor": "Goofoo"
   },
   "OFpu74Qe": {
    "filaments": [
@@ -7246,6 +7406,14 @@
    "name": "FilAr PLA-mate Blanco",
    "filament_type": "PLA",
    "filament_vendor": "FilAr"
+  },
+  "OFtjqw2h": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo PA-GF10"
+   ],
+   "name": "Goofoo PA-GF10",
+   "filament_type": "PA-GF",
+   "filament_vendor": "Goofoo"
   },
   "OFtkLO6q": {
    "filaments": [
@@ -7953,6 +8121,14 @@
    "name": "Snapmaker Dual PLA Silk",
    "filament_type": "PLA",
    "filament_vendor": "Snapmaker"
+  },
+  "OFyncHIG": {
+   "filaments": [
+    "InlongFilamentLibrary/Goofoo ASA"
+   ],
+   "name": "Goofoo ASA",
+   "filament_type": "ASA",
+   "filament_vendor": "Goofoo"
   },
   "OFyoBZdm": {
    "filaments": [

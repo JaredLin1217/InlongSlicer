@@ -9,6 +9,7 @@ on:
     paths:
      - 'deps/**'
      - 'deps_src/**'
+     - 'cmake/**'
      - 'src/**'
      - '**/CMakeLists.txt'
      - 'version.inc'
@@ -34,6 +35,7 @@ on:
     paths:
      - 'deps/**'
      - 'deps_src/**'
+     - 'cmake/**'
      - 'src/**'
      - '**/CMakeLists.txt'
      - 'version.inc'
@@ -68,7 +70,7 @@ concurrency:
   # Pushes don't cancel a running build, because only a finished branch build
   # saves caches every pull request can restore.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-  
+
 
 jobs:
   # build_win.bat ships a test suite. Run it before the Windows builds.
@@ -409,11 +411,9 @@ jobs:
         path: '/__w/InlongSlicer/InlongSlicer/InlongSlicer-Linux-flatpak_${{ env.ver }}_${{ matrix.variant.arch }}.flatpak'
     - name: Deploy Flatpak to nightly release
       if: github.repository == 'JaredLin1217/InlongSlicer' && vars.NIGHTLY_RELEASE_ID != '' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/belt-printer')
-      uses: WebFreak001/deploy-nightly@v3.2.0
+      uses: ./.github/actions/deploy-nightly
       with:
-        upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
         release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
         asset_path: /__w/InlongSlicer/InlongSlicer/InlongSlicer-Linux-flatpak_${{ env.ver }}_${{ matrix.variant.arch }}.flatpak
         asset_name: InlongSlicer-Linux-flatpak_nightly${{ env.nightly_suffix }}_${{ matrix.variant.arch }}.flatpak
-        asset_content_type: application/octet-stream
-        max_releases: 1 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+        content_type: application/octet-stream

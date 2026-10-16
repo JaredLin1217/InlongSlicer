@@ -38,6 +38,8 @@ jobs:
       # suffix (nightly_suffix) so they never overwrite the main nightly assets.
       deploy_nightly: ${{ vars.NIGHTLY_RELEASE_ID != '' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/belt-printer') }}
       nightly_suffix: ${{ github.ref == 'refs/heads/belt-printer' && '_belt' || '' }}
+      NSIS_VERSION: '3.13'
+      NSIS_SHA256: BA63DFFC4410EE89193E1CB5A41989991BD77C61068DA17E3156D136B7B0B3D8
 
     steps:
       - name: Checkout
@@ -418,25 +420,21 @@ jobs:
 
       - name: Deploy Mac release
         if: github.repository == 'JaredLin1217/InlongSlicer' && env.deploy_nightly == 'true' && runner.os == 'macOS' && inputs.macos-combine-only && !vars.SELF_HOSTED
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ${{ github.workspace }}/InlongSlicer_Mac_universal_${{ env.ver }}.dmg
           asset_name: InlongSlicer_Mac_universal_nightly${{ env.nightly_suffix }}.dmg
-          asset_content_type: application/octet-stream
-          max_releases: 1 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+          content_type: application/octet-stream
 
+      # The DMG is only built when the validator app was.
       - name: Deploy Mac InlongSlicer_profile_validator DMG release
         if: github.repository == 'JaredLin1217/InlongSlicer' && vars.NIGHTLY_RELEASE_ID != '' && github.ref == 'refs/heads/main' && runner.os == 'macOS' && inputs.macos-combine-only && !vars.SELF_HOSTED
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ${{ github.workspace }}/InlongSlicer_profile_validator_Mac_universal_${{ env.ver }}.dmg
           asset_name: InlongSlicer_profile_validator_Mac_universal_nightly.dmg
-          asset_content_type: application/octet-stream
-          max_releases: 1
 
 # Windows
       - name: Set Windows build variables
@@ -455,28 +453,45 @@ jobs:
         if: runner.os == 'Windows'
         uses: microsoft/setup-msbuild@v3
 
-      - name: Install nsis
+      # NSIS builds the installer. A pinned portable copy is kept in the Actions
+      # cache, so most runs never download it, and a cache miss fetches the
+      # release archive from SourceForge instead of going through the Chocolatey
+      # community feed, which hosted runners often cannot reach. Prepending it to
+      # PATH also makes cpack use it over the NSIS preinstalled on some images.
+      - name: Restore NSIS
+        id: nsis-cache
+        if: runner.os == 'Windows' && !vars.SELF_HOSTED
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/nsis
+          key: nsis-${{ env.NSIS_VERSION }}
+
+      - name: Install NSIS
         if: runner.os == 'Windows' && !vars.SELF_HOSTED
         shell: pwsh
-        # The Chocolatey community feed intermittently 504s, and `choco install`
-        # exits 0 when package resolution fails that way. Unchecked, the job then
-        # builds for ~25 minutes before `cpack -G NSIS` reports a missing makensis.
-        # Retry the install and verify makensis itself, so a real failure stops here.
         run: |
           dir "C:/Program Files (x86)/Windows Kits/10/Include"
-          $nsisDir = Join-Path ${env:ProgramFiles(x86)} 'NSIS'
+          $nsisDir = Join-Path $env:RUNNER_TEMP 'nsis'
           $makensis = Join-Path $nsisDir 'makensis.exe'
-          for ($attempt = 1; $attempt -le 3 -and -not (Test-Path $makensis); $attempt++) {
-            if ($attempt -gt 1) { Start-Sleep -Seconds (15 * $attempt) }
-            Write-Host "::group::choco install nsis (attempt $attempt)"
-            choco install nsis --yes --no-progress
-            Write-Host "::endgroup::"
-          }
           if (-not (Test-Path $makensis)) {
-            throw "NSIS install failed: $makensis not found after 3 attempts."
+            $zip = Join-Path $env:RUNNER_TEMP "nsis-$env:NSIS_VERSION.zip"
+            curl.exe -fsSL --retry 5 --retry-all-errors --retry-delay 15 -o $zip "https://downloads.sourceforge.net/project/nsis/NSIS%203/$env:NSIS_VERSION/nsis-$env:NSIS_VERSION.zip"
+            if ($LASTEXITCODE -ne 0) { throw "NSIS $env:NSIS_VERSION download failed." }
+            if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne $env:NSIS_SHA256) {
+              throw "NSIS $env:NSIS_VERSION archive does not match its pinned SHA256."
+            }
+            Expand-Archive $zip $env:RUNNER_TEMP
+            Move-Item (Join-Path $env:RUNNER_TEMP "nsis-$env:NSIS_VERSION") $nsisDir
           }
           & $makensis /VERSION
           $nsisDir | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+
+      - name: Save NSIS
+        if: runner.os == 'Windows' && !vars.SELF_HOSTED && steps.nsis-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ runner.temp }}/nsis
+          key: nsis-${{ env.NSIS_VERSION }}
 
       - name: Build slicer Win
         if: runner.os == 'Windows'
@@ -697,36 +712,30 @@ jobs:
 
       - name: Deploy Windows release portable
         if: github.repository == 'JaredLin1217/InlongSlicer' && env.deploy_nightly == 'true' && runner.os == 'Windows' && !vars.SELF_HOSTED
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ${{ github.workspace }}/${{ env.BUILD_DIR }}/InlongSlicer_Windows_${{ env.ver }}${{ env.ARCH_SUFFIX }}_portable.zip
           asset_name: InlongSlicer_Windows${{ env.ARCH_SUFFIX }}_nightly${{ env.nightly_suffix }}_portable.zip
-          asset_content_type: application/x-zip-compressed
-          max_releases: 1
+          content_type: application/x-zip-compressed
 
       - name: Deploy Windows release installer
         if: github.repository == 'JaredLin1217/InlongSlicer' && env.deploy_nightly == 'true' && runner.os == 'Windows' && !vars.SELF_HOSTED
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ${{ github.workspace }}/${{ env.BUILD_DIR }}/InlongSlicer_Windows_Installer_${{ env.ver }}${{ env.ARCH_SUFFIX }}.exe
           asset_name: InlongSlicer_Windows_Installer${{ env.ARCH_SUFFIX }}_nightly${{ env.nightly_suffix }}.exe
-          asset_content_type: application/x-msdownload
-          max_releases: 1
+          content_type: application/x-msdownload
 
       - name: Deploy Windows InlongSlicer_profile_validator release
         if: github.repository == 'JaredLin1217/InlongSlicer' && vars.NIGHTLY_RELEASE_ID != '' && github.ref == 'refs/heads/main' && runner.os == 'Windows' && inputs.arch != 'arm64' && !vars.SELF_HOSTED
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ${{ github.workspace }}/build/src/Release/InlongSlicer_profile_validator.exe
           asset_name: InlongSlicer_profile_validator_Windows_nightly.exe
-          asset_content_type: application/x-msdownload
-          max_releases: 1
+          content_type: application/x-msdownload
 
       - name: Build MSIX Store package Win
         if: runner.os == 'Windows' && !vars.SELF_HOSTED
@@ -855,14 +864,12 @@ jobs:
 
       - name: Deploy Ubuntu release
         if: ${{ github.repository == 'JaredLin1217/InlongSlicer' && ! env.ACT && env.deploy_nightly == 'true' && runner.os == 'Linux' && !vars.SELF_HOSTED }}
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ./build/InlongSlicer_Linux_AppImage${{ env.ubuntu-ver-str }}${{ env.arch_suffix }}_${{ env.ver }}.AppImage
           asset_name: InlongSlicer_Linux_AppImage${{ env.ubuntu-ver-str }}${{ env.arch_suffix }}_nightly${{ env.nightly_suffix }}.AppImage
-          asset_content_type: application/octet-stream
-          max_releases: 1 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+          content_type: application/octet-stream
       - name: Deploy Ubuntu release
         if: ${{ github.repository == 'JaredLin1217/InlongSlicer' && vars.NIGHTLY_RELEASE_ID != '' && ! env.ACT && github.ref == 'refs/heads/main' && runner.os == 'Linux' && !vars.SELF_HOSTED && inputs.arch != 'aarch64' }}
         uses: rickstaa/action-create-tag@v1
@@ -874,36 +881,28 @@ jobs:
 
       - name: Deploy Ubuntu InlongSlicer_profile_validator release
         if: ${{ github.repository == 'JaredLin1217/InlongSlicer' && vars.NIGHTLY_RELEASE_ID != '' && ! env.ACT && github.ref == 'refs/heads/main' && runner.os == 'Linux' && !vars.SELF_HOSTED && inputs.arch != 'aarch64' }}
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ./build/src/Release/InlongSlicer_profile_validator
           asset_name: InlongSlicer_profile_validator_Linux${{ env.ubuntu-ver-str }}_nightly
-          asset_content_type: application/octet-stream
-          max_releases: 1
 
       - name: Deploy Ubuntu generate_system_cache release
         if: ${{ github.repository == 'JaredLin1217/InlongSlicer' && ! env.ACT && github.ref == 'refs/heads/main' && runner.os == 'Linux' && !vars.SELF_HOSTED && inputs.arch != 'aarch64' }}
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ./build/src/dev-utils/Release/generate_system_cache
           asset_name: generate_system_cache_Linux${{ env.ubuntu-ver-str }}_nightly
-          asset_content_type: application/octet-stream
-          max_releases: 1
 
       - name: Deploy inlong_custom_preset_tests
         if: ${{ github.repository == 'JaredLin1217/InlongSlicer' && vars.NIGHTLY_RELEASE_ID != '' && ! env.ACT && github.ref == 'refs/heads/main' && runner.os == 'Linux' && !vars.SELF_HOSTED && inputs.arch != 'aarch64' }}
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: ./.github/actions/deploy-nightly
         with:
-          upload_url: https://uploads.github.com/repos/JaredLin1217/InlongSlicer/releases/${{ vars.NIGHTLY_RELEASE_ID }}/assets{?name,label}
           release_id: ${{ vars.NIGHTLY_RELEASE_ID }}
           asset_path: ${{ github.workspace }}/resources/profiles/inlong_custom_preset_tests.zip
           asset_name: inlong_custom_preset_tests.zip
-          asset_content_type: application/octet-stream
-          max_releases: 1
+          content_type: application/octet-stream
 
       # The build has just touched everything it can use, so an object
       # untouched for a week is dead, usually orphaned by a flag change.

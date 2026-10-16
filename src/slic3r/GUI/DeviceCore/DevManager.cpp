@@ -201,7 +201,7 @@ namespace Slic3r
     {
         const std::string agent_id = get_current_printer_agent_id();
         if (!agent_id.empty())
-            return agent_id == BBL_PRINTER_AGENT_ID ? BBL_CLOUD_PROVIDER : ORCA_CLOUD_PROVIDER;
+            return agent_id == BBL_PRINTER_AGENT_ID ? BBL_CLOUD_PROVIDER : INLONG_CLOUD_PROVIDER;
         return GUI::wxGetApp().get_printer_cloud_provider();
     }
 
@@ -275,6 +275,18 @@ namespace Slic3r
             std::string printer_signal  = j["dev_signal"].get<std::string>();
             std::string connect_type    = j["connect_type"].get<std::string>();
             std::string bind_state      = j["bind_state"].get<std::string>();
+
+            // Passive discovery must not replace another agent's saved binding.
+            if (get_current_printer_agent_id() == MOONRAKER_PRINTER_AGENT_ID) {
+                if (AppConfig* config = get_app_config()) {
+                    const auto& machines = config->get_local_machines();
+                    auto it = machines.find(dev_id);
+                    if (it != machines.end() && it->second.printer_agent_id != MOONRAKER_PRINTER_AGENT_ID) {
+                        BOOST_LOG_TRIVIAL(warning) << "Ignoring Moonraker discovery for a device owned by another agent: " << dev_id;
+                        return;
+                    }
+                }
+            }
 
             if (connect_type == "farm") {
                 connect_type ="lan";
@@ -962,7 +974,7 @@ namespace Slic3r
                     // Orca cloud printers are only ever delivered through this REST
                     // account list; tag them so DeviceManager's cloud/lan branches
                     // (subscribe + deselect in set_selected_machine) treat them right.
-                    if (provider == ORCA_CLOUD_PROVIDER)
+                    if (provider == INLONG_CLOUD_PROVIDER)
                         obj->dev_connection_type = "cloud";
 
                     if (!elem["dev_id"].is_null())

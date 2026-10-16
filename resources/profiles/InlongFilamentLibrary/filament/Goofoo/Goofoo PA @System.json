@@ -1,0 +1,9 @@
+{
+	"type": "filament",
+	"name": "Goofoo PA @System",
+	"inherits": "Goofoo PA @base",
+	"from": "system",
+	"setting_id": "9pqahRHUASTAP912",
+	"instantiation": "true",
+	"compatible_printers": []
+}

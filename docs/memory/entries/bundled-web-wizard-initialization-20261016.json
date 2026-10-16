@@ -1,0 +1,136 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "bundled-web-wizard-initialization-20261016",
+  "key": "bundled-web-wizard-initialization-contract",
+  "type": "fact",
+  "conclusion": "Bundled web pages translate through resources/web/include/i18n.js, data-i18n keys, and the host gettext dictionary ORCA_UI_STRINGS. Missing legacy text.js references or redundant declarations can abort initialization before RequestProfile. Printer pages 21 and 24 load guide/21/common.js and initialize its globals once; material pages 22 and 23 use guide/22/common.js without overriding its selection functions. Selection submits full preset names from filalist through save_userguide_filaments. Simplified and Traditional Chinese catalogs must cover the host keys used by static markup and dynamic controls. Loading-page completion waits for both native profile readiness and the userguide_loading_page_ready message emitted by guide/0/load.js; the existing slow-computer fallback remains.",
+  "scope": "InlongSlicer bundled web wizard and preset dialogs",
+  "modules": [
+    "webguide",
+    "localization",
+    "presets"
+  ],
+  "tags": [
+    "wizard",
+    "filament",
+    "translation",
+    "merge-recovery"
+  ],
+  "files": [
+    "resources/web/include/i18n.js",
+    "resources/web/guide/21/index.html",
+    "resources/web/guide/24/index.html",
+    "resources/web/guide/22/index.html",
+    "resources/web/guide/23/index.html",
+    "resources/web/guide/22/common.js",
+    "src/slic3r/GUI/WebGuideDialog.cpp",
+    "localization/i18n/zh_TW/InlongSlicer_zh_TW.po",
+    "localization/i18n/zh_CN/InlongSlicer_zh_CN.po",
+    "scripts/tests/test_web_ui_contracts.py",
+    "resources/web/guide/0/load.js",
+    "src/slic3r/GUI/WebGuideDialog.hpp"
+  ],
+  "sources": [
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/include/i18n.js",
+      "kind": "file_snapshot",
+      "sha256": "3dde0309ef7756adc987e264db14735a5300ce63759a89bd046da7380eec12fa",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/21/index.html",
+      "kind": "file_snapshot",
+      "sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/24/index.html",
+      "kind": "file_snapshot",
+      "sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/22/index.html",
+      "kind": "file_snapshot",
+      "sha256": "85a2bb3caf06a42cffd36f974b6e57ad6d29fb23c0760322e4d75a16a5a02967",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/23/index.html",
+      "kind": "file_snapshot",
+      "sha256": "f72521b882c7c49fe3b7a2f3a2abf5d15cdab95d732245c089e6085a9cccdfff",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "Bundled script imports, initialization and material selection bridge",
+      "path": "resources/web/guide/22/common.js",
+      "kind": "file_snapshot",
+      "sha256": "c6ddf9a26f72da5bfd2c1a7c6f39945094f8ec04393c4d76129e4d3b6f27bed8",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "guide_strings host dictionary",
+      "path": "src/slic3r/GUI/WebGuideDialog.cpp",
+      "kind": "file_snapshot",
+      "sha256": "ef992a85caf03a4b0917bf2ccc98238dd486a7a4e5f82f7dfcaf1ea5350806a9",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "Host-referenced wizard, homepage and project labels",
+      "path": "localization/i18n/zh_TW/InlongSlicer_zh_TW.po",
+      "kind": "file_snapshot",
+      "sha256": "167d2abf4abd894a290a16cad55fd7adc094d6faf74e1f2219882e485148207b",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "Host-referenced wizard, homepage and project labels",
+      "path": "localization/i18n/zh_CN/InlongSlicer_zh_CN.po",
+      "kind": "file_snapshot",
+      "sha256": "c653d2b8914aba0842295728c08198d8c32a045f751253d1747defd6aa51b282",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "locator": "TestWebUiContracts initialization, catalog and shared-logic regression checks",
+      "path": "scripts/tests/test_web_ui_contracts.py",
+      "kind": "file_snapshot",
+      "sha256": "fa05ed43642cf8bce35cb0c9c277cda8b8e5f5e37943cbb7e9342b72045ad62e",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2"
+    },
+    {
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "sha256": "6a7e629c7d91d6a077d4bb162e216a58fe1f97d2e628aa207eca37ae9d7f7b88",
+      "locator": "Loading-page readiness handshake",
+      "path": "resources/web/guide/0/load.js",
+      "kind": "file_snapshot"
+    },
+    {
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "sha256": "b701d0fe9ada786762484df3dc9f7230a8f9564d13e2cbbaca2769671f853779",
+      "locator": "Loading-page readiness handshake",
+      "path": "src/slic3r/GUI/WebGuideDialog.hpp",
+      "kind": "file_snapshot"
+    }
+  ],
+  "verified_utc": "2026-10-16T08:53:25.1147135+00:00",
+  "verification": {
+    "method": "Current semantic delta review, web contract tests and gettext validation",
+    "summary": "Reviewed the 23-line WebGuideDialog delta and unchanged shared page imports, selection functions and bridge handlers. The new host readiness guard pairs with guide/0/load.js. All five current web contract tests and all 23 locale msgfmt checks pass after the catalog merge. The earlier 34 wizard-browser scenarios were not rerun in this sync; color-picker browser coverage is a different check. Reviewed source snapshots support the initialization contract, not a claim of a fresh manual native wizard session. File hashes bind the reviewed merge-worktree bytes; the pre-merge HEAD is a checkout anchor, not a claim that uncommitted bytes already belong to it.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "bundled-web-wizard-host-i18n-and-shared-initialization"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

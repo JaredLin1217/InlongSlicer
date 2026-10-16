@@ -5,18 +5,27 @@
 .DESCRIPTION
     The Windows counterpart of scripts/check_profile.sh, and kept deliberately close to it.
 
-    Runs the same five checks, in the same order, with the same validator flags, and with the
+    Runs the same seven checks, in the same order, with the same validator flags, and with the
     same semantics: every check runs even after an earlier one fails (the workflow's
     continue-on-error), then the script exits non-zero once at the end.
 
         extra_json_check              scripts/inlong_extra_profile_check.py
+        profile_tool                  scripts/inlong_profile_tool.py check --fork-compatible
+        legacy_compat                 scripts/inlong_profile_tool.py legacy-compat --check against
+                                      the v2.4.2 profiles
         validate_system               validator -p <profiles> -l <level>
         validate_slice                validator -p <profiles> -s -l <level>
         validate_filament_subtypes    validator -p <profiles> -l <level> -f
         validate_custom               validator against every released custom-preset fixture
 
-    Everything that has to be downloaded - the profile validator and the custom-preset fixture
-    archives - lands under a per-user cache directory (%LOCALAPPDATA%\orca-profile-check) and
+    profile_tool is the only check that is not the validator binary; it makes the static checks
+    the validator cannot, because the validator loads the tree the way the slicer does and so
+    never sees a profile no <vendor>.json indexes, a preset name two files claim, or a file
+    normalize and update-index would still rewrite.
+
+    Everything that has to be downloaded - the profile validator, the custom-preset fixture
+    archives and the v2.4.2 profile tree - lands under a per-user cache directory
+    (%LOCALAPPDATA%\inlong-profile-check) and
     is reused on the next run. Being outside the checkout, that directory is shared by every
     worktree on the machine. It also holds one log per check plus a copy of the comment CI would
     post on the PR.
@@ -41,7 +50,10 @@
     Check only this vendor, named after its <Vendor>.json (e.g. "Co Print"). validate_custom is
     narrowed with it too, by keeping only that vendor's presets in each fixture tree. The one
     check it cannot narrow is validate_slice for a vendor that ships no printers; the summary
-    reports that one as skipped, and naming it explicitly still runs it.
+    reports that one as skipped, and naming it explicitly still runs it. profile_tool keeps its
+    two cross-vendor checks (setting_id and filament_id) tree-wide, so a scoped run can still
+    fail on another vendor's files, and legacy_compat is tree-wide too: the map it checks covers
+    every vendor.
 
 .PARAMETER Validator
     InlongSlicer_profile_validator.exe to use; also $env:INLONG_PROFILE_VALIDATOR. Default: the local
@@ -55,7 +67,7 @@
     Re-download the validator and fixtures instead of using the cache.
 
 .PARAMETER WorkDir
-    Downloads, logs and fixture trees (default: %LOCALAPPDATA%\orca-profile-check). Point it
+    Downloads, logs and fixture trees (default: %LOCALAPPDATA%\inlong-profile-check). Point it
     somewhere short, such as D:\t, if a fixture tree trips Windows' 260-character path limit.
 
 .PARAMETER LogLevel
@@ -109,7 +121,7 @@ $HostArch = switch ($HostArch) {
     default { 'x86' }
 }
 
-$AllChecks = @('extra_json_check', 'validate_system', 'validate_slice', 'validate_filament_subtypes', 'validate_custom')
+$AllChecks = @('extra_json_check', 'profile_tool', 'legacy_compat', 'validate_system', 'validate_slice', 'validate_filament_subtypes', 'validate_custom')
 
 $script:LogWriter = $null
 $script:Python = ''
@@ -209,7 +221,7 @@ $VendorPyArgs = if ($Vendor) { @('--vendor', $Vendor) } else { @() }
 
 if (-not $WorkDir) {
     # Per-user cache dir, so every worktree on the machine shares one set of downloads.
-    $WorkDir = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'orca-profile-check'
+    $WorkDir = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'inlong-profile-check'
 }
 $LogDir = Join-Path $WorkDir 'logs'
 try { New-Item -ItemType Directory -Force -Path $LogDir | Out-Null } catch { Die "cannot create ${LogDir}: $_" }
@@ -432,6 +444,43 @@ function Expand-VendorPresets([string] $Zip, [string] $Tree, [string] $Prefix) {
     return $kept
 }
 
+# The profile tree of the release resources\info\legacy_compatible_printers.json is generated
+# against. The tag is immutable, so the extracted tree is cached in the work dir and -Refresh
+# re-extracts it. A checkout without the tag (a shallow clone, a fork that never fetched tags)
+# gets it from upstream, as CI does. git archive writes a file rather than a pipe, which
+# PowerShell would re-encode, and tar.exe ships with Windows 10 and later.
+$LegacyBaseTag = 'v2.4.2'
+$LegacyBaseUrl = 'https://github.com/OrcaSlicer/OrcaSlicer.git'
+
+function Get-LegacyBaseProfiles {
+    $ErrorActionPreference = 'Continue'
+    $base = Join-Path (Join-Path $WorkDir 'legacy-base') $LegacyBaseTag
+    $profiles = Join-Path (Join-Path $base 'resources') 'profiles'
+    if ($Refresh -or -not (Test-Path -LiteralPath $profiles -PathType Container)) {
+        & git -C $RepoRoot rev-parse -q --verify "refs/tags/$LegacyBaseTag^{commit}" 2>$null | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "fetching tag $LegacyBaseTag from $LegacyBaseUrl ..."
+            & git -C $RepoRoot fetch --no-tags $LegacyBaseUrl "refs/tags/${LegacyBaseTag}:refs/tags/${LegacyBaseTag}"
+            if ($LASTEXITCODE -ne 0) { throw "cannot fetch tag $LegacyBaseTag" }
+        }
+        # Extracted beside its final place and moved there whole, so an interrupted extraction is
+        # never mistaken for the tree on the next run.
+        $partial = "$base.partial"
+        foreach ($dir in $base, $partial) {
+            if (Test-Path -LiteralPath $dir) { Remove-Item -LiteralPath $dir -Recurse -Force }
+        }
+        New-Item -ItemType Directory -Force -Path $partial | Out-Null
+        $archive = Join-Path $partial 'profiles.tar'
+        & git -C $RepoRoot archive -o $archive $LegacyBaseTag resources/profiles
+        if ($LASTEXITCODE -ne 0) { throw "cannot archive resources/profiles of $LegacyBaseTag" }
+        & tar -xf $archive -C $partial
+        if ($LASTEXITCODE -ne 0) { throw "cannot extract $archive" }
+        Remove-Item -LiteralPath $archive -Force
+        Move-Item -LiteralPath $partial -Destination $base
+    }
+    return $profiles
+}
+
 # ---------------------------------------------------------------------------- checks
 
 $CheckBodies = @{
@@ -439,6 +488,18 @@ $CheckBodies = @{
     extra_json_check = {
         Invoke-Tool -Exe (Resolve-Python) -Arguments (@((Join-Path $RepoRoot 'scripts\inlong_extra_profile_check.py')) + $VendorPyArgs)
     }
+    profile_tool = {
+        Invoke-Tool -Exe (Resolve-Python) -Arguments (@((Join-Path $RepoRoot 'scripts\inlong_profile_tool.py'), 'check', '--fork-compatible', '--profiles', $ProfilesDir) + $VendorPyArgs)
+    }
+
+    # The map says which printers a user filament preset made against 2.4.2 can be migrated
+    # back to, so a profile change that renames a filament preset or narrows its
+    # compatible_printers has to regenerate it (the CI comment gives the command).
+    legacy_compat = {
+        $base = Get-LegacyBaseProfiles
+        Invoke-Tool -Exe (Resolve-Python) -Arguments @((Join-Path $RepoRoot 'scripts\inlong_profile_tool.py'), 'legacy-compat', '--profiles', $ProfilesDir, '--base', $base, '--check')
+    }
+
     validate_system = {
         Invoke-Tool -Exe $Validator -Arguments (@('-p', $ProfilesDir) + $VendorArgs + @('-l', "$LogLevel"))
     }
@@ -573,6 +634,8 @@ $CheckBodies = @{
 # Heading CI puts above this check's log in the PR comment.
 $CommentHeadings = @{
     extra_json_check          = '### Inlong extra profile check failed'
+    profile_tool               = '### Profile Check Failed (inlong_profile_tool.py)'
+    legacy_compat              = '### Legacy Compatible Printers Map Out of Date'
     validate_system            = '### System Profile Validation Failed'
     validate_slice             = '### Slice Validation Failed (custom g-code expansion)'
     validate_filament_subtypes = '### Filament Subtype Validation Failed'
@@ -619,7 +682,7 @@ try {
     [Console]::OutputEncoding = New-Object Text.UTF8Encoding($false)
     Push-UserPresets
 
-    if ($Checks | Where-Object { $_ -ne 'extra_json_check' }) { $Validator = Resolve-Validator }
+    if ($Checks | Where-Object { $_ -ne 'extra_json_check' -and $_ -ne 'profile_tool' -and $_ -ne 'legacy_compat' }) { $Validator = Resolve-Validator }
 
     # An empty printer set is a failure to the sweep, so validate_slice is recorded as skipped
     # rather than run for a vendor that ships no printers (the filament-only InlongFilamentLibrary);

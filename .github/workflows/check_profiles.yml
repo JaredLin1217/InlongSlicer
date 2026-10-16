@@ -10,6 +10,7 @@ on:
     paths:
     - 'resources/profiles/**'
     - 'resources/printers/**'
+    - 'resources/info/legacy_compatible_printers.json'
     - 'scripts/**'
     - 'src/libslic3r/PrintConfig.cpp'
     - ".github/workflows/check_profiles.yml"
@@ -46,6 +47,28 @@ jobs:
           set +e
           python3 ./scripts/inlong_extra_profile_check.py 2>&1 | tee ${{ runner.temp }}/extra_json_check.log
           exit ${PIPESTATUS[0]}
+
+      - name: Check profile indexes and deterministic identity
+        id: profile_tool
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 ./scripts/inlong_profile_tool.py check --fork-compatible 2>&1 | tee ${{ runner.temp }}/profile_tool.log
+
+      # The app migrates user filament presets made against 2.4.2 back to the printers their
+      # parent listed then, from resources/info/legacy_compatible_printers.json. A PR that
+      # renames a filament preset or narrows its compatible_printers changes what that map
+      # must say, so it has to regenerate it.
+      - name: Check the legacy compatible printers map
+        id: legacy_compat
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          base="${{ runner.temp }}/v2.4.2"
+          git fetch --no-tags --depth=1 https://github.com/OrcaSlicer/OrcaSlicer.git refs/tags/v2.4.2:refs/tags/v2.4.2
+          mkdir -p "$base"
+          git archive v2.4.2 resources/profiles | tar -x -C "$base"
+          python3 ./scripts/inlong_profile_tool.py legacy-compat --base "$base/resources/profiles" --check 2>&1 | tee ${{ runner.temp }}/legacy_compat.log
 
       # download
       - name: Download
@@ -205,7 +228,7 @@ jobs:
           echo "${{ github.event.pull_request.number }}" > ${{ runner.temp }}/profile-check-results/pr_number.txt
 
       - name: Prepare comment artifact
-        if: ${{ always() && github.event_name == 'pull_request' && (steps.extra_json_check.outcome == 'failure' || steps.validate_system.outcome == 'failure' || steps.validate_slice.outcome == 'failure' || steps.validate_filament_subtypes.outcome == 'failure' || steps.validate_custom.outcome == 'failure') }}
+        if: ${{ always() && github.event_name == 'pull_request' && (steps.extra_json_check.outcome == 'failure' || steps.profile_tool.outcome == 'failure' || steps.legacy_compat.outcome == 'failure' || steps.validate_system.outcome == 'failure' || steps.validate_slice.outcome == 'failure' || steps.validate_filament_subtypes.outcome == 'failure' || steps.validate_custom.outcome == 'failure') }}
         run: |
           {
             # Marker matched by check_profiles_comment.yml to delete prior comments.
@@ -219,6 +242,17 @@ jobs:
               echo '```'
               head -c 30000 ${{ runner.temp }}/extra_json_check.log || echo "No output captured"
               echo '```'
+              echo ""
+            fi
+
+            if [ "${{ steps.legacy_compat.outcome }}" = "failure" ]; then
+              echo "### Legacy Compatible Printers Map Out of Date"
+              echo ""
+              echo '```'
+              head -c 30000 ${{ runner.temp }}/legacy_compat.log || echo "No output captured"
+              echo '```'
+              echo ""
+              echo 'Regenerate it: `git archive v2.4.2 resources/profiles | tar -x -C /tmp/v2.4.2`, then `python3 scripts/inlong_profile_tool.py legacy-compat --base /tmp/v2.4.2/resources/profiles`.'
               echo ""
             fi
 
@@ -271,7 +305,7 @@ jobs:
           retention-days: 1
 
       - name: Fail if any check failed
-        if: ${{ always() && (steps.extra_json_check.outcome == 'failure' || steps.validate_system.outcome == 'failure' || steps.validate_slice.outcome == 'failure' || steps.validate_filament_subtypes.outcome == 'failure' || steps.validate_custom.outcome == 'failure') }}
+        if: ${{ always() && (steps.extra_json_check.outcome == 'failure' || steps.profile_tool.outcome == 'failure' || steps.legacy_compat.outcome == 'failure' || steps.validate_system.outcome == 'failure' || steps.validate_slice.outcome == 'failure' || steps.validate_filament_subtypes.outcome == 'failure' || steps.validate_custom.outcome == 'failure') }}
         run: |
           echo "One or more profile checks failed; see the step logs above."
           echo 'Reproduce the whole run locally with scripts/check_profile.sh (scripts\check_profile.bat on Windows).'

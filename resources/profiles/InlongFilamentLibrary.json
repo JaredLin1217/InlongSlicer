@@ -1,6 +1,6 @@
 {
 	"name": "InlongFilamentLibrary",
-	"version": "02.04.00.19",
+	"version": "02.04.00.20",
 	"force_update": "0",
 	"description": "Inlong Filament Library",
 	"filament_list": [
@@ -2051,6 +2051,182 @@
 		{
 			"name": "COEX PLA+Silk @System",
 			"sub_path": "filament/COEX/COEX PLA+Silk @System.json"
+		},
+		{
+			"name": "School House Spools PETG @base",
+			"sub_path": "filament/SchoolHouseSpools/School House Spools PETG @base.json"
+		},
+		{
+			"name": "School House Spools PLA @base",
+			"sub_path": "filament/SchoolHouseSpools/School House Spools PLA @base.json"
+		},
+		{
+			"name": "Goofoo ABS @base",
+			"sub_path": "filament/Goofoo/Goofoo ABS @base.json"
+		},
+		{
+			"name": "Goofoo ASA @base",
+			"sub_path": "filament/Goofoo/Goofoo ASA @base.json"
+		},
+		{
+			"name": "Goofoo PA @base",
+			"sub_path": "filament/Goofoo/Goofoo PA @base.json"
+		},
+		{
+			"name": "Goofoo PA-CF @base",
+			"sub_path": "filament/Goofoo/Goofoo PA-CF @base.json"
+		},
+		{
+			"name": "Goofoo PA-GF10 @base",
+			"sub_path": "filament/Goofoo/Goofoo PA-GF10 @base.json"
+		},
+		{
+			"name": "Goofoo PE @base",
+			"sub_path": "filament/Goofoo/Goofoo PE @base.json"
+		},
+		{
+			"name": "Goofoo PETG @base",
+			"sub_path": "filament/Goofoo/Goofoo PETG @base.json"
+		},
+		{
+			"name": "School House Spools PETG @System",
+			"sub_path": "filament/SchoolHouseSpools/School House Spools PETG @System.json"
+		},
+		{
+			"name": "Goofoo PHA @base",
+			"sub_path": "filament/Goofoo/Goofoo PHA @base.json"
+		},
+		{
+			"name": "Goofoo PLA @base",
+			"sub_path": "filament/Goofoo/Goofoo PLA @base.json"
+		},
+		{
+			"name": "Goofoo PLA-CF @base",
+			"sub_path": "filament/Goofoo/Goofoo PLA-CF @base.json"
+		},
+		{
+			"name": "School House Spools PLA @System",
+			"sub_path": "filament/SchoolHouseSpools/School House Spools PLA @System.json"
+		},
+		{
+			"name": "Goofoo PP @base",
+			"sub_path": "filament/Goofoo/Goofoo PP @base.json"
+		},
+		{
+			"name": "Goofoo PVA @base",
+			"sub_path": "filament/Goofoo/Goofoo PVA @base.json"
+		},
+		{
+			"name": "Goofoo 90A TPU @base",
+			"sub_path": "filament/Goofoo/Goofoo 90A TPU @base.json"
+		},
+		{
+			"name": "Goofoo 95A TPU @base",
+			"sub_path": "filament/Goofoo/Goofoo 95A TPU @base.json"
+		},
+		{
+			"name": "Goofoo ABS @System",
+			"sub_path": "filament/Goofoo/Goofoo ABS @System.json"
+		},
+		{
+			"name": "Goofoo ASA @System",
+			"sub_path": "filament/Goofoo/Goofoo ASA @System.json"
+		},
+		{
+			"name": "Goofoo PA @System",
+			"sub_path": "filament/Goofoo/Goofoo PA @System.json"
+		},
+		{
+			"name": "Goofoo PA-CF @System",
+			"sub_path": "filament/Goofoo/Goofoo PA-CF @System.json"
+		},
+		{
+			"name": "Goofoo PA-GF10 @System",
+			"sub_path": "filament/Goofoo/Goofoo PA-GF10 @System.json"
+		},
+		{
+			"name": "Goofoo PE @System",
+			"sub_path": "filament/Goofoo/Goofoo PE @System.json"
+		},
+		{
+			"name": "Goofoo PE-CF @base",
+			"sub_path": "filament/Goofoo/Goofoo PE-CF @base.json"
+		},
+		{
+			"name": "Goofoo PETG @System",
+			"sub_path": "filament/Goofoo/Goofoo PETG @System.json"
+		},
+		{
+			"name": "Goofoo PETG HF @base",
+			"sub_path": "filament/Goofoo/Goofoo PETG HF @base.json"
+		},
+		{
+			"name": "Goofoo PETG-CF @base",
+			"sub_path": "filament/Goofoo/Goofoo PETG-CF @base.json"
+		},
+		{
+			"name": "Goofoo PHA @System",
+			"sub_path": "filament/Goofoo/Goofoo PHA @System.json"
+		},
+		{
+			"name": "Goofoo PLA @System",
+			"sub_path": "filament/Goofoo/Goofoo PLA @System.json"
+		},
+		{
+			"name": "Goofoo PLA-CF @System",
+			"sub_path": "filament/Goofoo/Goofoo PLA-CF @System.json"
+		},
+		{
+			"name": "Goofoo PLA Silk @base",
+			"sub_path": "filament/Goofoo/Goofoo PLA Silk @base.json"
+		},
+		{
+			"name": "Goofoo PP @System",
+			"sub_path": "filament/Goofoo/Goofoo PP @System.json"
+		},
+		{
+			"name": "Goofoo PP-CF @base",
+			"sub_path": "filament/Goofoo/Goofoo PP-CF @base.json"
+		},
+		{
+			"name": "Goofoo PP-GF @base",
+			"sub_path": "filament/Goofoo/Goofoo PP-GF @base.json"
+		},
+		{
+			"name": "Goofoo PVA @System",
+			"sub_path": "filament/Goofoo/Goofoo PVA @System.json"
+		},
+		{
+			"name": "Goofoo 90A TPU @System",
+			"sub_path": "filament/Goofoo/Goofoo 90A TPU @System.json"
+		},
+		{
+			"name": "Goofoo 95A TPU @System",
+			"sub_path": "filament/Goofoo/Goofoo 95A TPU @System.json"
+		},
+		{
+			"name": "Goofoo PE-CF @System",
+			"sub_path": "filament/Goofoo/Goofoo PE-CF @System.json"
+		},
+		{
+			"name": "Goofoo PETG HF @System",
+			"sub_path": "filament/Goofoo/Goofoo PETG HF @System.json"
+		},
+		{
+			"name": "Goofoo PETG-CF @System",
+			"sub_path": "filament/Goofoo/Goofoo PETG-CF @System.json"
+		},
+		{
+			"name": "Goofoo PLA Silk @System",
+			"sub_path": "filament/Goofoo/Goofoo PLA Silk @System.json"
+		},
+		{
+			"name": "Goofoo PP-CF @System",
+			"sub_path": "filament/Goofoo/Goofoo PP-CF @System.json"
+		},
+		{
+			"name": "Goofoo PP-GF @System",
+			"sub_path": "filament/Goofoo/Goofoo PP-GF @System.json"
 		}
 	],
 	"process_list": [],

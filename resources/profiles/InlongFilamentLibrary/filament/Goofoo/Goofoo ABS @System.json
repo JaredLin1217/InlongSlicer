@@ -1,0 +1,9 @@
+{
+	"type": "filament",
+	"name": "Goofoo ABS @System",
+	"inherits": "Goofoo ABS @base",
+	"from": "system",
+	"setting_id": "xB5yuCQmVymkEsHT",
+	"instantiation": "true",
+	"compatible_printers": []
+}

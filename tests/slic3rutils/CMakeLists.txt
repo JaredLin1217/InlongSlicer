@@ -5,7 +5,15 @@ add_executable(${_TEST_NAME}_tests
     test_config_value_formatter.cpp
     test_creality_cfs_match.cpp
     test_dev_mapping.cpp
+    test_device_access.cpp
+    test_moonraker_discovery.cpp
+    test_network_discovery.cpp
     test_filament_bitmap_utils.cpp
+    test_colour_picker_field.cpp
+    test_filament_color_picker.cpp
+    test_device_progress.cpp
+    test_device_manager_integration.cpp
+    test_web_media_controller.cpp
     test_scene_raycaster.cpp
     test_lazy.cpp
     test_prebuild_queue.cpp
@@ -20,6 +28,7 @@ add_executable(${_TEST_NAME}_tests
     test_plugin_capabilities_in_use.cpp
     test_plugin_install.cpp
     test_plugin_lifecycle.cpp
+    test_plugin_resource_texture.cpp
     test_plugin_printer_agent.cpp
     test_printhost.cpp
     test_slicing_pipeline_bindings.cpp
@@ -32,7 +41,9 @@ add_executable(${_TEST_NAME}_tests
     test_texture_color_palette.cpp
     test_texture_island_view.cpp
     test_file_url.cpp
+    test_imgui_wrapper.cpp
     test_user_manager.cpp
+    test_sequential_clearance.cpp
     ../fff_print/test_helpers.cpp
     )
 

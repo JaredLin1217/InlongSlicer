@@ -1,0 +1,56 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-grid-stability-20261016",
+  "key": "organic-support-belt-floor-grid",
+  "type": "fact",
+  "conclusion": "Organic branch topology and independent output layers use different Z grids: clip output slices and propagated roots using belt-floor polygons evaluated at each output layer's physical print_z, not the topology cache index, and keep a positive regular height for negative-Z layer zero. Parallel overhang sampling can emit tips and roofs onto shared lower layers; quantized tip deduplication must publish layer-local candidates in stable source-layer order rather than mutex acquisition order. Otherwise even fresh slices with identical settings can generate different support geometry, and support-only re-slices differ from a fresh slice.",
+  "scope": "InlongSlicer",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "belt",
+    "layer-height",
+    "determinism",
+    "reslice",
+    "parallelism"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_print.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "5a7ad1174fae59838299c7a0c0ea9f355c89ca8250616f30955776eb622fbf09",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "locator": "RichInterfacePlacer::PendingPlacement, generate_initial_areas ordered publication, OrganicSupportLayerPlan::legacy and organic_draw_branches output_belt_floors"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "4012a42c15cbb752c66bc4416eb2eec6d659ebdcaf27b9b74457ccc90ed5f653",
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "locator": "A support-only change on a belt purge print matches a fresh slice; Belt supports reach the belt under a leading overhang"
+    }
+  ],
+  "verified_utc": "2026-10-16T08:53:34.7986051+00:00",
+  "verification": {
+    "method": "Byte-identical implementation and semantic test-delta review",
+    "summary": "TreeSupport3D.cpp is byte-identical to the prior verified snapshot. The reviewed test_print.cpp diff adds 185 lines and removes none; the existing belt floor, leading-overhang and support-only reslice tests remain in place alongside incoming upstream cases. This verifies preservation of the implementation contract; it does not claim a fresh support benchmark or speedup measurement. Rebuilt native affected-suite execution remains a separate pending integration check. File hashes bind the reviewed merge-worktree bytes; the pre-merge HEAD is a checkout anchor, not a claim that uncommitted bytes already belong to it.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-grid-stability-performance-20261013"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

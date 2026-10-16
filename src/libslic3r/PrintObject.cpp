@@ -868,11 +868,10 @@ void PrintObject::contour_z()
     BOOST_LOG_TRIVIAL(debug) << "Contouring in parallel - start";
 
     TriangleMesh mesh = this->m_model_object->raw_mesh();
-    if (m_model_object->instances.size() != 1) {
-        throw RuntimeError("ContourZ: unexpected number of instances");
-    }
-
-    ModelInstance *inst = m_model_object->instances.front();
+    // A PrintObject groups the instances that share their whole transformation but the XY shift: an
+    // instance rotated, scaled or mirrored differently is a PrintObject of its own. So the first
+    // instance stands for all of them.
+    const ModelInstance *inst = m_instances.front().model_instance;
     Point                    center_offset = this->center_offset();
     Geometry::Transformation trans = inst->get_transformation();
 
@@ -895,7 +894,8 @@ void PrintObject::contour_z()
 
                 std::scoped_lock lock(mtx);
                 completed++;
-                std::string msg = (boost::format("Z contoured layer %d/%d (%d%%)") % (completed) % m_layers.size() % int(double(completed) / m_layers.size() * 100)).str();
+                // TRN Slicing status: layers done, total layers, percentage done.
+                std::string msg = (boost::format(L("Z contoured layer %d/%d (%d%%)")) % (completed) % m_layers.size() % int(double(completed) / m_layers.size() * 100)).str();
                 m_print->set_status(40, msg);
             }
         }
@@ -968,12 +968,11 @@ void PrintObject::generate_support_material(bool with_belt_brim)
             BOOST_LOG_TRIVIAL(info) << std::fixed << std::setprecision(0) << "is_support_necessary takes " << duration << " secs.";
 
             if (sntype != NoNeedSupp) {
-                std::map<SupportNecessaryType, std::string> reasons = {
-                    {SharpTail,L("floating regions")},
-                    {Cantilever,L("floating cantilever")},
-                    {LargeOverhang,L("large overhangs")} };
-                std::string warning_message = Slic3r::format(L("It seems object %s has %s. Please re-orient the object or enable support generation."),
-                    this->model_object()->name, reasons[sntype]);
+                std::map<SupportNecessaryType, std::string> messages = {
+                    {SharpTail,L("It seems object %1% has floating regions. Please re-orient the object or enable support generation.")},
+                    {Cantilever,L("It seems object %1% has a floating cantilever. Please re-orient the object or enable support generation.")},
+                    {LargeOverhang,L("It seems object %1% has large overhangs. Please re-orient the object or enable support generation.")} };
+                std::string warning_message = Slic3r::format(messages[sntype], this->model_object()->name);
                 this->active_step_add_warning(PrintStateBase::WarningLevel::NON_CRITICAL, warning_message, PrintStateBase::SlicingNeedSupportOn);
             }
 

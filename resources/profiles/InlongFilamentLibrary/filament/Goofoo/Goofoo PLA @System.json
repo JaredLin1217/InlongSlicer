@@ -1,0 +1,9 @@
+{
+	"type": "filament",
+	"name": "Goofoo PLA @System",
+	"inherits": "Goofoo PLA @base",
+	"from": "system",
+	"setting_id": "jSvoBWhddlPMD50H",
+	"instantiation": "true",
+	"compatible_printers": []
+}

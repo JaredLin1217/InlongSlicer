@@ -1,0 +1,61 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "upstream-profile-compatibility-20261016",
+  "key": "curated-profile-validation-compatibility",
+  "type": "lesson",
+  "conclusion": "The upstream 2.5 profile authoring tool is scripts/inlong_profile_tool.py. Project wrappers use check --fork-compatible to preserve the four curated fork bundles and legacy per-extruder arrays without explicit variant layouts. Reference, index-coverage and deterministic-ID checks remain active; effective configurations also require the native validator. Do not mass-normalize curated profiles: disposable previews can remove fields. Historical reference trees retain their original OrcaFilamentLibrary inheritance identity.",
+  "scope": "InlongSlicer upstream integration and preset tooling",
+  "modules": [
+    "profiles",
+    "upstream-sync",
+    "branding"
+  ],
+  "tags": [
+    "compatibility",
+    "validation",
+    "legacy-presets"
+  ],
+  "files": [
+    "scripts/inlong_profile_tool.py",
+    "scripts/tests/test_profile_tool.py",
+    "InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md"
+  ],
+  "sources": [
+    {
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "sha256": "7cb2c00fabd378be95d53e86dba90db93e83934b1dea5b6bb1850170186b87be",
+      "kind": "file_snapshot",
+      "path": "scripts/inlong_profile_tool.py",
+      "locator": "FORK_PROFILE_BUNDLES, check_profiles, check_variant_arrays and _flatten_presets"
+    },
+    {
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "sha256": "cf17eb93dabf21552ac6eb8495eed62f723228110821e26bcf58483fab3707de",
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_profile_tool.py",
+      "locator": "TestCheck fork layout/missing-reference regression and TestLegacyCompat historical library regression"
+    },
+    {
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "sha256": "a26c318348e1720748403b0854385f6a8b7ebd2cac90820f8aee72a7f9e9a758",
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md",
+      "locator": "Profile Tool Compatibility During Upstream Sync"
+    }
+  ],
+  "verified_utc": "2026-10-16T08:33:38.6668829+00:00",
+  "verification": {
+    "result": "passed",
+    "summary": "Reviewed actual source snapshots on the local merge worktree, anchored at pre-merge HEAD f9c8b09. The supported CLI check passes 73 vendors; a real-tree unit rerun passes, and negative-reference and historical-library regressions pass. The source hashes bind the uncommitted reviewed bytes; the checkout anchor does not claim those bytes are already committed. Preview-only normalization removed 47 fields in scratch and was not applied to source. Native effective-config validation remains a separate required test, not evidence claimed by this record.",
+    "reviewed_by": "Codex root agent",
+    "method": "Source review, real-tree CLI check, targeted unit regressions and isolated transformation preview"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
