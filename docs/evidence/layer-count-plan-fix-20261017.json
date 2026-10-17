@@ -1,0 +1,248 @@
+{
+  "schema_version": "inlong-emitted-layer-plan-fix/v1",
+  "verified_utc": "2026-10-17T10:03:10.949669+00:00",
+  "checkout_anchor": "50267762b691187c059ab7fd4b73df59de6d7871",
+  "scope": "Generic G-code export layer planning for all devices; Windows Release native verification. No machine/profile identity selects the fix.",
+  "source_sha256": {
+    "src/libslic3r/GCode.cpp": "e5cf25ddcce00de616d0458a0b10fa730471e263b78a9d467c30d0c24723192b",
+    "tests/fff_print/test_print.cpp": "3b25637919a1d68850a1510bd865142010c5a4a4e132f0e88414ea61941feb4f",
+    "tests/fff_print/test_support_material.cpp": "520c41447692e68583b69cc4b7af475ce8cb77d4cbfd9a5aaec2dbe75e7d28e0"
+  },
+  "product_validation_passed": true,
+  "root_causes": [
+    "The old up-front count duplicated Z merging with a different rule from collect_layers_to_print; it also included empty object/support planes.",
+    "An empty object plane could emit a layer-change tag without a move, while preview renumbers only existing move vertices.",
+    "After empty planes are omitted, a source Layer::id is not an index into the emitted layer plan; spiral finishing must recognize the last emitted item."
+  ],
+  "changes": [
+    "Build and filter the canonical layer plan before expanding total_layer_count; reuse that same plan for generation.",
+    "Sequential instances reuse their cached per-object plan, and each instance contributes the actual emitted count.",
+    "Retain genuine object/support paths, belt brim/apron paths, tower-only layers and explicit user events; discard records without a tool or printable content.",
+    "Keep original first-layer validation, physical print_z, toolpath generation, profile parameters and support-contact planning unchanged.",
+    "Count serially processed output records to detect the final spiral-vase layer, excluding pipeline no-op sentinels."
+  ],
+  "source_review": {
+    "physical_layer_generator_unchanged": true,
+    "preexisting_print_tests_unchanged": true,
+    "support_tests_outside_expanded_fixture_unchanged": true,
+    "changed_knowledge_source_snapshots": {
+      "endpoint-layer-fixes-20261017": [
+        "tests/fff_print/test_support_material.cpp"
+      ],
+      "inlong-infinity-defaults-fan-20261017": [
+        "src/libslic3r/GCode.cpp"
+      ],
+      "normal-support-contact-clearance-endpoint-20261017": [
+        "tests/fff_print/test_support_material.cpp"
+      ],
+      "organic-contact-tip-landing-endpoint-20261017": [
+        "tests/fff_print/test_support_material.cpp"
+      ],
+      "organic-support-grid-stability-endpoint-20261017": [
+        "tests/fff_print/test_print.cpp",
+        "tests/fff_print/test_support_material.cpp"
+      ],
+      "upstream-print-statistics-placeholders-20261017": [
+        "src/libslic3r/GCode.cpp",
+        "tests/fff_print/test_print.cpp"
+      ]
+    }
+  },
+  "tests": [
+    {
+      "path": ".agents/runtime/runs/run-5afe5ad4cbc344209470759ccf7f976f/validation/final-affected-fff.xml",
+      "sha256": "1cf3737ccf6acba0d760b907c30d89cd02bfce35dd59f1f1d996486ba6c58691",
+      "test_cases": 258,
+      "assertions": 9170,
+      "result": "passed"
+    },
+    {
+      "path": ".agents/runtime/runs/run-5afe5ad4cbc344209470759ccf7f976f/validation/final-belt-compatibility.xml",
+      "sha256": "0c6c107d297467ea18700f0941dc93524c85fe9a4a7057d8da09a5ad9903157a",
+      "test_cases": 76,
+      "assertions": 934,
+      "result": "passed"
+    }
+  ],
+  "regressions": {
+    "empty_plane_print_sequences": "3 nozzle sizes x 2 print sequences x 2 instances = 6 parameter combinations",
+    "thin_bed_support": "3 nozzle sizes x 2 independent-body modes x 2 print sequences = 12 parameter combinations",
+    "spiral_finishing": "Both print sequences retain constant-Z finishing extrusion at the final physical layer after an omitted empty plane.",
+    "baseline_failure_reports": [
+      "baseline-regressions.xml",
+      "spiral-before-fix.xml"
+    ]
+  },
+  "native_cases": [
+    {
+      "label": "final-vulcan600-fresh",
+      "header": 1553,
+      "footer": 1553,
+      "emitted": 1553,
+      "with_deposition": 1553,
+      "first_deposition": {
+        "index": 1,
+        "line": 85,
+        "z": 0.2375,
+        "height": 0.2375,
+        "deposition_moves": 1540,
+        "extrusion_mm": 623.3832199999999,
+        "feature_moves": {
+          "Skirt": 122,
+          "Support interface": 230,
+          "Support": 1188
+        },
+        "actual_deposition_z": [
+          0.238
+        ],
+        "first_deposition_line": 109,
+        "last_deposition_line": 2176
+      },
+      "final_layer": {
+        "index": 1553,
+        "line": 1149128,
+        "z": 218.25,
+        "height": 0.25,
+        "deposition_moves": 36,
+        "extrusion_mm": 6.823219999999999,
+        "feature_moves": {
+          "Outer wall": 12,
+          "Gap infill": 24
+        },
+        "actual_deposition_z": [
+          218.25
+        ],
+        "first_deposition_line": 1149153,
+        "last_deposition_line": 1149221
+      },
+      "gcode_sha256": "45c086db75c52e64ad563742e54d7819ec8c6cda8cff866e5d23f4fa06423692",
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-5afe5ad4cbc344209470759ccf7f976f\\work\\final-vulcan600-fresh\\plate_1.gcode"
+    },
+    {
+      "label": "final-x2-fresh",
+      "header": 2251,
+      "footer": 2251,
+      "emitted": 2251,
+      "with_deposition": 2251,
+      "first_deposition": {
+        "index": 1,
+        "line": 80,
+        "z": 0.18,
+        "height": 0.18,
+        "deposition_moves": 1296,
+        "extrusion_mm": 260.52197999999976,
+        "feature_moves": {
+          "Skirt": 112,
+          "Brim": 168,
+          "Support interface": 3,
+          "Support": 1013
+        },
+        "actual_deposition_z": [
+          0.18
+        ],
+        "first_deposition_line": 101,
+        "last_deposition_line": 1603
+      },
+      "final_layer": {
+        "index": 2251,
+        "line": 1192520,
+        "z": 246.4,
+        "height": 0.199997,
+        "deposition_moves": 3,
+        "extrusion_mm": 0.00047,
+        "feature_moves": {
+          "Outer wall": 3
+        },
+        "actual_deposition_z": [
+          246.4
+        ],
+        "first_deposition_line": 1192537,
+        "last_deposition_line": 1192539
+      },
+      "gcode_sha256": "b070625071cd3c3035d75ec21c9fe6004e1f4a4d613fba445cafc0c83631a2fb",
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-5afe5ad4cbc344209470759ccf7f976f\\work\\final-x2-fresh\\plate_1.gcode"
+    }
+  ],
+  "path_comparisons": [
+    {
+      "label": "x2",
+      "before_path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-45f88abd74d44fb984dc436027734500\\work\\current-x2-fresh\\plate_1.gcode",
+      "after_path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-5afe5ad4cbc344209470759ccf7f976f\\work\\final-x2-fresh\\plate_1.gcode",
+      "deposition_counts": [
+        727422,
+        727422
+      ],
+      "deposition_sha256": [
+        "3c1a60ba22b8e79002f0013e92fbd5245ca6cf7ecbd2aa22f10aeb7dbf54019a",
+        "3c1a60ba22b8e79002f0013e92fbd5245ca6cf7ecbd2aa22f10aeb7dbf54019a"
+      ],
+      "identical": true,
+      "compared_fields": [
+        "command",
+        "start XYZ",
+        "end XYZ",
+        "deposited E",
+        "arc IJ",
+        "feedrate",
+        "feature",
+        "width",
+        "height",
+        "tool"
+      ],
+      "normalization": "Merge only consecutive collinear, same-direction G1 depositions with identical feedrate, feature, width, height and tool and proportional E within one 0.00001 mm exported E quantum; sum E exactly to 8 decimal places. This ignores fan insertion split points, not geometry or material changes.",
+      "first_differences": [],
+      "effective_config_differences": {}
+    },
+    {
+      "label": "vulcan600",
+      "before_path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-45f88abd74d44fb984dc436027734500\\work\\current-vulcan600-fresh\\plate_1.gcode",
+      "after_path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-5afe5ad4cbc344209470759ccf7f976f\\work\\final-vulcan600-fresh\\plate_1.gcode",
+      "deposition_counts": [
+        762379,
+        762379
+      ],
+      "deposition_sha256": [
+        "4c4fec363c18b1f5b395b0038d168770004281e73bac8365bcb11c701ab43333",
+        "4c4fec363c18b1f5b395b0038d168770004281e73bac8365bcb11c701ab43333"
+      ],
+      "identical": true,
+      "compared_fields": [
+        "command",
+        "start XYZ",
+        "end XYZ",
+        "deposited E",
+        "arc IJ",
+        "feedrate",
+        "feature",
+        "width",
+        "height",
+        "tool"
+      ],
+      "normalization": "Merge only consecutive collinear, same-direction G1 depositions with identical feedrate, feature, width, height and tool and proportional E within one 0.00001 mm exported E quantum; sum E exactly to 8 decimal places. This ignores fan insertion split points, not geometry or material changes.",
+      "first_differences": [],
+      "effective_config_differences": {}
+    }
+  ],
+  "serialization_difference": "Vulcan600 has 764012 rather than 764013 positive XY/E commands because an obsolete empty-layer fan transition no longer splits one collinear line. After same-direction/collinearity and proportional-E normalization, ordered geometry, total E, arc IJ, commanded speed, role, width, height and tool are identical. X2 raw deposition commands were also identical. Cooling parameters are unchanged; raw G-code/fan timing is not claimed byte-identical.",
+  "candidate_binding": {
+    "dll_sha256": "8c0fcc3bb0783fdc207167c3c1d0d7d32545c5e4fe010a87007e4ffebaaf2d9c",
+    "core_library_sha256": "263e641e5203f86f008deac5277f299402e0b456a846744e482466830f6cad5a",
+    "sources": {
+      "src/libslic3r/GCode.cpp": "e5cf25ddcce00de616d0458a0b10fa730471e263b78a9d467c30d0c24723192b",
+      "tests/fff_print/test_print.cpp": "3b25637919a1d68850a1510bd865142010c5a4a4e132f0e88414ea61941feb4f",
+      "tests/fff_print/test_support_material.cpp": "520c41447692e68583b69cc4b7af475ce8cb77d4cbfd9a5aaec2dbe75e7d28e0"
+    }
+  },
+  "preservation": {
+    "installed_binaries_unchanged": true,
+    "live_settings_unchanged": true
+  },
+  "limits": [
+    "Native G-code and processor-result verification is not a live GUI or physical printer qualification.",
+    "X2 retains two legitimate independent object/support records at the same serialized Z108.6; every emitted record deposits material.",
+    "Legacy BBL preset compatibility lookup messages remain in CLI logs; this fix does not claim warning-free slicing.",
+    "The initially corrected mutable test-fixture accessor, expected old-algorithm failures and raw split-sensitive comparison are retained as diagnostic receipts.",
+    "No install, commit or push was requested or performed by this fix task."
+  ],
+  "agents_used": 1
+}

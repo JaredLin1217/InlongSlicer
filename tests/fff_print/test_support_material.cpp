@@ -11,6 +11,7 @@
 #include <boost/make_shared.hpp>
 
 #include "libslic3r/GCodeReader.hpp"
+#include "libslic3r/GCode/GCodeProcessor.hpp"
 #include "libslic3r/GCode/ConflictChecker.hpp"
 #include "libslic3r/Fill/FillBase.hpp"
 #include "libslic3r/Layer.hpp"
@@ -1130,8 +1131,9 @@ TEST_CASE("Thin bed intersections retain printable organic support below the fir
 {
     const double nozzle = GENERATE(0.4, 0.6, 0.8);
     const bool independent_body = GENERATE(false, true);
+    const char *sequence = GENERATE("by layer", "by object");
     const double layer_height = nozzle * (0.25 / 0.6);
-    CAPTURE(nozzle, layer_height, independent_body);
+    CAPTURE(nozzle, layer_height, independent_body, sequence);
     DynamicPrintConfig config = organic_support_config(independent_body, true, layer_height,
                                                        layer_height * 0.85, nozzle / 12., nozzle * 0.75);
     config.set_deserialize_strict({
@@ -1140,7 +1142,8 @@ TEST_CASE("Thin bed intersections retain printable organic support below the fir
         {"detect_thin_wall", false},
         {"support_threshold_angle", 60},
         {"initial_layer_line_width", nozzle * 1.05},
-        {"support_object_first_layer_gap", 2.0}
+        {"support_object_first_layer_gap", 2.0},
+        {"print_sequence", sequence}, {"skirt_loops", 0}, {"brim_type", "no_brim"}
     });
     TriangleMesh tilted = make_cube(12., 16., 3.);
     tilted.rotate_y(float(PI / 4.));
@@ -1155,7 +1158,24 @@ TEST_CASE("Thin bed intersections retain printable organic support below the fir
     REQUIRE_FALSE(support_layers.empty());
     REQUIRE(support_layers.front()->print_z <= layer_height + EPSILON);
     REQUIRE(support_layers.front()->height >= nozzle / 12. - EPSILON);
-    REQUIRE_NOTHROW(gcode(print));
+    GCodeProcessorResult result;
+    const std::string gc = gcode(print, &result);
+    std::set<unsigned int> move_layers;
+    for (size_t i = 1; i < result.moves.size(); ++i)
+        move_layers.insert(result.moves[i].layer_id);
+    REQUIRE_FALSE(move_layers.empty());
+    size_t changes = 0;
+    for (size_t pos = 0; (pos = gc.find(";LAYER_CHANGE\n", pos)) != std::string::npos; ++pos)
+        ++changes;
+    auto declared_total = [&gc](const std::string &prefix) {
+        const size_t pos = gc.find(prefix);
+        REQUIRE(pos != std::string::npos);
+        return size_t(std::stoul(gc.substr(pos + prefix.size())));
+    };
+    CHECK(changes == move_layers.size());
+    CHECK(declared_total("; total layer number: ") == changes);
+    CHECK(declared_total("; total layers count = ") == changes);
+    CHECK(*move_layers.rbegin() == changes - 1);
 }
 
 TEST_CASE("SupportMaterial: Organic top contact can use an exact independent height", "[SupportMaterial][OrganicTree]")

@@ -2255,6 +2255,23 @@ static bool belt_object_layer_prints_something(const PrintObject &object, const 
     return false;
 }
 
+template <typename Iterator>
+static bool layer_will_be_emitted(Iterator begin, Iterator end, const LayerTools &tools, bool has_wipe_tower)
+{
+    if (tools.extruders.empty())
+        return false;
+    // Tower-only layers and explicit user events may have no object/support paths.
+    // Ordinary skirts and brims are attached to printable object/support visits;
+    // belt apron bands also have their own printable layer records.
+    return (has_wipe_tower && tools.has_wipe_tower) || tools.custom_gcode != nullptr ||
+        std::any_of(begin, end, [](const GCode::LayerToPrint &layer) {
+            return (layer.object_layer != nullptr &&
+                    belt_object_layer_prints_something(*layer.object_layer->object(), *layer.object_layer)) ||
+                   (layer.support_layer != nullptr && layer.support_layer->has_extrusions()) ||
+                   (layer.belt_brim_band != nullptr && !layer.belt_brim_band->fills.empty());
+        });
+}
+
 std::vector<GCode::LayerToPrint> GCode::collect_layers_to_print(const PrintObject& object, bool skip_empty_first_layer)
 {
     std::vector<GCode::LayerToPrint> layers_to_print;
@@ -3417,66 +3434,10 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
         });
     }
 
-    // How many times will be change_layer() called?
-    // change_layer() in turn increments the progress bar status.
+    // Count the same filtered layer plan that will be passed to the generator below.
+    // Independent support grids may contain empty planes, and their near-Z merge
+    // must use collect_layers_to_print(), not a second approximation of that merge.
     m_layer_count = 0;
-    // On a belt, collect_layers_to_print() drops the layers that print nothing (an
-    // object's empty lead-in), so they must not be counted here either or the layer
-    // count in the file disagrees with its layer changes.
-    const bool belt = print.config().belt_printer.value;
-    if (print.config().print_sequence == PrintSequence::ByObject) {
-        // Add each of the object's layers separately.
-        for (auto object : print.objects()) {
-            std::vector<coordf_t> zs;
-            zs.reserve(object->layers().size() + object->support_layers().size());
-            for (auto layer : object->layers())
-                if (! belt || belt_object_layer_prints_something(*object, *layer))
-                    zs.push_back(layer->print_z);
-            for (auto layer : object->support_layers())
-                if (! belt || layer->has_extrusions())
-                    zs.push_back(layer->print_z);
-            // Belt brim apron bands each get their own change_layer() call.
-            for (const BeltBrimBand &band : object->belt_brim_prologue())
-                zs.push_back(band.print_z);
-            if (zs.empty())
-                continue;
-            std::sort(zs.begin(), zs.end());
-            //BBS: merge numerically very close Z values.
-            auto end_it = std::unique(zs.begin(), zs.end());
-            unsigned int temp_layer_count = (unsigned int)(end_it - zs.begin());
-            for (auto it = zs.begin(); it != end_it - 1; it++) {
-                if (abs(*it - *(it + 1)) < EPSILON)
-                    temp_layer_count--;
-            }
-            m_layer_count += (unsigned int)(object->instances().size() * temp_layer_count);
-        }
-    } else {
-        // Print all objects with the same print_z together.
-        std::vector<coordf_t> zs;
-        for (auto object : print.objects()) {
-            zs.reserve(zs.size() + object->layers().size() + object->support_layers().size());
-            for (auto layer : object->layers())
-                if (! belt || belt_object_layer_prints_something(*object, *layer))
-                    zs.push_back(layer->print_z);
-            for (auto layer : object->support_layers())
-                if (! belt || layer->has_extrusions())
-                    zs.push_back(layer->print_z);
-            // See the ByObject branch: apron bands are real printed layers.
-            for (const BeltBrimBand &band : object->belt_brim_prologue())
-                zs.push_back(band.print_z);
-        }
-        if (!zs.empty())
-        {
-            std::sort(zs.begin(), zs.end());
-            //BBS: merge numerically very close Z values.
-            auto end_it = std::unique(zs.begin(), zs.end());
-            m_layer_count = (unsigned int)(end_it - zs.begin());
-            for (auto it = zs.begin(); it != end_it - 1; it++) {
-                if (abs(*it - *(it + 1)) < EPSILON)
-                    m_layer_count--;
-            }
-        }
-    }
     print.throw_if_canceled();
 
     m_enable_cooling_markers = true;
@@ -3510,6 +3471,8 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     // Get optimal tool ordering to minimize tool switches of a multi-exruder print.
     // For a print by objects, find the 1st printing object.
     ToolOrdering tool_ordering;
+    std::map<const PrintObject *, std::vector<LayerToPrint>> sequential_layers_to_print;
+    std::vector<std::pair<coordf_t, std::vector<LayerToPrint>>> layers_to_print;
     unsigned int initial_extruder_id = (unsigned int)-1;
     //BBS: first non-support filament extruder
     unsigned int initial_non_support_extruder_id = (unsigned int) -1;
@@ -3547,6 +3510,19 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
                 tool_ordering = ToolOrdering(*(*print_object_instance_sequential_active)->print_object, initial_extruder_id);
                 tool_ordering.sort_and_build_data(*(*print_object_instance_sequential_active)->print_object,initial_extruder_id);
             }
+            const PrintObject *object = (*print_object_instance_sequential_active)->print_object;
+            auto planned = sequential_layers_to_print.find(object);
+            if (planned == sequential_layers_to_print.end()) {
+                auto layers = collect_layers_to_print(*object, print.config().belt_printer.value);
+                const bool object_has_wipe_tower = print.has_wipe_tower() && tool_ordering.has_wipe_tower();
+                layers.erase(std::remove_if(layers.begin(), layers.end(), [&](const LayerToPrint &layer) {
+                    return !layer_will_be_emitted(&layer, &layer + 1,
+                        tool_ordering.tools_for_layer(layer.print_z()), object_has_wipe_tower);
+                }), layers.end());
+                planned = sequential_layers_to_print.emplace(object, std::move(layers)).first;
+            }
+            // Each sequential instance emits the object's plan again.
+            m_layer_count += static_cast<unsigned int>(planned->second.size());
             float temp_max_additional_fan = tool_ordering.cal_max_additional_fan(print.config());
             if(temp_max_additional_fan > max_additional_fan )
                         max_additional_fan = temp_max_additional_fan;
@@ -3580,6 +3556,12 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
             // No object to print was found, cancel the G-code export.
             throw Slic3r::SlicingError(_(L("No object can be printed. It may be too small.")));
         has_wipe_tower = print.has_wipe_tower() && tool_ordering.has_wipe_tower();
+        layers_to_print = collect_layers_to_print(print);
+        layers_to_print.erase(std::remove_if(layers_to_print.begin(), layers_to_print.end(), [&](const auto &layer) {
+            return !layer_will_be_emitted(layer.second.begin(), layer.second.end(),
+                tool_ordering.tools_for_layer(layer.first), has_wipe_tower);
+        }), layers_to_print.end());
+        m_layer_count = static_cast<unsigned int>(layers_to_print.size());
         // Inlong: support all extruder priming
         initial_extruder_id = (wipe_tower_type == WipeTowerType::Type2 && has_wipe_tower && !print.config().single_extruder_multi_material_priming) ?
             // The priming towers will be skipped.
@@ -4611,7 +4593,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
                 // and export G-code into file.
                 tool_ordering.cal_most_used_extruder(print.config());
                 m_printed_objects.emplace_back(&object);
-                this->process_layers(print, tool_ordering, collect_layers_to_print(object, print.config().belt_printer.value), *print_object_instance_sequential_active - object.instances().data(), file,
+                this->process_layers(print, tool_ordering, sequential_layers_to_print.at(&object), *print_object_instance_sequential_active - object.instances().data(), file,
                                      prime_extruder);
                 {
                     // save the flush statitics stored in tool ordering by object
@@ -4640,7 +4622,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
         } else {
             // Sort layers by Z.
             // All extrusion moves with the same top layer height are extruded uninterrupted.
-            std::vector<std::pair<coordf_t, std::vector<LayerToPrint>>> layers_to_print = collect_layers_to_print(print);
+            // Reuse the exact plan counted before expanding total_layer_count.
             // Prusa Multi-Material wipe tower.
             if (has_wipe_tower && ! layers_to_print.empty()) {
                 m_wipe_tower.reset(new WipeTowerIntegration(print.config(), print.get_plate_index(), print.get_plate_origin(), *print.wipe_tower_data().priming.get(),
@@ -5086,13 +5068,14 @@ void GCode::process_layers(
         float max_xy_smoothing = m_config.get_abs_value("spiral_mode_max_xy_smoothing", nozzle_diameter);
         this->m_spiral_vase->set_max_xy_smoothing(max_xy_smoothing);
     }
+    size_t spiral_layers_processed = 0;
     const auto spiral_mode = tbb::make_filter<LayerResult, LayerResult>(slic3r_tbb_filtermode::serial_in_order,
-        [&spiral_mode = *this->m_spiral_vase.get(), &layers_to_print](LayerResult in) -> LayerResult {
+        [&spiral_mode = *this->m_spiral_vase.get(), &layers_to_print, &spiral_layers_processed](LayerResult in) -> LayerResult {
         	if (in.nop_layer_result)
                 return in;
 
             spiral_mode.enable(in.spiral_vase_enable);
-            bool last_layer = in.layer_id == layers_to_print.size() - 1;
+            const bool last_layer = ++spiral_layers_processed == layers_to_print.size();
             return { spiral_mode.process_layer(std::move(in.gcode), last_layer), in.layer_id, in.spiral_vase_enable, in.cooling_buffer_flush};
         });
     const auto pressure_equalizer = tbb::make_filter<LayerResult, LayerResult>(slic3r_tbb_filtermode::serial_in_order,
@@ -5183,12 +5166,13 @@ void GCode::process_layers(
         float max_xy_smoothing = m_config.get_abs_value("spiral_mode_max_xy_smoothing", nozzle_diameter);
         this->m_spiral_vase->set_max_xy_smoothing(max_xy_smoothing);
     }
+    size_t spiral_layers_processed = 0;
     const auto spiral_mode = tbb::make_filter<LayerResult, LayerResult>(slic3r_tbb_filtermode::serial_in_order,
-        [&spiral_mode = *this->m_spiral_vase.get(), &layers_to_print](LayerResult in)->LayerResult {
+        [&spiral_mode = *this->m_spiral_vase.get(), &layers_to_print, &spiral_layers_processed](LayerResult in)->LayerResult {
             if (in.nop_layer_result)
                 return in;
             spiral_mode.enable(in.spiral_vase_enable);
-            bool last_layer = in.layer_id == layers_to_print.size() - 1;
+            const bool last_layer = ++spiral_layers_processed == layers_to_print.size();
             return { spiral_mode.process_layer(std::move(in.gcode), last_layer), in.layer_id, in.spiral_vase_enable, in.cooling_buffer_flush };
         });
     const auto pressure_equalizer = tbb::make_filter<LayerResult, LayerResult>(slic3r_tbb_filtermode::serial_in_order,

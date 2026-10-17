@@ -1571,6 +1571,102 @@ TEST_CASE("Belt G-code has no layer that prints nothing", "[Print][belt][GCode][
     CHECK(total_count == layers);
 }
 
+TEST_CASE("G-code counts only layers with printable paths in both print sequences", "[Print][LayerCount][Regression]")
+{
+    const char *sequence = GENERATE("by layer", "by object");
+    const double nozzle = GENERATE(0.4, 0.6, 1.2);
+    CAPTURE(sequence, nozzle);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        {"print_sequence", sequence}, {"nozzle_diameter", std::to_string(nozzle)},
+        {"layer_height", 0.2}, {"initial_layer_print_height", 0.2},
+        {"skirt_loops", 0}, {"brim_type", "no_brim"}, {"enable_prime_tower", false},
+        {"z_hop", 0}, {"machine_start_gcode", ";CHECK_TOTAL:[total_layer_count]\n"},
+        {"layer_change_gcode", ";CHECK_LAYER:[layer_num]\n"}
+    });
+    Print print;
+    Model model;
+    init_print({cube(4)}, print, model, config, nullptr, true, 2);
+    print.set_status_silent();
+    print.process();
+    PrintObject &object = *print.get_object(0);
+    REQUIRE(object.layer_count() == 20);
+    // Keep the physical Z grid, but give one intermediate layer no printable paths.
+    // This also leaves a tool-ordering entry behind in the non-sequential case.
+    Layer &empty = *object.get_layer(4);
+    for (LayerRegion *region : empty.regions()) {
+        region->perimeters.clear();
+        region->fills.clear();
+    }
+    REQUIRE_FALSE(empty.has_extrusions());
+    const size_t expected = 19 * (std::string(sequence) == "by object" ? 2 : 1);
+    GCodeProcessorResult result;
+    const std::string gc = gcode(print, &result);
+    size_t changes = 0, header = 0, footer = 0, placeholder = 0, hook_count = 0;
+    GCodeReader reader;
+    reader.parse_buffer(gc, [&](GCodeReader &, const GCodeReader::GCodeLine &line) {
+        const std::string &raw = line.raw();
+        auto value_after = [&raw](std::string_view prefix) {
+            return size_t(std::strtoul(raw.c_str() + prefix.size(), nullptr, 10));
+        };
+        if (raw == ";LAYER_CHANGE") ++changes;
+        else if (raw.rfind("; total layer number: ", 0) == 0) header = value_after("; total layer number: ");
+        else if (raw.rfind("; total layers count = ", 0) == 0) footer = value_after("; total layers count = ");
+        else if (raw.rfind(";CHECK_TOTAL:", 0) == 0) placeholder = value_after(";CHECK_TOTAL:");
+        else if (raw.rfind(";CHECK_LAYER:", 0) == 0) CHECK(value_after(";CHECK_LAYER:") == hook_count++);
+    });
+    CHECK(changes == expected);
+    CHECK(header == expected);
+    CHECK(footer == expected);
+    CHECK(placeholder == expected);
+    CHECK(hook_count == expected);
+    std::set<unsigned int> move_layers;
+    // The preview starts at move 1 and renumbers the source layer ids it sees.
+    for (size_t i = 1; i < result.moves.size(); ++i)
+        move_layers.insert(result.moves[i].layer_id);
+    REQUIRE(move_layers.size() == expected);
+    CHECK(*move_layers.begin() == 0);
+    CHECK(*move_layers.rbegin() == expected - 1);
+}
+
+TEST_CASE("Spiral vase finishing follows the final emitted layer after an empty plane", "[Print][LayerCount][Regression]")
+{
+    const char *sequence = GENERATE("by layer", "by object");
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        {"print_sequence", sequence}, {"layer_height", 0.2}, {"initial_layer_print_height", 0.2},
+        {"skirt_loops", 0}, {"brim_type", "no_brim"}, {"spiral_mode", true},
+        {"wall_loops", 1}, {"top_shell_layers", 0}, {"bottom_shell_layers", 3},
+        {"sparse_infill_density", 0}, {"use_relative_e_distances", true},
+        {"spiral_finishing_flow_ratio", 0.1}, {"z_hop", 0}
+    });
+    Print print;
+    Model model;
+    init_print({cube(4)}, print, model, config);
+    print.set_status_silent();
+    print.process();
+    PrintObject &object = *print.get_object(0);
+    Layer &empty = *object.get_layer(1);
+    for (LayerRegion *region : empty.regions()) {
+        region->perimeters.clear();
+        region->fills.clear();
+    }
+    REQUIRE_FALSE(empty.has_extrusions());
+    const double top_z = object.layers().back()->print_z;
+    const std::string gc = gcode(print);
+    double finishing_length = 0.;
+    GCodeReader reader;
+    reader.apply_config(config);
+    reader.parse_buffer(gc, [&](GCodeReader &self, const GCodeReader::GCodeLine &line) {
+        if (line.extruding(self) && line.dist_XY(self) > EPSILON &&
+            std::abs(line.new_Z(self) - top_z) < EPSILON && std::abs(line.dist_Z(self)) < EPSILON)
+            finishing_length += line.dist_XY(self);
+    });
+    // Finishing duplicates the top loop at constant Z with tapered extrusion;
+    // it must not taper the penultimate source layer instead.
+    CHECK(finishing_length > 4.);
+}
+
 // A part with an overhang on its LEADING side (the end that prints first) needs
 // supports below the object's own lowest slicing layer: the belt under that overhang
 // is reached before the object's first contact with it, so the support layers sit at

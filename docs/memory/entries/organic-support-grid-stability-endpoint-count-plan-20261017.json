@@ -1,0 +1,130 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-grid-stability-endpoint-count-plan-20261017",
+  "key": "organic-support-belt-floor-grid",
+  "type": "fact",
+  "conclusion": "Organic branch topology and independent output layers use different Z grids: clip output slices and propagated roots using belt-floor polygons evaluated at each output layer's physical print_z, not the topology cache index, and keep a positive regular height for negative-Z layer zero. Parallel overhang sampling can emit tips and roofs onto shared lower layers; quantized tip deduplication must publish layer-local candidates in stable source-layer order rather than mutex acquisition order. Otherwise even fresh slices with identical settings can generate different support geometry, and support-only re-slices differ from a fresh slice. Lower continuous roof footprints must retain their parent contact and depth until the output grid is known, then map to contact output index minus depth. Flooring aggregated topology-Z interface layers can omit a complete interface immediately below an exact contact. Preserve source-index placement on synchronized fallback. Current endpoint fixes additionally lower the independent bed-support layer only when necessary to preserve a nearby exact contact within minimum thickness constraints. Historical Benchy timing and path-comparison observations are not current-build guarantees. The generic G-code layer-count fix filters empty export records and shares one plan for counting and generation. Support geometry and contact-height algorithms are unchanged, and current support and belt regressions pass.",
+  "scope": "Reviewed source snapshots at checkout anchor 50267762b691187c059ab7fd4b73df59de6d7871 after the generic emitted-layer count fix; original historical measurements retain their original scope.",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "belt",
+    "layer-height",
+    "determinism",
+    "reslice",
+    "parallelism",
+    "interface-continuity",
+    "contact-relative-depth"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_print.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/benchy-organic-interface-remapping-20261016.md",
+    "docs/evidence/benchy-slicing-performance-20261016.md",
+    "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "docs/evidence/endpoint-layer-fixes-20261017.json",
+    "docs/evidence/endpoint-layer-compatibility-20261017.json",
+    "docs/evidence/layer-count-plan-fix-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "94f6f117ac849385e6fac09e13a56a498086a17e90a5abeb0ecae00d5f39c848",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "3b25637919a1d68850a1510bd865142010c5a4a4e132f0e88414ea61941feb4f",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "520c41447692e68583b69cc4b7af475ce8cb77d4cbfd9a5aaec2dbe75e7d28e0",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-organic-interface-remapping-20261016.md",
+      "sha256": "3155411053be9004597cd938eb33ad8bf41a1e8add05cb4d684e7fa859923cec",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+      "sha256": "8c3671fdf5fac4c71ec181acbd05a6697dfa52fe06a79aad13d5afb6de3f5a84",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-fixes-20261017.json",
+      "sha256": "c26dbc08692a17a39f74c86744c5d0de3f571a167b823b4624fca0cefe8f7036",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-compatibility-20261017.json",
+      "sha256": "c62ec35650414dc7f3ceaa2d0a29f4e97321e0791dfd197bb30f2d2989c8decd",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/layer-count-plan-fix-20261017.json",
+      "sha256": "7fef73b395035c8885b04a1ec5c3382eb0e73cefb4a6e8d6aa940edb0b64cc14",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed unchanged subsystem behavior or the explicitly scoped output-plan/test change; current regression and native evidence is in layer-count-plan-fix-20261017.json. Commit identifies the checkout anchor, not uncommitted bytes."
+    }
+  ],
+  "verified_utc": "2026-10-17T10:03:10.949669+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Source diff and exact unchanged-body checks; final affected FFF and belt native regressions; fresh native X2/Vulcan600 slices and canonical deposition/configuration equality.",
+    "summary": "Only the named source snapshots drifted. Existing contact, fan-default and final-statistics contracts retain their reviewed source scope. New count behavior and explicit serialization differences are captured by durable evidence; no old benchmark is relabeled as a current result."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-grid-stability-endpoint-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

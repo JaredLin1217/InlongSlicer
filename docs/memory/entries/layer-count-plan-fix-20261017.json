@@ -1,0 +1,71 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "layer-count-plan-fix-20261017",
+  "key": "gcode-emitted-layer-plan-counts",
+  "type": "fact",
+  "conclusion": "Count and generate G-code from the same filtered emitted-layer plan. Raw object/support Z union counts can disagree with collection/merging and can include empty planes. Preserve actual paths, belt apron/coincident brim paths, tower-only output and explicit user events while retaining the first-layer safety check. Sequential instances each contribute their reused object plan. Spiral-vase finishing uses the emitted ordinal, not source Layer::id. Fresh current-preset X2 and Vulcan600 header/footer/emitted/deposition counts are respectively 2251 and1553. Ordered canonical deposition geometry, E, speed, width and height match baseline; Vulcan loses one fan-related collinear split after an empty cooling transition disappears. Parameters and installed settings remain unchanged; no physical print or installation was performed.",
+  "scope": "Generic G-code exporter, Windows Release validation at checkout anchor 50267762b691187c059ab7fd4b73df59de6d7871",
+  "modules": [
+    "GCode",
+    "Print",
+    "layer-planning"
+  ],
+  "tags": [
+    "layer-count",
+    "empty-layers",
+    "sequential",
+    "spiral-vase",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/GCode.cpp",
+    "tests/fff_print/test_print.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/layer-count-plan-fix-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e5cf25ddcce00de616d0458a0b10fa730471e263b78a9d467c30d0c24723192b",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed canonical output plan, regression fixture or durable native validation. Checkout anchor does not imply these uncommitted bytes are already in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "3b25637919a1d68850a1510bd865142010c5a4a4e132f0e88414ea61941feb4f",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed canonical output plan, regression fixture or durable native validation. Checkout anchor does not imply these uncommitted bytes are already in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "520c41447692e68583b69cc4b7af475ce8cb77d4cbfd9a5aaec2dbe75e7d28e0",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed canonical output plan, regression fixture or durable native validation. Checkout anchor does not imply these uncommitted bytes are already in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/layer-count-plan-fix-20261017.json",
+      "sha256": "7fef73b395035c8885b04a1ec5c3382eb0e73cefb4a6e8d6aa940edb0b64cc14",
+      "commit": "50267762b691187c059ab7fd4b73df59de6d7871",
+      "locator": "Reviewed canonical output plan, regression fixture or durable native validation. Checkout anchor does not imply these uncommitted bytes are already in that commit."
+    }
+  ],
+  "verified_utc": "2026-10-17T10:03:10.949669+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Expected failing native regressions, final Release regression suites, disposable DLL, both fresh current-profile slices and exact canonical geometry/config comparison.",
+    "summary": "Header/footer/output and processor move-layer assertions agree in both print sequences; native training outputs have no empty layer tags. All actual path differences and verification limits are retained in the durable evidence."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
