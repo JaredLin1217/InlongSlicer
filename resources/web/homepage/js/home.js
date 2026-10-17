@@ -84,7 +84,7 @@ function Set_RecentFile_MouseRightBtn_Event()
 
 function SetLoginPanelVisibility(visible) {
   var leftBoard = document.getElementById("LeftBoard");
-  leftBoard.style.display = "block";
+  leftBoard.style.display = "none";
 }
 
 function HandleStudio( pVal )
@@ -117,11 +117,7 @@ function HandleStudio( pVal )
       $("#BambuCloudSection").hide();
     }
 
-    if (providers.indexOf("inlong") >= 0) {
-      $("#LeftBoard").show();
-    } else {
-      $("#LeftBoard").hide();
-    }
+    SetLoginPanelVisibility(false);
   } else if (strCmd == "network_plugin_installtip") {
     // Bambu Cloud is unreachable without the network plugin, so its row only carries the tip.
     let bMissing = pVal["show"] * 1 == 1;

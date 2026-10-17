@@ -43,9 +43,10 @@
     "extruder_offset":  [
                             "0x0"
                         ],
-    "fan_kickstart":  "0",
-    "fan_speedup_overhangs":  "1",
-    "fan_speedup_time":  "0",
+    "fan_kickstart":  "0.1",
+    "fan_speedup_overhangs":  "0",
+    "fan_speedup_time":  "0.5",
+    "part_cooling_fan_min_pwm":  "0",
     "printer_structure":  "corexy",
     "gcode_flavor":  "marlin2",
     "heatbreak_fan_control_mode":  "global_m710",

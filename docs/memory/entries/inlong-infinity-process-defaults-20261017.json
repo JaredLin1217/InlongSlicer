@@ -1,0 +1,136 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "inlong-infinity-process-defaults-20261017",
+  "key": "inlong-infinity-external-bridge-defaults",
+  "type": "fact",
+  "conclusion": "The INLONG and _Infinity3DP vendor manifests declare nine common process templates. Their shipped external bridge defaults remain bridge_flow = 1.05 and bridge_density = 105%, while organic tree support branch diameter is tree_support_branch_diameter_organic = 3.0 mm. All 46 declared processes and the default print profiles of all 63 selectable machine/nozzle presets resolve that organic diameter. Update these shared process templates rather than duplicating defaults into each selectable process or adding process-only options to machine profiles. Existing saved project and user preset overrides retain their own values. Internal bridge settings remain unchanged.",
+  "scope": "INLONG and Infinity3DP shipped process profiles",
+  "modules": [
+    "printer-profiles"
+  ],
+  "tags": [
+    "bridge",
+    "organic-support",
+    "defaults",
+    "inheritance",
+    "INLONG",
+    "Infinity3DP"
+  ],
+  "files": [
+    "resources/profiles/INLONG.json",
+    "resources/profiles/_Infinity3DP.json",
+    "scripts/tests/test_inlong_profile_gcode.py",
+    "resources/profiles/INLONG/process/process_common.json",
+    "resources/profiles/INLONG/process/sc_process_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/X1_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/X3_common.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_common.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG.json",
+      "sha256": "7c8ecffb5c1a3daa09cac0f53183a1a36b2e4eb302f0f0a8ab6119abaebe43bd",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Declared process_list and vendor identity; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP.json",
+      "sha256": "e239019a1dffc8026dcf5e5bb45287604751db8aedd275a883a23a926075665e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Declared process_list and vendor identity; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_inlong_profile_gcode.py",
+      "sha256": "a71ab9aec55ba0c24560f8046e822357382185908fe8eccd5e94eae1a1402129",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Manifest-driven resolve helper and the two bridge default regression tests; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/process_common.json",
+      "sha256": "f87e234af1f62f257a38aa012d18bafd06888672d8ce039d6fc8ee287520fd1a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_process_common.json",
+      "sha256": "988c01568140c4a294daeeb0202ec0a387d2137a7fcc0a7c7536a66d82007f9a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+      "sha256": "0f1d89e79c8ac53929acca6973c6cbf6987368d2a4fdf3e486a7761fba1dac99",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+      "sha256": "f3c732cadabfffe4f4ae7577ef7fec7847e24031bfc8ebc3e30df970a64ea303",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_common.json",
+      "sha256": "ea0bd20e420b028aefc60f299e60a8162034c16fb7d2482643f88ed5b458f958",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_common.json",
+      "sha256": "1d66de5ba5b8f821dd47d1d821c0656ca4a985860e9a82344b90fb9b6b776652",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+      "sha256": "3018319bd1c9edaf0486afb336dd6da76a5fdabb0c2fe75436b196a45cd049ce",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_common.json",
+      "sha256": "cab2319f0ffc10fc28c77612dc13ff37bc85074dd70a545c7261bec2992040f8",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+      "sha256": "efeb9909368023511e3dfccd5e3491eb6947d4d7fedd06fecd7c5c385e649d24",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Shared process defaults: tree_support_branch_diameter_organic = 3.0, bridge_flow = 1.05, bridge_density = 105%, with preserved internal settings; refreshed after bundle patch-version changes; commit identifies the checkout anchor."
+    }
+  ],
+  "verified_utc": "2026-10-17T01:34:09.464856+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Fresh manifest-driven composition of all 46 processes and all 63 selectable machine defaults; direct verification of bridge flow/density in all nine common templates. All common-template and test-source hashes still match the previous reviewed record; only the two manifest patch versions changed.",
+    "summary": "External bridge flow remains 1.05 and density 105%; all process and machine-default organic diameters remain 3.0 mm. Current brim gap resolves to 0.1. The scoped profile tool check passed with zero error/warning files. Existing regression test source and internal bridge settings were unchanged; the previous eleven-test result is historical, not claimed as rerun. This new immutable record replaces the stale manifest hashes without editing the previous record."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "inlong-infinity-process-defaults-20261014"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

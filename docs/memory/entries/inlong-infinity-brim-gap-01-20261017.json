@@ -1,0 +1,438 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "inlong-infinity-brim-gap-01-20261017",
+  "key": "inlong-infinity-brim-object-gap-default",
+  "type": "fact",
+  "conclusion": "All 46 indexed INLONG and _Infinity3DP process profiles, including common bases and selectable layer-height presets, set brim_object_gap to the string 0.1 (millimeters). This process option is labeled Brim-object gap in PrintConfig.cpp; it is not a machine-specific geometry setting. Twenty-three differing 0.05/0.15 overrides were changed and every selectable machine default resolves to 0.1. INLONG bundle version advances from 01.05.01.26 to 01.05.01.27 and _Infinity3DP from 01.28.15.21 to 01.28.15.22 so the local resource updater can refresh an older installed system bundle. Existing user or project overrides are not rewritten.",
+  "scope": "Built-in INLONG and _Infinity3DP profile defaults after the user-requested change on 2026-10-17; uncommitted profile edits anchored at c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+  "modules": [
+    "profiles",
+    "brim"
+  ],
+  "tags": [
+    "INLONG",
+    "Infinity3DP",
+    "brim_object_gap",
+    "process",
+    "bundle-version"
+  ],
+  "files": [
+    "resources/profiles/INLONG/process/sc_process_common.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.20mm.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.25mm.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+    "resources/profiles/INLONG/process/process_common.json",
+    "resources/profiles/INLONG/process/Layer_0.15mm.json",
+    "resources/profiles/INLONG/process/Layer_0.20mm.json",
+    "resources/profiles/INLONG/process/Layer_0.25mm.json",
+    "resources/profiles/INLONG/process/Layer_0.30mm.json",
+    "resources/profiles/INLONG/process/Layer_0.35mm.json",
+    "resources/profiles/INLONG.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_common.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_common.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+    "resources/profiles/_Infinity3DP.json",
+    "src/libslic3r/PrintConfig.cpp",
+    "src/slic3r/Utils/PresetUpdater.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_process_common.json",
+      "sha256": "988c01568140c4a294daeeb0202ec0a387d2137a7fcc0a7c7536a66d82007f9a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.20mm.json",
+      "sha256": "ca69f68b2830312522060616dd5a14ee685815a247777c9987f03ae4c31ec5b1",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.25mm.json",
+      "sha256": "5121cf5a661b6e36716ce67d69bc04e5e38e1ec67cade377eb329c65719613c9",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+      "sha256": "6eb17bbccd47b43a9287aad755735be26b835bd6d796fa3d407c7e566adfb369",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/process_common.json",
+      "sha256": "f87e234af1f62f257a38aa012d18bafd06888672d8ce039d6fc8ee287520fd1a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.15mm.json",
+      "sha256": "4178d8129ae3943ce5d5a7b61949f939c10a8e63c09ff5f843d57a05bf49fc9a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.20mm.json",
+      "sha256": "ae69be94106737d74afe674f644a0cad4cae120974a7d96482a1cb8d2abd7769",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.25mm.json",
+      "sha256": "7d45d65b4de4ea05854e373d060996be1fdb5eee4ae2580fadfe05498180e2cd",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.30mm.json",
+      "sha256": "e61a33e8af44f3f655b4787f6885a6d8f498cd6590e57bc6d742c0c1c535e912",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.35mm.json",
+      "sha256": "f0c5505936f9c0faaccc25c976a31216fb35c2894821dd93a0440a38fa2f4656",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG.json",
+      "sha256": "7c8ecffb5c1a3daa09cac0f53183a1a36b2e4eb302f0f0a8ab6119abaebe43bd",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+      "sha256": "0f1d89e79c8ac53929acca6973c6cbf6987368d2a4fdf3e486a7761fba1dac99",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+      "sha256": "25db01ea4da18428447a710a72d013484fe0abe43f2a76b30795bf79babcdc3f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+      "sha256": "5811ce1eab816a40bb2a1f8e03cc143e89e84ddadc7473a44c55a8e1f526d763",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.15mm.json",
+      "sha256": "debca04e804fa2a414bd7ba809c19fa0e18170cd6fb736ab32b5f5191730a976",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+      "sha256": "85959883ae4b6d777896affd3325f44cc430002acc641afed6ddad390d077797",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+      "sha256": "f3c732cadabfffe4f4ae7577ef7fec7847e24031bfc8ebc3e30df970a64ea303",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+      "sha256": "b13f6a9c0d8d0871f3ebf927450f9bd7f9840fa542a8b06002ef11b48ce48f34",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+      "sha256": "46b39a475d37d85d722e9d5b8a5e34efd976cd26f3ce414207091daebda11903",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.15mm.json",
+      "sha256": "6a65e4b9e3188f6562611e881d5a6f562ffd20aaf18a766a4b747f40c3a92843",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+      "sha256": "582539b059b26326517664beb01547da5fa879f6affd408f511fe8f39828933e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_common.json",
+      "sha256": "ea0bd20e420b028aefc60f299e60a8162034c16fb7d2482643f88ed5b458f958",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+      "sha256": "0523acf96e8a067bc35cb74732b5b1be47e87a8b436814a6213a52ed3029d836",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+      "sha256": "c00c7c919c05e129085f76c7dd4d7c66999e88477665a8a71314ea4a791be7c9",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.15mm.json",
+      "sha256": "affa888f1beae2fcb0a9e2ff1fe2b31c11dd1264bd1e92b7f78433d53666dae5",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+      "sha256": "d65e3e7f879a49c9e5970f87f364d2361bfbfbae97ec5874ab0970268a93baf1",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_common.json",
+      "sha256": "1d66de5ba5b8f821dd47d1d821c0656ca4a985860e9a82344b90fb9b6b776652",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+      "sha256": "3d425e77b26512b61aa488af579fa1761e517cee630fa4a1f88b1855d1df7830",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+      "sha256": "9a8c5b0e3ba101e8e37fd0c4b0a74b25b7313cbcc1b9b65f3e2a564eaab8ec0f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.15mm.json",
+      "sha256": "3751eb0e482ee7143963999c69ec1a93250f1c0b5c7046e3247d4ae9d850acd3",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.20mm.json",
+      "sha256": "fb68db63d055936608508b8f7ba9a0eaf7281881fc4b0169a09cae9a2576ec1f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+      "sha256": "3018319bd1c9edaf0486afb336dd6da76a5fdabb0c2fe75436b196a45cd049ce",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+      "sha256": "4478db682a9e0e9d94e2922e70dbd354cf9276246326aa2cb42c0a6b2f89bcc7",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+      "sha256": "127466cf99491be1910f703c6294a477e9a20989f6755363b7cd784305926076",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.15mm.json",
+      "sha256": "76af8e6198da7cdbc34e2483f4cbe984d5ec4c9d3f34192aefd802de608c9e7c",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.20mm.json",
+      "sha256": "d7220120d0da2cbe1d27237446e55f9c5eef7ef9f50e942728f65e702a6f106e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_common.json",
+      "sha256": "cab2319f0ffc10fc28c77612dc13ff37bc85074dd70a545c7261bec2992040f8",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+      "sha256": "3fc7eb806323623275e19472812af26f964bb0d1ec56fc50604733cb60bd3884",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+      "sha256": "2cec9ea17a107212916e300ef0af89c793b9a6b94dfbe157111bbfa15216b67a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.15mm.json",
+      "sha256": "6b3e7e5a1bff6d908abc32b70e76c5e4a0c9c1d167885a8068c070a0096fe682",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+      "sha256": "f9aa876d927fc7191b90c2c26547c0a53f3a07b4ee0f3b38967c6462c5a7cb9e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+      "sha256": "efeb9909368023511e3dfccd5e3491eb6947d4d7fedd06fecd7c5c385e649d24",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+      "sha256": "b87ae19df869c7280da982e7212d208988f4943ccecf8acf5a3cc13aed86ab77",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.20mm.json",
+      "sha256": "8d8d754f1d4e1f7bca2edb79abbe64e1ca6689ba9aa772f571ae58eff87df911",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+      "sha256": "30f0c7a94b153bb21cdc04f242f1f05db23dbec4fdbafbf7613ca1b11621fc56",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+      "sha256": "a5e18c6aa522bdac139f1438e261e51752d855bbbd89218b29aa8d46121a8c0a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+      "sha256": "1b2e41a7106feb92c52f4ecb8b8c21677144703602de4fc3a5fa0ac623e53a9b",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP.json",
+      "sha256": "e239019a1dffc8026dcf5e5bb45287604751db8aedd275a883a23a926075665e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "sha256": "5accc9d15800d074fd2f7a2c00b38ffde2a9ecd383ebd945f5857a49c264a14c",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/Utils/PresetUpdater.cpp",
+      "sha256": "48c374453e068a11cca40b0271a414a556780c1b0cbdafc2590d65e4f715f2e7",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed source profile, option definition or local resource updater; commit is the checkout anchor, not proof of uncommitted bytes being in that commit."
+    }
+  ],
+  "verified_utc": "2026-10-17T01:31:58.538025+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Parsed all indexed process JSONs and composed every process and selectable machine default with the existing loader-faithful profile tool; checked compatible-process coverage, byte-scoped key replacement and all preexisting work hashes.",
+    "summary": "Every effective process brim gap and every selectable machine default is 0.1 mm. No unrelated JSON field or prior work changed. Only bundle patch versions also advance to make the local resource updater recognize the new defaults. Native GUI and saved-project migration were not tested or performed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

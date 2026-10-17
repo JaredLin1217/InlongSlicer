@@ -1,0 +1,86 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-inlong-only-uv-output-gap-20261017",
+  "key": "windows-filtered-install-bundled-uv-gap",
+  "type": "fact",
+  "conclusion": "At c952e845db the full native Windows install rule copies the configured downloaded uv executable into resources/tools/uv, while InstallOnlyInlong.cmake copies source resources and omits that downloaded executable. The Windows build-tree staging also has no uv copy. PythonInterpreter::bundled_uv_path first tries the configured absolute INLONG_BUNDLED_UV_EXECUTABLE path, then resources/tools/uv and executable-local tools/uv. The configured path exists on this development machine and masks the portable-output gap; unavailability is conditional on all three candidates being absent. For this local installation, copy the exact configured uv 0.11.21 into the filtered package resources/tools/uv and Release/tools/uv, verify its hash against the full package/configured tool and run --version in all three locations. Do not write through Release/resources because it is a source-resource junction. The source recipe remains unchanged, so a later recreation needs the same supplement. No network package installation or interactive plugin UI was tested.",
+  "scope": "Local Windows generated package completeness at c952e845db; unresolved source-recipe gap is explicit",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "Windows",
+    "install",
+    "MSVC",
+    "portable-settings",
+    "uv"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "src/CMakeLists.txt",
+    "cmake/InstallOnlyInlong.cmake",
+    "src/slic3r/plugin/PythonInterpreter.cpp",
+    "src/slic3r/plugin/PluginLoader.cpp",
+    "docs/evidence/windows-install-c952e845db-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/CMakeLists.txt",
+      "sha256": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/plugin/PythonInterpreter.cpp",
+      "sha256": "c5e8ee1cbeb00ab8e80f71acde0ed6167ccb7cc5d61f83aea3ba1058fedcc065",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/plugin/PluginLoader.cpp",
+      "sha256": "5692a1f1ac92ee9760397091a40ae352e2b13b6cf0b1eedd3455b11c56fe0b38",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/windows-install-c952e845db-20261017.json",
+      "sha256": "584084c6e50f068cd54bb70d1deab3355ca332b283aa9d91116612d5c535dd12",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    }
+  ],
+  "verified_utc": "2026-10-17T00:03:24.857390+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Current source review, actual native build commands and process/RAM observations, package file hashes and CLI tool smoke checks",
+    "summary": "Both native install targets exited zero. Full and filtered profile file sets match source. Original 835-file settings were restored temporarily by the native pipeline, then cleared from Release per the latest explicit user request. Both original 835-file and independent 832-file backups remain verified; all three portable data folders are finally empty. Python SSL and all three staged uv version checks passed. Known output-supplement and GUI-testing limits remain explicit."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -133,10 +133,10 @@ int16_t get_fan_speed(const std::string &line, GCodeFlavor flavor) {
 
 void FanMover::_put_in_middle_G1(std::list<BufferData>::iterator item_to_split, float nb_sec_since_itemtosplit_start, BufferData &&line_to_write) {
     assert(item_to_split != m_buffer.end());
-    if (nb_sec_since_itemtosplit_start > item_to_split->time * 0.9) {
+    if (nb_sec_since_itemtosplit_start >= item_to_split->time - EPSILON) {
         // doesn't really need to be split, print it after
         m_buffer.insert(next(item_to_split), line_to_write);
-    } else if (nb_sec_since_itemtosplit_start < item_to_split->time * 0.1) {
+    } else if (nb_sec_since_itemtosplit_start <= EPSILON) {
         // doesn't really need to be split, print it before
         //will also print before if line_to_split.time == 0
         m_buffer.insert(item_to_split, line_to_write);
@@ -188,14 +188,15 @@ void FanMover::_put_in_middle_G1(std::list<BufferData>::iterator item_to_split, 
 }
 
 void FanMover::_print_in_middle_G1(BufferData& line_to_split, float nb_sec, const std::string &line_to_write) {
-    if (nb_sec < line_to_split.time * 0.1) {
+    if (nb_sec <= EPSILON) {
         // Doesn't need to be split: the insertion point is at the start.
         m_process_output += line_to_write + (line_to_write.back() == '\n'?"":"\n");
-        m_process_output += line_to_split.raw + "\n";
-    } else if (nb_sec > line_to_split.time * 0.9) {
+    } else if (nb_sec >= line_to_split.time - EPSILON) {
         // Doesn't need to be split: the insertion point is at the end.
         m_process_output += line_to_split.raw + "\n";
         m_process_output += line_to_write + (line_to_write.back() == '\n' ? "" : "\n");
+        m_buffer_time_size -= line_to_split.time;
+        line_to_split.time = 0;
     }else if(line_to_split.raw.size() > 2
         && line_to_split.raw[0] == 'G' && line_to_split.raw[1] == '1' && line_to_split.raw[2] == ' ') {
         float percent = nb_sec / line_to_split.time;
@@ -203,12 +204,18 @@ void FanMover::_print_in_middle_G1(BufferData& line_to_split, float nb_sec, cons
         std::string& after = line_to_split.raw;
         if (line_to_split.dx != 0) {
             change_axis_value(before, 'X', line_to_split.x + line_to_split.dx * percent, 3);
+            line_to_split.x += line_to_split.dx * percent;
+            line_to_split.dx *= 1 - percent;
         }
         if (line_to_split.dy != 0) {
             change_axis_value(before, 'Y', line_to_split.y + line_to_split.dy * percent, 3);
+            line_to_split.y += line_to_split.dy * percent;
+            line_to_split.dy *= 1 - percent;
         }
         if (line_to_split.dz != 0) {
             change_axis_value(before, 'Z', line_to_split.z + line_to_split.dz * percent, 3);
+            line_to_split.z += line_to_split.dz * percent;
+            line_to_split.dz *= 1 - percent;
         }
         if (line_to_split.de != 0) {
             if (relative_e) {
@@ -217,15 +224,21 @@ void FanMover::_print_in_middle_G1(BufferData& line_to_split, float nb_sec, cons
             } else {
                 change_axis_value(before, 'E', line_to_split.e + line_to_split.de * percent, 5);
             }
+            line_to_split.e += line_to_split.de * percent;
+            line_to_split.de *= 1 - percent;
         }
         m_process_output += before + "\n";
         m_process_output += line_to_write + (line_to_write.back() == '\n' ? "" : "\n");
-        m_process_output += line_to_split.raw + "\n";
+        // Keep the remainder buffered so a short kick-start can end inside it.
+        m_buffer_time_size -= nb_sec;
+        line_to_split.time -= nb_sec;
 
     } else {
         //not a G1, print it before
         m_process_output += line_to_write + (line_to_write.back() == '\n' ? "" : "\n");
         m_process_output += line_to_split.raw + "\n";
+        m_buffer_time_size -= line_to_split.time;
+        line_to_split.time = 0;
     }
 }
 
@@ -351,9 +364,10 @@ void FanMover::_process_gcode_line(GCodeReader& reader, const GCodeReader::GCode
                                 // then erase everything lower that kickstart
                                 _remove_slow_fan(fan_baseline, kickstart);
                                 // print me
-                                if (!m_buffer.empty() && (m_buffer_time_size - m_buffer.front().time * 0.1) > nb_seconds_delay) {
+                                if (!m_buffer.empty() && m_buffer_time_size > nb_seconds_delay + EPSILON) {
                                     _print_in_middle_G1(m_buffer.front(), m_buffer_time_size - nb_seconds_delay, _set_fan(100));//m_writer.set_fan(100, true)); //FIXME extruder id (or use the gcode writer, but then you have to disable the multi-thread thing
-                                    remove_from_buffer(m_buffer.begin());
+                                    if (m_buffer.front().time <= EPSILON)
+                                        remove_from_buffer(m_buffer.begin());
                                 } else {
                                     m_process_output += _set_fan(100);//m_writer.set_fan(100, true)); //FIXME extruder id (or use the gcode writer, but then you have to disable the multi-thread thing
                                 }
@@ -363,7 +377,7 @@ void FanMover::_process_gcode_line(GCodeReader& reader, const GCodeReader::GCode
                                 auto it = m_buffer.begin();
                                 while (it != m_buffer.end() && time_count > 0) {
                                     time_count -= it->time;
-                                    if (time_count< 0) {
+                                    if (time_count <= 0) {
                                         //found something that is lower than us
                                         _put_in_middle_G1(it, it->time + time_count, BufferData(std::string(line.raw()), 0, fan_speed, true));
                                         //found, stop
@@ -382,9 +396,10 @@ void FanMover::_process_gcode_line(GCodeReader& reader, const GCodeReader::GCode
                                 // first erase everything lower that that value
                                 _remove_slow_fan(fan_speed, m_buffer_time_size + 1);
                                 // then write the fan command
-                                if (!m_buffer.empty() && (m_buffer_time_size - m_buffer.front().time * 0.1) > nb_seconds_delay) {
+                                if (!m_buffer.empty() && m_buffer_time_size > nb_seconds_delay + EPSILON) {
                                     _print_in_middle_G1(m_buffer.front(), m_buffer_time_size - nb_seconds_delay, line.raw());
-                                    remove_from_buffer(m_buffer.begin());
+                                    if (m_buffer.front().time <= EPSILON)
+                                        remove_from_buffer(m_buffer.begin());
                                 } else {
                                     m_process_output += line.raw() + "\n";
                                 }
@@ -485,7 +500,7 @@ void FanMover::_process_gcode_line(GCodeReader& reader, const GCodeReader::GCode
 
         if (m_current_kickstart.time > 0 && time > 0) {
             m_current_kickstart.time -= time;
-            if (m_current_kickstart.time < 0) {
+            if (m_current_kickstart.time <= 0) {
                 //prev is possible because we just do a emplace_back.
                 _put_in_middle_G1(prev(m_buffer.end()), time + m_current_kickstart.time, BufferData{ m_current_kickstart.raw, 0, m_current_kickstart.fan_speed, true });
             }

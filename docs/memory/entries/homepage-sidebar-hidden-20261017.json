@@ -1,0 +1,53 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "homepage-sidebar-hidden-20261017",
+  "key": "homepage-sidebar-visibility-policy",
+  "type": "fact",
+  "conclusion": "The InlongSlicer homepage account/navigation sidebar is intentionally hidden. Its CSS starts with display:none, SetLoginPanelVisibility always keeps LeftBoard hidden, and cloud_providers_info delegates to that function instead of showing the sidebar when Inlong is available. Keep both host update paths hidden to prevent the sidebar returning after login/provider updates. RightBoard already occupies the full page width. Retain the existing account message handlers and New/Open/Recent command dispatch; no native cloud-pane or account-service change is implied.",
+  "scope": "Bundled homepage resources after the user-requested sidebar removal on 2026-10-17; source checkout anchor c952e845db with uncommitted UI edits",
+  "modules": [
+    "homepage",
+    "web-ui"
+  ],
+  "tags": [
+    "sidebar",
+    "homepage",
+    "layout",
+    "native-messages"
+  ],
+  "files": [
+    "resources/web/homepage/js/home.js",
+    "resources/web/homepage/css/home.css"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/homepage/js/home.js",
+      "sha256": "57bc7f629aaed409bdcef298e4ec843586f12a4ba5345384dd0678276ec844fb",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed homepage visibility handlers or CSS; commit is the checkout anchor, not proof that uncommitted bytes are in the commit."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/homepage/css/home.css",
+      "sha256": "bbbb35ab59e268fa20acf04de2f9e30db9ab73f060bc65c175a6746d9f2ef53f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed homepage visibility handlers or CSS; commit is the checkout anchor, not proof that uncommitted bytes are in the commit."
+    }
+  ],
+  "verified_utc": "2026-10-17T01:23:12.731106+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Reviewed CSS and all LeftBoard writes; node --check; five existing web UI contract tests; real-browser DOM/layout and command dispatch checks with a disposable local native-host shim.",
+    "summary": "Cloud provider combinations, both visibility values, signed-in/out and missing-plugin updates kept sidebar width at zero with RightBoard left edge zero. New/Open/Recent/Clear commands were dispatched and no JavaScript errors were observed. Native dialogs and cloud authentication were not exercised."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

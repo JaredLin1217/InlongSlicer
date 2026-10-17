@@ -1,0 +1,450 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "inlong-infinity-process-defaults-seam-zero-20261017",
+  "key": "inlong-infinity-process-defaults",
+  "type": "fact",
+  "conclusion": "All 46 indexed INLONG and _Infinity3DP process profiles resolve seam_gap = 0, brim_object_gap = 0.1 mm and tree_support_branch_diameter_organic = 3.0 mm. Nine common process templates carry seam_gap; changing only those templates covers all selectable presets without copying process-only options into machine profiles. All 63 selectable machine/nozzle default-process links resolve these values. The common external bridge defaults remain bridge_flow = 1.05 and bridge_density = 105%; internal bridge settings are unchanged. Vendor bundle versions are INLONG 01.05.01.28 and _Infinity3DP 01.28.15.23 so the local resource updater recognizes this revision. Saved project and user-preset overrides are not rewritten. This reviewed record consolidates the previous brim-gap and bridge/organic-default facts with fresh snapshots.",
+  "scope": "Built-in INLONG and Infinity3DP process defaults after the user-requested zero seam gap on 2026-10-17; uncommitted source at checkout anchor c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+  "modules": [
+    "printer-profiles"
+  ],
+  "tags": [
+    "INLONG",
+    "Infinity3DP",
+    "seam_gap",
+    "brim_object_gap",
+    "bridge",
+    "organic-support",
+    "inheritance"
+  ],
+  "files": [
+    "resources/profiles/INLONG/process/sc_process_common.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.20mm.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.25mm.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+    "resources/profiles/INLONG/process/process_common.json",
+    "resources/profiles/INLONG/process/Layer_0.15mm.json",
+    "resources/profiles/INLONG/process/Layer_0.20mm.json",
+    "resources/profiles/INLONG/process/Layer_0.25mm.json",
+    "resources/profiles/INLONG/process/Layer_0.30mm.json",
+    "resources/profiles/INLONG/process/Layer_0.35mm.json",
+    "resources/profiles/INLONG.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_common.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_common.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+    "resources/profiles/_Infinity3DP.json",
+    "src/libslic3r/PrintConfig.cpp",
+    "src/slic3r/Utils/PresetUpdater.cpp",
+    "scripts/inlong_profile_tool.py"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_process_common.json",
+      "sha256": "c6a2a0158119d4f672336be30b79747736070dd9c28a11042c0b4dbf1d7d69cb",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.20mm.json",
+      "sha256": "ca69f68b2830312522060616dd5a14ee685815a247777c9987f03ae4c31ec5b1",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.25mm.json",
+      "sha256": "5121cf5a661b6e36716ce67d69bc04e5e38e1ec67cade377eb329c65719613c9",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+      "sha256": "6eb17bbccd47b43a9287aad755735be26b835bd6d796fa3d407c7e566adfb369",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/process_common.json",
+      "sha256": "65edb5145be4f94bfbd8db9a93f28cc50cdc28f10570ce1abb6ff27489db445f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.15mm.json",
+      "sha256": "4178d8129ae3943ce5d5a7b61949f939c10a8e63c09ff5f843d57a05bf49fc9a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.20mm.json",
+      "sha256": "ae69be94106737d74afe674f644a0cad4cae120974a7d96482a1cb8d2abd7769",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.25mm.json",
+      "sha256": "7d45d65b4de4ea05854e373d060996be1fdb5eee4ae2580fadfe05498180e2cd",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.30mm.json",
+      "sha256": "e61a33e8af44f3f655b4787f6885a6d8f498cd6590e57bc6d742c0c1c535e912",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.35mm.json",
+      "sha256": "f0c5505936f9c0faaccc25c976a31216fb35c2894821dd93a0440a38fa2f4656",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG.json",
+      "sha256": "e3486a5e6f363c471a59872fd834890ef924bb59a1438a92390188f948bf13c7",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+      "sha256": "54c923d6373e1a78e5c041725d3b5fec06f7c7bc9d8ec86412f0f00d7fe8d415",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+      "sha256": "25db01ea4da18428447a710a72d013484fe0abe43f2a76b30795bf79babcdc3f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+      "sha256": "5811ce1eab816a40bb2a1f8e03cc143e89e84ddadc7473a44c55a8e1f526d763",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.15mm.json",
+      "sha256": "debca04e804fa2a414bd7ba809c19fa0e18170cd6fb736ab32b5f5191730a976",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+      "sha256": "85959883ae4b6d777896affd3325f44cc430002acc641afed6ddad390d077797",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+      "sha256": "76b6f1166169065a5ac9814f34e3cf85b4c32f359d327f3197084bd9e4a94bf0",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+      "sha256": "b13f6a9c0d8d0871f3ebf927450f9bd7f9840fa542a8b06002ef11b48ce48f34",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+      "sha256": "46b39a475d37d85d722e9d5b8a5e34efd976cd26f3ce414207091daebda11903",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.15mm.json",
+      "sha256": "6a65e4b9e3188f6562611e881d5a6f562ffd20aaf18a766a4b747f40c3a92843",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+      "sha256": "582539b059b26326517664beb01547da5fa879f6affd408f511fe8f39828933e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_common.json",
+      "sha256": "8309e91dc7b958e1a7cf7b3abb10d731d19fa15243c17addbd79dc0602ee3443",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+      "sha256": "0523acf96e8a067bc35cb74732b5b1be47e87a8b436814a6213a52ed3029d836",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+      "sha256": "c00c7c919c05e129085f76c7dd4d7c66999e88477665a8a71314ea4a791be7c9",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.15mm.json",
+      "sha256": "affa888f1beae2fcb0a9e2ff1fe2b31c11dd1264bd1e92b7f78433d53666dae5",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+      "sha256": "d65e3e7f879a49c9e5970f87f364d2361bfbfbae97ec5874ab0970268a93baf1",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_common.json",
+      "sha256": "0c22b2f71714f069ce34bdd56eb8cdbdcd728c38d99be343823ef2265c8d2af8",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+      "sha256": "3d425e77b26512b61aa488af579fa1761e517cee630fa4a1f88b1855d1df7830",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+      "sha256": "9a8c5b0e3ba101e8e37fd0c4b0a74b25b7313cbcc1b9b65f3e2a564eaab8ec0f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.15mm.json",
+      "sha256": "3751eb0e482ee7143963999c69ec1a93250f1c0b5c7046e3247d4ae9d850acd3",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.20mm.json",
+      "sha256": "fb68db63d055936608508b8f7ba9a0eaf7281881fc4b0169a09cae9a2576ec1f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+      "sha256": "48b9673f2ca582aa3febc236acd1b4831524357f2e51ef3a63b31370ea416e6e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+      "sha256": "4478db682a9e0e9d94e2922e70dbd354cf9276246326aa2cb42c0a6b2f89bcc7",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+      "sha256": "127466cf99491be1910f703c6294a477e9a20989f6755363b7cd784305926076",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.15mm.json",
+      "sha256": "76af8e6198da7cdbc34e2483f4cbe984d5ec4c9d3f34192aefd802de608c9e7c",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.20mm.json",
+      "sha256": "d7220120d0da2cbe1d27237446e55f9c5eef7ef9f50e942728f65e702a6f106e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_common.json",
+      "sha256": "5ab963f437fbba5423544c8decdf288fd963082a4b5ad62b985a772d8a8ccddd",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+      "sha256": "3fc7eb806323623275e19472812af26f964bb0d1ec56fc50604733cb60bd3884",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+      "sha256": "2cec9ea17a107212916e300ef0af89c793b9a6b94dfbe157111bbfa15216b67a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.15mm.json",
+      "sha256": "6b3e7e5a1bff6d908abc32b70e76c5e4a0c9c1d167885a8068c070a0096fe682",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+      "sha256": "f9aa876d927fc7191b90c2c26547c0a53f3a07b4ee0f3b38967c6462c5a7cb9e",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+      "sha256": "883cf23eab6abce2fe2a8028c6a92c049abc251af154e6f07abe5b7b1df9f46f",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+      "sha256": "b87ae19df869c7280da982e7212d208988f4943ccecf8acf5a3cc13aed86ab77",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.20mm.json",
+      "sha256": "8d8d754f1d4e1f7bca2edb79abbe64e1ca6689ba9aa772f571ae58eff87df911",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+      "sha256": "30f0c7a94b153bb21cdc04f242f1f05db23dbec4fdbafbf7613ca1b11621fc56",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+      "sha256": "a5e18c6aa522bdac139f1438e261e51752d855bbbd89218b29aa8d46121a8c0a",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+      "sha256": "1b2e41a7106feb92c52f4ecb8b8c21677144703602de4fc3a5fa0ac623e53a9b",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP.json",
+      "sha256": "d92fa15bbe07b32be303f72b595aa5bca5db96c28336adecaef0b99887391764",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "sha256": "5accc9d15800d074fd2f7a2c00b38ffde2a9ecd383ebd945f5857a49c264a14c",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/Utils/PresetUpdater.cpp",
+      "sha256": "48c374453e068a11cca40b0271a414a556780c1b0cbdafc2590d65e4f715f2e7",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/inlong_profile_tool.py",
+      "sha256": "7cb2c00fabd378be95d53e86dba90db93e83934b1dea5b6bb1850170186b87be",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Current reviewed profile, option definition, local bundle updater or loader-faithful composition helper; commit is the checkout anchor, not proof that uncommitted bytes belong to it."
+    }
+  ],
+  "verified_utc": "2026-10-17T01:37:17.259008+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Byte-scoped one-key updates in nine common templates and patch-version-only changes in two manifests; composed every indexed process and selectable machine default with the existing profile helper; preserved unrelated current work hashes and prior parameter defaults.",
+    "summary": "All 46 processes and 63 machine defaults resolve seam gap zero, brim gap 0.1 and organic diameter 3.0. Common bridge flow/density remain 1.05/105%. Only seam_gap and bundle patch versions changed semantically; no native GUI, saved-project migration or slicing comparison was performed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "inlong-infinity-brim-gap-01-20261017",
+    "inlong-infinity-process-defaults-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

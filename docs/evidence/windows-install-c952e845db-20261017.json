@@ -1,0 +1,369 @@
+{
+  "completed_utc": "2026-10-17T00:03:24.801969+00:00",
+  "source_commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+  "product_source_unchanged": true,
+  "build_configuration": "Windows Release, Visual Studio 18 2026, existing configured build tree",
+  "successful_product_dependency_build": {
+    "label": "product-dependencies",
+    "command": [
+      "cmake",
+      "--build",
+      "build",
+      "--config",
+      "Release",
+      "--target",
+      "InlongSlicer_app_gui",
+      "InlongSlicer_profile_validator",
+      "COPY_DLLS",
+      "gettext_po_to_mo",
+      "orca_stubgen",
+      "--parallel",
+      "1",
+      "--",
+      "/p:CL_MPCount=6"
+    ],
+    "started_utc": "2026-10-16T23:53:18.083363+00:00",
+    "completed_utc": "2026-10-16T23:54:06.260507+00:00",
+    "seconds": 48.17760999998427,
+    "exit_code": 0,
+    "log_sha256": "2b35bf26bc752886e91bacbe4c7ff8a5ba3d987a3b07dbb42a0403c492e11491",
+    "native_waited": true
+  },
+  "successful_native_builds": [
+    {
+      "label": "install",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=6",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-16T23:54:06.521294+00:00",
+      "completed_utc": "2026-10-16T23:59:53.184120+00:00",
+      "seconds": 346.6626069000049,
+      "exit_code": 0,
+      "log_sha256": "c8f4b4d57908f509c63f6c12416c5d876e532e639538b9c18cbcb1c819aba153",
+      "native_waited": true
+    },
+    {
+      "label": "install_only_inlong",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install_only_inlong",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=6",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-16T23:59:53.465881+00:00",
+      "completed_utc": "2026-10-17T00:00:20.166418+00:00",
+      "seconds": 26.69992459999048,
+      "exit_code": 0,
+      "log_sha256": "abe1f0000832152ab6aa803c34b76cbd9688cda2dff664c4d84a80ea2511b319",
+      "native_waited": true
+    }
+  ],
+  "outputs": [
+    {
+      "label": "full",
+      "path": "build/InlongSlicer",
+      "binaries": {
+        "inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "InlongSlicer.dll": "a1bfe4e34ffdfca223200369cfb77d375fcf2279ccf9acf573f60f02e2a8de0f"
+      },
+      "profile_files": 14756,
+      "profiles_match_source": true,
+      "python_sha256": "863d24081ed3d43d8a202d44be98ecf94e96bc4b9b3f094f0ac71632d9c309e5",
+      "cli_help": true,
+      "help_text_captured": false,
+      "help_capture_limit": "Windows print_help reopens CONOUT$, so pipe logs may be empty; native exit and binary hashes were checked.",
+      "python_ssl_smoke": true,
+      "shared_guide_contract": true
+    },
+    {
+      "label": "inlong-only",
+      "path": "build/InlongSlicer_InlongOnly",
+      "binaries": {
+        "inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "InlongSlicer.dll": "a1bfe4e34ffdfca223200369cfb77d375fcf2279ccf9acf573f60f02e2a8de0f"
+      },
+      "profile_files": 734,
+      "profiles_match_source": true,
+      "python_sha256": "863d24081ed3d43d8a202d44be98ecf94e96bc4b9b3f094f0ac71632d9c309e5",
+      "cli_help": true,
+      "help_text_captured": false,
+      "help_capture_limit": "Windows print_help reopens CONOUT$, so pipe logs may be empty; native exit and binary hashes were checked.",
+      "python_ssl_smoke": true,
+      "shared_guide_contract": true
+    }
+  ],
+  "intermediate_settings_restoration_before_latest_user_reset": {
+    "completed_utc": "2026-10-17T00:01:16.042558+00:00",
+    "passed": true,
+    "restored": [
+      {
+        "path": "build/src/Release/data_dir",
+        "files": 835,
+        "exact": true
+      },
+      {
+        "path": "build/InlongSlicer/data_dir",
+        "files": 0,
+        "already_matching": true,
+        "exact": true
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly/data_dir",
+        "files": 0,
+        "already_matching": true,
+        "exact": true
+      }
+    ],
+    "exact_file_sets_directories_and_hashes": true,
+    "backup_retained": true
+  },
+  "final_release_settings_reset": {
+    "completed_utc": "2026-10-17T00:03:10.834699+00:00",
+    "passed": true,
+    "release_data_dir_empty": true,
+    "all_three_portable_data_dirs_empty": true,
+    "old_root_diagnostics_removed": [
+      "--debug",
+      "00000.log",
+      "cli-help.txt"
+    ],
+    "programs_and_uv_unchanged": true,
+    "original_835_file_backup_verified": true,
+    "independent_832_file_backup_verified": true,
+    "empty_marker_reason": "GUI_App::init_app_config uses global settings if the portable data_dir directory is absent. Keep an empty directory to start with fresh local settings.",
+    "global_settings_not_modified": true,
+    "source_resources_not_modified": true
+  },
+  "packaging_supplement": {
+    "completed_utc": "2026-10-17T00:02:55.207781+00:00",
+    "head": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+    "configured_uv": "build/.uv/0.11.21/uv.exe",
+    "sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68",
+    "full_install_tool_matches": true,
+    "supplemented_outputs": [
+      {
+        "path": "build/src/Release/tools/uv/uv.exe",
+        "sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68",
+        "already_matching": false
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly/resources/tools/uv/uv.exe",
+        "sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68",
+        "already_matching": false
+      }
+    ],
+    "all_three_uv_version_checks_passed": true,
+    "filtered_validator_matches_release_sha256": "34c8d78e0f30f9083de32ce142a5d77028786200e45cbedcbef314ea00ffb377",
+    "settings_still_exact": true,
+    "source_recipes_unchanged": true,
+    "reason": "The full install rule bundles downloaded uv, while the existing filtered helper copies source resources and omits that downloaded tool. Supplement only generated outputs. Release uses the executable-local tools/uv lookup fallback; its resources junction is not written.",
+    "limit": "This local output supplement does not change the versioned filtered-install recipe; a later recreation of that output needs the same supplement."
+  },
+  "controlled_interrupted_attempts": [
+    {
+      "label": "install",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install",
+        "--parallel",
+        "6"
+      ],
+      "started_utc": "2026-10-16T22:51:06.664271+00:00",
+      "completed_utc": "2026-10-16T22:55:07.773372+00:00",
+      "seconds": 241.10864709998714,
+      "exit_code": 15,
+      "log_sha256": "f6bd103f177f903955a11086c658895c36e60f5a2029b01ace22c19b0de602dc",
+      "native_waited": true
+    },
+    {
+      "label": "install",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install",
+        "--parallel",
+        "2",
+        "--",
+        "/p:CL_MPCount=2"
+      ],
+      "started_utc": "2026-10-16T22:55:52.038157+00:00",
+      "completed_utc": "2026-10-16T23:00:19.651843+00:00",
+      "seconds": 267.6133362999826,
+      "exit_code": 15,
+      "log_sha256": "e749577d9f27bf37bcbdb55195c3908e8579ea6751a07bd292c6f717c4f5204c",
+      "native_waited": true
+    },
+    {
+      "label": "install",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=6"
+      ],
+      "started_utc": "2026-10-16T23:01:04.874377+00:00",
+      "completed_utc": "2026-10-16T23:42:44.080072+00:00",
+      "seconds": 2499.2030879000085,
+      "exit_code": 15,
+      "log_sha256": "cfdb55b1d32d3424e9715b82566ff3bef3b77f5a1eed3fafb2b4d1888844dae7",
+      "native_waited": true
+    }
+  ],
+  "interrupted_attempts_resolved": "Only owned CMake/MSBuild/compiler process trees were stopped. The first two stops tuned nested MSVC parallelism; the third stopped unrelated ALL_BUILD test compilation after the complete GUI/core and primary products were built. Exact settings restoration passed after attempts one and two. After attempt three, independently written settings were archived and verified before exact restoration of the original 835 files per explicit user choice. Final commands explicitly build product dependencies, then run both actual install projects with BuildProjectReferences=false, one MSBuild project and six compiler workers.",
+  "independent_settings_preservation": {
+    "completed_utc": "2026-10-16T23:51:23.415908+00:00",
+    "human_choice": "Restore the original 835 pre-build settings files; later superseded by the explicit clean Release request.",
+    "archived_directories": [
+      {
+        "path": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/backup/after-independent-run/data-0",
+        "files": 832,
+        "exact": true
+      }
+    ],
+    "original_settings_restored_exactly": true,
+    "original_release_settings_files": 835
+  },
+  "compiler_warnings": {
+    "attempt1-install": {
+      "count": 0,
+      "codes": [],
+      "raw_log": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/validation/attempt1-install.log"
+    },
+    "attempt2-install": {
+      "count": 0,
+      "codes": [],
+      "raw_log": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/validation/attempt2-install.log"
+    },
+    "attempt3-install": {
+      "count": 1,
+      "codes": [
+        "LNK4098"
+      ],
+      "raw_log": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/validation/attempt3-install.log"
+    },
+    "product-dependencies": {
+      "count": 0,
+      "codes": [],
+      "raw_log": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/validation/product-dependencies.log"
+    },
+    "install": {
+      "count": 0,
+      "codes": [],
+      "raw_log": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/validation/install.log"
+    },
+    "install_only_inlong": {
+      "count": 0,
+      "codes": [],
+      "raw_log": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/validation/install_only_inlong.log"
+    }
+  },
+  "source_snapshots": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104"
+    },
+    {
+      "path": "src/CMakeLists.txt",
+      "sha256": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a"
+    },
+    {
+      "path": "src/slic3r/CMakeLists.txt",
+      "sha256": "da74f7b466a582bdeeb5c2314c6b66e803d9cf100614fe616b413dfdfd5412f0"
+    },
+    {
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755"
+    },
+    {
+      "path": "cmake/InlongBuildDataDirs.cmake",
+      "sha256": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe"
+    },
+    {
+      "path": "cmake/ResetBuildDataDirs.cmake",
+      "sha256": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b"
+    },
+    {
+      "path": "src/slic3r/plugin/PythonInterpreter.cpp",
+      "sha256": "c5e8ee1cbeb00ab8e80f71acde0ed6167ccb7cc5d61f83aea3ba1058fedcc065"
+    },
+    {
+      "path": "src/slic3r/plugin/PluginLoader.cpp",
+      "sha256": "5692a1f1ac92ee9760397091a40ae352e2b13b6cf0b1eedd3455b11c56fe0b38"
+    }
+  ],
+  "verification_recovery": {
+    "completed_utc": "2026-10-17T00:02:31.561350+00:00",
+    "cause": "The original verification assumed CLI help text was capturable through stdout pipes. Current source print_help reconnects stdout to CONOUT$ on Windows. Native help exited zero; only that text assertion failed.",
+    "actual_install_targets_replayed": false,
+    "verification_change": "Reused the completed full CLI exit and profile comparison; checked remaining outputs and Python smoke tests. Recorded absent help capture as a limitation.",
+    "settings_intermediate_restore_passed": true
+  },
+  "memory_observations": [
+    {
+      "phase": "default MP",
+      "cl_processes_including_driver": 17,
+      "available_physical_kib": 2441724
+    },
+    {
+      "phase": "two-worker measurement",
+      "cl_processes_including_driver": 3,
+      "available_physical_kib": 16926692
+    },
+    {
+      "phase": "six-worker early GUI",
+      "cl_processes_including_driver": 7,
+      "available_physical_kib": 15607776
+    },
+    {
+      "phase": "six-worker application GUI",
+      "available_physical_kib": 11175288
+    }
+  ],
+  "consumer_preinstall_receipt": ".agents/runtime/runs/run-c9b997ddc8d34ee8bb1454997b6bffab/validation/report.json",
+  "raw_evidence": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/validation",
+  "backup_manifest": ".agents/runtime/runs/run-2fc4b2a6afeb425eb0f161f1599934cc/backup/manifest.json",
+  "agents_used": 1,
+  "push_performed": false,
+  "limits": [
+    "Both native targets and package CLI/Python/uv smoke checks passed. No interactive GUI workflow, plugin network dependency installation, macOS or Linux run is claimed.",
+    "Compiler warnings are retained as recorded; this verification is not a warning-free or Provider release-readiness claim.",
+    "Six compiler workers are a measurement-based choice for this machine, not a global setting or an enforced RAM reservation. Available RAM observations do not guarantee safety on other computers.",
+    "The existing source filtered-install helper still omits downloaded uv. This task supplements generated output only; recreating the filtered package needs the same supplement until the recipe is fixed.",
+    "Build elapsed times are observations across incremental, interrupted and resumed work, not a controlled performance benchmark."
+  ]
+}

@@ -71,7 +71,7 @@ body
 
 #LeftBoard
 {
-	display: none;  /* shown by cloud_providers_info from backend */
+	display: none;  /* The homepage uses the full width without the account sidebar. */
 	border-right-width: 1px;
 	border-right-style: solid;
 	width:262px;

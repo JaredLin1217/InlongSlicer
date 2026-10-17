@@ -4,9 +4,11 @@
 #include "test_helpers.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/Config.hpp"
+#include "libslic3r/GCode/FanMover.hpp"
 #include "libslic3r/TriangleMesh.hpp"
 #include "libslic3r/libslic3r.h"
 #include <sstream>
@@ -16,6 +18,85 @@
 
 using namespace Slic3r;
 using namespace Slic3r::Test;
+
+TEST_CASE("Short fan kick-starts retain their duration after fan advance", "[Cooling][Regression]")
+{
+    const float lead = GENERATE(0.f, 0.5f);
+    const bool relative_e = GENERATE(false, true);
+    const bool separate_chunks = GENERATE(false, true);
+    constexpr float kickstart = 0.1f;
+    GCodeWriter writer;
+    writer.config.gcode_flavor.value = gcfKlipper;
+    writer.config.use_relative_e_distances.value = relative_e;
+    writer.config.part_cooling_fan_min_pwm.value = 0;
+    FanMover mover(writer, lead, true, relative_e, false, kickstart);
+
+    const std::string prefix = std::string("G90\n") + (relative_e ? "M83\n" : "M82\n") +
+        "G1 X0 Y0 Z0 F600\nM106 S0\n;TYPE:Outer wall\nG1 X10 E1 F600\nG1 X20 E" +
+        (relative_e ? "1" : "2") + " F600\nM106 S153\n";
+    const std::string suffix = std::string("G1 X30 E") + (relative_e ? "1" : "3") +
+        " F600\nG1 X40 E" + (relative_e ? "1" : "4") + " F600\nM106 S0\nG1 X50 E" +
+        (relative_e ? "1" : "5") + " F600\n";
+    std::string output;
+    if (separate_chunks) {
+        output = mover.process_gcode(prefix, false);
+        output += mover.process_gcode(suffix, true);
+    } else {
+        output = mover.process_gcode(prefix + suffix, true);
+    }
+
+    GCodeReader reader;
+    reader.apply_config(writer.config);
+    double elapsed = 0., extrusion = 0., distance = 0.;
+    double full_at = -1., target_at = -1.;
+    double feedrate = 600.;
+    reader.parse_buffer(output, [&](GCodeReader &parser, const GCodeReader::GCodeLine &line) {
+        if (line.has_f())
+            feedrate = line.f();
+        if (line.cmd_is("G1")) {
+            const double length = std::sqrt(std::pow(line.dist_X(parser), 2) +
+                                            std::pow(line.dist_Y(parser), 2) + std::pow(line.dist_Z(parser), 2));
+            elapsed += length / (feedrate / 60.);
+            distance += length;
+            extrusion += relative_e ? line.e() : line.dist_E(parser);
+        } else if (line.cmd_is("M106")) {
+            float pwm = -1.f;
+            line.has_value('S', pwm);
+            if (pwm == 255.f)
+                full_at = elapsed;
+            else if (pwm == 153.f)
+                target_at = elapsed;
+        }
+    });
+    REQUIRE(full_at >= 0.);
+    REQUIRE(target_at >= 0.);
+    CHECK_THAT(full_at, Catch::Matchers::WithinAbs(2. - lead, 0.0002));
+    // The configured kick-start is scaled by the 0 -> 60% speed increase.
+    CHECK_THAT(target_at - full_at, Catch::Matchers::WithinAbs(kickstart * 0.6, 0.0002));
+    CHECK_THAT(distance, Catch::Matchers::WithinAbs(50., 0.0002));
+    CHECK_THAT(extrusion, Catch::Matchers::WithinAbs(5., 0.00002));
+    CHECK_THAT(reader.x(), Catch::Matchers::WithinAbs(50., 0.0002));
+}
+
+TEST_CASE("A fan kick-start ends at an exact move boundary", "[Cooling][Regression]")
+{
+    GCodeWriter writer;
+    writer.config.gcode_flavor.value = gcfKlipper;
+    writer.config.use_relative_e_distances.value = true;
+    FanMover mover(writer, 0.f, true, true, false, 0.125f);
+    // S128 is parsed as 50%; its 0.0625 s kick-start ends at X20.625.
+    const std::string output = mover.process_gcode(
+        "G90\nM83\nG1 X0 Y0 Z0 F600\nM106 S0\nG1 X20 E2\nM106 S128\n"
+        "G1 X20.625 E0.0625\nG1 X30 E0.9375\n", true);
+    const size_t boundary = output.find("G1 X20.625");
+    const size_t restored = output.find("M106 S128");
+    const size_t following = output.find("G1 X30");
+    REQUIRE(boundary != std::string::npos);
+    REQUIRE(restored != std::string::npos);
+    REQUIRE(following != std::string::npos);
+    CHECK(boundary < restored);
+    CHECK(restored < following);
+}
 
 // The fan is held off for the first close_fan_the_first_x_layers layers, so an explicit
 // fan-off command is emitted.

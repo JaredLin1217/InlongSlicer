@@ -1,0 +1,70 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-msvc-install-parallelism-20261017",
+  "key": "windows-msvc-nested-build-parallelism",
+  "type": "fact",
+  "conclusion": "On this VS18 Windows Release configuration, CMake --parallel limits MSBuild project jobs but does not by itself cap the GUI compiler /MP workers. A six-project build spawned 17 cl processes including the driver and reduced available RAM to about 2.3 GiB. The successful local recipe explicitly builds InlongSlicer_app_gui, InlongSlicer_profile_validator, COPY_DLLS, gettext_po_to_mo and orca_stubgen first with --parallel 1 -- /p:CL_MPCount=6, then executes each actual install project with the same limits and /p:BuildProjectReferences=false. This avoids unrelated ALL_BUILD test executables after product dependencies are complete. Process observation confirmed six workers plus the driver, with about 14.9 GiB and 10.7 GiB available at the recorded GUI checkpoints. These are discrete machine-bound observations, not a continuous or enforced memory limit or a suitable fixed choice for every computer. Preserve portable settings before either native target because its reset command runs even during incremental installs.",
+  "scope": "VS18/MSVC native install commands at c952e845db; tune worker count to current free RAM",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "Windows",
+    "install",
+    "MSVC",
+    "portable-settings",
+    "uv"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "src/slic3r/CMakeLists.txt",
+    "cmake/InlongBuildDataDirs.cmake",
+    "docs/evidence/windows-install-c952e845db-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "b40bb61ce2d9eb018a0aaf6e4e3d5f09502ce0ec44831ece4392477df287a104",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/CMakeLists.txt",
+      "sha256": "da74f7b466a582bdeeb5c2314c6b66e803d9cf100614fe616b413dfdfd5412f0",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "cmake/InlongBuildDataDirs.cmake",
+      "sha256": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/windows-install-c952e845db-20261017.json",
+      "sha256": "584084c6e50f068cd54bb70d1deab3355ca332b283aa9d91116612d5c535dd12",
+      "commit": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+      "locator": "Reviewed current build/runtime source or fresh native installation evidence; commit identifies the checkout anchor, not publication of newly written evidence"
+    }
+  ],
+  "verified_utc": "2026-10-17T00:03:24.849392+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Current source review, actual native build commands and process/RAM observations, package file hashes and CLI tool smoke checks",
+    "summary": "Both native install targets exited zero. Full and filtered profile file sets match source. Original 835-file settings were restored temporarily by the native pipeline, then cleared from Release per the latest explicit user request. Both original 835-file and independent 832-file backups remain verified; all three portable data folders are finally empty. Python SSL and all three staged uv version checks passed. Known output-supplement and GUI-testing limits remain explicit."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
