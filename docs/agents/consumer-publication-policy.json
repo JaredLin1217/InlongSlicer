@@ -1,0 +1,33 @@
+{
+  "schema_version": "inlong-consumer-publication/v1",
+  "project_role": "Consumer",
+  "validation": {
+    "scope": "Consumer",
+    "profile": "Checkpoint",
+    "require_product_checks": true,
+    "require_guidance_audit": true,
+    "require_release_ready": false,
+    "consumer_release_ready_false_requires_exception": false
+  },
+  "authorization": {
+    "current_explicit_push_request_authorizes_push": true,
+    "repeat_confirmation_for_approved_push": false,
+    "commit_only_request_authorizes_push": false,
+    "historical_approval_authorizes_new_push": false
+  },
+  "commits": {
+    "require_source_correspondence": true,
+    "prefer_one_coherent_commit": true,
+    "separate_provider_evidence_commit_required": false
+  },
+  "remote": {
+    "require_fresh_observation": true,
+    "allow_force_push": false,
+    "verify_remote_head_after_push": true
+  },
+  "provider_release": {
+    "applies_to": "AI Agents distribution releases from a Provider checkout",
+    "scope": "Provider",
+    "require_release_ready": true
+  }
+}

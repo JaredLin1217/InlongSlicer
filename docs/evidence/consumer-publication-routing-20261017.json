@@ -1,0 +1,80 @@
+{
+  "schema_version": "inlong-consumer-publication-verification/v1",
+  "verified_utc": "2026-10-17T03:00:47.304302+00:00",
+  "checkout_anchor": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+  "source_state": "Uncommitted project-owned governance changes; no commit or push in this task.",
+  "cause": "Generic managed publication guidance required Provider release readiness, while this product checkout and installed validator are Consumer-scoped.",
+  "user_requested_outcome": "An explicit current commit/push request should complete the authorized workflow once its applicable checks pass, without a Provider-only exception confirmation.",
+  "project_policy": {
+    "schema_version": "inlong-consumer-publication/v1",
+    "project_role": "Consumer",
+    "validation": {
+      "scope": "Consumer",
+      "profile": "Checkpoint",
+      "require_product_checks": true,
+      "require_guidance_audit": true,
+      "require_release_ready": false,
+      "consumer_release_ready_false_requires_exception": false
+    },
+    "authorization": {
+      "current_explicit_push_request_authorizes_push": true,
+      "repeat_confirmation_for_approved_push": false,
+      "commit_only_request_authorizes_push": false,
+      "historical_approval_authorizes_new_push": false
+    },
+    "commits": {
+      "require_source_correspondence": true,
+      "prefer_one_coherent_commit": true,
+      "separate_provider_evidence_commit_required": false
+    },
+    "remote": {
+      "require_fresh_observation": true,
+      "allow_force_push": false,
+      "verify_remote_head_after_push": true
+    },
+    "provider_release": {
+      "applies_to": "AI Agents distribution releases from a Provider checkout",
+      "scope": "Provider",
+      "require_release_ready": true
+    }
+  },
+  "managed_assets_verified": 29,
+  "managed_asset_bytes_unchanged": true,
+  "managed_manifest_sha256": "248e2617edb52dc8d5f9e024cdcf145fde180011be7a5d0f796f09d63edd5806",
+  "regression": {
+    "test_cases": 13,
+    "result": "passed",
+    "native_exit_code": 0,
+    "log_sha256": "32ea4b3963d13308e6513d946628146c3e8d2e6a732f785d764a0c2052f8dfc5",
+    "covered": [
+      "Valid Consumer publication",
+      "Required active root override and shared Claude entry point",
+      "Provider role and Provider configuration rejected for routine product work",
+      "No repeated current-request confirmation, Consumer exception prompt or separate Provider evidence commit",
+      "Product verification and current-request authorization retained",
+      "Fresh remote observation, non-force push and post-push verification retained",
+      "Actual Provider distribution release gate retained"
+    ]
+  },
+  "source_sha256": {
+    "AGENTS.override.md": "d55687186015010665dfe127738af842bd3749e3d93127e93a81a3403faa5de2",
+    "CLAUDE.md": "2feabbd55172f9174c107abcc06074db0071812622c5fd80d8c6c84292fbd6ef",
+    "docs/agents/consumer-publication-policy.json": "439a63eecf55e997fa549b69c76de3dafd8d6514c6df6ce90168eaed2d6081d8",
+    ".claude/commands/commit-push-pr.md": "0fe7223b6e86362359815cb25d725330ea3b2ffafad56288ad24823865b56afd",
+    ".agents/docs/project-structure.md": "f0ab0726e03216eac2335f5efcbd6df3bf52406573affbaaf3e7eaa923ccb554",
+    "scripts/check-agents-guidance.ps1": "b043559038cf36152f5a4edddb0eb64f685cee86e4404377a14cd2ce0a259f32",
+    "scripts/tests/test_consumer_publication_policy.py": "7cb9cce429cc19b10b9da7a99d11ecfa4c2c2025b36b8d3a6c54282a13452862"
+  },
+  "documentation_basis": {
+    "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
+    "checked_utc": "2026-10-17T03:00:47.304302+00:00",
+    "section": "How Codex discovers guidance",
+    "observation": "Official documentation selects AGENTS.override.md before AGENTS.md and includes at most one file per directory; the project override explicitly incorporates the shared base rules."
+  },
+  "limits": [
+    "This task validates local instructions and the real guidance auditor with disposable fixture repositories, not interactive model compliance.",
+    "No product code, generated build outputs, live settings or global Codex memory/settings were changed.",
+    "No new commit/push was requested or performed; the preceding push approval was specific to its already-published commits."
+  ],
+  "agents_used": 1
+}

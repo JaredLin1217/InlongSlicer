@@ -5,12 +5,20 @@ consumer. It is not an Agents distribution provider.
 
 ## Governance Layout
 
-- `AGENTS.md` is the session entry point.
+- `AGENTS.override.md` is the project-owned Codex entry point. It incorporates
+  the managed `AGENTS.md` shared rules and applies the Consumer publication policy.
+  Root `CLAUDE.md` imports the same project-owned entry point.
+- `docs/agents/consumer-publication-policy.json` routes routine product commits
+  and pushes through Consumer Checkpoint, product verification and fresh remote
+  checks. A current explicit push request is its authorization; a Provider-gate
+  exception and separate Provider evidence commit are not routine requirements.
+  Provider distribution releases retain their own release-readiness gate.
 - `.agents/managed.json` records the deployed version and owned file hashes.
 - `.agents/scripts/validate.ps1 -Scope Consumer -Profile Checkpoint` checks
   the installed rules without running Provider-only checks.
 - `pwsh -NoProfile -File scripts/check-agents-guidance.ps1` checks project-owned
-  guidance entry points, resource references and retired operational instructions.
+  guidance entry points, the Consumer publication boundary, resource references
+  and retired operational instructions.
 - `.agents/skills/` contains project-local skills, including the Inlong
   branding migration guardrails.
 - `.agents/docs/runbooks/` contains operator procedures.

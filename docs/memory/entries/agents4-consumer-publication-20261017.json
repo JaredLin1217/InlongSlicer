@@ -1,0 +1,128 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "agents4-consumer-publication-20261017",
+  "key": "inlong-agents-consumer-boundary",
+  "type": "fact",
+  "conclusion": "InlongSlicer remains an Agents 4.0 dot-layout Consumer. Project-owned AGENTS.override.md incorporates the managed shared rules and routes routine product commits/pushes through Consumer Checkpoint, the guidance audit, relevant product checks and source correspondence. Root CLAUDE.md and the publication command share this project policy. A current explicit push request authorizes that push without another Provider-gate confirmation; commit-only requests and historical approvals do not authorize new pushes. Routine publication does not require RequireReleaseReady, a Provider exception or a separate Provider evidence commit. Actual Agents distribution releases retain their Provider gate. Fresh remote observation, non-force pushes and verified remote HEAD remain required. All 29 managed assets and the manifest are unchanged. Reviewed durable knowledge remains immutable v4 JSON; native hooks and global settings were not changed.",
+  "scope": "Project-owned InlongSlicer governance after the user-requested Consumer publication correction; uncommitted snapshots at checkout anchor 6e0c68035276fc612a500fdcb471dfbae9aecd99",
+  "modules": [
+    "project-governance"
+  ],
+  "tags": [
+    "agents4",
+    "consumer",
+    "publication",
+    "guidance",
+    "authorization",
+    "runtime"
+  ],
+  "files": [
+    "AGENTS.md",
+    ".agents/managed.json",
+    ".agents/docs/project-memory.md",
+    "AGENTS.override.md",
+    "CLAUDE.md",
+    "docs/agents/consumer-publication-policy.json",
+    ".claude/commands/commit-push-pr.md",
+    ".agents/docs/project-structure.md",
+    "scripts/check-agents-guidance.ps1",
+    "scripts/tests/test_consumer_publication_policy.py",
+    "docs/evidence/consumer-publication-routing-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "AGENTS.md",
+      "sha256": "da1a1ccf24a1e722bb644d8d6e5b5baa07e4f8e8a739f94bcc275d2be00d9f02",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/managed.json",
+      "sha256": "248e2617edb52dc8d5f9e024cdcf145fde180011be7a5d0f796f09d63edd5806",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/docs/project-memory.md",
+      "sha256": "bfb1fcd74f945d4325ea676816cf4b5152482c2c92831aa57ca7e00c7d63eb1d",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "AGENTS.override.md",
+      "sha256": "d55687186015010665dfe127738af842bd3749e3d93127e93a81a3403faa5de2",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "CLAUDE.md",
+      "sha256": "2feabbd55172f9174c107abcc06074db0071812622c5fd80d8c6c84292fbd6ef",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/agents/consumer-publication-policy.json",
+      "sha256": "439a63eecf55e997fa549b69c76de3dafd8d6514c6df6ce90168eaed2d6081d8",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".claude/commands/commit-push-pr.md",
+      "sha256": "0fe7223b6e86362359815cb25d725330ea3b2ffafad56288ad24823865b56afd",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/docs/project-structure.md",
+      "sha256": "f0ab0726e03216eac2335f5efcbd6df3bf52406573affbaaf3e7eaa923ccb554",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/check-agents-guidance.ps1",
+      "sha256": "b043559038cf36152f5a4edddb0eb64f685cee86e4404377a14cd2ce0a259f32",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_consumer_publication_policy.py",
+      "sha256": "7cb9cce429cc19b10b9da7a99d11ecfa4c2c2025b36b8d3a6c54282a13452862",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/consumer-publication-routing-20261017.json",
+      "sha256": "b96df34dd1475ad68d039d4f80489f21ff2e0591fe461a7daa4a72210514c196",
+      "commit": "6e0c68035276fc612a500fdcb471dfbae9aecd99",
+      "locator": "Reviewed local Consumer policy, entry-point linkage, auditor, regression or durable verification evidence; commit is only a checkout anchor."
+    }
+  ],
+  "verified_utc": "2026-10-17T03:00:47.304302+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Semantic rule review, exact managed-asset hash verification, guidance audit and 13 behavioral regression cases against disposable guidance repositories.",
+    "summary": "Current-request publication no longer routes through Provider-only requirements. Negative cases reject permission widening, missing entry points, disabled product/remote checks and a weakened actual Provider gate. Source and runtime application configuration are untouched."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "agents4-consumer-boundary-20261009"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
