@@ -1,0 +1,370 @@
+{
+  "schema_version": "inlong-large-project-performance/v1",
+  "verified_utc": "2026-10-17T13:22:07.496088+00:00",
+  "checkout_anchor": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+  "result": "passed",
+  "acceptance": {
+    "user_selected_baseline": "Supplied G-code, exact ordered printer commands",
+    "target_max_seconds": 600,
+    "target_min_speedup": 4.0,
+    "model_and_print_settings_unchanged": true,
+    "reference_exact": true
+  },
+  "inputs": [
+    {
+      "original": "C:\\Users\\v_jar\\Downloads\\test.3mf",
+      "copy": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\input.3mf",
+      "sha256": "ba86125d17a7103e6ae88b40f7d2f4a34acace011f230f4691be160ec375573d",
+      "bytes": 2560299
+    },
+    {
+      "original": "C:\\Users\\v_jar\\Downloads\\test_\u8f38\u51fa_\u4f46\u662f\u5207\u7247\u6642\u9593\u5f88\u4e45.gcode",
+      "copy": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\reference.gcode",
+      "sha256": "cf391f1f607eb29547eb1b49c9e3bb93abcd6bbd0fe06ecfab4ccf2967964394",
+      "bytes": 126185367
+    }
+  ],
+  "model": {
+    "vertices": 91492,
+    "triangles": 183024,
+    "size_mm": [
+      981.214447,
+      327.176086,
+      180.180389
+    ],
+    "nozzle_mm": 0.6,
+    "layer_height_mm": 0.3,
+    "organic_branch_distance_mm": 1.0,
+    "global_print_layers": 1128
+  },
+  "environment": {
+    "cpu": "Intel Core Ultra 7 255H",
+    "reported_logical_processors": 16,
+    "physical_bytes": 33744125952,
+    "scope": "Measurements on this Windows host and this supplied project; not a fourfold guarantee for every project or machine."
+  },
+  "native_unchanged_reload_control": {
+    "baseline": {
+      "label": "baseline",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\inlong-slicer.exe",
+        "--datadir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\baseline-data",
+        "--export-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\validation\\baseline-config.json",
+        "--slice",
+        "0",
+        "--debug",
+        "3",
+        "--outputdir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\baseline-out",
+        "--logfile",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\validation\\baseline-native.log",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\input.3mf"
+      ],
+      "started_utc": "2026-10-17T11:44:11.476783+00:00",
+      "finished_utc": "2026-10-17T12:20:12.714559+00:00",
+      "seconds": 2161.2308540999657,
+      "exit_code": 0,
+      "sampled": {
+        "working_set": 10200829952,
+        "private": 11090055168,
+        "available_min": 6947602432,
+        "cpu_seconds": 9312.34375,
+        "threads": 23
+      },
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\baseline-out\\plate_1.gcode",
+          "sha256": "82ffc510c26f99c30fac0c0ce8f1b6e1683430793352c9284e824f37f50f7b24",
+          "bytes": 125708310
+        }
+      ],
+      "stages_seconds": {
+        "smoothing": 37.6132,
+        "rasterization": 526.601,
+        "tree-layer unions": 885.412,
+        "final polygon assembly": 79.3465,
+        "interface": 30.3125,
+        "influence area growth": 26.914,
+        "influence area merging": 283.989
+      },
+      "tree_union_scheduling": {
+        "seconds": 885.412,
+        "jobs": 22023,
+        "workers": 8,
+        "reserved_bytes": 1557140890
+      },
+      "initial_available_bytes": 16174854144,
+      "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/baseline-result.json"
+    },
+    "optimized": {
+      "label": "optimized-1",
+      "command": [
+        ".agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\app\\inlong-slicer.exe",
+        "--datadir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\optimized-1-data",
+        "--export-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\validation\\optimized-1-config.json",
+        "--slice",
+        "0",
+        "--debug",
+        "3",
+        "--outputdir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\optimized-1-out",
+        "--logfile",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\validation\\optimized-1-native.log",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\input.3mf"
+      ],
+      "started_utc": "2026-10-17T12:33:54.464344+00:00",
+      "finished_utc": "2026-10-17T12:38:20.648467+00:00",
+      "seconds": 266.1833831000258,
+      "exit_code": 0,
+      "sampled": {
+        "working_set": 9713291264,
+        "private": 10465615872,
+        "available_min": 10952642560,
+        "cpu_seconds": 1842.75,
+        "threads": 23
+      },
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\optimized-1-out\\plate_1.gcode",
+          "sha256": "ae1fbd1759bf565ba8869976ba11b4e2cc51e1c448d503eb090665e3f4410303",
+          "bytes": 125708310
+        }
+      ],
+      "stages_seconds": {
+        "smoothing": 10.007,
+        "rasterization": 13.52,
+        "tree-layer unions": 73.9326,
+        "final polygon assembly": 7.72091,
+        "interface": 4.49013,
+        "influence area growth": 7.517,
+        "influence area merging": 70.191
+      },
+      "tree_union_scheduling": {
+        "seconds": 73.9326,
+        "jobs": 22023,
+        "workers": 16,
+        "reserved_bytes": 2862231608
+      },
+      "initial_available_bytes": 19714330624,
+      "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/optimized-1-result.json"
+    },
+    "wall_speedup": 8.11933047408832,
+    "wall_reduction_percent": 87.68371353781748,
+    "exact_comparison": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/baseline-vs-optimized-1-comparison.json"
+  },
+  "original_gui": {
+    "slice_started_local": "2026-10-17 18:53:34.785 +08:00",
+    "slice_finished_local": "2026-10-17 19:26:12.568 +08:00",
+    "slice_seconds": 1957.783,
+    "log_sha256": "64e810a233f7e0aaf76bd770b90cf1972ef801662fb2007e6a0426176bb9b687",
+    "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/work/gui-original.log"
+  },
+  "reference_preserving_candidates": [
+    {
+      "label": "reference-optimized-3",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\app\\inlong-slicer.exe",
+        "--datadir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\reference-optimized-3-data",
+        "--export-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\validation\\reference-optimized-3-config.json",
+        "--slice",
+        "0",
+        "--debug",
+        "3",
+        "--outputdir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\reference-optimized-3-out",
+        "--logfile",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\validation\\reference-optimized-3-native.log",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\input.3mf"
+      ],
+      "started_utc": "2026-10-17T13:15:41.446740+00:00",
+      "finished_utc": "2026-10-17T13:19:55.152966+00:00",
+      "seconds": 253.70628000004217,
+      "exit_code": 0,
+      "sampled": {
+        "working_set": 9675526144,
+        "private": 10069655552,
+        "available_min": 10090643456,
+        "cpu_seconds": 1797.875,
+        "threads": 23
+      },
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\reference-optimized-3-out\\plate_1.gcode",
+          "sha256": "52f229a43ebd1c55f1f2227ba8c0d2c327b86eb13626fd005758569dbe33ce9a",
+          "bytes": 126174695
+        }
+      ],
+      "stages_seconds": {
+        "smoothing": 9.75877,
+        "rasterization": 13.5596,
+        "tree-layer unions": 73.7258,
+        "final polygon assembly": 7.83733,
+        "interface": 3.83351,
+        "influence area growth": 6.74,
+        "influence area merging": 68.537
+      },
+      "tree_union_scheduling": {
+        "seconds": 73.7258,
+        "jobs": 21630,
+        "workers": 16,
+        "reserved_bytes": 2620474352
+      },
+      "initial_available_bytes": 19890352128,
+      "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/reference-optimized-3-result.json"
+    }
+  ],
+  "reference_candidate_median_seconds": 253.70628000004217,
+  "reference_gui_to_native_speedup": 7.716730543680963,
+  "output_equivalence": {
+    "commands": 4174470,
+    "layers": 1128,
+    "program_sha256": "ee2344ec6431b8d2bcb7d2a1aa45a6689c782f92183a7d4e4d71909ca8968b6f",
+    "annotated_motion_sha256": "cb7b88c29d4884f23b0cb52dfcd4cf750c00b6df784c970f6d635dff0e369a2e",
+    "annotation_sha256": "3e3ab7e846c05db33c6e4face51d7e020d4498976ee9119093f94d15efa10bc2",
+    "comparison": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/reference-vs-reference-optimized-3-comparison.json",
+    "method": "Remove comments and normalize whitespace only. Compare all ordered commands, all numeric tokens without tolerance, and ordered motion roles, width, height, Z and layer annotations. Raw file bytes may differ in timestamps, thumbnails and nonprinting metadata.",
+    "config_metadata_differences": {
+      "compatible_machine_expression_group": [
+        null,
+        ";;"
+      ],
+      "compatible_process_expression_group": [
+        null,
+        "\"\""
+      ]
+    }
+  },
+  "optimizations": [
+    "Reuse branch and collision radii only while the support element state and fixed settings are unchanged; refresh after every state replacement or successful merge.",
+    "Transfer point buffers while preserving contour/vertex order and grow polygon handle capacity geometrically. This avoids quadratic repeated deep copies without changing geometry.",
+    "Use one tree-layer union job per TBB task under the existing live-memory budget. Keep per-job polygon and boolean order unchanged.",
+    "Generate a build-tree-only Clipper engine copy with a no-intersection shortcut for already ordered scanbeam current-X keys. Strict comparisons preserve ties; the untouched vendor source is retained, and unknown engine hashes use the original implementation."
+  ],
+  "native_project_roundtrip": {
+    "unmodified_reload_commands": 4157828,
+    "reference_commands": 4174470,
+    "unmodified_difference": 16642,
+    "geometry_inspection": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/geometry-roundtrip-inspection.json",
+    "maximum_recenter_float_change_mm": 3.0517578125e-05,
+    "cause": "Native 3MF reload redundantly recenters saved float vertices and promotes single-volume local offsets into instance offsets. Both change the numerical representation used by slicing. Preserve the native serialized local mesh and volume/instance transform split. Decompose combined local/source metadata after restoration so subsequent saves do not duplicate the local pose. Generic 3MF import normalization remains unchanged.",
+    "regression": "Three axes with a half-ULP center residual, separate/shared meshes, and three source-transform modes: exact local coordinates, local pose split, source metadata and world placement. The initial six-case centering regression fails against the original importer. All 18 combined native restoration cases pass after the fix.",
+    "before_fix_receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/roundtrip-red-result.json",
+    "mesh_only_intermediate": {
+      "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/reference-optimized-1-result.json",
+      "comparison": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/reference-vs-reference-optimized-1-comparison.json",
+      "accepted": false
+    },
+    "pose_only_intermediate": {
+      "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/reference-optimized-2-result.json",
+      "comparison": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/reference-vs-reference-optimized-2-comparison.json",
+      "accepted": false
+    }
+  },
+  "seam_visibility_precision": {
+    "inspection": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/occlusion-transform-inspection.json",
+    "double_precision_roundtrip_changed_vertices": 39720,
+    "float_precision_roundtrip_changed_vertices": 0,
+    "cause": "The nine-digit component translation differs from its original float value in double precision. Transforming float vertices through a double intermediate biases half-ULP ties before visibility sampling, even when the slicing transform quantizes identically. Quantize visibility affine inputs to the same float precision as slicing while retaining original double-precision mirror classification and triangle order.",
+    "regression": "All three translation axes and both mirror states compare exact visibility vertices and triangle order against the original float-representable transform.",
+    "scope": "The full attached project is verified command-identical. Float-equivalent transform stability is tested generically; no claim of unchanged historical seams for every unrelated high-precision transform is made."
+  },
+  "memory": {
+    "policy": "No fixed multi-GB cache was added. Existing live physical/available RAM budgets, shared reservations and low/unknown-memory fallback remain active. The polygon accumulator retains point buffers and only grows lightweight handles.",
+    "capacities_tested_gib": [
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "limitation": "A low-memory fallback limits optional acceleration; it cannot make this model fit a machine smaller than its required working storage."
+  },
+  "tests": [
+    {
+      "label": "core-native-reference-optimized-3",
+      "assertions": 475835,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 3.5111401000176556,
+      "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/core-native-reference-optimized-3-result.json",
+      "xml": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/core-native-reference-optimized-3.xml",
+      "executable_sha256": "add39618a5dc2f5dc8763ef48219cfbecda922b4be46de99b2eed67e7b298c70"
+    },
+    {
+      "label": "fff-native-reference-optimized-3",
+      "assertions": 27553,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 56.18140640005004,
+      "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/fff-native-reference-optimized-3-result.json",
+      "xml": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/fff-native-reference-optimized-3.xml",
+      "executable_sha256": "ff09c764dc0259af92dd1b8ea808aaad513be79c6b3b9dfb3fbfb0583de491c1"
+    }
+  ],
+  "clipper_differential_cases": 2048,
+  "clipper_differential_scope": "Exact output path order, starting vertices, orientation, integer coordinates, success status and open paths against the untouched engine, across all four boolean operations/fill rules, collinear retention and reversed solutions.",
+  "cmake_adapter_tests": {
+    "cases": 4,
+    "receipt": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/clipper-scanbeam-contract-result.json"
+  },
+  "source_and_build": {
+    "utc": "2026-10-17T13:15:39.437743+00:00",
+    "head": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+    "files": {
+      "cmake/InlongClipperScanbeam.cmake": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0",
+      "scripts/tests/test_clipper_scanbeam.py": "fbd73bdaac74bed8fa1791517bc9aaa68bf09eda649b0b9261ef4d22eb240982",
+      "src/libslic3r/GCode/SeamVisibility.hpp": "4f13b242a8ab06242f0ec76e9c08d41754c8be3fb3f079075c831a9b81c67599",
+      "src/libslic3r/Support/SupportPolygonAccumulator.hpp": "011fd76a138de8fc7941adf5ea9171dc614fa9127d1953888e517918b8183661",
+      "tests/libslic3r/clipper_scanbeam_reference.cpp": "77b4a16f7b081c49d6cbf83e81a9249a2763cabd42c92b69dda157dbf9ff4445",
+      "tests/libslic3r/clipper_scanbeam_reference.hpp": "eefe309345efb958182a651988662f6010c8929a22de084a7717f065ebda4cbe",
+      "tests/libslic3r/test_clipper_scanbeam.cpp": "cd7a100d06310e81dcfe0ab6421ab105d61b00f59687c888da1849e858e04741",
+      "tests/libslic3r/test_support_polygon_accumulator.cpp": "63d204459afdca81c15e50694649305512c24352b091c229026080cecbc698df",
+      "CMakeLists.txt": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+      "src/libslic3r/CMakeLists.txt": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f",
+      "src/libslic3r/Format/bbs_3mf.cpp": "71c9eac57993c79c5a37daac32744abc055748faed8a2432967875065245010a",
+      "src/libslic3r/GCode/SeamPlacer.cpp": "0e9f87d3c2bfbdde7140a531babf8853f20ca16e4827f2984819c1a0de12b6ea",
+      "src/libslic3r/Support/TreeSupport3D.cpp": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+      "tests/libslic3r/CMakeLists.txt": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6",
+      "tests/libslic3r/test_3mf.cpp": "199120023fd72bf64b3ba884f69c6eaaa6e4784a03d17f130a4e26c23d8c65b7"
+    },
+    "products": {
+      "build/src/libslic3r/Release/libslic3r.lib": "0a991dc7ead8c6b09c8f7a1f551afa49c6de03885d433da46aa44c7df7d66ddc",
+      "build/deps_src/clipper2/Release/Clipper2.lib": "d15252c6113b5874c665e34271e5d4bcbf9cb711e263caae72151baaacfbf87a",
+      "build/tests/libslic3r/Release/libslic3r_tests.exe": "add39618a5dc2f5dc8763ef48219cfbecda922b4be46de99b2eed67e7b298c70",
+      "build/tests/fff_print/Release/fff_print_tests.exe": "ff09c764dc0259af92dd1b8ea808aaad513be79c6b3b9dfb3fbfb0583de491c1",
+      "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\work\\app\\InlongSlicer.dll": "94f69c9c62fa7a51eb0d1f38a8c9f1cc68003c994dc4d0caab7a08f1ac51122e"
+    },
+    "vendor_engine_sha256": "386cc787447ef158014ad9b84a54f397fb94789baff0e78983666c3aea02c800",
+    "generated_engine_sha256": "b75a90051a053d8178605039dc49c589b858a4ed9770de452325da0be40a926d"
+  },
+  "preservation": {
+    "installed_binary_hashes": {
+      "inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "InlongSlicer.dll": "2fd45a222b41378b9ef0b23483107fd850dca4ae9db0db3aa20caaf169ad6ba1"
+    },
+    "live_settings_files_before": 832,
+    "live_settings_files_after": 832,
+    "live_settings_differences": {}
+  },
+  "timing_protocol": [
+    "Fresh native process and full input loading/slicing/G-code export for each run. Unique empty datadir/output/TEMP directories. No cached G-code replay.",
+    "No native builds, regression suites or full-file comparisons overlapped the timed optimized slices. Small source/status reads and task checkpoint writes were permitted.",
+    "The long baseline includes short own-process PC/stack profiling intervals. The first optimized run completed before a later stack-sampling attempt could open it, so that attempt suspended no candidate thread.",
+    "OS file caches were not forcibly flushed. Available RAM differed across runs and adaptive union worker counts are recorded. Pure performance changes are independently proven command-identical by the unchanged-reload control pair.",
+    "Original GUI timing and native end-to-end timing use different interfaces; both path baselines and timer scopes are recorded separately."
+  ],
+  "deployment": {
+    "installed": false,
+    "committed": false,
+    "pushed": false,
+    "reason": "This request authorizes local investigation, optimization and validation. The live Release runtime and settings were preserved."
+  }
+}

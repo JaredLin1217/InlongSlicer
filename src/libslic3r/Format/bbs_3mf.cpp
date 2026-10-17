@@ -2329,12 +2329,13 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             }
         }
 
-        // If instances contain a single volume, the volume offset should be 0,0,0
-        // This equals to say that instance world position and volume world position should match
-        // Correct all instances/volumes for which this does not hold
+        // Normalize generic single-volume imports. Native projects must retain
+        // their saved volume/instance split: moving an offset between these
+        // transforms changes float rounding during slicing, even when their
+        // composed world transform is mathematically unchanged.
         for (int obj_id = 0; obj_id < int(model.objects.size()); ++obj_id) {
             ModelObject *o = model.objects[obj_id];
-            if (o->volumes.size() == 1) {
+            if (!m_is_bbl_3mf && o->volumes.size() == 1) {
                 ModelVolume *                           v                 = o->volumes.front();
                 const Slic3r::Geometry::Transformation &first_inst_trafo  = o->instances.front()->get_transformation();
                 const Vec3d                             world_vol_offset  = (first_inst_trafo * v->get_transformation()).get_offset();
@@ -5236,6 +5237,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
 
             Transform3d volume_matrix_to_object = Transform3d::Identity();
             bool        has_transform 		    = false;
+            bool        has_source_matrix       = false;
             int         shared_mesh_id          = object_id.second;
             if (volume_data)
             {
@@ -5245,6 +5247,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                     if (metadata.key == MATRIX_KEY) {
                         volume_matrix_to_object = Slic3r::Geometry::transform3d_from_string(metadata.value);
                         has_transform 			= ! volume_matrix_to_object.isApprox(Transform3d::Identity(), 1e-10);
+                        has_source_matrix       = true;
                         found_count++;
                     }
                     else if (metadata.key == MESH_SHARED_KEY){
@@ -5335,7 +5338,13 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 if (triangle_mesh.volume() < 0)
                     triangle_mesh.flip_triangles();
 
-                volume = object.add_volume(std::move(triangle_mesh));
+                // Native projects already store mesh-local coordinates and a
+                // component transform. Centering their float vertices again
+                // rounds asymmetric bounding-box residuals and can change a
+                // subsequent slice, even though the intended world pose is the
+                // same. Restore the serialized representation without another
+                // float translation; generic 3MF imports retain normalization.
+                volume = object.add_volume(std::move(triangle_mesh), ModelVolumeType::MODEL_PART, !m_is_bbl_3mf);
 
                 if (shared_mesh_id != -1)
                     //for some cases the shared mesh is in other plate and not loaded in cli slicing
@@ -5349,10 +5358,6 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 volume = object.add_volume_with_shared_mesh(*shared_volume);
                 BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": line %1%, create volume using shared_mesh %2%")%__LINE__%shared_volume;
             }
-            // stores the volume matrix taken from the metadata, if present
-            if (has_transform)
-                volume->source.transform = Slic3r::Geometry::Transformation(volume_matrix_to_object);
-
             volume->calculate_convex_hull();
 
             //set transform from 3mf
@@ -5364,6 +5369,15 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 if (!shift.isApprox(Vec3d::Zero()))
                     volume->translate(shift);
             }
+
+            // Native metadata stores local * source. Since the native local
+            // transform is now restored verbatim, retain only the source part
+            // here so the next save/reload does not apply the local pose twice.
+            // An explicitly stored identity matrix also needs this split.
+            if (m_is_bbl_3mf && has_source_matrix)
+                volume->source.transform = Slic3r::Geometry::Transformation(volume->get_matrix().inverse() * volume_matrix_to_object);
+            else if (has_transform)
+                volume->source.transform = Slic3r::Geometry::Transformation(volume_matrix_to_object);
 
             // recreate custom supports, seam and mmu segmentation from previously loaded attribute
             {

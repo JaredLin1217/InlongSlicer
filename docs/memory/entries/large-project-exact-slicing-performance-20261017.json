@@ -1,0 +1,48 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "large-project-exact-slicing-performance-20261017",
+  "key": "large-project-organic-support-exact-performance",
+  "type": "fact",
+  "conclusion": "Historical measurement for the recorded large project on the measured Windows host: the unchanged native reload takes2161.231s and its exact-output performance control takes266.183s (8.119x). The final reference-preserving candidate completes in253.706s including loading, slicing and export, with all4174470 ordered printer commands, motion role/width/height/Z annotations and1128 layers identical to the supplied G-code. Original GUI timing is1957.783s, a conservative7.717x comparison against native end-to-end timing. Main work savings come from state-local radius reuse, point-buffer transfer with geometric handle growth, one-job TBB scheduling under existing RAM budgets, and a reviewed-engine-hash-gated no-intersection Clipper scanbeam shortcut. Native project reproducibility also requires retaining local float mesh coordinates and the volume/instance split, preserving source-matrix decomposition, and quantizing seam visibility transforms consistently with slicing. No quality/material/profile settings or fixed multi-GB cache were added. These timings and output identities are specific to the bound source, project and host and require fresh verification after changes.",
+  "scope": "Historical 2026-10-17 experiment with source/binary/input hashes and timer boundaries in durable evidence; not a current-build claim for future checkouts or a speedup guarantee for every project or computer.",
+  "modules": [
+    "Support",
+    "OrganicSupport",
+    "GCode",
+    "3MF"
+  ],
+  "tags": [
+    "performance",
+    "exact-output",
+    "precision",
+    "memory-budget",
+    "historical"
+  ],
+  "files": [
+    "docs/evidence/large-project-slicing-performance-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+      "sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed durable measured results, input and product/source hashes, exact-output protocol, native regressions and preservation boundaries. The commit is a checkout anchor; uncommitted source bytes are explicitly bound in the report."
+    }
+  ],
+  "verified_utc": "2026-10-17T13:23:03.837927+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Reviewed the mathematical no-op cases and ownership transfer, native 3MF/source/mirror/float regressions,2048 exact differential clipping scenes,475835 core and27553 FFF/seam assertions, complete ordered command/motion/config comparison, and fresh installed-binary/settings/input hash readback.",
+    "summary": "Both requested targets pass on the supplied project: under600s and more than4x faster with the exact supplied printer program. Two nonprinting compatibility metadata fields differ; timestamps and other nonprinting file comments are outside byte identity. Installed Release and all835 live setting files are unchanged."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

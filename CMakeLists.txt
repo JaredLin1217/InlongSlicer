@@ -1246,6 +1246,8 @@ endfunction()
 
 # libslic3r, Inlong Slicer GUI and the slicer executable.
 add_subdirectory(deps_src)
+include(cmake/InlongClipperScanbeam.cmake)
+inlong_enable_clipper_scanbeam_fast_path(Clipper2)
 
 if (NOT SLIC3R_BUNDLED_WARNINGS)
     inlongslicer_silence_third_party_warnings("${CMAKE_CURRENT_SOURCE_DIR}/deps_src")

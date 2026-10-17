@@ -1,0 +1,104 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-inlong-only-uv-output-gap-20261017-performance-review",
+  "key": "windows-filtered-install-bundled-uv-gap",
+  "type": "fact",
+  "conclusion": "The reviewed source gap remains: the full Windows install copies configured downloaded uv, while filtered source-resource copying and build-tree staging omit that downloaded tool. Python checks the configured absolute location, resources/tools/uv and executable-local tools/uv; a working development path can mask portable incompleteness. Relevant recipes and Python lookup sources remain byte-identical outside the new root CMake adapter. Earlier uv0.11.21 copies, hashes/version checks and835/832 backup counts are historical at c952e845db; no uv deployment or network/plugin UI check occurred here. Recheck tool candidates on an authorized install, and avoid writing through a source-resource junction.",
+  "scope": "Current source-contract audit after the 2026-10-17 exact-output performance work; original deployment, named-project path and remote observations remain historical at their original anchors. This is not evidence of a new install, multi-project slice or release.",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "Windows",
+    "install",
+    "MSVC",
+    "portable-settings",
+    "uv"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "src/CMakeLists.txt",
+    "cmake/InstallOnlyInlong.cmake",
+    "src/slic3r/plugin/PythonInterpreter.cpp",
+    "src/slic3r/plugin/PluginLoader.cpp",
+    "docs/evidence/windows-install-c952e845db-20261017.json",
+    "docs/evidence/large-project-compatibility-audit-20261017.json",
+    "docs/evidence/large-project-slicing-performance-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/CMakeLists.txt",
+      "sha256": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/plugin/PythonInterpreter.cpp",
+      "sha256": "c5e8ee1cbeb00ab8e80f71acde0ed6167ccb7cc5d61f83aea3ba1058fedcc065",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/plugin/PluginLoader.cpp",
+      "sha256": "5692a1f1ac92ee9760397091a40ae352e2b13b6cf0b1eedd3455b11c56fe0b38",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/windows-install-c952e845db-20261017.json",
+      "sha256": "584084c6e50f068cd54bb70d1deab3355ca332b283aa9d91116612d5c535dd12",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-compatibility-audit-20261017.json",
+      "sha256": "d7e6676ba3a68b839681252f01ac3352974d577f9a689817a2d32695849e4d0a",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+      "sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    }
+  ],
+  "verified_utc": "2026-10-17T13:36:31.701761+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact reconstruction of four changed global files to HEAD after removing declared performance/test additions; unchanged hashes for every other prior snapshot; current475835 core and27553 FFF/seam assertions, fresh belt and eleven disposable packaging tests, full4174470-command identity and installed-state readback.",
+    "summary": "Reviewed all changed snapshots rather than refreshing hashes mechanically. Common source contracts remain verified; previous installations, model-specific timings/output identities and remote state remain historical. Current local runtime was preserved and the new source was not installed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "windows-inlong-only-uv-output-gap-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

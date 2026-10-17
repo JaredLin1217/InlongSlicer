@@ -280,6 +280,7 @@ set(lisbslic3r_sources
     GCode/RetractWhenCrossingPerimeters.cpp
     GCode/RetractWhenCrossingPerimeters.hpp
     GCode/SeamPlacer.cpp
+    GCode/SeamVisibility.hpp
     GCode/SeamPlacer.hpp
     GCode/PreciseSeam.cpp
     GCode/PreciseSeam.hpp
@@ -488,6 +489,7 @@ set(lisbslic3r_sources
     Support/SupportCommon.cpp
     Support/SupportCacheBudget.cpp
     Support/SupportCacheBudget.hpp
+    Support/SupportPolygonAccumulator.hpp
     Support/OrganicSupportLayerPlan.hpp
     Support/SupportCommon.hpp
     Support/SupportLayer.hpp

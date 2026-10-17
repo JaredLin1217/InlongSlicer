@@ -1,0 +1,85 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "application-updates-disabled-20261017",
+  "key": "inlong-application-version-check-policy",
+  "type": "fact",
+  "conclusion": "InlongSlicer application-version checks are disabled. PresetUpdater::version_check_enabled() is false; GUI_App::check_new_version_sf returns before HTTP, and normal/forced update-event handlers suppress release dialogs. The Help and command-palette update actions and stable-only preference are removed. Profile and plugin synchronization retains its independent existing behavior. The current Release was rebuilt and its CLI loaded successfully with all832 current user settings files restored exactly and byte-identical slicing core/Clipper libraries. No interactive GUI session was used for verification.",
+  "scope": "Recorded product policy and source/build evidence at the specified dirty checkout; future source or binary changes require reinspection.",
+  "modules": [
+    "GUI",
+    "ApplicationUpdates",
+    "WindowsBuild"
+  ],
+  "tags": [
+    "update-policy",
+    "InlongSlicer",
+    "settings-preservation"
+  ],
+  "files": [
+    "docs/evidence/application-updates-disabled-20261017.json",
+    "src/slic3r/GUI/GUI_App.cpp",
+    "src/slic3r/GUI/MainFrame.cpp",
+    "src/slic3r/GUI/NativeCommands.cpp",
+    "src/slic3r/GUI/Preferences.cpp",
+    "src/slic3r/Utils/PresetUpdater.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/application-updates-disabled-20261017.json",
+      "sha256": "89a732c3bdc09e5c19f1c90bf5c023074f205b7cdedaf1c699105ea004433db5",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/GUI_App.cpp",
+      "sha256": "68b613ca130c55271bd89fe006f603e3a6e104380670e4b3161042289e546630",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/MainFrame.cpp",
+      "sha256": "1a858a458f54cd9654d7f7c4bd8a1b31c89b66d342d5fe78f1a4842e9cb8e6f3",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/NativeCommands.cpp",
+      "sha256": "ca1ee424b321dbe60a88b0b25907a6fc030f53e41257236b32fd1954bbac99d3",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Preferences.cpp",
+      "sha256": "da0088c38cfea7d64787cd4497196528887017fce5e06d47827665f77b051c99",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/Utils/PresetUpdater.cpp",
+      "sha256": "b0f540018c72c4372752b070472e51d01e9ca6d353dd121eb11e519e878db5e2",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    }
+  ],
+  "verified_utc": "2026-10-17T14:37:10.823212+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Reviewed exact five-file change reconstruction and call-site coverage, built the native Release GUI target, checked linked policy text/core hashes, native CLI exit and exact settings readback.",
+    "summary": "The updater policy and all user-visible entry points are covered. Existing profile, plugin, fan and slicing implementations were preserved. GUI dialog suppression is a source/build claim, not an interactive UI observation."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

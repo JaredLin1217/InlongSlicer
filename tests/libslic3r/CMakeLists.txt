@@ -19,6 +19,8 @@ add_executable(${_TEST_NAME}_tests
     test_calib.cpp
     test_clipper_offset.cpp
     test_clipper_utils.cpp
+    test_clipper_scanbeam.cpp
+    clipper_scanbeam_reference.cpp
     test_config.cpp
     test_config_variant_expansion.cpp
     test_locales_utils.cpp
@@ -61,6 +63,7 @@ add_executable(${_TEST_NAME}_tests
     test_model.cpp
     test_utils.cpp
     test_support_cache_budget.cpp
+    test_support_polygon_accumulator.cpp
     test_miniz_extension.cpp
     test_timeutils.cpp
     test_voronoi.cpp
@@ -94,7 +97,7 @@ endif()
 
 # libslic3r links Draco privately; test_drc.cpp encodes its own fixtures.
 find_package(Draco REQUIRED)
-target_link_libraries(${_TEST_NAME}_tests test_common libslic3r draco::draco Catch2::Catch2WithMain)
+target_link_libraries(${_TEST_NAME}_tests test_common libslic3r draco::draco Clipper2 Catch2::Catch2WithMain)
 target_include_directories(${_TEST_NAME}_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 

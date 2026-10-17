@@ -27,6 +27,7 @@
 #include "libslic3r/Support/SupportLayer.hpp"
 #include "SupportCommon.hpp"
 #include "SupportCacheBudget.hpp"
+#include "SupportPolygonAccumulator.hpp"
 #include "OrganicSupportLayerPlan.hpp"
 #include "TriangleMeshSlicer.hpp"
 #include "TreeSupport.hpp"
@@ -2508,6 +2509,14 @@ struct SupportElementInfluenceAreas {
 
 struct SupportElementMerging {
     SupportElementState                     state;
+    void set_state(const SupportElementState &new_state, const TreeSupportSettings &config)
+    {
+        state = new_state;
+        // A layer may compare this element with many unrelated branches. These
+        // values depend only on its state and the fixed settings, not the pair.
+        radius = support_element_radius(config, state);
+        collision_radius = support_element_collision_radius(config, state);
+    }
     /*!
      * \brief All elements in the layer above the current one that are supported by this element
      */
@@ -2516,6 +2525,8 @@ struct SupportElementMerging {
     SupportElementInfluenceAreas            areas;
     // Bounding box of all influence areas.
     Eigen::AlignedBox<coord_t, 2>           bbox_data;
+    coord_t                                 radius{ 0 };
+    coord_t                                 collision_radius{ 0 };
 
     const Eigen::AlignedBox<coord_t, 2>&    bbox() const { return bbox_data;}
     const Point                             centroid() const { return (bbox_data.min() + bbox_data.max()) / 2; }
@@ -2784,7 +2795,7 @@ static void increase_areas_one_layer(
                 Polygons max_influence_area = safe_union(
                     diff_clipped(inc_wo_collision, volumes.getCollision(radius, layer_idx - 1, elem.use_min_xy_dist)),
                     safe_union(to_bp_data, to_model_data));
-                merging_area.state = elem;
+                merging_area.set_state(elem, config);
                 assert(!max_influence_area.empty());
                 merging_area.set_bbox(get_extents(max_influence_area));
                 merging_area.areas.influence_areas = std::move(max_influence_area);
@@ -2873,10 +2884,10 @@ static bool merge_influence_areas_two_elements(
     if (merging_gracious_and_non_gracious || merging_min_and_regular_xy)
         return false;
 
-    const bool dst_radius_bigger = support_element_collision_radius(config, dst.state) > support_element_collision_radius(config, src.state);
+    const bool dst_radius_bigger = dst.collision_radius > src.collision_radius;
     const SupportElementMerging &smaller_rad = dst_radius_bigger ? src : dst;
     const SupportElementMerging &bigger_rad  = dst_radius_bigger ? dst : src;
-    const coord_t real_radius_delta = std::abs(support_element_radius(config, bigger_rad.state) - support_element_radius(config, smaller_rad.state));
+    const coord_t real_radius_delta = std::abs(bigger_rad.radius - smaller_rad.radius);
     {
         // Testing intersection of bounding boxes.
         // Expand the smaller radius branch bounding box to match the lambda intersect_small_with_bigger() below.
@@ -2898,8 +2909,8 @@ static bool merge_influence_areas_two_elements(
         if (dst.state.to_buildplate != src.state.to_buildplate) {
             // Merging a "to build plate" branch with a "to model" branch.
             // Don't allow merging a thick "to build plate" branch into a thinner "to model" branch.
-            const coord_t rdst = support_element_radius(config, dst.state);
-            const coord_t rsrc = support_element_radius(config, src.state);
+            const coord_t rdst = dst.radius;
+            const coord_t rsrc = src.radius;
             if (dst.state.to_buildplate) {
                 if (rsrc < rdst)
                     increased_to_model_radius = src.state.increased_to_model_radius + rdst - rsrc;
@@ -2933,7 +2944,7 @@ static bool merge_influence_areas_two_elements(
     // If this area has any intersections with the influence area of the larger collision radius, a branch (of the larger collision radius) placed in this intersection, has already engulfed the branch of the smaller collision radius.
     // Because of this a merge may happen even if the influence areas (that represent possible center points of branches) do not intersect yet.
     // Remember that collision radius <= real radius as otherwise this assumption would be false.
-    const coord_t   smaller_collision_radius    = support_element_collision_radius(config, smaller_rad.state);
+    const coord_t   smaller_collision_radius    = smaller_rad.collision_radius;
     const Polygons &collision                   = volumes.getCollision(smaller_collision_radius, layer_idx - 1, use_min_radius);
     auto            intersect_small_with_bigger = [real_radius_delta, smaller_collision_radius, &collision, &config](const Polygons &small, const Polygons &bigger) {
         return intersection(
@@ -2997,7 +3008,7 @@ static bool merge_influence_areas_two_elements(
             influence_areas;
 
     dst.parents.insert(dst.parents.end(), src.parents.begin(), src.parents.end());
-    dst.state = new_state;
+    dst.set_state(new_state, config);
     dst.areas.influence_areas = std::move(influence_areas);
     dst.areas.to_bp_areas.clear();
     dst.areas.to_model_areas.clear();
@@ -5138,9 +5149,9 @@ void organic_draw_branches(
                                     Slice &dst = tree.slices[i - new_begin];
                                     if (++ dst.num_branches > 1) {
                                         if (!src.empty())
-                                            append(dst.polygons, std::move(src));
+                                            append_support_polygons(dst.polygons, std::move(src));
                                         if (has_bottom_contacts)
-                                            append(dst.bottom_contacts, std::move(bottom_contacts[j]));
+                                            append_support_polygons(dst.bottom_contacts, std::move(bottom_contacts[j]));
                                     } else {
                                         if (!src.empty())
                                             dst.polygons = std::move(src);
@@ -5212,7 +5223,7 @@ void organic_draw_branches(
             tbb::parallel_for(tbb::blocked_range<size_t>(0, jobs.size(), 1), [&](const tbb::blocked_range<size_t> &range) {
                 for (size_t idx = range.begin(); idx < range.end(); ++idx)
                     merge_slice(*jobs[idx]);
-            });
+            }, tbb::simple_partitioner());
         });
     }
     const auto profile_united = std::chrono::steady_clock::now();
@@ -5237,9 +5248,9 @@ void organic_draw_branches(
 
                     if (++ dst.num_branches > 1) {
                         if (!src.polygons.empty())
-                            append(dst.polygons, std::move(src.polygons));
+                            append_support_polygons(dst.polygons, std::move(src.polygons));
                         if (has_bottom_contacts)
-                            append(dst.bottom_contacts, std::move(src.bottom_contacts));
+                            append_support_polygons(dst.bottom_contacts, std::move(src.bottom_contacts));
                     } else {
                         if (!src.polygons.empty())
                             dst.polygons = std::move(src.polygons);

@@ -1,4 +1,5 @@
 #include "SeamPlacer.hpp"
+#include "SeamVisibility.hpp"
 
 #include "libslic3r/Point.hpp"
 #include "libslic3r/AABBTreeIndirect.hpp"
@@ -718,7 +719,7 @@ void compute_global_occlusion(GlobalModelInfo &result, const PrintObject *po,
       // ORCA fix (not related to Precise Seam, discovered during its development):
       // Mirror transforms have negative determinant which flips triangle winding.
       // fix_left_handed=true swaps indices to keep normals pointing outward.
-      its_transform(model_its, model_transformation, true);
+      transform_visibility_mesh(model_its, model_transformation);
       if (model_volume->type() == ModelVolumeType::MODEL_PART) {
         its_merge(triangle_set, model_its);
       } else {
@@ -742,7 +743,7 @@ void compute_global_occlusion(GlobalModelInfo &result, const PrintObject *po,
   // Object-level transform may include mirroring (negative determinant),
   // which inverts triangle winding. fix_left_handed=true corrects this
   // so visibility ray sampling sees outward-facing normals.
-  its_transform(triangle_set, obj_transform, true);
+  transform_visibility_mesh(triangle_set, obj_transform);
   BOOST_LOG_TRIVIAL(debug)
       << "SeamPlacer: decimate: end";
 

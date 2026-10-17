@@ -288,7 +288,8 @@ PresetUpdater::priv::priv()
 	, cancel(false)
 {
 	//BBS: refine preset updater logic
-	enabled_version_check = true;
+	// InlongSlicer releases are managed independently of upstream Orca releases.
+	enabled_version_check = false;
 	set_download_prefs(GUI::wxGetApp().app_config);
 	// Install indicies from resources. Only installs those that are either missing or older than in resources.
 	check_installed_vendor_profiles();
@@ -1301,7 +1302,7 @@ PresetUpdater::~PresetUpdater()
 void PresetUpdater::sync(std::string http_url, std::string language, std::string plugin_version, PresetBundle * /*preset_bundle*/)
 {
 	//p->set_download_prefs(GUI::wxGetApp().app_config);
-	if (!p->enabled_version_check && !p->enabled_config_update) { return; }
+	// Application version checks must not gate profile or plug-in synchronization.
 
 	p->thread = std::thread([this, http_url, language, plugin_version]() {
 		try {

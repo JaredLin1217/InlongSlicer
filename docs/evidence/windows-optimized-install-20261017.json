@@ -1,0 +1,442 @@
+{
+  "schema_version": "inlong-windows-local-install/v1",
+  "completed_utc": "2026-10-17T14:13:12.688465+00:00",
+  "checkout_anchor": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+  "source_contains_uncommitted_optimized_changes": true,
+  "requested_targets": [
+    "build",
+    "install",
+    "install_only_inlong"
+  ],
+  "result": "passed",
+  "native_commands": [
+    {
+      "label": "product-build",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "InlongSlicer_app_gui",
+        "InlongSlicer_profile_validator",
+        "COPY_DLLS",
+        "gettext_po_to_mo",
+        "orca_stubgen",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=5"
+      ],
+      "started_utc": "2026-10-17T14:04:20.380274+00:00",
+      "completed_utc": "2026-10-17T14:06:19.826919+00:00",
+      "seconds": 119.44638990005478,
+      "exit_code": 0,
+      "log_sha256": "2e2e8f177e7618cb51267ec38b4c0c9b94fe013e8bbf1892d9e27876295045d3"
+    },
+    {
+      "label": "install",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=5",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-17T14:06:38.588182+00:00",
+      "completed_utc": "2026-10-17T14:09:06.507034+00:00",
+      "seconds": 147.9186722000013,
+      "exit_code": 0,
+      "log_sha256": "c8f4b4d57908f509c63f6c12416c5d876e532e639538b9c18cbcb1c819aba153"
+    },
+    {
+      "label": "install_only_inlong",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install_only_inlong",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=5",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-17T14:09:07.051127+00:00",
+      "completed_utc": "2026-10-17T14:09:19.987980+00:00",
+      "seconds": 12.936323800007813,
+      "exit_code": 0,
+      "log_sha256": "35c0c727972242b0313b0583310a646cea6229ad92fafe92a071ee7a5f7ef8cf"
+    }
+  ],
+  "installed_verification": {
+    "utc": "2026-10-17T14:12:21.106209+00:00",
+    "passed": true,
+    "outputs": [
+      {
+        "path": "build/src/Release",
+        "dll_sha256": "3b1160b54c40123e9f55e1eac090157f5ab53681d03422a7ca65e1655f647d2c",
+        "exe_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "runtime_files_match_release": true,
+        "runtime_file_count": 51,
+        "intentional_development_exe_exclusions": [],
+        "profile_files": 14756,
+        "profiles_match_source": true,
+        "python_sha256": "863d24081ed3d43d8a202d44be98ecf94e96bc4b9b3f094f0ac71632d9c309e5",
+        "python_ssl": {
+          "python": "3.12.13 (main, Aug 30 2026, 20:55:58) [MSC v.1951 64 bit (AMD64)]",
+          "ssl": "OpenSSL 3.0.16 11 Feb 2025"
+        },
+        "uv_version": "uv 0.11.21 (5aa65dd7a 2026-06-11 x86_64-pc-windows-msvc)",
+        "uv_sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68",
+        "cli_help_exit_code": 0,
+        "settings_files_preserved": 832
+      },
+      {
+        "path": "build/InlongSlicer",
+        "dll_sha256": "3b1160b54c40123e9f55e1eac090157f5ab53681d03422a7ca65e1655f647d2c",
+        "exe_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "runtime_files_match_release": true,
+        "runtime_file_count": 50,
+        "intentional_development_exe_exclusions": [
+          "InlongSlicer_profile_validator.exe"
+        ],
+        "profile_files": 14756,
+        "profiles_match_source": true,
+        "python_sha256": "863d24081ed3d43d8a202d44be98ecf94e96bc4b9b3f094f0ac71632d9c309e5",
+        "python_ssl": {
+          "python": "3.12.13 (main, Aug 30 2026, 20:55:58) [MSC v.1951 64 bit (AMD64)]",
+          "ssl": "OpenSSL 3.0.16 11 Feb 2025"
+        },
+        "uv_version": "uv 0.11.21 (5aa65dd7a 2026-06-11 x86_64-pc-windows-msvc)",
+        "uv_sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68",
+        "cli_help_exit_code": 0,
+        "settings_files_preserved": 0
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly",
+        "dll_sha256": "3b1160b54c40123e9f55e1eac090157f5ab53681d03422a7ca65e1655f647d2c",
+        "exe_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "runtime_files_match_release": true,
+        "runtime_file_count": 51,
+        "intentional_development_exe_exclusions": [],
+        "profile_files": 734,
+        "profiles_match_source": true,
+        "python_sha256": "863d24081ed3d43d8a202d44be98ecf94e96bc4b9b3f094f0ac71632d9c309e5",
+        "python_ssl": {
+          "python": "3.12.13 (main, Aug 30 2026, 20:55:58) [MSC v.1951 64 bit (AMD64)]",
+          "ssl": "OpenSSL 3.0.16 11 Feb 2025"
+        },
+        "uv_version": "uv 0.11.21 (5aa65dd7a 2026-06-11 x86_64-pc-windows-msvc)",
+        "uv_sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68",
+        "cli_help_exit_code": 0,
+        "settings_files_preserved": 0
+      }
+    ],
+    "uv_supplement": [],
+    "configured_uv": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\.uv\\0.11.21\\uv.exe",
+    "compiler_warnings": {
+      "product-build": [],
+      "install": [],
+      "install_only_inlong": []
+    },
+    "tested_source_binding": {
+      "utc": "2026-10-17T14:12:21.044788+00:00",
+      "checks": {
+        "cmake/InlongClipperScanbeam.cmake": {
+          "expected": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0",
+          "actual": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0"
+        },
+        "scripts/tests/test_clipper_scanbeam.py": {
+          "expected": "fbd73bdaac74bed8fa1791517bc9aaa68bf09eda649b0b9261ef4d22eb240982",
+          "actual": "fbd73bdaac74bed8fa1791517bc9aaa68bf09eda649b0b9261ef4d22eb240982"
+        },
+        "src/libslic3r/GCode/SeamVisibility.hpp": {
+          "expected": "4f13b242a8ab06242f0ec76e9c08d41754c8be3fb3f079075c831a9b81c67599",
+          "actual": "4f13b242a8ab06242f0ec76e9c08d41754c8be3fb3f079075c831a9b81c67599"
+        },
+        "src/libslic3r/Support/SupportPolygonAccumulator.hpp": {
+          "expected": "011fd76a138de8fc7941adf5ea9171dc614fa9127d1953888e517918b8183661",
+          "actual": "011fd76a138de8fc7941adf5ea9171dc614fa9127d1953888e517918b8183661"
+        },
+        "tests/libslic3r/clipper_scanbeam_reference.cpp": {
+          "expected": "77b4a16f7b081c49d6cbf83e81a9249a2763cabd42c92b69dda157dbf9ff4445",
+          "actual": "77b4a16f7b081c49d6cbf83e81a9249a2763cabd42c92b69dda157dbf9ff4445"
+        },
+        "tests/libslic3r/clipper_scanbeam_reference.hpp": {
+          "expected": "eefe309345efb958182a651988662f6010c8929a22de084a7717f065ebda4cbe",
+          "actual": "eefe309345efb958182a651988662f6010c8929a22de084a7717f065ebda4cbe"
+        },
+        "tests/libslic3r/test_clipper_scanbeam.cpp": {
+          "expected": "cd7a100d06310e81dcfe0ab6421ab105d61b00f59687c888da1849e858e04741",
+          "actual": "cd7a100d06310e81dcfe0ab6421ab105d61b00f59687c888da1849e858e04741"
+        },
+        "tests/libslic3r/test_support_polygon_accumulator.cpp": {
+          "expected": "63d204459afdca81c15e50694649305512c24352b091c229026080cecbc698df",
+          "actual": "63d204459afdca81c15e50694649305512c24352b091c229026080cecbc698df"
+        },
+        "CMakeLists.txt": {
+          "expected": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+          "actual": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431"
+        },
+        "src/libslic3r/CMakeLists.txt": {
+          "expected": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f",
+          "actual": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f"
+        },
+        "src/libslic3r/Format/bbs_3mf.cpp": {
+          "expected": "71c9eac57993c79c5a37daac32744abc055748faed8a2432967875065245010a",
+          "actual": "71c9eac57993c79c5a37daac32744abc055748faed8a2432967875065245010a"
+        },
+        "src/libslic3r/GCode/SeamPlacer.cpp": {
+          "expected": "0e9f87d3c2bfbdde7140a531babf8853f20ca16e4827f2984819c1a0de12b6ea",
+          "actual": "0e9f87d3c2bfbdde7140a531babf8853f20ca16e4827f2984819c1a0de12b6ea"
+        },
+        "src/libslic3r/Support/TreeSupport3D.cpp": {
+          "expected": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+          "actual": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05"
+        },
+        "tests/libslic3r/CMakeLists.txt": {
+          "expected": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6",
+          "actual": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6"
+        },
+        "tests/libslic3r/test_3mf.cpp": {
+          "expected": "199120023fd72bf64b3ba884f69c6eaaa6e4784a03d17f130a4e26c23d8c65b7",
+          "actual": "199120023fd72bf64b3ba884f69c6eaaa6e4784a03d17f130a4e26c23d8c65b7"
+        },
+        "deps_src/clipper2/Clipper2Lib/src/clipper.engine.cpp": {
+          "expected": "386cc787447ef158014ad9b84a54f397fb94789baff0e78983666c3aea02c800",
+          "actual": "386cc787447ef158014ad9b84a54f397fb94789baff0e78983666c3aea02c800"
+        },
+        "build/generated/inlong_clipper/clipper.engine.cpp": {
+          "expected": "b75a90051a053d8178605039dc49c589b858a4ed9770de452325da0be40a926d",
+          "actual": "b75a90051a053d8178605039dc49c589b858a4ed9770de452325da0be40a926d"
+        }
+      },
+      "passed": true
+    },
+    "tested_core_hashes": {
+      "build/src/libslic3r/Release/libslic3r.lib": {
+        "expected": "0a991dc7ead8c6b09c8f7a1f551afa49c6de03885d433da46aa44c7df7d66ddc",
+        "actual": "0a991dc7ead8c6b09c8f7a1f551afa49c6de03885d433da46aa44c7df7d66ddc"
+      },
+      "build/deps_src/clipper2/Release/Clipper2.lib": {
+        "expected": "d15252c6113b5874c665e34271e5d4bcbf9cb711e263caae72151baaacfbf87a",
+        "actual": "d15252c6113b5874c665e34271e5d4bcbf9cb711e263caae72151baaacfbf87a"
+      }
+    },
+    "pre_existing_worktree_hashes_preserved": true,
+    "settings_exact": true,
+    "all_live_processes_closed": true,
+    "limits": [
+      "Native CLI help exits were verified; Windows may reopen CONOUT$ and produce empty pipe logs.",
+      "No interactive GUI workflow or new slicing performance measurement is claimed.",
+      "Downloaded uv is supplemented in generated Windows outputs; existing filtered recipe remains unchanged."
+    ],
+    "message_classification_review": "The install log contains a copied asset named warning.svg, not a compiler warning. Reviewed actual diagnostic lines; the /LTCG optimization notice is informational.",
+    "uv_supplement_completed_before_recovery": [
+      "build/InlongSlicer_InlongOnly/resources/tools/uv/uv.exe"
+    ],
+    "uv_supplement_recovery_note": "The first verification copied the missing downloaded uv into the recreated filtered output before stopping at the development-validator assertion. The successful continuation found the file already matching; its empty uv_supplement list refers only to that continuation. The source resources contain no uv.exe and the unchanged filtered recipe does not copy downloaded uv."
+  },
+  "settings_restoration": {
+    "utc": "2026-10-17T14:09:40.152389+00:00",
+    "passed": true,
+    "settings": [
+      {
+        "path": "build/src/Release/data_dir",
+        "files": 832,
+        "exact": true
+      },
+      {
+        "path": "build/InlongSlicer/data_dir",
+        "files": 0,
+        "exact": true
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly/data_dir",
+        "files": 0,
+        "exact": true
+      }
+    ],
+    "backups_retained": true
+  },
+  "pre_build_settings_files": [
+    832,
+    0,
+    0
+  ],
+  "compiler_workers": 5,
+  "project_workers": 1,
+  "compiler_budget_basis": "Reserve an observed 8 GiB and budget 2 GiB per MSVC compiler worker; cap at 6. Observation is not an enforced reservation.",
+  "pre_build_ram_kib": {
+    "TotalVisibleMemorySize": 32953248,
+    "FreePhysicalMemory": 19721376
+  },
+  "build_source_binding": {
+    "utc": "2026-10-17T14:06:21.228800+00:00",
+    "products": {
+      "build/src/libslic3r/Release/libslic3r.lib": {
+        "expected": "0a991dc7ead8c6b09c8f7a1f551afa49c6de03885d433da46aa44c7df7d66ddc",
+        "actual": "0a991dc7ead8c6b09c8f7a1f551afa49c6de03885d433da46aa44c7df7d66ddc"
+      },
+      "build/deps_src/clipper2/Release/Clipper2.lib": {
+        "expected": "d15252c6113b5874c665e34271e5d4bcbf9cb711e263caae72151baaacfbf87a",
+        "actual": "d15252c6113b5874c665e34271e5d4bcbf9cb711e263caae72151baaacfbf87a"
+      }
+    },
+    "passed": true,
+    "dll_sha256": "3b1160b54c40123e9f55e1eac090157f5ab53681d03422a7ca65e1655f647d2c",
+    "exe_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+    "source": {
+      "utc": "2026-10-17T14:06:21.878670+00:00",
+      "checks": {
+        "cmake/InlongClipperScanbeam.cmake": {
+          "expected": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0",
+          "actual": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0"
+        },
+        "scripts/tests/test_clipper_scanbeam.py": {
+          "expected": "fbd73bdaac74bed8fa1791517bc9aaa68bf09eda649b0b9261ef4d22eb240982",
+          "actual": "fbd73bdaac74bed8fa1791517bc9aaa68bf09eda649b0b9261ef4d22eb240982"
+        },
+        "src/libslic3r/GCode/SeamVisibility.hpp": {
+          "expected": "4f13b242a8ab06242f0ec76e9c08d41754c8be3fb3f079075c831a9b81c67599",
+          "actual": "4f13b242a8ab06242f0ec76e9c08d41754c8be3fb3f079075c831a9b81c67599"
+        },
+        "src/libslic3r/Support/SupportPolygonAccumulator.hpp": {
+          "expected": "011fd76a138de8fc7941adf5ea9171dc614fa9127d1953888e517918b8183661",
+          "actual": "011fd76a138de8fc7941adf5ea9171dc614fa9127d1953888e517918b8183661"
+        },
+        "tests/libslic3r/clipper_scanbeam_reference.cpp": {
+          "expected": "77b4a16f7b081c49d6cbf83e81a9249a2763cabd42c92b69dda157dbf9ff4445",
+          "actual": "77b4a16f7b081c49d6cbf83e81a9249a2763cabd42c92b69dda157dbf9ff4445"
+        },
+        "tests/libslic3r/clipper_scanbeam_reference.hpp": {
+          "expected": "eefe309345efb958182a651988662f6010c8929a22de084a7717f065ebda4cbe",
+          "actual": "eefe309345efb958182a651988662f6010c8929a22de084a7717f065ebda4cbe"
+        },
+        "tests/libslic3r/test_clipper_scanbeam.cpp": {
+          "expected": "cd7a100d06310e81dcfe0ab6421ab105d61b00f59687c888da1849e858e04741",
+          "actual": "cd7a100d06310e81dcfe0ab6421ab105d61b00f59687c888da1849e858e04741"
+        },
+        "tests/libslic3r/test_support_polygon_accumulator.cpp": {
+          "expected": "63d204459afdca81c15e50694649305512c24352b091c229026080cecbc698df",
+          "actual": "63d204459afdca81c15e50694649305512c24352b091c229026080cecbc698df"
+        },
+        "CMakeLists.txt": {
+          "expected": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+          "actual": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431"
+        },
+        "src/libslic3r/CMakeLists.txt": {
+          "expected": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f",
+          "actual": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f"
+        },
+        "src/libslic3r/Format/bbs_3mf.cpp": {
+          "expected": "71c9eac57993c79c5a37daac32744abc055748faed8a2432967875065245010a",
+          "actual": "71c9eac57993c79c5a37daac32744abc055748faed8a2432967875065245010a"
+        },
+        "src/libslic3r/GCode/SeamPlacer.cpp": {
+          "expected": "0e9f87d3c2bfbdde7140a531babf8853f20ca16e4827f2984819c1a0de12b6ea",
+          "actual": "0e9f87d3c2bfbdde7140a531babf8853f20ca16e4827f2984819c1a0de12b6ea"
+        },
+        "src/libslic3r/Support/TreeSupport3D.cpp": {
+          "expected": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+          "actual": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05"
+        },
+        "tests/libslic3r/CMakeLists.txt": {
+          "expected": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6",
+          "actual": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6"
+        },
+        "tests/libslic3r/test_3mf.cpp": {
+          "expected": "199120023fd72bf64b3ba884f69c6eaaa6e4784a03d17f130a4e26c23d8c65b7",
+          "actual": "199120023fd72bf64b3ba884f69c6eaaa6e4784a03d17f130a4e26c23d8c65b7"
+        },
+        "deps_src/clipper2/Clipper2Lib/src/clipper.engine.cpp": {
+          "expected": "386cc787447ef158014ad9b84a54f397fb94789baff0e78983666c3aea02c800",
+          "actual": "386cc787447ef158014ad9b84a54f397fb94789baff0e78983666c3aea02c800"
+        },
+        "build/generated/inlong_clipper/clipper.engine.cpp": {
+          "expected": "b75a90051a053d8178605039dc49c589b858a4ed9770de452325da0be40a926d",
+          "actual": "b75a90051a053d8178605039dc49c589b858a4ed9770de452325da0be40a926d"
+        }
+      },
+      "passed": true
+    }
+  },
+  "reused_native_checks": [
+    {
+      "path": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/core-native-reference-optimized-3-result.json",
+      "sha256": "4cb95c47b1d18def4060cd2fdb1dd0be17cca33214e53bd5ef6c6b9453aa97ab",
+      "exit_code": 0,
+      "test_exe_sha256": "add39618a5dc2f5dc8763ef48219cfbecda922b4be46de99b2eed67e7b298c70",
+      "test_exe_still_matches": true
+    },
+    {
+      "path": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/fff-native-reference-optimized-3-result.json",
+      "sha256": "25519c5cb3f2c434e29ba258e022b379e030b9f3d1e52982c100dddf622cca47",
+      "exit_code": 0,
+      "test_exe_sha256": "ff09c764dc0259af92dd1b8ea808aaad513be79c6b3b9dfb3fbfb0583de491c1",
+      "test_exe_still_matches": true
+    },
+    {
+      "path": ".agents/runtime/runs/run-95cf28c1a35b432db35d432d2fd15ed9/validation/belt-native-final-result.json",
+      "sha256": "57827152456f757f8cc256e1b1697ba98b7617333bf8f0544bd0683d5061a9a6",
+      "exit_code": 0,
+      "test_exe_sha256": "ff09c764dc0259af92dd1b8ea808aaad513be79c6b3b9dfb3fbfb0583de491c1",
+      "test_exe_still_matches": true
+    }
+  ],
+  "prior_exact_output_evidence": {
+    "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+    "sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+    "fresh_slice_performed_in_this_install_task": false,
+    "basis": "The installed build links the same byte-identical optimized core/Clipper libraries and unchanged product source as the exact-output slicing candidate. The freshly relinked application DLL has a new hash recorded separately."
+  },
+  "source_snapshots": {
+    "CMakeLists.txt": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+    "cmake/InlongBuildDataDirs.cmake": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe",
+    "cmake/InlongClipperScanbeam.cmake": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0",
+    "cmake/InstallOnlyInlong.cmake": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+    "cmake/ResetBuildDataDirs.cmake": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b",
+    "deps_src/clipper2/Clipper2Lib/src/clipper.engine.cpp": "386cc787447ef158014ad9b84a54f397fb94789baff0e78983666c3aea02c800",
+    "docs/evidence/large-project-slicing-performance-20261017.json": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+    "scripts/tests/test_clipper_scanbeam.py": "fbd73bdaac74bed8fa1791517bc9aaa68bf09eda649b0b9261ef4d22eb240982",
+    "src/CMakeLists.txt": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a",
+    "src/libslic3r/CMakeLists.txt": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f",
+    "src/libslic3r/Format/bbs_3mf.cpp": "71c9eac57993c79c5a37daac32744abc055748faed8a2432967875065245010a",
+    "src/libslic3r/GCode/SeamPlacer.cpp": "0e9f87d3c2bfbdde7140a531babf8853f20ca16e4827f2984819c1a0de12b6ea",
+    "src/libslic3r/GCode/SeamVisibility.hpp": "4f13b242a8ab06242f0ec76e9c08d41754c8be3fb3f079075c831a9b81c67599",
+    "src/libslic3r/Support/SupportPolygonAccumulator.hpp": "011fd76a138de8fc7941adf5ea9171dc614fa9127d1953888e517918b8183661",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+    "src/slic3r/plugin/PythonInterpreter.cpp": "c5e8ee1cbeb00ab8e80f71acde0ed6167ccb7cc5d61f83aea3ba1058fedcc065",
+    "tests/libslic3r/CMakeLists.txt": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6",
+    "tests/libslic3r/clipper_scanbeam_reference.cpp": "77b4a16f7b081c49d6cbf83e81a9249a2763cabd42c92b69dda157dbf9ff4445",
+    "tests/libslic3r/clipper_scanbeam_reference.hpp": "eefe309345efb958182a651988662f6010c8929a22de084a7717f065ebda4cbe",
+    "tests/libslic3r/test_3mf.cpp": "199120023fd72bf64b3ba884f69c6eaaa6e4784a03d17f130a4e26c23d8c65b7",
+    "tests/libslic3r/test_clipper_scanbeam.cpp": "cd7a100d06310e81dcfe0ab6421ab105d61b00f59687c888da1849e858e04741",
+    "tests/libslic3r/test_support_polygon_accumulator.cpp": "63d204459afdca81c15e50694649305512c24352b091c229026080cecbc698df"
+  },
+  "raw_validation": ".agents/runtime/runs/run-960eed000aa74539946341b79e9ac7d1/validation",
+  "settings_backup": ".agents/runtime/runs/run-960eed000aa74539946341b79e9ac7d1/backup",
+  "guidance_check_exit": 0,
+  "consumer_changed": ".agents/runtime/runs/run-7cb9c36eb4b9474796903602ea69c3b6/validation/report.json",
+  "consumer_checkpoint": "Persisted separately after reviewing and promoting this evidence.",
+  "agents_used": 1,
+  "commit_performed": false,
+  "push_performed": false,
+  "limits": [
+    "Native CLI help exits were verified; Windows may reopen CONOUT$ and produce empty pipe logs.",
+    "No interactive GUI workflow or new slicing performance measurement is claimed.",
+    "Downloaded uv is supplemented in generated Windows outputs; existing filtered recipe remains unchanged."
+  ]
+}

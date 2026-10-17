@@ -1,0 +1,152 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-local-install-contract-20261017-performance-review",
+  "key": "windows-native-install-output-contract",
+  "type": "fact",
+  "conclusion": "Default local Windows outputs remain build/InlongSlicer and build/InlongSlicer_InlongOnly. The filtered recipe recreates only its allowed directory, retains its nine profile roots and patches the shared guide printer selector. ResetBuildDataDirs hooks still clear configured portable data_dir folders even on incremental install/build targets. Exact CMake reconstruction and unchanged helper/script hashes plus eleven disposable tests revalidate these source contracts. This task avoided reset targets, linked to a disposable OutDir with references/pre/post events disabled, and preserved the installed binaries and832 live setting files. Earlier package results do not qualify the current uninstalled product source.",
+  "scope": "Current source-contract audit after the 2026-10-17 exact-output performance work; original deployment, named-project path and remote observations remain historical at their original anchors. This is not evidence of a new install, multi-project slice or release.",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "Windows",
+    "install",
+    "install-only-inlong",
+    "portable-settings",
+    "profiles"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "build_win.bat",
+    "cmake/InlongBuildDataDirs.cmake",
+    "cmake/InstallOnlyInlong.cmake",
+    "cmake/ResetBuildDataDirs.cmake",
+    "docs/evidence/upstream-windows-install-contract-review-20261017.json",
+    "resources/web/guide/21/common.js",
+    "resources/web/guide/21/index.html",
+    "resources/web/guide/24/index.html",
+    "scripts/tests/test_build_data_dirs.py",
+    "scripts/tests/test_build_win_installer.py",
+    "src/CMakeLists.txt",
+    "docs/evidence/large-project-compatibility-audit-20261017.json",
+    "docs/evidence/large-project-slicing-performance-20261017.json"
+  ],
+  "sources": [
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "src/CMakeLists.txt",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "build_win.bat",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "a561ab71d9a01a76567cdc7cd37c3fa2ce8c0f5c9112fad7b4533d54d4de3554"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "cmake/InlongBuildDataDirs.cmake",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "051a3586394fa1e6b49826882b3133f7bff189be5c5f4ae90b186f5de8f1b0fe"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "cmake/ResetBuildDataDirs.cmake",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/common.js",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "b0d346607c907cd2b9dfdf2c27e3e12b9f82929bcd8f6c321f4aa356f3e2090e"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/index.html",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/24/index.html",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_build_data_dirs.py",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "sha256": "33693bf82dac6c76cec5c95157c5c343cbe64083da4aee23c76af904144ed8d9"
+    },
+    {
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "sha256": "1e67dcdd220fa0ca4de7faf9d0e80c7e4a1d2f1d62ff63f17793f4ffa07a863f",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence.",
+      "path": "scripts/tests/test_build_win_installer.py",
+      "kind": "file_snapshot"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-windows-install-contract-review-20261017.json",
+      "sha256": "393a0a27bc87beb597e092c46b7a82b789afff3bbcdcf60866763c98aabf5a5b",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-compatibility-audit-20261017.json",
+      "sha256": "d7e6676ba3a68b839681252f01ac3352974d577f9a689817a2d32695849e4d0a",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+      "sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    }
+  ],
+  "verified_utc": "2026-10-17T13:36:31.702771+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact reconstruction of four changed global files to HEAD after removing declared performance/test additions; unchanged hashes for every other prior snapshot; current475835 core and27553 FFF/seam assertions, fresh belt and eleven disposable packaging tests, full4174470-command identity and installed-state readback.",
+    "summary": "Reviewed all changed snapshots rather than refreshing hashes mechanically. Common source contracts remain verified; previous installations, model-specific timings/output identities and remote state remain historical. Current local runtime was preserved and the new source was not installed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "windows-local-install-contract-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

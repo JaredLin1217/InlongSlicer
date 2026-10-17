@@ -1,0 +1,95 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-full-install-stale-profiles-upstream-20261017-performance-review",
+  "key": "windows-full-install-overlay-stale-profile-reconciliation",
+  "type": "lesson",
+  "conclusion": "Windows full CMake installation overlays resources, while the Inlong-only target recreates its filtered output; neither a zero exit nor an old file count proves current output/source equality. These Windows install recipes are unchanged by the reviewed CMake additions and pass eleven disposable contract tests. Preserve settings and provenance, archive/hash extra files before reconciliation, then compare exact file sets. The recorded1685 extras and734/14756 profile counts remain historical measurements of earlier builds. This task performed no install and preserved all832 existing live setting files.",
+  "scope": "Current source-contract audit after the 2026-10-17 exact-output performance work; original deployment, named-project path and remote observations remain historical at their original anchors. This is not evidence of a new install, multi-project slice or release.",
+  "modules": [
+    "build",
+    "packaging"
+  ],
+  "tags": [
+    "install",
+    "stale-output",
+    "profiles",
+    "settings-preservation"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "InlongSlicer_doc/upstream_install_verification_20261016.json",
+    "InlongSlicer_doc/upstream_sync_20261016.md",
+    "cmake/InstallOnlyInlong.cmake",
+    "docs/evidence/upstream-windows-install-contract-review-20261017.json",
+    "docs/evidence/large-project-compatibility-audit-20261017.json",
+    "docs/evidence/large-project-slicing-performance-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "cmake/InstallOnlyInlong.cmake",
+      "sha256": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_sync_20261016.md",
+      "sha256": "ad75081b85e887a8b0a92399c4dac580a6c1851ae47391addedd88e077af623c",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_install_verification_20261016.json",
+      "sha256": "b64f4545bb0e4f8a573c7358b8bb41731702a21502f4f543c53edde9b7394714",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-windows-install-contract-review-20261017.json",
+      "sha256": "393a0a27bc87beb597e092c46b7a82b789afff3bbcdcf60866763c98aabf5a5b",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-compatibility-audit-20261017.json",
+      "sha256": "d7e6676ba3a68b839681252f01ac3352974d577f9a689817a2d32695849e4d0a",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+      "sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    }
+  ],
+  "verified_utc": "2026-10-17T13:36:31.700761+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact reconstruction of four changed global files to HEAD after removing declared performance/test additions; unchanged hashes for every other prior snapshot; current475835 core and27553 FFF/seam assertions, fresh belt and eleven disposable packaging tests, full4174470-command identity and installed-state readback.",
+    "summary": "Reviewed all changed snapshots rather than refreshing hashes mechanically. Common source contracts remain verified; previous installations, model-specific timings/output identities and remote state remain historical. Current local runtime was preserved and the new source was not installed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "windows-full-install-stale-profiles-upstream-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

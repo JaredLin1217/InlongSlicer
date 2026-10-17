@@ -1,0 +1,234 @@
+{
+  "schema_version": "inlong-large-project-compatibility-audit/v1",
+  "checkout_anchor": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+  "source_audits": {
+    "CMakeLists.txt": {
+      "raw_source_sha256": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+      "baseline_lf_sha256": "daa5f390730f0fff875c14f86687fd770d9f802ccc77bdd979e3607363f5e3ac",
+      "restored_lf_sha256": "daa5f390730f0fff875c14f86687fd770d9f802ccc77bdd979e3607363f5e3ac",
+      "only_declared_additions": true
+    },
+    "src/libslic3r/CMakeLists.txt": {
+      "raw_source_sha256": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f",
+      "baseline_lf_sha256": "07907d5b658bd00e964c85d6fe317913d553cf3d620e63ca02cd96cdc922aa2f",
+      "restored_lf_sha256": "07907d5b658bd00e964c85d6fe317913d553cf3d620e63ca02cd96cdc922aa2f",
+      "only_declared_additions": true
+    },
+    "tests/libslic3r/CMakeLists.txt": {
+      "raw_source_sha256": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6",
+      "baseline_lf_sha256": "c346bab07d83b1c41519e585cd14cc5ea4004634e73ea20d198503b70006d645",
+      "restored_lf_sha256": "c346bab07d83b1c41519e585cd14cc5ea4004634e73ea20d198503b70006d645",
+      "only_declared_additions": true
+    },
+    "src/libslic3r/Support/TreeSupport3D.cpp": {
+      "raw_source_sha256": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+      "baseline_lf_sha256": "6c8b5c54d60866b47808fd69bb5bba7673caf1c9fbccbe3dda75221635e0969f",
+      "restored_lf_sha256": "6c8b5c54d60866b47808fd69bb5bba7673caf1c9fbccbe3dda75221635e0969f",
+      "all_contact_grid_and_landing_code_outside_reviewed_performance_substitutions_identical": true
+    },
+    "src/libslic3r/GCode.cpp": {
+      "raw_source_sha256": "e5cf25ddcce00de616d0458a0b10fa730471e263b78a9d467c30d0c24723192b",
+      "unchanged_from_head": true
+    },
+    "src/libslic3r/GCode/GCodeProcessor.cpp": {
+      "raw_source_sha256": "34f494701836b9a27a558127ea6de5b1fb2a98f03d70a13a39be86020866336e",
+      "unchanged_from_head": true
+    },
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": {
+      "raw_source_sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "unchanged_from_head": true
+    },
+    "src/libslic3r/Polyline.cpp": {
+      "raw_source_sha256": "447122276cada254938cfe85e2a6223bdaa435c5fb1effd140598471c848bd22",
+      "unchanged_from_head": true
+    },
+    "src/libslic3r/Support/TreeSupportCommon.hpp": {
+      "raw_source_sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "unchanged_from_head": true
+    }
+  },
+  "affected_knowledge_records": {
+    "endpoint-layer-fixes-count-plan-20261017": {
+      "changed_global_snapshots": [
+        "src/libslic3r/Support/TreeSupport3D.cpp",
+        "src/libslic3r/CMakeLists.txt",
+        "tests/libslic3r/CMakeLists.txt"
+      ],
+      "unchanged_snapshots": [
+        "src/libslic3r/Polyline.cpp",
+        "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+        "tests/libslic3r/test_polyline.cpp",
+        "tests/fff_print/test_tree_support.cpp",
+        "tests/fff_print/test_support_material.cpp",
+        "docs/evidence/endpoint-layer-fixes-20261017.json",
+        "docs/evidence/layer-count-plan-fix-20261017.json"
+      ],
+      "old_scope": "Reviewed source snapshots at checkout anchor 50267762b691187c059ab7fd4b73df59de6d7871 after the generic emitted-layer count fix; original historical measurements retain their original scope.",
+      "old_snapshot_matches_baseline": {
+        "src/libslic3r/Support/TreeSupport3D.cpp": true,
+        "src/libslic3r/CMakeLists.txt": true,
+        "tests/libslic3r/CMakeLists.txt": true
+      }
+    },
+    "organic-contact-tip-landing-endpoint-count-plan-20261017": {
+      "changed_global_snapshots": [
+        "src/libslic3r/Support/TreeSupport3D.cpp"
+      ],
+      "unchanged_snapshots": [
+        "tests/fff_print/test_support_material.cpp",
+        "docs/evidence/benchy-organic-branch-continuation-20261016.md",
+        "docs/evidence/benchy-slicing-performance-20261016.md",
+        "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+        "docs/evidence/endpoint-layer-fixes-20261017.json",
+        "docs/evidence/endpoint-layer-compatibility-20261017.json",
+        "docs/evidence/layer-count-plan-fix-20261017.json"
+      ],
+      "old_scope": "Reviewed source snapshots at checkout anchor 50267762b691187c059ab7fd4b73df59de6d7871 after the generic emitted-layer count fix; original historical measurements retain their original scope.",
+      "old_snapshot_matches_baseline": {
+        "src/libslic3r/Support/TreeSupport3D.cpp": true
+      }
+    },
+    "organic-support-grid-stability-endpoint-count-plan-20261017": {
+      "changed_global_snapshots": [
+        "src/libslic3r/Support/TreeSupport3D.cpp"
+      ],
+      "unchanged_snapshots": [
+        "tests/fff_print/test_print.cpp",
+        "src/libslic3r/Support/TreeSupportCommon.hpp",
+        "tests/fff_print/test_support_material.cpp",
+        "docs/evidence/benchy-organic-interface-remapping-20261016.md",
+        "docs/evidence/benchy-slicing-performance-20261016.md",
+        "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+        "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+        "docs/evidence/endpoint-layer-fixes-20261017.json",
+        "docs/evidence/endpoint-layer-compatibility-20261017.json",
+        "docs/evidence/layer-count-plan-fix-20261017.json"
+      ],
+      "old_scope": "Reviewed source snapshots at checkout anchor 50267762b691187c059ab7fd4b73df59de6d7871 after the generic emitted-layer count fix; original historical measurements retain their original scope.",
+      "old_snapshot_matches_baseline": {
+        "src/libslic3r/Support/TreeSupport3D.cpp": true
+      }
+    },
+    "upstream-main-integration-20261017": {
+      "changed_global_snapshots": [
+        "CMakeLists.txt"
+      ],
+      "unchanged_snapshots": [
+        "src/libslic3r/PNGReadWrite.cpp",
+        "src/libslic3r/utils.cpp",
+        "src/slic3r/plugin/PluginFsUtils.cpp",
+        "src/libslic3r/Support/SupportCommon.cpp",
+        "src/libslic3r/Support/TreeSupport.cpp",
+        "src/libslic3r/Support/TreeSupport.hpp",
+        "docs/evidence/upstream-sync-verification-20261017.json",
+        "InlongSlicer_doc/upstream_sync_20261017.md"
+      ],
+      "old_scope": "Version-bound Windows integration of upstream main at 6d40ec93f6",
+      "old_snapshot_matches_baseline": {
+        "CMakeLists.txt": true
+      }
+    },
+    "windows-full-install-stale-profiles-upstream-20261017": {
+      "changed_global_snapshots": [
+        "CMakeLists.txt"
+      ],
+      "unchanged_snapshots": [
+        "cmake/InstallOnlyInlong.cmake",
+        "InlongSlicer_doc/upstream_sync_20261016.md",
+        "InlongSlicer_doc/upstream_install_verification_20261016.json",
+        "docs/evidence/upstream-windows-install-contract-review-20261017.json"
+      ],
+      "old_scope": "Default Windows full and Inlong-only CMake installation outputs",
+      "old_snapshot_matches_baseline": {
+        "CMakeLists.txt": true
+      }
+    },
+    "windows-inlong-only-uv-output-gap-20261017": {
+      "changed_global_snapshots": [
+        "CMakeLists.txt"
+      ],
+      "unchanged_snapshots": [
+        "src/CMakeLists.txt",
+        "cmake/InstallOnlyInlong.cmake",
+        "src/slic3r/plugin/PythonInterpreter.cpp",
+        "src/slic3r/plugin/PluginLoader.cpp",
+        "docs/evidence/windows-install-c952e845db-20261017.json"
+      ],
+      "old_scope": "Local Windows generated package completeness at c952e845db; unresolved source-recipe gap is explicit",
+      "old_snapshot_matches_baseline": {
+        "CMakeLists.txt": true
+      }
+    },
+    "windows-local-install-contract-20261017": {
+      "changed_global_snapshots": [
+        "CMakeLists.txt"
+      ],
+      "unchanged_snapshots": [
+        "src/CMakeLists.txt",
+        "build_win.bat",
+        "cmake/InlongBuildDataDirs.cmake",
+        "cmake/ResetBuildDataDirs.cmake",
+        "cmake/InstallOnlyInlong.cmake",
+        "resources/web/guide/21/common.js",
+        "resources/web/guide/21/index.html",
+        "resources/web/guide/24/index.html",
+        "scripts/tests/test_build_data_dirs.py",
+        "scripts/tests/test_build_win_installer.py",
+        "docs/evidence/upstream-windows-install-contract-review-20261017.json"
+      ],
+      "old_scope": "Default Windows native CMake local package outputs",
+      "old_snapshot_matches_baseline": {
+        "CMakeLists.txt": true
+      }
+    },
+    "windows-msvc-install-parallelism-20261017": {
+      "changed_global_snapshots": [
+        "CMakeLists.txt"
+      ],
+      "unchanged_snapshots": [
+        "src/slic3r/CMakeLists.txt",
+        "cmake/InlongBuildDataDirs.cmake",
+        "docs/evidence/windows-install-c952e845db-20261017.json"
+      ],
+      "old_scope": "VS18/MSVC native install commands at c952e845db; tune worker count to current free RAM",
+      "old_snapshot_matches_baseline": {
+        "CMakeLists.txt": true
+      }
+    }
+  },
+  "scope": "Static current-source contract audit plus current native support/geometry/seam and disposable packaging/belt regressions. Prior installs, three-project path identities and remote-ref observations retain their historical source/date scope. No new install or multi-project slice is claimed.",
+  "performance_evidence": "docs/evidence/large-project-slicing-performance-20261017.json",
+  "packaging_tests": {
+    "command": [
+      "C:\\Users\\v_jar\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+      "-m",
+      "unittest",
+      "scripts.tests.test_build_data_dirs",
+      "scripts.tests.test_build_win_installer",
+      "-v"
+    ],
+    "exit_code": 0,
+    "started_utc": "2026-10-17T13:29:19.517657+00:00",
+    "finished_utc": "2026-10-17T13:29:25.518550+00:00",
+    "seconds": 6.00133860000642
+  },
+  "belt_tests": {
+    "command": [
+      "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\tests\\fff_print\\Release\\fff_print_tests.exe",
+      "[belt]",
+      "--order",
+      "rand",
+      "--rng-seed",
+      "20261017",
+      "--reporter",
+      "junit",
+      "--out",
+      "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-95cf28c1a35b432db35d432d2fd15ed9\\validation\\belt-native-final.xml"
+    ],
+    "exit_code": 0,
+    "started_utc": "2026-10-17T13:29:19.517657+00:00",
+    "finished_utc": "2026-10-17T13:33:46.978048+00:00",
+    "seconds": 267.45994640002027,
+    "exe_sha256": "ff09c764dc0259af92dd1b8ea808aaad513be79c6b3b9dfb3fbfb0583de491c1"
+  }
+}

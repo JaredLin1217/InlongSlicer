@@ -1,0 +1,130 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "upstream-main-integration-20261017-performance-review",
+  "key": "upstream-main-6d40-integration-verification",
+  "type": "fact",
+  "conclusion": "The ten-commit Orca main integration ending at6d40ec93f6 is a historical 2026-10-17 integration, including Inlong identity, lazy PNG/texture loading, extended Windows archive paths and reviewed support fixes. All tracked source snapshots from that record except the root CMake file still match; its only new delta adds the reviewed Clipper build adapter. The previous three-project output identities, GUI preference incident, build and remote-ref observations remain historical. Current work validates the supplied large project and disposable candidate only; no new upstream fetch, GUI/macOS check, install or publication was performed. Use independent data directories and disabled project references/build events for disposable app linking.",
+  "scope": "Current source-contract audit after the 2026-10-17 exact-output performance work; original deployment, named-project path and remote observations remain historical at their original anchors. This is not evidence of a new install, multi-project slice or release.",
+  "modules": [
+    "upstream-sync",
+    "branding",
+    "build",
+    "tests"
+  ],
+  "tags": [
+    "Windows",
+    "upstream",
+    "extended-path",
+    "texture-library",
+    "settings-preservation"
+  ],
+  "files": [
+    "CMakeLists.txt",
+    "src/libslic3r/PNGReadWrite.cpp",
+    "src/libslic3r/utils.cpp",
+    "src/slic3r/plugin/PluginFsUtils.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport.hpp",
+    "docs/evidence/upstream-sync-verification-20261017.json",
+    "InlongSlicer_doc/upstream_sync_20261017.md",
+    "docs/evidence/large-project-compatibility-audit-20261017.json",
+    "docs/evidence/large-project-slicing-performance-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "CMakeLists.txt",
+      "sha256": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PNGReadWrite.cpp",
+      "sha256": "11beabe5fb2bdb7e4a4b50e2ff463cf25553384ad74239b92d9569bc7b415b26",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/utils.cpp",
+      "sha256": "a9870ee1ba3489dac6e8dd2e5998fbc722cba2f4ae87e52c0caa462e10b15920",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/plugin/PluginFsUtils.cpp",
+      "sha256": "4a8dd108fdf967e50e651a0975c7903f1a5dadabfcabf8ed42381161bb8fd54b",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "fa823c0d9caa08efa8e79ccef905bd3be78ddbd72eeb0dec70f5e36998ade45d",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "fed229ff0b3e2c7ac6a606901760dc6ffb5ca2a7b2ea7a2972468e628becc434",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.hpp",
+      "sha256": "2cae88c07844389b2414f0101534b77b49d707682b129a5c9c6517d4d70b9743",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-sync-verification-20261017.json",
+      "sha256": "d1a1a96b39424ffec395ca4c36dcbab75773756756f6149f02ee1c3a21c47095",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/upstream_sync_20261017.md",
+      "sha256": "37d254f25e8a0980a9fbd251ed0f974513fcf80dd9450e80f6402e089f6d7f9e",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-compatibility-audit-20261017.json",
+      "sha256": "d7e6676ba3a68b839681252f01ac3352974d577f9a689817a2d32695849e4d0a",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+      "sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    }
+  ],
+  "verified_utc": "2026-10-17T13:36:31.699761+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact reconstruction of four changed global files to HEAD after removing declared performance/test additions; unchanged hashes for every other prior snapshot; current475835 core and27553 FFF/seam assertions, fresh belt and eleven disposable packaging tests, full4174470-command identity and installed-state readback.",
+    "summary": "Reviewed all changed snapshots rather than refreshing hashes mechanically. Common source contracts remain verified; previous installations, model-specific timings/output identities and remote state remain historical. Current local runtime was preserved and the new source was not installed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "upstream-main-integration-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

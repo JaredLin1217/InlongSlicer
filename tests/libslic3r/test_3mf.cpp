@@ -30,9 +30,12 @@
 #include "libslic3r/TriangleMesh.hpp"
 #include "libslic3r/TriangleSelector.hpp"
 #include "libslic3r/TextureDisplacement.hpp"
+#include "libslic3r/GCode/SeamVisibility.hpp"
 #include <memory>
 #include <cstdint>
+#include <cmath>
 #include <ios>
+#include <iomanip>
 #include <nlohmann/json.hpp>
 
 #include <boost/filesystem/operations.hpp>
@@ -406,6 +409,108 @@ static bool load_project(const std::string& path, Model& model, const ScopedTemp
                                      &is_orca_3mf, &file_version, nullptr, LoadStrategy::LoadModel | LoadStrategy::LoadConfig);
     release_PlateData_list(plates);
     return loaded;
+}
+
+TEST_CASE("Native projects preserve float mesh coordinates without repeated centering", "[3mf][Regression]")
+{
+    const int axis = GENERATE(0, 1, 2);
+    const bool share_mesh = GENERATE(false, true);
+    const int source_transform_mode = GENERATE(0, 1, 2);
+    CAPTURE(axis, share_mesh, source_transform_mode);
+
+    indexed_triangle_set mesh = make_cube(2., 2., 2.).its;
+    // Half a float ULP remains in the bounding-box center after an initial
+    // centering. Another float translation rounds some vertices differently.
+    for (Vec3f &vertex : mesh.vertices) {
+        vertex -= Vec3f::Ones();
+        vertex[axis] = vertex[axis] < 0.f ? -512.f : std::nextafter(512.f, 0.f);
+    }
+
+    Model source;
+    ModelObject *object = source.add_object();
+    object->name = "float_mesh_first";
+    ModelVolume *volume = object->add_volume(TriangleMesh(std::move(mesh)), ModelVolumeType::MODEL_PART, false);
+    volume->set_offset(Vec3d(3.25, -7.5, 2.125));
+    if (source_transform_mode == 1)
+        volume->source.transform.set_offset(Vec3d(2., 4., 8.));
+    else if (source_transform_mode == 2)
+        // The combined metadata matrix is identity even though the separate
+        // local and source transforms are not.
+        volume->source.transform = Geometry::Transformation(volume->get_matrix().inverse());
+    object->add_instance()->set_offset(Vec3d(600., 300., 100.));
+    ModelObject *copy = source.add_object(*object);
+    copy->name = "float_mesh_second";
+    copy->volumes.front()->set_offset(Vec3d(-4., 8., 16.));
+
+    SaveStrategy strategy = SaveStrategy::Zip64 | SaveStrategy::Silence | SaveStrategy::SplitModel;
+    if (share_mesh)
+        strategy = strategy | SaveStrategy::ShareMesh;
+    ScopedTemporaryFile file(".3mf");
+    store_project(source, file.string(), strategy);
+    ScopedTemporaryDir backup("orca_float_mesh_dst");
+    Model restored;
+    REQUIRE(load_project(file.string(), restored, backup));
+    REQUIRE(restored.objects.size() == source.objects.size());
+    for (size_t i = 0; i < source.objects.size(); ++i) {
+        const ModelVolume &before = *source.objects[i]->volumes.front();
+        const auto found = std::find_if(restored.objects.begin(), restored.objects.end(), [&](const ModelObject *candidate) {
+            return candidate->name == source.objects[i]->name;
+        });
+        REQUIRE(found != restored.objects.end());
+        const ModelVolume &after = *(*found)->volumes.front();
+        REQUIRE(after.mesh().its.vertices.size() == before.mesh().its.vertices.size());
+        REQUIRE(after.mesh().its.indices == before.mesh().its.indices);
+        for (size_t j = 0; j < before.mesh().its.vertices.size(); ++j)
+            for (int component = 0; component < 3; ++component)
+                // Zero tolerance is the contract: preserving serialized float
+                // coordinates must not introduce even one ULP of mesh drift.
+                REQUIRE_THAT(double(after.mesh().its.vertices[j][component]),
+                             Catch::Matchers::WithinAbs(double(before.mesh().its.vertices[j][component]), 0.));
+        // Native projects also preserve the local/instance transform split.
+        // A mathematically equivalent split can round float mesh coordinates
+        // differently during slicing.
+        REQUIRE(after.get_offset().isApprox(before.get_offset(), 1e-12));
+        REQUIRE_THAT((after.source.transform.get_matrix().matrix() - before.source.transform.get_matrix().matrix()).norm(),
+                     Catch::Matchers::WithinAbs(0., 1e-12));
+        const Transform3d before_world = source.objects[i]->instances.front()->get_matrix() * before.get_matrix();
+        const Transform3d after_world = (*found)->instances.front()->get_matrix() * after.get_matrix();
+        REQUIRE_THAT((before_world.matrix() - after_world.matrix()).norm(), Catch::Matchers::WithinAbs(0., 1e-12));
+    }
+}
+
+TEST_CASE("Seam visibility geometry survives serialized float transform rounding", "[3mf][SeamVisibility][Regression]")
+{
+    const int axis = GENERATE(0, 1, 2);
+    const bool mirrored = GENERATE(false, true);
+    CAPTURE(axis, mirrored);
+    indexed_triangle_set mesh = its_make_cube(768., 768., 768.);
+    for (Vec3f &vertex : mesh.vertices)
+        vertex -= Vec3f::Constant(384.f);
+
+    Transform3d original = Transform3d::Identity();
+    original.translation()[axis] = -std::ldexp(1., -16);
+    if (mirrored)
+        original.linear()(axis, axis) = -1.;
+    Transform3d serialized = Transform3d::Identity();
+    for (int row = 0; row < 3; ++row)
+        for (int column = 0; column < 4; ++column) {
+            std::ostringstream text;
+            text << std::setprecision(std::numeric_limits<float>::max_digits10) << original(row, column);
+            serialized(row, column) = std::stod(text.str());
+        }
+    // These matrices describe exactly the same float slicing transform. The
+    // saved decimal changes its double value, which used to bias visibility
+    // mesh vertices halfway between two floats and move aligned seams.
+    REQUIRE_THAT(serialized.translation()[axis], Catch::Matchers::WithinAbs(original.translation()[axis], 1e-12));
+    REQUIRE_THAT(serialized.translation()[axis], !Catch::Matchers::WithinAbs(original.translation()[axis], 0.));
+    indexed_triangle_set expected = mesh;
+    its_transform(expected, original, true);
+    SeamPlacerImpl::transform_visibility_mesh(mesh, serialized);
+    REQUIRE(mesh.indices == expected.indices);
+    for (size_t i = 0; i < mesh.vertices.size(); ++i)
+        for (int component = 0; component < 3; ++component)
+            REQUIRE_THAT(double(mesh.vertices[i][component]),
+                         Catch::Matchers::WithinAbs(double(expected.vertices[i][component]), 0.));
 }
 
 TEST_CASE("A plate's G-code statistics are stored next to its G-code", "[3mf]")

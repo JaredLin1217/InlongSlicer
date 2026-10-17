@@ -1,0 +1,47 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "windows-optimized-install-20261017",
+  "key": "windows-optimized-product-local-install",
+  "type": "fact",
+  "conclusion": "Historical 2026-10-17 local deployment: the current optimized Windows Release product build, real install and real install_only_inlong targets all completed with zero exit codes. The Release, full package and Inlong-only package contain identical application binaries and the same tested optimized core/Clipper libraries. All832 pre-existing Release settings files and both empty package data_dir sets were restored exactly. Package profiles, CLI startup and bundled Python SSL/uv checks passed. The existing filtered Windows recipe still omits downloaded uv, so the matching configured tool was supplemented in generated output only. The 253.706s exact-output slicing result remains the earlier source/core-bound measurement; this installation did not rerun that benchmark.",
+  "scope": "Historical installed-output evidence at the recorded checkout plus explicit worktree hashes; re-inspect current files and settings before future build or deployment. No interactive GUI test or cross-platform packaging claim.",
+  "modules": [
+    "WindowsBuild",
+    "Packaging",
+    "Support"
+  ],
+  "tags": [
+    "historical",
+    "install",
+    "settings-preservation",
+    "exact-output",
+    "optimized-core"
+  ],
+  "files": [
+    "docs/evidence/windows-optimized-install-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/windows-optimized-install-20261017.json",
+      "sha256": "8eada687776c2131217ee14a2111d0974a565f36da1f95dcbfddc09d54660c7e",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed actual native command receipts, installed binary and unchanged core/source hashes, exact settings restoration and fresh package smoke/profile verification. Commit is a checkout anchor; dirty source bytes are independently bound."
+    }
+  ],
+  "verified_utc": "2026-10-17T14:13:12.791636+00:00",
+  "verification": {
+    "method": "Reviewed native command exits and logs, byte-identical tested core/Clipper libraries, source correspondence, full and filtered profile content hashes, all three CLI/Python SSL/uv checks and exact832-file settings readback.",
+    "summary": "All requested local targets passed with existing settings preserved. Runtime backup and validation receipts are retained; source recipes were unchanged, and generated-output uv supplementation is explicitly scoped.",
+    "result": "passed",
+    "reviewed_by": "Codex root agent"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

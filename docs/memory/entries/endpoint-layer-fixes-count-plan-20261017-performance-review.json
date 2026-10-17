@@ -1,0 +1,136 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "endpoint-layer-fixes-count-plan-20261017-performance-review",
+  "key": "endpoint-layer-validity",
+  "type": "fact",
+  "conclusion": "Small closed-contour preservation, independent organic bed-support placement and the shared filtered emitted-layer count plan retain their reviewed implementation outside the declared performance substitutions. Current affected core, support, seam and belt regressions pass. Earlier X2/Vulcan600 counts, exact heights, deposition identities and X600HD results remain measurements at their original source/date anchors. Those projects were not re-sliced in this performance task. The new native 3MF/visibility corrections can restore coordinates or seams that earlier reloads rounded differently, so old project output hashes must not be promoted to the new build.",
+  "scope": "Current source-contract audit after the 2026-10-17 exact-output performance work; original deployment, named-project path and remote observations remain historical at their original anchors. This is not evidence of a new install, multi-project slice or release.",
+  "modules": [
+    "gcode-generation",
+    "organic-support"
+  ],
+  "tags": [
+    "endpoint",
+    "arc-fitting",
+    "closed-contour",
+    "first-layer",
+    "device-independent"
+  ],
+  "files": [
+    "src/libslic3r/Polyline.cpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/CMakeLists.txt",
+    "tests/libslic3r/test_polyline.cpp",
+    "tests/libslic3r/CMakeLists.txt",
+    "tests/fff_print/test_tree_support.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/endpoint-layer-fixes-20261017.json",
+    "docs/evidence/layer-count-plan-fix-20261017.json",
+    "docs/evidence/large-project-compatibility-audit-20261017.json",
+    "docs/evidence/large-project-slicing-performance-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Polyline.cpp",
+      "sha256": "447122276cada254938cfe85e2a6223bdaa435c5fb1effd140598471c848bd22",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/CMakeLists.txt",
+      "sha256": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_polyline.cpp",
+      "sha256": "75e64386cdd53ab3338935822430c6aca427b7646145e4c0b3c728f7c387ee5e",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/CMakeLists.txt",
+      "sha256": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_tree_support.cpp",
+      "sha256": "673521e0c536288c32ff0dae22e9e96855b5c7f85efd46d7007572aeb1c93226",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "520c41447692e68583b69cc4b7af475ce8cb77d4cbfd9a5aaec2dbe75e7d28e0",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-fixes-20261017.json",
+      "sha256": "c26dbc08692a17a39f74c86744c5d0de3f571a167b823b4624fca0cefe8f7036",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/layer-count-plan-fix-20261017.json",
+      "sha256": "7fef73b395035c8885b04a1ec5c3382eb0e73cefb4a6e8d6aa940edb0b64cc14",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Current byte snapshot reviewed against the explicit reconstruction/unchanged-source audit. Commit is a checkout anchor; historical runtime results retain the scope of their original evidence."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-compatibility-audit-20261017.json",
+      "sha256": "d7e6676ba3a68b839681252f01ac3352974d577f9a689817a2d32695849e4d0a",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+      "sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed current source audit, individual native/disposable tests and exact-output experiment; no new installation or old-project identity is inferred."
+    }
+  ],
+  "verified_utc": "2026-10-17T13:36:31.693250+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact reconstruction of four changed global files to HEAD after removing declared performance/test additions; unchanged hashes for every other prior snapshot; current475835 core and27553 FFF/seam assertions, fresh belt and eleven disposable packaging tests, full4174470-command identity and installed-state readback.",
+    "summary": "Reviewed all changed snapshots rather than refreshing hashes mechanically. Common source contracts remain verified; previous installations, model-specific timings/output identities and remote state remain historical. Current local runtime was preserved and the new source was not installed."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "endpoint-layer-fixes-count-plan-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
