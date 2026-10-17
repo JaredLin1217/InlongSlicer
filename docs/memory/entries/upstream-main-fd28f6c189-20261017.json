@@ -1,0 +1,77 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "upstream-main-fd28f6c189-20261017",
+  "key": "orca-fd28f6c189-local-merge-contract",
+  "type": "fact",
+  "conclusion": "Orca upstream/main through fd28f6c189 expands legacy embedded material per-variant arrays before config diffing and selects/deletes all current-plate instances that are contained or intersecting. The local merge preserves Inlong branding/profiles, exact-output optimization sources and disabled application-update policy. The changed core and preset tests build, the new legacy-material regression runs, and the changed Selection.cpp compiles. Installed binaries and all832 current settings files remain byte-identical. GUI interaction and a new full slicing benchmark were not performed.",
+  "scope": "Source-bound local integration of the two upstream commits at the recorded base and upstream anchors; installation and historical benchmark results are separate.",
+  "modules": [
+    "Presets",
+    "Selection",
+    "UpstreamIntegration"
+  ],
+  "tags": [
+    "upstream-main",
+    "legacy-project",
+    "settings-preservation"
+  ],
+  "files": [
+    "docs/evidence/upstream-main-fd28f6c189-20261017.json",
+    "src/libslic3r/Preset.cpp",
+    "src/slic3r/GUI/Selection.cpp",
+    "src/slic3r/GUI/Selection.hpp",
+    "tests/libslic3r/test_preset_bundle_loading.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-main-fd28f6c189-20261017.json",
+      "sha256": "825d799f57f89a2a904600f5b2d5d0673d9b4d880575d198d012f488464fd389",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Preset.cpp",
+      "sha256": "16fb7d36799dde1de21f04249f4bdf18498b4238837326200ad24ec9913cbb14",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Selection.cpp",
+      "sha256": "5581906f7e32082cd80b6b3f2fae6e6426e857c1ce86bbd4a7fe1ed6190c6ed2",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Selection.hpp",
+      "sha256": "cb1d50e07b0471013c40de66d226c180b31512da03777b1b94d5e25dd62127f3",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_preset_bundle_loading.cpp",
+      "sha256": "2e19ddc8bf10588997c3b981d5b6f10137d873a7eb429aa527b660e2933c8229",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    }
+  ],
+  "verified_utc": "2026-10-17T15:00:51.806114+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Review of both upstream commits, affected native builds and regression execution, exact source/profile/runtime/settings preservation and branding scans.",
+    "summary": "No merge conflicts; all affected checks passed. Selected-file compilation is not an interactive GUI or installation claim."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

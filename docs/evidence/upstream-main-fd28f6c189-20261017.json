@@ -1,0 +1,184 @@
+{
+  "schema_version": "inlong-upstream-merge-verification/v1",
+  "verified_utc": "2026-10-17T15:00:51.746056+00:00",
+  "result": "passed",
+  "checkout_anchor": "cf542457cd349291fb235638b7b09b64d03933eb",
+  "upstream": "fd28f6c1894a7fb09af2af0d8a8c935d98467e2d",
+  "incoming_commits": [
+    "9b2fcaa53af870b14e1b7a031c2c68749a1b5478 fix: \"bad allocation\" when opening a 2.4 project with a custom filament (#16569)",
+    "fd28f6c1894a7fb09af2af0d8a8c935d98467e2d Fix Ctrl+A (select current plate) and Delete All skipping objects that no longer fit or while one of instances not on the bed (#15895)"
+  ],
+  "changes": [
+    "Expand embedded legacy material per-variant arrays before computing child-config differences.",
+    "Select/delete every instance intersecting the current plate, including oversized or partially outside instances."
+  ],
+  "merged_source_tree": "e53d00218f7b5084f5dd57a9e3fbf9df7d91c853",
+  "merge_conflicts": [],
+  "native_builds": [
+    {
+      "label": "build-core",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "libslic3r",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=5",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-17T14:55:49.867399+00:00",
+      "completed_utc": "2026-10-17T14:56:19.716467+00:00",
+      "seconds": 29.848348399973474,
+      "exit_code": 0,
+      "log_sha256": "3126184f8729b030de04510991c4ca3aaf4b42bbf17b0b272ed3afa1c80439cf"
+    },
+    {
+      "label": "build-core-tests",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "libslic3r_tests",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=5",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-17T14:56:19.728475+00:00",
+      "completed_utc": "2026-10-17T14:57:02.456176+00:00",
+      "seconds": 42.72792010003468,
+      "exit_code": 0,
+      "log_sha256": "b9bfab1bfc3b9511ffdab912edea87b6fec9841294916a58486c5b98637f9ce7"
+    },
+    {
+      "label": "compile-selection",
+      "command": [
+        "C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\slic3r\\libslic3r_gui.vcxproj",
+        "/t:ClCompile",
+        "/p:Configuration=Release",
+        "/p:Platform=x64",
+        "/p:BuildProjectReferences=false",
+        "/p:PreBuildEventUseInBuild=false",
+        "/p:PostBuildEventUseInBuild=false",
+        "/p:CL_MPCount=5",
+        "/p:SelectedFiles=D:\\Work\\Nowing\\GitHub\\InlongSlicer\\src\\slic3r\\GUI\\Selection.cpp",
+        "/verbosity:minimal"
+      ],
+      "started_utc": "2026-10-17T14:57:02.475171+00:00",
+      "completed_utc": "2026-10-17T14:57:35.396684+00:00",
+      "seconds": 32.92129620001651,
+      "exit_code": 0,
+      "log_sha256": "8c19d7bf17e30df757a77c451376c29f2d43cf2a763b252634b4aa5f27d98900"
+    }
+  ],
+  "native_tests": {
+    "passed": true,
+    "test_cases": 776,
+    "failures": 0,
+    "errors": 0,
+    "test_exe_sha256": "fd79ea5fc5d1075e896f3e456458e09461d677d1bb9db7d7bc91bf9447c514c4",
+    "xml_sha256": "ee27e11ec3ae38edb61ad38d7056b33f99742e3103c156f671635741930a9fe1",
+    "assertions": 482969,
+    "skipped": 0,
+    "upstream_regression": "A project filament storing one value for a per-variant key applies it to every variant",
+    "upstream_regression_executed": true
+  },
+  "preservation": {
+    "utc": "2026-10-17T15:00:50.812415+00:00",
+    "passed": true,
+    "merged_files": {
+      "src/libslic3r/Preset.cpp": "16fb7d36799dde1de21f04249f4bdf18498b4238837326200ad24ec9913cbb14",
+      "src/slic3r/GUI/Selection.cpp": "5581906f7e32082cd80b6b3f2fae6e6426e857c1ce86bbd4a7fe1ed6190c6ed2",
+      "src/slic3r/GUI/Selection.hpp": "cb1d50e07b0471013c40de66d226c180b31512da03777b1b94d5e25dd62127f3",
+      "tests/libslic3r/test_preset_bundle_loading.cpp": "2e19ddc8bf10588997c3b981d5b6f10137d873a7eb429aa527b660e2933c8229"
+    },
+    "preserved_source": {
+      "version.inc": "95f38e46645c70378f23602c2eb2eff985a8a36f5f28b8dcd7225e3bc111c8ce",
+      "src/CMakeLists.txt": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a",
+      "src/slic3r/GUI/MainFrame.cpp": "1a858a458f54cd9654d7f7c4bd8a1b31c89b66d342d5fe78f1a4842e9cb8e6f3",
+      "src/libslic3r/CMakeLists.txt": "e1cbcdb3f79cd36017029680b4ee668ab26e00132abc9649f1a76ccd99125d1f",
+      "scripts/tests/test_clipper_scanbeam.py": "fbd73bdaac74bed8fa1791517bc9aaa68bf09eda649b0b9261ef4d22eb240982",
+      "src/libslic3r/Format/bbs_3mf.cpp": "71c9eac57993c79c5a37daac32744abc055748faed8a2432967875065245010a",
+      "src/slic3r/GUI/NativeCommands.cpp": "ca1ee424b321dbe60a88b0b25907a6fc030f53e41257236b32fd1954bbac99d3",
+      "InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md": "a26c318348e1720748403b0854385f6a8b7ebd2cac90820f8aee72a7f9e9a758",
+      "tests/libslic3r/clipper_scanbeam_reference.hpp": "eefe309345efb958182a651988662f6010c8929a22de084a7717f065ebda4cbe",
+      "tests/libslic3r/CMakeLists.txt": "14f98c7ead2053dda8b08cfc582110e9d6cc4c0dc00d138155fce2d2355d85c6",
+      "src/slic3r/Utils/PresetUpdater.cpp": "b0f540018c72c4372752b070472e51d01e9ca6d353dd121eb11e519e878db5e2",
+      "src/slic3r/GUI/GUI_App.cpp": "68b613ca130c55271bd89fe006f603e3a6e104380670e4b3161042289e546630",
+      "tests/libslic3r/clipper_scanbeam_reference.cpp": "77b4a16f7b081c49d6cbf83e81a9249a2763cabd42c92b69dda157dbf9ff4445",
+      "src/libslic3r/GCode/SeamVisibility.hpp": "4f13b242a8ab06242f0ec76e9c08d41754c8be3fb3f079075c831a9b81c67599",
+      "src/slic3r/GUI/Preferences.cpp": "da0088c38cfea7d64787cd4497196528887017fce5e06d47827665f77b051c99",
+      "CMakeLists.txt": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+      "tests/libslic3r/test_clipper_scanbeam.cpp": "cd7a100d06310e81dcfe0ab6421ab105d61b00f59687c888da1849e858e04741",
+      "cmake/InlongClipperScanbeam.cmake": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0",
+      "tests/libslic3r/test_3mf.cpp": "199120023fd72bf64b3ba884f69c6eaaa6e4784a03d17f130a4e26c23d8c65b7",
+      "tests/libslic3r/test_support_polygon_accumulator.cpp": "63d204459afdca81c15e50694649305512c24352b091c229026080cecbc698df",
+      "src/libslic3r/Support/TreeSupport3D.cpp": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+      "src/libslic3r/Support/SupportPolygonAccumulator.hpp": "011fd76a138de8fc7941adf5ea9171dc614fa9127d1953888e517918b8183661",
+      "src/libslic3r/GCode/SeamPlacer.cpp": "0e9f87d3c2bfbdde7140a531babf8853f20ca16e4827f2984819c1a0de12b6ea"
+    },
+    "profiles_tree_unchanged": true,
+    "runtime_binaries": {
+      "build/src/Release/inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "build/src/Release/InlongSlicer.dll": "f6dd499b265683012024dbcb6a6f41188c5117a394e5ea3d716ec2cef28f12c4",
+      "build/InlongSlicer/inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "build/InlongSlicer/InlongSlicer.dll": "3b1160b54c40123e9f55e1eac090157f5ab53681d03422a7ca65e1655f647d2c",
+      "build/InlongSlicer_InlongOnly/inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "build/InlongSlicer_InlongOnly/InlongSlicer.dll": "3b1160b54c40123e9f55e1eac090157f5ab53681d03422a7ca65e1655f647d2c"
+    },
+    "runtime_settings": {
+      "build/src/Release/data_dir": {
+        "files": 832,
+        "exact_match": true,
+        "manifest_sha256": "0d12097f17186dc2d61ff1c8f86c33919c04fb009b4cf657f917ef7192098a65"
+      },
+      "build/InlongSlicer/data_dir": {
+        "files": 0,
+        "exact_match": true,
+        "manifest_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "build/InlongSlicer_InlongOnly/data_dir": {
+        "files": 0,
+        "exact_match": true,
+        "manifest_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      }
+    }
+  },
+  "branding_audit": {
+    "color_check": "Inlong brand color validation passed: no legacy Orca accents found in UI sources.",
+    "filename_scan_sha256": "2fd9ca8bbbcb4b1dcd4e7b6cfc414838d98b7d966f9dd6cf0a2f5e5001c4b857",
+    "content_scan_sha256": "1fe62961d8bb63bcde61e440b496036734cbfed4c3e0286dd984b4efefd039be",
+    "review": "Incoming changes add no Orca branding references. Existing cloud/wiki/protocol, plugin/import ABI, dependency and upstream-history references remain allowed. Profiles and canonical branding sources are unchanged."
+  },
+  "runtime": ".agents/runtime/runs/run-efb8d469fa84410885234cdfabdc4349",
+  "latest_upstream_observation": {
+    "label": "upstream-latest-check",
+    "command": [
+      "git",
+      "ls-remote",
+      "upstream",
+      "refs/heads/main"
+    ],
+    "started_utc": "2026-10-17T15:00:50.896601+00:00",
+    "completed_utc": "2026-10-17T15:00:51.733542+00:00",
+    "seconds": 0.8368666999740526,
+    "exit_code": 0,
+    "log_sha256": "8f7812b4549d5a9f0a76b991f4b09f8508505a2a2609179f30eb3a05af6efbfa"
+  },
+  "verification_limits": [
+    "Selection.cpp was compiled through the real MSBuild selected-file target. No full GUI link or interactive UI test was performed.",
+    "Core and regression binaries were rebuilt; installed EXE/DLL and all current settings were preserved.",
+    "Earlier slicing-performance/path-equivalence measurements remain historical; the large project was not re-sliced.",
+    "This task performs a local merge only; it does not install or push."
+  ]
+}
