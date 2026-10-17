@@ -1,0 +1,153 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "normal-support-contact-clearance-endpoint-20261017",
+  "key": "normal-support-contact-distance-contract",
+  "type": "fact",
+  "conclusion": "Normal support must clip by its full deposited Z span, not a bottom contact coordinate that includes an air gap. Sharp-tail detection must not replace the requested normal XY gap with a fixed 0.2 mm; near-Z guard clearance is capped by the configured XY gap. Normal support without a sheath reserves complete bead width while retaining its reference fill pitch. Synchronized body layers with independently placed top contacts reserve the minimum printable contact height, preserving the requested contact print plane. G-code print Z is the extrusion top plane: compute nominal top contact gap from the model underside, or subtract model path height from its print Z before measuring a bead envelope; do not count a model layer height twice. With both independent height flags enabled the tested 0.17 mm top gap is retained, while fully synchronized support may quantize a requested gap to object layers. Organic tip XY/Z percentages are applied by the organic planner and are not normal-support distance overrides. Current endpoint fixes additionally lower the independent bed-support layer only when necessary to preserve a nearby exact contact within minimum thickness constraints. Historical Benchy timing and path-comparison observations are not current-build guarantees.",
+  "scope": "Normal support contact geometry and gap interpretation; revalidated common source after endpoint fixes at checkout anchor 2fd6f38cc21d0208ed1df326311b8748b4b36374.",
+  "modules": [
+    "Support",
+    "NormalSupport"
+  ],
+  "tags": [
+    "support",
+    "contact",
+    "XY-clearance",
+    "Z-gap",
+    "independent-heights",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportMaterial.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/SupportCommon.hpp",
+    "src/libslic3r/Support/SupportLayer.hpp",
+    "src/libslic3r/Fill/FillBase.cpp",
+    "src/libslic3r/Slicing.cpp",
+    "src/libslic3r/Flow.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "src/slic3r/GUI/ConfigManipulation.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/upstream-sync-verification-20261017.json",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "docs/evidence/endpoint-layer-fixes-20261017.json",
+    "docs/evidence/endpoint-layer-compatibility-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportMaterial.cpp",
+      "sha256": "946a539039e52b276b7c69c08981c873d454267a0e9429e974d459eadd01590c",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "fa823c0d9caa08efa8e79ccef905bd3be78ddbd72eeb0dec70f5e36998ade45d",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.hpp",
+      "sha256": "a3c0963c8e6d9d2b8bb60ed48244fd756924fa3c548d9d7e24c7b455f97eb40a",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportLayer.hpp",
+      "sha256": "af9fe91c80b052bba6645c7d9861e0452734daa2b4dcd2c0941bb8a129a7f463",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillBase.cpp",
+      "sha256": "980ab01ad1fa353174fade2c3e899edfc338bddb493f042a9d528945d857c5a5",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Slicing.cpp",
+      "sha256": "2f2a395a7e14c0d4ced04a654828425953641ab7c65c98856eeac0fb5d214a8f",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Flow.cpp",
+      "sha256": "69ee6437e86e8f2a585a82cd6b1bb71a88fbddd3605e40feb27b595bb26113a6",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/ConfigManipulation.cpp",
+      "sha256": "163c6874b94568716c65c1d2fdda9120a242e11f341ee7cd41621078cd5dde95",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "b1202bb220dd0f1eebdeb84ae0c5e3c32f45701db7458d5eb2b9272ea4d1ec92",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-sync-verification-20261017.json",
+      "sha256": "d1a1a96b39424ffec395ca4c36dcbab75773756756f6149f02ee1c3a21c47095",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-fixes-20261017.json",
+      "sha256": "c26dbc08692a17a39f74c86744c5d0de3f571a167b823b4624fca0cefe8f7036",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-compatibility-20261017.json",
+      "sha256": "c62ec35650414dc7f3ceaa2d0a29f4e97321e0791dfd197bb30f2d2989c8decd",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    }
+  ],
+  "verified_utc": "2026-10-17T08:14:33.245434+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact source and fixture comparison against HEAD; all changed snapshots confined to the extracted planner and added regression; 130 affected support/extrusion cases plus focused belt Print regressions; historical benchmark document hash verification.",
+    "summary": "Current geometric invariants are revalidated. No historical timing or full-project command-equality result is relabeled as a new benchmark. See the endpoint compatibility evidence for the retained source boundaries and individual belt cases."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "normal-support-contact-clearance-upstream-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

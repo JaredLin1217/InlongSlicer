@@ -1,0 +1,136 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "endpoint-layer-root-causes-20261017",
+  "key": "endpoint-layer-validity",
+  "type": "fact",
+  "conclusion": "On the verified InlongSlicer build, X2 final layer Z=246.4 can contain no deposited motion under arc fitting at 0.01 mm resolution; disabling arc fitting or using 0.001 mm restores tiny extrusions. A reconstructed native contour collapses to two identical points under the actual library simplifier, while nonempty extrusion collections still schedule the layer. The slanted Vulcan600 training model fails with fully fresh Vulcan600 0.6/0.25 presets and with X600HD 0.6/0.25 presets. The organic independent layer planner can delete the optional first support anchor Z=0.25 when an exact contact Z=0.2875 is closer than its 0.05 mm minimum. Changing only top gap 0.2125 to 0.20 or 0.15 passes; zero first-layer XY gap alone does not. These are diagnosed, unfixed product defects; exit-code/log-only checks are not sufficient endpoint-path validation.",
+  "scope": "Verified source snapshots at checkout 2fd6f38cc21d0208ed1df326311b8748b4b36374 and installed DLL a8aaac509c2f21373e166a797970cabe878866464399d54d3497613c857de68f; diagnostic evidence only, no product fix.",
+  "modules": [
+    "gcode-generation",
+    "organic-support"
+  ],
+  "tags": [
+    "endpoint",
+    "arc-fitting",
+    "degenerate-path",
+    "empty-first-layer",
+    "Vulcan600",
+    "X600HD",
+    "X2"
+  ],
+  "files": [
+    "src/libslic3r/LayerRegion.cpp",
+    "src/libslic3r/ArcFitter.cpp",
+    "src/libslic3r/Polyline.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Layer.hpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "src/libslic3r/Support/SupportParameters.hpp",
+    "resources/profiles/INLONG/process/Layer_0.25mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+    "resources/profiles/INLONG/machine/Vulcan600_common.json",
+    "docs/evidence/endpoint-layer-root-causes-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/LayerRegion.cpp",
+      "sha256": "c7f1874cafd457814ce2350042097e0d32fc874718d2a042c595202074e34983",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/ArcFitter.cpp",
+      "sha256": "e5d916f3ef106fd2865612627cf849a34e26510f4b7c7ac06ef73147fb37e388",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Polyline.cpp",
+      "sha256": "ff6d810fab63fbc5f6031abe3b9527ddef1e2e00e0086706b02102cfe6011ae8",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "72b0e6c2b6dba43995bdab19b97318c2a463655814d148fbb8df6d2c123e4265",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Layer.hpp",
+      "sha256": "5f316b8641a7b0faeafba2d2b2c266ab6b4122f4eb0dba0f85517711b39c5a1d",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportParameters.hpp",
+      "sha256": "7917704a286e505ef9780f4f9a5206de4931f42e73faa567686cc166c1d550b5",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.25mm.json",
+      "sha256": "7d45d65b4de4ea05854e373d060996be1fdb5eee4ae2580fadfe05498180e2cd",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+      "sha256": "30f0c7a94b153bb21cdc04f242f1f05db23dbec4fdbafbf7613ca1b11621fc56",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan600_common.json",
+      "sha256": "62fe7ff60d16326913c2b74bf7bea475b71e7d18364e14764ea053f55880f160",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-root-causes-20261017.json",
+      "sha256": "33f7ce98a2d2de645f36146cb88c3c796f92da7c9b3d86606557d1db002623f0",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed root-cause source or durable controlled-verification evidence; commit is a checkout anchor for the new evidence file."
+    }
+  ],
+  "verified_utc": "2026-10-17T07:47:02.205808+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Controlled current native CLI slices, one-parameter effective-config diffs, transformed triangle-plane cuts, actual library contour simplification and a verbatim production layer-planner fixture.",
+    "summary": "Reviewed causal diagnosis only; failing product cases remain unfixed. Full-model SDK harness failures were excluded."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

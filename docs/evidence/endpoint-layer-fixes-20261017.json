@@ -1,0 +1,352 @@
+{
+  "schema_version": "inlong-endpoint-layer-fixes/v1",
+  "verified_utc": "2026-10-17T08:09:31.519426+00:00",
+  "checkout_anchor": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+  "source_sha256": {
+    "src/libslic3r/Polyline.cpp": "447122276cada254938cfe85e2a6223bdaa435c5fb1effd140598471c848bd22",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "94f6f117ac849385e6fac09e13a56a498086a17e90a5abeb0ecae00d5f39c848",
+    "src/libslic3r/CMakeLists.txt": "1c46b062708f281a32d28f0a2e4833d7b70b73454a41323bd902521a99ccee61",
+    "tests/libslic3r/test_polyline.cpp": "75e64386cdd53ab3338935822430c6aca427b7646145e4c0b3c728f7c387ee5e",
+    "tests/libslic3r/CMakeLists.txt": "6747447ae501c9518c42f08cbcf81abe113d524131dbe7566ca8d471542e536c",
+    "tests/fff_print/test_tree_support.cpp": "673521e0c536288c32ff0dae22e9e96855b5c7f85efd46d7007572aeb1c93226",
+    "tests/fff_print/test_support_material.cpp": "b1202bb220dd0f1eebdeb84ae0c5e3c32f45701db7458d5eb2b9272ea4d1ec92"
+  },
+  "product_validation_passed": true,
+  "installation_performed": false,
+  "commit_or_push_performed": false,
+  "changes": [
+    {
+      "component": "Polyline3 common linear and arc-enabled simplification",
+      "invariant": "A closed source contour with at least three vertices is retained when linear simplification would leave fewer than three vertices. Valid fitted arcs retain their existing representation; fallback clears stale fitting metadata."
+    },
+    {
+      "component": "Organic independent support output planner",
+      "invariant": "Preserve bed support at or below the first object plane. When the first exact contact is closer than the minimum layer height, lower the independent support bed layer within the minimum limit. Leave object Z, exact contact Z, profiles and raft heights unchanged. Infeasible exact-anchor constraints retain the explicit synchronized fallback."
+    }
+  ],
+  "device_independence": "Both fixes use geometry, configured tolerances and layer-height limits. No machine name, vendor identifier or per-device profile override selects either fix.",
+  "parameterized_coverage": {
+    "closed_contours": "3 geometric scales x 3 tolerances x arc on/off = 18 cases, plus open-line and valid arc controls",
+    "support_planning": "5 nozzle scales (0.2/0.4/0.6/0.8/1.2) x 2 first heights x 4 contact separations x 2 body grid modes = 80 cases",
+    "synthetic_pipeline": "3 nozzle diameters (0.4/0.6/0.8) x 2 independent-body modes = 6 tilted-model slices and G-code exports; every model first layer is empty but the real first support deposits material",
+    "existing_support": "Traditional support, classic tree styles, organic contact continuity, raft preservation and infeasible-plan fallback covered by the affected native test selection"
+  },
+  "tests": [
+    {
+      "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/fixed-polyline.xml",
+      "sha256": "f1d598b237424c03318967842d9b8eef715a89debe190e086dab1372abf8c284",
+      "test_cases": 2,
+      "assertions": 88,
+      "result": "passed"
+    },
+    {
+      "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/fixed-planner.xml",
+      "sha256": "31e099f8d2016c3c38d38dcc2896a216286017b670ca55f79db62cfed2f4b5e8",
+      "test_cases": 3,
+      "assertions": 1378,
+      "result": "passed"
+    },
+    {
+      "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/affected-fff.xml",
+      "sha256": "e9381d2213d367fcaf0af86a252024c312dd42de50ecb38ba1909979f35b0056",
+      "test_cases": 130,
+      "assertions": 19414,
+      "result": "passed"
+    },
+    {
+      "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/thin-bed-integration-final.xml",
+      "sha256": "e78192c8247b31dbff2f6259047dd4120a2de4f45bf1958158ffa782f3b8a25c",
+      "test_cases": 1,
+      "assertions": 30,
+      "result": "passed"
+    }
+  ],
+  "native_cases": [
+    {
+      "label": "vulcan600-fresh",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\inlong-slicer.exe",
+        "--datadir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\vulcan600-fresh-data",
+        "--load-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\INLONG\\machine\\Vulcan600 0.6mm nozzle.json;D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\INLONG\\process\\Layer_0.25mm.json",
+        "--load-filaments",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\INLONG\\filament\\INLONG PET-CFGF.json;D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\INLONG\\filament\\INLONG PET-CFGF.json",
+        "--export-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\vulcan600-fresh-config.json",
+        "--slice",
+        "0",
+        "--debug",
+        "3",
+        "--outputdir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\vulcan600-fresh",
+        "--logfile",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\vulcan600-fresh-native.log",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\vulcan600-original.3mf"
+      ],
+      "started_utc": "2026-10-17T08:02:25.227490+00:00",
+      "finished_utc": "2026-10-17T08:02:54.058437+00:00",
+      "seconds": 28.830729600013,
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\vulcan600-fresh\\plate_1.gcode",
+          "sha256": "aaf3eedd4c97eec1e11849ca4d0604d6fc7236cb69fa878cdb319bc9bc5c7abc",
+          "bytes": 33439481
+        }
+      ],
+      "native_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/vulcan600-fresh-native.log",
+        "sha256": "3045af09b84b1015d5b2a530e0f64ec4e6db74a3e5103c6610e1d30eaf52aedf"
+      },
+      "stdout_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/vulcan600-fresh-stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/vulcan600-fresh-stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "x600hd-fresh",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\inlong-slicer.exe",
+        "--datadir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\x600hd-fresh-data",
+        "--load-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\_Infinity3DP\\machine\\Infinity3DP X600HD 0.6mm nozzle.json;D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\_Infinity3DP\\process\\X600HD_Layer_0.25mm.json",
+        "--load-filaments",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\_Infinity3DP\\filament\\Infinity3DP PET-CFGF.json;D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\resources\\profiles\\_Infinity3DP\\filament\\Infinity3DP PET-CFGF.json",
+        "--export-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\x600hd-fresh-config.json",
+        "--slice",
+        "0",
+        "--debug",
+        "3",
+        "--outputdir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\x600hd-fresh",
+        "--logfile",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\x600hd-fresh-native.log",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\vulcan600-original.3mf"
+      ],
+      "started_utc": "2026-10-17T08:02:54.084033+00:00",
+      "finished_utc": "2026-10-17T08:03:21.700621+00:00",
+      "seconds": 27.616540099988924,
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\x600hd-fresh\\plate_1.gcode",
+          "sha256": "0ea17a4c985a978a677be3b9ac6db7a1450317338596b4747bd0edeb5fb4c871",
+          "bytes": 34112112
+        }
+      ],
+      "native_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/x600hd-fresh-native.log",
+        "sha256": "e3b7bee61c2af4418db7c0119e3a07445cee980a4aa6b11304221aee622a9cb5"
+      },
+      "stdout_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/x600hd-fresh-stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/x600hd-fresh-stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "x2-current",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\inlong-slicer.exe",
+        "--datadir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\x2-current-data",
+        "--export-settings",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\x2-current-config.json",
+        "--slice",
+        "0",
+        "--debug",
+        "3",
+        "--outputdir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\x2-current",
+        "--logfile",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\x2-current-native.log",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\x2-current.3mf"
+      ],
+      "started_utc": "2026-10-17T08:03:21.722257+00:00",
+      "finished_utc": "2026-10-17T08:04:24.436381+00:00",
+      "seconds": 62.713787000015145,
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\x2-current\\plate_1.gcode",
+          "sha256": "1f0a13beca5687be8966373560a1ed7eaa9a06a0140449a0a7eadb68ea24eda2",
+          "bytes": 40500925
+        }
+      ],
+      "native_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/x2-current-native.log",
+        "sha256": "9209b6d22d8b98e159a3c185bb793eddf8df97f23d9226d37b0a8f92d51af124"
+      },
+      "stdout_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/x2-current-stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr_log": {
+        "path": ".agents/runtime/runs/run-4d5496ce9d504cef8895eb2992f38b2b/validation/x2-current-stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "endpoint_summary": [
+    {
+      "label": "vulcan600-fresh",
+      "gcode_sha256": "aaf3eedd4c97eec1e11849ca4d0604d6fc7236cb69fa878cdb319bc9bc5c7abc",
+      "first_layers": [
+        {
+          "z": 0.2375,
+          "deposition_moves": 1540,
+          "extrusion_mm": 623.3832199999999
+        },
+        {
+          "z": 0.25,
+          "deposition_moves": 0,
+          "extrusion_mm": 0.0
+        },
+        {
+          "z": 0.2875,
+          "deposition_moves": 857,
+          "extrusion_mm": 31.810439999999993
+        }
+      ],
+      "final_layer": {
+        "z": 218.25,
+        "deposition_moves": 36,
+        "extrusion_mm": 6.823219999999999
+      }
+    },
+    {
+      "label": "x2-current",
+      "gcode_sha256": "1f0a13beca5687be8966373560a1ed7eaa9a06a0140449a0a7eadb68ea24eda2",
+      "first_layers": [
+        {
+          "z": 0.2,
+          "deposition_moves": 1256,
+          "extrusion_mm": 401.41900000000066
+        },
+        {
+          "z": 0.3,
+          "deposition_moves": 219,
+          "extrusion_mm": 11.590279999999996
+        },
+        {
+          "z": 0.4,
+          "deposition_moves": 261,
+          "extrusion_mm": 11.815280000000003
+        }
+      ],
+      "final_layer": {
+        "z": 246.4,
+        "deposition_moves": 3,
+        "extrusion_mm": 0.00047
+      }
+    },
+    {
+      "label": "x600hd-fresh",
+      "gcode_sha256": "0ea17a4c985a978a677be3b9ac6db7a1450317338596b4747bd0edeb5fb4c871",
+      "first_layers": [
+        {
+          "z": 0.2375,
+          "deposition_moves": 1540,
+          "extrusion_mm": 623.3832199999999
+        },
+        {
+          "z": 0.25,
+          "deposition_moves": 0,
+          "extrusion_mm": 0.0
+        },
+        {
+          "z": 0.2875,
+          "deposition_moves": 857,
+          "extrusion_mm": 31.810439999999993
+        }
+      ],
+      "final_layer": {
+        "z": 218.25,
+        "deposition_moves": 36,
+        "extrusion_mm": 6.823219999999999
+      }
+    }
+  ],
+  "configurations": {
+    "fresh_vulcan600_effective_config_difference": {},
+    "x2_control_difference": {
+      "different_settings_to_system": [
+        [
+          "enable_arc_fitting;initial_layer_infill_speed;initial_layer_speed;inner_wall_speed;internal_solid_infill_speed;outer_wall_speed;raft_first_layer_density;raft_first_layer_expansion;sparse_infill_speed;support_base_pattern_spacing;support_bottom_interface_spacing;support_bottom_z_distance;support_interface_pattern;support_interface_spacing;support_interface_speed;support_object_xy_distance;support_top_z_distance;top_surface_speed;tree_support_tip_diameter;tree_support_wall_count",
+          "",
+          ""
+        ],
+        [
+          "initial_layer_infill_speed;initial_layer_speed;inner_wall_speed;internal_solid_infill_speed;outer_wall_speed;raft_first_layer_density;raft_first_layer_expansion;sparse_infill_speed;support_base_pattern_spacing;support_bottom_interface_spacing;support_bottom_z_distance;support_interface_pattern;support_interface_spacing;support_interface_speed;support_object_xy_distance;support_top_z_distance;top_surface_speed;tree_support_tip_diameter;tree_support_wall_count",
+          "",
+          ""
+        ]
+      ],
+      "enable_arc_fitting": [
+        "0",
+        "1"
+      ]
+    },
+    "current_installed_profile_comparison": {
+      "INLONG": {
+        "matched_json_files": 46,
+        "mismatches": []
+      },
+      "_Infinity3DP": {
+        "matched_json_files": 117,
+        "mismatches": []
+      }
+    }
+  },
+  "prior_regression_evidence": {
+    "polyline_report": ".agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\baseline-polyline.xml",
+    "support_report": ".agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\baseline-planner.xml",
+    "supported_result": "The original implementation fails the small closed-contour assertions and 40 of 80 support-bed planning combinations."
+  },
+  "known_compatibility_warnings": {
+    "vulcan600-fresh": [
+      "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\resources/profiles/BBL/machine_full/Vulcan600 0.6mm nozzle.json ",
+      "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\resources/profiles/BBL/process_full/Layer: 0.25mm.json "
+    ],
+    "x600hd-fresh": [
+      "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\resources/profiles/BBL/machine_full/Vulcan600 0.6mm nozzle.json ",
+      "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\resources/profiles/BBL/process_full/Layer: 0.25mm.json "
+    ],
+    "x2-current": [
+      "Slic3r::CLI::run:2747, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\resources/profiles/BBL/machine_full/Infinity3DP X2 0.4mm nozzle.json ",
+      "Slic3r::CLI::run:2771, can not find system preset file: D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\work\\app\\resources/profiles/BBL/process_full/X2_Layer: 0.20mm.json "
+    ]
+  },
+  "preservation": {
+    "installed_binaries_unchanged": true,
+    "live_settings_unchanged": true,
+    "profiles_unchanged": true,
+    "Vulcan600培训用档案.3mf_unchanged": true,
+    "X2培训用档案.3mf_unchanged": true
+  },
+  "build": {
+    "candidate_dll_sha256": "cb6a0c9ee53162de46301d9ee8514ef2f07971e82d53ffe4792981138a43d2d4",
+    "library_sha256": "05cb4e4b4a38628b6a28094f65787dedc26773e35e764b877ea680766c11a074",
+    "method": "Release tests and DLL linked against updated common library; executable dependencies and profiles copied to registered disposable runtime. Installed program and configuration remain intact."
+  },
+  "corrected_test_setup": "Initial circle control had chord error exceeding fitting tolerance; the accepted control uses a sufficiently fine circular arc. Initial synthetic tilt did not request support for its 45-degree slope; accepted tests explicitly request support at 60 degrees. A first isolated CLI launch lacked its Python DLL dependency. These setup failures are retained in runtime and excluded from product validation.",
+  "limits": [
+    "Parameter and source coverage demonstrate common behavior, not physical qualification of every printer or every possible settings combination.",
+    "No physical print, installation or publication was performed. Existing CLI preset compatibility warnings remain separate from the fixed path failures."
+  ],
+  "agents_used": 1
+}

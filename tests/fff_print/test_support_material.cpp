@@ -1125,6 +1125,39 @@ TEST_CASE("SupportMaterial: Organic support keeps the synchronized grid when ind
         REQUIRE(is_on_regular_grid(layer->print_z, 0.2));
 }
 
+TEST_CASE("Thin bed intersections retain printable organic support below the first object layer",
+          "[SupportMaterial][OrganicTree][Regression]")
+{
+    const double nozzle = GENERATE(0.4, 0.6, 0.8);
+    const bool independent_body = GENERATE(false, true);
+    const double layer_height = nozzle * (0.25 / 0.6);
+    CAPTURE(nozzle, layer_height, independent_body);
+    DynamicPrintConfig config = organic_support_config(independent_body, true, layer_height,
+                                                       layer_height * 0.85, nozzle / 12., nozzle * 0.75);
+    config.set_deserialize_strict({
+        {"nozzle_diameter", std::to_string(nozzle)},
+        {"wall_generator", "classic"},
+        {"detect_thin_wall", false},
+        {"support_threshold_angle", 60},
+        {"initial_layer_line_width", nozzle * 1.05},
+        {"support_object_first_layer_gap", 2.0}
+    });
+    TriangleMesh tilted = make_cube(12., 16., 3.);
+    tilted.rotate_y(float(PI / 4.));
+    Print print;
+    try {
+        init_and_process_print({tilted}, print, config);
+    } catch (const SlicingErrors &errors) {
+        FAIL(print.slicing_errors_message(errors));
+    }
+    REQUIRE_FALSE(print.objects().front()->layers().front()->has_extrusions());
+    const auto support_layers = nonempty_support_layers(print);
+    REQUIRE_FALSE(support_layers.empty());
+    REQUIRE(support_layers.front()->print_z <= layer_height + EPSILON);
+    REQUIRE(support_layers.front()->height >= nozzle / 12. - EPSILON);
+    REQUIRE_NOTHROW(gcode(print));
+}
+
 TEST_CASE("SupportMaterial: Organic top contact can use an exact independent height", "[SupportMaterial][OrganicTree]")
 {
     DynamicPrintConfig config = organic_support_config(false, true, 0.2, 0.15);

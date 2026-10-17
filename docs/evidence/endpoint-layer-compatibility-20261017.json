@@ -1,0 +1,71 @@
+{
+  "schema_version": "inlong-endpoint-compatibility/v1",
+  "verified_utc": "2026-10-17T08:14:33.245434+00:00",
+  "checkout_anchor": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+  "result": "passed",
+  "source_review": {
+    "organic_code_outside_extracted_planner_identical_to_head": true,
+    "preexisting_support_material_tests_identical_to_head": true,
+    "changed_record_snapshots": {
+      "normal-support-contact-clearance-upstream-20261017": [
+        "tests/fff_print/test_support_material.cpp"
+      ],
+      "organic-contact-tip-landing-benchy-performance-20261016": [
+        "src/libslic3r/Support/TreeSupport3D.cpp",
+        "tests/fff_print/test_support_material.cpp"
+      ],
+      "organic-support-grid-stability-statistics-20261017": [
+        "src/libslic3r/Support/TreeSupport3D.cpp",
+        "tests/fff_print/test_support_material.cpp"
+      ],
+      "organic-support-slicing-profile-benchy-20261016": [
+        "src/libslic3r/Support/TreeSupport3D.cpp"
+      ]
+    },
+    "normal_contact_code_unchanged": true
+  },
+  "belt_regressions": {
+    "path": ".agents\\runtime\\runs\\run-4d5496ce9d504cef8895eb2992f38b2b\\validation\\belt-compatibility.xml",
+    "sha256": "5443c59140d866dac97ee2538cffe8d4435c1db63d1fa13da9d3819f5c66aa83",
+    "test_cases": 23,
+    "assertions": 139,
+    "names": [
+      "Belt printers never start a scarf seam below the layer",
+      "Belt-only keys at non-default values leave non-belt G-code unchanged",
+      "Belt supports reach the belt under a leading overhang",
+      "Belt supports reach the belt under a leading overhang/normal(auto) / default / independent=0",
+      "Belt supports reach the belt under a leading overhang/normal(auto) / default / independent=1",
+      "Belt supports reach the belt under a leading overhang/tree(auto) / default / independent=0",
+      "Belt supports reach the belt under a leading overhang/tree(auto) / default / independent=1",
+      "Belt supports reach the belt under a leading overhang/tree(auto) / organic / independent=0",
+      "Belt supports reach the belt under a leading overhang/tree(auto) / organic / independent=1",
+      "Belt supports reach the belt under a leading overhang/tree(auto) / tree_hybrid / independent=0",
+      "Belt supports reach the belt under a leading overhang/tree(auto) / tree_hybrid / independent=1",
+      "Belt printers keep the part fan off within the band above the belt",
+      "Belt G-code has no layer that prints nothing",
+      "Belt G-code has no layer that prints nothing/by object",
+      "Belt printers slice organic tree supports that reach the belt",
+      "Switching a sliced project from belt to non-belt matches a fresh slice",
+      "Switching a sliced project from belt to non-belt matches a fresh slice/belt printer to a flat-bed printer",
+      "Switching a sliced project from belt to non-belt matches a fresh slice/belt tilt axis set to None",
+      "A support-only change on a belt purge print matches a fresh slice",
+      "Belt printers refuse an object taller than the gantry clearance",
+      "Belt printers refuse an object taller than the gantry clearance/a 20 mm cube fits under 50 mm of clearance",
+      "Belt printers refuse an object taller than the gantry clearance/a 60 mm cube does not",
+      "Belt purge tower enabled without a tower object warns"
+    ]
+  },
+  "reviewed_invariants": [
+    "Normal contact span, XY clearance and independent contact gap behavior still pass the native support selection.",
+    "Inclined organic landing, deterministic publication, contact-relative interface mapping and belt output-grid behavior retain their code outside the extracted planner and pass their native regressions.",
+    "The first independent support layer may be lowered within constraints; all exact contact Zs and configured layer-height limits remain governed by the reviewed planner.",
+    "Historical Benchy timing and command-equality measurements remain historical. No new performance or exact-path identity claim is inferred from the endpoint fix."
+  ],
+  "current_source_sha256": {
+    "src/libslic3r/Support/TreeSupport3D.cpp": "94f6f117ac849385e6fac09e13a56a498086a17e90a5abeb0ecae00d5f39c848",
+    "tests/fff_print/test_support_material.cpp": "b1202bb220dd0f1eebdeb84ae0c5e3c32f45701db7458d5eb2b9272ea4d1ec92",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+    "tests/fff_print/test_print.cpp": "5d47b8dd9e7b7f7b49257601a5e924e7f081790b409dc7c2150962372ec901aa"
+  },
+  "related_verification": "docs/evidence/endpoint-layer-fixes-20261017.json"
+}

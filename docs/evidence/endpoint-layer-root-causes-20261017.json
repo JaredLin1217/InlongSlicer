@@ -1,0 +1,798 @@
+{
+  "schema_version": "inlong-endpoint-root-cause/v1",
+  "verified_utc": "2026-10-17T07:47:02.205808+00:00",
+  "checkout_anchor": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+  "product_source_unchanged": true,
+  "installed_executable_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+  "installed_dll_sha256": "a8aaac509c2f21373e166a797970cabe878866464399d54d3497613c857de68f",
+  "investigation_result": "Causal mechanisms identified; product defects remain unfixed.",
+  "product_validation_passed": false,
+  "x2": {
+    "final_layer_z": 246.4,
+    "baseline_deposition_moves": 0,
+    "no_arc": {
+      "index": 2245,
+      "line_start": 2734660,
+      "z": 246.4,
+      "deposition_moves": 2,
+      "extrusion_mm": 0.00058,
+      "xy_moves": 5,
+      "lines": [
+        {
+          "line": 2734660,
+          "text": ";LAYER_CHANGE"
+        },
+        {
+          "line": 2734661,
+          "text": ";Z:246.4"
+        },
+        {
+          "line": 2734662,
+          "text": ";HEIGHT:0.199997"
+        },
+        {
+          "line": 2734663,
+          "text": ";BEFORE_LAYER_CHANGE"
+        },
+        {
+          "line": 2734664,
+          "text": "G92 E0"
+        },
+        {
+          "line": 2734665,
+          "text": ";246.4"
+        },
+        {
+          "line": 2734666,
+          "text": ""
+        },
+        {
+          "line": 2734667,
+          "text": ""
+        },
+        {
+          "line": 2734668,
+          "text": ";AFTER_LAYER_CHANGE"
+        },
+        {
+          "line": 2734669,
+          "text": ";246.4"
+        },
+        {
+          "line": 2734670,
+          "text": ";_SET_FAN_SPEED_CHANGING_LAYER"
+        },
+        {
+          "line": 2734671,
+          "text": "M204 T1600"
+        },
+        {
+          "line": 2734672,
+          "text": "G1 X45.687 Y127.261 Z246.4 F12000"
+        },
+        {
+          "line": 2734673,
+          "text": "M204 P1600"
+        },
+        {
+          "line": 2734674,
+          "text": ";TYPE:Outer wall"
+        },
+        {
+          "line": 2734675,
+          "text": ";WIDTH:0.36784"
+        },
+        {
+          "line": 2734676,
+          "text": "G1 F900"
+        },
+        {
+          "line": 2734677,
+          "text": "G1 X45.698 Y127.259 E.00029"
+        },
+        {
+          "line": 2734678,
+          "text": "G1 X45.687 Y127.261 E.00029"
+        },
+        {
+          "line": 2734679,
+          "text": "G1 E-1.2 F3600"
+        },
+        {
+          "line": 2734680,
+          "text": ";WIPE_START"
+        },
+        {
+          "line": 2734681,
+          "text": "G1 F1500"
+        },
+        {
+          "line": 2734682,
+          "text": "G1 X45.698 Y127.259"
+        },
+        {
+          "line": 2734683,
+          "text": "G1 X45.687 Y127.261"
+        },
+        {
+          "line": 2734684,
+          "text": ";WIPE_END"
+        },
+        {
+          "line": 2734685,
+          "text": "M106 S0"
+        },
+        {
+          "line": 2734686,
+          "text": ";TYPE:Custom"
+        },
+        {
+          "line": 2734687,
+          "text": "M400"
+        },
+        {
+          "line": 2734688,
+          "text": "G92 E1"
+        },
+        {
+          "line": 2734689,
+          "text": "G1 E-0.2 F300"
+        },
+        {
+          "line": 2734690,
+          "text": "G1 X0 Y0 F7500"
+        },
+        {
+          "line": 2734691,
+          "text": "G28 Z"
+        },
+        {
+          "line": 2734692,
+          "text": "M104 S0"
+        },
+        {
+          "line": 2734693,
+          "text": "M140 S0"
+        },
+        {
+          "line": 2734694,
+          "text": "M84"
+        },
+        {
+          "line": 2734695,
+          "text": "M710 S200"
+        },
+        {
+          "line": 2734696,
+          "text": "; EXECUTABLE_BLOCK_END"
+        },
+        {
+          "line": 2734697,
+          "text": ""
+        }
+      ]
+    },
+    "fine_resolution": {
+      "index": 2245,
+      "line_start": 1722904,
+      "z": 246.4,
+      "deposition_moves": 3,
+      "extrusion_mm": 0.00047,
+      "xy_moves": 7,
+      "lines": [
+        {
+          "line": 1722904,
+          "text": ";LAYER_CHANGE"
+        },
+        {
+          "line": 1722905,
+          "text": ";Z:246.4"
+        },
+        {
+          "line": 1722906,
+          "text": ";HEIGHT:0.199997"
+        },
+        {
+          "line": 1722907,
+          "text": ";BEFORE_LAYER_CHANGE"
+        },
+        {
+          "line": 1722908,
+          "text": "G92 E0"
+        },
+        {
+          "line": 1722909,
+          "text": ";246.4"
+        },
+        {
+          "line": 1722910,
+          "text": ""
+        },
+        {
+          "line": 1722911,
+          "text": ""
+        },
+        {
+          "line": 1722912,
+          "text": ";AFTER_LAYER_CHANGE"
+        },
+        {
+          "line": 1722913,
+          "text": ";246.4"
+        },
+        {
+          "line": 1722914,
+          "text": ";_SET_FAN_SPEED_CHANGING_LAYER"
+        },
+        {
+          "line": 1722915,
+          "text": "M204 T1600"
+        },
+        {
+          "line": 1722916,
+          "text": "G1 X45.689 Y127.261 Z246.4 F12000"
+        },
+        {
+          "line": 1722917,
+          "text": "M204 P1600"
+        },
+        {
+          "line": 1722918,
+          "text": ";TYPE:Outer wall"
+        },
+        {
+          "line": 1722919,
+          "text": ";WIDTH:0.36784"
+        },
+        {
+          "line": 1722920,
+          "text": "G1 F900"
+        },
+        {
+          "line": 1722921,
+          "text": "G1 X45.698 Y127.259 E.00023"
+        },
+        {
+          "line": 1722922,
+          "text": "G1 X45.693 Y127.259 E.00014"
+        },
+        {
+          "line": 1722923,
+          "text": "G1 X45.689 Y127.261 E.0001"
+        },
+        {
+          "line": 1722924,
+          "text": "G1 E-1.2 F3600"
+        },
+        {
+          "line": 1722925,
+          "text": ";WIPE_START"
+        },
+        {
+          "line": 1722926,
+          "text": "G1 F1500"
+        },
+        {
+          "line": 1722927,
+          "text": "G1 X45.698 Y127.259"
+        },
+        {
+          "line": 1722928,
+          "text": "G1 X45.693 Y127.259"
+        },
+        {
+          "line": 1722929,
+          "text": "G1 X45.689 Y127.261"
+        },
+        {
+          "line": 1722930,
+          "text": ";WIPE_END"
+        },
+        {
+          "line": 1722931,
+          "text": "M106 S0"
+        },
+        {
+          "line": 1722932,
+          "text": ";TYPE:Custom"
+        },
+        {
+          "line": 1722933,
+          "text": "M400"
+        },
+        {
+          "line": 1722934,
+          "text": "G92 E1"
+        },
+        {
+          "line": 1722935,
+          "text": "G1 E-0.2 F300"
+        },
+        {
+          "line": 1722936,
+          "text": "G1 X0 Y0 F7500"
+        },
+        {
+          "line": 1722937,
+          "text": "G28 Z"
+        },
+        {
+          "line": 1722938,
+          "text": "M104 S0"
+        },
+        {
+          "line": 1722939,
+          "text": "M140 S0"
+        },
+        {
+          "line": 1722940,
+          "text": "M84"
+        },
+        {
+          "line": 1722941,
+          "text": "M710 S200"
+        },
+        {
+          "line": 1722942,
+          "text": "; EXECUTABLE_BLOCK_END"
+        },
+        {
+          "line": 1722943,
+          "text": ""
+        }
+      ]
+    },
+    "effective_config_controls": {
+      "x2-no-arc": {
+        "enable_arc_fitting": {
+          "before": "1",
+          "after": "0"
+        },
+        "different_settings_to_system": {
+          "before": [
+            "initial_layer_infill_speed;initial_layer_speed;inner_wall_speed;internal_solid_infill_speed;outer_wall_speed;raft_first_layer_density;raft_first_layer_expansion;sparse_infill_speed;support_base_pattern_spacing;support_bottom_interface_spacing;support_bottom_z_distance;support_interface_pattern;support_interface_spacing;support_interface_speed;support_object_xy_distance;support_top_z_distance;top_surface_speed;tree_support_tip_diameter;tree_support_wall_count",
+            "",
+            ""
+          ],
+          "after": [
+            "enable_arc_fitting;initial_layer_infill_speed;initial_layer_speed;inner_wall_speed;internal_solid_infill_speed;outer_wall_speed;raft_first_layer_density;raft_first_layer_expansion;sparse_infill_speed;support_base_pattern_spacing;support_bottom_interface_spacing;support_bottom_z_distance;support_interface_pattern;support_interface_spacing;support_interface_speed;support_object_xy_distance;support_top_z_distance;top_surface_speed;tree_support_tip_diameter;tree_support_wall_count",
+            "",
+            ""
+          ]
+        }
+      },
+      "x2-fine-resolution": {
+        "resolution": {
+          "before": "0.01",
+          "after": "0.001"
+        },
+        "different_settings_to_system": {
+          "before": [
+            "initial_layer_infill_speed;initial_layer_speed;inner_wall_speed;internal_solid_infill_speed;outer_wall_speed;raft_first_layer_density;raft_first_layer_expansion;sparse_infill_speed;support_base_pattern_spacing;support_bottom_interface_spacing;support_bottom_z_distance;support_interface_pattern;support_interface_spacing;support_interface_speed;support_object_xy_distance;support_top_z_distance;top_surface_speed;tree_support_tip_diameter;tree_support_wall_count",
+            "",
+            ""
+          ],
+          "after": [
+            "initial_layer_infill_speed;initial_layer_speed;inner_wall_speed;internal_solid_infill_speed;outer_wall_speed;raft_first_layer_density;raft_first_layer_expansion;resolution;sparse_infill_speed;support_base_pattern_spacing;support_bottom_interface_spacing;support_bottom_z_distance;support_interface_pattern;support_interface_spacing;support_interface_speed;support_object_xy_distance;support_top_z_distance;top_surface_speed;tree_support_tip_diameter;tree_support_wall_count",
+            "",
+            ""
+          ]
+        }
+      }
+    },
+    "mechanism": "At 0.01 mm resolution, the arc-enabled simplification path can collapse a tiny closed wall into two identical endpoints. simplify_loop does not reject a degenerate path; LayerRegion::has_extrusions only tests nonempty entity containers. The layer is scheduled and GCode::_extrude travels to its first point, but its zero-length segments emit no deposition.",
+    "primitive_probe": [
+      {
+        "arc_length_mm": 0.018691680412292466,
+        "arc_points": 4,
+        "first_equals_last": true,
+        "fixture": "X2 fine-output reconstructed closed contour",
+        "raw_length_mm": 0.018691680412292466,
+        "raw_points": 4,
+        "tolerance_mm": 0.001
+      },
+      {
+        "arc_length_mm": 0.0,
+        "arc_points": 2,
+        "first_equals_last": true,
+        "fixture": "X2 fine-output reconstructed closed contour",
+        "raw_length_mm": 0.018691680412292466,
+        "raw_points": 4,
+        "tolerance_mm": 0.01
+      }
+    ],
+    "primitive_limit": "The minimal contour uses coordinates reconstructed from the 0.001 mm native G-code, not captured original full-precision extrusion vertices."
+  },
+  "first_layer": {
+    "model": "Vulcan600 training project, original slanted pose preserved",
+    "fully_fresh_vulcan600_failed": true,
+    "x600hd_06_025_failed": true,
+    "first_slice_z": 0.125,
+    "first_slice_principal_thickness_mm": 0.1579914122400954,
+    "model_geometry_note": "The original object first slice is far narrower than its configured 0.6 mm nozzle wall width, so the first scheduled print layer depends on support paths.",
+    "layer_height_mm": 0.25,
+    "min_support_height_mm": 0.05,
+    "default_top_gap_mm": 0.2125,
+    "contact_adjustment_mm": 0.0375,
+    "mechanism": "OrganicSupportLayerPlan::independent treats ordinary topology/root Z anchors as optional. A mandatory exact contact at Z=0.2875 is only 0.0375 mm above the Z=0.25 first-layer anchor, below the 0.05 mm minimum. resolved_anchors.pop_back removes that first-layer anchor, so the support plan starts at Z=0.2875. The thin object has no first-layer wall/fill; collect_layers_to_print then raises the empty-first-layer exception.",
+    "source_class_probe": [
+      {
+        "contact_z": 0.35,
+        "failure": "",
+        "first_layer_anchor": 0.25,
+        "gap": 0.15,
+        "min_height": 0.05,
+        "output_zs": [
+          0.25,
+          0.35,
+          0.675,
+          1.0
+        ]
+      },
+      {
+        "contact_z": 0.3,
+        "failure": "",
+        "first_layer_anchor": 0.25,
+        "gap": 0.2,
+        "min_height": 0.05,
+        "output_zs": [
+          0.25,
+          0.3,
+          0.6499999999999999,
+          1.0
+        ]
+      },
+      {
+        "contact_z": 0.2875,
+        "failure": "",
+        "first_layer_anchor": 0.25,
+        "gap": 0.2125,
+        "min_height": 0.05,
+        "output_zs": [
+          0.2875,
+          0.64375,
+          1.0
+        ]
+      }
+    ],
+    "source_class_snapshot": {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\src\\libslic3r\\Support\\TreeSupport3D.cpp",
+      "source_sha256": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+      "verbatim_class_sha256": "adfb5c5a7ae33383a64fa4762437d46a5992fcd3361a1e5f5ac7de850c04bbeb",
+      "start_line": 75,
+      "end_line": 307
+    },
+    "isolated_controls": {
+      "fresh-vulcan600-top-015": {
+        "support_top_z_distance": {
+          "before": "0.2125",
+          "after": "0.15"
+        }
+      },
+      "fresh-vulcan600-top-020": {
+        "support_top_z_distance": {
+          "before": "0.2125",
+          "after": "0.2"
+        }
+      }
+    },
+    "controls_note": "Full fresh Vulcan600 setting maps differ only in support_top_z_distance: 0.2125 fails; 0.20 and 0.15 succeed. Restoring only bottom distance fails. First-layer XY gap zero alone, restoring XY clearance, or disabling only the separate top-contact toggle does not cure it; the main independent-height flag also activates exact contacts.",
+    "probe_limit": "The production planner class was compiled verbatim with a minimal first-root/contact anchor fixture. Full native CLI outcomes independently match this mechanism; the complete model internal layer state was not directly captured."
+  },
+  "native_cases": [
+    {
+      "label": "fresh-vulcan600",
+      "exit_code": 4294967196,
+      "empty_first_layer": true,
+      "seconds": 24.31069949999801,
+      "gcodes": []
+    },
+    {
+      "label": "fresh-vulcan600-top-015",
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "seconds": 27.265699300012784,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-27d645b21bbf403094761691450e0b61\\work\\fresh-vulcan600-top-015\\plate_1.gcode",
+          "sha256": "2d0f4c8054e067620a7d7d807d940bd8c14066fee6bd882d9d3049f463f16df3",
+          "bytes": 39884901
+        }
+      ]
+    },
+    {
+      "label": "fresh-vulcan600-top-020",
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "seconds": 27.01281580000068,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-27d645b21bbf403094761691450e0b61\\work\\fresh-vulcan600-top-020\\plate_1.gcode",
+          "sha256": "62b1f080133740bfc7f00868aa0b4e49cb10e7cc47f302d7e2d217451ef12ab2",
+          "bytes": 40115658
+        }
+      ]
+    },
+    {
+      "label": "x2-fine-resolution",
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "seconds": 53.60647890000837,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-27d645b21bbf403094761691450e0b61\\work\\x2-fine-resolution\\plate_1.gcode",
+          "sha256": "9f368767dfb97cf98774359e7ef8c1c04f89ce6cd023262d5b399a0b86dd1c0b",
+          "bytes": 45041307
+        }
+      ]
+    },
+    {
+      "label": "x2-no-arc",
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "seconds": 51.64713050000137,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-27d645b21bbf403094761691450e0b61\\work\\x2-no-arc\\plate_1.gcode",
+          "sha256": "6602ef18b689db434da611e8e7d6c5a9abe24049b02111847e3da3feb64da7d8",
+          "bytes": 69283988
+        }
+      ]
+    },
+    {
+      "label": "x600hd-gap-zero-xy-old",
+      "exit_code": 4294967196,
+      "empty_first_layer": true,
+      "seconds": 27.269323900021845,
+      "gcodes": []
+    },
+    {
+      "label": "x600hd-no-independent-top",
+      "exit_code": 4294967196,
+      "empty_first_layer": true,
+      "seconds": 24.62752909999108,
+      "gcodes": []
+    },
+    {
+      "label": "x600hd-old-contact-distances",
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "seconds": 29.326843999995617,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-27d645b21bbf403094761691450e0b61\\work\\x600hd-old-contact-distances\\plate_1.gcode",
+          "sha256": "4cf7446a188e496293f2df2863af6edbd3bfab490d96568c210db394855eb1e4",
+          "bytes": 40516770
+        }
+      ]
+    },
+    {
+      "label": "x600hd-only-bottom-old",
+      "exit_code": 4294967196,
+      "empty_first_layer": true,
+      "seconds": 27.771652800001903,
+      "gcodes": []
+    },
+    {
+      "label": "x600hd-only-top-old",
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "seconds": 29.5130247999914,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-27d645b21bbf403094761691450e0b61\\work\\x600hd-only-top-old\\plate_1.gcode",
+          "sha256": "1f62294b7f720418e219ee3be50381e0e1c7e627c5a0740cff028ecb0da1d2a7",
+          "bytes": 40516772
+        }
+      ]
+    },
+    {
+      "label": "x600hd-top-015-only",
+      "exit_code": 0,
+      "empty_first_layer": false,
+      "seconds": 27.049157000001287,
+      "gcodes": [
+        {
+          "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-27d645b21bbf403094761691450e0b61\\work\\x600hd-top-015-only\\plate_1.gcode",
+          "sha256": "b786412df2073c0cf351b7860e5b2a1a7cca3e644b08c066d1de1e7fb976d5cd",
+          "bytes": 39884924
+        }
+      ]
+    }
+  ],
+  "mesh_sections": [
+    {
+      "project": "x2",
+      "vertices": 6917,
+      "triangles": 13838,
+      "bounds": [
+        [
+          32.14117650812142,
+          103.21150271352455,
+          0.0
+        ],
+        [
+          267.0295795278107,
+          193.85940531245342,
+          246.3139895073803
+        ]
+      ],
+      "sections": [
+        {
+          "z": 246.1,
+          "segments": 48,
+          "components": [
+            {
+              "points": 48,
+              "min": [
+                41.898656,
+                125.928092
+              ],
+              "max": [
+                50.303732,
+                129.68819
+              ],
+              "principal_extents_mm": [
+                8.403257205129595,
+                3.7644555481683426
+              ],
+              "center": [
+                45.960421812499995,
+                127.85864614583335
+              ]
+            }
+          ]
+        },
+        {
+          "z": 246.3,
+          "segments": 8,
+          "components": [
+            {
+              "points": 8,
+              "min": [
+                45.339592,
+                127.094598
+              ],
+              "max": [
+                47.03637,
+                127.489533
+              ],
+              "principal_extents_mm": [
+                1.7053229978391218,
+                0.38767615308294046
+              ],
+              "center": [
+                45.862421250000004,
+                127.33629512499999
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "project": "vulcan600",
+      "vertices": 133111,
+      "triangles": 266314,
+      "bounds": [
+        [
+          245.7729587925383,
+          94.942628304892,
+          0.0
+        ],
+        [
+          359.2270409000149,
+          410.05737169510803,
+          218.34647359839147
+        ]
+      ],
+      "sections": [
+        {
+          "z": 0.125,
+          "segments": 89,
+          "components": [
+            {
+              "points": 89,
+              "min": [
+                254.684831,
+                219.23249
+              ],
+              "max": [
+                254.92956,
+                272.110335
+              ],
+              "principal_extents_mm": [
+                52.87808901473866,
+                0.1579914122400954
+              ],
+              "center": [
+                254.80360142696622,
+                245.55487307865155
+              ]
+            }
+          ]
+        },
+        {
+          "z": 0.25,
+          "segments": 124,
+          "components": [
+            {
+              "points": 124,
+              "min": [
+                254.647499,
+                208.83951
+              ],
+              "max": [
+                255.075849,
+                282.832408
+              ],
+              "principal_extents_mm": [
+                73.99324613758492,
+                0.31036852781838487
+              ],
+              "center": [
+                254.87188242741925,
+                245.54777983064517
+              ]
+            }
+          ]
+        },
+        {
+          "z": 0.375,
+          "segments": 152,
+          "components": [
+            {
+              "points": 152,
+              "min": [
+                254.610166,
+                200.951139
+              ],
+              "max": [
+                255.21565,
+                290.760008
+              ],
+              "principal_extents_mm": [
+                89.80929536807196,
+                0.46422837055067057
+              ],
+              "center": [
+                254.9454270789475,
+                244.11141299342106
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "src/libslic3r/LayerRegion.cpp": "c7f1874cafd457814ce2350042097e0d32fc874718d2a042c595202074e34983",
+    "src/libslic3r/ArcFitter.cpp": "e5d916f3ef106fd2865612627cf849a34e26510f4b7c7ac06ef73147fb37e388",
+    "src/libslic3r/Polyline.cpp": "ff6d810fab63fbc5f6031abe3b9527ddef1e2e00e0086706b02102cfe6011ae8",
+    "src/libslic3r/GCode.cpp": "72b0e6c2b6dba43995bdab19b97318c2a463655814d148fbb8df6d2c123e4265",
+    "src/libslic3r/Layer.hpp": "5f316b8641a7b0faeafba2d2b2c266ab6b4122f4eb0dba0f85517711b39c5a1d",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "cd46d7ede5aa154447ac1907f3a0fc3922f2cd3f86de754f49be2716bff1d86f",
+    "src/libslic3r/Support/TreeSupportCommon.hpp": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+    "src/libslic3r/Support/SupportParameters.hpp": "7917704a286e505ef9780f4f9a5206de4931f42e73faa567686cc166c1d550b5",
+    "resources/profiles/INLONG/process/Layer_0.25mm.json": "7d45d65b4de4ea05854e373d060996be1fdb5eee4ae2580fadfe05498180e2cd",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json": "30f0c7a94b153bb21cdc04f242f1f05db23dbec4fdbafbf7613ca1b11621fc56",
+    "resources/profiles/INLONG/machine/Vulcan600_common.json": "62fe7ff60d16326913c2b74bf7bea475b71e7d18364e14764ea053f55880f160"
+  },
+  "preservation": {
+    "observed_utc": "2026-10-17T07:47:02.205808+00:00",
+    "binaries_unchanged": true,
+    "live_settings_unchanged": true,
+    "original_copy_unchanged": true,
+    "network_original_unchanged": true
+  },
+  "agents_used": 1,
+  "repair_direction": [
+    "Preserve or explicitly reject degenerate closed wall paths after simplification; scheduling must agree with actual depositable path geometry.",
+    "Protect the first non-raft support anchor when resolving exact-contact/minimum-height conflicts, and recompute neighboring contact/body intervals without introducing an empty first layer."
+  ],
+  "excluded_attempts": "The optional full-model standalone SDK probe crashed while loading canonical configuration and was excluded from all conclusions. Only successful native CLI controls, library primitive probes and the verbatim planner probe supply accepted evidence.",
+  "limits": [
+    "No product fix, installation, commit, push or physical print was performed.",
+    "The other subproject checkout was not inspected. Known preset compatibility warnings are separate from these path-generation mechanisms."
+  ]
+}

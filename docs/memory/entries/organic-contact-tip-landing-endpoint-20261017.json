@@ -1,0 +1,95 @@
+{
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "id": "organic-contact-tip-landing-endpoint-20261017",
+  "tags": [
+    "branch-continuation",
+    "model-landing",
+    "local-tip-clearance",
+    "regression"
+  ],
+  "type": "fact",
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "94f6f117ac849385e6fac09e13a56a498086a17e90a5abeb0ecae00d5f39c848",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "b1202bb220dd0f1eebdeb84ae0c5e3c32f45701db7458d5eb2b9272ea4d1ec92",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-organic-branch-continuation-20261016.md",
+      "sha256": "4ae7960ee97236e3dad200a81d2a740bcd1ccaba9d7f96b3301a1cb0a93e1c07",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-fixes-20261017.json",
+      "sha256": "c26dbc08692a17a39f74c86744c5d0de3f571a167b823b4624fca0cefe8f7036",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-compatibility-20261017.json",
+      "sha256": "c62ec35650414dc7f3ceaa2d0a29f4e97321e0791dfd197bb30f2d2989c8decd",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    }
+  ],
+  "scope": "Organic support contact tip classification and branch continuity; revalidated common source after endpoint fixes at checkout anchor 2fd6f38cc21d0208ed1df326311b8748b4b36374.",
+  "retracts": [],
+  "schema_version": "agents-knowledge/v4",
+  "sensitive": false,
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact source and fixture comparison against HEAD; all changed snapshots confined to the extracted planner and added regression; 130 affected support/extrusion cases plus focused belt Print regressions; historical benchmark document hash verification.",
+    "summary": "Current geometric invariants are revalidated. No historical timing or full-project command-equality result is relabeled as a new benchmark. See the endpoint compatibility evidence for the retained source boundaries and individual belt cases."
+  },
+  "reusable": true,
+  "conclusion": "A locally collision-safe CONTACT_TO_MODEL candidate does not establish a flat model landing. Only avoidance-classified gracious candidates and build-plate candidates set to_model_gracious during organic tip initialization. Otherwise ordinary collision-based model-resting propagation must remain available for inclined surfaces; forcing flat-landing avoidance can delete valid tips and emit failed influence-area expansion warnings. Preserve normal branch clearances and the separate local contact-footprint exception. Current endpoint fixes additionally lower the independent bed-support layer only when necessary to preserve a nearby exact contact within minimum thickness constraints. Historical Benchy timing and path-comparison observations are not current-build guarantees.",
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/benchy-organic-branch-continuation-20261016.md",
+    "docs/evidence/benchy-slicing-performance-20261016.md",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "docs/evidence/endpoint-layer-fixes-20261017.json",
+    "docs/evidence/endpoint-layer-compatibility-20261017.json"
+  ],
+  "key": "organic-contact-tip-landing-classification",
+  "supersedes": [
+    "organic-contact-tip-landing-benchy-performance-20261016"
+  ],
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "verified_utc": "2026-10-17T08:14:33.245434+00:00"
+}

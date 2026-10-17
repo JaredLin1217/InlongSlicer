@@ -1,0 +1,112 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "endpoint-layer-fixes-20261017",
+  "key": "endpoint-layer-validity",
+  "type": "fact",
+  "conclusion": "Common Polyline3 simplification now preserves small closed contours that would collapse to a line or stationary move. Organic independent support planning retains a printable bed layer below nearby exact top contacts by lowering only the support first layer within its minimum height limit. No device identity or profile override selects these fixes. All 80 planning combinations, 18 small-contour combinations, 6 synthetic thin-bed slices, affected support/extrusion regressions and the supplied X2/Vulcan600/X600HD CLI cases pass. X2 Z=246.4 has 3 deposition moves; fresh Vulcan600/X600HD first support is Z=0.2375 with deposition, then exact contact Z=0.2875. Original Vulcan effective configuration including gap 0.2125 is unchanged. Known legacy preset lookup warnings remain. Installed binaries and live configuration are unchanged; this is source and disposable Release-build validation, not installation or physical printer qualification.",
+  "scope": "Reviewed uncommitted source snapshots anchored at 2fd6f38cc21d0208ed1df326311b8748b4b36374 and the disposable DLL recorded in durable evidence.",
+  "modules": [
+    "gcode-generation",
+    "organic-support"
+  ],
+  "tags": [
+    "endpoint",
+    "arc-fitting",
+    "closed-contour",
+    "first-layer",
+    "device-independent"
+  ],
+  "files": [
+    "src/libslic3r/Polyline.cpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/CMakeLists.txt",
+    "tests/libslic3r/test_polyline.cpp",
+    "tests/libslic3r/CMakeLists.txt",
+    "tests/fff_print/test_tree_support.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/endpoint-layer-fixes-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Polyline.cpp",
+      "sha256": "447122276cada254938cfe85e2a6223bdaa435c5fb1effd140598471c848bd22",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "94f6f117ac849385e6fac09e13a56a498086a17e90a5abeb0ecae00d5f39c848",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/CMakeLists.txt",
+      "sha256": "1c46b062708f281a32d28f0a2e4833d7b70b73454a41323bd902521a99ccee61",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_polyline.cpp",
+      "sha256": "75e64386cdd53ab3338935822430c6aca427b7646145e4c0b3c728f7c387ee5e",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/CMakeLists.txt",
+      "sha256": "6747447ae501c9518c42f08cbcf81abe113d524131dbe7566ca8d471542e536c",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_tree_support.cpp",
+      "sha256": "673521e0c536288c32ff0dae22e9e96855b5c7f85efd46d7007572aeb1c93226",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "b1202bb220dd0f1eebdeb84ae0c5e3c32f45701db7458d5eb2b9272ea4d1ec92",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-fixes-20261017.json",
+      "sha256": "c26dbc08692a17a39f74c86744c5d0de3f571a167b823b4624fca0cefe8f7036",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed common source, regression test or durable verification report. Commit identifies checkout anchor, not uncommitted contents."
+    }
+  ],
+  "verified_utc": "2026-10-17T08:09:31.519426+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Native parameterized and pipeline regressions, isolated current CLI slices, modal endpoint audits, effective-config comparison and source/hash preservation checks.",
+    "summary": "Both common fixes pass within the documented coverage. Known preset lookup warnings and physical qualification limits remain explicit."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "endpoint-layer-root-causes-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

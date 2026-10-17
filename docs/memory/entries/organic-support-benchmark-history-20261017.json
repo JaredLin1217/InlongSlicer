@@ -1,0 +1,55 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-benchmark-history-20261017",
+  "key": "organic-support-benchy-contact-sampling-performance",
+  "type": "fact",
+  "conclusion": "Historical benchmark only, at the checkout and host recorded in the durable evidence: For the recorded large Benchy on the measured 16-core Windows host, the latest support-corrected baseline takes 43.542s median over three trials; a local contact-collision reuse candidate takes 42.654s with strongly overlapping ranges, so the experiment does not establish a stable substantial total speedup or halving. Sampled CPU medians fall from 300.641 to 292.516s and initial sampling medians from 7.092 to 5.008s. All 811657 ordered printer commands, motion role/width/height annotations and emitted configuration remain identical. Initial sampling mostly spends its worker elapsed time in roof and regular component geometry/line generation. Keep reuse local to a fixed batch/layer; changing a value-returning contact arm into a separate branch also prevents copies of ordinary reference-returning avoidance polygons. Further speed work needs complete-key geometry/fill reuse and profiling of support assembly, toolpaths and non-support stages, without changing deterministic publication or contact rules. These timings and command identities do not describe the current endpoint-fix build and must be remeasured before any current performance claim.",
+  "scope": "Historical 2026-10-16 Benchy benchmark, not current-build performance or path identity.",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "performance",
+    "profiling",
+    "path-equivalence",
+    "bounded-working-storage"
+  ],
+  "files": [
+    "docs/evidence/benchy-slicing-performance-20261016.md",
+    "docs/evidence/endpoint-layer-compatibility-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-compatibility-20261017.json",
+      "sha256": "c62ec35650414dc7f3ceaa2d0a29f4e97321e0791dfd197bb30f2d2989c8decd",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    }
+  ],
+  "verified_utc": "2026-10-17T08:14:33.245434+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact source and fixture comparison against HEAD; all changed snapshots confined to the extracted planner and added regression; 130 affected support/extrusion cases plus focused belt Print regressions; historical benchmark document hash verification.",
+    "summary": "Current geometric invariants are revalidated. No historical timing or full-project command-equality result is relabeled as a new benchmark. See the endpoint compatibility evidence for the retained source boundaries and individual belt cases."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-slicing-profile-benchy-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

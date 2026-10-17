@@ -734,7 +734,12 @@ void Polyline3::clip_end(double distance)
 
 void Polyline3::simplify(double tolerance)
 {
-    this->points = MultiPoint3::_douglas_peucker(this->points, tolerance);
+    Points3 simplified = MultiPoint3::_douglas_peucker(this->points, tolerance);
+    // A closed contour needs three vertices as well as its closing point.
+    // DP treats coincident endpoints as an open segment and may otherwise
+    // erase a small printable tip or reduce it to an out-and-back line.
+    if (this->points.size() < 4 || this->points.front() != this->points.back() || simplified.size() >= 4)
+        this->points = std::move(simplified);
     this->fitting_result.clear();
 }
 
@@ -742,8 +747,19 @@ void Polyline3::simplify_by_fitting_arc(double tolerance)
 {
     // BBS: do arc fit first, then use DP simplify to handle the straight part to reduce point.
     Points points_2d = to_points(this->points);
-    ArcFitter::do_arc_fitting_and_simplify(points_2d, this->fitting_result, tolerance);
+    std::vector<PathFittingData> fitted;
+    ArcFitter::do_arc_fitting_and_simplify(points_2d, fitted, tolerance);
+    if (this->points.size() >= 4 && this->points.front() == this->points.back() && points_2d.size() < 4 &&
+        std::none_of(fitted.begin(), fitted.end(), [](const PathFittingData &fit) {
+            return fit.path_type == EMovePathType::Arc_move_cw || fit.path_type == EMovePathType::Arc_move_ccw;
+        })) {
+        // Keep the original linear contour, with no stale fitting indices.
+        // Real fitted arcs may represent a closed contour with fewer vertices.
+        this->fitting_result.clear();
+        return;
+    }
     this->points = to_points3(points_2d);
+    this->fitting_result = std::move(fitted);
 }
 
 void Polyline3::reverse()

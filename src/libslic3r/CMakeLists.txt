@@ -488,6 +488,7 @@ set(lisbslic3r_sources
     Support/SupportCommon.cpp
     Support/SupportCacheBudget.cpp
     Support/SupportCacheBudget.hpp
+    Support/OrganicSupportLayerPlan.hpp
     Support/SupportCommon.hpp
     Support/SupportLayer.hpp
     Support/SupportMaterial.cpp

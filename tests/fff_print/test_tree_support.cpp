@@ -16,9 +16,79 @@
 #include "test_helpers.hpp"
 #include "libslic3r/ExtrusionEntityCollection.hpp"
 #include "libslic3r/Print.hpp"
+#include "libslic3r/Support/OrganicSupportLayerPlan.hpp"
 
 using namespace Slic3r::Test;
 using namespace Slic3r;
+
+TEST_CASE("Independent organic support retains a bed layer below nearby exact contacts", "[TreeSupport][Regression]")
+{
+    using namespace Slic3r::TreeSupport3D;
+    const double nozzle = GENERATE(0.2, 0.4, 0.6, 0.8, 1.2);
+    const double first_ratio = GENERATE(0.35, 0.5);
+    const double contact_step_ratio = GENERATE(0.1, 0.75, 1., 2.);
+    const bool preserve_grid = GENERATE(false, true);
+    CAPTURE(nozzle, first_ratio, contact_step_ratio, preserve_grid);
+    SlicingParameters slicing{};
+    slicing.layer_height = nozzle * first_ratio;
+    slicing.first_object_layer_height = slicing.layer_height;
+    slicing.object_print_z_min = 0.;
+    slicing.min_layer_height = nozzle * 0.1;
+    slicing.max_suport_layer_height = nozzle * 0.75;
+    TreeSupportSettings config{};
+    config.layer_height = scaled<coord_t>(slicing.layer_height);
+    SupportGeneratorLayer contact;
+    contact.print_z = slicing.first_object_layer_height + contact_step_ratio * slicing.min_layer_height;
+    contact.polygons.emplace_back(Points{{0, 0}, {1000000, 0}, {1000000, 1000000}, {0, 1000000}});
+    std::string reason;
+    const auto plan = OrganicSupportLayerPlan::independent(slicing, config, 4, {&contact}, {0}, preserve_grid, reason);
+    INFO(reason);
+    REQUIRE(plan.has_value());
+    REQUIRE(plan->find_exact(contact.print_z) >= 0);
+    // The first support cannot move above an empty model first layer, nor may
+    // contact accuracy be obtained by printing a sub-minimum layer.
+    REQUIRE((*plan)[0].print_z <= slicing.first_object_layer_height + EPSILON);
+    REQUIRE((*plan)[0].source_layer_begin == 0);
+    if (contact_step_ratio >= 1.)
+        REQUIRE_THAT((*plan)[0].print_z, Catch::Matchers::WithinAbs(slicing.first_object_layer_height, EPSILON));
+    for (size_t i = 0; i < plan->size(); ++i) {
+        REQUIRE((*plan)[i].height >= slicing.min_layer_height - EPSILON);
+        REQUIRE((*plan)[i].height <= slicing.max_suport_layer_height + EPSILON);
+        if (i > 0)
+            REQUIRE_THAT((*plan)[i].bottom_z, Catch::Matchers::WithinAbs((*plan)[i - 1].print_z, EPSILON));
+    }
+}
+
+TEST_CASE("Independent support rejects incompatible exact contacts and keeps raft heights", "[TreeSupport]")
+{
+    using namespace Slic3r::TreeSupport3D;
+    SlicingParameters slicing{};
+    slicing.layer_height = slicing.first_object_layer_height = 0.2;
+    slicing.object_print_z_min = 0.;
+    slicing.min_layer_height = 0.05;
+    slicing.max_suport_layer_height = 0.3;
+    TreeSupportSettings config{};
+    config.layer_height = scaled<coord_t>(slicing.layer_height);
+    SupportGeneratorLayer first, second;
+    first.print_z = 0.43;
+    second.print_z = first.print_z + slicing.min_layer_height * 0.5;
+    first.polygons.emplace_back(Points{{0, 0}, {1000000, 0}, {0, 1000000}});
+    second.polygons = first.polygons;
+    std::string reason;
+    REQUIRE_FALSE(OrganicSupportLayerPlan::independent(slicing, config, 5, {&first, &second}, {}, false, reason).has_value());
+    REQUIRE_FALSE(reason.empty());
+
+    config.raft_layers = {0.2, 0.4};
+    slicing.object_print_z_min = 0.4;
+    first.print_z = 0.83;
+    reason.clear();
+    const auto plan = OrganicSupportLayerPlan::independent(slicing, config, 6, {&first}, {}, false, reason);
+    INFO(reason);
+    REQUIRE(plan.has_value());
+    REQUIRE(plan->find_exact(first.print_z) >= 0);
+    for (double raft_z : config.raft_layers)
+        REQUIRE(plan->find_exact(raft_z) >= 0);
+}
 
 namespace {
 

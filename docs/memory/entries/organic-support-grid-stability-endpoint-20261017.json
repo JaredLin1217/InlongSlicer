@@ -1,0 +1,122 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-grid-stability-endpoint-20261017",
+  "key": "organic-support-belt-floor-grid",
+  "type": "fact",
+  "conclusion": "Organic branch topology and independent output layers use different Z grids: clip output slices and propagated roots using belt-floor polygons evaluated at each output layer's physical print_z, not the topology cache index, and keep a positive regular height for negative-Z layer zero. Parallel overhang sampling can emit tips and roofs onto shared lower layers; quantized tip deduplication must publish layer-local candidates in stable source-layer order rather than mutex acquisition order. Otherwise even fresh slices with identical settings can generate different support geometry, and support-only re-slices differ from a fresh slice. Lower continuous roof footprints must retain their parent contact and depth until the output grid is known, then map to contact output index minus depth. Flooring aggregated topology-Z interface layers can omit a complete interface immediately below an exact contact. Preserve source-index placement on synchronized fallback. Current endpoint fixes additionally lower the independent bed-support layer only when necessary to preserve a nearby exact contact within minimum thickness constraints. Historical Benchy timing and path-comparison observations are not current-build guarantees.",
+  "scope": "InlongSlicer; revalidated common source after endpoint fixes at checkout anchor 2fd6f38cc21d0208ed1df326311b8748b4b36374.",
+  "modules": [
+    "Support",
+    "OrganicSupport"
+  ],
+  "tags": [
+    "belt",
+    "layer-height",
+    "determinism",
+    "reslice",
+    "parallelism",
+    "interface-continuity",
+    "contact-relative-depth"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_print.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/benchy-organic-interface-remapping-20261016.md",
+    "docs/evidence/benchy-slicing-performance-20261016.md",
+    "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "docs/evidence/endpoint-layer-fixes-20261017.json",
+    "docs/evidence/endpoint-layer-compatibility-20261017.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "94f6f117ac849385e6fac09e13a56a498086a17e90a5abeb0ecae00d5f39c848",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_print.cpp",
+      "sha256": "5d47b8dd9e7b7f7b49257601a5e924e7f081790b409dc7c2150962372ec901aa",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "b1202bb220dd0f1eebdeb84ae0c5e3c32f45701db7458d5eb2b9272ea4d1ec92",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-organic-interface-remapping-20261016.md",
+      "sha256": "3155411053be9004597cd938eb33ad8bf41a1e8add05cb4d684e7fa859923cec",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/benchy-slicing-performance-20261016.md",
+      "sha256": "9f81df4d0db001728515d3ef43600d91b973c93f7014a538abd5f1ff5c12a15e",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-gcode-statistics-verification-20261017.json",
+      "sha256": "8c3671fdf5fac4c71ec181acbd05a6697dfa52fe06a79aad13d5afb6de3f5a84",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-fixes-20261017.json",
+      "sha256": "c26dbc08692a17a39f74c86744c5d0de3f571a167b823b4624fca0cefe8f7036",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/endpoint-layer-compatibility-20261017.json",
+      "sha256": "c62ec35650414dc7f3ceaa2d0a29f4e97321e0791dfd197bb30f2d2989c8decd",
+      "commit": "2fd6f38cc21d0208ed1df326311b8748b4b36374",
+      "locator": "Reviewed unchanged behavior outside the extracted planner, executed native regressions, or immutable historical benchmark evidence as scoped in this record. Commit is a checkout anchor."
+    }
+  ],
+  "verified_utc": "2026-10-17T08:14:33.245434+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Exact source and fixture comparison against HEAD; all changed snapshots confined to the extracted planner and added regression; 130 affected support/extrusion cases plus focused belt Print regressions; historical benchmark document hash verification.",
+    "summary": "Current geometric invariants are revalidated. No historical timing or full-project command-equality result is relabeled as a new benchmark. See the endpoint compatibility evidence for the retained source boundaries and individual belt cases."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-grid-stability-statistics-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
