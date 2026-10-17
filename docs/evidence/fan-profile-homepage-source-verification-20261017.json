@@ -1,0 +1,870 @@
+{
+  "evidence_kind": "InlongSlicer product committed-source verification; not Agents Provider release evidence",
+  "schema_version": "inlong-product-source-verification/v1",
+  "captured_utc": "2026-10-17T02:48:34.551943+00:00",
+  "source_commit": "e9edffafe650cb59675a1899ea59924125eed213",
+  "source_tree": "39ab14bdb13531fda5b35f2f09a571f4fb97e7ce",
+  "source_parent": "c952e845dbd53d742bbd83d6c4c6f19ad96d70ed",
+  "clean_source_at_capture": true,
+  "tested_source_matches_committed_content": true,
+  "declared_evidence_path": "docs/evidence/fan-profile-homepage-source-verification-20261017.json",
+  "declared_source_exclusions": [
+    "docs/evidence/fan-profile-homepage-source-verification-20261017.json"
+  ],
+  "source_files": [
+    {
+      "path": "docs/evidence/fan-timing-and-profile-defaults-20261017.json",
+      "git_blob": "8b9bba3228b95b12cc1f857698dba45b493ca2fc",
+      "worktree_sha256": "a49a0ab63ffb9c65f866bfff9991a377ae13351e9cc27ccaa3b4fcd5c99424a1",
+      "committed_blob_sha256": "a271bc55c4d69e568843a70867a31774814f0dd44c1702c187af5aba513ab361",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/evidence/windows-install-c952e845db-20261017.json",
+      "git_blob": "f2cfd2317633d0f4bb81fb0ad35e2cb9c4d6b3ac",
+      "worktree_sha256": "584084c6e50f068cd54bb70d1deab3355ca332b283aa9d91116612d5c535dd12",
+      "committed_blob_sha256": "12b9d4e16b3afea0f2858ce4deb3af12a15d559e0576eaac08369f0f0da129b0",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/homepage-sidebar-hidden-20261017.json",
+      "git_blob": "3b9dd6183567bccb8358880b07e9be180015800e",
+      "worktree_sha256": "073b09efc63deb80045a28194944edb8c1d6a3c201b324e54c33b3f50b37ecbe",
+      "committed_blob_sha256": "073b09efc63deb80045a28194944edb8c1d6a3c201b324e54c33b3f50b37ecbe",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/inlong-infinity-brim-gap-01-20261017.json",
+      "git_blob": "ad5e51b6f9dcaa9d05dc887d63b289beca10e4bb",
+      "worktree_sha256": "ed61f6195a3d0fa64fd81dbe9320f2f035f66e72d637adda8255a24a57520609",
+      "committed_blob_sha256": "ed61f6195a3d0fa64fd81dbe9320f2f035f66e72d637adda8255a24a57520609",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/inlong-infinity-defaults-fan-20261017.json",
+      "git_blob": "2b787710b397f785753f1e3ddc65c0d5ab068d5e",
+      "worktree_sha256": "e9204227e3809262b9c9c2806da42e1a4daf1a802e3eca2065d07bfa92e52daa",
+      "committed_blob_sha256": "e9204227e3809262b9c9c2806da42e1a4daf1a802e3eca2065d07bfa92e52daa",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/inlong-infinity-process-defaults-20261017.json",
+      "git_blob": "743323d1ba1bba24cbf26142ef0c43eae2ac38ec",
+      "worktree_sha256": "bbf8925e93d128139a17a9059757e4e02be1bcd4fa4fe23163318df7f6de8de1",
+      "committed_blob_sha256": "bbf8925e93d128139a17a9059757e4e02be1bcd4fa4fe23163318df7f6de8de1",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/inlong-infinity-process-defaults-seam-zero-20261017.json",
+      "git_blob": "17d9edf70d34ac7854f2fa01ab0652b1fb5290ba",
+      "worktree_sha256": "f2625bad0ef66c0f266168663b5a680bb79ca377ed2164b2b192c19089c88573",
+      "committed_blob_sha256": "f2625bad0ef66c0f266168663b5a680bb79ca377ed2164b2b192c19089c88573",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/windows-inlong-only-uv-output-gap-20261017.json",
+      "git_blob": "53d1fa7c20372a4d4f5543db520bcbfcf6172408",
+      "worktree_sha256": "ec52feab4de0fc41ba96a9d47cc19941278d0cd400b19e91de32c02e98b5fc45",
+      "committed_blob_sha256": "ec52feab4de0fc41ba96a9d47cc19941278d0cd400b19e91de32c02e98b5fc45",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "docs/memory/entries/windows-msvc-install-parallelism-20261017.json",
+      "git_blob": "b370676396d9d6b3afe743f334eb76527c2ad0d1",
+      "worktree_sha256": "86c2d42528fa0edb7ebb09de848378ca76451c84e23338cc9bbd04bd76e0de08",
+      "committed_blob_sha256": "86c2d42528fa0edb7ebb09de848378ca76451c84e23338cc9bbd04bd76e0de08",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG.json",
+      "git_blob": "a1ac569337e0ef42205d1b1f28b9d6df09aa8594",
+      "worktree_sha256": "df92eb13704e01d418f00da0a85ac2e215e78f37e52a2a41cd70bf62f513153b",
+      "committed_blob_sha256": "2007fa38561ff1d85bdb474171455d7eee269b14ddff4425cbeafd0f93b4600a",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/machine/SC12060_common.json",
+      "git_blob": "e7e0d7cac6da550a0175c4407cccaf434b768b40",
+      "worktree_sha256": "abefea9aebc9389ac3a902aa7c2d16ce9211e65d2980b2809a9b15e90dcae00c",
+      "committed_blob_sha256": "dc6660a479b8753602bf6ac96f68f9bbfe8df85e1e5123868100020de9ab96a0",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/machine/Vulcan1200_common.json",
+      "git_blob": "126a93aa50c186f886672b564dabf8271e337807",
+      "worktree_sha256": "10359de347b87f27914e47787202490c0d813949dbf43b0ec838aedceb21f4c9",
+      "committed_blob_sha256": "f6d8b6ef7776514c94ce94d14b99c28003cd0f56fa5779bcfeaa572bec7875bb",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/machine/Vulcan600_common.json",
+      "git_blob": "01ec11d8bf3aa34560f7d2d9b7c70cde02f88448",
+      "worktree_sha256": "62fe7ff60d16326913c2b74bf7bea475b71e7d18364e14764ea053f55880f160",
+      "committed_blob_sha256": "2905a5a7bee72720ef810ca21fedf6c62725ae58954f97873f9b6e9377a0dcfe",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/process/Layer_0.15mm.json",
+      "git_blob": "d840e50848558fddce2a95c71f62c20ff7490eb3",
+      "worktree_sha256": "4178d8129ae3943ce5d5a7b61949f939c10a8e63c09ff5f843d57a05bf49fc9a",
+      "committed_blob_sha256": "1e94dc7a6119cdeb56f244fca31fe6f8eff4951e0fe27384bc1cea344c4d312e",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/process/Layer_0.30mm.json",
+      "git_blob": "44aaffc54f338bce4f4c9522fb6dc13531cad8a0",
+      "worktree_sha256": "e61a33e8af44f3f655b4787f6885a6d8f498cd6590e57bc6d742c0c1c535e912",
+      "committed_blob_sha256": "9314169b6b11b31a7849179b346c3afe5a2683f3832ddec0b8c9a9f78ca19781",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/process/Layer_0.35mm.json",
+      "git_blob": "dd75566b88dbabc667c1008e2930e778c0be0aef",
+      "worktree_sha256": "f0c5505936f9c0faaccc25c976a31216fb35c2894821dd93a0440a38fa2f4656",
+      "committed_blob_sha256": "198d3e8de36004bc38104590ecaede27f80f1585861392cd47ed135c12c210a7",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/process/process_common.json",
+      "git_blob": "00eda4aeb9686994060cca2e553a2742f33b57a1",
+      "worktree_sha256": "65edb5145be4f94bfbd8db9a93f28cc50cdc28f10570ce1abb6ff27489db445f",
+      "committed_blob_sha256": "694686e375c265f5ac931c4b73cc02716d1828574799a1e619d2b6b38e675491",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+      "git_blob": "9af860ded847caab2288ea9400dde9e6b3633945",
+      "worktree_sha256": "6eb17bbccd47b43a9287aad755735be26b835bd6d796fa3d407c7e566adfb369",
+      "committed_blob_sha256": "ede987ba9b5222eeef70bb3d45459cbfc247986cd81d3b53499fb982f48e51e1",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/INLONG/process/sc_process_common.json",
+      "git_blob": "43a9fc1760b529d8c8391d768603e7d9d8e8ac65",
+      "worktree_sha256": "c6a2a0158119d4f672336be30b79747736070dd9c28a11042c0b4dbf1d7d69cb",
+      "committed_blob_sha256": "7b65b80005e7fbda167d2fddb3236d702fc7919d8f291f8f2ab8f9758b8691f2",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP.json",
+      "git_blob": "ac070c440d23877274be4f91a17b264b7355eb36",
+      "worktree_sha256": "f04eb5cbe5794322ed72faf50662f26fcfa6f5eb1b73dcbd0301bc15ecde9675",
+      "committed_blob_sha256": "e6d3264a90375d052224c9d6619f4f46464f38dc68b898e4b62281b3a7a6e92a",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO common.json",
+      "git_blob": "9e7acc274e1e6f203b81b5d0ef378ae9c3a17688",
+      "worktree_sha256": "ccabffc8a3e118f843897e1dab7037026d9b097be1bfc3afa16e35c5fe1ae671",
+      "committed_blob_sha256": "617c1a9488663765c089b052159421f212759f73be5dd8f0878937f01ff35c1b",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX common.json",
+      "git_blob": "6ef508191bff509c04d0c3cac5757670af208a22",
+      "worktree_sha256": "72ac22771acb9c73568068d0e3f0b08c1c94493c15116c93e0a0edc7c761afea",
+      "committed_blob_sha256": "b8d6601937d40bc0ea06a7886fb8bda76716722b4887139b1ce1cb31457d46f5",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 common.json",
+      "git_blob": "3eb12bd19ebb6c7824126617edfe06591898fb4e",
+      "worktree_sha256": "e32c241234e6a8f2a6f89296f5f0a00c05a9327e6c9a20a209900b1ac7bb7ee9",
+      "committed_blob_sha256": "bf5c8f339c8b519e5e80a4d93074a197b608749dc85c03e807239135cd01ed6b",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO common.json",
+      "git_blob": "67588e48678cc365645b6656fa5a943f13f3c154",
+      "worktree_sha256": "f651209f67f971d6ba437046533120a6dda50a13e080722102d8f5a68860be7a",
+      "committed_blob_sha256": "f05e460880beb3c118fe4304780618bd907675e3e795ebda891b18430aa8de26",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 common.json",
+      "git_blob": "09195c26ac241b3f1f21ce7ba25c33e80442f980",
+      "worktree_sha256": "487e6e1d6d9e5ca1b5eb804097aa166c45724b7f87571bb69e2a8630e3d7a84b",
+      "committed_blob_sha256": "e862c8106e3008aceb438d0100d9f61736f6b98275c6ee44270edd4ebc8c8474",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 common.json",
+      "git_blob": "cf51bb1e0a1d756b9b71617f4cfd05db05378915",
+      "worktree_sha256": "18019bf6909cef4206a10f5e5142b58b8116d44dcdfd8c71286fa1e6be3c0ae3",
+      "committed_blob_sha256": "26d27df138843c5972f7cd39987ada57dc7df8b4471285d6bb72b0131f6979aa",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD common.json",
+      "git_blob": "b2f4c155767d3bb01305d0caf07db00afa1972d7",
+      "worktree_sha256": "85bbc57a95080ba70ff048702ca0ee5806d28c4cbeb2246a195ee299a6d0fabc",
+      "committed_blob_sha256": "67396cc34ca5ba310cfad36b715eef14609f0cd006d6f219670af44eede8a955",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+      "git_blob": "9ab44d8be51d5035bd7913e0403dfa81cb991ff6",
+      "worktree_sha256": "b13f6a9c0d8d0871f3ebf927450f9bd7f9840fa542a8b06002ef11b48ce48f34",
+      "committed_blob_sha256": "155923c755a309cb137c17d4ca1eb66c671ff4d9ccd562cfebd02b82ec424271",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+      "git_blob": "fd1161033dd10907f16b10d1fc6e437175ede294",
+      "worktree_sha256": "46b39a475d37d85d722e9d5b8a5e34efd976cd26f3ce414207091daebda11903",
+      "committed_blob_sha256": "5fb1bce2ce31435552dbe2a30426026d040ab09ada29a9c3b34d96f40c7bb25c",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+      "git_blob": "40e94f87a598242a5fbecee350c084f2789aa4e5",
+      "worktree_sha256": "582539b059b26326517664beb01547da5fa879f6affd408f511fe8f39828933e",
+      "committed_blob_sha256": "afae45a35d247911ad9a7a4d214f008698b8ede8751bad16f910526b8245638f",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+      "git_blob": "27b6c1f478697d96e1ac2198f177394c368159e4",
+      "worktree_sha256": "76b6f1166169065a5ac9814f34e3cf85b4c32f359d327f3197084bd9e4a94bf0",
+      "committed_blob_sha256": "d4144b6092cf2a078a79a46278e555b0d396973ae1268cc5e1707666423a9b5c",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+      "git_blob": "3cbc5d8ee002a12fc7456ad9ce9aa9413333deec",
+      "worktree_sha256": "25db01ea4da18428447a710a72d013484fe0abe43f2a76b30795bf79babcdc3f",
+      "committed_blob_sha256": "d6f7685db8fcd9a8115406a6ef427fe92a73f135dc404f161dcf629c12da46f8",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+      "git_blob": "3c4c42b543f59d6beb28c533efb00d5a67139773",
+      "worktree_sha256": "5811ce1eab816a40bb2a1f8e03cc143e89e84ddadc7473a44c55a8e1f526d763",
+      "committed_blob_sha256": "ad81c4d7cebece8e8804d7064c80ec595db1fd3460ebd777595d3c820576ff70",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+      "git_blob": "784b189c55806b1bfb1e1582f821bb20e099101f",
+      "worktree_sha256": "85959883ae4b6d777896affd3325f44cc430002acc641afed6ddad390d077797",
+      "committed_blob_sha256": "536aff9e4d52458268b84ea7dfb6b8c8269ce43a1217450c36734ac0c14bb528",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+      "git_blob": "6c3d2bd9cb470bbf5f9027cc607c338b60b6f194",
+      "worktree_sha256": "54c923d6373e1a78e5c041725d3b5fec06f7c7bc9d8ec86412f0f00d7fe8d415",
+      "committed_blob_sha256": "2f74db825b6a7736c2653006ddf738259a70a8d4edfab43901d6f9d18d753ea4",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+      "git_blob": "e2ee8298f6ca1a6790a5a4e28cb8b121a829bb96",
+      "worktree_sha256": "0523acf96e8a067bc35cb74732b5b1be47e87a8b436814a6213a52ed3029d836",
+      "committed_blob_sha256": "3b1e347a49822e71c539395f96ffb057afe8491270c9f4ed174791be0eb8ec28",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+      "git_blob": "b1b0f869acf88e3d182fad03296587da2b536244",
+      "worktree_sha256": "c00c7c919c05e129085f76c7dd4d7c66999e88477665a8a71314ea4a791be7c9",
+      "committed_blob_sha256": "d3dd997554a197e372dd1c44c1e6048d2c7c0351bc7d7448323e7eb873782442",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+      "git_blob": "8af024432e3ae61f10ba7139d87443917698880f",
+      "worktree_sha256": "d65e3e7f879a49c9e5970f87f364d2361bfbfbae97ec5874ab0970268a93baf1",
+      "committed_blob_sha256": "e3e21a1037891c95555b1f4d17be852489dcd4fcfe024cea81f0ca778200006b",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X1_common.json",
+      "git_blob": "e7c23722733e01f0939087f7111d65febcf7ea64",
+      "worktree_sha256": "8309e91dc7b958e1a7cf7b3abb10d731d19fa15243c17addbd79dc0602ee3443",
+      "committed_blob_sha256": "b124e6803e2ec8691fab65b43bc3dacc81391994feaf4373246526d504503734",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+      "git_blob": "26ee8361fa0487fde3382725b3241f2e52e70719",
+      "worktree_sha256": "4478db682a9e0e9d94e2922e70dbd354cf9276246326aa2cb42c0a6b2f89bcc7",
+      "committed_blob_sha256": "964d609c062cd20d6547c2fb2473b9f5274acd1efe3e9e9c3afb549b77a04a9d",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+      "git_blob": "4bd9fb3c7ecdcbf5464f571eb26f408bb81da022",
+      "worktree_sha256": "127466cf99491be1910f703c6294a477e9a20989f6755363b7cd784305926076",
+      "committed_blob_sha256": "d8ee66162f518d5e1990f18ef19309fa2880e7340b84842bdee6eb01882c2b63",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+      "git_blob": "9f1bed2c80a52395bab790d679a63aaaaa7d7b00",
+      "worktree_sha256": "48b9673f2ca582aa3febc236acd1b4831524357f2e51ef3a63b31370ea416e6e",
+      "committed_blob_sha256": "af1b8d865432f575036f4035f29619e5418f3efd3c6cc65b6a4d6f6c15b99dff",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+      "git_blob": "993f9d584966c5478048c5d943b93f21dc9359fc",
+      "worktree_sha256": "3d425e77b26512b61aa488af579fa1761e517cee630fa4a1f88b1855d1df7830",
+      "committed_blob_sha256": "b684d72d2c0dfd9bf5fead2cd4883a0aa043eca6b7ff196545749abdcc85ec26",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+      "git_blob": "d916c70c5a9335d3666b7f020766d106ec8d4784",
+      "worktree_sha256": "9a8c5b0e3ba101e8e37fd0c4b0a74b25b7313cbcc1b9b65f3e2a564eaab8ec0f",
+      "committed_blob_sha256": "da4c433aa0cb15eb08b335d2e96fa251f715f6d95ba82ef793931abc12d3a397",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X2_common.json",
+      "git_blob": "dbb235c6a8e12fabaca7e28b1a7fdae8c16b8eec",
+      "worktree_sha256": "0c22b2f71714f069ce34bdd56eb8cdbdcd728c38d99be343823ef2265c8d2af8",
+      "committed_blob_sha256": "16f960fcb0a934c29e972c7dfd42abef903e8ea0b122127a0c20349445ef2ea6",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+      "git_blob": "7a24356ef098120decfd5285b54218d0318d47d7",
+      "worktree_sha256": "3fc7eb806323623275e19472812af26f964bb0d1ec56fc50604733cb60bd3884",
+      "committed_blob_sha256": "6b55b54711f14c6981faf6b7774f9ddd4e591642f49ea9d44755698c34865264",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+      "git_blob": "5079983e2ba9551d28d10646e11ec7240b32dced",
+      "worktree_sha256": "2cec9ea17a107212916e300ef0af89c793b9a6b94dfbe157111bbfa15216b67a",
+      "committed_blob_sha256": "4b1e8d77c041a3ffd95b820e1f3ed6be7637646181eee1bfd70159d1d285bd7c",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+      "git_blob": "a8da7cbc0d8087c8c7f10da78fc8ac75af96e26c",
+      "worktree_sha256": "f9aa876d927fc7191b90c2c26547c0a53f3a07b4ee0f3b38967c6462c5a7cb9e",
+      "committed_blob_sha256": "eda27d0d9a65a55da2d5940f9bd06ce51d3f00f672e251830f768aacafc1d6c4",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X3_common.json",
+      "git_blob": "c5e93f8e3ef269bbe2c3262e0dee77bc428c31be",
+      "worktree_sha256": "5ab963f437fbba5423544c8decdf288fd963082a4b5ad62b985a772d8a8ccddd",
+      "committed_blob_sha256": "48218ee5de44043abe13d621c1c7199a4d0b8d315f197d1510e7911e63f97d40",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+      "git_blob": "6d3f365a6cfd41ad6c4ea3b10ccffdcf89a2a867",
+      "worktree_sha256": "b87ae19df869c7280da982e7212d208988f4943ccecf8acf5a3cc13aed86ab77",
+      "committed_blob_sha256": "05c39375e7d2a93ef25c40a52673bea657513866b2688b82b1df7498bd00bf0b",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+      "git_blob": "52dfe460931bc6cac150fbdca0c912afee9d08af",
+      "worktree_sha256": "a5e18c6aa522bdac139f1438e261e51752d855bbbd89218b29aa8d46121a8c0a",
+      "committed_blob_sha256": "9878beda4d8d8dcf713ea3353e5f0791a7caab9eb79e68d1205cba435591ccc3",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+      "git_blob": "98f3dad2a47268457321dc22bfa26a636844b7bc",
+      "worktree_sha256": "1b2e41a7106feb92c52f4ecb8b8c21677144703602de4fc3a5fa0ac623e53a9b",
+      "committed_blob_sha256": "8f39df2a432b7439b76717418ccec113c6eb3821cde12acec7838154d61d3bf4",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+      "git_blob": "f2e7b26a9590a0a30a6c48bd16430d0dfbc69196",
+      "worktree_sha256": "883cf23eab6abce2fe2a8028c6a92c049abc251af154e6f07abe5b7b1df9f46f",
+      "committed_blob_sha256": "f6e9b365f798e698eae928f7463bcad8bfee4a7b2915de7ed91846de5ab6cfc5",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/web/homepage/css/home.css",
+      "git_blob": "288031a44abdd0108b1a93fde97e4501d014a629",
+      "worktree_sha256": "bbbb35ab59e268fa20acf04de2f9e30db9ab73f060bc65c175a6746d9f2ef53f",
+      "committed_blob_sha256": "0a1af1016a6edd61469499bff6c3a3e2c9a24654648f7ea1ae929d0dd4cc309f",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "resources/web/homepage/js/home.js",
+      "git_blob": "0e44fef29f98c6ff79f06ba853ff415d82aa27ff",
+      "worktree_sha256": "57bc7f629aaed409bdcef298e4ec843586f12a4ba5345384dd0678276ec844fb",
+      "committed_blob_sha256": "57bc7f629aaed409bdcef298e4ec843586f12a4ba5345384dd0678276ec844fb",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "src/libslic3r/GCode/FanMover.cpp",
+      "git_blob": "6d3a01bacb1fd8d96528fb67c0ce4d22c986a921",
+      "worktree_sha256": "59cf44904546bd2fe754db6a8c62adbcb9bebfb779fb6510b4b054001bee0004",
+      "committed_blob_sha256": "a079c615626517df7b02f372bf89681429ad7e048b7a1bbd77289a3a51dee0ff",
+      "git_filtered_worktree_matches_commit": true
+    },
+    {
+      "path": "tests/fff_print/test_cooling.cpp",
+      "git_blob": "f037eb48ee45b840d5b49eff51fa7618d13e2aa8",
+      "worktree_sha256": "1ac2c89b3da3efeee1350bdaa9cc5127b6c80bf52f4bb2b493eeb35bfdbdd837",
+      "committed_blob_sha256": "1f4b8d0d3221b7580555bd09cf542dcc8d69ffa1dd7b79adf7b76094fa6d5ea9",
+      "git_filtered_worktree_matches_commit": true
+    }
+  ],
+  "line_ending_binding": "Exact native-tested worktree SHA-256 bytes are unchanged. Git filtered blob IDs bind those bytes to committed content; raw committed SHA-256 is recorded separately where text line endings differ.",
+  "validation_reuse": "Completed native tests and both native install targets were not repeated. Their persisted receipts, exact test/source hashes, logs and installed binary hashes were freshly rechecked before committing.",
+  "native_cooling_regression": {
+    "receipt": {
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\tests\\fff_print\\Release\\fff_print_tests.exe",
+        "[Cooling],Toolchange gcode is bracketed against FanMover splitting its moves",
+        "--reporter",
+        "compact",
+        "--order",
+        "rand"
+      ],
+      "started_utc": "2026-10-17T02:11:31.460961+00:00",
+      "seconds": 4.108506499993382,
+      "exit_code": 0,
+      "binary_sha256": "8da0a34dcbf871353cc6a6e138c4b306f4c36e2057e5a84d03ffd8a44ff6545d",
+      "log_sha256": "42f8e813f0e03c23cb5e991fef4d8fa103ee39aba74852938812f09c4a48c508",
+      "native_process_waited": true,
+      "core_source_sha256": "59cf44904546bd2fe754db6a8c62adbcb9bebfb779fb6510b4b054001bee0004",
+      "test_source_sha256": "1ac2c89b3da3efeee1350bdaa9cc5127b6c80bf52f4bb2b493eeb35bfdbdd837"
+    },
+    "assertions": 84,
+    "test_cases": 8
+  },
+  "native_fan_timing": {
+    "verified_utc": "2026-10-17T02:11:02.417275+00:00",
+    "exit_code": 0,
+    "binary_sha256": "835dc2f52d01302adfa657582270008291b5922eba26a1e5cc272e66226293b4",
+    "cases": {
+      "baseline": {
+        "before": {
+          "fan_commands": [
+            {
+              "time_seconds": 2.0,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        },
+        "after": {
+          "fan_commands": [
+            {
+              "time_seconds": 2.0,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        }
+      },
+      "advance": {
+        "before": {
+          "fan_commands": [
+            {
+              "time_seconds": 1.5,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        },
+        "after": {
+          "fan_commands": [
+            {
+              "time_seconds": 1.5,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        }
+      },
+      "kick": {
+        "before": {
+          "fan_commands": [
+            {
+              "time_seconds": 2.0,
+              "pwm": 255.0
+            },
+            {
+              "time_seconds": 2.0,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        },
+        "after": {
+          "fan_commands": [
+            {
+              "time_seconds": 2.0,
+              "pwm": 255.0
+            },
+            {
+              "time_seconds": 2.06,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        }
+      },
+      "combined": {
+        "before": {
+          "fan_commands": [
+            {
+              "time_seconds": 1.5,
+              "pwm": 255.0
+            },
+            {
+              "time_seconds": 2.0,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        },
+        "after": {
+          "fan_commands": [
+            {
+              "time_seconds": 1.5,
+              "pwm": 255.0
+            },
+            {
+              "time_seconds": 1.56,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        }
+      },
+      "overhang_only": {
+        "before": {
+          "fan_commands": [
+            {
+              "time_seconds": 2.0,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        },
+        "after": {
+          "fan_commands": [
+            {
+              "time_seconds": 2.0,
+              "pwm": 153.0
+            },
+            {
+              "time_seconds": 4.0,
+              "pwm": 0.0
+            }
+          ],
+          "distance_mm": 50.0,
+          "extrusion_mm": 5.0,
+          "final_position": {
+            "X": 50.0,
+            "Y": 0.0,
+            "Z": 0.0
+          }
+        }
+      }
+    },
+    "minimum_pwm_floor_verified": true,
+    "method": "Native production FanMover/GCodeWriter, linear motion at constant commanded feed rate; not physical fan RPM or acceleration-aware timing.",
+    "result": "passed"
+  },
+  "native_builds": [
+    {
+      "label": "product-dependencies",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "InlongSlicer_app_gui",
+        "InlongSlicer_profile_validator",
+        "COPY_DLLS",
+        "gettext_po_to_mo",
+        "orca_stubgen",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=6"
+      ],
+      "started_utc": "2026-10-17T02:21:30.963460+00:00",
+      "completed_utc": "2026-10-17T02:23:48.737263+00:00",
+      "seconds": 137.77307100000326,
+      "exit_code": 0,
+      "log_sha256": "e7a3a1b83b04ef0b63c6374d5f9c7da40447fa7223624d3800cb194569596553",
+      "native_waited": true
+    },
+    {
+      "label": "install",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=6",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-17T02:23:48.942237+00:00",
+      "completed_utc": "2026-10-17T02:27:27.685271+00:00",
+      "seconds": 218.7413774000015,
+      "exit_code": 0,
+      "log_sha256": "d0a3b63a327a066c992605e4a1927e6d6ad6bcc053c964b766d8b663aea0f915",
+      "native_waited": true
+    },
+    {
+      "label": "install_only_inlong",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "install_only_inlong",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=6",
+        "/p:BuildProjectReferences=false"
+      ],
+      "started_utc": "2026-10-17T02:27:29.774896+00:00",
+      "completed_utc": "2026-10-17T02:27:43.449340+00:00",
+      "seconds": 13.674663899990264,
+      "exit_code": 0,
+      "log_sha256": "abe1f0000832152ab6aa803c34b76cbd9688cda2dff664c4d84a80ea2511b319",
+      "native_waited": true
+    }
+  ],
+  "installed_outputs": [
+    {
+      "label": "full",
+      "path": "build/InlongSlicer",
+      "binaries": {
+        "inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "InlongSlicer.dll": "a8aaac509c2f21373e166a797970cabe878866464399d54d3497613c857de68f"
+      },
+      "profile_files": 14756,
+      "profiles_match_source": true,
+      "homepage_matches_source": true,
+      "guide_contract": true,
+      "python_ssl_smoke": true,
+      "uv_smoke": true,
+      "cli_help_exit_zero": true,
+      "help_text_capture_limit": "Windows print_help reopens CONOUT$; pipe text may be empty."
+    },
+    {
+      "label": "inlong-only",
+      "path": "build/InlongSlicer_InlongOnly",
+      "binaries": {
+        "inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "InlongSlicer.dll": "a8aaac509c2f21373e166a797970cabe878866464399d54d3497613c857de68f"
+      },
+      "profile_files": 734,
+      "profiles_match_source": true,
+      "homepage_matches_source": true,
+      "guide_contract": true,
+      "python_ssl_smoke": true,
+      "uv_smoke": true,
+      "cli_help_exit_zero": true,
+      "help_text_capture_limit": "Windows print_help reopens CONOUT$; pipe text may be empty."
+    }
+  ],
+  "latest_install_settings_restoration": {
+    "completed_utc": "2026-10-17T02:28:17.997098+00:00",
+    "passed": true,
+    "restored": [
+      {
+        "path": "build/src/Release/data_dir",
+        "files": 835,
+        "exact": true
+      },
+      {
+        "path": "build/InlongSlicer/data_dir",
+        "files": 0,
+        "already_matching": true,
+        "exact": true
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly/data_dir",
+        "files": 0,
+        "already_matching": true,
+        "exact": true
+      }
+    ],
+    "exact_file_sets_directories_and_hashes": true,
+    "backups_retained": true
+  },
+  "packaging_supplement": {
+    "configured_uv": "build/.uv/0.11.21/uv.exe",
+    "sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68",
+    "outputs": [
+      {
+        "path": "build/src/Release/tools/uv/uv.exe",
+        "already_matching": true,
+        "sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68"
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly/resources/tools/uv/uv.exe",
+        "already_matching": false,
+        "sha256": "5a7ec85884c2ccb1be560cb8fac3eb890df1adf49bfcc070a270ba70401bdd68"
+      }
+    ],
+    "source_recipes_unchanged": true,
+    "release_source_resource_junction_not_written": true,
+    "reason": "The native filtered Windows install copies source resources and omits the configured downloaded uv; supply the same validated binary as the full package."
+  },
+  "compiler_warning_lines": [],
+  "machine_defaults": {
+    "fan_speedup_time": "0.5",
+    "fan_kickstart": "0.1",
+    "fan_speedup_overhangs": "0",
+    "part_cooling_fan_min_pwm": "0"
+  },
+  "selectable_machine_variants": 63,
+  "indexed_process_profiles": 46,
+  "process_defaults": {
+    "brim_object_gap": "0.1",
+    "seam_gap": "0",
+    "tree_support_branch_diameter_organic": "3.0"
+  },
+  "homepage_validation": {
+    "reviewed_record": "docs/memory/entries/homepage-sidebar-hidden-20261017.json",
+    "current_sources_match_record": true,
+    "interactive_browser_checks_reused": true,
+    "new_interactive_gui_check": false
+  },
+  "consumer_checkpoint": {
+    "receipt_path": ".agents/runtime/runs/run-bca0669812c64ad0a8f9a83ab3b5c548/validation/report.json",
+    "receipt_sha256": "8e99fcb0086f8db965c969d52e4e458716b0d81c8a1f6ed9c7013026e822679a",
+    "input_digest": "febf8dac8165f549b9cba706eccf61168f3c2fe22ea0b49cf63ce2700d3988e8",
+    "result": "passed",
+    "passed": true,
+    "individual_results": {
+      "syntax": "passed",
+      "json-schema": "passed",
+      "ownership": "passed",
+      "knowledge": "passed",
+      "sources": "passed",
+      "diff": "passed"
+    },
+    "release_ready": false
+  },
+  "publication_gate": {
+    "required": "Checkpoint -RequireReleaseReady",
+    "project_scope": "Consumer",
+    "tool_restriction": "The installed validator accepts RequireReleaseReady only for Provider Checkpoint.",
+    "provider_release_evidence": false,
+    "current_exception_authorized": false
+  },
+  "limitations": [
+    "Builds were completed before the product commit and identify the prior c952e845db-dirty build anchor; this record binds their unchanged tested source bytes to the new product commit.",
+    "Physical fan RPM and acceleration/arc-aware fan timing were not measured; the kick-start duration remains proportional to speed increase.",
+    "Existing saved-project and custom user-preset overrides are not rewritten.",
+    "Filtered Windows uv packaging uses a verified output supplement; the versioned recipe is unchanged.",
+    "This product-source evidence is not the unavailable Provider collector output and does not satisfy Provider release readiness."
+  ],
+  "agents_used": 1,
+  "content_digest_algorithm": "SHA256 of UTF-8 JSON with sorted keys and compact separators, excluding content_sha256",
+  "content_sha256": "152b16fa8f9f044fef355d321660784c5339739383cac4559009838e1e6583a6"
+}
