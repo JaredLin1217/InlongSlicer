@@ -1,0 +1,78 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-floating-root-diagnosis-20261019",
+  "key": "organic-model-landing-connectivity-diagnosis",
+  "type": "lesson",
+  "conclusion": "Organic model-root support can remain suspended on curved surfaces even when slicing succeeds. A reviewed X2 organic case with XY gap 0.4 and bottom Z gap 0.17 produces four roots about 0.95-1.05 mm above their first footprint/model intersection and two external disconnected interface islands. An XY-zero diagnostic restores approximately 0.174 mm model-root centerline gaps while external islands remain; bottom-Z-zero leaves approximately 0.84 mm root gaps. Current organic fallback contact retention does not require a valid placeable intersection, and collision-clipped area thresholds do not prove anchoring. Future repair needs landing and extrusion-level connectivity validation across devices; this entry records a reproduced unresolved defect, not a fix. CLI diagnostic overrides must be marked in different_settings_to_system and verified from emitted effective settings.",
+  "scope": "Reviewed current source mechanisms and installed Windows Release diagnosis; no algorithm correction, new source build, installation, publication or physical printer claim.",
+  "modules": [
+    "support",
+    "slicing",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "model-contact",
+    "floating-support",
+    "effective-config"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeModelVolumes.cpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/organic-floating-support-diagnosis-20261019.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Current unchanged support source and durable diagnosis; checkout anchor only for the newly authored evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeModelVolumes.cpp",
+      "sha256": "8ba6195aacec33e1948d67f027a76c5cee352e761a3f967d9801712a8d75ef9a",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Current unchanged support source and durable diagnosis; checkout anchor only for the newly authored evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Current unchanged support source and durable diagnosis; checkout anchor only for the newly authored evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "520c41447692e68583b69cc4b7af475ce8cb77d4cbfd9a5aaec2dbe75e7d28e0",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Current unchanged support source and durable diagnosis; checkout anchor only for the newly authored evidence file."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-floating-support-diagnosis-20261019.json",
+      "sha256": "2e544d79dc1eb3b2eb108c6733b0f19d7f41ea26c9e247a1978c617ec1bdefbb",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Current unchanged support source and durable diagnosis; checkout anchor only for the newly authored evidence file."
+    }
+  ],
+  "verified_utc": "2026-10-19T08:06:02.496932+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Original-config slicing, effective-footer validation, independent G-code bead topology and project-mesh cross sections, controlled single-key slices and source review.",
+    "summary": "Verified measured defect locations and preservation in four accepted runs. Reproduction success is not product correctness; exact isolated source causality and the external-island generation stage remain open."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

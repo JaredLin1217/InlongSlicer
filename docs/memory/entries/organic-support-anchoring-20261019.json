@@ -1,0 +1,138 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-anchoring-20261019",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Collision clearance and overlapping filled cross-sections do not prove that an organic tree is anchored. Validate geometry down to a model, bed or existing support, and validate actual positive-extrusion bead connectivity after toolpath generation. Respect physical extrusion Z slabs, requested XY/Z/first-layer clearances, blockers and branch angles; relocate bottom contacts to the true landing. Use local belt Z and retain the contact-plane extent. No-extrusion connectors cannot establish anchoring, and tiny unlandable isolated contact remnants are not printable stems. In the reviewed unchanged 3MF, four nominal printed-material root gaps improve from about 1.00 mm to 0.20 mm and two external islands reconnect. The 0.17 mm bottom-gap setting is unchanged and quantizes to 0.20 mm on its synchronized 0.20 mm body grid. All 771 effective settings are unchanged. The generic curved fixture passes at two nozzle sizes and two contact-height settings, while the original implementation fails the same actual-extrusion property. Normal support clearance, organic contact classification, closed-contour endpoint preservation and the shared filtered emitted-layer count contracts remain, with current support/belt and layer-count tests passing. Older model-specific timings and exact G-code identities remain historical; support geometry intentionally changes in this repair.",
+  "scope": "Reviewed current uncommitted product source and isolated Windows Release results. The HEAD fields are checkout anchors, not claims that changed bytes or the new evidence are committed. No new install, push, physical print or named-project re-slice beyond the supplied support model is claimed.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "model-contact",
+    "floating-support",
+    "actual-extrusion",
+    "normal-support",
+    "layer-count",
+    "belt",
+    "performance-history"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "src/libslic3r/Support/TreeModelVolumes.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Support/SupportMaterial.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "src/libslic3r/Polyline.cpp",
+    "docs/evidence/organic-support-anchoring-fix-20261019.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "5f72b64e403ea60695a71cc615d38aeba210ab056ee9f8184982522345e8e366",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "8d5e12fe1d478ba4d7df611c34eae7984a6f972b1ffdb9d5ffcd56cf96ff3585",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeModelVolumes.hpp",
+      "sha256": "0d7ba3514fad39c37c794b72f7c66dc93277d840c6e4759a609f56bc4f979fdb",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "63236e8eace3041075a1b551f0c546dc3053442cd748bd07934a72b896371092",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e5cf25ddcce00de616d0458a0b10fa730471e263b78a9d467c30d0c24723192b",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportMaterial.cpp",
+      "sha256": "946a539039e52b276b7c69c08981c873d454267a0e9429e974d459eadd01590c",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "fa823c0d9caa08efa8e79ccef905bd3be78ddbd72eeb0dec70f5e36998ade45d",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Polyline.cpp",
+      "sha256": "447122276cada254938cfe85e2a6223bdaa435c5fb1effd140598471c848bd22",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-anchoring-fix-20261019.json",
+      "sha256": "4b3d8e29083dc9ab2919b4b905752206fc551b64d389e00b8ac53dd2f8daad2d",
+      "commit": "18c07850cbb8fb6b5ec297db63c0574333193071",
+      "locator": "Reviewed current source contract and accepted native verification; checkout anchor only for uncommitted bytes."
+    }
+  ],
+  "verified_utc": "2026-10-19T10:15:38.465666+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Source review, expected-red original TU control, 20665 current native assertions including G-code export, original-config CLI repeat identity, actual printed-bead landing measurements and effective-footer equality.",
+    "summary": "The six source-drifted records are replaced after semantic review. Their immutable historical observations remain available; this record describes the new anchoring behavior and preserves unchanged normal-support/count/endpoint contracts without carrying old output guarantees forward."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "endpoint-layer-fixes-count-plan-20261017-performance-review",
+    "layer-count-plan-fix-20261017",
+    "normal-support-contact-clearance-endpoint-count-plan-20261017",
+    "organic-contact-tip-landing-endpoint-count-plan-20261017-performance-review",
+    "organic-floating-root-diagnosis-20261019",
+    "organic-support-grid-stability-endpoint-count-plan-20261017-performance-review"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

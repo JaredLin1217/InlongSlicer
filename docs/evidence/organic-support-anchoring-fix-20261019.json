@@ -1,0 +1,272 @@
+{
+  "schema_version": "inlong-organic-support-anchoring/v1",
+  "verified_utc": "2026-10-19T10:15:38.465666+00:00",
+  "git_head_anchor": "18c07850cbb8fb6b5ec297db63c0574333193071",
+  "scope": "Generic organic geometry repair, source build and isolated Windows Release validation. No installation, publication or physical printer trial.",
+  "input_sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf",
+  "mechanisms": [
+    "Descend disconnected support components within configured branch-angle, physical Z-slab, XY, bed, first-layer and blocker constraints; place bottom interfaces at the true landing.",
+    "Use the local belt Z frame and include contact output planes in the output plan.",
+    "Check only positive-extrusion beads; hollow cross-section interiors and no-extrusion connector moves do not establish a printed predecessor.",
+    "Fill missing collision-free output planes without replacing existing paths. Remove only isolated unlandable contact remnants smaller than the structural bead footprint."
+  ],
+  "source_binding": {
+    "files": {
+      "src/libslic3r/Support/TreeSupport3D.cpp": "5f72b64e403ea60695a71cc615d38aeba210ab056ee9f8184982522345e8e366",
+      "src/libslic3r/Support/TreeSupport3D.hpp": "8d5e12fe1d478ba4d7df611c34eae7984a6f972b1ffdb9d5ffcd56cf96ff3585",
+      "src/libslic3r/Support/TreeModelVolumes.hpp": "0d7ba3514fad39c37c794b72f7c66dc93277d840c6e4759a609f56bc4f979fdb",
+      "tests/fff_print/test_support_material.cpp": "63236e8eace3041075a1b551f0c546dc3053442cd748bd07934a72b896371092"
+    },
+    "core_object": {
+      "path": "build/src/libslic3r/libslic3r.dir/Release/TreeSupport3D.obj",
+      "sha256": "3382298361ca9fb2f2256678c17c23caf6218a0a4a3c3b1ac3e143a5b9fbd618"
+    },
+    "test_object": {
+      "path": "build/tests/fff_print/fff_print_tests.dir/Release/test_support_material.obj",
+      "sha256": "39d409ca95d955786ffe06d90b6d86eecf4d27c8c50099a8caa632b33836948a"
+    },
+    "basis": "Accepted incremental Release compiles and links; current files predate their object files and no source edits followed these builds.",
+    "git_head_anchor": "18c07850cbb8fb6b5ec297db63c0574333193071",
+    "dll_sha256": "f5731c915cafbd1bd2460b3d6109057831d6e54f1f0638021ebe455cc952290b",
+    "fff_sha256": "347f872eed8c0fa72028d61b211d8dbdae2c3fbe81a7e938ffee9f51d31d70fb"
+  },
+  "original_project": {
+    "baseline_nominal_root_gaps_mm": [
+      1.000001000000001,
+      1.000001000000001,
+      1.0000030000000208,
+      1.0000030000000208
+    ],
+    "corrected_landings": [
+      {
+        "support_print_z": 19.8,
+        "support_bottom_z": 19.600001000000002,
+        "landings": [
+          {
+            "model_print_z": 19.4,
+            "air_gap_mm": 0.20000100000000387,
+            "bead_overlap_mm2": 0.08972338453065866
+          },
+          {
+            "model_print_z": 19.2,
+            "air_gap_mm": 0.40000100000000316,
+            "bead_overlap_mm2": 1.277505364987044
+          },
+          {
+            "model_print_z": 19.0,
+            "air_gap_mm": 0.6000010000000024,
+            "bead_overlap_mm2": 1.277505364987044
+          }
+        ],
+        "nearest_landing": {
+          "model_print_z": 19.4,
+          "air_gap_mm": 0.20000100000000387,
+          "bead_overlap_mm2": 0.08972338453065866
+        }
+      },
+      {
+        "support_print_z": 21.0,
+        "support_bottom_z": 20.799999,
+        "landings": [
+          {
+            "model_print_z": 20.6,
+            "air_gap_mm": 0.19999899999999826,
+            "bead_overlap_mm2": 3.1231380714777424
+          },
+          {
+            "model_print_z": 20.4,
+            "air_gap_mm": 0.3999990000000011,
+            "bead_overlap_mm2": 3.1231380714777424
+          },
+          {
+            "model_print_z": 20.2,
+            "air_gap_mm": 0.5999990000000004,
+            "bead_overlap_mm2": 3.1231380714777424
+          },
+          {
+            "model_print_z": 20.0,
+            "air_gap_mm": 0.7999989999999997,
+            "bead_overlap_mm2": 3.1219051515185736
+          }
+        ],
+        "nearest_landing": {
+          "model_print_z": 20.6,
+          "air_gap_mm": 0.19999899999999826,
+          "bead_overlap_mm2": 3.1231380714777424
+        }
+      },
+      {
+        "support_print_z": 138.8,
+        "support_bottom_z": 138.60000300000002,
+        "landings": [
+          {
+            "model_print_z": 138.4,
+            "air_gap_mm": 0.20000300000000948,
+            "bead_overlap_mm2": 0.07838355084533005
+          },
+          {
+            "model_print_z": 138.2,
+            "air_gap_mm": 0.40000300000002653,
+            "bead_overlap_mm2": 1.2175912840570944
+          },
+          {
+            "model_print_z": 138.0,
+            "air_gap_mm": 0.6000030000000152,
+            "bead_overlap_mm2": 1.2175912840570944
+          }
+        ],
+        "nearest_landing": {
+          "model_print_z": 138.4,
+          "air_gap_mm": 0.20000300000000948,
+          "bead_overlap_mm2": 0.07838355084533005
+        }
+      },
+      {
+        "support_print_z": 140.0,
+        "support_bottom_z": 139.800003,
+        "landings": [
+          {
+            "model_print_z": 139.6,
+            "air_gap_mm": 0.20000300000000948,
+            "bead_overlap_mm2": 3.183473109739242
+          },
+          {
+            "model_print_z": 139.4,
+            "air_gap_mm": 0.4000029999999981,
+            "bead_overlap_mm2": 3.183473109739242
+          },
+          {
+            "model_print_z": 139.2,
+            "air_gap_mm": 0.6000030000000152,
+            "bead_overlap_mm2": 3.170671234561942
+          }
+        ],
+        "nearest_landing": {
+          "model_print_z": 139.6,
+          "air_gap_mm": 0.20000300000000948,
+          "bead_overlap_mm2": 3.183473109739242
+        }
+      }
+    ],
+    "external_islands": [
+      {
+        "original_print_z": 24.6,
+        "remaining_material_in_original_bounds_mm2": 1.1301109596496026,
+        "disconnected_birth_removed": true
+      },
+      {
+        "original_print_z": 25.8,
+        "remaining_material_in_original_bounds_mm2": 1.1174499026860978,
+        "disconnected_birth_removed": true
+      }
+    ],
+    "gap_interpretation": "The requested bottom gap remains 0.17 mm. On the unchanged synchronized 0.20 mm body grid its valid nominal landing is 0.20 mm; no extra 0.20 mm plane is skipped. Measurements use actual model/support G-code bead envelopes rather than a raw mesh surface.",
+    "effective_settings": {
+      "baseline_keys": 771,
+      "candidate_keys": 771,
+      "differences": {},
+      "settings_identical": true
+    },
+    "native_result": {
+      "label": "candidate-solo-final",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-09077bf3652d4d5ead8a9045f37b6d0d\\work\\native\\inlong-slicer.exe",
+        "--datadir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-09077bf3652d4d5ead8a9045f37b6d0d\\work\\candidate-solo-final-data",
+        "--debug",
+        "4",
+        "--slice",
+        "1",
+        "--outputdir",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-09077bf3652d4d5ead8a9045f37b6d0d\\work\\candidate-solo-final",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-09077bf3652d4d5ead8a9045f37b6d0d\\work\\input.3mf"
+      ],
+      "started_utc": "2026-10-19T10:07:58.721095+00:00",
+      "finished_utc": "2026-10-19T10:08:30.635141+00:00",
+      "seconds": 31.91407210000034,
+      "exit_code": 0,
+      "binary_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "dll_sha256": "f5731c915cafbd1bd2460b3d6109057831d6e54f1f0638021ebe455cc952290b",
+      "project_sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf",
+      "installed_settings_unchanged": true
+    },
+    "concurrent_run_seconds": 61.23385380000036,
+    "repeat_identity": {
+      "concurrent": {
+        "sha256": "8a8a1d2f7585e78c416bcfe9996a448397a417ba7924b2cbe37ccdc4d3f1246c",
+        "records": 381897
+      },
+      "solo": {
+        "sha256": "8a8a1d2f7585e78c416bcfe9996a448397a417ba7924b2cbe37ccdc4d3f1246c",
+        "records": 381897
+      },
+      "identical": true
+    },
+    "log_warning_error_matches": [],
+    "remaining_unresolved_support_candidates": 0
+  },
+  "regressions": {
+    "support_tree_belt": {
+      "assertions": 20414,
+      "errors": 0,
+      "failures": 0,
+      "seconds": 827.576,
+      "testcases": 186
+    },
+    "curved_landing": {
+      "assertions": 16,
+      "errors": 0,
+      "failures": 0,
+      "seconds": 24.171,
+      "testcases": 1
+    },
+    "layer_count": {
+      "assertions": 235,
+      "errors": 0,
+      "failures": 0,
+      "seconds": 0.902,
+      "testcases": 2
+    }
+  },
+  "original_control": {
+    "assertions": 16,
+    "errors": 0,
+    "failures": 1,
+    "seconds": 18.071,
+    "testcases": 1
+  },
+  "assertions_total": 20665,
+  "product_receipt": {
+    "path": ".agents/runtime/runs/run-09077bf3652d4d5ead8a9045f37b6d0d/work/product-validation.json",
+    "sha256": "e894c48b435f6a9b5190de055f36a9608722177a29ca45e0c70ac1a5ab8bafa8"
+  },
+  "raw_receipts": {
+    "support-existing-nineteenth.xml": "c49b17002d2d919d2530597dfe8d9b2dd867d089d34ea0ddd4d3a568f60b6f7d",
+    "anchoring-precision-final.xml": "3b8cbc2c0912b53d1204a080e19c414b681f3f01c1c1921a2b243f0993e206ca",
+    "anchoring-original-final-control.xml": "11944b826403184db6bdd1d532c732ffc6996eb3cb245bf256e5c157cbedd84c",
+    "layer-count-final.xml": "b3eb850d377c8c5b1247305aacb779d4c9af15ef39f166fe4a44bb6e3f217397",
+    "candidate-final-support-births.json": "8db1b2b4dd315a1300d74114dddb366be0e7280c025b535f8ffded5e6e0baa08",
+    "candidate-final-printed-model-landings.json": "ec573ae80f7ccc7cae6bc2f4080060243c4c5907d61e861da89fe81c747d359c",
+    "original-baseline-printed-model-landings.json": "96cdb910fcec28df5b7ef85e3d3087b79108ef9237f4d25327e988ae98dee5f2",
+    "final-repeat-identity.json": "46711555ec35b55de2b34602440292c24eee027793668b40463f6fb6ae610923"
+  },
+  "preservation": {
+    "installed_dll_sha256": "808e375e67dbae0c68f25355532172905b04ad7629200eaddb3502d6bbe46d46",
+    "installed_settings_unchanged": true,
+    "settings_file_count": 832,
+    "project_parameters_unchanged": true,
+    "network_input_hash_rechecked": true
+  },
+  "reviewed_prior_contracts": {
+    "normal_support": "Full deposited-span XY clipping and exact independent top-contact rules are unchanged; current support regressions pass.",
+    "organic_tips": "Existing contact candidate classification and local tip exceptions remain; the new anchoring checks supplement their collision tests.",
+    "emitted_layers": "The shared filtered G-code emitted-layer count plan is unchanged and passes 235 current assertions; new support material participates in that plan.",
+    "endpoints_and_belt": "Existing endpoint preservation and physical belt-floor clipping remain; new continuation checks use the correct local frame.",
+    "historical_performance": "Older Benchy, training-project and large-project timing/output identities remain historical at their recorded snapshots. This repair deliberately changes organic support paths and does not relabel older measurements as new-build guarantees."
+  },
+  "limits": [
+    "The raw project-mesh continuous surface is not the printed stair-step material surface. All stated air gaps are nominal slicer/G-code geometry, not a physical printer measurement.",
+    "Adaptive/fallback constraints intentionally exercised by some regression fixtures may log expected fallback warnings; the supplied project has no matching warnings.",
+    "Earlier exploratory builds/tests and corrected diagnostic predicates remain in the registered runtime and are excluded from accepted product receipts. One original implementation failure is an intentional negative control."
+  ]
+}

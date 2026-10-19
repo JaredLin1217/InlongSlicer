@@ -55,6 +55,7 @@ struct SlicingParameters;
 
 namespace TreeSupport3D
 {
+class OrganicSupportLayerPlan;
 
 
 struct AreaIncreaseSettings
@@ -318,7 +319,7 @@ using SupportElements = std::deque<SupportElement>;
 }
 
 // Organic specific: Smooth branches and produce one cummulative mesh to be sliced.
-void organic_draw_branches(
+OrganicSupportLayerPlan organic_draw_branches(
     PrintObject                     &print_object,
     TreeModelVolumes                &volumes, 
     const TreeSupportSettings       &config,

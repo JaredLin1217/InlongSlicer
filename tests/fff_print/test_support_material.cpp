@@ -19,6 +19,7 @@
 #include "libslic3r/Support/TreeSupport.hpp"
 #include "libslic3r/Support/TreeSupportUtils.hpp"
 #include "libslic3r/Thread.hpp"
+#include "libslic3r/Utils.hpp"
 
 #include <cmath>
 #include <functional>
@@ -40,6 +41,162 @@
 
 using namespace Slic3r::Test;
 using namespace Slic3r;
+
+static TriangleMesh support_curved_tunnel()
+{
+    constexpr int segments = 128;
+    constexpr float outer_radius = 9.5f;
+    constexpr float inner_radius = 7.5f;
+    indexed_triangle_set mesh;
+    for (int end = 0; end < 2; ++end)
+        for (int ring = 0; ring < 2; ++ring)
+            for (int index = 0; index < segments; ++index) {
+                const double angle = 2. * M_PI * index / segments;
+                const float radius = ring == 0 ? outer_radius : inner_radius;
+                mesh.vertices.emplace_back(24.f * end, float(radius * std::cos(angle)),
+                    outer_radius + float(radius * std::sin(angle)));
+            }
+    auto quad = [&mesh](int a, int b, int c, int d) {
+        mesh.indices.emplace_back(a, b, c);
+        mesh.indices.emplace_back(a, c, d);
+    };
+    for (int index = 0; index < segments; ++index) {
+        const int next = (index + 1) % segments;
+        quad(index, next, 2 * segments + next, 2 * segments + index);
+        quad(segments + index, 3 * segments + index, 3 * segments + next, segments + next);
+        quad(index, segments + index, segments + next, next);
+        quad(2 * segments + index, 2 * segments + next, 3 * segments + next, 3 * segments + index);
+    }
+    TriangleMesh result(std::move(mesh));
+    TriangleMesh foot = make_cube(24.f, 19.f, 2.f);
+    foot.translate(0.f, -9.5f, 0.f);
+    result.merge(foot);
+    return result;
+}
+
+TEST_CASE("Organic support components reach a printed predecessor or a model landing on curved floors",
+          "[SupportMaterial][OrganicTree][Anchoring][Regression]")
+{
+    const double nozzle = GENERATE(0.4, 0.6);
+    const bool independent_contact = GENERATE(false, true);
+    const double layer_height = nozzle * 0.5;
+    const double bottom_gap = layer_height * 0.85;
+    CAPTURE(nozzle, independent_contact, bottom_gap);
+    std::ostringstream messages;
+    using LogSink = boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend>;
+    const auto sink = boost::make_shared<LogSink>();
+    sink->locked_backend()->add_stream(boost::shared_ptr<std::ostream>(&messages, boost::null_deleter()));
+    const unsigned previous_log_level = get_logging_level();
+    boost::log::core::get()->add_sink(sink);
+    struct RestoreLog {
+        boost::shared_ptr<LogSink> sink;
+        unsigned level;
+        ~RestoreLog() { boost::log::core::get()->remove_sink(sink); set_logging_level(level); }
+    } restore_log{sink, previous_log_level};
+    set_logging_level(5);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        {"enable_support", true}, {"support_type", "tree(auto)"}, {"support_style", "organic"},
+        {"nozzle_diameter", std::to_string(nozzle)}, {"layer_height", layer_height},
+        {"initial_layer_print_height", layer_height}, {"min_layer_height", "0.05"},
+        {"max_layer_height", std::to_string(nozzle * 0.75)},
+        {"support_top_z_distance", bottom_gap}, {"support_bottom_z_distance", bottom_gap},
+        {"support_object_xy_distance", 0.4}, {"support_on_build_plate_only", false},
+        {"support_threshold_angle", 40}, {"bridge_no_support", false},
+        {"tree_support_branch_angle_organic", 30}, {"tree_support_branch_diameter_organic", 3.},
+        {"tree_support_branch_distance_organic", 1.}, {"tree_support_tip_diameter", 2.},
+        {"support_interface_top_layers", 4}, {"support_interface_bottom_layers", 2},
+        {"support_top_contact_pattern", "concentric"}, {"support_bottom_contact_pattern", "concentric"},
+        {"support_top_contact_spacing", 0.05}, {"support_bottom_contact_spacing", 0.05},
+        {"support_top_contact_wall_count", 1}, {"support_bottom_contact_wall_count", 1},
+        {"independent_support_layer_height", false},
+        {"independent_support_top_contact_layer_height", independent_contact}
+    });
+    Print print;
+    Model model;
+    init_print({support_curved_tunnel()}, print, model, config);
+    model.objects.front()->instances.front()->set_offset(Vec3d(60., 60., 0.));
+    print.apply(model, config);
+    print.validate();
+    print.set_status_silent();
+    print.process();
+    const PrintObject &object = *print.objects().front();
+    REQUIRE_FALSE(object.support_layers().empty());
+    std::vector<std::pair<double, Polygons>> printed;
+    size_t checked_components = 0;
+    size_t unanchored_components = 0;
+    std::ostringstream unanchored_locations;
+    for (const SupportLayer *layer : object.support_layers()) {
+        Polygons footprint;
+        for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+            if (!path.is_force_no_extrusion() && path.mm3_per_mm > 0.)
+                append(footprint, path.polygons_covered_by_width());
+        });
+        footprint = union_(footprint);
+        for (const ExPolygon &component : union_ex(footprint)) {
+            if (component.area() < sqr(scale_(nozzle)) * 0.05)
+                continue;
+            const Polygons current = to_polygons(component);
+            bool anchored = false;
+            for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+                if (path.is_force_no_extrusion() || path.mm3_per_mm <= 0.)
+                    return;
+                const Polygons bead = path.polygons_covered_by_width();
+                // This checks connectivity, not a minimum load-bearing area.
+                // Use the output coordinate resolution for numerical noise.
+                const double overlap_tolerance = sqr(double(scale_(0.001)));
+                if (area(intersection(bead, current)) <= overlap_tolerance)
+                    return;
+                const double bottom = layer->print_z - path.height;
+                if (bottom < EPSILON)
+                    anchored = true;
+                for (const auto &[z, below] : printed)
+                    if (z >= bottom - EPSILON && z < layer->print_z - EPSILON &&
+                        // G-code coordinates are emitted at 0.001 mm precision;
+                        // touching bead edges must survive that rounding.
+                        area(intersection(bead, offset(below, scale_(0.001)))) > overlap_tolerance)
+                        anchored = true;
+                // Independently modulated paths at the same print Z can have
+                // different bottoms. Check each actual bead, not the tallest
+                // path's bottom applied to the entire connected component.
+                for (const Layer *model_layer : object.layers())
+                    if (model_layer->print_z <= bottom - bottom_gap + EPSILON &&
+                        model_layer->print_z >= bottom - bottom_gap - layer_height - EPSILON &&
+                        area(intersection(bead, to_polygons(model_layer->lslices))) > overlap_tolerance)
+                        anchored = true;
+            });
+            ++checked_components;
+            if (!anchored) {
+                ++unanchored_components;
+                const BoundingBox bounds = get_extents(component);
+                unanchored_locations << " Z=" << layer->print_z << " XY=" << unscale<double>(bounds.min.x()) <<
+                    "," << unscale<double>(bounds.min.y()) << ".." << unscale<double>(bounds.max.x()) <<
+                    "," << unscale<double>(bounds.max.y());
+                for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+                    const Polygons bead = path.polygons_covered_by_width();
+                    if (area(intersection(bead, current)) <= sqr(double(scale_(nozzle))) * 0.002)
+                        return;
+                    double model_top = -1., support_top = -1.;
+                    for (const Layer *other : object.layers())
+                        if (other->print_z < layer->print_z && area(intersection(bead, to_polygons(other->lslices))) > sqr(double(scale_(nozzle))) * 0.002)
+                            model_top = other->print_z;
+                    for (const auto &[z, below] : printed)
+                        if (area(intersection(bead, below)) > sqr(double(scale_(nozzle))) * 0.002)
+                            support_top = z;
+                    unanchored_locations << " [h=" << path.height << " role=" << int(path.role()) <<
+                        " model=" << model_top << " support=" << support_top << "]";
+                });
+            }
+        }
+        printed.emplace_back(layer->print_z, footprint);
+    }
+    REQUIRE(checked_components > 0);
+    sink->flush();
+    INFO(messages.str());
+    INFO(unanchored_locations.str());
+    CHECK(unanchored_components == 0);
+    REQUIRE_FALSE(gcode(print).empty());
+}
 
 TEST_CASE("Normal support honors the configured XY clearance through its full extrusion height",
           "[SupportMaterial][NormalSupport][Regression]")

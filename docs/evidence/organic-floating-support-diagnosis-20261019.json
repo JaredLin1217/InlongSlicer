@@ -1,0 +1,600 @@
+{
+  "schema_version": "inlong-organic-support-diagnosis/v1",
+  "verified_utc": "2026-10-19T08:06:02.496932+00:00",
+  "checkout_anchor": "18c07850cbb8fb6b5ec297db63c0574333193071",
+  "result": "confirmed_geometry_defect",
+  "scope": "Diagnosis of organic support on the supplied model using the installed Windows Release; no production algorithm change or corrected slice is claimed.",
+  "input_project_sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf",
+  "installed_dll_sha256": "808e375e67dbae0c68f25355532172905b04ad7629200eaddb3502d6bbe46d46",
+  "source_sha256": {
+    "src/libslic3r/Support/TreeSupport3D.cpp": "a7983dc42d0bdbc3e46d35477bd804cb1351e54832ccde3aacd56f16136e6c05",
+    "src/libslic3r/Support/TreeModelVolumes.cpp": "8ba6195aacec33e1948d67f027a76c5cee352e761a3f967d9801712a8d75ef9a",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "649c2636a5e9f2bc71fa089d9c2936dfd14daa9201ecd46255e3da11a5c577ac",
+    "tests/fff_print/test_support_material.cpp": "520c41447692e68583b69cc4b7af475ce8cb77d4cbfd9a5aaec2dbe75e7d28e0"
+  },
+  "configuration": {
+    "printer_model": "Infinity3DP X2",
+    "nozzle_diameter": [
+      "0.4"
+    ],
+    "layer_height": "0.2",
+    "support_type": "tree(auto)",
+    "support_style": "organic",
+    "support_top_z_distance": "0.17",
+    "support_bottom_z_distance": "0.17",
+    "support_object_xy_distance": "0.4",
+    "support_on_build_plate_only": "0",
+    "independent_support_layer_height": "0",
+    "independent_support_top_contact_layer_height": "1"
+  },
+  "confirmed_observations": [
+    "Four substantial model-root component births occur at output Z 20.4, 21.8, 139.4 and 140.8 mm without overlapping lower support deposition.",
+    "At these four roots the sampled first footprint/model intersection is about 0.95 or 1.05 mm below the extruded bead bottom; nominal 0.17 mm planes have zero footprint/model overlap.",
+    "Two additional substantial support-interface islands appear at Z 24.6 and 25.8 mm, entirely left of the model minimum X and disconnected from the prior support footprint. Their exact generation stage requires further instrumentation.",
+    "Two other tiny baseline candidates with area under 0.04 mm2 touch or nearly touch lower beads and are not counted as confirmed substantial islands.",
+    "Setting XY clearance to zero in a disposable diagnostic project brings the model-root minimum centerline gaps to about 0.174 mm, while both external interface islands remain.",
+    "Setting bottom Z clearance to zero leaves model-root gaps of about 0.84 mm. A Z-clearance-only adjustment does not resolve the defect.",
+    "Disabling independent top-contact heights changes root shapes and lowers their sampled minimum gaps, but leaves both external interface islands. Independent top-contact height is not the sole cause."
+  ],
+  "reviewed_source_mechanisms": [
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "lines": [
+        4982,
+        5015
+      ],
+      "finding": "Non-gracious model roots descend through XY-expanded collision masks. The area threshold can terminate descent before a usable landing has been demonstrated."
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "lines": [
+        5021,
+        5039
+      ],
+      "finding": "The additional bottom-slice placeability filtering block is disabled with #if 0."
+    },
+    {
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "lines": [
+        5044,
+        5093
+      ],
+      "finding": "For nonzero bottom gaps, complete contact footprints are retained without requiring a placeable intersection; fallback contacts can be emitted even when clipped contacts are empty."
+    },
+    {
+      "path": "src/libslic3r/Support/TreeModelVolumes.cpp",
+      "lines": [
+        641,
+        651
+      ],
+      "finding": "Cached collision masks include XY clearance as well as neighboring layers for Z clearance. Clearance avoidance therefore cannot itself prove that a root is anchored."
+    }
+  ],
+  "causal_limits": "Geometry and the single-parameter controls confirm a landing/clearance interaction. Source review identifies unsafe fallback mechanisms; no instrumented native source A/B isolates every contributing statement or the separate external-island generation stage.",
+  "required_generic_correction": [
+    "Choose a valid model landing or a build-plate-connected branch under the configured XY and Z constraints before accepting each root.",
+    "Regenerate or reroute roots that cannot land, then validate extrusion-level component connectivity for both base and interface material.",
+    "Retain the configured gaps and required overhang coverage; validate curved contacts, narrow interfaces, independent top heights and multiple printer profiles without device-name branches."
+  ],
+  "cases": [
+    {
+      "label": "baseline",
+      "changed_key": null,
+      "seconds": 37.226150000000416,
+      "effective_support_configuration_verified": true,
+      "gcode_sha256": "ad8b9dff8f0410c430910e7bdbf92863e3160cae4182411739ecdcd53ae9cce3",
+      "actual_native_log": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/00000.log",
+        "sha256": "57fc66aa8c0742a987a5cda3e5c0873202851f7b4a926be6e74b8c1e84c2fe61"
+      },
+      "result_receipt": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/baseline-result.json",
+        "sha256": "52e638198992a27c7d1cacf402a4b3450b86abfdca3c5fa137bc4eeec23c98d8"
+      },
+      "support_birth_measurements": [
+        {
+          "z": 20.4,
+          "bottom_z": 20.200001,
+          "height": 0.19999899999999826,
+          "layer": 111,
+          "first_line": 72010,
+          "area_mm2": 0.7480455308330507,
+          "bounds": [
+            125.179,
+            143.25644230255293,
+            125.8704618153176,
+            144.60567379963166
+          ],
+          "previous_support_distance": 9.102160998705648,
+          "minimum_sampled_model_gap": 0.9524872321170221,
+          "maximum_sampled_model_gap": 0.9980345771406078
+        },
+        {
+          "z": 21.8,
+          "bottom_z": 21.600001000000002,
+          "height": 0.19999899999999826,
+          "layer": 118,
+          "first_line": 77575,
+          "area_mm2": 0.917707928789545,
+          "bounds": [
+            121.51825842291055,
+            143.25937715829903,
+            122.64604180901084,
+            144.38806392446682
+          ],
+          "previous_support_distance": 1.0419317641038754,
+          "minimum_sampled_model_gap": 1.0700421966296005,
+          "maximum_sampled_model_gap": 1.0995392686315242
+        },
+        {
+          "z": 24.6,
+          "bottom_z": 24.399999,
+          "height": 0.20000100000000032,
+          "layer": 132,
+          "first_line": 88665,
+          "area_mm2": 1.1279225183172115,
+          "bounds": [
+            115.96724326649456,
+            146.03507227745553,
+            116.767,
+            147.81386661846142
+          ],
+          "previous_support_distance": 0.6076384387025291,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 25.8,
+          "bottom_z": 25.600001000000002,
+          "height": 0.19999899999999826,
+          "layer": 141,
+          "first_line": 94536,
+          "area_mm2": 1.114833278019562,
+          "bounds": [
+            115.96700000000001,
+            141.3920033572429,
+            116.767,
+            143.17099933111174
+          ],
+          "previous_support_distance": 13.548989755849712,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 139.4,
+          "bottom_z": 139.200003,
+          "height": 0.1999969999999962,
+          "layer": 737,
+          "first_line": 359954,
+          "area_mm2": 0.6994879010789649,
+          "bounds": [
+            125.179,
+            143.27548494409422,
+            125.84046195504901,
+            144.5879911555218
+          ],
+          "previous_support_distance": 9.201344671025707,
+          "minimum_sampled_model_gap": 0.9549021930456547,
+          "maximum_sampled_model_gap": 0.9981039953584627
+        },
+        {
+          "z": 140.8,
+          "bottom_z": 140.60000300000002,
+          "height": 0.1999969999999962,
+          "layer": 744,
+          "first_line": 365047,
+          "area_mm2": 0.917746126843917,
+          "bounds": [
+            121.50027123481854,
+            143.25937715829903,
+            122.62801041093374,
+            144.38808749132522
+          ],
+          "previous_support_distance": 1.03085432299955,
+          "minimum_sampled_model_gap": 1.0705194272837275,
+          "maximum_sampled_model_gap": 1.0994985910644175
+        }
+      ]
+    },
+    {
+      "label": "xy-zero-override",
+      "changed_key": "support_object_xy_distance",
+      "seconds": 32.42118389999996,
+      "effective_support_configuration_verified": true,
+      "gcode_sha256": "b203cc697e0b6feeacf77438dcd9c765a41cba7f057aae4d55d765fe5a44aa31",
+      "actual_native_log": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/xy-zero-override/00000.log",
+        "sha256": "1c6d2b14a29c829a6d0140d10dd1995370111ab5dbda1d842b3ac8e834b39a57"
+      },
+      "result_receipt": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/xy-zero-override-result.json",
+        "sha256": "ae16b1d08c189da15cbfa71084ca7e4a0bc62b8621812f21883e071f9240cd5d"
+      },
+      "support_birth_measurements": [
+        {
+          "z": 21.0,
+          "bottom_z": 20.799999,
+          "height": 0.20000100000000032,
+          "layer": 114,
+          "first_line": 74738,
+          "area_mm2": 5.196990490375649,
+          "bounds": [
+            121.99611563185205,
+            142.82203874732224,
+            124.96951301658393,
+            144.7809999820381
+          ],
+          "previous_support_distance": 5.343694811350786,
+          "minimum_sampled_model_gap": 0.17380856904145503,
+          "maximum_sampled_model_gap": 0.2990986994750706
+        },
+        {
+          "z": 24.6,
+          "bottom_z": 24.399999,
+          "height": 0.20000100000000032,
+          "layer": 132,
+          "first_line": 88944,
+          "area_mm2": 1.4304941277537442,
+          "bounds": [
+            115.96763808452245,
+            145.94800537966393,
+            116.967,
+            147.89718369874524
+          ],
+          "previous_support_distance": 0.3142165718954361,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 25.8,
+          "bottom_z": 25.600001000000002,
+          "height": 0.19999899999999826,
+          "layer": 141,
+          "first_line": 94843,
+          "area_mm2": 1.4325039452286736,
+          "bounds": [
+            115.96700000000001,
+            141.30807236275572,
+            116.967,
+            143.25463256071856
+          ],
+          "previous_support_distance": 9.34273794697455,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 140.0,
+          "bottom_z": 139.800003,
+          "height": 0.1999969999999962,
+          "layer": 740,
+          "first_line": 362713,
+          "area_mm2": 5.193710303535603,
+          "bounds": [
+            121.99721454651821,
+            142.82103644425337,
+            124.9696092110841,
+            144.779
+          ],
+          "previous_support_distance": 5.226884310437333,
+          "minimum_sampled_model_gap": 0.17400197307040344,
+          "maximum_sampled_model_gap": 0.2991717583209095
+        }
+      ]
+    },
+    {
+      "label": "bottom-zero-override",
+      "changed_key": "support_bottom_z_distance",
+      "seconds": 43.90073579999989,
+      "effective_support_configuration_verified": true,
+      "gcode_sha256": "a68c21d143b8bd1bbeb0d470bbabef03ef3ebca7ea05d3ad90a0674b23ea4996",
+      "actual_native_log": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/bottom-zero-override/00000.log",
+        "sha256": "ce73f96f628788ca7feacabd645ce302e3f2da9ca7f43368e2a7c0bca71586d5"
+      },
+      "result_receipt": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/bottom-zero-override-result.json",
+        "sha256": "030781cc33e53cc27792bf7224a425004948358409e256af60351b9c34a1ce7e"
+      },
+      "support_birth_measurements": [
+        {
+          "z": 21.6,
+          "bottom_z": 21.399999,
+          "height": 0.20000100000000032,
+          "layer": 117,
+          "first_line": 76950,
+          "area_mm2": 1.6884423855180337,
+          "bounds": [
+            121.32328336723327,
+            143.08951365250667,
+            122.79531316093541,
+            144.55606918265545
+          ],
+          "previous_support_distance": 4.921081945280346,
+          "minimum_sampled_model_gap": 0.8386513427527973,
+          "maximum_sampled_model_gap": 0.8997363241201981
+        },
+        {
+          "z": 21.6,
+          "bottom_z": 21.399999,
+          "height": 0.20000100000000032,
+          "layer": 117,
+          "first_line": 76933,
+          "area_mm2": 1.6273118882508295,
+          "bounds": [
+            123.77893872825094,
+            143.117005537614,
+            125.22134091049841,
+            144.5521297141828
+          ],
+          "previous_support_distance": 7.361852410684772,
+          "minimum_sampled_model_gap": 0.8393026764836264,
+          "maximum_sampled_model_gap": 2.197738686474551
+        },
+        {
+          "z": 24.6,
+          "bottom_z": 24.399999,
+          "height": 0.20000100000000032,
+          "layer": 132,
+          "first_line": 88797,
+          "area_mm2": 1.1279225183172115,
+          "bounds": [
+            115.96724326649456,
+            146.03507227745553,
+            116.767,
+            147.81386661846142
+          ],
+          "previous_support_distance": 0.6076384391069445,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 25.8,
+          "bottom_z": 25.600001000000002,
+          "height": 0.19999899999999826,
+          "layer": 141,
+          "first_line": 94673,
+          "area_mm2": 1.114833278019562,
+          "bounds": [
+            115.96700000000001,
+            141.3920033572429,
+            116.767,
+            143.17099933111174
+          ],
+          "previous_support_distance": 13.691855615052608,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 140.6,
+          "bottom_z": 140.399988,
+          "height": 0.20001199999998676,
+          "layer": 743,
+          "first_line": 363745,
+          "area_mm2": 1.601902653786881,
+          "bounds": [
+            123.79258947309626,
+            143.10447947259243,
+            125.22467396607212,
+            144.5445433808709
+          ],
+          "previous_support_distance": 7.354248037709895,
+          "minimum_sampled_model_gap": 0.8412386164845032,
+          "maximum_sampled_model_gap": 2.19779711155482
+        },
+        {
+          "z": 140.6,
+          "bottom_z": 140.399988,
+          "height": 0.20001199999998676,
+          "layer": 743,
+          "first_line": 363761,
+          "area_mm2": 1.6801184108564187,
+          "bounds": [
+            121.34232240714857,
+            143.0908654955489,
+            122.79892346584957,
+            144.56533447145284
+          ],
+          "previous_support_distance": 4.911251576481184,
+          "minimum_sampled_model_gap": 0.836708822204713,
+          "maximum_sampled_model_gap": 0.8994397423607552
+        }
+      ]
+    },
+    {
+      "label": "contact-sync-override",
+      "changed_key": "independent_support_top_contact_layer_height",
+      "seconds": 27.921665899999425,
+      "effective_support_configuration_verified": true,
+      "gcode_sha256": "a222ce1dc44449abd51488f96cec8b3b19b4ae7b2fb312c379374dd6c4ba2bb2",
+      "actual_native_log": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/contact-sync-override/00000.log",
+        "sha256": "f9a736ee31c151bc0f1d594da91e63afa8139fbd124c3a7defc4dfb97ef49ab5"
+      },
+      "result_receipt": {
+        "path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics/contact-sync-override-result.json",
+        "sha256": "04cd0b077e2a3b2cd1503ed08a24df4f77a53e717d52fa197d7ea54a6de0a38a"
+      },
+      "support_birth_measurements": [
+        {
+          "z": 21.0,
+          "bottom_z": 20.799999,
+          "height": 0.20000100000000032,
+          "layer": 105,
+          "first_line": 73969,
+          "area_mm2": 4.452379081214905,
+          "bounds": [
+            123.6720076732956,
+            142.54619918845555,
+            126.59932667605077,
+            145.3145436606602
+          ],
+          "previous_support_distance": 7.6547669461330194,
+          "minimum_sampled_model_gap": 0.2701033698158639,
+          "maximum_sampled_model_gap": 1.5997868417381866
+        },
+        {
+          "z": 21.2,
+          "bottom_z": 20.999999,
+          "height": 0.20000100000000032,
+          "layer": 106,
+          "first_line": 74826,
+          "area_mm2": 4.647276427269061,
+          "bounds": [
+            120.74762491864594,
+            142.844000034002,
+            123.42465153929909,
+            144.756
+          ],
+          "previous_support_distance": 0.2548891577345873,
+          "minimum_sampled_model_gap": 0.3810234099135954,
+          "maximum_sampled_model_gap": 0.49985173200339617
+        },
+        {
+          "z": 24.6,
+          "bottom_z": 24.399999,
+          "height": 0.20000100000000032,
+          "layer": 123,
+          "first_line": 88303,
+          "area_mm2": 1.1279225183172115,
+          "bounds": [
+            115.96724326649456,
+            146.03507227745553,
+            116.767,
+            147.81386661846142
+          ],
+          "previous_support_distance": 0.7287516641258013,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 25.8,
+          "bottom_z": 25.600001000000002,
+          "height": 0.19999899999999826,
+          "layer": 129,
+          "first_line": 94051,
+          "area_mm2": 1.114833278019562,
+          "bounds": [
+            115.96700000000001,
+            141.3920033572429,
+            116.767,
+            143.17099933111174
+          ],
+          "previous_support_distance": 9.81518149701525,
+          "minimum_sampled_model_gap": null,
+          "maximum_sampled_model_gap": null
+        },
+        {
+          "z": 140.0,
+          "bottom_z": 139.800003,
+          "height": 0.1999969999999962,
+          "layer": 700,
+          "first_line": 359993,
+          "area_mm2": 4.3884443911914035,
+          "bounds": [
+            123.64339367853259,
+            142.5561205998559,
+            126.56830112220693,
+            145.30417664397848
+          ],
+          "previous_support_distance": 7.653270856306727,
+          "minimum_sampled_model_gap": 0.26958447514115846,
+          "maximum_sampled_model_gap": 1.5998291736003978
+        },
+        {
+          "z": 140.2,
+          "bottom_z": 140.000003,
+          "height": 0.1999969999999962,
+          "layer": 701,
+          "first_line": 361000,
+          "area_mm2": 4.642771214091931,
+          "bounds": [
+            120.72999494211548,
+            142.844,
+            123.40509043618373,
+            144.755
+          ],
+          "previous_support_distance": 0.24579735478749237,
+          "minimum_sampled_model_gap": 0.3811744739685423,
+          "maximum_sampled_model_gap": 0.49981205197661893
+        }
+      ]
+    }
+  ],
+  "root_clearance": [
+    {
+      "z": 20.4,
+      "bottom_z": 20.200001,
+      "configured_bottom_gap": 0.17,
+      "model_plane_at_configured_gap": 20.030001,
+      "overlap_mm2_at_configured_gap": 0.0,
+      "xy_distance_at_configured_gap": 0.17883993637209225,
+      "first_sampled_intersection_below_root": {
+        "drop_mm": 0.9500000000000001,
+        "overlap_mm2": 0.06466172551963417
+      }
+    },
+    {
+      "z": 21.8,
+      "bottom_z": 21.600001000000002,
+      "configured_bottom_gap": 0.17,
+      "model_plane_at_configured_gap": 21.430001,
+      "overlap_mm2_at_configured_gap": 0.0,
+      "xy_distance_at_configured_gap": 1.3631931120428271,
+      "first_sampled_intersection_below_root": {
+        "drop_mm": 1.05,
+        "overlap_mm2": 0.04887898008220247
+      }
+    },
+    {
+      "z": 24.6,
+      "bottom_z": 24.399999,
+      "configured_bottom_gap": 0.17,
+      "model_plane_at_configured_gap": 24.229999,
+      "overlap_mm2_at_configured_gap": 0.0,
+      "xy_distance_at_configured_gap": 0.23314320000000066,
+      "first_sampled_intersection_below_root": null
+    },
+    {
+      "z": 25.8,
+      "bottom_z": 25.600001000000002,
+      "configured_bottom_gap": 0.17,
+      "model_plane_at_configured_gap": 25.430001,
+      "overlap_mm2_at_configured_gap": 0.0,
+      "xy_distance_at_configured_gap": 0.23314512620899736,
+      "first_sampled_intersection_below_root": null
+    },
+    {
+      "z": 139.4,
+      "bottom_z": 139.200003,
+      "configured_bottom_gap": 0.17,
+      "model_plane_at_configured_gap": 139.03000300000002,
+      "overlap_mm2_at_configured_gap": 0.0,
+      "xy_distance_at_configured_gap": 0.17918556497100935,
+      "first_sampled_intersection_below_root": {
+        "drop_mm": 0.9500000000000001,
+        "overlap_mm2": 0.05505572215847384
+      }
+    },
+    {
+      "z": 140.8,
+      "bottom_z": 140.60000300000002,
+      "configured_bottom_gap": 0.17,
+      "model_plane_at_configured_gap": 140.43000300000003,
+      "overlap_mm2_at_configured_gap": 0.0,
+      "xy_distance_at_configured_gap": 1.3629052040655893,
+      "first_sampled_intersection_below_root": {
+        "drop_mm": 1.05,
+        "overlap_mm2": 0.04897270464740239
+      }
+    }
+  ],
+  "method_limits": "Support bead envelopes buffer centerlines by half width, arcs use 0.01 mm chord tolerance; cross-section overlap uses exact project triangles and a 0.05 mm vertical sampling step. Small boundary-touching components are excluded from confirmed counts. This is geometric diagnosis, not a physical print qualification.",
+  "diagnostic_override_note": "Initial unmarked XY/Z JSON edits were restored from inherited presets and yielded identical G-code. They are retained in runtime and excluded from effective controls. Corrected diagnostic projects add the single key to different_settings_to_system, then verify emitted effective settings.",
+  "preservation": {
+    "installed_settings_files": 832,
+    "installed_settings_unchanged_in_all_runs": true,
+    "production_source_modified": false,
+    "installed_or_pushed": false
+  },
+  "runtime_path": ".agents/runtime/runs/run-2b1f8ec843934792a12d5b5e592db081/diagnostics"
+}

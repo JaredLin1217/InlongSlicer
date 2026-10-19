@@ -107,6 +107,10 @@ public:
      */
     const Polygons& getCollision(const coord_t radius, LayerIndex layer_idx, bool min_xy_dist) const;
 
+    // The physical-height continuation pass must retain blockers without also
+    // inheriting the collision cache's source-layer rounding of model Z gaps.
+    const std::vector<Polygons>& support_blockers() const { return m_anti_overhang; }
+
     // Collision volume for a contact footprint that is allowed to use the
     // configured Z gap without an additional XY clearance.  This is limited
     // to the current model outline and is intended for narrow sharp-tail
