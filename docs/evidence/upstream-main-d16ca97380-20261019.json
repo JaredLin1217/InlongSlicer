@@ -1,0 +1,588 @@
+{
+  "schema_version": "inlong-upstream-integration/v1",
+  "verified_utc": "2026-10-19T06:22:45.452289+00:00",
+  "scope": "Local merge and native/profile verification only. No installed EXE/DLL replacement, installation, push or real-printer operation.",
+  "base": "1fc5598d97c580be616892842e440221090de2ac",
+  "upstream": "d16ca973802cc884f6bc463b140403a30bb9bc6d",
+  "incoming_commits": [
+    "8160f64cae78c6d4311c514d923841d8024f7d30 Skip the LAN reconnect after a print to the selected printer (#16271)",
+    "72ba7a2b35de67a85216552cef50484f3b089f39 Fix incorrect layer number in G-code conflict warning (#16588)",
+    "1ee0b730a1e6484e55a631dd567b41c986fc1d6a Linux: use WebKit's shared-memory transport in hypervisor guests",
+    "c1fb801ff33c13bb667e32a58a8c9165fb1406cb Linux: Show display backend of app on Troubleshoot dialog (#16615)",
+    "0f59cd5d0554e69af6818677b4af85c54946ead1 Let Global shortcuts run while typing, except keys that edit text (#16558)",
+    "06665d05582f29acc84cb63cfeb1f719a7f904fd Post a readable diff of changed custom G-code on profile PRs (#16605)",
+    "da4d766d467cb90274393523c8ba68dea74bb3c2 Fix Moonraker status stream hanging app exit and missing dead printers (#16604)",
+    "d16ca973802cc884f6bc463b140403a30bb9bc6d Snapmaker U1: set the top cover purifier mode and match Snapmaker's start G-code (#16590)"
+  ],
+  "source_tree_before_evidence": "3d47c073858643f68f96a5d9ec15e282649c9f97",
+  "staged_paths_before_evidence": [
+    ".claude/skills/orca-wxwidgets/references/platforms.md",
+    ".claude/skills/orca-wxwidgets/references/webview-gl-aui-media.md",
+    ".github/workflows/check_profiles.yml",
+    ".github/workflows/check_profiles_comment.yml",
+    "docs/HLSD/keyboard-shortcuts.md",
+    "resources/profiles/Snapmaker.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker ABS @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker ASA @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PETG @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PETG Translucent @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PETG-CF @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA Eco @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA Glow @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA Metal @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker PVA @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPE @U1.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU 95A @U1 base.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU 95A @U1.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU @U1.json",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU High-Flow @U1.json",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.2 nozzle).json",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.4 nozzle).json",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.6 nozzle).json",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.8 nozzle).json",
+    "scripts/inlong_profile_tool.py",
+    "scripts/tests/test_profile_tool.py",
+    "src/InlongSlicer.cpp",
+    "src/libvgcode/src/Layers.cpp",
+    "src/slic3r/GUI/ImGuiWrapper.cpp",
+    "src/slic3r/GUI/ImGuiWrapper.hpp",
+    "src/slic3r/GUI/KBShortcutsDialog.cpp",
+    "src/slic3r/GUI/KeyChord.cpp",
+    "src/slic3r/GUI/KeyChord.hpp",
+    "src/slic3r/GUI/MainFrame.cpp",
+    "src/slic3r/GUI/OpenGLManager.cpp",
+    "src/slic3r/GUI/OpenGLManager.hpp",
+    "src/slic3r/GUI/Plater.cpp",
+    "src/slic3r/GUI/TroubleshootDialog.cpp",
+    "src/slic3r/GUI/TroubleshootDialog.hpp",
+    "src/slic3r/Utils/MoonrakerPrinterAgent.cpp",
+    "src/slic3r/Utils/MoonrakerPrinterAgent.hpp",
+    "tests/slic3rutils/CMakeLists.txt",
+    "tests/slic3rutils/test_imgui_wrapper.cpp",
+    "tests/slic3rutils/test_moonraker_discovery.cpp",
+    "tests/slic3rutils/test_moonraker_printer_agent.cpp",
+    "tests/slic3rutils/test_shortcuts.cpp"
+  ],
+  "source_sha256": {
+    ".claude/skills/orca-wxwidgets/references/platforms.md": "495eddc45aa08dc6b61052344227c3e3907672427690eccf90be514d0df734fc",
+    ".claude/skills/orca-wxwidgets/references/webview-gl-aui-media.md": "e839f95247bf48fd1270d9803c7bbaaf8582e808e0bb2fa5a47cfaa2f9052c48",
+    ".github/workflows/check_profiles.yml": "cb034a5882914b5089f8b4c99afdf2d3cf1c5094053b37b86817cddcd8d10631",
+    ".github/workflows/check_profiles_comment.yml": "d1930ade58627ead62dc292debea0d2f7ddcc5b2e1ca5aea6280d06190bc0f7e",
+    "docs/HLSD/keyboard-shortcuts.md": "611cd9931e79a119322cae45717994f2c5d59c0e3ad468101e5863d4e42c9ffe",
+    "resources/profiles/Snapmaker.json": "5fe638e7314aec40f7545d578f1ed200750004c6e7e0f74fe5ff0a10977806a2",
+    "resources/profiles/Snapmaker/filament/Snapmaker ABS @U1 base.json": "331e085a6c6cbee23a4dcd9b4160848a1b452678d3fc71550a598e5f3617d790",
+    "resources/profiles/Snapmaker/filament/Snapmaker ASA @U1 base.json": "8cb3241e664fe932d2c57946f61307d1ccd19d602b08d5be51b42e1cb7af38d8",
+    "resources/profiles/Snapmaker/filament/Snapmaker PETG @U1 base.json": "0d42fbcab51d6bbeec144376e9216306f3793b4fe35e3507ba61c4819ae19e49",
+    "resources/profiles/Snapmaker/filament/Snapmaker PETG Translucent @U1 base.json": "8e64c8b3a2d1656c84c1dc9b2173691b08ecc7202c97891462614aa56eb52457",
+    "resources/profiles/Snapmaker/filament/Snapmaker PETG-CF @U1 base.json": "bb82bfe103c72acb220ea4e8c0ee419ef82aa19b505540b38cf51ca5d1fc40a8",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA @U1 base.json": "9196927014656d4f1c8a39c61a9519eb352c013d33814b6e765ede2ce1d40a1c",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA Eco @U1 base.json": "a782cfe2290336d6dbab9b8a12fab26da0622f0a2fd1f5b2b17a10270b62e24f",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA Glow @U1 base.json": "505084843d191ee9c4d1a8bb4772d51bdb5d24caa7e53a21c6bb14c16ebd12d2",
+    "resources/profiles/Snapmaker/filament/Snapmaker PLA Metal @U1 base.json": "1b4f2bd87dd452376d51f6c6ec17c284c856618d42e27d5f73dafddaaafaee66",
+    "resources/profiles/Snapmaker/filament/Snapmaker PVA @U1 base.json": "97a823c36125c7699860cfc8501cd7fe94215a0a1c21a320067285612c74a72f",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPE @U1.json": "70f46208685487e39ebb406376363b76b51ffa0ea8842d46a01d8ffdf8058107",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU 95A @U1 base.json": "8b3fcc7b9ef1d2e16e9aeea30d853d587accb7e1751cd637e2d9aaf099fb46b3",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU 95A @U1.json": "454a0c070d1b7a15b060f54a4abee1890ecafb59a0918599a31045e671d6a527",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU @U1.json": "5fcb9655235d5571fc1b92cb2b1bc2a287b54ac7ad1b3f2a71a5e558d0071a93",
+    "resources/profiles/Snapmaker/filament/Snapmaker TPU High-Flow @U1.json": "b7162cb48cdd12bc04b79e38dff3b14f5e40e1584d0cfd672666de14dcc414fa",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.2 nozzle).json": "9b79a330536f156ffa5b21416b3d479e6ce2638f32b14fd610f9aac19da35c8e",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.4 nozzle).json": "c8961a62a5948db714acba9755278f3cdb87c6312feb5ab4707fbe7ba80836da",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.6 nozzle).json": "04dc74c4e26fb9e5b41bfe2ef561c07c095f2ab476fc92fb329d588f2c1c8bf1",
+    "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.8 nozzle).json": "553a4544bcdc842666175f3563a8555b389870961e9ceb67afeded42964a7283",
+    "scripts/inlong_profile_tool.py": "ab4ad039b179188202c49fdc19c4621a3c0b02b192a4227584892d2541f376bd",
+    "scripts/tests/test_profile_tool.py": "27e429687b8aa36b1db10da883195ea109ed1941baa5ea9724f4f244e6476194",
+    "src/InlongSlicer.cpp": "6ea485f7d9d9ca7c7dcc7bedc08cac921aa319d0aac609652180d3eb466d397b",
+    "src/libvgcode/src/Layers.cpp": "e608b6307f86ca37ba7f532916891cd53a78946adc06e3c0598c0169b3abd02e",
+    "src/slic3r/GUI/ImGuiWrapper.cpp": "a55eddbf625b68d63eaa7fd7b71656ed9832a0680e10f56e0284d61c87f44e62",
+    "src/slic3r/GUI/ImGuiWrapper.hpp": "c79f83bc2fc3b8a9127b967fed8ba46e2fcaa93dd3f5afe8199c6cb27579e795",
+    "src/slic3r/GUI/KBShortcutsDialog.cpp": "03a55476fbd9e5dc5111235ebe0d3a4b138869c6ef5a1c91cdde15d5e6b7bdc6",
+    "src/slic3r/GUI/KeyChord.cpp": "bc4da9e8e46daa67ddc8132d381864cad6670698219f670c11405faa444e8cc6",
+    "src/slic3r/GUI/KeyChord.hpp": "0ccbf537a082a3d3138bf23a0d9fbc8d95948fb1862fe1361303a82c33fe7e77",
+    "src/slic3r/GUI/MainFrame.cpp": "85c458e32e8a779c20025296ce61a0002e00ed3670b86d6ee610fd5a5bfd9ee6",
+    "src/slic3r/GUI/OpenGLManager.cpp": "f01f6c3a02069fcf0a3431f6572f454c4913d0991effde0a1fe48478106a3e0a",
+    "src/slic3r/GUI/OpenGLManager.hpp": "ba59607b20e3479fef273e43088ba59b98d30399e420c84b12f2656ccc49694c",
+    "src/slic3r/GUI/Plater.cpp": "0b4e60e75a6fb6b06925757ddb3c7360cb82ad4bae2791a18a69d2fbcd549f5b",
+    "src/slic3r/GUI/TroubleshootDialog.cpp": "a58dc2dfc417af7ca4c39dbcbc90b446f8d75d56ca7de269c8b2905a54a79348",
+    "src/slic3r/GUI/TroubleshootDialog.hpp": "1ef437316f8efcc7a959d625231a3fd606d278c5b10232d5c0b9dacd98398e56",
+    "src/slic3r/Utils/MoonrakerPrinterAgent.cpp": "0d7ee43eec84fb8ba88dc69cd3ecc5eddb1d614e98e5fa59f0ae3720c793da80",
+    "src/slic3r/Utils/MoonrakerPrinterAgent.hpp": "cbe3cd0e070f38c99d5dcb0dcd026ac522b137aa3c4662acd6bbfec4b0e110dd",
+    "tests/slic3rutils/CMakeLists.txt": "ba20811505c99db9c0bb44dd7bda2a553fb9b1d9fab4521476f94e1ea8331008",
+    "tests/slic3rutils/test_imgui_wrapper.cpp": "d74954e2a19507dcd7302be997038380c01142c6852affa583204b3439cba907",
+    "tests/slic3rutils/test_moonraker_printer_agent.cpp": "4b9de4433a759fed085337cc3f163a451183af248aa5917cd00539020679fcac",
+    "tests/slic3rutils/test_shortcuts.cpp": "fdc63524a39116359d0ccf30ec880ea9e8d8ffd3fb0c1db4de1922c4366bb250"
+  },
+  "conflict_review": {
+    "utc": "2026-10-19T04:44:48.640265+00:00",
+    "resolutions": [
+      {
+        "path": "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.2 nozzle).json",
+        "conflict_regions": 1,
+        "resolution": "Import the new purifier/pre-extrusion/cleaning start G-code while retaining the existing Inlong explanatory comments and all unrelated fork fields.",
+        "sha256": "9b79a330536f156ffa5b21416b3d479e6ce2638f32b14fd610f9aac19da35c8e"
+      },
+      {
+        "path": "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.4 nozzle).json",
+        "conflict_regions": 1,
+        "resolution": "Import the new purifier/pre-extrusion/cleaning start G-code while retaining the existing Inlong explanatory comments and all unrelated fork fields.",
+        "sha256": "c8961a62a5948db714acba9755278f3cdb87c6312feb5ab4707fbe7ba80836da"
+      },
+      {
+        "path": "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.6 nozzle).json",
+        "conflict_regions": 1,
+        "resolution": "Import the new purifier/pre-extrusion/cleaning start G-code while retaining the existing Inlong explanatory comments and all unrelated fork fields.",
+        "sha256": "04dc74c4e26fb9e5b41bfe2ef561c07c095f2ab476fc92fb329d588f2c1c8bf1"
+      },
+      {
+        "path": "resources/profiles/Snapmaker/machine/Snapmaker U1 (0.8 nozzle).json",
+        "conflict_regions": 1,
+        "resolution": "Import the new purifier/pre-extrusion/cleaning start G-code while retaining the existing Inlong explanatory comments and all unrelated fork fields.",
+        "sha256": "553a4544bcdc842666175f3563a8555b389870961e9ceb67afeded42964a7283"
+      },
+      {
+        "path": "scripts/tests/test_profile_tool.py",
+        "conflict_regions": 1,
+        "resolution": "Retain the expanded gcode-diff test description using the fork tool filename; preserve all merged tests.",
+        "sha256": "27e429687b8aa36b1db10da883195ea109ed1941baa5ea9724f4f244e6476194"
+      },
+      {
+        "path": "src/slic3r/Utils/MoonrakerPrinterAgent.cpp",
+        "conflict_regions": 2,
+        "resolution": "Import the new explicit Asio/Beast includes; verify against the local Boost headers before native compilation.",
+        "sha256": "0d7ee43eec84fb8ba88dc69cd3ecc5eddb1d614e98e5fa59f0ae3720c793da80"
+      }
+    ],
+    "branding_adaptations": [
+      "Profile tool CI/help uses inlong_profile_tool.py.",
+      "Internal scene canvas name is InlongSceneCanvas."
+    ],
+    "missing_local_boost_headers": []
+  },
+  "branding_review": {
+    "result": "passed",
+    "adaptations": [
+      "Retained Inlong profile-tool path in CLI help, tests and new CI gcode-diff step.",
+      "Retained Inlong in four Snapmaker start-G-code comments while applying the upstream sequencing changes.",
+      "Used InlongSceneCanvas for the new internal wx canvas name."
+    ],
+    "scan": "Full filename/content scan and incoming added-line review. No incoming product Orca references remain. Existing external URLs, dependency/ABI names, upstream skill identifiers and historical documentation remain intentional.",
+    "filename_scan_sha256": "35a9153a81fbafa99d709dea167f1ce9d342b5c1c487f674e85ef41ba9a3e62f",
+    "content_scan_sha256": "df27206b2e19869da24d91973bc197cf97468592ab5b7de98ae9fd9bda73736e"
+  },
+  "preservation": {
+    "utc": "2026-10-19T06:22:23.443452+00:00",
+    "passed": true,
+    "tree": "3d47c073858643f68f96a5d9ec15e282649c9f97",
+    "preserved_trees": {
+      "src/libslic3r": "9b6d786228e63ae6d6187ef19b51beba0a8240fd",
+      "resources/profiles/INLONG": "da19c90d5e21d1ffaf385c81742ec9b02cd0e3fb",
+      "resources/profiles/_Infinity3DP": "fc39d5fbe5cfe9035a0c6ecb5dccc375f59383e4",
+      "resources/profiles/InlongArena": "7090a61890f02e2883dba5a511f93fac4673cd0e",
+      "resources/profiles/InlongFilamentLibrary": "80fba6a07cb56074b517154649faaf3d05684827"
+    },
+    "preserved_files": {
+      "version.inc": "95f38e46645c70378f23602c2eb2eff985a8a36f5f28b8dcd7225e3bc111c8ce",
+      "CMakeLists.txt": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+      "src/CMakeLists.txt": "689ace537da8ecb9cfcfdeba05a65ac76f1d4f37f3c14f8cd904391dab81087a",
+      "cmake/InlongClipperScanbeam.cmake": "97e06eec1fddbaf2e3b5d8c280ce22c01cc0b527d3e503df0462d9444d8869e0",
+      "cmake/InstallOnlyInlong.cmake": "6dd05eb14a15ef438d492e620b5b591b775a0cf6a0104b455a8fb773bc6e4755",
+      "cmake/ResetBuildDataDirs.cmake": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b",
+      "src/slic3r/GUI/GUI_App.cpp": "68b613ca130c55271bd89fe006f603e3a6e104380670e4b3161042289e546630",
+      "src/slic3r/GUI/NativeCommands.cpp": "ca1ee424b321dbe60a88b0b25907a6fc030f53e41257236b32fd1954bbac99d3",
+      "src/slic3r/GUI/Preferences.cpp": "da0088c38cfea7d64787cd4497196528887017fce5e06d47827665f77b051c99",
+      "src/slic3r/Utils/PresetUpdater.cpp": "b0f540018c72c4372752b070472e51d01e9ca6d353dd121eb11e519e878db5e2",
+      "resources/web/homepage/js/home.js": "57bc7f629aaed409bdcef298e4ec843586f12a4ba5345384dd0678276ec844fb",
+      "resources/web/homepage/css/home.css": "bbbb35ab59e268fa20acf04de2f9e30db9ab73f060bc65c175a6746d9f2ef53f"
+    },
+    "runtime_binaries": {
+      "build/src/Release/inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "build/src/Release/InlongSlicer.dll": "808e375e67dbae0c68f25355532172905b04ad7629200eaddb3502d6bbe46d46",
+      "build/InlongSlicer/inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "build/InlongSlicer/InlongSlicer.dll": "808e375e67dbae0c68f25355532172905b04ad7629200eaddb3502d6bbe46d46",
+      "build/InlongSlicer_InlongOnly/inlong-slicer.exe": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+      "build/InlongSlicer_InlongOnly/InlongSlicer.dll": "808e375e67dbae0c68f25355532172905b04ad7629200eaddb3502d6bbe46d46"
+    },
+    "settings_files": {
+      "build/src/Release/data_dir": 832,
+      "build/InlongSlicer/data_dir": 0,
+      "build/InlongSlicer_InlongOnly/data_dir": 0
+    },
+    "native_core_unchanged": true
+  },
+  "native_gui": {
+    "utc": "2026-10-19T06:21:35.394550+00:00",
+    "passed": true,
+    "cases": 64,
+    "assertions": 606,
+    "failures": 0,
+    "errors": 0,
+    "test_exe_sha256": "de4bd0e8d47a1fa7e7bf616b67929ed26564f2b6459889dd70c92fd807772996",
+    "xml_sha256": "e51b950d209fadaaff6eb6260f82ad227aef78c661279504674fb8527c0bea3e"
+  },
+  "native_test_compatibility_review": {
+    "utc": "2026-10-19T06:20:25.033914+00:00",
+    "tree": "3d47c073858643f68f96a5d9ec15e282649c9f97",
+    "initial_tree": "163fcb29ed16fe06bddc1f58e8ce89ce14255313",
+    "changed_since_initial": [
+      "tests/slic3rutils/test_moonraker_printer_agent.cpp"
+    ],
+    "test_sha256": "4b9de4433a759fed085337cc3f163a451183af248aa5917cd00539020679fcac",
+    "reason": "Existing Inlong perform_connection_async compiles out initial status query and automatic WebSocket monitoring. Adapt the upstream automatic-query test to assert successful connection without automatic HTTP status queries or streams. Retain all explicit stream shutdown/reconnect/heartbeat tests. Production code and monitoring policy remain unchanged."
+  },
+  "initial_native_test_result": {
+    "label": "native-gui-regressions",
+    "command": [
+      "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\tests\\slic3rutils\\Release\\slic3rutils_tests.exe",
+      "[Shortcuts],[ImGuiWrapper],[MoonrakerPrinterAgent],[DeviceAccess],[NetworkDiscovery],[DeviceManager]",
+      "--order",
+      "rand",
+      "--rng-seed",
+      "20261019",
+      "--reporter",
+      "junit",
+      "--out",
+      "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-833560fd58b5418a805a9004e4b9c82b\\validation\\native-gui-regressions.xml"
+    ],
+    "started_utc": "2026-10-19T06:17:24.272722+00:00",
+    "completed_utc": "2026-10-19T06:17:44.624104+00:00",
+    "seconds": 20.35160360000009,
+    "exit_code": 42,
+    "log_sha256": "4e1d05d242639a68ea96a9504ab9fd145d008d3ca1ab2b8fe1da528d52ce320a"
+  },
+  "test_log_limits": "Mock-device fixtures emit null-cloud and unsupported mock-device/resource diagnostics; the loopback stream tests intentionally trigger socket timeout/disconnect warnings. JUnit assertions, not absence of log messages, determine the native test result.",
+  "layer_boundaries": {
+    "utc": "2026-10-19T04:51:13.953895+00:00",
+    "passed": true,
+    "checks": 10,
+    "library_sha256": "2bd2f81f6fbeae2519c2d5ff84da1a74f1a081da7ea68e564dc2d9fed64ad699",
+    "exe_sha256": "35e37ab6aa3e1bda6784dc38f629345610ed31fb1bad8109446132ecd80df51f",
+    "source_sha256": "0e6912630bef00706eaec88f9171807a1335759396c9a3c62b82adb930789e97"
+  },
+  "profile_validator_binding": {
+    "utc": "2026-10-19T04:59:24.229807+00:00",
+    "exe_sha256": "7928b18053a8e8466c30e7118b493b42ec1a36b648f393d8bee9d618f2a9fb00",
+    "core_sha256": "7f7702474daaa4fd719d283b4746d9b6b8e99c6bce55292976f6c2212db2eaa5",
+    "note": "Core and validator source are unchanged by this merge; the previously built validator is reused against isolated current profiles."
+  },
+  "verification": {
+    "configure": {
+      "label": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build"
+      ],
+      "started_utc": "2026-10-19T04:46:40.391790+00:00",
+      "completed_utc": "2026-10-19T04:48:35.859167+00:00",
+      "seconds": 115.46743320000007,
+      "exit_code": 0,
+      "log_sha256": "df57a376bc32464761c1b6db7e9961f36e1f16221c86a6a3d419da0e2abcbc28"
+    },
+    "build-vgcode": {
+      "label": "build-vgcode",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "libvgcode",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=3",
+        "/p:BuildProjectReferences=false",
+        "/p:PreBuildEventUseInBuild=false",
+        "/p:PostBuildEventUseInBuild=false"
+      ],
+      "started_utc": "2026-10-19T04:48:35.886912+00:00",
+      "completed_utc": "2026-10-19T04:48:41.370135+00:00",
+      "seconds": 5.48326639999982,
+      "exit_code": 0,
+      "log_sha256": "583c16572ccbe8e01054dce5da3edd2a7fe9438aabd9901683ffa767a87a8e74"
+    },
+    "build-gui-library": {
+      "label": "build-gui-library",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "libslic3r_gui",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=3",
+        "/p:BuildProjectReferences=false",
+        "/p:PreBuildEventUseInBuild=false",
+        "/p:PostBuildEventUseInBuild=false"
+      ],
+      "started_utc": "2026-10-19T04:48:41.391833+00:00",
+      "completed_utc": "2026-10-19T06:08:49.545178+00:00",
+      "seconds": 4808.1536285,
+      "exit_code": 0,
+      "log_sha256": "93f9d83711f8e2d72da5ac9e9b51a8da6656fae7ebafc0eeaf5ec651b985aae7"
+    },
+    "build-gui-tests": {
+      "label": "build-gui-tests",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "slic3rutils_tests",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=3",
+        "/p:BuildProjectReferences=false",
+        "/p:PreBuildEventUseInBuild=false",
+        "/p:PostBuildEventUseInBuild=false"
+      ],
+      "started_utc": "2026-10-19T06:08:49.577782+00:00",
+      "completed_utc": "2026-10-19T06:16:50.788869+00:00",
+      "seconds": 481.21068879999984,
+      "exit_code": 0,
+      "log_sha256": "eaefecefafb152e543c54237be44559b92b61987ce06afe0b1f74b0a573f14e8"
+    },
+    "compile-launcher": {
+      "label": "compile-launcher",
+      "command": [
+        "C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\InlongSlicer.vcxproj",
+        "/t:ClCompile",
+        "/p:Configuration=Release",
+        "/p:Platform=x64",
+        "/p:BuildProjectReferences=false",
+        "/p:PreBuildEventUseInBuild=false",
+        "/p:PostBuildEventUseInBuild=false",
+        "/p:CL_MPCount=3",
+        "/p:SelectedFiles=D:\\Work\\Nowing\\GitHub\\InlongSlicer\\src\\InlongSlicer.cpp",
+        "/verbosity:minimal"
+      ],
+      "started_utc": "2026-10-19T06:16:50.819124+00:00",
+      "completed_utc": "2026-10-19T06:18:26.444930+00:00",
+      "seconds": 95.6250229999996,
+      "exit_code": 0,
+      "log_sha256": "814d05291d48ce7f6987db91d2b7fe81979df534a800b71b94a3f56d845d2375"
+    },
+    "profile-tool-tests": {
+      "label": "profile-tool-tests",
+      "command": [
+        "C:\\Users\\v_jar\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_profile_tool.py",
+        "-v"
+      ],
+      "started_utc": "2026-10-19T04:47:11.395919+00:00",
+      "completed_utc": "2026-10-19T04:54:39.597834+00:00",
+      "seconds": 448.2016595,
+      "exit_code": 0,
+      "log_sha256": "9fba63ac5d3fdbe4c4a0f4a8766f70ee507e43bfaf28ffdd12d900090d578c85"
+    },
+    "extra-profile-check": {
+      "label": "extra-profile-check",
+      "command": [
+        "C:\\Users\\v_jar\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "scripts/inlong_extra_profile_check.py"
+      ],
+      "started_utc": "2026-10-19T04:54:39.624038+00:00",
+      "completed_utc": "2026-10-19T04:55:13.525729+00:00",
+      "seconds": 33.90265190000014,
+      "exit_code": 0,
+      "log_sha256": "a241570606ba71c4c72f3f4e6ca1a56c74756e0379420f8e2e21880e427ad927"
+    },
+    "profile-check": {
+      "label": "profile-check",
+      "command": [
+        "C:\\Users\\v_jar\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "scripts/inlong_profile_tool.py",
+        "check",
+        "--fork-compatible"
+      ],
+      "started_utc": "2026-10-19T04:55:13.569357+00:00",
+      "completed_utc": "2026-10-19T04:57:36.153634+00:00",
+      "seconds": 142.58415579999996,
+      "exit_code": 0,
+      "log_sha256": "6e8780c58603f0fd2be5ab321f741fc9a1cfba8c38f4d11b4c5456778b4c10b9"
+    },
+    "native-snapmaker-profiles": {
+      "label": "native-snapmaker-profiles",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\InlongSlicer_profile_validator.exe",
+        "-p",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-833560fd58b5418a805a9004e4b9c82b\\work\\native-resources\\profiles",
+        "-v",
+        "Snapmaker"
+      ],
+      "started_utc": "2026-10-19T04:59:29.537586+00:00",
+      "completed_utc": "2026-10-19T04:59:51.243883+00:00",
+      "seconds": 21.706544399999984,
+      "exit_code": 0,
+      "log_sha256": "7080529016651eb2b23abb65b989214cc16f0d1b423f136ce92258c1b25ae488"
+    },
+    "native-snapmaker-slice": {
+      "label": "native-snapmaker-slice",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\InlongSlicer_profile_validator.exe",
+        "-p",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-833560fd58b5418a805a9004e4b9c82b\\work\\native-resources\\profiles",
+        "-v",
+        "Snapmaker",
+        "--slice"
+      ],
+      "started_utc": "2026-10-19T04:59:51.279924+00:00",
+      "completed_utc": "2026-10-19T05:00:36.398926+00:00",
+      "seconds": 45.11967189999996,
+      "exit_code": 0,
+      "log_sha256": "cf9cb2e394d698da15f74330248798ef015adad5dd85799063d8f2671d51c12e"
+    },
+    "native-gui-regressions-compatible": {
+      "label": "native-gui-regressions-compatible",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\tests\\slic3rutils\\Release\\slic3rutils_tests.exe",
+        "[Shortcuts],[ImGuiWrapper],[MoonrakerPrinterAgent],[DeviceAccess],[NetworkDiscovery],[DeviceManager]",
+        "--order",
+        "rand",
+        "--rng-seed",
+        "20261019",
+        "--reporter",
+        "junit",
+        "--out",
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-833560fd58b5418a805a9004e4b9c82b\\validation\\native-gui-regressions-compatible.xml"
+      ],
+      "started_utc": "2026-10-19T06:21:24.895061+00:00",
+      "completed_utc": "2026-10-19T06:21:35.369123+00:00",
+      "seconds": 10.4733212000001,
+      "exit_code": 0,
+      "log_sha256": "bb3293d827086892f1f125a052bba5cd7ac4460f7e1b323d25c9a739ca5ab5e3"
+    },
+    "build-gui-tests-compatible": {
+      "label": "build-gui-tests-compatible",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--config",
+        "Release",
+        "--target",
+        "slic3rutils_tests",
+        "--parallel",
+        "1",
+        "--",
+        "/p:CL_MPCount=3",
+        "/p:BuildProjectReferences=false",
+        "/p:PreBuildEventUseInBuild=false",
+        "/p:PostBuildEventUseInBuild=false"
+      ],
+      "started_utc": "2026-10-19T06:19:36.721212+00:00",
+      "completed_utc": "2026-10-19T06:21:17.929945+00:00",
+      "seconds": 101.20938350000051,
+      "exit_code": 0,
+      "log_sha256": "2119967017f4f574d2c01d93a082adf3835a3795103a4ad7ca0f11a16eee41f2"
+    },
+    "brand-colors": {
+      "label": "brand-colors",
+      "command": [
+        "C:\\Users\\v_jar\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "scripts/check_inlong_brand_colors.py"
+      ],
+      "started_utc": "2026-10-19T04:50:46.539731+00:00",
+      "completed_utc": "2026-10-19T04:51:47.751917+00:00",
+      "seconds": 61.21257490000016,
+      "exit_code": 0,
+      "log_sha256": "b1ecb13ff032d4ba532380598acec95c0b9f6ea96715eb1e7ececa7beb54d5b0"
+    },
+    "layer-boundaries": {
+      "label": "layer-boundaries",
+      "command": [
+        "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-833560fd58b5418a805a9004e4b9c82b\\work\\layer-check\\build\\Release\\layer_boundary_check.exe"
+      ],
+      "started_utc": "2026-10-19T04:51:13.830004+00:00",
+      "completed_utc": "2026-10-19T04:51:13.933268+00:00",
+      "seconds": 0.10389000000009219,
+      "exit_code": 0,
+      "log_sha256": "dbb56cf66d096c7564ad38dbe7fbf2ea3eef0c106edfccb9cf747bab6755fad7"
+    },
+    "snapmaker-gcode-diff": {
+      "label": "snapmaker-gcode-diff",
+      "command": [
+        "C:\\Users\\v_jar\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "scripts/inlong_profile_tool.py",
+        "gcode-diff",
+        "--base",
+        "1fc5598d97c580be616892842e440221090de2ac",
+        "--vendor",
+        "Snapmaker"
+      ],
+      "started_utc": "2026-10-19T04:53:45.535951+00:00",
+      "completed_utc": "2026-10-19T04:53:46.275901+00:00",
+      "seconds": 0.7403461999999763,
+      "exit_code": 0,
+      "log_sha256": "09792d702655479dcfc4fb40b6e25899c04108c5f1d349489e678d939fae8141"
+    }
+  },
+  "compiler_warnings": {
+    "configure": [],
+    "build-vgcode": [],
+    "build-gui-library": [],
+    "build-gui-tests": [],
+    "build-gui-tests-compatible": [],
+    "compile-launcher": [
+      "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(6652,29): warning C4805: '==': 作業中類型 'const unsigned char' 和類型 'const _Ty' 的不安全混合 [D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\InlongSlicer.vcxproj]",
+      "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(6652,29): warning C4805:         with [D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\InlongSlicer.vcxproj]",
+      "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(6652,29): warning C4805:         [ [D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\InlongSlicer.vcxproj]",
+      "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(6652,29): warning C4805:             _Ty=bool [D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\InlongSlicer.vcxproj]",
+      "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(6652,29): warning C4805:         ] [D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\InlongSlicer.vcxproj]"
+    ]
+  },
+  "profile_tests": {
+    "tests": 137,
+    "skipped": 1,
+    "skip_reason": "This Windows test context cannot create symbolic links.",
+    "snapmaker_slices": {
+      "printers": 77,
+      "additional_processes": 4,
+      "additional_filaments": 11,
+      "total": 92,
+      "passed": 92
+    },
+    "extra_check": "72 vendors, zero errors and zero warnings.",
+    "fork_compatible_check": "73 vendors, zero errors and 28 obsolete-key warnings in 14 unchanged COEX profiles.",
+    "unchanged_legacy_warning_files": {
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX ABS @base.json": "6e46cdb98a4063b757600240cd015cf551c49cc9653ec7e20152ec349d2e47f2",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX ABS PRIME @base.json": "07c926de6e3277a0be7d09336d0ba9d5b25ddc084d60c602f3062fd5aec290c0",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX ASA PRIME @base.json": "3c171b62997a427187bb3ade1d4a7c572cf9641be8451e7d5edb4bbf1a103230",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX NYLEX PA6-CF @base.json": "afd8a789b01e030d7df4d232ae1b412b8c02fdddf975c7eae5efb02f0f174cc5",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX NYLEX UNFILLED @base.json": "b7fdb803f1db2fc66da3c6ad05f9e488b8274443322f8f8f379c349673139f84",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX PCTG PRIME @base.json": "a13b4dbaa1da08fd253626dde328e39b6d1379597ac7f0dd81f26586980ce332",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX PETG @base.json": "d4dd08f5e91bc92855b9436f67df94eea66d1a7ad8da9664d83286505d2bf85e",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX PLA @base.json": "0833ff60108ee3a9ff2f5f46b782af4cc0f8af4aa84e4010df026d82465da4d5",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX PLA PRIME @base.json": "c52b558d363a11903fa5afa1952512ed4b5aac527fa8fca98d26aef2f40d7d0e",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX PLA+Silk @base.json": "9d5208272ab269b740bd0eee8acece69297976ab72f70d9c89e7f702c93d4fee",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX TPE 30D @base.json": "4debd3e9be4ec8ba2b25f8fa9a1ae418432b954e96d2e718ac26b6e959659e50",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX TPE 40D @base.json": "bedba87f39118f0e439a80ee81ca69e032148f93910b34f1df30f286c03e351d",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX TPE 60D @base.json": "673c7f7fd8f2566c1abb9ad8d4f36ffc7d2752af105f5a3e172a3db78dacff45",
+      "resources/profiles/InlongFilamentLibrary/filament/COEX/COEX TPU 60A @base.json": "e4798c9ec5558aa5110e537ee038b87b48320fabf1408e0719634f8ac021d1bc"
+    }
+  },
+  "limits": [
+    "Windows native static libraries and test executable were rebuilt; the installed application was preserved.",
+    "Linux/macOS-specific paths were reviewed but were not built on this Windows host.",
+    "Loopback fake Moonraker servers exercise connection shutdown/reconnect behavior; no real printer was contacted.",
+    "The unchanged slicing core and curated profile trees were verified by hashes; no new performance benchmark is claimed.",
+    "Native Snapmaker effective-config and synthetic slicing checks use disposable current-profile copies."
+  ]
+}

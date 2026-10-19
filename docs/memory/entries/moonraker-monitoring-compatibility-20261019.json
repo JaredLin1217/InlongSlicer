@@ -1,0 +1,69 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "moonraker-monitoring-compatibility-20261019",
+  "key": "inlong-moonraker-automatic-monitoring-policy",
+  "type": "lesson",
+  "conclusion": "Inlong deliberately compiles out the initial Moonraker status query and automatic WebSocket startup in perform_connection_async because its MonitorPanel is not used for these printers. Upstream d16ca97380 assumes automatic monitoring in one new disconnect-during-query test; importing that expectation unchanged waits for an HTTP request the fork never sends. Preserve the production policy and test successful connection without automatic queries/streams instead. Keep the upstream explicit-stream shutdown, reconnect, heartbeat and callback tests, which exercise the new implementation directly. This compatibility test protects existing Inlong behavior during upstream integration.",
+  "scope": "Source and Windows loopback-test review at the local d16ca97380 merge. No new installation or real-printer validation.",
+  "modules": [
+    "networking",
+    "upstream-sync"
+  ],
+  "tags": [
+    "Moonraker",
+    "monitoring",
+    "compatibility",
+    "regression"
+  ],
+  "files": [
+    "src/slic3r/Utils/MoonrakerPrinterAgent.cpp",
+    "src/slic3r/Utils/MoonrakerPrinterAgent.hpp",
+    "tests/slic3rutils/test_moonraker_printer_agent.cpp",
+    "docs/evidence/upstream-main-d16ca97380-20261019.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/Utils/MoonrakerPrinterAgent.cpp",
+      "sha256": "0d7ee43eec84fb8ba88dc69cd3ecc5eddb1d614e98e5fa59f0ae3720c793da80",
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "locator": "Existing disabled automatic-monitoring block, new explicit-stream behavior and reviewed fork-compatible native regression. Checkout anchor; reviewed bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/Utils/MoonrakerPrinterAgent.hpp",
+      "sha256": "cbe3cd0e070f38c99d5dcb0dcd026ac522b137aa3c4662acd6bbfec4b0e110dd",
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "locator": "Existing disabled automatic-monitoring block, new explicit-stream behavior and reviewed fork-compatible native regression. Checkout anchor; reviewed bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/slic3rutils/test_moonraker_printer_agent.cpp",
+      "sha256": "4b9de4433a759fed085337cc3f163a451183af248aa5917cd00539020679fcac",
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "locator": "Existing disabled automatic-monitoring block, new explicit-stream behavior and reviewed fork-compatible native regression. Checkout anchor; reviewed bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-main-d16ca97380-20261019.json",
+      "sha256": "4f8b0d13256eb11b423f1974862f4b1f6df76f22e211144f4e97be42a1584200",
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "locator": "Existing disabled automatic-monitoring block, new explicit-stream behavior and reviewed fork-compatible native regression. Checkout anchor; reviewed bytes are separately hashed."
+    }
+  ],
+  "verified_utc": "2026-10-19T06:22:46.636890+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Reviewed pre-merge and merged connection code, diagnosed the initial one-case JUnit failure, adapted the fork expectation, rebuilt and reran all selected native regressions.",
+    "summary": "Production code and the disabled-monitoring policy are unchanged by the compatibility adaptation. The complete final selected native suite passes; original failed receipt and corrected evidence are retained."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "application-updates-upstream-review-20261019",
+  "key": "inlong-application-version-check-policy",
+  "type": "fact",
+  "conclusion": "InlongSlicer application-version checks remain disabled. PresetUpdater::version_check_enabled() is false; GUI_App::check_new_version_sf returns before HTTP, and normal/forced update-event handlers suppress release dialogs. The Help and command-palette update actions and stable-only preference remain removed. Profile and plugin synchronization retains its independent behavior. Upstream d16ca97380 changes MainFrame shortcut/focus handling only. All other update-policy snapshots are unchanged. This merge rebuilt native GUI static code and regressions while preserving installed EXE/DLL and all 832 current user settings files; it is not a new installation or interactive update-dialog observation.",
+  "scope": "Current update-policy source review after merging upstream d16ca97380. Historical installation results remain at their original checkout anchors.",
+  "modules": [
+    "GUI",
+    "ApplicationUpdates",
+    "WindowsBuild"
+  ],
+  "tags": [
+    "update-policy",
+    "InlongSlicer",
+    "settings-preservation"
+  ],
+  "files": [
+    "docs/evidence/application-updates-disabled-20261017.json",
+    "src/slic3r/GUI/GUI_App.cpp",
+    "src/slic3r/GUI/MainFrame.cpp",
+    "src/slic3r/GUI/NativeCommands.cpp",
+    "src/slic3r/GUI/Preferences.cpp",
+    "src/slic3r/Utils/PresetUpdater.cpp",
+    "docs/evidence/upstream-main-d16ca97380-20261019.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/application-updates-disabled-20261017.json",
+      "sha256": "89a732c3bdc09e5c19f1c90bf5c023074f205b7cdedaf1c699105ea004433db5",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/GUI_App.cpp",
+      "sha256": "68b613ca130c55271bd89fe006f603e3a6e104380670e4b3161042289e546630",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/MainFrame.cpp",
+      "sha256": "85c458e32e8a779c20025296ce61a0002e00ed3670b86d6ee610fd5a5bfd9ee6",
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "locator": "Reviewed current upstream merge diff; pre-merge checkout anchor, with reviewed bytes bound by SHA-256."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/NativeCommands.cpp",
+      "sha256": "ca1ee424b321dbe60a88b0b25907a6fc030f53e41257236b32fd1954bbac99d3",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Preferences.cpp",
+      "sha256": "da0088c38cfea7d64787cd4497196528887017fce5e06d47827665f77b051c99",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/Utils/PresetUpdater.cpp",
+      "sha256": "b0f540018c72c4372752b070472e51d01e9ca6d353dd121eb11e519e878db5e2",
+      "commit": "ec403e02f5e6f0a850c3564aca13e591763115fd",
+      "locator": "Reviewed disabled application request/dialog routes, independent profile worker and source-bound native build. Commit is a checkout anchor; uncommitted bytes are separately hashed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-main-d16ca97380-20261019.json",
+      "sha256": "4f8b0d13256eb11b423f1974862f4b1f6df76f22e211144f4e97be42a1584200",
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "locator": "Current upstream source review, individual native/profile receipts, preservation hashes and explicit verification limits."
+    }
+  ],
+  "verified_utc": "2026-10-19T06:22:45.820944+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Semantic diff review, hash comparison of all prior sources and affected native/profile regression evidence.",
+    "summary": "Reviewed every previous source hash; only MainFrame.cpp changed. Its full diff contains shortcut/focus routing and includes, without restoring update actions. Native GUI library compilation and affected shortcut/Moonraker/device regressions passed. Installed binary/settings preservation was independently rechecked."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "application-updates-disabled-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

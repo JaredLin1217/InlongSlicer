@@ -1,0 +1,71 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "upstream-profile-compatibility-20261019",
+  "key": "curated-profile-validation-compatibility",
+  "type": "lesson",
+  "conclusion": "The upstream profile authoring tool remains scripts/inlong_profile_tool.py. Project wrappers use check --fork-compatible to preserve the four curated fork bundles and legacy per-extruder arrays without explicit variant layouts. Reference, index-coverage and deterministic-ID checks remain active. Upstream d16ca97380 adds gcode-diff for readable custom-G-code/text changes; its new CLI, unit tests and CI step use the Inlong tool path. Effective configurations still require the native validator. Full profile-tool tests and fork-compatible/extra checks passed, followed by native Snapmaker configuration validation and synthetic slicing of the updated profiles. Do not mass-normalize curated profiles. Historical reference trees retain their original OrcaFilamentLibrary inheritance identity.",
+  "scope": "Current InlongSlicer upstream profile-tool integration at d16ca97380; no real-printer behavior or other-vendor native reslicing is claimed.",
+  "modules": [
+    "profiles",
+    "upstream-sync",
+    "branding"
+  ],
+  "tags": [
+    "compatibility",
+    "validation",
+    "legacy-presets"
+  ],
+  "files": [
+    "scripts/inlong_profile_tool.py",
+    "scripts/tests/test_profile_tool.py",
+    "InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md",
+    "docs/evidence/upstream-main-d16ca97380-20261019.json"
+  ],
+  "sources": [
+    {
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "sha256": "ab4ad039b179188202c49fdc19c4621a3c0b02b192a4227584892d2541f376bd",
+      "kind": "file_snapshot",
+      "path": "scripts/inlong_profile_tool.py",
+      "locator": "Reviewed current upstream merge diff; pre-merge checkout anchor, with reviewed bytes bound by SHA-256."
+    },
+    {
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "sha256": "27e429687b8aa36b1db10da883195ea109ed1941baa5ea9724f4f244e6476194",
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_profile_tool.py",
+      "locator": "Reviewed current upstream merge diff; pre-merge checkout anchor, with reviewed bytes bound by SHA-256."
+    },
+    {
+      "commit": "f9c8b09d2ebffd4de1da23215c00cbc51d5f11e2",
+      "sha256": "a26c318348e1720748403b0854385f6a8b7ebd2cac90820f8aee72a7f9e9a758",
+      "kind": "file_snapshot",
+      "path": "InlongSlicer_doc/orcaslicer_to_inlongslicer_migration.md",
+      "locator": "Profile Tool Compatibility During Upstream Sync"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-main-d16ca97380-20261019.json",
+      "sha256": "4f8b0d13256eb11b423f1974862f4b1f6df76f22e211144f4e97be42a1584200",
+      "commit": "1fc5598d97c580be616892842e440221090de2ac",
+      "locator": "Current upstream source review, individual native/profile receipts, preservation hashes and explicit verification limits."
+    }
+  ],
+  "verified_utc": "2026-10-19T06:22:46.604200+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Semantic diff review, hash comparison of all prior sources and affected native/profile regression evidence.",
+    "summary": "Reviewed the complete tool/test diff and unchanged migration guidance. Ran full profile-tool unittest discovery, fork-compatible and extra-profile CLI checks, plus native Snapmaker effective-config and synthetic slicing checks using an isolated current-profile copy. Reviewed unchanged curated bundle subtree hashes. No normalization was applied."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "upstream-profile-compatibility-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
