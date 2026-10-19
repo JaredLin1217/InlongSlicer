@@ -1,0 +1,95 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "upstream-fd28-contract-review-20261019",
+  "key": "orca-fd28f6c189-local-merge-contract",
+  "type": "fact",
+  "conclusion": "The earlier fd28f6c189 legacy embedded-material expansion and contained/intersecting plate-selection contracts remain intact. Preset.cpp and Selection.cpp/Selection.hpp are byte-identical to the reviewed snapshots. The preset test file now also covers a missing parent: the selected preset safely falls back to itself, while a loaded parent still resolves to the root. Current native preset regressions pass. Earlier installation, exact-output and GUI observations retain the scope of their original evidence.",
+  "scope": "Continuity review of the fd28 preset/selection contracts during d3699dd9f6 integration; original runtime and benchmark results remain historical.",
+  "modules": [
+    "Presets",
+    "Selection",
+    "UpstreamIntegration"
+  ],
+  "tags": [
+    "upstream-main",
+    "legacy-project",
+    "settings-preservation"
+  ],
+  "files": [
+    "docs/evidence/upstream-main-fd28f6c189-20261017.json",
+    "src/libslic3r/Preset.cpp",
+    "src/slic3r/GUI/Selection.cpp",
+    "src/slic3r/GUI/Selection.hpp",
+    "tests/libslic3r/test_preset_bundle_loading.cpp",
+    "docs/evidence/upstream-main-d3699dd9f6-20261019.json",
+    "src/libslic3r/Preset.hpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-main-fd28f6c189-20261017.json",
+      "sha256": "825d799f57f89a2a904600f5b2d5d0673d9b4d880575d198d012f488464fd389",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Preset.cpp",
+      "sha256": "16fb7d36799dde1de21f04249f4bdf18498b4238837326200ad24ec9913cbb14",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Selection.cpp",
+      "sha256": "5581906f7e32082cd80b6b3f2fae6e6426e857c1ce86bbd4a7fe1ed6190c6ed2",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Selection.hpp",
+      "sha256": "cb1d50e07b0471013c40de66d226c180b31512da03777b1b94d5e25dd62127f3",
+      "commit": "cf542457cd349291fb235638b7b09b64d03933eb",
+      "locator": "Reviewed merged bytes and native results. Commit is the pre-merge checkout anchor; the snapshot hash identifies verified content."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_preset_bundle_loading.cpp",
+      "sha256": "b09db0c7a82cd2cc1058354631377f1d2ea6a6d23414131c24372fd40f852243",
+      "commit": "6aed7d26430c3a4daac834fd831a3afb564165eb",
+      "locator": "Reviewed exact supplemental upstream diff; checkout anchor and separately hashed uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-main-d3699dd9f6-20261019.json",
+      "sha256": "49cd2a9d9ac8007fe7d159cfaf11690556c0ae0d30a75f96d3c1a4c356473ac1",
+      "commit": "6aed7d26430c3a4daac834fd831a3afb564165eb",
+      "locator": "Current caller/ABI review, native preset/plugin results and preservation evidence with explicit limits."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Preset.hpp",
+      "sha256": "3a3d80104577ff415aa63c7e3bb7c551eacdbabf93a812615e7685b34f2240e3",
+      "commit": "6aed7d26430c3a4daac834fd831a3afb564165eb",
+      "locator": "Direct current source dependency of the reviewed getter or embedded-Python regression; future drift suppresses recall."
+    }
+  ],
+  "verified_utc": "2026-10-19T06:50:49.060718+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Compared all prior source hashes, reviewed the sole changed snapshot semantically and ran affected native regressions.",
+    "summary": "Only the declared source changed; the supplemental evidence separates current source/test verification from historical installations and benchmark observations."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "upstream-main-fd28f6c189-20261017"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

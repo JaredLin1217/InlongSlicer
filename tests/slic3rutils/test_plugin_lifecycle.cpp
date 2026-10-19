@@ -1,5 +1,6 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/nowide/convert.hpp>
 #include <catch2/catch_all.hpp>
 
 #include <ios>
@@ -283,6 +284,30 @@ TEST_CASE("Lifecycle hook shutdown drains concurrent dispatch", "[PluginLifecycl
     if (!shutdown_was_started)
         FAIL("Lifecycle hook shutdown did not start");
     CHECK(shutdown_finished);
+}
+
+TEST_CASE("Embedded Python keeps bytecode in the initialized data directory", "[PluginLifecycle][Python][BytecodeCache]")
+{
+    ScopedPluginManager plugin_system;
+    if (!plugin_system.initialized)
+        SKIP("Bundled Python interpreter unavailable: " + PythonInterpreter::instance().last_error());
+
+    PythonGILState gil;
+    REQUIRE(gil);
+    PyObjectPtr sys(PyImport_ImportModule("sys"));
+    REQUIRE(sys);
+    PyObjectPtr prefix(PyObject_GetAttrString(sys.get(), "pycache_prefix"));
+    REQUIRE(prefix);
+    REQUIRE(PyUnicode_Check(prefix.get()));
+    const char* cache_path_utf8 = PyUnicode_AsUTF8(prefix.get());
+    REQUIRE(cache_path_utf8 != nullptr);
+#ifdef _WIN32
+    const fs::path cache_path(boost::nowide::widen(cache_path_utf8));
+#else
+    const fs::path cache_path(cache_path_utf8);
+#endif
+    CHECK(cache_path.lexically_normal() ==
+          (plugin_system.python_data_dir.dir / "python" / "pycache").lexically_normal());
 }
 
 TEST_CASE("A discovered script plugin loads and materializes its capability", "[PluginLifecycle][Python]")
@@ -615,8 +640,22 @@ TEST_CASE("Python module release removes package submodules and owned sys.path",
 
     // Ensure the next import executes the new submodule rather than reusing a stale package child.
     write_package("'new'");
-    boost::system::error_code ec;
-    fs::remove_all(package_root / "__pycache__", ec);
+    {
+        // The rewrite can keep the old mtime and size, so drop the bytecode wherever the
+        // interpreter caches it.
+        PythonGILState gil;
+        REQUIRE(gil);
+        PyObjectPtr util(PyImport_ImportModule("importlib.util"));
+        REQUIRE(util);
+        for (const char* file : {"__init__.py", "sub.py"}) {
+            PyObjectPtr source(PyUnicode_DecodeFSDefault((package_root / file).string().c_str()));
+            REQUIRE(source);
+            PyObjectPtr cached(PyObject_CallMethod(util.get(), "cache_from_source", "O", source.get()));
+            REQUIRE(cached);
+            boost::system::error_code ec;
+            fs::remove(fs::path(PyUnicode_AsUTF8(cached.get())), ec);
+        }
+    }
 
     paths.clear();
     modules.clear();
