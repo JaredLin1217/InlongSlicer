@@ -1,0 +1,142 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-slicing-performance-20261020",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "The organic closed-trunk repair should first accept complete raw printed-material coverage without repeating lateral morphology, then use exact bounded working-set reuse and revision/locality checks to avoid repeated full-layer morphology. Ordered hierarchical road bounds eliminate per-point segment-list allocation and reject distant ranges while preserving the original rounded projection and tie order. Expanded axis-aligned BoundingBox values must be marked defined before merges. On the supplied input, the prior Release measured 573.096 seconds and the final isolated repetition measured 255.818 seconds; baseline build overlap is disclosed in evidence. Both supplied project outputs and 16 nozzle/fill/independent-height variants retain exact canonical commands and effective settings. Cache-disabled output agrees, and relevant native controls pass. Previously verified closed circuits and actual bead bearing are retained through exact output identity, with all prior physical/all-model limits. Optional cache allowance remains live-memory-aware and bounded; no printer-name or model-specific rule is introduced.",
+  "scope": "Current uncommitted source and source-bound normal Release verification. Historical full suites, upstream observations and physical printing claims are not renewed.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "performance",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "closed-contours",
+    "floating-support",
+    "exact-output",
+    "memory-budget",
+    "projection",
+    "ordered-ties",
+    "belt"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "tests/fff_print/test_tree_support.cpp",
+    "src/libslic3r/Support/SupportCacheBudget.hpp",
+    "src/libslic3r/Support/SupportCacheBudget.cpp",
+    "tests/libslic3r/test_support_cache_budget.cpp",
+    "src/libslic3r/Support/OrganicSupportRoadProjection.hpp",
+    "tests/libslic3r/test_geometry.cpp",
+    "docs/evidence/organic-support-slicing-performance-20261020.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "c42d71d0f994ba5e5c729713339d86f5d3adcbcbf4fc860be2010d3a927e8ac2",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "6f420041421bbfca3f99d5f06743116e9b5b702aeb21c038754a4b977d3dffbf",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "aa7bf4967e40b1ce4892397a1c628c6cc4f946b396e826094c4cb2039fb67ecc",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "d2be112296f385878d8d4363dd4f0a1c8379a46d8e52b4d6905567d320b255df",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_tree_support.cpp",
+      "sha256": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCacheBudget.hpp",
+      "sha256": "1c3869d671138ec62cb5c15465a5d58157a19345ba24a8f8aede43f8b451a23a",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCacheBudget.cpp",
+      "sha256": "4acdc6c2db24a9f6059a2ffbc1ce32575de12a5daadbd4913e1bb657a0337162",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_support_cache_budget.cpp",
+      "sha256": "00087f782dbc44b00844159d118e48a264b7ebbaae4df9d435c071af9701c1e9",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportRoadProjection.hpp",
+      "sha256": "dc10e44ce75a37322a0ccaca64003b2eab56292b7e308a8de0276f15316c8f34",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_geometry.cpp",
+      "sha256": "873343725689bc73506641e01075bf76f0d7718cd844afaa8a0a3d0f8e710a33",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-slicing-performance-20261020.json",
+      "sha256": "bfa72e2dd05fec80c5d727033fc5cdec0692f2e844e986f44bbe258f4a706b8d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source and defining native controls, or durable exact-output and normal-build performance evidence. HEAD is a checkout anchor only."
+    }
+  ],
+  "verified_utc": "2026-10-20T10:11:46.245016+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Source review; exhaustive original-projection controls; native support and belt regressions; 16 fixture goldens; actual Release exports, isolated repetition and cache-disabled equivalence; live configuration preservation.",
+    "summary": "Speed up computation while retaining the latest fixed support paths; record baseline load and reject the invalid-bound prototype."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-closed-trunks-20261020"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

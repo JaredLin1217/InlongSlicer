@@ -115,6 +115,10 @@ static bool remap_generator_layers(
     return true;
 }
 
+static void normalize_organic_bottom_contacts(
+    const PrintObject &object,
+    SupportGeneratorLayersPtr &bottom_contacts);
+
 } // namespace TreeSupport3D
 } // namespace Slic3r
 
@@ -4356,9 +4360,11 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
 
             remove_undefined_layers();
 
+            if (output_plan.independent())
+                normalize_organic_bottom_contacts(print_object, bottom_contacts);
+
             std::tie(interface_layers, base_interface_layers) = generate_interface_layers(print_object.config(), support_params,
                 bottom_contacts, top_contacts, interface_layers, base_interface_layers, intermediate_layers, layer_storage);
-
             auto t_draw = std::chrono::high_resolution_clock::now();
             auto dur_pre_gen = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_precalc - t_start).count();
             auto dur_gen = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_gen - t_precalc).count();
@@ -4717,6 +4723,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
 {
     if (plan.size() < 2)
         return;
+    const bool independent_organic = plan.independent();
     std::vector<SupportLayer *> output(plan.size(), nullptr);
     const bool trace_anchors = std::getenv("INLONG_SUPPORT_ANCHOR_TRACE") != nullptr;
     for (SupportLayer *layer : object.support_layers()) {
@@ -4729,7 +4736,9 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
     BeltFloorContext belt;
     belt.init_local(object.slicing_parameters(), object.print()->config(), object_z_offset);
     auto touches = [&](const Polygons &a, const Polygons &b) {
-        return area(intersection(offset(a, scale_(0.001)), b)) > min_area;
+        // Use exact printed bead footprints; the former tolerance could
+        // classify a real micro-gap as already anchored.
+        return area(intersection(a, b)) > min_area;
     };
     std::function<void(const ExtrusionEntity &, ExtrusionPaths &)> collect_paths;
     collect_paths = [&](const ExtrusionEntity &entity, ExtrusionPaths &paths) {
@@ -4762,6 +4771,16 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             footprint_idx = idx;
         }
         return footprint_polygons;
+    };
+    auto model_landing = [&](double bottom_z, const Polygons &area) {
+        if (!independent_organic || !config.support_rests_on_model)
+            return false;
+        const double below = bottom_z - object.slicing_parameters().gap_object_support + object_z_offset;
+        const auto &layers = object.layers();
+        auto it = std::upper_bound(layers.begin(), layers.end(), below + EPSILON,
+            [](double z, const Layer *layer) { return z < layer->print_z; });
+        return it != layers.begin() &&
+            Slic3r::area(intersection(area, to_polygons((*std::prev(it))->lslices))) > min_area;
     };
     // Remove only an isolated contact remnant, retaining the collection/loop
     // structure and every unrelated extrusion on the same layer.
@@ -4849,32 +4868,53 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 Polygons collisions;
                 for (LayerIndex source = plan[lower].source_layer_begin; source <= plan[lower].source_layer_end; ++source)
                     append(collisions, volumes.getCollision(0, source, false));
-                if (touches(area, collisions) || !diff(area, Polygons{volumes.m_bed_area}).empty() ||
+                const bool lands_on_model = model_landing(plan[lower].bottom_z, area);
+                if ((touches(area, collisions) && !lands_on_model) || !diff(area, Polygons{volumes.m_bed_area}).empty() ||
                     (belt.is_active() && touches(area, belt.surface_polygon(plan[lower].print_z)))) {
                     if (trace_anchors)
                         BOOST_LOG_TRIVIAL(debug) << "Continuation blocked at Z=" << plan[lower].print_z <<
-                            ", model=" << touches(area, collisions) << ", bed=" << !diff(area, Polygons{volumes.m_bed_area}).empty();
+                            ", model=" << touches(area, collisions) << ", lands_on_model=" << lands_on_model <<
+                            ", bed=" << !diff(area, Polygons{volumes.m_bed_area}).empty();
                     break;
                 }
                 missing.push_back(lower);
+                if (lands_on_model) {
+                    landed = true;
+                    break;
+                }
             }
-            if (!landed || missing.empty()) {
-                // A clipped contact smaller than a structural bead footprint
-                // cannot acquire a collision-safe stem. Do not emit that
-                // airborne remnant or relax the requested clearances for it.
-                if (component.area() < sqr(double(config.support_line_width)) &&
-                    std::all_of(selected.begin(), selected.end(), [](const ExtrusionPath &path) {
-                        return path.role() == ExtrusionRole::erSupportMaterialInterface;
-                    })) {
-                    remove_fragment(output[idx]->support_fills, area);
-                    footprint_idx.reset();
-                    output[idx]->support_islands = union_ex(footprint(idx));
-                    ++removed;
+            if (!landed) {
+                if (independent_organic) {
+                    // A component without a collision-safe route to the bed,
+                    // another support, or a model landing is an airborne tree
+                    // fragment. Drop it instead of printing a floating trunk;
+                    // relaxing the configured clearances would hide the defect.
+                    if (remove_fragment(output[idx]->support_fills, area)) {
+                        footprint_idx.reset();
+                        output[idx]->support_islands = union_ex(footprint(idx));
+                        ++removed;
+                    } else {
+                        ++unresolved;
+                    }
                 } else {
-                    ++unresolved;
+                    // Keep the legacy synchronized-grid behavior for classic
+                    // organic output; only discard sub-bead interface debris.
+                    if (component.area() < sqr(double(config.support_line_width)) &&
+                        std::all_of(selected.begin(), selected.end(), [](const ExtrusionPath &path) {
+                            return path.role() == ExtrusionRole::erSupportMaterialInterface;
+                        })) {
+                        remove_fragment(output[idx]->support_fills, area);
+                        footprint_idx.reset();
+                        output[idx]->support_islands = union_ex(footprint(idx));
+                        ++removed;
+                    } else {
+                        ++unresolved;
+                    }
                 }
                 continue;
             }
+            if (missing.empty())
+                continue;
             for (size_t lower : missing) {
                 const auto &entry = plan[lower];
                 if (output[lower] == nullptr)
@@ -5102,15 +5142,41 @@ OrganicSupportLayerPlan organic_draw_branches(
     OrganicSupportLayerPlan layer_plan = OrganicSupportLayerPlan::legacy(slicing_params, config, source_layer_count);
 
     std::vector<LayerIndex> mandatory_source_layers;
+    std::vector<coordf_t> bottom_clearance_planes;
     for (const Tree &tree : trees) {
         for (const Branch &branch : tree.branches) {
             if (branch.has_root)
                 mandatory_source_layers.push_back(branch.path.front()->state.layer_idx);
+            if (branch.has_root && support_params.organic_independent_layer_height &&
+                config.support_rests_on_model && slicing_params.gap_object_support > EPSILON &&
+                volumes.m_belt_floor.empty()) {
+                const SupportElement &root = *branch.path.front();
+                if (root.state.layer_idx > 0 && !root.state.to_buildplate && root.state.result_on_layer_is_set()) {
+                    const coordf_t root_z = layer_z(slicing_params, config, root.state.layer_idx);
+                    const coord_t radius = support_element_radius(config, root);
+                    Polygon reach = make_circle(radius + config.xy_distance, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                    reach.translate(root.state.result_on_layer);
+                    const double z_offset = print_object.belt_global_z_offset();
+                    const coordf_t lowest = root_z - unscaled<coordf_t>(5 * radius) + z_offset;
+                    const auto &layers = print_object.layers();
+                    auto layer = std::lower_bound(layers.begin(), layers.end(), lowest,
+                        [](const Layer *entry, coordf_t z) { return entry->print_z < z; });
+                    const Layer *contact_layer = nullptr;
+                    for (; layer != layers.end(); ++layer) {
+                        const coordf_t boundary = (*layer)->print_z - z_offset + slicing_params.gap_object_support;
+                        if (boundary >= root_z - slicing_params.min_layer_height + EPSILON)
+                            break;
+                        if (!intersection(Polygons{reach}, to_polygons((*layer)->lslices)).empty())
+                            contact_layer = *layer;
+                    }
+                    if (contact_layer != nullptr)
+                        bottom_clearance_planes.push_back(contact_layer->print_z - z_offset + slicing_params.gap_object_support);
+                }
+            }
             if (branch.has_tip)
                 mandatory_source_layers.push_back(branch.path.back()->state.layer_idx);
         }
     }
-
     const bool requested_independent_output =
         support_params.organic_independent_layer_height ||
         support_params.independent_top_contact_layer_height;
@@ -5138,7 +5204,7 @@ OrganicSupportLayerPlan organic_draw_branches(
         const bool preserve_source_grid = !support_params.organic_independent_layer_height;
         if (std::optional<OrganicSupportLayerPlan> independent_plan = OrganicSupportLayerPlan::independent(
                 slicing_params, config, source_layer_count, top_contacts, mandatory_source_layers,
-                preserve_source_grid, fallback_reason)) {
+                preserve_source_grid, fallback_reason, bottom_clearance_planes)) {
             OrganicSupportLayerPlan candidate = std::move(*independent_plan);
             for (size_t idx = 0; idx < top_contacts.size(); ++idx)
                 if (top_contacts[idx] != nullptr)
@@ -5734,6 +5800,56 @@ OrganicSupportLayerPlan organic_draw_branches(
 
     BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: final polygon assembly " << std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_united).count() << " seconds";
     return layer_plan;
+}
+
+// Independent organic layers use a variable Z grid for the branch mesh, but a
+// bottom contact still has to be measured from the model layer it supports.
+// Reusing the preceding grid boundary as bottom_z inserts one whole support
+// layer between the contact and that model layer. Re-anchor each generated
+// contact to the highest intersecting model layer at or below the configured
+// gap target, while retaining its generated flow height.
+static void normalize_organic_bottom_contacts(
+    const PrintObject          &object,
+    SupportGeneratorLayersPtr  &bottom_contacts)
+{
+    const coordf_t gap = object.slicing_parameters().gap_object_support;
+    if (gap <= EPSILON || bottom_contacts.empty())
+        return;
+
+    const double min_area = sqr(double(scale_(0.001)));
+    for (SupportGeneratorLayer *contact : bottom_contacts) {
+        if (contact == nullptr || contact->polygons.empty() || contact->height <= EPSILON)
+            continue;
+
+        const coordf_t expected_model_z = contact->bottom_print_z() - gap;
+        const Layer *model_layer = nullptr;
+        double best_overlap = 0.;
+        for (const Layer *candidate : object.layers()) {
+            if (candidate->print_z > expected_model_z + EPSILON)
+                break;
+            const double overlap = area(intersection(contact->polygons, to_polygons(candidate->lslices)));
+            // A support footprint may graze a higher wall layer while resting
+            // on a lower platform. Select the layer carrying the largest
+            // actual contact area, then prefer the higher layer on a tie.
+            if (overlap > best_overlap + min_area ||
+                (overlap > min_area && std::abs(overlap - best_overlap) <= min_area &&
+                 (model_layer == nullptr || candidate->print_z > model_layer->print_z))) {
+                model_layer = candidate;
+                best_overlap = overlap;
+            }
+        }
+        if (model_layer == nullptr)
+            continue;
+
+        const coordf_t corrected_bottom_print_z = model_layer->print_z + gap;
+        const coordf_t corrected_print_z = corrected_bottom_print_z + contact->height;
+        if (corrected_print_z <= model_layer->print_z + EPSILON)
+            continue;
+
+        contact->bottom_z = model_layer->print_z;
+        contact->print_z = corrected_print_z;
+        contact->idx_object_layer_below = model_layer->id();
+    }
 }
 
 } // namespace TreeSupport3D

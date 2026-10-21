@@ -1,0 +1,203 @@
+{
+  "schema_version": "inlong-organic-support-stroke-foundations/v1",
+  "verified_utc": "2026-10-19T14:51:10.864674+00:00",
+  "git_head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+  "scope": "Generic organic-support source repair, isolated Windows Release linking, unchanged-project slicing and native regression validation. No installation, commit, push or physical-print trial.",
+  "causes": [
+    "Independent support-body output heights omitted model-contact extrusion bottom planes, adding excess bottom clearance.",
+    "Filled cross-sections and current-plane neighbors hid weak or disconnected individual printed roads.",
+    "Separate entities can be sorted independently during export and cannot share a continuous-road bearing assumption.",
+    "DP/arc optimization can erase a narrow road's apparently sufficient overlap with a curved predecessor.",
+    "A very narrow continuation at a larger height had almost zero flow: an observed G-code continuation emitted E0 and did not print its supposed foundation."
+  ],
+  "repair": [
+    "Preserve physical bottom-clearance boundaries within valid independent support layer intervals.",
+    "Check each continuous positive-extrusion entity against actual previous support beads or a permitted model landing.",
+    "Reserve the two roads' relative DP/arc tolerance when accepting bearing, rather than crediting a pre-optimization fringe that can disappear on export.",
+    "Include every generated support/interface output plane and use already generated model roads when validating model-contact bearing.",
+    "Continue missing stems only through collision-free physical slabs; back-propagate actual bearing from the landing before publishing split paths.",
+    "Correct source-polygon-induced height modulation only for a collision-free, physically valid bead.",
+    "Require continuation width at least equal to height; remove only exact unlandable sub-bead remnants, preserving neighboring main trunks and allowing travel across a pruned loop."
+  ],
+  "source_binding": {
+    "verified_utc": "2026-10-19T14:51:08.289297+00:00",
+    "git_head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+    "files": {
+      "src/libslic3r/Support/TreeSupport3D.cpp": "50c201ff5db9f2c4e2383fef34ebcf68cf446403ea71982b3e563536f9614664",
+      "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "tests/fff_print/test_support_material.cpp": "1eb68c075fc0e65a5eecb56a0ebf0e800785c234d7c114bbf249c41175c77624",
+      "tests/fff_print/test_tree_support.cpp": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b"
+    },
+    "objects": {
+      ".agents\\runtime\\runs\\run-929f8a6586b94459bde981a9101acdfa\\work\\core-obj\\TreeSupport3D.obj": "1c89268873959e98ba98fa14b76d3cf94863fa7b9380d817932d4d4869960cb7",
+      "build\\tests\\fff_print\\fff_print_tests.dir\\Release\\test_support_material.obj": "f21929442a294c0e74539459a129e8329c99c7956949b27b31f44a543ca2406c",
+      "build\\tests\\fff_print\\fff_print_tests.dir\\Release\\test_tree_support.obj": "56193612727c2254b7581b775078ca77c29310d082d5a2f5a4266422b9302b82"
+    },
+    "dll_sha256": "973c10911b3c0d021c23b6e179f37e53a89f13f2a930d8a7ca83c5681346c80f",
+    "fff_sha256": "56bf48b75a82f1d543298c056c7d3a494fc6a8f374b78024002ade80cf7f37a1",
+    "map_sha256": "2bb6f0f7ddf1201208d5c547ec900a525e5bcf23e2d29b20f56ed4cd95cae275",
+    "installed_dll_sha256": "928552d7128a39ce913d3a3b99545f0488bf7477e2996970a85ddd7a7d3b0878",
+    "method": "The isolated current TreeSupport3D object precedes the unchanged normal core archive in both link commands. Both changed test TUs were compiled to the normal test object directory. No installation target was invoked.",
+    "source_precedes_tested_objects_and_links": true,
+    "cli_checks": {
+      "candidate-14": {
+        "effective_settings_equal": true,
+        "setting_count": 771,
+        "gcode_sha256": "492ee6718882044c0e4c32d5e41c86a780168766c6e6e833be5eebdd9f60b484",
+        "actual_header_footer_layers": 1296,
+        "warning_error_count": 0,
+        "anchoring": [
+          "Organic support path anchoring: reconnected 24 hollow-wall components, removed 104 contact fragments, remaining candidates 5, output planes=532, final Z=145.4"
+        ],
+        "retained_conservative_candidates": [
+          5
+        ]
+      },
+      "candidate-14-original": {
+        "effective_settings_equal": true,
+        "setting_count": 771,
+        "gcode_sha256": "25d209dfe3ce80881a362511607289b0dd82c31a2c26338d71640a070182f89f",
+        "actual_header_footer_layers": 828,
+        "warning_error_count": 0,
+        "anchoring": [
+          "Organic support path anchoring: reconnected 5 hollow-wall components, removed 28 contact fragments, remaining candidates 0, output planes=727, final Z=145.4"
+        ],
+        "retained_conservative_candidates": [
+          0
+        ]
+      }
+    },
+    "fresh_nas_project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d"
+  },
+  "native": {
+    "anchoring-14": {
+      "assertions": 160,
+      "test_cases": 2,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 41.408693800003675,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/anchoring-14-result.json",
+        "sha256": "89937c4e44988fc6e287a0b4ba67575c37edfc4f710d573f7b3caab1cd055dd8"
+      },
+      "xml": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/anchoring-14.xml",
+        "sha256": "5d7909530f5cb27225d809c112205c4a7541fa2feff83723e456addaee9bb453"
+      }
+    },
+    "related-support-14": {
+      "assertions": 20723,
+      "test_cases": 188,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 712.221782099994,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/related-support-14-result.json",
+        "sha256": "c62d80371ea0d18e250d01093585e14cc39c75da1cf4a2c95009fd6f247a1950"
+      },
+      "xml": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/related-support-14.xml",
+        "sha256": "dc7f11e2cda2584cd3c14d918d6b69bcefb7bf8dd64bbe0b592daa3592cf6e67"
+      }
+    }
+  },
+  "expected_red_control": {
+    "expected_failure": true,
+    "failed_assertions": 10,
+    "description": "Same final test object with the original core archive, intentionally red.",
+    "xml": {
+      "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/stroke-original-accepted-control.xml",
+      "sha256": "74f1d00fafdb59bee239f160f59b14b615a72680baf376362f5da6e3f9e06a05"
+    }
+  },
+  "projects": {
+    "candidate-14": {
+      "input_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+      "seconds_with_concurrent_validation": 52.59206339999946,
+      "live_settings_preserved": true,
+      "source_settings_and_layer_count": {
+        "effective_settings_equal": true,
+        "setting_count": 771,
+        "gcode_sha256": "492ee6718882044c0e4c32d5e41c86a780168766c6e6e833be5eebdd9f60b484",
+        "actual_header_footer_layers": 1296,
+        "warning_error_count": 0,
+        "anchoring": [
+          "Organic support path anchoring: reconnected 24 hollow-wall components, removed 104 contact fragments, remaining candidates 5, output planes=532, final Z=145.4"
+        ],
+        "retained_conservative_candidates": [
+          5
+        ]
+      },
+      "continuous_gcode_strokes_checked": 4588,
+      "unresolved_printed_bearing_strokes": 0,
+      "model_root_locations": 4,
+      "model_contact_strokes": 6,
+      "nearest_printed_material_gap_mm": [
+        0.1700000000000017,
+        0.16999999999999815,
+        0.17000000000001592,
+        0.17000000000001592
+      ],
+      "slice_receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/case2/candidate-14/result.json",
+        "sha256": "980cc4e44565cd1a3c95f4b5459c0469d9defa7fb5aa1bef5cfb672310a40305"
+      },
+      "bead_receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/case2/candidate-14-bead-verification.json",
+        "sha256": "a7adee9ff4604fe80aa861b85c9a08eb73f854458682e81867e7af17fb4f731c"
+      },
+      "landings_receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/case2/candidate-14-printed-model-landings.json",
+        "sha256": "692d9bb894007f47189a4c50c36f646a8fa8a3275c1a72a9dcf027e5d4181fc9"
+      }
+    },
+    "candidate-14-original": {
+      "input_sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf",
+      "seconds_with_concurrent_validation": 50.66538020000007,
+      "live_settings_preserved": true,
+      "source_settings_and_layer_count": {
+        "effective_settings_equal": true,
+        "setting_count": 771,
+        "gcode_sha256": "25d209dfe3ce80881a362511607289b0dd82c31a2c26338d71640a070182f89f",
+        "actual_header_footer_layers": 828,
+        "warning_error_count": 0,
+        "anchoring": [
+          "Organic support path anchoring: reconnected 5 hollow-wall components, removed 28 contact fragments, remaining candidates 0, output planes=727, final Z=145.4"
+        ],
+        "retained_conservative_candidates": [
+          0
+        ]
+      },
+      "continuous_gcode_strokes_checked": 4717,
+      "unresolved_printed_bearing_strokes": 0,
+      "model_root_locations": 4,
+      "model_contact_strokes": 10,
+      "nearest_printed_material_gap_mm": [
+        0.20000100000000387,
+        0.19999899999999826,
+        0.20000300000000948,
+        0.20000300000000948
+      ],
+      "slice_receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/candidate-14-original/result.json",
+        "sha256": "466f6c199f15caf0dbca63c6e2dd9b620463db08902042547a6a5cbeec366860"
+      },
+      "bead_receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/candidate-14-original-bead-verification.json",
+        "sha256": "8c5d144cc6dfa8340dcf3919179f4c8c9cf552b306610c64fff3aa84c48dc955"
+      },
+      "landings_receipt": {
+        "path": ".agents/runtime/runs/run-929f8a6586b94459bde981a9101acdfa/work/candidate-14-original-printed-model-landings.json",
+        "sha256": "ec573ae80f7ccc7cae6bc2f4080060243c4c5907d61e861da89fe81c747d359c"
+      }
+    }
+  },
+  "limits": [
+    "The independent verifier uses nominal positive G-code bead envelopes, 0.01 mm arc tessellation, 0.001 mm XY rounding and 0.002 mm Z matching tolerance.",
+    "It validates printed-road bearing and nominal model-contact clearance, not physical adhesion or structural strength.",
+    "The pre-export tolerance guard is deliberately conservative and may retain otherwise supported roads when no safer continuation is available; its counters are recorded separately from the independent final G-code result.",
+    "The original synchronized 0.20 mm support-body grid retains a quantized 0.20 mm contact gap for its unchanged 0.17 mm setting; the new independent-body project attains 0.17 mm.",
+    "No manufacturer or device name is used in the algorithm. Native coverage includes 0.4/0.6 mm full organic fixtures and 0.4/0.6/1.2 mm clearance planning.",
+    "Earlier model-specific performance and exact-output observations remain historical and are not renewed by this repair."
+  ]
+}

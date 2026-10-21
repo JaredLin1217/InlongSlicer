@@ -1,0 +1,94 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-local-bearing-20261020",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Whole-road overlap is insufficient for organic support bearing: check each unsupported local span and accept long spans only as bounded straight bridges with two carried ends. Reserve DP/arc displacement and bearing area. Reconnect toward lower printed support within the configured branch angle, use actual output Z intervals for physical bead heights, and accept only the nearest eligible printed model plane at the configured bottom gap or synchronized-grid quantization. The unchanged new project had 85 local/structural failures before repair and zero after; all 6050 continuous support runs in the final normal output pass independent positive-extrusion G-code geometry checks. The earlier project also passes. All 96 printable TopContact regions remain, but unsupported contact fringes are trimmed and exact contact footprint area is not preserved. Both project settings remain unchanged. Focused and broader normal native support, tree, belt and layer-count suites pass. The tested normal DLL is applied to build/src/Release with all live settings preserved. The shared algorithm uses geometry and configuration, with no device-specific exception. Older timing and exact-path claims remain historical.",
+  "scope": "Reviewed current uncommitted source bytes, normal Windows Release build/link, actual Release CLI output and live configuration readback. HEAD is a checkout anchor only. No publication or physical print-strength trial.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "local-bearing",
+    "floating-support",
+    "model-contact",
+    "actual-extrusion",
+    "independent-layer-height",
+    "arc-fitting",
+    "belt",
+    "layer-count"
+  ],
+  "files": [
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "tests/fff_print/test_tree_support.cpp",
+    "docs/evidence/organic-support-local-bearing-20261020.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current generic geometry contract, focused/broad native tests, or durable exported-output and Release application evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "015de9732920c7ada134e3f2d3778f226b0bd6e49f64a95a58d8b4110566ab49",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current generic geometry contract, focused/broad native tests, or durable exported-output and Release application evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "73f567a793d6899759b11e4e136fd472075c983d6eaf470574ca6b5fee61db0a",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current generic geometry contract, focused/broad native tests, or durable exported-output and Release application evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "c1da13284f7575ea3c970d5b7bdddccb1c75f70f95d8ed1632bc84a249e197f8",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current generic geometry contract, focused/broad native tests, or durable exported-output and Release application evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_tree_support.cpp",
+      "sha256": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current generic geometry contract, focused/broad native tests, or durable exported-output and Release application evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-local-bearing-20261020.json",
+      "sha256": "dcae0c608dd01ac8e008a49b2f0c79efa9ae4b2214d66a0a66912bf49ff7214d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current generic geometry contract, focused/broad native tests, or durable exported-output and Release application evidence; checkout anchor only for uncommitted bytes."
+    }
+  ],
+  "verified_utc": "2026-10-19T23:37:32.976190+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Source review; expected-red old-core control; focused and broad normal native regression suites; two unchanged-project exports; independent positive-extrusion local/global bearing; TopContact retention diagnostics; actual Release exact canonical output binding; live configuration hashing.",
+    "summary": "Supersede the insufficient whole-stroke bearing acceptance with verified local-span geometry and nearest legal model-plane contracts."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-stroke-foundations-20261019"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-safe-bead-cache-20261020",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Restore the pre-optimization organic support path and bearing implementation when topology changes appear, then use only exact bead-offset memoization keyed by path width and every rounded coordinate. On the supplied project this retained closed trunks, Z-gap and floating-support behavior, produced the same 402017 canonical records, and reduced the measured Release slice from 428.316 s to 381.632 s (10.8%) with no warning or error lines. The cache is bounded by 64 MiB and available-RAM/256, so it changes reuse only and never skips topology or support decisions.",
+  "scope": "Current uncommitted source and source-bound Windows Release verification for the supplied organic-support project. No physical print, commit or push.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "performance",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "closed-contours",
+    "floating-support",
+    "exact-output",
+    "z-gap",
+    "memory-budget",
+    "bead-cache"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "tests/fff_print/test_tree_support.cpp",
+    "docs/evidence/organic-support-safe-bead-cache-20261020.json"
+  ],
+  "sources": [
+    {
+      "locator": "Source after exact bead-offset memoization; checkout HEAD is an anchor only.",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "sha256": "67f17b6b5b3d4b914f81de227801edffd0d37c572441bb456fd4c128615b47a2",
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp"
+    },
+    {
+      "locator": "Restored closure and bearing helper source.",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "sha256": "9a003cb823516cb4d3c655ac6a1026b2553e1e221545eed51712562855f85425",
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp"
+    },
+    {
+      "locator": "Exact-output, native-test, timing and Release-settings receipts.",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "sha256": "9b8ec9be0cc14a418c50c5f322b044c359b3da7eae22cbfbeb4b67e71593d9df",
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-safe-bead-cache-20261020.json"
+    }
+  ],
+  "verified_utc": "2026-10-20T12:25:33.2238477+00:00",
+  "verification": {
+    "result": "passed",
+    "summary": "Restored baseline and exact bead-cache Release exports both completed without warning/error lines; canonical count and SHA-256 matched; data_dir settings remained unchanged.",
+    "method": "Normal source-bound Release build, 316 focused native assertions, and two full exports of the same hashed 3MF with canonical command comparison.",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-slicing-performance-20261020"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

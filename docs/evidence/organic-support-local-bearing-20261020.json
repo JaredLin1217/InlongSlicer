@@ -1,0 +1,405 @@
+{
+  "schema_version": "inlong-organic-support-local-bearing/v1",
+  "verified_utc": "2026-10-19T23:37:32.976190+00:00",
+  "git_head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+  "scope": "Generic organic-support repair, normal Release build/test/link, unchanged-project CLI slicing and application to build/src/Release with live configuration preserved. No commit, push or physical print trial.",
+  "causes": [
+    "A continuous curved road could pass the old whole-stroke minimum-area check while a long local portion had no underlying material. The screenshot area at Z=23.50 mm contained a 5.58 mm curved cantilever, reaching 2.48 mm from previous support.",
+    "A continuation calculated from a nominal plan interval could leave a physical extrusion-height gap at its actual output plane.",
+    "Synchronized model-root lookup accepted an extra older model plane after the nearest eligible plane, allowing an additional empty grid layer.",
+    "DP/arc path optimization could consume nominal bearing and bridge-curvature margins."
+  ],
+  "repair": [
+    "Check unsupported centerline spans per continuous positive-extrusion entity, rejoining closed-loop seams. A span longer than a line width requires both carried ends and a bounded straight bridge.",
+    "Reserve relative path-optimization displacement and area before accepting a foundation. Recheck after simplification using final printed curvature limits.",
+    "Continue missing spans toward existing lower support roads within configured organic branch angle, with collision-free physical slabs and valid positive extrusion flow.",
+    "Back-propagate bearing using actual adjacent output Z spacing and trim only unlandable offending pieces, preserving adjacent main trunks.",
+    "Require the nearest eligible actual printed model foundation at the configured bottom gap, allowing only the documented synchronized-grid quantization.",
+    "Use configured line width, layer geometry, branch angle and clearances; no printer-name or input-model-specific code path."
+  ],
+  "source_binding": {
+    "verified_utc": "2026-10-19T22:53:06.639933+00:00",
+    "head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+    "source": {
+      "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "015de9732920c7ada134e3f2d3778f226b0bd6e49f64a95a58d8b4110566ab49",
+      "src/libslic3r/Support/TreeSupport3D.cpp": "73f567a793d6899759b11e4e136fd472075c983d6eaf470574ca6b5fee61db0a",
+      "tests/fff_print/test_support_material.cpp": "c1da13284f7575ea3c970d5b7bdddccb1c75f70f95d8ed1632bc84a249e197f8",
+      "tests/fff_print/test_tree_support.cpp": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b"
+    },
+    "objects": {
+      "build/src/libslic3r/libslic3r.dir/Release/TreeSupport3D.obj": "a68c14b54aaed1095c6ac5380f4518b494f9eb750c0551620725bfe22d12f7f8",
+      "build/tests/fff_print/fff_print_tests.dir/Release/test_support_material.obj": "9d6f87a6599cd27976893aa6e9e9a7b6170254478e11a16d3ad403330423ebf2",
+      "build/tests/fff_print/fff_print_tests.dir/Release/test_tree_support.obj": "56193612727c2254b7581b775078ca77c29310d082d5a2f5a4266422b9302b82"
+    },
+    "binaries": {
+      "build/src/libslic3r/Release/libslic3r.lib": "ebb38bec3be92828eba320f0e863d26f1a2dc8f8ee8da7159686cc790dd81eef",
+      "build/tests/fff_print/Release/fff_print_tests.exe": "0e0996d4afb06fee997dca30a58939e50d45a0bf5a408ecd9e9d6512adf73ebc",
+      ".agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\native\\InlongSlicer.dll": "6e3a4d4e44565fb399a1e7c29a4cae312643e2f5b783443c082c05e7c39dab31",
+      ".agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\native\\normal-stage.map": "9639e25a9045243ac50efa0c54bcf12ec081ad8c35abce7e58be1f8463af2d67"
+    },
+    "method": "Normal Release core archive and normal fff_print_tests, with a staged normal-configuration app link. No isolated TreeSupport3D object is prepended in the normal app or test link.",
+    "source_unchanged": true
+  },
+  "source_binding_receipt": {
+    "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-source-binding.json",
+    "sha256": "21b583d96b7f7f02ec25cbfd90956978f6b169423edd0ec549052ac0d5c32641"
+  },
+  "normal_build_receipts": [
+    {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-core-test-build.json",
+      "sha256": "7688a41f41f391b99f4ce0068ed12813ab3abffb594c8a6234fe7cf1d56aac66"
+    },
+    {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-stage-build.json",
+      "sha256": "1d6a4d1820c1373db092f449e3ffe4f955cf9073e29072ea70dd13bb5b7ee273"
+    }
+  ],
+  "baseline": {
+    "continuous_support_runs": 4588,
+    "local_or_structural_failures": 85,
+    "gcode_sha256": "6dcb19fe02dbf46793d3ee57f9998c7632888059dd2c3a9128b823673980c475",
+    "receipt": {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/baseline-local-verification.json",
+      "sha256": "802ef811c5bfb11cb354bd7a6d10741b7130f5a97ec35a6e8244b1d07c023d12"
+    }
+  },
+  "native": {
+    "expected_red_control": {
+      "assertions": 192,
+      "junit_case_elements": 3,
+      "failures": 7,
+      "errors": 0,
+      "seconds": 46.497,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/baseline-final-result.json",
+        "sha256": "95550fcfc9446f3cddb6809a4599c3c7e85afbc1450b860c926a16f5cbf3334d"
+      },
+      "xml": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/baseline-final.xml",
+        "sha256": "9aee899b484a78ebd0263f8a3f90846939535dcd0b7b931a3783d57e78529bf0"
+      }
+    },
+    "focused_normal": {
+      "assertions": 192,
+      "junit_case_elements": 3,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 81.21578059998865,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/anchoring-normal-result.json",
+        "sha256": "5f7036374f6d65fde073f5668b50e26c04964ff3ec74a83422a87c63b5718359"
+      },
+      "xml": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/anchoring-normal.xml",
+        "sha256": "7f7546fb425f19089e4c881bc4703cbb3e9b948614aca60fc83b691a2ae69db5"
+      }
+    },
+    "related_normal": {
+      "assertions": 20675,
+      "junit_case_elements": 188,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 2356.5517040999985,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/related-normal-result.json",
+        "sha256": "9a4c22b84062b7d89d29c87dfa05ef20ede868bab4b6aeaad68ce8ef1a8da95c"
+      },
+      "xml": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/related-normal.xml",
+        "sha256": "cae74a23510c8ca09a1ee272f5e6bf5786c5053671c3740dafb261e2d8b9fb0e"
+      },
+      "top_level_test_cases": 122
+    }
+  },
+  "fixture_export_cross_check": {
+    "configurations": [
+      {
+        "label": "fixture5-nozzle-0p400000-body-0-contact-0",
+        "runs": 1116,
+        "problems": 0
+      },
+      {
+        "label": "fixture5-nozzle-0p400000-body-0-contact-1",
+        "runs": 643,
+        "problems": 0
+      },
+      {
+        "label": "fixture5-nozzle-0p400000-body-1-contact-0",
+        "runs": 526,
+        "problems": 0
+      },
+      {
+        "label": "fixture5-nozzle-0p400000-body-1-contact-1",
+        "runs": 526,
+        "problems": 0
+      },
+      {
+        "label": "fixture5-nozzle-0p600000-body-0-contact-0",
+        "runs": 704,
+        "problems": 0
+      },
+      {
+        "label": "fixture5-nozzle-0p600000-body-0-contact-1",
+        "runs": 704,
+        "problems": 0
+      },
+      {
+        "label": "fixture5-nozzle-0p600000-body-1-contact-0",
+        "runs": 539,
+        "problems": 0
+      },
+      {
+        "label": "fixture5-nozzle-0p600000-body-1-contact-1",
+        "runs": 539,
+        "problems": 0
+      }
+    ],
+    "continuous_support_runs": 5297,
+    "problems": 0,
+    "scope": "Eight exported 0.4/0.6 mm fixture combinations from repair prototype 5. The same eight combinations also pass the final normal native suite. Final source adds gated contact diagnostics; final project exports are independently checked below.",
+    "receipt": {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/fixture-matrix-5-summary.json",
+      "sha256": "583607c3e02d18eba6e5526f13855102428ca16bb00d88f0c42bb059dd2853ba"
+    }
+  },
+  "outputs": {
+    "normal-stage": {
+      "result": {
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\native\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\normal-stage-data",
+          "--debug",
+          "4",
+          "--slice",
+          "1",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\normal-stage",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\input.3mf"
+        ],
+        "exit_code": 0,
+        "seconds": 266.5865677999973,
+        "dll_sha256": "6e3a4d4e44565fb399a1e7c29a4cae312643e2f5b783443c082c05e7c39dab31",
+        "project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+        "live_settings_preserved": true,
+        "finished_utc": "2026-10-19T22:56:45.792471+00:00",
+        "effective_settings_equal": true,
+        "setting_count": 771,
+        "gcode_sha256": "72ca18c63d32920e7d2229b6cd19ec2faaea0cae6e0e3d92ec8e729f7147a068",
+        "warning_error_lines": []
+      },
+      "receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-stage/result.json",
+        "sha256": "f867a864b4cf99a38e8a771fc1f0aff67d5c23f7fe10c274ec9111efb0744ef7"
+      },
+      "counts": {
+        "gcode_sha256": "72ca18c63d32920e7d2229b6cd19ec2faaea0cae6e0e3d92ec8e729f7147a068",
+        "canonical_sha256": "8df8a2b055a9b3fc8ee3de2c10fbc166cd25ecdce1edd3448df025bdc1654cc4",
+        "record_count": 253617,
+        "actual_layers": 1296,
+        "header_layers": 1296,
+        "footer_layers": 1296
+      },
+      "bearing": {
+        "label": "normal-stage",
+        "gcode_sha256": "72ca18c63d32920e7d2229b6cd19ec2faaea0cae6e0e3d92ec8e729f7147a068",
+        "support_paths": 6082,
+        "support_planes": 527,
+        "continuous_support_runs": 6050,
+        "allowed_straight_bridges": 276,
+        "configured_model_contact_paths": 11,
+        "problems": [],
+        "limits": "Independent positive-extrusion G-code parser. Circular arcs use 0.005 mm chord tolerance. Every long unsupported span must be straight within half a line width and carried at both ends. Nominal bead envelopes permit half a line width of lateral reach plus 0.002 mm rounding tolerance. Model roots require actual printed model material at the configured Z gap; this is geometric validation, not a physical print-strength test."
+      },
+      "bearing_receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-stage-local-verification.json",
+        "sha256": "6cac3bc9eee3888e872d2083c8f8e6029153b2d6148d84a3c5f52e2f482237ed"
+      },
+      "top_contact": {
+        "reference_area_mm2": 1336.82170244887,
+        "missing_area_mm2": 21.730801063143,
+        "uncovered_beyond_one_bead_mm2": 13.178927286106,
+        "reference_regions": 96,
+        "missing_regions": 0
+      },
+      "top_contact_receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-stage/roof-profile.json",
+        "sha256": "2a9dd8d9d6c46bc7dca204724e02302d699351263f08bbe1dbe38ab126f400af"
+      }
+    },
+    "normal-original": {
+      "result": {
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\native\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\normal-original-data",
+          "--debug",
+          "4",
+          "--slice",
+          "1",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\normal-original",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\original-input.3mf"
+        ],
+        "exit_code": 0,
+        "seconds": 259.3166326999926,
+        "dll_sha256": "6e3a4d4e44565fb399a1e7c29a4cae312643e2f5b783443c082c05e7c39dab31",
+        "project_sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf",
+        "live_settings_preserved": true,
+        "finished_utc": "2026-10-19T22:58:04.845752+00:00",
+        "effective_settings_equal": true,
+        "setting_count": 771,
+        "gcode_sha256": "6bf8e53ada64ed1f023d6ffe37e9f5b121bafafaa2ac48c2d7ad0fbae706f443",
+        "warning_error_lines": []
+      },
+      "receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-original/result.json",
+        "sha256": "c371c8628e9bf5fd4173f5597fdc96baf0308aada4e63a89f35d51fcf7cb958a"
+      },
+      "counts": {
+        "gcode_sha256": "6bf8e53ada64ed1f023d6ffe37e9f5b121bafafaa2ac48c2d7ad0fbae706f443",
+        "canonical_sha256": "294efb75152002bc2791a5a2c136a79b886a5d21ea6b70a1edbc773d27214ff5",
+        "record_count": 390782,
+        "actual_layers": 828,
+        "header_layers": 828,
+        "footer_layers": 828
+      },
+      "bearing": {
+        "label": "normal-original",
+        "gcode_sha256": "6bf8e53ada64ed1f023d6ffe37e9f5b121bafafaa2ac48c2d7ad0fbae706f443",
+        "support_paths": 5782,
+        "support_planes": 721,
+        "continuous_support_runs": 5743,
+        "allowed_straight_bridges": 257,
+        "configured_model_contact_paths": 13,
+        "problems": [],
+        "limits": "Independent positive-extrusion G-code parser. Circular arcs use 0.005 mm chord tolerance. Every long unsupported span must be straight within half a line width and carried at both ends. Nominal bead envelopes permit half a line width of lateral reach plus 0.002 mm rounding tolerance. Model roots require actual printed model material at the configured Z gap; this is geometric validation, not a physical print-strength test."
+      },
+      "bearing_receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-original-local-verification.json",
+        "sha256": "714763c0536e2e95035aee0ec3e50a2c2f1ab8345334b702b0444aad1b165d04"
+      },
+      "top_contact": {
+        "reference_area_mm2": 1463.176313171619,
+        "missing_area_mm2": 0.480162215936,
+        "uncovered_beyond_one_bead_mm2": 0,
+        "reference_regions": 96,
+        "missing_regions": 0
+      },
+      "top_contact_receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-original/roof-profile.json",
+        "sha256": "f2e88b2b4cd317da63110b213f05b5a75e07b7b2ea716c521af8f375935abe51"
+      }
+    },
+    "release-final": {
+      "result": {
+        "command": [
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\inlong-slicer.exe",
+          "--datadir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\release-final-data",
+          "--debug",
+          "4",
+          "--slice",
+          "1",
+          "--outputdir",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\release-final",
+          "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-9f07b492a7a54996b202757721b6fd90\\work\\input.3mf"
+        ],
+        "exit_code": 0,
+        "seconds": 258.04742210000404,
+        "dll_sha256": "6e3a4d4e44565fb399a1e7c29a4cae312643e2f5b783443c082c05e7c39dab31",
+        "project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+        "live_settings_preserved": true,
+        "finished_utc": "2026-10-19T23:37:21.491825+00:00",
+        "effective_settings_equal": true,
+        "setting_count": 771,
+        "gcode_sha256": "7ed0e7d3f02ebbb7280571bb33dd80b404dea7d74eeb31affd094a83ecc92f04",
+        "warning_error_lines": []
+      },
+      "receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/release-final/result.json",
+        "sha256": "2e5238760b364c7feed7187b11db5260acf8fa2e2417ce2fee0808abed60ad44"
+      },
+      "counts": {
+        "gcode_sha256": "7ed0e7d3f02ebbb7280571bb33dd80b404dea7d74eeb31affd094a83ecc92f04",
+        "canonical_sha256": "8df8a2b055a9b3fc8ee3de2c10fbc166cd25ecdce1edd3448df025bdc1654cc4",
+        "record_count": 253617,
+        "actual_layers": 1296,
+        "header_layers": 1296,
+        "footer_layers": 1296
+      },
+      "bearing": {
+        "label": "normal-stage",
+        "gcode_sha256": "72ca18c63d32920e7d2229b6cd19ec2faaea0cae6e0e3d92ec8e729f7147a068",
+        "support_paths": 6082,
+        "support_planes": 527,
+        "continuous_support_runs": 6050,
+        "allowed_straight_bridges": 276,
+        "configured_model_contact_paths": 11,
+        "problems": [],
+        "limits": "Independent positive-extrusion G-code parser. Circular arcs use 0.005 mm chord tolerance. Every long unsupported span must be straight within half a line width and carried at both ends. Nominal bead envelopes permit half a line width of lateral reach plus 0.002 mm rounding tolerance. Model roots require actual printed model material at the configured Z gap; this is geometric validation, not a physical print-strength test."
+      },
+      "bearing_receipt": {
+        "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/normal-stage-local-verification.json",
+        "sha256": "6cac3bc9eee3888e872d2083c8f8e6029153b2d6148d84a3c5f52e2f482237ed"
+      },
+      "bearing_binding": "All 253617 motion/state and path TYPE/WIDTH/HEIGHT/LAYER_CHANGE records exactly match the independently verified normal-stage output; only non-geometric metadata may differ."
+    }
+  },
+  "release_application": {
+    "dll_sha256": "6e3a4d4e44565fb399a1e7c29a4cae312643e2f5b783443c082c05e7c39dab31",
+    "source_binding": "normal-source-binding.json",
+    "expected_dll_sha256": "6e3a4d4e44565fb399a1e7c29a4cae312643e2f5b783443c082c05e7c39dab31",
+    "settings_count": 843,
+    "settings_preserved": true,
+    "applied_utc": "2026-10-19T23:32:31.4584395+00:00",
+    "previous_dll_sha256": "58f96c43556ef0c8d07200afe56ca3507b683485c27b5eecb3440b8e74e59739",
+    "updated_files": [
+      "InlongSlicer.dll",
+      "InlongSlicer.pdb",
+      "InlongSlicer.lib",
+      "InlongSlicer.exp"
+    ]
+  },
+  "release_application_receipt": {
+    "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/release-application.json",
+    "sha256": "b595b68d8bfe62744949664bba13afc1cf4bd3e9f2b2cab6bfcf8f736ab56c3c"
+  },
+  "output_binding_receipt": {
+    "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/release-final-output-verification.json",
+    "sha256": "54bbee98163b3ebc5537d22623386beb145889184e99085f393173692bad82da"
+  },
+  "screenshot_comparison": {
+    "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/verified-local-bearing-comparison.png",
+    "sha256": "f9e98983c679166d753ea61b801a1a6757c4ac475ae087368b4459d8c236bd6f"
+  },
+  "verification_tools": [
+    {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/verify-local-export.py",
+      "sha256": "907b52e4e999b8ec5d30f416d7172929e272c908d0d494cb2a02ae25d27d60f4"
+    },
+    {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/check-final-output.py",
+      "sha256": "89d630d3f3a97dbf0575ea8623831bf242a8947767104fff82775bb1255df88c"
+    },
+    {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/run-slice.py",
+      "sha256": "c3c7fecc76610f4c7e2a1812c970b004e429d4f11661ff57fbc6b231c6fa9fdc"
+    },
+    {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/run-native.py",
+      "sha256": "a65b20a3b778df00a8d85f9bd80da2e21c8f55cb948c76f78a2595fc70625f03"
+    },
+    {
+      "path": ".agents/runtime/runs/run-9f07b492a7a54996b202757721b6fd90/work/apply-release.ps1",
+      "sha256": "c2671e52925538a059aa484c7d0d3809672be2936a6ac5c4df40348d96f51b60"
+    }
+  ],
+  "limits": [
+    "This is geometric/native validation of the supplied projects and synthetic fixtures; physical print strength has not been tested.",
+    "The correction intentionally changes support toolpaths. Model geometry and all 771 effective project settings remain unchanged.",
+    "All 96 printable TopContact regions remain represented. This is not exact footprint preservation: the newer project trims 21.730801063143 mm2 (about 1.63 percent of summed planned TopContact area); 13.178927286106 mm2 is beyond a one-bead envelope. Raw per-plane diagnostics are retained.",
+    "Previously recorded slicing timings and exact G-code identities remain historical; correctness is the current acceptance target."
+  ]
+}

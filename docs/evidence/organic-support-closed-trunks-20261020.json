@@ -1,0 +1,369 @@
+{
+  "schema_version": "inlong-organic-closed-trunks/v1",
+  "verified_utc": "2026-10-20T03:56:37.374788+00:00",
+  "git_head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+  "scope": "Generic organic trunk closure and real bead-bearing repair, current uncommitted source, normal Release native tests and actual Release CLI. No commit, push or physical printing trial.",
+  "causes": [
+    "Organic sheath generation clipped its seam and inserted an inward open anchor.",
+    "Continuation and pruning clipped boundary polylines into open hooks. Reclosing only an excised span could create a new airborne closing chord.",
+    "Height modulation could discard direction-locked wall identity; ordinary infill bridge exemptions must not exempt trunk contours.",
+    "Default square-join bead polygons overstated actual round-bead bearing at corners. Microscopic native closed loops could collapse at output precision yet count as full nominal support footprints."
+  ],
+  "repair": [
+    "Generate complete oriented organic outer and inner contours at every branch size, preserving identity through height modulation.",
+    "Clip filled cross-sections and extract closed contours. Restrict a replacement section to collision-free carried centers so its new closing chord is backed.",
+    "Require complete local bearing of outer walls; retain legal two-ended straight bridges only for ordinary infill and interface.",
+    "Use round actual bead envelopes and remove unprintable closed loops before contact and bearing capture and from newly generated repairs.",
+    "Apply geometry and configured flow/slab/collision rules without printer-name or input-model-specific branches.",
+    "Reuse exact footprint, eroded-footprint and allowed-center masks within the shared adaptive live-memory budget, invalidating mutable planes on every path change. Maximum requested budget is 256 MiB and 1/32 available RAM; low-memory or unknown readings use uncached scratch behavior."
+  ],
+  "source_binding": {
+    "verified_utc": "2026-10-20T03:19:58.754308+00:00",
+    "head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+    "source": {
+      "src/libslic3r/Support/SupportCommon.cpp": "c42d71d0f994ba5e5c729713339d86f5d3adcbcbf4fc860be2010d3a927e8ac2",
+      "src/libslic3r/Support/TreeSupport3D.cpp": "82af35a48702cdd4f8429fdb75a708d5346351645a17475c21aa90fe77e9bb2d",
+      "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "9a003cb823516cb4d3c655ac6a1026b2553e1e221545eed51712562855f85425",
+      "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "tests/fff_print/test_support_material.cpp": "d2be112296f385878d8d4363dd4f0a1c8379a46d8e52b4d6905567d320b255df",
+      "tests/fff_print/test_tree_support.cpp": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b",
+      "src/libslic3r/Support/SupportCacheBudget.hpp": "1c3869d671138ec62cb5c15465a5d58157a19345ba24a8f8aede43f8b451a23a",
+      "src/libslic3r/Support/SupportCacheBudget.cpp": "4acdc6c2db24a9f6059a2ffbc1ce32575de12a5daadbd4913e1bb657a0337162",
+      "tests/libslic3r/test_support_cache_budget.cpp": "00087f782dbc44b00844159d118e48a264b7ebbaae4df9d435c071af9701c1e9"
+    },
+    "objects": {
+      "build/src/libslic3r/libslic3r.dir/Release/SupportCommon.obj": "4a534deec5f7a45d5d6c1094f861eed8da25e03d14fb389407388224ba9cf54d",
+      "build/src/libslic3r/libslic3r.dir/Release/TreeSupport3D.obj": "9f5d6c8f23b76fd07c89d48cc57c53c95c217d383b768fbc4dc01e389da10d44",
+      "build/tests/fff_print/fff_print_tests.dir/Release/test_support_material.obj": "4caa33bb6db3c915f7e4054bc24a9c7ca1285cffcaa9b5b5dd92860218ad3d18",
+      "build/tests/fff_print/fff_print_tests.dir/Release/test_tree_support.obj": "56193612727c2254b7581b775078ca77c29310d082d5a2f5a4266422b9302b82"
+    },
+    "binaries": {
+      "build/src/libslic3r/Release/libslic3r.lib": "d7b39abde365b431fed8affce9527fcf002587a37ebc905e3a61ab538e52b7a0",
+      ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/native-11/fff_print_tests.exe": "e06003ae0ea594c50d1763dd826ca785f0ff5c41ab8d54e5b2eedd54021da546",
+      ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/native-11/InlongSlicer.dll": "7b0a638255ed5495d3422429c43131f138d7c0efba6db0bf31770f9c155ca6c2",
+      ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/native-11/InlongSlicer.map": "3f033e24bfdbc9abf3795ae104c467d42e75a04aeee85e199ec752401d280ee3"
+    },
+    "method": "Normal Release core archive and native test link; normal app link with staged output paths only. Portable data preparation was disabled. No substituted source object is prepended to either link.",
+    "source_unchanged": true
+  },
+  "source_binding_receipt": {
+    "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/normal-source-binding-11.json",
+    "sha256": "f2d1ad575756d14566caaded1b0f13d1db3331026089fd46680a21bc2c723b3d"
+  },
+  "normal_build_receipts": [
+    {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/core-11.json",
+      "sha256": "656a04a93c4db96aa2bb181033cc088b5661e175cbdfe9aa962703b3fb31a288"
+    },
+    {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/tests-11.json",
+      "sha256": "fee322f6373d4d3251f2e0a8f76b97f91b88a8bb1065287139472f07e18d1a11"
+    },
+    {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/stage-11.json",
+      "sha256": "4f31c6744ee25b387091ab416f7394b213248a95dea397143e853bd687f87065"
+    }
+  ],
+  "expected_red_control": {
+    "assertions": 18,
+    "failures": 10,
+    "errors": 0,
+    "receipt": {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/baseline-closed-result.json",
+      "sha256": "223f5cf11b281b90914284ab411b142fd81fcf215e8ff520f296d3ea6cdbe9b0"
+    },
+    "junit": {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/baseline-closed.xml",
+      "sha256": "bd6ef7f11b796c849bbe342883feed4384d9208bab92091342b874267d7a7a23"
+    }
+  },
+  "native": {
+    "related-closed-11": {
+      "assertions": 316,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 312.70123580000654,
+      "exe_sha256": "e06003ae0ea594c50d1763dd826ca785f0ff5c41ab8d54e5b2eedd54021da546",
+      "receipt": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/related-closed-11-result.json",
+        "sha256": "02797dce2cd0762478d32752b872a74008dd6281d30976327a50ef75d5e50302"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/related-closed-11.xml",
+        "sha256": "31479fc596f7168ce47ae696bd418440d5f43d9a34c11beaeedb2f990141f9e4"
+      }
+    },
+    "regression-11-organic": {
+      "assertions": 693,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 2288.5257096999994,
+      "exe_sha256": "e06003ae0ea594c50d1763dd826ca785f0ff5c41ab8d54e5b2eedd54021da546",
+      "receipt": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/regression-11-organic-result.json",
+        "sha256": "5f675e8a46299d86be14051150914231c02ed2972bc62cb7044db9ab7db15673"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/regression-11-organic.xml",
+        "sha256": "4186428c735f3562da8fbd5370bc33dcee794203f1445fb5ad8a5b6730531bed"
+      }
+    },
+    "regression-11-support": {
+      "assertions": 1677,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 598.3928782000003,
+      "exe_sha256": "e06003ae0ea594c50d1763dd826ca785f0ff5c41ab8d54e5b2eedd54021da546",
+      "receipt": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/regression-11-support-result.json",
+        "sha256": "362ebb2cc544d34900f47374ec097cad3c86f37c476d027ef88442f7e3bfb6d2"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/regression-11-support.xml",
+        "sha256": "ae1e9d6a6bd0c6e6c6c52f1c049645bd0b69d239c8d7495de7e8ff69e10dab9d"
+      }
+    },
+    "regression-11-belt-tree-layer": {
+      "assertions": 18331,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 1056.5194596000074,
+      "exe_sha256": "e06003ae0ea594c50d1763dd826ca785f0ff5c41ab8d54e5b2eedd54021da546",
+      "receipt": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/regression-11-belt-tree-layer-result.json",
+        "sha256": "dbd7ecbc5547399161dee80017d883606c1c68dc502eac3a9ad1921ecd22dabb"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/regression-11-belt-tree-layer.xml",
+        "sha256": "d478dff3f2ee722c355ba685294409486bb67d0e5db226ba913f394cd44e323b"
+      }
+    }
+  },
+  "regression_coverage": {
+    "top_level_cases": 122,
+    "disjoint": true,
+    "complete": true,
+    "groups": {
+      "organic": 19,
+      "support": 51,
+      "belt-tree-layer": 52
+    },
+    "receipt": {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/regression-11-coverage.json",
+      "sha256": "3e44ee11f24137254f42c7d75569da43152c2bedbd5a1d04f5a1be2f4ffb51e0"
+    }
+  },
+  "outputs": {
+    "release-closed-11": {
+      "project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+      "gcode_sha256": "ddbfdde3da459c68817d7e3c5f8c5ab602efb0fb50a5e5cf5ca1f5a378c9af1c",
+      "dll_sha256": "7b0a638255ed5495d3422429c43131f138d7c0efba6db0bf31770f9c155ca6c2",
+      "slice_seconds_under_concurrent_validation": 543.7285508000059,
+      "effective_settings": 771,
+      "effective_settings_unchanged": true,
+      "live_settings_preserved": true,
+      "warning_error_count": 0,
+      "continuous_support_runs": 26137,
+      "closed_native_wall_circuits": 23595,
+      "open_outer_walls": 0,
+      "unmatched_outer_walls": 0,
+      "local_or_structural_bearing_failures": 0,
+      "native_to_export_max_displacement_mm": 0.04276019704715047,
+      "configured_model_contact_runs": 14,
+      "required_contact_regions": 95,
+      "lost_contact_regions": 0,
+      "footprint_cache": {
+        "limit_bytes": 268435456,
+        "used_bytes": 45486408,
+        "hits": 79621,
+        "builds": 7359,
+        "eroded_hits": 71910,
+        "allowed_hits": 198199
+      },
+      "max_exported_wall_endpoint_gap_mm": 0.0014142135623798477,
+      "raw_contact_edge_trim_mm2": 0.478283719621,
+      "contact_area_mm2": 1341.546444249546,
+      "uncovered_beyond_one_bead_mm2": 0,
+      "receipts": [
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-closed-11/result.json",
+          "sha256": "ee8bed1fcece17bd97451d13ea4dba34a0d118d51b0a6a694cc1d2343831e1b7"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-closed-11-local-verification.json",
+          "sha256": "2696a074b01de5681af477ba7347afca803761250361118da9d1716bc727e728"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-closed-11-contour-identity.json",
+          "sha256": "467ae6a2499dcbf9515c76e913fe7b66b2ba12bd5b76454172b9ddcefc8bcc5e"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-closed-11-contour-matches.json",
+          "sha256": "58224cbfb95b7390073b8886a6865ffc107225fd1aac81bd827e9c064283252e"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-closed-11/roof-profile.json",
+          "sha256": "cac5ba715c3ee5b6b65ee079dfef5b4acb964e887a2e9ae9fc6311371e664565"
+        }
+      ]
+    },
+    "release-original-11": {
+      "project_sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf",
+      "gcode_sha256": "e2eff85c3578baddea0255c443a0783c82293f19fd0bccd4fb6e4bfb19dbd1dc",
+      "dll_sha256": "7b0a638255ed5495d3422429c43131f138d7c0efba6db0bf31770f9c155ca6c2",
+      "slice_seconds_under_concurrent_validation": 529.4552906000026,
+      "effective_settings": 771,
+      "effective_settings_unchanged": true,
+      "live_settings_preserved": true,
+      "warning_error_count": 0,
+      "continuous_support_runs": 33201,
+      "closed_native_wall_circuits": 30626,
+      "open_outer_walls": 0,
+      "unmatched_outer_walls": 0,
+      "local_or_structural_bearing_failures": 0,
+      "native_to_export_max_displacement_mm": 0.04329465466111541,
+      "configured_model_contact_runs": 47,
+      "required_contact_regions": 96,
+      "lost_contact_regions": 0,
+      "footprint_cache": {
+        "limit_bytes": 268435456,
+        "used_bytes": 47040032,
+        "hits": 98188,
+        "builds": 10597,
+        "eroded_hits": 82771,
+        "allowed_hits": 206212
+      },
+      "max_exported_wall_endpoint_gap_mm": 0.0014142135623798477,
+      "raw_contact_edge_trim_mm2": 0.2583670926815,
+      "contact_area_mm2": 1467.2882433739935,
+      "uncovered_beyond_one_bead_mm2": 0,
+      "receipts": [
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-original-11/result.json",
+          "sha256": "bb5499346aa8f52cb1c11ef449460a92296b30e41135a9cff368cb665ca0d30a"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-original-11-local-verification.json",
+          "sha256": "0320e1bc28a992197c879e4fa6de2a446d8cce240250ac3ff3ffd265e1a9ac6d"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-original-11-contour-identity.json",
+          "sha256": "12fbca004ce7401a510709dfb6882f696d6cd11a89f51631381f07c00164ffd6"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-original-11-contour-matches.json",
+          "sha256": "a1e815e7a35ddb4c5fdaee4a809ce4d6da1f610c50bc116c62c6cf30d8a9b72d"
+        },
+        {
+          "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-original-11/roof-profile.json",
+          "sha256": "350adec6aac8fbeecf9de5cce30bba583062ca63ccd2a1702a1697e343edae98"
+        }
+      ]
+    }
+  },
+  "adaptive_budget_validation": {
+    "result": {
+      "assertions": 74,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 2.621299499995075,
+      "exe_sha256": "d1769ced4f30341eaca522dcb19032f9e30cc8891a9e47ebd3354fefe53bb7cf",
+      "receipt": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/budget-7-result.json",
+        "sha256": "fa5d07989e3cb6b6ff99fee0140304038d89244ccd056eb1d35322b5238e8f90"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/budget-7.xml",
+        "sha256": "95b748f2651f439aceb4e1f6ae4c108287ed7cea51e9580aa87fb32d58ee52f3"
+      }
+    },
+    "scope": "Existing budget helper and its tests remain byte-identical to the tested version. The current native and actual Release runs exercise the final geometry-cache caller."
+  },
+  "normal_without_profile": {
+    "receipt": {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-normal-11/result.json",
+      "sha256": "ef04df567d514c5669c11dc996be75a35a1b8c0b77943021f39da3937c2e57a9"
+    },
+    "canonical": {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/normal-canonical-comparison-11.json",
+      "sha256": "c045edcef7978e03ca63f6e27cbd6fd5fcc998d6c2cf7d0116a2e77dee959b65"
+    },
+    "exact_canonical_instruction_and_geometry_match": true
+  },
+  "release_application": {
+    "dll_sha256": "7b0a638255ed5495d3422429c43131f138d7c0efba6db0bf31770f9c155ca6c2",
+    "expected_dll_sha256": "7b0a638255ed5495d3422429c43131f138d7c0efba6db0bf31770f9c155ca6c2",
+    "settings_count": 843,
+    "applied_utc": "2026-10-20T03:23:52.3728817+00:00",
+    "previous_dll_sha256": "1f8f02ec52c2a4c92c8ef7b8e700c47ecc5f55ea63eedd9674c0a589cf4a4785",
+    "updated_files": [
+      "InlongSlicer.dll",
+      "InlongSlicer.pdb",
+      "InlongSlicer.lib",
+      "InlongSlicer.exp"
+    ],
+    "settings_preserved": true,
+    "source_binding": "normal-source-binding-11.json",
+    "receipt": {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/release-application-11.json",
+      "sha256": "0c3a233c3751fa358c0196f1b7eeed879238836023793f3c12477c32ee16f3e8"
+    }
+  },
+  "comparison": {
+    "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/closed-trunk-comparison.png",
+    "sha256": "d5a0997d04e1c15e532f058b90278d490ca1de75b5c88629041f16e88e0a9cf4"
+  },
+  "actual_interface_retention": {
+    "release-closed-11": {
+      "old_interface_regions": 185,
+      "lost_regions": [],
+      "old_interface_region_area_mm2": 4760.461146744952,
+      "new_interface_total_area_mm2": 4786.9554715559225,
+      "reference": "Actual v9 printed interface bead regions; independent of the changed pre-repair footprint union diagnostics."
+    },
+    "release-original-11": {
+      "old_interface_regions": 136,
+      "lost_regions": [],
+      "old_interface_region_area_mm2": 4373.7267119753915,
+      "new_interface_total_area_mm2": 4364.092676259894,
+      "reference": "Actual v9 printed interface bead regions; independent of the changed pre-repair footprint union diagnostics."
+    }
+  },
+  "actual_interface_retention_receipt": {
+    "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/actual-interface-retention-11.json",
+    "sha256": "889ecf575f0c3497cda26e964214c4658b04e97af24d8b4d9749c588dfaa2f95"
+  },
+  "checker_controls": {
+    "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/checker-controls.json",
+    "sha256": "36fd252aa30e52402355ac1eb0a9f3ff4e3da3c20d967ef05678ad190ed25d10"
+  },
+  "independent_checker": {
+    "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/verify-local-export.py",
+    "sha256": "c2a570a98c04499b1cd9afed5c76b9bc4f6c809cd0a63de8d8c1c0bd3c649366"
+  },
+  "checker_semantics": "Explicit E0 XY steps no longer than 0.002 mm are retained inside extrusion circuits because five-decimal E quantization can round tiny moves to zero. Entire all-zero paths and stationary extrusion dots do not become full bead footprints. Native endpoints coincide exactly; exported endpoint differences are reported against the explicit coordinate-precision bound. Complete native walls are matched one-to-one to observed subcircuits, even after continuous infill prefixes.",
+  "limits": [
+    "Native walls are exactly closed. Their actual G-code circuits match within 0.05 mm Hausdorff displacement for fitting; measured endpoint differences are retained and bounded by sqrt(2)*0.001+0.0001 mm for XY quantization and subprecision segment removal. Full actual round-bead bearing is checked separately.",
+    "Independent bearing uses actual emitted heights and round line-width envelopes, plus the nearest eligible printed model material at the configured bottom gap. Outer contours have no bridge exemption; only rounding-scale unbacked fragments are tolerated.",
+    "Meaningful top-contact regions are retained, but unsupported fringes can be trimmed; exact contact area and old support paths are not preserved.",
+    "The two provided cartesian projects and native variants are verified. This is geometric and regression evidence, not an all-model guarantee or a physical print-strength trial.",
+    "Earlier local-bearing evidence did not prove closed contour topology. Intermediate v9 outputs retained real corner-bearing failures and sub-output-precision loops; they were not accepted."
+  ],
+  "support_resource_effect": {
+    "before_filament_g": 63.65,
+    "after_filament_g": 75.35,
+    "before_estimated_print_time": "4h 6m 47s",
+    "after_estimated_print_time": "5h 0m 57s",
+    "extra_filament_g": 11.7,
+    "extra_estimated_print_seconds": 3250,
+    "non_support_extrusion_totals_unchanged": true,
+    "receipt": {
+      "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/output-cost-comparison-11.json",
+      "sha256": "7b0ecb2ed450cda093d985cc4dff6a45449ca185ebe6a9510e79bb0f5ae351da"
+    }
+  },
+  "checker_gap_regression": {
+    "path": ".agents/runtime/runs/run-11376fc882724d7880b2438fbd111b33/work/checker-gap-regression.json",
+    "sha256": "df1efdca7af0db309adb08dc62cea1a188c4c7fe287dab5631cadc6666057975"
+  }
+}

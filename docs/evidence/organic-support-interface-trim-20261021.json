@@ -1,0 +1,41 @@
+{
+  "schema_version": "inlong-organic-support-interface/v1",
+  "verified_utc": "2026-10-20T19:36:55.0813830+00:00",
+  "git_head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+  "scope": "Organic tree support interface-overlap repair for the supplied 3MF; source-bound Windows Release verification; no commit or push.",
+  "input": {
+    "path": "//192.168.50.102/home/验证切片用/支撑有悬空问题2.3mf",
+    "sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d"
+  },
+  "cause": "The prior XY keepout was gated by zero_gap_interface_top and can_merge_support_regions. This project uses support_top_z_distance=0.17 and same support/interface filament, so the keepout was skipped.",
+  "change": "For organic trees, trim support-body polygons by the expanded same-Z interface footprint regardless of Z gap or same-filament merge status; preserve interface paths as separate role roads.",
+  "results": {
+    "focused_native_assertions": "316 in 5 cases passed",
+    "interface_trim_seconds": 393.2904908,
+    "canonical_count": 374910,
+    "canonical_sha256": "9c1d54344f614084654d99eb4191ab4cf734fcb50b891212a31e2abd6e22eaa6",
+    "previous_canonical_count": 402017,
+    "previous_canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+    "support_sections_before": 762,
+    "support_sections_after": 739,
+    "interface_sections_before": 302,
+    "interface_sections_after": 280,
+    "material_g_before": 75.35,
+    "material_g_after": 74.96,
+    "nonclosed_outer_walls": 0,
+    "missing_area_mm2": 0.4782837172985,
+    "warnings_errors": 0
+  },
+  "settings": {
+    "release_data_files": 844,
+    "settings_preserved_during_profile": false,
+    "reason": "A separate user-launched build/src/Release GUI process started during the final profile, so the live data_dir changed concurrently; no settings were overwritten by deployment."
+  },
+  "receipts": [
+    ".agents/runtime/runs/run-ec88c6e6c8bf4bf8a80a6af54c12c251/work/focused-interface-trim.log",
+    ".agents/runtime/runs/run-ec88c6e6c8bf4bf8a80a6af54c12c251/work/interface-trim/result.json",
+    ".agents/runtime/runs/run-ec88c6e6c8bf4bf8a80a6af54c12c251/work/interface-trim-profile/result.json",
+    ".agents/runtime/runs/run-ec88c6e6c8bf4bf8a80a6af54c12c251/work/interface-trim-profile/roof-profile.json",
+    ".agents/runtime/runs/run-ec88c6e6c8bf4bf8a80a6af54c12c251/work/release-application-interface-trim.json"
+  ]
+}

@@ -18,10 +18,12 @@
 #include "libslic3r/Support/SupportCommon.hpp"
 #include "libslic3r/Support/TreeSupport.hpp"
 #include "libslic3r/Support/TreeSupportUtils.hpp"
+#include "libslic3r/Support/OrganicSupportPathBearing.hpp"
 #include "libslic3r/Thread.hpp"
 #include "libslic3r/Utils.hpp"
 
 #include <cmath>
+#include <cstdlib>
 #include <functional>
 #include <limits>
 #include <map>
@@ -41,6 +43,112 @@
 
 using namespace Slic3r::Test;
 using namespace Slic3r;
+
+TEST_CASE("Organic trunk outer walls close at every branch diameter",
+          "[SupportMaterial][OrganicTree][ClosedTrunks][Regression]")
+{
+    const double diameter = GENERATE(0.8, 1.2, 3., 12.);
+    const int walls = GENERATE(1, 2);
+    CAPTURE(diameter, walls);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({{"enable_support", true}, {"support_type", "tree(auto)"},
+        {"support_style", "organic"}, {"tree_support_wall_count", walls},
+        {"nozzle_diameter", "0.4"}, {"layer_height", 0.2}, {"initial_layer_print_height", 0.2}});
+    Print print;
+    Model model;
+    init_print({make_cube(10., 10., 10.)}, print, model, config);
+    const SupportParameters params(*print.objects().front());
+    Polygon circle;
+    for (int index = 0; index < 64; ++index) {
+        const double angle = index * 2. * M_PI / 64.;
+        circle.points.emplace_back(scale_(diameter * 0.5 * std::cos(angle)), scale_(diameter * 0.5 * std::sin(angle)));
+    }
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    ExtrusionEntityCollection generated;
+    tree_supports_generate_paths(generated.entities, Polygons{circle}, flow, params);
+    REQUIRE_FALSE(generated.empty());
+    for_each_extrusion_path(generated, [&](const ExtrusionPath &path) {
+        CHECK(path.first_point() == path.last_point());
+        CHECK_FALSE(path.can_reverse());
+    });
+}
+
+TEST_CASE("Organic sheath keeps every outer trunk contour closed",
+          "[SupportMaterial][OrganicTree][ClosedTrunks][Regression]")
+{
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({{"enable_support", true}, {"support_type", "tree(auto)"},
+        {"support_style", "organic"}, {"nozzle_diameter", "0.4"}, {"layer_height", 0.2},
+        {"initial_layer_print_height", 0.2}});
+    Print print;
+    Model model;
+    init_print({make_cube(10., 10., 10.)}, print, model, config);
+    const SupportParameters params(*print.objects().front());
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    std::unique_ptr<Fill> filler(Fill::new_from_type(ipRectilinear));
+    filler->spacing = flow.spacing();
+    ExtrusionEntityCollection generated;
+    const Polygon region{Points{Point(scale_(0.), scale_(0.)), Point(scale_(12.), scale_(0.)),
+        Point(scale_(12.), scale_(12.)), Point(scale_(0.), scale_(12.))}};
+    fill_expolygons_with_sheath_generate_paths(generated.entities, Polygons{region}, filler.get(), 0.5f,
+        erSupportMaterial, flow, params, true, true);
+    REQUIRE_FALSE(generated.empty());
+    // no_sort keeps the sheath collection first, ahead of its infill. Check
+    // that collection's first path directly so normal fill paths retain their
+    // existing reversible and ordering metadata.
+    auto *sheath = dynamic_cast<ExtrusionEntityCollection *>(generated.entities.front());
+    REQUIRE(sheath != nullptr);
+    REQUIRE_FALSE(sheath->entities.empty());
+    auto *outer = dynamic_cast<ExtrusionPath *>(sheath->entities.front());
+    REQUIRE(outer != nullptr);
+    CHECK(outer->first_point() == outer->last_point());
+}
+
+TEST_CASE("Organic support distinguishes two-ended straight bridges from curved cantilevers",
+          "[SupportMaterial][OrganicTree][Anchoring][LocalBearing][Regression]")
+{
+    const double width = GENERATE(0.2, 0.4, 0.6, 1.2);
+    auto point = [](double x, double y) { return Point(scale_(x), scale_(y)); };
+    auto rectangle = [&](double x0, double y0, double x1, double y1) {
+        return Polygon{Points{point(x0, y0), point(x1, y0), point(x1, y1), point(x0, y1)}};
+    };
+    auto unbacked = [&](const Polyline &line, const Polygons &foundation) {
+        return TreeSupport3D::organic_support_unbacked_spans(line, foundation, scale_(width * 0.5), scale_(width), scale_(0.002));
+    };
+    const Polygons one_end{rectangle(-1., -1., 0.25, 4.)};
+    CHECK_FALSE(unbacked(Polyline{Points{point(0., 0.), point(5., 0.)}}, one_end).empty());
+    const Polygons two_ends{rectangle(-1., -1., 0.25, 1.), rectangle(4.75, -1., 6., 1.)};
+    CHECK(unbacked(Polyline{Points{point(0., 0.), point(5., 0.)}}, two_ends).empty());
+    CHECK_FALSE(unbacked(Polyline{Points{point(0., 0.), point(3., 0.), point(3., 3.), point(0., 3.), point(0., 0.)}}, one_end).empty());
+    const Polygons around_seam{rectangle(-0.5, -0.5, 0.5, 3.5), rectangle(3.5, -0.5, 4.5, 3.5), rectangle(-0.5, 2.5, 4.5, 3.5)};
+    CHECK(unbacked(Polyline{Points{point(2., 0.), point(4., 0.), point(4., 3.), point(0., 3.), point(0., 0.), point(2., 0.)}}, around_seam).empty());
+    CHECK_FALSE(TreeSupport3D::organic_support_unbacked_spans(
+        Polyline{Points{point(2., 0.), point(4., 0.), point(4., 3.), point(0., 3.), point(0., 0.), point(2., 0.)}},
+        around_seam, scale_(width * 0.5), scale_(width), scale_(0.002), 0., -1., true).empty());
+    const Polyline bow{Points{point(0., 0.), point(2.5, width * 0.2), point(5., 0.)}};
+    CHECK(TreeSupport3D::organic_support_unbacked_spans(bow, two_ends, scale_(width * 0.5), scale_(width), scale_(0.002)).empty());
+    CHECK_FALSE(TreeSupport3D::organic_support_unbacked_spans(bow, two_ends, scale_(width * 0.5), scale_(width), scale_(0.002), scale_(width * 0.45)).empty());
+}
+
+TEST_CASE("Closed support continuations reserve bearing under their source road",
+          "[SupportMaterial][OrganicTree][ClosedTrunks][Regression]")
+{
+    const double width = GENERATE(0.2, 0.4, 0.6, 1.2);
+    const Polyline source{Points{Point(scale_(-4.), scale_(0.)), Point(scale_(4.), scale_(0.))}};
+    const Polygon bed{Points{Point(scale_(-10.), scale_(-10.)), Point(scale_(10.), scale_(-10.)),
+        Point(scale_(10.), scale_(10.)), Point(scale_(-10.), scale_(10.))}};
+    Polygons printed;
+    const Polylines contours = TreeSupport3D::organic_support_closed_contours(source, Polygons{bed}, scale_(width));
+    REQUIRE_FALSE(contours.empty());
+    for (const Polyline &contour : contours) {
+        CHECK(contour.is_closed());
+        ExtrusionPath path(erSupportMaterial, 0.1, float(width), float(width * 0.5));
+        path.polyline = Polyline3(contour);
+        append(printed, path.polygons_covered_by_width());
+    }
+    CHECK(TreeSupport3D::organic_support_unbacked_spans(source, offset(union_(printed), -scale_(width * 0.1)),
+        0., scale_(width), scale_(0.002), 0., -1., true).empty());
+}
 
 static TriangleMesh support_curved_tunnel()
 {
@@ -78,10 +186,12 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
           "[SupportMaterial][OrganicTree][Anchoring][Regression]")
 {
     const double nozzle = GENERATE(0.4, 0.6);
+    const bool independent_body = GENERATE(false, true);
     const bool independent_contact = GENERATE(false, true);
+    const char *body_pattern = GENERATE("rectilinear", "hollow");
     const double layer_height = nozzle * 0.5;
     const double bottom_gap = layer_height * 0.85;
-    CAPTURE(nozzle, independent_contact, bottom_gap);
+    CAPTURE(nozzle, independent_body, independent_contact, bottom_gap, body_pattern);
     std::ostringstream messages;
     using LogSink = boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend>;
     const auto sink = boost::make_shared<LogSink>();
@@ -102,6 +212,8 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
         {"max_layer_height", std::to_string(nozzle * 0.75)},
         {"support_top_z_distance", bottom_gap}, {"support_bottom_z_distance", bottom_gap},
         {"support_object_xy_distance", 0.4}, {"support_on_build_plate_only", false},
+        {"support_base_pattern", body_pattern}, {"support_base_pattern_spacing", 5.},
+        {"tree_support_wall_count", 1},
         {"support_threshold_angle", 40}, {"bridge_no_support", false},
         {"tree_support_branch_angle_organic", 30}, {"tree_support_branch_diameter_organic", 3.},
         {"tree_support_branch_distance_organic", 1.}, {"tree_support_tip_diameter", 2.},
@@ -109,7 +221,7 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
         {"support_top_contact_pattern", "concentric"}, {"support_bottom_contact_pattern", "concentric"},
         {"support_top_contact_spacing", 0.05}, {"support_bottom_contact_spacing", 0.05},
         {"support_top_contact_wall_count", 1}, {"support_bottom_contact_wall_count", 1},
-        {"independent_support_layer_height", false},
+        {"independent_support_layer_height", independent_body},
         {"independent_support_top_contact_layer_height", independent_contact}
     });
     Print print;
@@ -121,18 +233,126 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
     print.set_status_silent();
     print.process();
     const PrintObject &object = *print.objects().front();
+    CAPTURE(object.slicing_parameters().gap_object_support);
+    if (const char *directory = std::getenv("INLONG_SUPPORT_FIXTURE_OUTPUT_DIR")) {
+        const std::string filename = std::string(directory) + "/nozzle-" + std::to_string(nozzle) +
+            "-body-" + std::to_string(independent_body) + "-contact-" + std::to_string(independent_contact) + "-" + body_pattern + ".gcode";
+        print.export_gcode(filename, nullptr);
+    }
     REQUIRE_FALSE(object.support_layers().empty());
     std::vector<std::pair<double, Polygons>> printed;
     size_t checked_components = 0;
     size_t unanchored_components = 0;
+    size_t weakly_anchored_strokes = 0;
+    size_t curved_cantilevers = 0;
+    size_t open_hollow_trunks = 0;
+    size_t unprintable_walls = 0;
+    auto round_bead = [](const ExtrusionPath &path) {
+        return offset(path.polyline.to_polyline(), float(scale_(path.width * 0.5)), jtRound, scale_(0.001), etOpenRound);
+    };
     std::ostringstream unanchored_locations;
     for (const SupportLayer *layer : object.support_layers()) {
         Polygons footprint;
         for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
             if (!path.is_force_no_extrusion() && path.mm3_per_mm > 0.)
-                append(footprint, path.polygons_covered_by_width());
+                append(footprint, round_bead(path));
         });
         footprint = union_(footprint);
+        // A neighboring extrusion on the same plane cannot turn an otherwise
+        // unsupported stroke into a printable branch. Keep variable-width and
+        // height-modulated fragments of one continuous road together.
+        std::vector<ExtrusionPaths> roads;
+        std::function<void(const ExtrusionEntity &)> visit_road;
+        visit_road = [&](const ExtrusionEntity &entity) {
+            if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection *>(&entity)) {
+                for (const ExtrusionEntity *child : collection->entities)
+                    visit_road(*child);
+                return;
+            }
+            // Independently sortable loops remain different roads even when
+            // their seams happen to coincide. Width changes within one road
+            // do not create a new independent extrusion.
+            bool starts_road = true;
+            for_each_extrusion_path(entity, [&](const ExtrusionPath &path) {
+                if (path.is_force_no_extrusion() || path.mm3_per_mm <= 0.)
+                    return;
+                if (starts_road || roads.back().back().last_point() != path.first_point())
+                    roads.emplace_back();
+                starts_road = false;
+                roads.back().push_back(path);
+            });
+        };
+        visit_road(layer->support_fills);
+        for (const ExtrusionPaths &paths : roads) {
+            if ((std::string(body_pattern) == "hollow" || !paths.front().can_reverse()) && layer->print_z > layer_height + EPSILON &&
+                paths.front().role() == erSupportMaterial && paths.front().first_point() != paths.back().last_point()) {
+                ++open_hollow_trunks;
+                unanchored_locations << " open trunk Z=" << layer->print_z;
+            }
+            if (paths.front().role() == erSupportMaterial && !paths.front().can_reverse()) {
+                double length = 0.;
+                for (const ExtrusionPath &path : paths) {
+                    length += path.length();
+                }
+                // A printable contour must survive the final 0.001 mm XY
+                // precision; sub-width loops are valid solid branch tips.
+                if (length < scale_(0.002))
+                    ++unprintable_walls;
+            }
+            Polygons road, bearing, model_contact;
+            double max_width = 0.;
+            bool grounded = false;
+            for (const ExtrusionPath &path : paths) {
+                const Polygons bead = round_bead(path);
+                append(road, bead);
+                max_width = std::max(max_width, double(path.width));
+                const double bottom = layer->print_z - path.height;
+                grounded |= bottom <= EPSILON;
+                for (const auto &[z, below] : printed)
+                    if (z >= bottom - EPSILON && z < layer->print_z - EPSILON)
+                        append(bearing, intersection(bead, offset(below, scale_(0.001))));
+                const double grid_height = independent_body ? EPSILON : layer_height;
+                for (const Layer *model_layer : object.layers())
+                    if (model_layer->print_z <= bottom - bottom_gap + EPSILON &&
+                        model_layer->print_z >= bottom - bottom_gap - grid_height - EPSILON)
+                        append(model_contact, intersection(bead, to_polygons(model_layer->lslices)));
+            }
+            const double road_area = area(union_(road));
+            if (grounded || road_area < sqr(double(scale_(nozzle))) * 0.05)
+                continue;
+            Polygons previous;
+            Polyline centerline;
+            double min_width = std::numeric_limits<double>::max();
+            for (const ExtrusionPath &path : paths) {
+                min_width = std::min(min_width, double(path.width));
+                const Polyline line = path.polyline.to_polyline();
+                if (centerline.points.empty())
+                    centerline = line;
+                else
+                    centerline.points.insert(centerline.points.end(), line.points.begin() + 1, line.points.end());
+                for (const auto &[z, below] : printed)
+                    if (z >= layer->print_z - path.height - EPSILON && z < layer->print_z - EPSILON)
+                        append(previous, intersection(round_bead(path), below));
+            }
+            const Polylines unsupported = TreeSupport3D::organic_support_unbacked_spans(centerline,
+                union_(previous, model_contact), scale_(min_width * 0.5), scale_(min_width), scale_(0.002), 0., scale_(min_width * 0.5),
+                paths.front().role() == erSupportMaterial && !paths.front().can_reverse() && centerline.is_closed());
+            if (!unsupported.empty()) {
+                ++curved_cantilevers;
+                unanchored_locations << " curved cantilever Z=" << layer->print_z << " length=" <<
+                    unscale<double>(unsupported.front().length()) << " wall=" << !paths.front().can_reverse() <<
+                    " XY=" << unscale<double>(centerline.first_point().x()) << "," <<
+                    unscale<double>(centerline.first_point().y());
+            }
+            const double minimum_bearing = std::min(road_area * 0.05, sqr(double(scale_(max_width))) * 0.5);
+            if (area(union_(model_contact)) <= sqr(double(scale_(0.001))) &&
+                area(union_(bearing)) + sqr(double(scale_(0.001))) < minimum_bearing) {
+                ++weakly_anchored_strokes;
+                const BoundingBox bounds = get_extents(road);
+                unanchored_locations << " weak road Z=" << layer->print_z << " XY=" <<
+                    unscale<double>(bounds.min.x()) << "," << unscale<double>(bounds.min.y());
+            }
+        }
         for (const ExPolygon &component : union_ex(footprint)) {
             if (component.area() < sqr(scale_(nozzle)) * 0.05)
                 continue;
@@ -141,7 +361,7 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
             for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
                 if (path.is_force_no_extrusion() || path.mm3_per_mm <= 0.)
                     return;
-                const Polygons bead = path.polygons_covered_by_width();
+                const Polygons bead = round_bead(path);
                 // This checks connectivity, not a minimum load-bearing area.
                 // Use the output coordinate resolution for numerical noise.
                 const double overlap_tolerance = sqr(double(scale_(0.001)));
@@ -161,7 +381,8 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
                 // path's bottom applied to the entire connected component.
                 for (const Layer *model_layer : object.layers())
                     if (model_layer->print_z <= bottom - bottom_gap + EPSILON &&
-                        model_layer->print_z >= bottom - bottom_gap - layer_height - EPSILON &&
+                        model_layer->print_z >= bottom - bottom_gap -
+                            (independent_body ? EPSILON : layer_height) - EPSILON &&
                         area(intersection(bead, to_polygons(model_layer->lslices))) > overlap_tolerance)
                         anchored = true;
             });
@@ -173,7 +394,7 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
                     "," << unscale<double>(bounds.min.y()) << ".." << unscale<double>(bounds.max.x()) <<
                     "," << unscale<double>(bounds.max.y());
                 for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
-                    const Polygons bead = path.polygons_covered_by_width();
+                    const Polygons bead = round_bead(path);
                     if (area(intersection(bead, current)) <= sqr(double(scale_(nozzle))) * 0.002)
                         return;
                     double model_top = -1., support_top = -1.;
@@ -195,6 +416,10 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
     INFO(messages.str());
     INFO(unanchored_locations.str());
     CHECK(unanchored_components == 0);
+    CHECK(weakly_anchored_strokes == 0);
+    CHECK(curved_cantilevers == 0);
+    CHECK(open_hollow_trunks == 0);
+    CHECK(unprintable_walls == 0);
     REQUIRE_FALSE(gcode(print).empty());
 }
 

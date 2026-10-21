@@ -1,0 +1,387 @@
+{
+  "schema_version": "inlong-organic-support-performance/v1",
+  "verified_utc": "2026-10-20T10:11:46.245016+00:00",
+  "git_head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+  "scope": "Generic organic support performance repair, source-bound normal Windows Release and unchanged project exports. No commit, push or physical printing trial.",
+  "causes": [
+    "Repeated full-layer round-bead offsets and unions after individual local edits",
+    "Repeated checks of already validated planes and identical bearing geometry",
+    "Optional cache allowance retained early-layer roads and stopped reusing later geometry",
+    "Nearest-road searches rebuilt every polyline segment list for every point and scanned distant segments"
+  ],
+  "changes": [
+    "Skip lateral morphology only when complete raw printed-material coverage is already established with nonnegative reach and a nondegenerate integer window",
+    "Exact bounded round-bead reuse with bounded working-set rotation, recent erosion and bearing-result reuse, and lazy unused endpoint offsets",
+    "Physical predecessor revision checks; defer final support-island rebuilding",
+    "Stream one revision-bound local road index and select complete nearby beads with an erosion guard",
+    "Build ordered hierarchical line bounds once per lower plane, retain original segment visit and comparison order, and use the original rounded point-on-line projection",
+    "Mark expanded horizontal, vertical and point bounds valid before hierarchical merges; preserve the original tie winners"
+  ],
+  "memory_policy": {
+    "max_requested_bytes": 268435456,
+    "available_fraction": "1/32",
+    "bead_fraction_of_reservation": "1/2",
+    "low_memory": "Shared live-memory reservation, including the existing working-storage reserve; disable optional caching on <=4 GiB physical RAM, unknown readings or insufficient headroom. This bounds optional caches, not arbitrary model working storage.",
+    "projection_index": "Transient per queried lower plane, not all model layers"
+  },
+  "source_binding": {
+    "verified_utc": "2026-10-20T09:33:19.472325+00:00",
+    "source": {
+      "src/libslic3r/Support/SupportCommon.cpp": "c42d71d0f994ba5e5c729713339d86f5d3adcbcbf4fc860be2010d3a927e8ac2",
+      "src/libslic3r/Support/TreeSupport3D.cpp": "6f420041421bbfca3f99d5f06743116e9b5b702aeb21c038754a4b977d3dffbf",
+      "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "aa7bf4967e40b1ce4892397a1c628c6cc4f946b396e826094c4cb2039fb67ecc",
+      "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "tests/fff_print/test_support_material.cpp": "d2be112296f385878d8d4363dd4f0a1c8379a46d8e52b4d6905567d320b255df",
+      "tests/fff_print/test_tree_support.cpp": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b",
+      "src/libslic3r/Support/SupportCacheBudget.hpp": "1c3869d671138ec62cb5c15465a5d58157a19345ba24a8f8aede43f8b451a23a",
+      "src/libslic3r/Support/SupportCacheBudget.cpp": "4acdc6c2db24a9f6059a2ffbc1ce32575de12a5daadbd4913e1bb657a0337162",
+      "tests/libslic3r/test_support_cache_budget.cpp": "00087f782dbc44b00844159d118e48a264b7ebbaae4df9d435c071af9701c1e9",
+      "src/libslic3r/Support/OrganicSupportRoadProjection.hpp": "dc10e44ce75a37322a0ccaca64003b2eab56292b7e308a8de0276f15316c8f34",
+      "tests/libslic3r/test_geometry.cpp": "873343725689bc73506641e01075bf76f0d7718cd844afaa8a0a3d0f8e710a33"
+    },
+    "objects": {
+      "build/src/libslic3r/libslic3r.dir/Release/TreeSupport3D.obj": "dee502f41d343d8ff2477564ee2b86f512f0c88d93a35c5e7ed1d06ceaa7fa2d",
+      "build/tests/libslic3r/libslic3r_tests.dir/Release/test_geometry.obj": "0766d80df00c8970ed2abe8b9501daf1594649a8d58bb5e5fbe0a5ef2423f87d"
+    },
+    "binaries": {
+      "build/src/libslic3r/Release/libslic3r.lib": "9d7e68b9a0d1f1c5578f46f5070ff90b249d43516d034cd0e9c5badb9618278c",
+      ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/native-22/fff_print_tests.exe": "b06c9d8bbdb72d1683a325910a190f070106f8e9a951d40192cdc57ba2ff32b0",
+      ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/native-22/InlongSlicer.dll": "61997ff355e0b892955a6553e08da3ab885c3b4c9dec448de3c08662c52f8d4f",
+      ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/native-22/InlongSlicer.map": "33a93804c6fdc31b86417cb143bbb7d040db5888f5806fcbfb51e3635db8c49f",
+      "build/tests/libslic3r/Release/libslic3r_tests.exe": "daa2e153b5fff0ba6fa682a164d5e55b0d632efe06dde4439d289bb40a80238b"
+    },
+    "head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+    "method": "Normal Release core and native link; staged app output paths only. No substituted objects or portable data preparation."
+  },
+  "source_binding_receipt": {
+    "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/normal-source-binding-22.json",
+    "sha256": "3fe8f031b2484efbae667f3a6fd8ce49dcd5bcd6e0ab60456243febb801f8057"
+  },
+  "native": {
+    "related-projection-22": {
+      "assertions": 8427,
+      "cases": 6,
+      "failures": 0,
+      "errors": 0,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-projection-22-result.json",
+        "sha256": "7c2901b741f54ac1834b1d3ba5c540ed4a99489d8a5efcbcac137abbf8d31079"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-projection-22.xml",
+        "sha256": "158cdd580be68fc797c8e401c7d2abea8921725b92a3c3cdfc32f14dfcba29fb"
+      },
+      "exe_sha256": "daa2e153b5fff0ba6fa682a164d5e55b0d632efe06dde4439d289bb40a80238b"
+    },
+    "related-candidate-22": {
+      "assertions": 316,
+      "cases": 5,
+      "failures": 0,
+      "errors": 0,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-candidate-22-result.json",
+        "sha256": "724ecb26309463b2939cbed02bdc5776a5673b58e3dcb7ed945643da36e7ac31"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-candidate-22.xml",
+        "sha256": "f434dbddd7a2e1089c5a01f08466f1c3e788c454d63e91cf4a6f663be44887c9"
+      },
+      "exe_sha256": "b06c9d8bbdb72d1683a325910a190f070106f8e9a951d40192cdc57ba2ff32b0"
+    },
+    "related-belt-22": {
+      "assertions": 64,
+      "cases": 9,
+      "failures": 0,
+      "errors": 0,
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-belt-22-result.json",
+        "sha256": "00612cbfb96ba0600caf1133ec2cf5e024fddef589513ef1b2d1fa01441529b7"
+      },
+      "junit": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-belt-22.xml",
+        "sha256": "e65b15d36ee175a25547e0a4663e24f3e2f2bee73712303de4251b5087818ab7"
+      },
+      "exe_sha256": "b06c9d8bbdb72d1683a325910a190f070106f8e9a951d40192cdc57ba2ff32b0"
+    }
+  },
+  "fixture_variants": 16,
+  "fixture_comparison": {
+    "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/fixtures-comparison-22.json",
+    "sha256": "f74bea43cf89a1e99847714353215ffd08ec67688f0d08f285fa8e94a35124e0"
+  },
+  "exports": {
+    "baseline": {
+      "exit_code": 0,
+      "seconds": 573.0962628999987,
+      "project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+      "dll_sha256": "7b0a638255ed5495d3422429c43131f138d7c0efba6db0bf31770f9c155ca6c2",
+      "settings_preserved": true,
+      "canonical_count": 402017,
+      "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+      "gcode_sha256": "6894ad7471eb76328fc7cd4530a1f9aaad9e1718f6040b8464ba05a80c7ddac0",
+      "warning_error_lines": [],
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/baseline/result.json",
+        "sha256": "e80616e287bb1115bc57a2f8a62e11017823351773e9e041f5c76290808a7a96"
+      },
+      "resources": {
+        "peak_working_set_bytes": 773758976,
+        "peak_private_commit_bytes": 842420224,
+        "user_cpu_seconds": 645.515625,
+        "kernel_cpu_seconds": 7.453125
+      }
+    },
+    "candidate-22": {
+      "exit_code": 0,
+      "seconds": 227.81985850000638,
+      "project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+      "dll_sha256": "61997ff355e0b892955a6553e08da3ab885c3b4c9dec448de3c08662c52f8d4f",
+      "settings_preserved": true,
+      "canonical_count": 402017,
+      "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+      "gcode_sha256": "966f2575edf40e2f352f1c25d08ed8e716e9c77dae4813d92665abc5fdeb3a7b",
+      "warning_error_lines": [],
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/candidate-22/result.json",
+        "sha256": "c4a1a735382f3ef4c03a0903fc5d74eaa916759a3786eb516884505e3943c38c"
+      },
+      "resources": {
+        "peak_working_set_bytes": 892448768,
+        "peak_private_commit_bytes": 958803968,
+        "user_cpu_seconds": 349.234375,
+        "kernel_cpu_seconds": 4.09375
+      }
+    },
+    "repeat-22": {
+      "exit_code": 0,
+      "seconds": 255.81753529999696,
+      "project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+      "dll_sha256": "61997ff355e0b892955a6553e08da3ab885c3b4c9dec448de3c08662c52f8d4f",
+      "settings_preserved": true,
+      "canonical_count": 402017,
+      "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+      "gcode_sha256": "34a046aa64b5e88bc86f9e599a3bb141290be957bf82f5b1e16c77140303d737",
+      "warning_error_lines": [],
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/repeat-22/result.json",
+        "sha256": "afdf75e9314552852648c439319d13823a390231fb9b4215afc19ca89787e7ec"
+      },
+      "resources": {
+        "peak_working_set_bytes": 887459840,
+        "peak_private_commit_bytes": 947417088,
+        "user_cpu_seconds": 363.765625,
+        "kernel_cpu_seconds": 6.125
+      }
+    },
+    "no-cache-22": {
+      "exit_code": 0,
+      "seconds": 617.885320500005,
+      "project_sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d",
+      "dll_sha256": "61997ff355e0b892955a6553e08da3ab885c3b4c9dec448de3c08662c52f8d4f",
+      "settings_preserved": true,
+      "canonical_count": 402017,
+      "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+      "gcode_sha256": "919eb7d8f77ed98b794600c16bc4cc28ac999ed65e879aac1a139e74be4574a9",
+      "warning_error_lines": [],
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/no-cache-22/result.json",
+        "sha256": "ac42fc46e9240d63337768f90a1832e4c5c2cf9421cf3258ec6579429c6849a9"
+      },
+      "resources": {
+        "peak_working_set_bytes": 716886016,
+        "peak_private_commit_bytes": 773017600,
+        "user_cpu_seconds": 716.578125,
+        "kernel_cpu_seconds": 4.578125
+      }
+    },
+    "original-22": {
+      "exit_code": 0,
+      "seconds": 223.05169169999135,
+      "project_sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf",
+      "dll_sha256": "61997ff355e0b892955a6553e08da3ab885c3b4c9dec448de3c08662c52f8d4f",
+      "settings_preserved": true,
+      "canonical_count": 592880,
+      "canonical_sha256": "259e73b227dc19755a5e212d1caeedb68f002748fb51fec1f3719a346b97aef5",
+      "gcode_sha256": "c524b73e70b0c13320a13b10e2b6e7cfb28fc890b028a3929c653b7d6f2595af",
+      "warning_error_lines": [],
+      "receipt": {
+        "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/original-22/result.json",
+        "sha256": "394f788ca6625859b4b409e9ad620cc596f84769e7be84001545ace7414a63e8"
+      },
+      "resources": {
+        "peak_working_set_bytes": 1115811840,
+        "peak_private_commit_bytes": 1237635072,
+        "user_cpu_seconds": 339.203125,
+        "kernel_cpu_seconds": 3.6875
+      }
+    }
+  },
+  "comparisons": {
+    "comparison-22.json": {
+      "reference": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-8d6f6f80ed704b53a08306a94c908a1b\\work\\baseline\\plate_1.gcode",
+        "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+        "records": 402017,
+        "layers": 1296,
+        "settings_count": 771
+      },
+      "candidate": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-8d6f6f80ed704b53a08306a94c908a1b\\work\\candidate-22\\plate_1.gcode",
+        "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+        "records": 402017,
+        "layers": 1296,
+        "settings_count": 771
+      },
+      "canonical_equal": true,
+      "settings_equal": true
+    },
+    "comparison-repeat-22.json": {
+      "reference": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-8d6f6f80ed704b53a08306a94c908a1b\\work\\baseline\\plate_1.gcode",
+        "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+        "records": 402017,
+        "layers": 1296,
+        "settings_count": 771
+      },
+      "candidate": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-8d6f6f80ed704b53a08306a94c908a1b\\work\\repeat-22\\plate_1.gcode",
+        "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+        "records": 402017,
+        "layers": 1296,
+        "settings_count": 771
+      },
+      "canonical_equal": true,
+      "settings_equal": true
+    },
+    "comparison-no-cache-22.json": {
+      "reference": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-8d6f6f80ed704b53a08306a94c908a1b\\work\\baseline\\plate_1.gcode",
+        "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+        "records": 402017,
+        "layers": 1296,
+        "settings_count": 771
+      },
+      "candidate": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-8d6f6f80ed704b53a08306a94c908a1b\\work\\no-cache-22\\plate_1.gcode",
+        "canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+        "records": 402017,
+        "layers": 1296,
+        "settings_count": 771
+      },
+      "canonical_equal": true,
+      "settings_equal": true
+    },
+    "comparison-original-22.json": {
+      "reference": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-11376fc882724d7880b2438fbd111b33\\work\\release-original-11\\plate_1.gcode",
+        "canonical_sha256": "259e73b227dc19755a5e212d1caeedb68f002748fb51fec1f3719a346b97aef5",
+        "records": 592880,
+        "layers": 828,
+        "settings_count": 771
+      },
+      "candidate": {
+        "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-8d6f6f80ed704b53a08306a94c908a1b\\work\\original-22\\plate_1.gcode",
+        "canonical_sha256": "259e73b227dc19755a5e212d1caeedb68f002748fb51fec1f3719a346b97aef5",
+        "records": 592880,
+        "layers": 828,
+        "settings_count": 771
+      },
+      "canonical_equal": true,
+      "settings_equal": true
+    }
+  },
+  "log_audits": {
+    "candidate-22": {
+      "log_directory": "candidate-22",
+      "suspicious_lines": [],
+      "metrics": [
+        "Organic bead reuse: builds 105673, hits 719701, rotations 1, unchanged planes 484, nearby queries 57500, nearby roads 433465, erosion hits 9646, bearing hits 16657/70935",
+        "Organic support path anchoring: reconnected 287 hollow-wall components, removed 164 contact fragments, remaining candidates 1, output planes=532, final Z=145.4, local repairs=255, discarded unprintable walls=0, footprint cache hits=0, builds=512, cached bytes=92268352, cache limit=268435456",
+        "Total time of organic tree support: 208845 ms"
+      ]
+    },
+    "repeat-22": {
+      "log_directory": "repeat-22",
+      "suspicious_lines": [],
+      "metrics": [
+        "Organic bead reuse: builds 105673, hits 719701, rotations 1, unchanged planes 484, nearby queries 57500, nearby roads 433465, erosion hits 9646, bearing hits 16657/70935",
+        "Organic support path anchoring: reconnected 287 hollow-wall components, removed 164 contact fragments, remaining candidates 1, output planes=532, final Z=145.4, local repairs=255, discarded unprintable walls=0, footprint cache hits=0, builds=512, cached bytes=92268352, cache limit=268435456",
+        "Total time of organic tree support: 234691 ms"
+      ]
+    },
+    "no-cache-22": {
+      "log_directory": "no-cache-22",
+      "suspicious_lines": [],
+      "metrics": [
+        "Organic bead reuse: builds 825374, hits 0, rotations 0, unchanged planes 484, nearby queries 57500, nearby roads 433465, erosion hits 0, bearing hits 0/70935",
+        "Organic support path anchoring: reconnected 287 hollow-wall components, removed 164 contact fragments, remaining candidates 1, output planes=532, final Z=145.4, local repairs=255, discarded unprintable walls=0, footprint cache hits=0, builds=512, cached bytes=0, cache limit=0",
+        "Total time of organic tree support: 601193 ms"
+      ]
+    },
+    "original-22": {
+      "log_directory": "original-22",
+      "suspicious_lines": [],
+      "metrics": [
+        "Organic bead reuse: builds 100086, hits 877126, rotations 1, unchanged planes 677, nearby queries 67233, nearby roads 554657, erosion hits 8331, bearing hits 24352/79359",
+        "Organic support path anchoring: reconnected 260 hollow-wall components, removed 88 contact fragments, remaining candidates 0, output planes=727, final Z=145.4, local repairs=254, discarded unprintable walls=0, footprint cache hits=0, builds=701, cached bytes=95607440, cache limit=268435456",
+        "Total time of organic tree support: 204515 ms"
+      ]
+    }
+  },
+  "performance": {
+    "baseline_seconds": 573.0962628999987,
+    "isolated_repeat_seconds": 255.81753529999696,
+    "speedup": 2.240254024134543,
+    "time_reduction_percent": 55.362204945203885,
+    "conditions": [
+      "The baseline used the same local input and isolated configuration; normal core/app builds overlapped part of it and stack sampling briefly paused the owned hot thread. It is not an idle-system benchmark.",
+      "The headline optimized repetition ran after owned builds, native tests and the first export completed, with no second owned slicer.",
+      "Original-project and cache-disabled exports were concurrent validation; their times are not headline comparisons.",
+      "Observed speedups apply to these inputs and this host; no universal machine or model speed guarantee."
+    ]
+  },
+  "closure_and_bearing": {
+    "reference": {
+      "path": "docs/evidence/organic-support-closed-trunks-20261020.json",
+      "sha256": "e34e6b9f6270f93d4f5eba63b5a0871d743c336c6c0a4f4af60ed8c92e99be9b"
+    },
+    "method": "Both projects retain every non-comment command plus TYPE/WIDTH/HEIGHT/LAYER_CHANGE records and all effective settings. This preserves the prior independently verified printed circuits, bead bearing and contact output; the final native matrix separately verifies defining support behavior.",
+    "limits": "No renewed all-model geometry guarantee, physical strength trial or old pre-repair support/material identity."
+  },
+  "release_application": {
+    "dll_sha256": "61997ff355e0b892955a6553e08da3ab885c3b4c9dec448de3c08662c52f8d4f",
+    "source_binding": "normal-source-binding-22.json",
+    "applied_utc": "2026-10-20T09:34:03.0042451+00:00",
+    "previous_dll_sha256": "18510efac4cc611b9d5a4013f2ef99debadbca3933198a1123741f5e780289e6",
+    "settings_preserved": true,
+    "updated_files": [
+      "InlongSlicer.dll",
+      "InlongSlicer.pdb",
+      "InlongSlicer.lib",
+      "InlongSlicer.exp"
+    ],
+    "expected_dll_sha256": "61997ff355e0b892955a6553e08da3ab885c3b4c9dec448de3c08662c52f8d4f",
+    "settings_count": 845
+  },
+  "unchanged_prior_source": {
+    "src/libslic3r/Support/SupportCommon.cpp": "c42d71d0f994ba5e5c729713339d86f5d3adcbcbf4fc860be2010d3a927e8ac2",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+    "tests/fff_print/test_support_material.cpp": "d2be112296f385878d8d4363dd4f0a1c8379a46d8e52b4d6905567d320b255df",
+    "tests/fff_print/test_tree_support.cpp": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b",
+    "src/libslic3r/Support/SupportCacheBudget.hpp": "1c3869d671138ec62cb5c15465a5d58157a19345ba24a8f8aede43f8b451a23a",
+    "src/libslic3r/Support/SupportCacheBudget.cpp": "4acdc6c2db24a9f6059a2ffbc1ce32575de12a5daadbd4913e1bb657a0337162",
+    "tests/libslic3r/test_support_cache_budget.cpp": "00087f782dbc44b00844159d118e48a264b7ebbaae4df9d435c071af9701c1e9"
+  },
+  "rejected_control": {
+    "receipt": {
+      "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-projection-19-result.json",
+      "sha256": "8b31576c249b598f0b7f3c89b12a68997c4fbed861a214d9dd7f52985a1e92e8"
+    },
+    "junit": {
+      "path": ".agents/runtime/runs/run-8d6f6f80ed704b53a08306a94c908a1b/work/related-projection-19.xml",
+      "sha256": "7a09b884907e37a596e37212f4b9d370075c51d35c991ba6df91d0636b4d1cbd"
+    },
+    "finding": "Three coordinate controls and a fixture golden reject the prototype because expanded axis-aligned BoundingBox values kept defined=false and disappeared from bound merges. The rejected version was never applied; the final version marks expanded bounds valid and retains the original traversal order."
+  },
+  "interrupted_trials": "Trials 15, 16 and 20 were stopped before application after review; the owned partial repeat-17 is not accepted timing evidence. Final accepted runtime is source-bound version 22; the partial candidate-21 and repeat-21 attempts are not accepted repeat timing evidence. A complete final-21 export retained the same canonical output."
+}

@@ -1,0 +1,127 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-closed-trunks-20261020",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Organic sheaths must not clip their seam or add an open inward anchor. Filled cross-sections, closed contour extraction and carried-center clipping preserve closure through repairs. Direction-locked wall identity survives height modulation and is checked separately from ordinary infill bridges. Use round printed bead envelopes and exclude unprintable loops before they can count as structural support; sub-width closed tips remain valid. The two supplied projects and the final normal Release native matrix pass exported contour closure within coordinate precision and actual bead-bearing checks; geometry-based rules have no printer-specific exceptions. Top-contact regions remain, while unsupported fringes may be trimmed. Exact old support paths, all-model guarantees and physical strength are outside this evidence. Completing bearing increases support cost: the newer project changes from 63.65 g / 4h 6m 47s to 75.35 g / 5h 0m 57s estimated output; all non-support extrusion totals remain equal. Concurrent final slicing measurements are not a controlled speed comparison.",
+  "scope": "Verified current uncommitted source, source-bound normal Windows Release core/native/app builds, focused and broad native regressions, actual Release exports and live settings readback. HEAD is an anchor only. No publication or physical printing trial.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "closed-contours",
+    "floating-support",
+    "round-bead",
+    "model-contact",
+    "actual-extrusion",
+    "independent-layer-height",
+    "arc-fitting",
+    "belt",
+    "layer-count"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "tests/fff_print/test_tree_support.cpp",
+    "src/libslic3r/Support/SupportCacheBudget.hpp",
+    "src/libslic3r/Support/SupportCacheBudget.cpp",
+    "tests/libslic3r/test_support_cache_budget.cpp",
+    "docs/evidence/organic-support-closed-trunks-20261020.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "c42d71d0f994ba5e5c729713339d86f5d3adcbcbf4fc860be2010d3a927e8ac2",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "82af35a48702cdd4f8429fdb75a708d5346351645a17475c21aa90fe77e9bb2d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "9a003cb823516cb4d3c655ac6a1026b2553e1e221545eed51712562855f85425",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "d2be112296f385878d8d4363dd4f0a1c8379a46d8e52b4d6905567d320b255df",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_tree_support.cpp",
+      "sha256": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCacheBudget.hpp",
+      "sha256": "1c3869d671138ec62cb5c15465a5d58157a19345ba24a8f8aede43f8b451a23a",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCacheBudget.cpp",
+      "sha256": "4acdc6c2db24a9f6059a2ffbc1ce32575de12a5daadbd4913e1bb657a0337162",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_support_cache_budget.cpp",
+      "sha256": "00087f782dbc44b00844159d118e48a264b7ebbaae4df9d435c071af9701c1e9",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-closed-trunks-20261020.json",
+      "sha256": "e34e6b9f6270f93d4f5eba63b5a0871d743c336c6c0a4f4af60ed8c92e99be9b",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed source bytes, defining native behavioral tests, unchanged adaptive-budget helper, or durable normal-build and actual-output evidence. Git HEAD identifies the checkout only."
+    }
+  ],
+  "verified_utc": "2026-10-20T03:56:38.061023+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Source review; expected-red old-core closure control; final normal focused and 122-case broad regressions; two unchanged-project actual Release exports; native-to-G-code circuit mapping; independent round-bead bearing and contact retention; normal/diagnostic exact canonical comparison; live configuration hashing.",
+    "summary": "Replace insufficient local-span-only acceptance with complete exported outer-contour topology and real bead bearing, including unprintable-contour rejection."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-local-bearing-20261020"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

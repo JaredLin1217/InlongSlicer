@@ -9161,6 +9161,25 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
 {
     std::string gcode;
 
+    // Keep tree support material and its interface as separate printed
+    // roads.  The support ordering code may place two role-specific paths at
+    // the same endpoint (or within the configured minimum travel distance).
+    // In that case travel_to() intentionally skips retraction, which makes
+    // the exported G-code look like one continuous trunk and lets interface
+    // material be mixed into the support body.  Force a role boundary only
+    // for support roles and only when the normal travel would be too short to
+    // retract; long travels retain the existing retraction policy.
+    const bool support_role_change = is_tree(this->config().support_type) &&
+        m_last_pos_defined &&
+        m_last_extrusion_role != path.role() &&
+        is_support(m_last_extrusion_role) && is_support(path.role());
+    if (support_role_change) {
+        const double distance = (m_last_pos.to_point() - path.first_point()).cast<double>().norm() * SCALING_FACTOR;
+        const double minimum_travel = FILAMENT_CONFIG(retraction_minimum_travel);
+        if (distance <= std::max(minimum_travel, 0.01))
+            gcode += this->retract(false, false, LiftType::NormalLift, false, path.role());
+    }
+
     const std::string  bridge_description = is_bridge(path.role()) ? path_description + " (bridge)" : std::string();
     const std::string &description        = bridge_description.empty() ? path_description : bridge_description;
 

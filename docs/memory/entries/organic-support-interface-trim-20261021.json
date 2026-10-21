@@ -1,0 +1,68 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-interface-trim-20261021",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Organic tree support body and same-layer interface paths must be kept spatially disjoint even when the top Z gap is nonzero and support/interface use the same extruder. The previous keepout was gated on zero_gap_interface_top and non-mergeable filaments, so this project skipped it. Removing those gates trims the expanded interface footprint from organic support-body polygons. On the supplied project this reduced interface sections from 302 to 280, preserved 19,560 closed outer walls with zero nonclosed walls, passed 316 focused native assertions, and produced no warning/error lines. The canonical output intentionally changes because the mixed interface segments are removed; no physical print trial is included.",
+  "scope": "Current uncommitted source and source-bound Windows Release verification for the supplied organic-support project. No commit, push or physical printing trial.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "support-interface",
+    "closed-contours",
+    "floating-support",
+    "z-gap",
+    "exact-output-change"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "docs/evidence/organic-support-interface-trim-20261021.json"
+  ],
+  "sources": [
+    {
+      "locator": "Source with generic organic interface keepout applied regardless of Z gap or filament merge.",
+      "kind": "file_snapshot",
+      "sha256": "6eb2e4886b473f5c51993c73960390582159a3f36baa2336413b458c38aea7d5",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db"
+    },
+    {
+      "locator": "Source with role-boundary stroke isolation and exact RAM-bounded bead cache.",
+      "kind": "file_snapshot",
+      "sha256": "679e729e86aaaf6be220550f2f8ed3f6a16b3f410d6a7e0c8361f022a1d0d514",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db"
+    },
+    {
+      "locator": "Root cause, build, native, G-code, closure and Release verification evidence.",
+      "kind": "file_snapshot",
+      "sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+      "path": "docs/evidence/organic-support-interface-trim-20261021.json",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db"
+    }
+  ],
+  "verified_utc": "2026-10-20T19:38:55.9934223+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex",
+    "summary": "Interface-overlap repair passed focused/native and project export checks; all profiled organic outer walls remained closed and no warning/error lines were emitted.",
+    "method": "Normal source-bound Release build, 316 focused native assertions, full export and outer-wall profile of the hashed NAS 3MF, guidance audit and Consumer Changed validation."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-safe-bead-cache-20261020"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

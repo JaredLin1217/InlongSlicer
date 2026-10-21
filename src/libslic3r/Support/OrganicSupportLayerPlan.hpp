@@ -53,7 +53,8 @@ public:
         const SupportGeneratorLayersPtr      &top_contacts,
         const std::vector<LayerIndex>         &mandatory_source_layers,
         bool                                  preserve_source_grid,
-        std::string                           &failure_reason)
+        std::string                           &failure_reason,
+        const std::vector<coordf_t>           &bottom_clearance_planes = {})
     {
         if (source_layer_count == 0 || slicing_params.max_suport_layer_height <= EPSILON) {
             failure_reason = "missing source layers or maximum support layer height";
@@ -78,7 +79,7 @@ public:
         const size_t raft_count = std::min(config.raft_layers.size(), source_layer_count);
         std::vector<Anchor> anchors;
         anchors.reserve((preserve_source_grid ? source_layer_count : mandatory_source_layers.size() + 2) +
-                        top_contacts.size() + raft_count);
+                        top_contacts.size() + raft_count + bottom_clearance_planes.size());
         for (size_t layer_idx = 0; layer_idx < raft_count; ++layer_idx)
             anchors.push_back({layer_z(slicing_params, config, layer_idx), true});
 
@@ -119,6 +120,12 @@ public:
             if (contact->print_z > EPSILON)
                 anchors.push_back({contact->print_z, true});
         }
+        // Keep model-contact clearance planes on the independent output grid.
+        // Without these anchors, a configured bottom Z gap is rounded back to
+        // the 0.20 mm source grid and the support root becomes too close.
+        for (coordf_t z : bottom_clearance_planes)
+            if (z > EPSILON && z < layer_z(slicing_params, config, source_layer_count - 1) - EPSILON)
+                anchors.push_back({z, true});
 
         std::sort(anchors.begin(), anchors.end(), [](const Anchor &lhs, const Anchor &rhs) {
             return lhs.z < rhs.z;

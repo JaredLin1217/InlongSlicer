@@ -90,6 +90,36 @@ TEST_CASE("Independent support rejects incompatible exact contacts and keeps raf
         REQUIRE(plan->find_exact(raft_z) >= 0);
 }
 
+TEST_CASE("Independent support preserves model landing clearance planes", "[TreeSupport][Anchoring][Regression]")
+{
+    using namespace Slic3r::TreeSupport3D;
+    const double nozzle = GENERATE(0.4, 0.6, 1.2);
+    SlicingParameters slicing{};
+    slicing.layer_height = slicing.first_object_layer_height = nozzle * 0.5;
+    slicing.object_print_z_min = 0.;
+    slicing.min_layer_height = nozzle * 0.1;
+    slicing.max_suport_layer_height = nozzle * 0.75;
+    TreeSupportSettings config{};
+    config.layer_height = scaled<coord_t>(slicing.layer_height);
+    const double model_top = 10 * slicing.layer_height;
+    const double requested_gap = slicing.layer_height * 0.85;
+    const double contact_bottom = model_top + requested_gap;
+    std::string reason;
+    const auto plan = OrganicSupportLayerPlan::independent(slicing, config, 24, {}, {0, 15},
+        false, reason, {contact_bottom});
+    INFO(reason);
+    REQUIRE(plan.has_value());
+    const LayerIndex boundary = plan->find_exact(contact_bottom);
+    REQUIRE(boundary >= 0);
+    REQUIRE(size_t(boundary + 1) < plan->size());
+    REQUIRE_THAT((*plan)[size_t(boundary + 1)].bottom_z - model_top,
+        Catch::Matchers::WithinAbs(requested_gap, EPSILON));
+    for (size_t idx = 0; idx < plan->size(); ++idx) {
+        CHECK((*plan)[idx].height >= slicing.min_layer_height - EPSILON);
+        CHECK((*plan)[idx].height <= slicing.max_suport_layer_height + EPSILON);
+    }
+}
+
 namespace {
 
 // The upper plate overhangs both the lower plate and open air, so branches land on the model and on

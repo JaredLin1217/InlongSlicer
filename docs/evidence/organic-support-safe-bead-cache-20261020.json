@@ -1,0 +1,37 @@
+{
+  "schema_version": "inlong-organic-support-performance/v2",
+  "verified_utc": "2026-10-20T12:23:06.1891393+00:00",
+  "git_head_anchor": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+  "scope": "Generic organic support behavior restoration plus exact bead-offset memoization; source-bound Windows Release export; no commit, push or physical printing trial.",
+  "input": {
+    "path": "//192.168.50.102/home/验证切片用/支撑有悬空问题2.3mf",
+    "sha256": "2cf18c70a24086df22c4d4d178f88ee09b712e9ca3f8c35843faeeafb0db031d"
+  },
+  "behavior": {
+    "restored_source_snapshot": "82af35a48702cdd4f8429fdb75a708d5346351645a17475c21aa90fe77e9bb2d",
+    "restored_dll_sha256": "c03efbf19c380bd972033d1eedfe4721ebed841d1c440048d036732ca51ef162",
+    "closed_trunk_and_anchoring_tests": "316 assertions in 5 cases passed",
+    "z_gap_and_floating_support": "preserved and exact canonical output matched prior closure baseline"
+  },
+  "performance": {
+    "restored_seconds": 428.3157353,
+    "bead_cache_seconds": 381.6319646,
+    "speedup_ratio": 0.108,
+    "peak_working_set_bytes": 847618048,
+    "peak_private_commit_bytes": 904499200,
+    "cache_policy": "exact path geometry and width key; max 64 MiB and available-RAM/256",
+    "warnings_errors": 0
+  },
+  "output": {
+    "canonical_count": 402017,
+    "restored_canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+    "bead_cache_canonical_sha256": "68407b449fe47a80f54464564464f65b1a2b41211e115e94c584f603a40cd6dd",
+    "settings_preserved": true
+  },
+  "receipts": [
+    ".agents/runtime/runs/run-0a2cc57d7ae34dbdb811805f6855de89/work/restore/result.json",
+    ".agents/runtime/runs/run-0a2cc57d7ae34dbdb811805f6855de89/work/bead-cache/result.json",
+    ".agents/runtime/runs/run-0a2cc57d7ae34dbdb811805f6855de89/work/focused-tests-bead-cache.log",
+    ".agents/runtime/runs/run-0a2cc57d7ae34dbdb811805f6855de89/work/release-application-bead-cache.json"
+  ]
+}

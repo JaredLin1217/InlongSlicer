@@ -790,6 +790,22 @@ void fill_support_interface_with_walls(
         dst.resize(first_narrow);
         append(dst, std::move(narrow_paths));
     }
+
+    // A clipped interface can leave a positive-flow remnant shorter than the
+    // printer's coordinate resolution. Keeping those remnants produces many
+    // isolated one-segment islands on tree trunks; discard only new interface
+    // paths below the fixed 0.1 mm minimum.
+    if (role == ExtrusionRole::erSupportMaterialInterface) {
+        const coord_t minimum_path_length = scale_(0.1);
+        for (size_t idx = first_entity; idx < dst.size();) {
+            auto *path = dynamic_cast<ExtrusionPath *>(dst[idx]);
+            if (path != nullptr && path->length() < minimum_path_length) {
+                delete dst[idx];
+                dst.erase(dst.begin() + idx);
+            } else
+                ++idx;
+        }
+    }
 }
 
 static Polylines draw_perimeters(const ExPolygon &expoly, double clip_length)
@@ -816,6 +832,26 @@ void tree_supports_generate_paths(
     const Flow              &flow,
     const SupportParameters &support_params)
 {
+    if (support_params.support_style == smsTreeOrganic) {
+        // Organic trunks are complete contour roads. Avoid the generic seam
+        // anchor, which can project into a hollow branch without a bead below.
+        for (const ExPolygon &region : closing_ex(polygons, float(SCALED_EPSILON),
+                float(SCALED_EPSILON))) {
+            auto walls = std::make_unique<ExtrusionEntityCollection>();
+            walls->no_sort = true;
+            if (region.area() > support_params.tree_branch_diameter_double_wall_area_scaled)
+                for (const ExPolygon &inner : offset2_ex({region}, -1.5 * flow.scaled_width(), 0.5 * flow.scaled_width()))
+                    extrusion_entities_append_paths(walls->entities, draw_perimeters(inner, 0.),
+                        ExtrusionRole::erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height(), false);
+            extrusion_entities_append_paths(walls->entities, draw_perimeters(region, 0.),
+                ExtrusionRole::erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height(), false);
+            for (ExtrusionEntity *wall : walls->entities)
+                wall->set_reverse();
+            if (!walls->empty())
+                dst.push_back(walls.release());
+        }
+        return;
+    }
     // Offset expolygon inside, returns number of expolygons collected (0 or 1).
     // Vertices of output paths are marked with Z = source contour index of the expoly.
     // Vertices at the intersection of source contours are marked with Z = -1.
@@ -879,7 +915,7 @@ void tree_supports_generate_paths(
 
     const double spacing = flow.scaled_spacing();
     // Clip the sheath path to avoid the extruder to get exactly on the first point of the loop.
-    const double clip_length = spacing * 0.15;
+    const double clip_length = support_params.support_style == smsTreeOrganic ? 0. : spacing * 0.15;
     const double anchor_length = spacing * 6.;
     ClipperZUtils::ZPaths anchor_candidates;
     for (ExPolygon& expoly : closing_ex(polygons, float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5 * flow.scaled_width()))) {
@@ -1060,7 +1096,7 @@ void fill_expolygons_with_sheath_generate_paths(
 
     const double spacing = flow.scaled_spacing();
     // Clip the sheath path to avoid the extruder to get exactly on the first point of the loop.
-    const double clip_length = spacing * 0.15;
+    const double clip_length = support_params.support_style == smsTreeOrganic ? 0. : spacing * 0.15;
 
     for (ExPolygon &expoly : closing_ex(polygons, float(SCALED_EPSILON), float(SCALED_EPSILON + 0.5*flow.scaled_width()))) {
         // Don't reorder the skirt and its infills.
@@ -1749,7 +1785,7 @@ static void modulate_extrusion_by_overlapping_layers(
         const auto *b = dynamic_cast<const ExtrusionPath*>(rhs);
         assert(a != nullptr && b != nullptr);
         return a->role() == b->role() && a->width == b->width &&
-               a->height == b->height && a->mm3_per_mm == b->mm3_per_mm;
+               a->height == b->height && a->mm3_per_mm == b->mm3_per_mm && a->can_reverse() == b->can_reverse();
     };
     if (std::any_of(extrusions_in_out.begin() + 1, extrusions_in_out.end(),
                     [&](const ExtrusionEntity *entity) { return !same_flow(extrusions_in_out.front(), entity); })) {
@@ -1772,6 +1808,7 @@ static void modulate_extrusion_by_overlapping_layers(
     assert(extrusion_path_template != nullptr);
     ExtrusionRole extrusion_role  = extrusion_path_template->role();
     float         extrusion_width = extrusion_path_template->width;
+    const bool    reversible = extrusion_path_template->can_reverse();
 
     struct ExtrusionPathFragment
     {
@@ -1955,6 +1992,8 @@ static void modulate_extrusion_by_overlapping_layers(
                 // Allocate a new path.
                 multipath.paths.push_back(ExtrusionPath(extrusion_role, frag.mm3_per_mm, frag.width, frag.height));
                 path = &multipath.paths.back();
+                if (!reversible)
+                    path->set_reverse();
             }
             // The Clipper library may flip the order of the clipped polylines arbitrarily.
             // Reverse the source polyline, if connecting to the end.
@@ -1977,6 +2016,8 @@ static void modulate_extrusion_by_overlapping_layers(
             }
         }
         if (!multipath.paths.empty()) {
+            if (!reversible)
+                multipath.set_reverse();
             if (multipath.paths.size() == 1) {
                 // This path was not fragmented.
                 extrusions_in_out.push_back(new ExtrusionPath(std::move(multipath.paths.front())));
@@ -1989,8 +2030,14 @@ static void modulate_extrusion_by_overlapping_layers(
     }
     // If there are any non-consumed fragments, add them separately.
     //FIXME this shall not happen, if the Clipper works as expected and all paths split to fragments could be re-connected.
-    for (auto it_fragment = path_fragments.begin(); it_fragment != path_fragments.end(); ++ it_fragment)
-        extrusion_entities_append_paths(extrusions_in_out, std::move(it_fragment->polylines), extrusion_role, it_fragment->mm3_per_mm, it_fragment->width, it_fragment->height);
+    for (auto it_fragment = path_fragments.begin(); it_fragment != path_fragments.end(); ++ it_fragment) {
+        const size_t first = extrusions_in_out.size();
+        extrusion_entities_append_paths(extrusions_in_out, std::move(it_fragment->polylines), extrusion_role,
+            it_fragment->mm3_per_mm, it_fragment->width, it_fragment->height, reversible);
+        if (!reversible)
+            for (size_t index = first; index < extrusions_in_out.size(); ++index)
+                extrusions_in_out[index]->set_reverse();
+    }
 }
 
 // Support layer that is covered by some form of dense interface.
@@ -2402,11 +2449,10 @@ void generate_support_toolpaths(
                 }
             }
 
-            // Inlong: For organic trees the support-material regions are generated from
-            // expanded wall polygons. With separate interface material,
-            // that expansion can overlap same-layer interface-material regions, so trim
-            // the support-material regions from those interface footprints here.
-            if (organic_tree && support_params.zero_gap_interface_top && !support_params.can_merge_support_regions &&
+            // Organic tree support-material regions are generated from expanded
+            // wall polygons. Keep them separate from every same-Z interface
+            // footprint so interface paths cannot be emitted through the trunk.
+            if (organic_tree &&
                 (!base_layer.empty() || !base_interface_layer.empty())) {
                 Polygons interface_polygons;
                 if (!top_contact_layer.empty())
@@ -2416,7 +2462,7 @@ void generate_support_toolpaths(
                 if (!interface_polygons.empty()) {
                     const coord_t trim_margin = std::max(
                         support_params.support_material_flow.scaled_width(),
-                        support_params.support_material_interface_flow.scaled_width());
+                        support_params.support_material_interface_flow.scaled_width()) / 2;
                     Polygons interface_keepout = offset(interface_polygons, trim_margin);
                     if (!base_layer.empty())
                         base_layer.set_polygons_to_extrude(diff(base_layer.polygons_to_extrude(), interface_keepout));

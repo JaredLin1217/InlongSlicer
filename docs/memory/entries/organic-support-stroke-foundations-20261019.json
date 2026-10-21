@@ -1,0 +1,152 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-stroke-foundations-20261019",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Organic anchoring must be checked per continuous printed entity, rather than across filled source polygons or independently sortable neighbors. A weak bead-edge overlap does not establish a foundation. Reserve the relative DP/arc optimization tolerance so a nominal fringe cannot disappear during export. Reconnect only physical collision-free extrusion slabs, retain pieces that reach a printed landing, and avoid nearly zero-flow continuations that disappear as E0 on export. Prune exact unlandable sub-bead remnants without deleting adjacent main trunks. Independent support output planning must preserve model-root extrusion bottom planes at the configured bottom gap. In the unchanged new project all four nominal printed-material gaps become 0.170 mm, instead of about 0.315/0.204 mm. Its 771 effective settings remain unchanged. The original project's synchronized 0.20 mm support body grid still quantizes its unchanged 0.17 mm gap to 0.20 mm. Both exported projects have no unresolved positive-stroke bearing candidates under the documented geometric verifier. Native anchoring, support, tree, belt and layer-count checks pass; the original core fails ten stronger anchoring assertions. Normal-support clearance, organic contact classification, endpoint preservation and filtered emitted-layer counting contracts remain in force. Older timing and exact G-code identities remain historical; this repair intentionally changes support geometry.",
+  "scope": "Reviewed current source bytes and isolated Windows Release validation. HEAD is a checkout anchor, not proof that uncommitted bytes are in that commit. No installed Release update, publication or physical printer trial.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "model-contact",
+    "floating-support",
+    "actual-extrusion",
+    "normal-support",
+    "layer-count",
+    "belt",
+    "performance-history",
+    "independent-layer-height",
+    "stroke-bearing",
+    "flow-quantization"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "src/libslic3r/Support/TreeModelVolumes.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Support/SupportMaterial.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupportCommon.hpp",
+    "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+    "src/libslic3r/Polyline.cpp",
+    "docs/evidence/organic-support-anchoring-fix-20261019.json",
+    "tests/fff_print/test_tree_support.cpp",
+    "docs/evidence/organic-support-stroke-foundations-20261019.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "50c201ff5db9f2c4e2383fef34ebcf68cf446403ea71982b3e563536f9614664",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "8d5e12fe1d478ba4d7df611c34eae7984a6f972b1ffdb9d5ffcd56cf96ff3585",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeModelVolumes.hpp",
+      "sha256": "0d7ba3514fad39c37c794b72f7c66dc93277d840c6e4759a609f56bc4f979fdb",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "1eb68c075fc0e65a5eecb56a0ebf0e800785c234d7c114bbf249c41175c77624",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e5cf25ddcce00de616d0458a0b10fa730471e263b78a9d467c30d0c24723192b",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportMaterial.cpp",
+      "sha256": "946a539039e52b276b7c69c08981c873d454267a0e9429e974d459eadd01590c",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "fa823c0d9caa08efa8e79ccef905bd3be78ddbd72eeb0dec70f5e36998ade45d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupportCommon.hpp",
+      "sha256": "81eb703039f52aa2a5eb05c48009c5c7398f1b3d32a245824a45b8b86d4346e0",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportLayerPlan.hpp",
+      "sha256": "35cfea6be815f79d2cdee7562a7c77d20d981434ceccbf251dff9d3cf24f281d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Polyline.cpp",
+      "sha256": "447122276cada254938cfe85e2a6223bdaa435c5fb1effd140598471c848bd22",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-anchoring-fix-20261019.json",
+      "sha256": "4b3d8e29083dc9ab2919b4b905752206fc551b64d389e00b8ac53dd2f8daad2d",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_tree_support.cpp",
+      "sha256": "9663775a8783aaa596f19c8688e00f634e9619b2a53544a785f6f94bb2f13f1b",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-stroke-foundations-20261019.json",
+      "sha256": "7f7c39c2991d0f13af217227c9d552e0a37d60ba6236bdc7335b5f211c274b2f",
+      "commit": "42fa29e48db07a8c7275dc341aaa6204910a65db",
+      "locator": "Reviewed current source contract or durable geometric/native validation evidence; checkout anchor only for uncommitted bytes."
+    }
+  ],
+  "verified_utc": "2026-10-19T14:51:10.864674+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex root agent",
+    "method": "Source review, expected-red original-core control, native support/tree/belt/layer-count suites, two unchanged-project CLI slices, independent exported-bead bearing and printed-material gap measurements.",
+    "summary": "Semantically refresh the source-drifted organic support record while preserving unchanged contracts and historical benchmark limits."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-anchoring-20261019"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
