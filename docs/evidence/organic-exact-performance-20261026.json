@@ -1,0 +1,598 @@
+{
+  "schema_version": "inlong-product-evidence/v1",
+  "verified_utc": "2026-10-26T10:48:44.232603+00:00",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "goal": "Reduce native organic support slicing toward one tenth elapsed time while preserving all accepted machine instructions and path metadata.",
+  "performance": {
+    "clean_baseline_seconds": 212.726731,
+    "optimized_seconds": [
+      67.9089064,
+      67.9735194
+    ],
+    "optimized_median_seconds": 67.94121290000001,
+    "speedup": 3.131041115104967,
+    "time_reduction_percent": 68.06174166235836,
+    "requested_speedup": 10.0,
+    "requested_seconds": 21.2726731,
+    "target_achieved": false,
+    "scope": "One original 3MF on this host, separate processes, identical original data_dir, no competing product builds or tests at process start. This does not establish a universal speedup across models or hardware.",
+    "peak_working_set_bytes": 878612480,
+    "initial_diagnostic_baseline_seconds": 217.6871457,
+    "invalid_control": {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/control-before-1-build-invalid.json",
+      "sha256": "9db2ef76813faef586fc374a6993538c502ccb552729f8ad9009774f6f6ed16a"
+    },
+    "stage_details": {
+      "control-before-2": [
+        "Organic draw profiling: smoothing 0.165021 seconds",
+        "Organic draw profiling: rasterization 0.552196 seconds",
+        "Organic draw profiling: tree-layer unions 4.4956 seconds, jobs 740, workers 16, reserved bytes 388441888",
+        "Organic draw profiling: final polygon assembly 4.61304 seconds"
+      ],
+      "optimized-final-1": [
+        "Organic draw profiling: smoothing 0.159806 seconds",
+        "Organic draw profiling: rasterization 0.579729 seconds",
+        "Organic draw profiling: tree-layer unions 4.59208 seconds, jobs 740, workers 16, reserved bytes 388441888",
+        "Organic draw profiling: final polygon assembly 4.51114 seconds",
+        "Organic path validation: anchoring 5.92054 seconds, joining 8.45943 seconds, bracing 25.2468 seconds, certified roads=3228, footprint hits=625",
+        "Organic bearing details: certificates 1.66576 seconds, native bearing 11.4467 seconds, spans 1.25355 seconds, largest road=2417, largest foundation=15634, indexes=727, skipped indexes=0",
+        "Organic repair details: roots 0.0129337 seconds, inspection 14.6327 seconds, braces 10.0473 seconds",
+        "Organic brace details: direction 7.48605 seconds, checking 0.397501 seconds, certified bridges=1031",
+        "Organic support toolpaths: generation 1.94944 seconds, reconnection 39.631 seconds"
+      ],
+      "optimized-final-2": [
+        "Organic draw profiling: smoothing 0.167118 seconds",
+        "Organic draw profiling: rasterization 0.572505 seconds",
+        "Organic draw profiling: tree-layer unions 4.27606 seconds, jobs 740, workers 16, reserved bytes 388441888",
+        "Organic draw profiling: final polygon assembly 4.61483 seconds",
+        "Organic path validation: anchoring 5.90163 seconds, joining 8.38205 seconds, bracing 25.0662 seconds, certified roads=3228, footprint hits=625",
+        "Organic bearing details: certificates 1.66046 seconds, native bearing 11.393 seconds, spans 1.2435 seconds, largest road=2417, largest foundation=15634, indexes=727, skipped indexes=0",
+        "Organic repair details: roots 0.0127789 seconds, inspection 14.5602 seconds, braces 9.94337 seconds",
+        "Organic brace details: direction 7.40571 seconds, checking 0.395228 seconds, certified bridges=1031",
+        "Organic support toolpaths: generation 1.93831 seconds, reconnection 39.3534 seconds"
+      ]
+    }
+  },
+  "acceptance": {
+    "exact_output": true,
+    "requested_10x": false
+  },
+  "changed_files": [
+    "src/libslic3r/BridgeDetector.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "tests/libslic3r/CMakeLists.txt",
+    "tests/libslic3r/test_bridge_detector.cpp"
+  ],
+  "source_sha256": {
+    "tests/libslic3r/CMakeLists.txt": "ca186d1c9aa76f0f50bfb4158616f6572ad3e7f310139cda36706ab084c1c041",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "b3381b73559236a4b0e3edf0dd41859968fb8840063e7533baccd7300ff1267b",
+    "src/libslic3r/Fill/FillBase.cpp": "1042eb5cb513a298bc83e130a3563d03a62e4d32f4c98357289fe2896ec80286",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "02fbc4afec6349938f7c59638363377d4b1a37cda3a316c768670c67deedfab2",
+    "src/libslic3r/Print.hpp": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+    "src/libslic3r/Support/SupportCommon.cpp": "cd1a2cbf08fd56abdd38d32a6135d94523becbf0922a7f23316057cd7baa8c52",
+    "src/libslic3r/Brim.hpp": "7912a98e7d7a6b2d54c92d4c02cccc40f7344e7463a95e12008b8afddb492ee3",
+    "src/libslic3r/Layer.cpp": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+    "src/libslic3r/Print.cpp": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+    "src/libslic3r/Support/TreeSupport3D.hpp": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+    "tests/fff_print/test_support_material.cpp": "48805c19573ebb125d9b49f52497d13e5955f907eb6f0259d73f782a3d06aa90",
+    "src/libslic3r/Fill/FillRectilinear.cpp": "17c00e1a19446f38c8c30a3ef1fa0c2afcf083368fc16df4bb0dcf6b02b30b28",
+    "src/libslic3r/Support/SupportCommon.hpp": "b2b5c7ed7778dc84d14048e53ea44c18486f2be9ff1ab6a0e5f41caf36a94969",
+    "src/libslic3r/GCode.cpp": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "src/libslic3r/BridgeDetector.cpp": "c38f20abff24dc4f1f82b88b3cc3c6fff79f05e7209d53d43304cd059f474a3b",
+    "tests/fff_print/test_skirt_brim.cpp": "57bfaa71baf7e90abf6c279aac8d4d82c60208a1225b1ae9b681b73751a3a996",
+    "src/libslic3r/Brim.cpp": "51d3e8cb526e204b3ea267ea568f6d875b017039cb30a53d7424cca190d402da",
+    "tests/libslic3r/test_bridge_detector.cpp": "77dffa2961e461bf48cbe0b0fed3216bdb081fd3038ca17ba0fc7ef0858a38e3",
+    "src/libslic3r/Support/TreeSupport.cpp": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+    "src/libslic3r/Fill/FillBase.hpp": "17507c53de3a915b952c85f418e1ce575a814671db71093345a41247d210008c"
+  },
+  "source_delta": {
+    "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/source-delta.patch",
+    "sha256": "e339ecaf72b0e65a6c4ae5b175f9d7c7ab067fe9fcab8cd3dc0cae04f01fc4f5"
+  },
+  "engine": {
+    "path": "build/src/Release/InlongSlicer.dll",
+    "sha256": "0cd9358698e25952bd02e0c9ae88fb157731c7337dd28820613c99cb5c13c460"
+  },
+  "gui": {
+    "path": "build/src/Release/inlong-slicer.exe",
+    "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+  },
+  "previous_correctness_evidence": {
+    "path": "docs/evidence/organic-contact-walls-20261026.json",
+    "sha256": "cf750dcff049848282365341840993be39aa47e6e2d44c07080f792db4ad7df3"
+  },
+  "inputs": {
+    "C:\\Users\\v_jar\\Downloads\\\u652f\u6491\u6709\u60ac\u7a7a\u95ee\u9898.3mf": {
+      "length": 724169,
+      "sha256": "88bc1542aab5f5923f129a612dfcdd6a682437240f67246e051f79e9afdcecaf"
+    },
+    "C:\\Users\\v_jar\\Downloads\\\u652f\u6491\u6709\u60ac\u7a7a\u95ee\u9898_X2_04_ABS_110g_10261543_6h54m.gcode": {
+      "length": 13943279,
+      "sha256": "4de833e8bb39e00c6267183bc5d20bbeeae35bce217a7502c357a42a406a2cd7"
+    }
+  },
+  "native_tests": {
+    "method": "All selected native cases run once in three Catch2 shards with separate TEMP directories; exact case names match the native XML inventory with no missing or duplicate cases.",
+    "passed": true,
+    "cases": 156,
+    "assertions": 9146,
+    "executable_sha256": "8d7af2304d6e0181b2ba43754723600a832f95ab8fd8fff142e2ac120e10d945",
+    "inventory_sha256": "7568e60ffdbb514b5a54ed0faafab14d3ee22d1f62d915b1efef16416fb72f0b",
+    "shards": [
+      {
+        "index": 0,
+        "cases": 52,
+        "assertions": 3250,
+        "result": {
+          "shard_index": 0,
+          "shard_count": 3,
+          "filters": "[SupportMaterial],[SkirtBrim]",
+          "order": "lex",
+          "rng_seed": 20261026,
+          "exit_code": 0,
+          "elapsed_seconds": 78.6764834,
+          "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\tests\\fff_print\\Release\\fff_print_tests.exe",
+          "executable_sha256": "8d7af2304d6e0181b2ba43754723600a832f95ab8fd8fff142e2ac120e10d945",
+          "executable_unchanged": true
+        },
+        "xml_path": "D:/Work/Nowing/GitHub/InlongSlicer/.agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/native-shard-0/results.xml",
+        "xml_sha256": "b00d3c8c52f718da7ff5f87676b0af1a618fd5c9c502f1d3abac3891d6ae2b75",
+        "test_names": [
+          "A bent narrow interface keeps its curved center road when its hull crosses a clearance",
+          "A bottom interface is produced for every support style on a forced model contact",
+          "A contact pattern keeps its intentional gaps free of same-plane generic interface fill",
+          "A local interface detour keeps every bearing used by the upper layer",
+          "A narrow interface contour uses one center road without overlapping return sides",
+          "A positive support bearing certificate preserves the native curved-wall checks",
+          "A single interface row avoids a long parallel boundary anchor",
+          "A straight bridge certificate keeps native two-ended bearing rules",
+          "Adjacent bed strokes form a continuous extrusion within their original footprint",
+          "An overhang sliced with support off reports that support is needed",
+          "An untilted belt printer gets no brim",
+          "Bed interfaces connect across planned infill space without crossing a support hole",
+          "Bed path connections preserve brim barriers and extrusion boundaries",
+          "Bed support uses process widths while keeping its continuous route outside brim",
+          "Bed support yields to brim beads while preserving its source and remaining footprint",
+          "Bed width normalization splices a collapsed interface loop without skinny connectors",
+          "Belt apron survives another object printing at the same Z",
+          "Belt brim coexists with support material",
+          "Belt brim does not resurrect the skirt",
+          "Belt brim is absent when both widths are zero",
+          "Belt brim is laid at the object's first belt contact",
+          "Belt brim lattice lines keep their clearance above the belt",
+          "Belt brim lines all have the same width",
+          "Belt brim of each object precedes its perimeters on its own filament",
+          "Belt brim on a multi-extruder object uses the wall filament, no doubling",
+          "Belt brim on a single extruder emits every band once",
+          "Belt brim on an object layer precedes its perimeters, once",
+          "Belt brim slices when every object is a flush target",
+          "Belt brim spans many layers instead of one",
+          "Belt brim writes every generated segment exactly once",
+          "Belt inner-only leading brim does not reject the prime tower or spiral vase",
+          "Bottom interface layer count matches its setting with top interface off",
+          "Bottom interface spacing controls bottom interface density for every support style",
+          "Bottom-only support interface keeps the dense interface density",
+          "Brim boundaries retain the exposed part of a partially covered bed wall",
+          "Brim ears appear only at corners within the max angle",
+          "Brim fills narrow allowed branches without entering neighboring holes",
+          "Brim uses first layer speed",
+          "By-layer per-object skirt and brim precede each object",
+          "Changing Organic tip contact parameters invalidates support",
+          "Changing each support wall setting invalidates support but preserves model paths",
+          "Closed support continuations reserve bearing under their source road",
+          "Combine brims merges neighboring object instances",
+          "Combine brims merges touching brims",
+          "Compact bed finishing loops remain closed inside a continuous support chain",
+          "Compact generic interfaces use legal open strokes and retain upper contacts",
+          "Compatible interface finishes join without changing flow or crossing a narrow corridor",
+          "Complete brim supports bed roots without consuming editable support geometry",
+          "Concentric contact rings remain complete around one narrow center finish",
+          "Contact and interface wall counts remain independent even with matching patterns and density",
+          "Contact and interface wall settings default to one and reach the support planner",
+          "Default support still emits base and interface material"
+        ]
+      },
+      {
+        "index": 1,
+        "cases": 52,
+        "assertions": 3759,
+        "result": {
+          "shard_index": 1,
+          "shard_count": 3,
+          "filters": "[SupportMaterial],[SkirtBrim]",
+          "order": "lex",
+          "rng_seed": 20261026,
+          "exit_code": 0,
+          "elapsed_seconds": 558.6742023,
+          "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\tests\\fff_print\\Release\\fff_print_tests.exe",
+          "executable_sha256": "8d7af2304d6e0181b2ba43754723600a832f95ab8fd8fff142e2ac120e10d945",
+          "executable_unchanged": true
+        },
+        "xml_path": "D:/Work/Nowing/GitHub/InlongSlicer/.agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/native-shard-1/results.xml",
+        "xml_sha256": "c9e47bd8aa98bef0ec01f3b25a00c7ae40d39bbf85e748db12cba0a22e397ed4",
+        "test_names": [
+          "Dense local obstacles retain native roads when bounded interface planning is exhausted",
+          "Enforced support layers are generated",
+          "Every brim type slices on a belt printer",
+          "Every support style applies contact and interface walls on their respective layers",
+          "Every tree support style produces base and interface material",
+          "Explicit rectilinear support uses alternating end connections",
+          "Explicit rectilinear support uses native contour topology without an outline",
+          "Full-width bed routes follow a concave hole without extrusion breaks",
+          "Independent organic bottom contacts retain a printed handoff to their trunks",
+          "Independent support heights keep concentric interface rings complete",
+          "Independent top contact preserves its gap without changing bottom contact synchronization",
+          "Infeasible process-width bed routes leave the tested support unchanged",
+          "Interface finishes follow a full-width turn around a keepout",
+          "Interface splicing clips distant complex roads while preserving crossing keepouts",
+          "Interior support splices preserve a hole between nearby paths",
+          "Interlaced support interface alternates fill angle while rectilinear does not",
+          "Isolated compact interfaces remain only when a later road needs them",
+          "Joined interfaces start above existing printed material without changing their width",
+          "Leading brim length alone produces a belt brim",
+          "Leading brim length reaches further ahead of the object",
+          "Leading-edge-only brim ignores an overhang ahead of the part",
+          "Leading-edge-only brim is laid at the first contact and nowhere else",
+          "Narrow contact rescue never extrudes a bead below its physical layer height",
+          "No support interface is generated when neither top nor bottom is configured",
+          "Non-organic tree support generates a bottom interface on internal geometry",
+          "Normal and tree support use the same interface fill angle",
+          "Normal support honors the configured XY clearance through its full extrusion height",
+          "Normal top contacts retain the configured Z gap with independent heights",
+          "Object brims are generated per instance",
+          "Organic contact at the build plate follows the next model layer",
+          "Organic contact reaches a horizontal ceiling with exactly the requested gap",
+          "Organic contact tips continue over a sloped model landing",
+          "Organic hollow trunks omit sub-bead pinhole walls and preserve printable voids",
+          "Organic independent roof layers preserve a continuous interface footprint",
+          "Organic interface projection stays inside contact demand and owns each layer once",
+          "Organic merge placement is deterministic and keeps valid support layer heights",
+          "Organic neighboring contact components form one platform",
+          "Organic roof heads divide a straight strip into equal intervals",
+          "Organic sharp tip keeps a continuous contact platform",
+          "Organic sheath keeps every outer trunk contour closed",
+          "Organic sphere contacts stay continuous at every XY and Z clearance",
+          "Organic support components reach a printed predecessor or a model landing on curved floors",
+          "Organic support distinguishes two-ended straight bridges from curved cantilevers",
+          "Organic trunk outer walls close at every branch diameter",
+          "Organic tunnel contacts retain the model gap without growing intermediate interfaces",
+          "Outer-only brim ears stay out of model holes",
+          "Outer-only painted brim ears stay out of model holes",
+          "Painted brim ear radius controls sliced size",
+          "Per-object skirt is generated per instance",
+          "Per-object skirts group when objects are close",
+          "Raft interface angle alternates by 45 degrees per interface id",
+          "Rectilinear interface links stay continuous around their wall clearance"
+        ]
+      },
+      {
+        "index": 2,
+        "cases": 52,
+        "assertions": 2137,
+        "result": {
+          "shard_index": 2,
+          "shard_count": 3,
+          "filters": "[SupportMaterial],[SkirtBrim]",
+          "order": "lex",
+          "rng_seed": 20261026,
+          "exit_code": 0,
+          "elapsed_seconds": 316.0540543,
+          "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\tests\\fff_print\\Release\\fff_print_tests.exe",
+          "executable_sha256": "8d7af2304d6e0181b2ba43754723600a832f95ab8fd8fff142e2ac120e10d945",
+          "executable_unchanged": true
+        },
+        "xml_path": "D:/Work/Nowing/GitHub/InlongSlicer/.agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/native-shard-2/results.xml",
+        "xml_sha256": "4b4616781e126d2e0aba4c3c7734ce63b90307338b7a2cb27322f4e20acf00d4",
+        "test_names": [
+          "Requested support walls retain sub-line-width contact regions",
+          "Scenario: Brim has the configured number of loops",
+          "Scenario: Skirt and brim generation",
+          "Scenario: Skirt has the configured number of loops",
+          "Scenario: Support layer Z honors contact distance",
+          "Short bed strokes join the interior of a long path without losing its foundation",
+          "Skirt height is honored",
+          "Skirt is emitted once per layer it spans",
+          "Spiral inset remains available to independent contact layers",
+          "Stepped contact patches share their parent rim without filling the intervening region",
+          "Sub-line-width contact rings stay compatible with support height modulation",
+          "Support G-code emission survives a second slice in the same process",
+          "Support interface bottom layers default to the top layer count",
+          "Support interface fill angle follows the configured interface pattern",
+          "Support interface walls grow inward and reserve their interior for every fill pattern",
+          "Support top interface layer count matches the configured value",
+          "Support visibility bounds keep point contacts and reject separated material",
+          "Support visibility routing preserves equal-distance corner ordering",
+          "Support visibility workers preserve the native detour and settlement order",
+          "Support walls and narrow gap fill retain their widths across overlapping contact heights",
+          "SupportMaterial: All support styles accept every raft footprint mode",
+          "SupportMaterial: Compatible overlapping rafts form one boolean-union toolpath",
+          "SupportMaterial: Concentric raft fills a nozzle-width center remainder",
+          "SupportMaterial: Concentric raft fills a partially collapsed branch",
+          "SupportMaterial: Every support style boolean-unions every configured raft layer",
+          "SupportMaterial: Every support style changes paths for solid and box raft modes",
+          "SupportMaterial: Non-organic tree raft layer counts are exact",
+          "SupportMaterial: Organic impossible exact contact plan falls back atomically",
+          "SupportMaterial: Organic independent output handles raft and model contacts",
+          "SupportMaterial: Organic sub-minimum contact remainder is merged into a valid output layer",
+          "SupportMaterial: Organic support body can use an independent output grid",
+          "SupportMaterial: Organic support keeps the synchronized grid when independent heights are disabled",
+          "SupportMaterial: Organic top contact can use an exact independent height",
+          "SupportMaterial: Overlapping object rafts emit less first-layer extrusion than separated rafts",
+          "SupportMaterial: Overlapping raft instances clip later paths in world coordinates",
+          "SupportMaterial: Raft Z distance is exact or object-grid rounded",
+          "SupportMaterial: Raft expansion density spacing and pattern affect paths",
+          "SupportMaterial: Raft layer expansion step grows cumulatively downward",
+          "SupportMaterial: Raft layer expansion step remains additive with existing expansion options",
+          "SupportMaterial: Raft layer heights honor support nozzle limits",
+          "SupportMaterial: Raft overlap suppression keeps real conflict checks",
+          "SupportMaterial: Rafts that overlap only after downward expansion are boolean-unioned",
+          "SupportMaterial: Shared raft footprint modes preserve required support roots",
+          "SupportMaterial: manual tree roof fragments require a printable contact",
+          "The no-check flag skips the support-needed check",
+          "Thin bed intersections retain printable organic support below the first object layer",
+          "Three raft layers are created",
+          "Top interface layer count equals the configured value for every support style",
+          "Tree bridge support follows the bridge exclusion switch",
+          "Uncombined neighboring brims precede their respective objects",
+          "Zero XY organic support keeps contact paths on an overhang",
+          "Zero-gap organic support keeps a tilted cube covered"
+        ]
+      }
+    ]
+  },
+  "core_tests": {
+    "assertions": 114,
+    "cases": 5,
+    "result": {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/final-core-native.log",
+      "sha256": "22895bbddea9aab176df558d468faae8a5aefa8c244ab72c53c19f60f2baa24a"
+    },
+    "purpose": "Exact bridge scoring parity under worker limits and shared 2-128GB / pressure / unknown-memory budget policy."
+  },
+  "focused_native_tests": {
+    "assertions": 429,
+    "cases": 13,
+    "result": {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/visibility-1-native.log",
+      "sha256": "f5b4616dd1a4b2ab92e9ef6b038506e0b0c249e5b87133f2c93721b028d11072"
+    }
+  },
+  "processes": [
+    {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/control-before-2/slice-process.json",
+      "sha256": "2865e1e353057956636eedb79e7730b600bd664146be3330863c03e822956149"
+    },
+    {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/optimized-final-1/slice-process.json",
+      "sha256": "071fb1e81990e04567323ff91c75799b26cdb3db457c7d9a3626a00e39a16225"
+    },
+    {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/optimized-final-2/slice-process.json",
+      "sha256": "1503d466926095e1302623cd608434ac1c8d2dd04582f5f9133e222a533abdb8"
+    }
+  ],
+  "exports": [
+    {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/control-before-2/out/plate_1.gcode",
+      "sha256": "1312a5b83d71c4cf27173cd56615da5492ad91364dfdd888d90289fb3125f53f"
+    },
+    {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/optimized-final-1/out/plate_1.gcode",
+      "sha256": "04c5b6503b09a73e91d5af61e00ea7adce18998775c01a0bff84610ae7002cae"
+    },
+    {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/optimized-final-2/out/plate_1.gcode",
+      "sha256": "916c384276cd35068c2a913d56ff38c8bde075ce27d094c80920bdd29f7f9be9"
+    }
+  ],
+  "equivalence": {
+    "control-before-2": {
+      "reference": "C:\\Users\\v_jar\\Downloads\\\u652f\u6491\u6709\u60ac\u7a7a\u95ee\u9898_X2_04_ABS_110g_10261543_6h54m.gcode",
+      "reference_sha256": "4de833e8bb39e00c6267183bc5d20bbeeae35bce217a7502c357a42a406a2cd7",
+      "export": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-888e188f3799484ab96c4157802083da\\work\\control-before-2\\out\\plate_1.gcode",
+      "export_sha256": "1312a5b83d71c4cf27173cd56615da5492ad91364dfdd888d90289fb3125f53f",
+      "identical_instructions": true,
+      "reference_instructions": 453458,
+      "output_instructions": 453458,
+      "command_sha256": "72154e8a7b0b937f361d56d178688f889e2431b4d302239fc36534cdf315fde1",
+      "different_instruction_positions": 0,
+      "first_differences": [],
+      "identical_path_metadata": true,
+      "metadata_rows": 15309,
+      "first_metadata_differences": [],
+      "identical_z_planes": true,
+      "output_planes": 830,
+      "baseline_seconds": 217.6871457,
+      "elapsed_seconds": 212.726731,
+      "speedup": 1.023318248142496,
+      "target_seconds": 21.76871457,
+      "reached_tenth_time": false,
+      "peak_working_set_bytes": 852234240,
+      "data_unchanged": true,
+      "stage_lines": [
+        "Organic draw profiling: smoothing 0.165021 seconds",
+        "Organic draw profiling: rasterization 0.552196 seconds",
+        "Organic draw profiling: tree-layer unions 4.4956 seconds, jobs 740, workers 16, reserved bytes 388441888",
+        "Organic draw profiling: final polygon assembly 4.61304 seconds",
+        "Organic interface profiling: 0.25771 seconds",
+        "Total time used creating Tree support for the currently grouped meshes: 12980.6 ms. Different subtasks:",
+        "Total time of organic tree support: 199213 ms"
+      ]
+    },
+    "optimized-final-1": {
+      "reference": "C:\\Users\\v_jar\\Downloads\\\u652f\u6491\u6709\u60ac\u7a7a\u95ee\u9898_X2_04_ABS_110g_10261543_6h54m.gcode",
+      "reference_sha256": "4de833e8bb39e00c6267183bc5d20bbeeae35bce217a7502c357a42a406a2cd7",
+      "export": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-888e188f3799484ab96c4157802083da\\work\\optimized-final-1\\out\\plate_1.gcode",
+      "export_sha256": "04c5b6503b09a73e91d5af61e00ea7adce18998775c01a0bff84610ae7002cae",
+      "identical_instructions": true,
+      "reference_instructions": 453458,
+      "output_instructions": 453458,
+      "command_sha256": "72154e8a7b0b937f361d56d178688f889e2431b4d302239fc36534cdf315fde1",
+      "different_instruction_positions": 0,
+      "first_differences": [],
+      "identical_path_metadata": true,
+      "metadata_rows": 15309,
+      "first_metadata_differences": [],
+      "identical_z_planes": true,
+      "output_planes": 830,
+      "baseline_seconds": 217.6871457,
+      "elapsed_seconds": 67.9089064,
+      "speedup": 3.2055757814412393,
+      "target_seconds": 21.76871457,
+      "reached_tenth_time": false,
+      "peak_working_set_bytes": 865521664,
+      "data_unchanged": true,
+      "stage_lines": [
+        "Organic draw profiling: smoothing 0.159806 seconds",
+        "Organic draw profiling: rasterization 0.579729 seconds",
+        "Organic draw profiling: tree-layer unions 4.59208 seconds, jobs 740, workers 16, reserved bytes 388441888",
+        "Organic draw profiling: final polygon assembly 4.51114 seconds",
+        "Organic interface profiling: 0.251476 seconds",
+        "Total time used creating Tree support for the currently grouped meshes: 13029.2 ms. Different subtasks:",
+        "Organic physical-height modulation: 0.0058828 seconds, adjusted=0",
+        "Organic physical-height modulation: 0.0017095 seconds, adjusted=0",
+        "Organic path validation: anchoring 5.92054 seconds, joining 8.45943 seconds, bracing 25.2468 seconds, certified roads=3228, footprint hits=625",
+        "Organic support toolpaths: generation 1.94944 seconds, reconnection 39.631 seconds",
+        "Total time of organic tree support: 54641.4 ms"
+      ]
+    },
+    "optimized-final-2": {
+      "reference": "C:\\Users\\v_jar\\Downloads\\\u652f\u6491\u6709\u60ac\u7a7a\u95ee\u9898_X2_04_ABS_110g_10261543_6h54m.gcode",
+      "reference_sha256": "4de833e8bb39e00c6267183bc5d20bbeeae35bce217a7502c357a42a406a2cd7",
+      "export": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-888e188f3799484ab96c4157802083da\\work\\optimized-final-2\\out\\plate_1.gcode",
+      "export_sha256": "916c384276cd35068c2a913d56ff38c8bde075ce27d094c80920bdd29f7f9be9",
+      "identical_instructions": true,
+      "reference_instructions": 453458,
+      "output_instructions": 453458,
+      "command_sha256": "72154e8a7b0b937f361d56d178688f889e2431b4d302239fc36534cdf315fde1",
+      "different_instruction_positions": 0,
+      "first_differences": [],
+      "identical_path_metadata": true,
+      "metadata_rows": 15309,
+      "first_metadata_differences": [],
+      "identical_z_planes": true,
+      "output_planes": 830,
+      "baseline_seconds": 217.6871457,
+      "elapsed_seconds": 67.9735194,
+      "speedup": 3.202528685016124,
+      "target_seconds": 21.76871457,
+      "reached_tenth_time": false,
+      "peak_working_set_bytes": 878612480,
+      "data_unchanged": true,
+      "stage_lines": [
+        "Organic draw profiling: smoothing 0.167118 seconds",
+        "Organic draw profiling: rasterization 0.572505 seconds",
+        "Organic draw profiling: tree-layer unions 4.27606 seconds, jobs 740, workers 16, reserved bytes 388441888",
+        "Organic draw profiling: final polygon assembly 4.61483 seconds",
+        "Organic interface profiling: 0.258158 seconds",
+        "Total time used creating Tree support for the currently grouped meshes: 13056.5 ms. Different subtasks:",
+        "Organic physical-height modulation: 0.005742 seconds, adjusted=0",
+        "Organic physical-height modulation: 0.0015778 seconds, adjusted=0",
+        "Organic path validation: anchoring 5.90163 seconds, joining 8.38205 seconds, bracing 25.0662 seconds, certified roads=3228, footprint hits=625",
+        "Organic support toolpaths: generation 1.93831 seconds, reconnection 39.3534 seconds",
+        "Total time of organic tree support: 54381.3 ms"
+      ]
+    }
+  },
+  "test2_stability": [
+    {
+      "name": "test2-final-1",
+      "identical_instructions": true,
+      "identical_metadata": true,
+      "identical_planes": true,
+      "instructions": 6358,
+      "metadata_rows": 597,
+      "planes": 57,
+      "command_sha256": "a01ce2cf452383615addfc83fa545b7e748250a30dc53d63825cf4001a2f2e53",
+      "exit_code": 0,
+      "data_unchanged": true,
+      "reference": ".agents\\runtime\\runs\\run-56039c28d77b44ff8d255a538ce01dbd\\work\\rim-1\\out\\plate_1.gcode",
+      "reference_sha256": "dfc2f8579b6fa552a48297e3839be98ee96ad83321f94208feb6bb3122738fa2"
+    },
+    {
+      "name": "test2-final-2",
+      "identical_instructions": true,
+      "identical_metadata": true,
+      "identical_planes": true,
+      "instructions": 6358,
+      "metadata_rows": 597,
+      "planes": 57,
+      "command_sha256": "a01ce2cf452383615addfc83fa545b7e748250a30dc53d63825cf4001a2f2e53",
+      "exit_code": 0,
+      "data_unchanged": true,
+      "reference": ".agents\\runtime\\runs\\run-56039c28d77b44ff8d255a538ce01dbd\\work\\rim-1\\out\\plate_1.gcode",
+      "reference_sha256": "dfc2f8579b6fa552a48297e3839be98ee96ad83321f94208feb6bb3122738fa2"
+    }
+  ],
+  "warning_audit": [
+    {
+      "name": "control-before-2",
+      "findings": []
+    },
+    {
+      "name": "optimized-final-1",
+      "findings": []
+    },
+    {
+      "name": "optimized-final-2",
+      "findings": []
+    },
+    {
+      "name": "test2-final-1",
+      "findings": []
+    },
+    {
+      "name": "test2-final-2",
+      "findings": []
+    },
+    {
+      "name": "visibility-1",
+      "findings": []
+    }
+  ],
+  "diagnosis": [
+    "Repeated rounded bead offsets and full layer unions dominated native validation after the original branch geometry was complete.",
+    "Interface connector visibility repeatedly prepared identical native clip masks and evaluated independent visibility edges serially.",
+    "Bridge direction scores were independent but serial; candidate straight bridges repeatedly ran complete geometric bearing checks."
+  ],
+  "corrections": [
+    "Bound exact geometry-content caches using the existing shared live RAM allowance, invalidate mutable footprints after every relevant path mutation, and retain uncached behavior on constrained or unknown-memory hosts.",
+    "Keep native clipping, original candidate order, Dijkstra settlement and tie handling; use conservative bounds, immutable native clip preparation and memory-bounded independent visibility queries.",
+    "Evaluate bridge directions independently with bounded workers, preserve each score summation order, and keep the original final score selection order.",
+    "Use positive-only actual-material certificates for backed curves and two-ended straight bridges; all ambiguous, curved-cantilever or boundary cases fall back to original native checks.",
+    "Build earlier physical layer masks only for actual overlapping queries, retain existing model/contact/collision rules and leave every accepted process parameter unchanged."
+  ],
+  "invariants": {
+    "no_gcode_postprocessing": true,
+    "no_project_or_profile_parameter_changes": true,
+    "no_model_or_Z_specific_rules": true,
+    "original_instructions": 453458,
+    "metadata_rows": 15309,
+    "z_planes": 830,
+    "test2_original_instructions": 6358,
+    "test2_z_planes": 57,
+    "contact_preservation": "Repeated test2 native instructions and bead metadata are exactly equal to the previously verified 0.17mm contact/rim output. Native contact and curved-floor regressions also pass."
+  },
+  "configuration": {
+    "original_data_dir": "build/src/Release/data_dir",
+    "files_preserved": 852,
+    "final_build": {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/optimized-final-build-result.json",
+      "sha256": "2e1e8e0eb6ceaa0c35125e16511155c69441677e18790604197ae79afc9bc90c"
+    },
+    "manifest": {
+      "path": ".agents/runtime/runs/run-888e188f3799484ab96c4157802083da/work/optimized-final-settings-before.json",
+      "sha256": "fe508994ac98ff0a34f48d252f69a35ff8568aa60d310969511199db694111c3"
+    }
+  },
+  "remaining_work": [
+    "The requested 10x target is not met. The verified result is the measured clean paired speedup only; broader pipeline optimization would require further source-bound validation."
+  ],
+  "install": false,
+  "commit": false,
+  "push": false
+}

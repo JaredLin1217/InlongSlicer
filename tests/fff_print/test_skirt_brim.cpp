@@ -42,12 +42,604 @@
 #include "libslic3r/ObjectID.hpp"
 #include "libslic3r/Print.hpp"
 #include "libslic3r/BeltBrim.hpp"
+#include "libslic3r/Brim.hpp"
 #include "libslic3r/Config.hpp"
 #include "libslic3r/ExtrusionEntity.hpp"
 #include "libslic3r/TriangleMesh.hpp"
 
 using namespace Slic3r::Test;
 using namespace Slic3r;
+
+TEST_CASE("Brim fills narrow allowed branches without entering neighboring holes",
+          "[SkirtBrim][BrimCoverage][Regression]")
+{
+    const double nozzle = GENERATE(0.4, 0.6);
+    const double angle = GENERATE(0., M_PI / 6., M_PI / 2.);
+    const bool frame = GENERATE(false, true);
+    CAPTURE(nozzle, angle, frame);
+    Print print;
+    init_and_process_print({cube(4)}, print, {
+        {"nozzle_diameter", std::to_string(nozzle)}, {"initial_layer_line_width", nozzle * 1.25},
+        {"initial_layer_print_height", 0.2}, {"skirt_loops", 0},
+        {"brim_type", "outer_only"}, {"brim_width", 2.}
+    });
+    const Flow flow = print.brim_flow();
+    const double scale = flow.width() / 0.5;
+    auto rectangle = [scale](double x0, double y0, double x1, double y1) {
+        return Polygon{Points{Point::new_scale(x0 * scale,y0 * scale), Point::new_scale(x1 * scale,y0 * scale),
+            Point::new_scale(x1 * scale,y1 * scale), Point::new_scale(x0 * scale,y1 * scale)}};
+    };
+    ExPolygons target{ExPolygon(rectangle(4.8,-0.125,8.,0.125))};
+    if (frame) {
+        ExPolygon band(rectangle(-5.,-8.,5.,8.));
+        Polygon hole = rectangle(-4.,-7.,4.,7.);
+        hole.make_clockwise();
+        band.holes.push_back(std::move(hole));
+        target = union_ex(target, ExPolygons{band});
+    }
+    for (ExPolygon &part : target)
+        part.rotate(angle);
+    const ExtrusionEntityCollection result = makeBrimInfillFromPlateCoordinates(target, print, {});
+    REQUIRE_FALSE(result.empty());
+    Point probe = Point::new_scale(6.5 * scale,0.);
+    probe.rotate(angle);
+    Polygons coverage;
+    result.polygons_covered_by_width(coverage, 1.f);
+    CHECK(contains(union_(coverage), probe));
+    const double minimum_width = std::max(0.25 * double(flow.scaled_width()), double(scale_(flow.height())));
+    const ExPolygons printable_gaps = opening_ex(diff_ex(target, coverage), float(minimum_width * 0.5));
+    CHECK_THAT(area(printable_gaps) * SCALING_FACTOR * SCALING_FACTOR, Catch::Matchers::WithinAbs(0.,0.002));
+    size_t branch_paths = 0;
+    for_each_extrusion_path(result, [&](const ExtrusionPath &path) {
+        CHECK(path.role() == erBrim);
+        CHECK(path.mm3_per_mm > 0.);
+        CHECK(path.width >= flow.height());
+        CHECK_THAT(path.height, Catch::Matchers::WithinAbs(flow.height(), 0.00001));
+        Polyline local = path.polyline.to_polyline();
+        local.rotate(-angle);
+        if (get_extents(local).max.x() > scale_(6. * scale)) {
+            ++branch_paths;
+            CHECK(path.width < flow.width());
+            CHECK_THAT(area(diff_ex(path.polygons_covered_by_width(), target)) * SCALING_FACTOR * SCALING_FACTOR,
+                Catch::Matchers::WithinAbs(0.,0.001));
+        }
+    });
+    CHECK(branch_paths > 0);
+}
+
+TEST_CASE("Bed support yields to brim beads while preserving its source and remaining footprint",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const auto role = GENERATE(erSupportMaterial, erSupportMaterialInterface);
+    const double angle = GENERATE(0., M_PI / 6.);
+    const bool hole = GENERATE(false, true);
+    CAPTURE(role, angle, hole);
+    const Flow flow = Flow::new_from_config_width(frSupportMaterial, ConfigOptionFloatOrPercent(0.4, false), 0.4, 0.2);
+    ExtrusionEntityCollection source;
+    Polyline line{Points{Point::new_scale(-5.,0.), Point::new_scale(5.,0.)}};
+    line.rotate(angle);
+    ExtrusionPath crossing(role, flow.mm3_per_mm(), flow.width(), flow.height());
+    crossing.polyline = Polyline3(line);
+    source.append(std::move(crossing));
+    Polygon outside{Points{Point::new_scale(7.,-1.),Point::new_scale(9.,-1.),Point::new_scale(9.,1.),Point::new_scale(7.,1.)}};
+    outside.rotate(angle);
+    extrusion_entities_append_loops(source.entities, Polygons{outside}, role, flow.mm3_per_mm(), flow.width(), flow.height());
+    ExPolygon brim(Polygon{Points{Point::new_scale(-3.,-2.),Point::new_scale(3.,-2.),Point::new_scale(3.,2.),Point::new_scale(-3.,2.)}});
+    if (hole) {
+        Polygon keepout{Points{Point::new_scale(-1.,-0.5),Point::new_scale(-1.,0.5),Point::new_scale(1.,0.5),Point::new_scale(1.,-0.5)}};
+        brim.holes.push_back(std::move(keepout));
+    }
+    brim.rotate(angle);
+    const Polygons original = source.polygons_covered_by_width();
+    const Polygons coverage = to_polygons(ExPolygons{brim});
+    const auto result = support_outside_brim(source, coverage);
+    REQUIRE_FALSE(result.empty());
+    CHECK_THAT(area(intersection_ex(result.polygons_covered_by_width(), coverage)) * SCALING_FACTOR * SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0., 0.0001));
+    CHECK_THAT(area(xor_ex(union_ex(source.polygons_covered_by_width()), union_ex(original))) * SCALING_FACTOR * SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0., 0.000000001));
+    Point left = Point::new_scale(-4.,0.); left.rotate(angle);
+    CHECK(contains(union_(result.polygons_covered_by_width()), left));
+    Point middle = Point::new_scale(0.,0.); middle.rotate(angle);
+    CHECK(contains(union_(result.polygons_covered_by_width()), middle) == hole);
+    REQUIRE(result.entities.back()->is_loop());
+    for_each_extrusion_path(result, [&](const ExtrusionPath &path) {
+        CHECK(path.role() == role);
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(flow.width(), 0.00001));
+        CHECK_THAT(path.height, Catch::Matchers::WithinAbs(flow.height(), 0.00001));
+    });
+}
+
+TEST_CASE("Complete brim supports bed roots without consuming editable support geometry",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const int boundary = GENERATE(0, 1, 2);
+    const bool different_material = boundary == 1;
+    const bool raft = boundary == 2;
+    const bool tree = GENERATE(false, true);
+    const bool combined = GENERATE(false, true);
+    const size_t instance_count = GENERATE(size_t(1), size_t(2));
+    CAPTURE(different_material, raft, tree, combined, instance_count);
+    TriangleMesh shape = make_cube(4.,4.,0.6);
+    shape.translate(-2.,-2.,0.);
+    TriangleMesh cap = make_cube(12.,8.,2.);
+    cap.translate(-6.,-4.,0.6);
+    shape.merge(cap);
+    auto config = multifilament_config(2, {
+        {"enable_support",true}, {"support_type",tree ? "tree(auto)" : "normal(auto)"}, {"support_style",tree ? "organic" : "default"},
+        {"layer_height",0.2}, {"initial_layer_print_height",0.2}, {"brim_type","outer_only"},
+        {"brim_width",instance_count == 1 ? 3. : 40.}, {"brim_object_gap",0.1}, {"combine_brims",combined}, {"skirt_loops",0},
+        {"support_filament",different_material ? 2 : 0}, {"support_interface_filament",different_material ? 2 : 0},
+        {"raft_layers",raft ? 2 : 0},
+        {"support_top_z_distance",0.17}, {"support_bottom_z_distance",0.17},
+        {"support_top_contact_pattern","concentric"}, {"support_top_contact_wall_count",1},
+        {"independent_support_layer_height",false}, {"independent_support_top_contact_layer_height",false},
+        {"bridge_no_support",false}, {"support_threshold_angle",30}
+    });
+    Print print;
+    Model model;
+    init_print(std::vector<TriangleMesh>{shape}, print, model, config, nullptr, false, instance_count);
+    // Separate the support/raft footprints while deliberately overlapping the
+    // wide brims, so per-instance ownership and combined output are exercised.
+    for (size_t i = 0; i < instance_count; ++i)
+        model.objects.front()->instances[i]->set_offset(Vec3d(50. + 50. * i,60.,0.));
+    print.apply(model,config);
+    print.process();
+    const PrintObject &object = *print.objects().front();
+    REQUIRE_FALSE(object.support_layers().empty());
+    const auto &bed = object.support_layers().front()->support_fills;
+    REQUIRE_FALSE(bed.empty());
+    const Polygons original = bed.polygons_covered_by_width();
+    const ObjectInstanceID key{object.id(),0};
+    const auto *derived = print.first_layer_brim_support(key);
+    const bool support_above_brim = object.support_layers().front()->print_z > object.layers().front()->print_z + EPSILON;
+    if (different_material || raft || support_above_brim) {
+        CHECK(derived == nullptr);
+    } else {
+        REQUIRE(derived != nullptr);
+        for_each_extrusion_path(*derived,[](const ExtrusionPath &path) {
+            CHECK(path.width >= path.height);
+        });
+        Polygons brim;
+        for (const auto &group : print.skirt_brim_groups())
+            for (const auto &region : group.brims)
+                region.brim.polygons_covered_by_width(brim,1.f);
+        const Point shift = -object.instances().front().shift;
+        for (Polygon &polygon : brim)
+            polygon.translate(shift);
+        CHECK(area(derived->polygons_covered_by_width()) < area(original));
+        CHECK_THAT(area(intersection_ex(derived->polygons_covered_by_width(), brim)) * SCALING_FACTOR * SCALING_FACTOR,
+            Catch::Matchers::WithinAbs(0.,0.0001));
+        CHECK_THAT(area(xor_ex(union_ex(bed.polygons_covered_by_width()), union_ex(original))) * SCALING_FACTOR * SCALING_FACTOR,
+            Catch::Matchers::WithinAbs(0.,0.000000001));
+        const Polygons foundation = union_(derived->polygons_covered_by_width(),brim);
+        const ExPolygons lost = opening_ex(diff_ex(original,foundation),float(scale_(0.1)));
+        CHECK_THAT(area(lost)*SCALING_FACTOR*SCALING_FACTOR,Catch::Matchers::WithinAbs(0.,0.002));
+    }
+    config.set_deserialize_strict({{"brim_type","no_brim"}});
+    print.apply(model,config);
+    print.process();
+    CHECK(print.first_layer_brim_support({print.objects().front()->id(),0}) == nullptr);
+    REQUIRE_FALSE(print.objects().front()->support_layers().front()->support_fills.empty());
+}
+
+TEST_CASE("Brim boundaries retain the exposed part of a partially covered bed wall",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const auto role = GENERATE(erSupportMaterial, erSupportMaterialInterface);
+    const double angle = GENERATE(0., M_PI / 6.);
+    CAPTURE(role,angle);
+    auto rectangle = [](double x0,double y0,double x1,double y1) {
+        return Polygon{Points{Point::new_scale(x0,y0),Point::new_scale(x1,y0),Point::new_scale(x1,y1),Point::new_scale(x0,y1)}};
+    };
+    Polygon wall = rectangle(-0.8,-4.8,0.2,4.8);
+    wall.rotate(angle);
+    ExPolygons envelope{ExPolygon(rectangle(-1.,-5.,0.4,5.))};
+    ExPolygons brim{ExPolygon(rectangle(0.3,-6.,3.,6.))};
+    envelope.front().rotate(angle);
+    brim.front().rotate(angle);
+    ExtrusionEntityCollection source;
+    const Flow flow = Flow::new_from_config_width(frSupportMaterial, ConfigOptionFloatOrPercent(0.4,false),0.4,0.2);
+    extrusion_entities_append_loops(source.entities,Polygons{wall},role,flow.mm3_per_mm(),flow.width(),flow.height());
+    const auto result = support_outside_brim(source,to_polygons(brim),envelope);
+    Point required = Point::new_scale(0.1,0.); required.rotate(angle);
+    CHECK(contains(union_(result.polygons_covered_by_width()),required));
+    CHECK_THAT(area(intersection_ex(result.polygons_covered_by_width(),brim))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    const Polygons printed = union_(result.polygons_covered_by_width(),to_polygons(brim));
+    const ExPolygons printable_loss = opening_ex(diff_ex(source.polygons_covered_by_width(),printed),float(scale_(0.1)));
+    CHECK_THAT(area(printable_loss)*SCALING_FACTOR*SCALING_FACTOR,Catch::Matchers::WithinAbs(0.,0.001));
+    CHECK_THAT(area(diff_ex(result.polygons_covered_by_width(),envelope))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+}
+
+TEST_CASE("Adjacent bed strokes form a continuous extrusion within their original footprint",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const auto role = GENERATE(erSupportMaterial, erSupportMaterialInterface);
+    const double angle = GENERATE(0., M_PI / 6.);
+    const double second_width = GENERATE(0.3, 0.4);
+    CAPTURE(role,angle,second_width);
+    ExtrusionEntityCollection fragments;
+    for (int side : {-1,1}) {
+        const Flow flow = Flow::new_from_config_width(frSupportMaterial,
+            ConfigOptionFloatOrPercent(side < 0 ? 0.4 : second_width,false),0.4,0.2);
+        Polyline line{Points{Point::new_scale(side < 0 ? -2. : 0.04,0.),
+            Point::new_scale(side < 0 ? -0.04 : 2.,0.)}};
+        line.rotate(angle);
+        ExtrusionPath path(role,flow.mm3_per_mm()*0.95,flow.width(),flow.height());
+        path.polyline = Polyline3(line);
+        fragments.append(std::move(path));
+    }
+    // The source wall was continuous before brim clipping and adaptive-width
+    // reconstruction split it. Do not invent a connecting footprint between
+    // two genuinely separate source strokes.
+    ExtrusionEntityCollection source;
+    const Flow wall_flow = Flow::new_from_config_width(frSupportMaterial,
+        ConfigOptionFloatOrPercent(0.4,false),0.4,0.2);
+    ExtrusionPath wall(role,wall_flow.mm3_per_mm()*0.95,wall_flow.width(),wall_flow.height());
+    Polyline wall_line{Points{Point::new_scale(-2.,0.),Point::new_scale(2.,0.)}};
+    wall_line.rotate(angle);
+    wall.polyline = Polyline3(wall_line);
+    source.append(std::move(wall));
+    const Polygons original = source.polygons_covered_by_width();
+    auto result = std::move(fragments);
+    connect_bed_support_paths(result,source,{});
+    REQUIRE(result.entities.size() == 1);
+    const auto *multi = dynamic_cast<const ExtrusionMultiPath *>(result.entities.front());
+    REQUIRE(multi != nullptr);
+    REQUIRE(multi->paths.size() >= 3);
+    for (size_t i = 0; i < multi->paths.size(); ++i) {
+        const auto &path = multi->paths[i];
+        CHECK(path.role() == role);
+        CHECK(path.width >= path.height);
+        CHECK_THAT(path.height,Catch::Matchers::WithinAbs(0.2,0.000001));
+        const double area_per_mm = path.height*(path.width-path.height*(1.-0.25*PI));
+        CHECK_THAT(path.mm3_per_mm/area_per_mm,Catch::Matchers::WithinAbs(0.95,0.000001));
+        if (i > 0)
+            CHECK(path.first_point3() == multi->paths[i-1].last_point3());
+    }
+    CHECK_THAT(unscale<double>(multi->length()),Catch::Matchers::WithinAbs(4.,0.00001));
+    CHECK(contains(union_(result.polygons_covered_by_width()),Point(0,0)));
+    CHECK_THAT(area(diff_ex(result.polygons_covered_by_width(),original))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    CHECK_THAT(area(xor_ex(union_ex(source.polygons_covered_by_width()),union_ex(original)))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.000000001));
+}
+
+TEST_CASE("Bed path connections preserve brim barriers and extrusion boundaries",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const int boundary = GENERATE(0,1,2,3);
+    CAPTURE(boundary);
+    ExtrusionEntityCollection source;
+    const double end = boundary == 3 ? 0.3 : 0.04;
+    for (int side : {-1,1}) {
+        const auto role = boundary == 1 && side > 0 ? erSupportMaterialInterface : erSupportMaterial;
+        const Flow flow = Flow::new_from_config_width(frSupportMaterial,
+            ConfigOptionFloatOrPercent(0.4,false),0.4,boundary == 2 && side > 0 ? 0.3 : 0.2);
+        ExtrusionPath path(role,flow.mm3_per_mm(),flow.width(),flow.height());
+        path.polyline = Polyline3(Polyline{Points{Point::new_scale(side < 0 ? -2. : end,0.),
+            Point::new_scale(side < 0 ? -end : 2.,0.)}});
+        source.append(std::move(path));
+    }
+    Polygons brim;
+    if (boundary == 0)
+        brim.emplace_back(Points{Point::new_scale(-0.02,-1.),Point::new_scale(0.02,-1.),
+            Point::new_scale(0.02,1.),Point::new_scale(-0.02,1.)});
+    const auto result = support_outside_brim(source,brim);
+    CHECK(result.entities.size() == 2);
+    CHECK_THAT(area(intersection_ex(result.polygons_covered_by_width(),brim))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    if (boundary != 0)
+        CHECK_THAT(area(xor_ex(union_ex(result.polygons_covered_by_width()),union_ex(source.polygons_covered_by_width())))*SCALING_FACTOR*SCALING_FACTOR,
+            Catch::Matchers::WithinAbs(0.,0.000000001));
+}
+
+TEST_CASE("Compact bed finishing loops remain closed inside a continuous support chain",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const auto role = GENERATE(erSupportMaterial, erSupportMaterialInterface);
+    ExtrusionEntityCollection source;
+    const Flow wall_flow = Flow::new_from_config_width(frSupportMaterial,
+        ConfigOptionFloatOrPercent(0.4,false),0.4,0.2);
+    ExtrusionPath wall(role,wall_flow.mm3_per_mm(),wall_flow.width(),wall_flow.height());
+    wall.polyline = Polyline3(Polyline{Points{Point::new_scale(-1.,0.),Point::new_scale(1.,0.)}});
+    source.append(std::move(wall));
+    ExtrusionEntityCollection result;
+    const Flow flow = wall_flow.with_width(0.2);
+    for (double x : {-0.1,0.1}) {
+        Polygon loop{Points{Point::new_scale(x-0.05,-0.02),Point::new_scale(x+0.05,-0.02),
+            Point::new_scale(x+0.05,0.02),Point::new_scale(x-0.05,0.02)}};
+        extrusion_entities_append_loops(result.entities,Polygons{loop},role,flow.mm3_per_mm(),flow.width(),flow.height());
+    }
+    const Polygons original = result.polygons_covered_by_width();
+    connect_bed_support_paths(result,source,{});
+    REQUIRE(result.entities.size() == 1);
+    const auto *multi = dynamic_cast<const ExtrusionMultiPath *>(result.entities.front());
+    REQUIRE(multi != nullptr);
+    REQUIRE(multi->paths.size() == 3);
+    CHECK(multi->paths.front().is_closed());
+    CHECK(multi->paths.back().is_closed());
+    for (size_t i = 1; i < multi->paths.size(); ++i)
+        CHECK(multi->paths[i-1].last_point3() == multi->paths[i].first_point3());
+    CHECK_THAT(area(diff_ex(original,result.polygons_covered_by_width()))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.000000001));
+    CHECK_THAT(area(diff_ex(result.polygons_covered_by_width(),source.polygons_covered_by_width()))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+}
+
+TEST_CASE("Bed interfaces connect across planned infill space without crossing a support hole",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const bool hole = GENERATE(false,true);
+    const Flow flow = Flow::new_from_config_width(frSupportMaterial,
+        ConfigOptionFloatOrPercent(0.3,false),0.4,0.18);
+    ExtrusionEntityCollection source;
+    for (int side : {-1,1}) {
+        ExtrusionPath path(erSupportMaterialInterface,flow.mm3_per_mm(),flow.width(),flow.height());
+        path.polyline = Polyline3(Polyline{Points{Point::new_scale(side < 0 ? -1. : 0.04,0.),
+            Point::new_scale(side < 0 ? -0.04 : 1.,0.)}});
+        source.append(std::move(path));
+    }
+    auto result = source;
+    ExPolygon island(Polygon{Points{Point::new_scale(-1.2,-0.2),Point::new_scale(1.2,-0.2),
+        Point::new_scale(1.2,0.2),Point::new_scale(-1.2,0.2)}});
+    if (hole) {
+        Polygon cut{Points{Point::new_scale(-0.015,-0.05),Point::new_scale(-0.015,0.05),
+            Point::new_scale(0.015,0.05),Point::new_scale(0.015,-0.05)}};
+        island.holes.push_back(std::move(cut));
+    }
+    const ExPolygons region{island};
+    connect_bed_support_paths(result,source,{},region);
+    CHECK(result.entities.size() == (hole ? 2 : 1));
+    CHECK_THAT(area(diff_ex(result.polygons_covered_by_width(),region))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    for_each_extrusion_path(result,[&](const ExtrusionPath &path) {
+        CHECK(path.role() == erSupportMaterialInterface);
+        CHECK_THAT(path.height,Catch::Matchers::WithinAbs(flow.height(),0.000001));
+    });
+}
+
+TEST_CASE("Short bed strokes join the interior of a long path without losing its foundation",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const auto role=GENERATE(erSupportMaterial,erSupportMaterialInterface);
+    const bool closed=GENERATE(false,true);
+    const bool closed_spur=GENERATE(false,true);
+    const Flow flow=Flow::new_from_config_width(frSupportMaterial,
+        ConfigOptionFloatOrPercent(0.42,false),0.4,0.2);
+    ExtrusionEntityCollection source;
+    if (closed) {
+        Polygon outline{Points{Point::new_scale(-5.,-1.),Point::new_scale(5.,-1.),
+            Point::new_scale(5.,0.),Point::new_scale(-5.,0.)}};
+        extrusion_entities_append_loops(source.entities,Polygons{outline},role,flow.mm3_per_mm(),flow.width(),flow.height());
+    } else {
+        ExtrusionPath line(role,flow.mm3_per_mm(),flow.width(),flow.height());
+        line.polyline=Polyline3(Polyline{Points{Point::new_scale(-5.,0.),Point::new_scale(5.,0.)}});
+        source.append(std::move(line));
+    }
+    const Flow thin=flow.with_width(closed_spur?0.2:0.42);
+    ExtrusionPath spur(role,thin.mm3_per_mm(),thin.width(),thin.height());
+    Points tip{Point::new_scale(-0.04,0.3),Point::new_scale(0.04,0.3),Point::new_scale(0.04,0.33)};
+    if (closed_spur) tip.push_back(tip.front());
+    spur.polyline=Polyline3(Polyline{std::move(tip)});
+    spur.set_reverse();
+    const Points3 original_spur=spur.polyline.points;
+    source.append(std::move(spur));
+    const Polygons original=source.polygons_covered_by_width();
+    const ExPolygons region{ExPolygon(Polygon{Points{Point::new_scale(-5.5,-1.5),Point::new_scale(5.5,-1.5),
+        Point::new_scale(5.5,1.),Point::new_scale(-5.5,1.)}})};
+    auto result=source;
+    connect_bed_support_paths(result,source,{},region);
+    REQUIRE(result.entities.size()==1);
+    const auto *multi=dynamic_cast<const ExtrusionMultiPath *>(result.entities.front());
+    REQUIRE(multi!=nullptr);
+    CHECK_FALSE(multi->can_reverse());
+    CHECK((multi->first_point3()==multi->last_point3())==closed);
+    bool retained=false;
+    for (size_t i=0;i<multi->paths.size();++i) {
+        const auto &p=multi->paths[i];
+        if (p.polyline.points==original_spur) retained=true;
+        CHECK(p.role()==role);
+        CHECK(p.width>=p.height);
+        if (i>0) CHECK(multi->paths[i-1].last_point3()==p.first_point3());
+    }
+    CHECK(retained);
+    const ExPolygons lost=opening_ex(diff_ex(original,result.polygons_covered_by_width()),float(scale_(0.1)));
+    CHECK_THAT(area(lost)*SCALING_FACTOR*SCALING_FACTOR,Catch::Matchers::WithinAbs(0.,0.0001));
+    CHECK_THAT(area(diff_ex(result.polygons_covered_by_width(),region))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    CHECK_THAT(area(xor_ex(union_ex(original),union_ex(source.polygons_covered_by_width())))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.000000001));
+}
+
+TEST_CASE("Interior support splices preserve a hole between nearby paths",
+          "[SkirtBrim][BrimSupport][Regression]")
+{
+    const bool hole=GENERATE(false,true);
+    const Flow flow=Flow::new_from_config_width(frSupportMaterial,
+        ConfigOptionFloatOrPercent(0.2,false),0.4,0.18);
+    ExtrusionEntityCollection source;
+    ExtrusionPath line(erSupportMaterial,flow.mm3_per_mm(),flow.width(),flow.height());
+    line.polyline=Polyline3(Polyline{Points{Point::new_scale(-5.,0.),Point::new_scale(5.,0.)}});
+    source.append(std::move(line));
+    Polygon dot{Points{Point::new_scale(-0.02,0.4),Point::new_scale(0.02,0.4),
+        Point::new_scale(0.02,0.43),Point::new_scale(-0.02,0.43)}};
+    extrusion_entities_append_loops(source.entities,Polygons{dot},erSupportMaterial,flow.mm3_per_mm(),flow.width(),flow.height());
+    ExPolygon island(Polygon{Points{Point::new_scale(-5.5,-0.5),Point::new_scale(5.5,-0.5),
+        Point::new_scale(5.5,0.8),Point::new_scale(-5.5,0.8)}});
+    if (hole) {
+        Polygon opening{Points{Point::new_scale(-1.,0.12),Point::new_scale(-1.,0.25),
+            Point::new_scale(1.,0.25),Point::new_scale(1.,0.12)}};
+        island.holes.push_back(std::move(opening));
+    }
+    auto result=source;
+    connect_bed_support_paths(result,source,{},ExPolygons{island});
+    CHECK(result.entities.size()==(hole?2:1));
+    CHECK_THAT(area(diff_ex(result.polygons_covered_by_width(),ExPolygons{island}))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+}
+
+TEST_CASE("Bed support uses process widths while keeping its continuous route outside brim",
+          "[SkirtBrim][BrimSupport][BedWidths][Regression]")
+{
+    const auto role=GENERATE(erSupportMaterial,erSupportMaterialInterface);
+    const double width=GENERATE(0.4,0.6);
+    const double angle=GENERATE(0.,M_PI/6.);
+    const bool rounded_minimum=GENERATE(false,true);
+    const double scale=width/0.4;
+    auto point=[&](double x,double y) { Point p=Point::new_scale(x*scale,y*scale); p.rotate(angle); return p; };
+    const Flow flow=Flow::new_from_config_width(frSupportMaterial,ConfigOptionFloatOrPercent(width,false),width,0.5*width);
+    ExtrusionEntityCollection source;
+    ExtrusionPath wall(role,flow.mm3_per_mm()*0.95,flow.width(),flow.height());
+    wall.polyline=Polyline3(Polyline{Points{point(-5.,0.35),point(5.,0.35)}});
+    source.append(std::move(wall));
+    ExtrusionEntityCollection result;
+    auto *multi=new ExtrusionMultiPath;
+    const Flow narrow=flow.with_width(0.5*width);
+    ExtrusionPath a(role,narrow.mm3_per_mm()*0.95,narrow.width(),narrow.height());
+    if (rounded_minimum) {
+        // A medial filler can round one float below its layer-height floor.
+        a.width=std::nextafter(a.height,0.f);
+        a.mm3_per_mm=0.95*a.height*(a.width-a.height*(1.-0.25*PI));
+    }
+    a.polyline=Polyline3(Polyline{Points{point(-4.,0.35),point(-0.5,0.12),point(0.5,0.12),point(1.,0.35)}});
+    ExtrusionPath b(role,flow.mm3_per_mm()*0.95,flow.width(),flow.height());
+    b.polyline=Polyline3(Polyline{Points{point(1.,0.35),point(4.,0.35)}});
+    multi->paths={a,b};
+    multi->set_reverse();
+    result.entities.push_back(multi);
+    const Polygons before=result.polygons_covered_by_width();
+    const Polygons original=source.polygons_covered_by_width();
+    const ExPolygons region{ExPolygon(Polygon{Points{point(-5.5,-0.2),point(5.5,-0.2),point(5.5,1.),point(-5.5,1.)}})};
+    const Polygons brim{Polygon{Points{point(-6.,-1.),point(6.,-1.),point(6.,0.),point(-6.,0.)}}};
+    REQUIRE(normalize_bed_support_widths(result,source,brim,region));
+    REQUIRE(result.entities.size()==1);
+    CHECK_FALSE(result.entities.front()->can_reverse());
+    const auto *normalized=dynamic_cast<const ExtrusionMultiPath *>(result.entities.front());
+    REQUIRE(normalized!=nullptr);
+    for (size_t i=0;i<normalized->paths.size();++i) {
+        const auto &p=normalized->paths[i];
+        CHECK(p.role()==role);
+        CHECK_THAT(p.width,Catch::Matchers::WithinAbs(flow.width(),0.000001));
+        CHECK_THAT(p.height,Catch::Matchers::WithinAbs(flow.height(),0.000001));
+        const double area_per_mm=p.height*(p.width-p.height*(1.-0.25*PI));
+        CHECK_THAT(p.mm3_per_mm/area_per_mm,Catch::Matchers::WithinAbs(0.95,0.000001));
+        if (i>0) CHECK(normalized->paths[i-1].last_point3()==p.first_point3());
+    }
+    CHECK(contains(union_(result.polygons_covered_by_width()),point(0.,0.12)));
+    CHECK_THAT(area(intersection_ex(result.polygons_covered_by_width(),brim))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    CHECK_THAT(area(opening_ex(diff_ex(before,result.polygons_covered_by_width()),float(scale_(flow.height()*0.5))))*
+        SCALING_FACTOR*SCALING_FACTOR,Catch::Matchers::WithinAbs(0.,0.002));
+    CHECK_THAT(area(xor_ex(union_ex(original),union_ex(source.polygons_covered_by_width())))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.000000001));
+}
+
+TEST_CASE("Bed width normalization splices a collapsed interface loop without skinny connectors",
+          "[SkirtBrim][BrimSupport][BedWidths][ManufacturableInterface][Regression]")
+{
+    const double angle=GENERATE(0.,M_PI/6.);
+    const double width=GENERATE(0.4,0.6);
+    const bool self_crossing=GENERATE(false,true);
+    const bool clearance_corner=GENERATE(false,true);
+    const bool open_receiver=GENERATE(false,true);
+    const bool reverse_receiver=GENERATE(false,true);
+    CAPTURE(angle,width,self_crossing,clearance_corner,open_receiver,reverse_receiver);
+    const double factor=width/0.4;
+    auto point=[&](double x,double y) { Point p=Point::new_scale(factor*x,factor*y); p.rotate(angle); return p; };
+    const Flow flow(float(width),float(0.5*width),float(width));
+    const Flow thin=flow.with_width(float(0.5*width));
+    ExtrusionEntityCollection source;
+    ExtrusionPath wall(erSupportMaterialInterface,flow.mm3_per_mm(),flow.width(),flow.height());
+    wall.polyline=Polyline3(Polyline{open_receiver ?
+        Points{point(2.,4.75),point(2.,5.),point(-2.,5.),point(-2.,-5.),point(2.,-5.),point(2.,3.95)} :
+        Points{point(-2.,-5.),point(2.,-5.),point(2.,5.),point(-2.,5.),point(-2.,-5.)}});
+    if (reverse_receiver) wall.reverse();
+    wall.set_reverse();
+    source.append(std::move(wall));
+    ExtrusionPath remnant(erSupportMaterialInterface,thin.mm3_per_mm(),thin.width(),thin.height());
+    remnant.polyline=Polyline3(Polyline{self_crossing ?
+        Points{point(2.04,4.),point(2.12,4.),point(2.04,4.68),point(2.12,4.68),point(2.04,4.)} :
+        Points{point(2.04,4.),point(2.12,4.),point(2.12,4.68),point(2.04,4.68),point(2.04,4.)}});
+    source.append(std::move(remnant));
+    const Polygons original=source.polygons_covered_by_width();
+    const ExPolygons region{ExPolygon(Polygon{Points{point(-3.,-6.),point(3.,-6.),point(3.,6.),point(-3.,6.)}})};
+    auto result=source;
+    const Polygons brim=clearance_corner ? Polygons{Polygon{Points{
+        point(2.22,4.25),point(3.,4.25),point(3.,4.4),point(2.22,4.4)}}} : Polygons{};
+    REQUIRE(normalize_bed_support_widths(result,source,brim,region));
+    REQUIRE(result.entities.size()==1);
+    if (open_receiver)
+        CHECK(result.entities.front()->first_point()==result.entities.front()->last_point());
+    for_each_extrusion_path(result,[&](const ExtrusionPath &path) {
+        CHECK_THAT(path.width,Catch::Matchers::WithinAbs(flow.width(),0.000001));
+        CHECK_THAT(path.height,Catch::Matchers::WithinAbs(flow.height(),0.000001));
+        CHECK(path.role()==erSupportMaterialInterface);
+    });
+    CHECK_THAT(area(opening_ex(diff_ex(original,result.polygons_covered_by_width()),
+        float(scale_(flow.height()*0.5))))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.002));
+    CHECK_THAT(area(diff_ex(result.polygons_covered_by_width(),region))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    CHECK_THAT(area(intersection_ex(result.polygons_covered_by_width(),brim))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+    CHECK_THAT(area(xor_ex(union_ex(original),union_ex(source.polygons_covered_by_width())))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.000000001));
+}
+
+TEST_CASE("Full-width bed routes follow a concave hole without extrusion breaks",
+          "[SkirtBrim][BrimSupport][BedWidths][Regression]")
+{
+    const Flow flow=Flow::new_from_config_width(frSupportMaterial,ConfigOptionFloatOrPercent(0.4,false),0.4,0.2);
+    ExtrusionEntityCollection source;
+    ExtrusionPath wall(erSupportMaterialInterface,flow.mm3_per_mm(),flow.width(),flow.height());
+    wall.polyline=Polyline3(Polyline{Points{Point::new_scale(-5.,0.6),Point::new_scale(5.,0.6)}});
+    source.append(std::move(wall));
+    const Flow narrow=flow.with_width(0.2);
+    ExtrusionEntityCollection result;
+    ExtrusionPath line(erSupportMaterialInterface,narrow.mm3_per_mm(),narrow.width(),narrow.height());
+    line.polyline=Polyline3(Polyline{Points{Point::new_scale(-1.,0.22),Point::new_scale(-0.3,0.22),
+        Point::new_scale(0.3,0.22),Point::new_scale(1.,0.22)}});
+    result.append(std::move(line));
+    ExPolygon area(Polygon{Points{Point::new_scale(-5.5,-1.),Point::new_scale(5.5,-1.),
+        Point::new_scale(5.5,1.),Point::new_scale(-5.5,1.)}});
+    Polygon hole{Points{Point::new_scale(-0.2,-0.5),Point::new_scale(-0.2,0.1),
+        Point::new_scale(0.2,0.1),Point::new_scale(0.2,-0.5)}};
+    area.holes.push_back(hole);
+    REQUIRE(normalize_bed_support_widths(result,source,{},ExPolygons{area}));
+    CHECK(result.entities.size()==1);
+    for_each_extrusion_path(result,[&](const ExtrusionPath &p) {
+        CHECK_THAT(p.width,Catch::Matchers::WithinAbs(0.4,0.000001));
+    });
+    CHECK_THAT(Slic3r::area(intersection_ex(result.polygons_covered_by_width(),Polygons{hole}))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.0001));
+}
+
+TEST_CASE("Infeasible process-width bed routes leave the tested support unchanged",
+          "[SkirtBrim][BrimSupport][BedWidths][Regression]")
+{
+    const Flow flow=Flow::new_from_config_width(frSupportMaterial,ConfigOptionFloatOrPercent(0.4,false),0.4,0.2);
+    ExtrusionEntityCollection source;
+    ExtrusionPath wide(erSupportMaterial,flow.mm3_per_mm(),flow.width(),flow.height());
+    wide.polyline=Polyline3(Polyline{Points{Point::new_scale(-2.,2.),Point::new_scale(2.,2.)}});
+    source.append(std::move(wide));
+    const Flow narrow=flow.with_width(0.2);
+    ExtrusionPath thin(erSupportMaterial,narrow.mm3_per_mm(),narrow.width(),narrow.height());
+    thin.polyline=Polyline3(Polyline{Points{Point::new_scale(-1.,0.925),Point::new_scale(1.,0.925)}});
+    source.append(thin);
+    ExtrusionEntityCollection result;
+    result.append(thin);
+    const Polygons original=result.polygons_covered_by_width();
+    const ExPolygons region{ExPolygon(Polygon{Points{Point::new_scale(-2.,0.8),Point::new_scale(2.,0.8),
+        Point::new_scale(2.,1.05),Point::new_scale(-2.,1.05)}})};
+    const Polygons brim{Polygon{Points{Point::new_scale(-3.,-1.),Point::new_scale(3.,-1.),
+        Point::new_scale(3.,0.8),Point::new_scale(-3.,0.8)}}};
+    CHECK_FALSE(normalize_bed_support_widths(result,source,brim,region));
+    CHECK_THAT(area(xor_ex(union_ex(original),union_ex(result.polygons_covered_by_width())))*SCALING_FACTOR*SCALING_FACTOR,
+        Catch::Matchers::WithinAbs(0.,0.000000001));
+}
 
 // Distinct brim regions (combine_brims merges touching brims into one covering >1 object).
 static int brim_count(const Print &print)

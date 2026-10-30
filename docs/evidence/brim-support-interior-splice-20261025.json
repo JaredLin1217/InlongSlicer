@@ -1,0 +1,317 @@
+{
+  "schema_version": "inlong-bed-support-interior-splice/v1",
+  "verified_utc": "2026-10-25T12:14:13.466518Z",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "anchor_semantics": "HEAD anchors the checkout; SHA-256 binds reviewed uncommitted source.",
+  "source": {
+    "src/libslic3r/Print.hpp": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+    "src/libslic3r/Support/SupportCommon.cpp": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+    "src/libslic3r/GCode.cpp": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+    "src/libslic3r/Brim.cpp": "793a08bf7681dc65d5a86259b894ab061625435251f7ae063fa3d58b9a5be188",
+    "src/libslic3r/Brim.hpp": "88f3dff2feb8966e019c8aeaa3aea26b76504b7b6aadc4a6e4332cf4f1b34b0f",
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "src/libslic3r/Print.cpp": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "tests/fff_print/test_skirt_brim.cpp": "44e0db9941bb9b0ba1d6bbd15ec1badbfe4d2fe8d518c6e35f91dbdbfff61a64"
+  },
+  "unchanged_source": {
+    "src/libslic3r/Brim.hpp": "88f3dff2feb8966e019c8aeaa3aea26b76504b7b6aadc4a6e4332cf4f1b34b0f",
+    "src/libslic3r/Print.hpp": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+    "src/libslic3r/Support/SupportCommon.cpp": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "src/libslic3r/Print.cpp": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+    "src/libslic3r/GCode.cpp": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b"
+  },
+  "tests": [
+    {
+      "path": ".agents/runtime/runs/run-3e08d0c097e74c63ae654e2d8e83fe20/work/skirt-brim-all.log",
+      "sha256": "efd5d67c6cca6f48253e34960d4ae9fe3e6fb3817d8820430ff1cf4aa2d84eb1",
+      "assertions": 1351,
+      "cases": 48
+    },
+    {
+      "path": ".agents/runtime/runs/run-3e08d0c097e74c63ae654e2d8e83fe20/work/related-guards.log",
+      "sha256": "f5aa01d8c44a63e58254d01ee010aca600c93733bf36be055c66d13fdbf98049",
+      "assertions": 956,
+      "cases": 9
+    }
+  ],
+  "native_test_sha256": "a22197d0027387f4465c659763782dc3c6ae23aeb1c2912e489e4daefd974643",
+  "build": {
+    "exit_code": 0,
+    "log": ".agents/runtime/runs/run-3e08d0c097e74c63ae654e2d8e83fe20/work/release-1-build.log",
+    "sha256": "22a35a7a2f8d6dda374b362309e1f9421000a940c0f1184596b36b405e9bcecf"
+  },
+  "engine": {
+    "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\inlong-slicer.exe",
+    "engine_sha256": "61dc67a3671b90fd34b0ed80d92121e207c94cf499dfba0cff535be8ac8e14a0",
+    "gui_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+    "project_sha256": "c453a645a079eaae32360f7e7ecb47d22a7f5e2b6b4a34b8e3cd66626bd510d5",
+    "elapsed_seconds": 5.8884203,
+    "gcode": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-3e08d0c097e74c63ae654e2d8e83fe20\\work\\verify-1\\out\\plate_1.gcode",
+    "gcode_sha256": "3394f3a26d188f75200436dbc24af25dbe426513dd528166fa6da00284d6f842",
+    "data_dir": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\data_dir"
+  },
+  "geometry": {
+    "baseline": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-3e08d0c097e74c63ae654e2d8e83fe20\\work\\input-previous.gcode",
+    "baseline_sha256": "9e52884c2f81e2454029f9868b9ceec081cbeb10948926f3ee9811366850eda2",
+    "gcode": ".agents\\runtime\\runs\\run-3e08d0c097e74c63ae654e2d8e83fe20\\work\\verify-1\\out\\plate_1.gcode",
+    "gcode_sha256": "3394f3a26d188f75200436dbc24af25dbe426513dd528166fa6da00284d6f842",
+    "layers": 57,
+    "first_z": 0.18,
+    "paths": {
+      "Brim": {
+        "before": {
+          "width_fragments": 6,
+          "continuous_extrusions": 6,
+          "shorter_than_1mm": 0,
+          "lengths_mm": [
+            37.061856264719445,
+            34.67580995229606,
+            32.28942929748426,
+            29.916028849850086,
+            27.56825024742427,
+            25.228594392189255
+          ],
+          "widths_mm": [
+            0.42
+          ]
+        },
+        "after": {
+          "width_fragments": 6,
+          "continuous_extrusions": 6,
+          "shorter_than_1mm": 0,
+          "lengths_mm": [
+            37.061856264719445,
+            34.67580995229606,
+            32.28942929748426,
+            29.916028849850086,
+            27.56825024742427,
+            25.228594392189255
+          ],
+          "widths_mm": [
+            0.42
+          ]
+        }
+      },
+      "Support": {
+        "before": {
+          "width_fragments": 40,
+          "continuous_extrusions": 14,
+          "shorter_than_1mm": 3,
+          "lengths_mm": [
+            63.32701748915364,
+            0.2927059405407666,
+            16.677836432959836,
+            16.642137537458026,
+            1.2168217898628133,
+            137.9220979664575,
+            13.33439243181593,
+            34.463171599331346,
+            20.825309216423992,
+            34.03208590357563,
+            5.615558685331274,
+            75.41724063431951,
+            0.3398012784033083,
+            0.12056854249490148
+          ],
+          "widths_mm": [
+            0.2,
+            0.395078,
+            0.42
+          ]
+        },
+        "after": {
+          "width_fragments": 42,
+          "continuous_extrusions": 10,
+          "shorter_than_1mm": 0,
+          "lengths_mm": [
+            63.32701748915364,
+            18.907694409112,
+            16.642137537458026,
+            138.85203273408445,
+            13.33439243181593,
+            34.463171599331346,
+            20.825309216423992,
+            35.05648616879254,
+            5.615558685331274,
+            75.41724063431951
+          ],
+          "widths_mm": [
+            0.2,
+            0.395078,
+            0.395293,
+            0.42
+          ]
+        }
+      },
+      "Support interface": {
+        "before": {
+          "width_fragments": 72,
+          "continuous_extrusions": 4,
+          "shorter_than_1mm": 0,
+          "lengths_mm": [
+            23.563233803340378,
+            23.563680057747344,
+            1.4901346330022995,
+            1.4901346330022995
+          ],
+          "widths_mm": [
+            0.18,
+            0.19503,
+            0.195031,
+            0.195032,
+            0.195035,
+            0.195036,
+            0.195088,
+            0.195096,
+            0.195104,
+            0.195133,
+            0.195136,
+            0.195155,
+            0.195158,
+            0.202954,
+            0.202955,
+            0.229003,
+            0.229049,
+            0.229905,
+            0.243179,
+            0.243214,
+            0.259412,
+            0.259503,
+            0.283284,
+            0.292637,
+            0.292638,
+            0.292639,
+            0.408
+          ]
+        },
+        "after": {
+          "width_fragments": 72,
+          "continuous_extrusions": 4,
+          "shorter_than_1mm": 0,
+          "lengths_mm": [
+            23.563233803340378,
+            23.563680057747344,
+            1.4901346330022995,
+            1.4901346330022995
+          ],
+          "widths_mm": [
+            0.18,
+            0.19503,
+            0.195031,
+            0.195032,
+            0.195035,
+            0.195036,
+            0.195088,
+            0.195096,
+            0.195104,
+            0.195133,
+            0.195136,
+            0.195155,
+            0.195158,
+            0.202954,
+            0.202955,
+            0.229003,
+            0.229049,
+            0.229905,
+            0.243179,
+            0.243214,
+            0.259412,
+            0.259503,
+            0.283284,
+            0.292637,
+            0.292638,
+            0.292639,
+            0.408
+          ]
+        }
+      }
+    },
+    "changes": [
+      {
+        "z": 0.18,
+        "role": "Support",
+        "removed_mm2": 0.005044076674595244,
+        "added_mm2": 0.0056150870303346735
+      }
+    ],
+    "brim_changed": false,
+    "brim_components": 1,
+    "support_brim_overlap_mm2": 2.7846061460515924e-05,
+    "minimum_first_support_width_margin_mm": 0.0,
+    "printable_lost_foundation_mm2": 0.0,
+    "model_changes": [],
+    "upper_support_changes": [],
+    "bottom_contact_gaps_mm": [
+      0.17000000000000304,
+      0.17000000000000304,
+      0.17000000000000304
+    ],
+    "errors": [],
+    "warnings": [],
+    "note": "Continuous extrusion counts ignore width/speed comments and stationary moves, but break on retraction, nonextruding XY motion, layer or role change."
+  },
+  "retained_fragments": [
+    {
+      "original_length_mm": 0.2927059405407666,
+      "bounds": [
+        152.58,
+        156.839,
+        152.748,
+        156.941
+      ],
+      "missing_centerline_mm": 0.0,
+      "joined_continuous_length_mm": 138.85203273408445
+    },
+    {
+      "original_length_mm": 0.3398012784033083,
+      "bounds": [
+        147.482,
+        143.051,
+        147.585,
+        143.147
+      ],
+      "missing_centerline_mm": 0.0,
+      "joined_continuous_length_mm": 35.05648616879254
+    },
+    {
+      "original_length_mm": 0.12056854249490148,
+      "bounds": [
+        148.99,
+        142.51,
+        149.046,
+        142.518
+      ],
+      "missing_centerline_mm": 0.0,
+      "joined_continuous_length_mm": 35.05648616879254
+    }
+  ],
+  "repeat_instructions_identical": true,
+  "instructions": 6475,
+  "configuration": {
+    "restored": [
+      {
+        "path": "build/src/Release/data_dir",
+        "files": 844,
+        "exact_match": true
+      },
+      {
+        "path": "build/InlongSlicer/data_dir",
+        "files": 0,
+        "exact_match": true
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly/data_dir",
+        "files": 0,
+        "exact_match": true
+      }
+    ],
+    "slice_settings_unchanged": true,
+    "manifest": ".agents/runtime/runs/run-3e08d0c097e74c63ae654e2d8e83fe20/work/release-1-settings-before.json",
+    "manifest_sha256": "a330972851834a9f6cde2b0e07aa886c2dc88423880353ea61384ad565bbf0d5"
+  },
+  "implementation": "After endpoint chaining, project short bed strokes onto nearby continuous receiver paths. Replace a local receiver interval by a bounded detour through the unchanged short stroke. Both round connector beads must fit the valid support islands, final-brim keepout and other-role keepouts. Preserve role, height, flow ratio, non-reversible direction and receiver closure. Reject a detour that loses a printable-width region of the old footing. Stable candidate order makes exports deterministic. Scope remains per-instance first-layer derived support; original support collections, higher geometry and contact planning remain unchanged.",
+  "limitations": "Parallel pattern spacing and truly disconnected regions are not replaced with arbitrary cross-region links. Software geometry/export tests do not measure deposited plastic. No install, commit or push."
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-native-first-rearchitecture-20261028",
+  "key": "organic-support-performance-architecture",
+  "type": "lesson",
+  "conclusion": "Run organic source topology repair before native OrcaSlicer toolpath generation, and keep full printed-path Clipper reconstruction as an explicit INLONG_SUPPORT_FULL_REPAIR fallback. On test.3mf this reduced the main Release slice to 197.8 seconds with zero log error or warning markers while preserving the source repair pass and 1696-file data directory.",
+  "scope": "InlongSlicer organic support slicing",
+  "modules": [
+    "TreeSupport3D",
+    "organic-support",
+    "toolpath-generation"
+  ],
+  "tags": [
+    "OrcaSlicer",
+    "native-first",
+    "Clipper",
+    "performance",
+    "support-repair",
+    "test.3mf"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "docs/evidence/organic-native-first-rearchitecture-20261028.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "edc2b43804323b93dc54e38bccf8acb8b86cdde05de161a2f407e67b78c1ec20",
+      "commit": "fc386d25ae",
+      "locator": "native-first organic support repair and measured Release validation"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "0bd096dd25518947aa8510de0ddcd2506f1e1df7315959bfba682303552e4882",
+      "commit": "fc386d25ae",
+      "locator": "native-first organic support repair and measured Release validation"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-native-first-rearchitecture-20261028.json",
+      "sha256": "a00b8b429602e4d314d6eac02b48b4e20ba5a89d5a6136f157ebb24b731a8892",
+      "commit": "fc386d25ae",
+      "locator": "native-first organic support repair and measured Release validation"
+    }
+  ],
+  "verified_utc": "2026-10-28T07:07:06.9397691Z",
+  "verification": {
+    "method": "Release build plus repeated test.3mf CLI slices",
+    "summary": "Main Release built successfully; isolated native-first repair slice completed in 247.57 seconds and main Release completed in 197.80 seconds with exit_code 0, unchanged copied data directories, and zero error/warning/exception/landing markers. Strict printed repair remains available through INLONG_SUPPORT_FULL_REPAIR.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": "2027-01-26T07:07:06.9397691Z"
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

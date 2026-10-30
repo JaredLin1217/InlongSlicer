@@ -1,0 +1,49 @@
+{
+  "purpose": "organic support native-first rearchitecture",
+  "source_copy": "opt-current",
+  "change": {
+    "native_orca_topology": "preserved",
+    "source_anchor_repair": "retained and returns changed flag",
+    "printed_path_repair": "strict fallback only when INLONG_SUPPORT_FULL_REPAIR is set",
+    "default_path": "native toolpath generation after source topology repair"
+  },
+  "build": {
+    "dll_sha256": "1472b81bc5e74930943c282db2807b77a98dd7afb5024468f15b049274a67b2b",
+    "exe_sha256": "73328053c79f1908bf296c6d9366b5fa5a4e428402584b9934745982c9a1d0f4"
+  },
+  "measurements": {
+    "native_repair": {
+      "elapsed_seconds": 247.5700273,
+      "exit_code": 0,
+      "gcode_sha256": "c1b821b42ac915eb493f9ffcbb1dddceb3d4f05abe5c80a3591feab03894feb8",
+      "gcode_bytes": 130104345,
+      "data_unchanged": true,
+      "source_anchor_seconds": 52.373,
+      "toolpath_generation_seconds": 26.6384,
+      "printed_repair": "skipped",
+      "log_error_or_warning_lines": 0
+    },
+    "native_no_repair": {
+      "elapsed_seconds": 159.1484498,
+      "gcode_sha256": "1a81e796025ea3b1ced83745e33fe4d4ea69b4651db125d7ea2809784300b37e"
+    },
+    "isolated_1fc": {
+      "elapsed_seconds": 624.4062681,
+      "gcode_sha256": "0b6b9c84e9bf9dbbef03a2d1e41693bc26b9f53afbdf0f6e0b102b3593640d3d"
+    },
+    "previous_local_current": {
+      "elapsed_seconds": 1801.4896746,
+      "timed_out": true
+    }
+  },
+  "path_roles": {
+    "native_repair": "Z=1148; Support=2808; Support interface=2419; Brim=1",
+    "native_no_repair": "Z=1148; Support=2806; Support interface=2416; Brim=1",
+    "isolated_1fc": "Z=1128; Support=3095; Support interface=2706; Brim=1"
+  },
+  "files": {
+    "conditional_slice": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-2ae5d458a2d34f11b0e132c1b8cd161a\\work\\opt-native-repair-slice\\out\\plate_1.gcode",
+    "log": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-2ae5d458a2d34f11b0e132c1b8cd161a\\work\\opt-native-repair-slice\\slice.log",
+    "receipt": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-2ae5d458a2d34f11b0e132c1b8cd161a\\work\\comparison-organic-native-first-20261028.json"
+  }
+}

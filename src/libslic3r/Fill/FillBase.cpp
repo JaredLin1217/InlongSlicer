@@ -127,7 +127,8 @@ bool Fill::use_bridge_flow(const InfillPattern type)
 Polylines Fill::fill_surface(const Surface *surface, const FillParams &params)
 {
     // Perform offset.
-    Slic3r::ExPolygons expp = offset_ex(surface->expolygon, float(scale_(this->overlap - 0.5 * this->spacing)));
+    Slic3r::ExPolygons expp = params.boundary_is_center_domain ? ExPolygons{surface->expolygon} :
+        offset_ex(surface->expolygon, float(scale_(this->overlap - 0.5 * this->spacing)));
     // Orca: Separated infills move the box center onto each body; origin-aligned patterns follow it.
     const Point shift = this->aligned_to_origin() && ! empty(this->bounding_box) ? this->bounding_box.center() : Point::Zero();
     translate(expp, -shift);

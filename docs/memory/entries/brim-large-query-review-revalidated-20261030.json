@@ -1,0 +1,304 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "brim-large-query-review-revalidated-20261030",
+  "key": "brim-printable-gap-coverage",
+  "type": "lesson",
+  "conclusion": "Completed test2 and 830-plane outputs retain all Brim, support and contact paths exactly, with no error or landing-warning findings in their logs. The large export timed out before G-code, so no large-file Brim parity claim is made.",
+  "scope": "Source-bound exact-output verification on completed fixtures and incomplete large-file performance diagnostics; timing limitations are explicit.",
+  "modules": [
+    "slicing",
+    "brim",
+    "support",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "brim",
+    "center-domain",
+    "continuity",
+    "first-layer",
+    "float-rounding",
+    "interface",
+    "per-instance",
+    "physical-width",
+    "process-width",
+    "source-bound-release"
+  ],
+  "files": [
+    "docs/evidence/brim-support-process-widths-20261025.json",
+    "docs/evidence/organic-contact-walls-20261026.json",
+    "docs/evidence/organic-exact-performance-20261026.json",
+    "docs/evidence/organic-interface-bearing-review-20261025.json",
+    "docs/evidence/organic-interface-bounded-20261025.json",
+    "docs/evidence/organic-interface-bounded-bearing-20261025.json",
+    "docs/evidence/organic-interface-continuity-20261025.json",
+    "docs/evidence/organic-interface-demand-20261026.json",
+    "docs/evidence/organic-interface-manufacturing-20261026.json",
+    "docs/evidence/organic-interface-splice-20261026.json",
+    "docs/evidence/organic-large-query-performance-20261027.json",
+    "src/libslic3r/BridgeDetector.cpp",
+    "src/libslic3r/Brim.cpp",
+    "src/libslic3r/Brim.hpp",
+    "src/libslic3r/Fill/FillBase.cpp",
+    "src/libslic3r/Fill/FillBase.hpp",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "src/libslic3r/Fill/FillRectilinear.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Layer.cpp",
+    "src/libslic3r/Print.cpp",
+    "src/libslic3r/Print.hpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/SupportCommon.hpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "tests/fff_print/test_skirt_brim.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "tests/libslic3r/CMakeLists.txt",
+    "tests/libslic3r/test_bridge_detector.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/brim-support-process-widths-20261025.json",
+      "sha256": "326e8c0b4052e9ec30fac8698e48faa594dba88a0d8bfb3ad3c8e5d0b2ffbee1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-contact-walls-20261026.json",
+      "sha256": "cf750dcff049848282365341840993be39aa47e6e2d44c07080f792db4ad7df3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-exact-performance-20261026.json",
+      "sha256": "1389bb6802dcb90bc73fddd26e23e166e3ff46e6fc52a71eb5996b2ac8888a1c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bearing-review-20261025.json",
+      "sha256": "829171c768c495b3d67a7c76938c7b7318510ec26429db8ef5f3a6ff099fa958",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bounded-20261025.json",
+      "sha256": "cb4c0135d8cf674ef4205ab31a488823109f7d53c4c59d53d02bd397b8761945",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bounded-bearing-20261025.json",
+      "sha256": "a8da607ccb52051257eae4e6e618b6dc0f91634963515b9179aecf447e7a74c3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-continuity-20261025.json",
+      "sha256": "f619f1003ec6af20e5eec3845cfab90cc4b4dcb5e9fe2136cc3baef9919c4795",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-demand-20261026.json",
+      "sha256": "4b4c1accfd8e3296cfb61b0463f4a791553f1a4c6221530aae5dedf61ab928b7",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-manufacturing-20261026.json",
+      "sha256": "c8758f06cf0b46389c7ca15b1de3bdaca560de018060fe8be00b45fa5723b675",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-splice-20261026.json",
+      "sha256": "30b55c23ce920f733a2d6d5b6225db9d43d7afd1477c8a39a5be569fff8beff6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-large-query-performance-20261027.json",
+      "sha256": "4009a64ca3f7f8a06fbca8460437dcd3587e92c628ac397e16a1f1cfaacda69b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/BridgeDetector.cpp",
+      "sha256": "c38f20abff24dc4f1f82b88b3cc3c6fff79f05e7209d53d43304cd059f474a3b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.cpp",
+      "sha256": "51d3e8cb526e204b3ea267ea568f6d875b017039cb30a53d7424cca190d402da",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.hpp",
+      "sha256": "7912a98e7d7a6b2d54c92d4c02cccc40f7344e7463a95e12008b8afddb492ee3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillBase.cpp",
+      "sha256": "1042eb5cb513a298bc83e130a3563d03a62e4d32f4c98357289fe2896ec80286",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillBase.hpp",
+      "sha256": "17507c53de3a915b952c85f418e1ce575a814671db71093345a41247d210008c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillRectilinear.cpp",
+      "sha256": "17c00e1a19446f38c8c30a3ef1fa0c2afcf083368fc16df4bb0dcf6b02b30b28",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Layer.cpp",
+      "sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "3f989381831ab346aca6001c48a87af8b71629f368e62b402fcd1249acfd4fcb",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.hpp",
+      "sha256": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "b3381b73559236a4b0e3edf0dd41859968fb8840063e7533baccd7300ff1267b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "732134e4d512c9466475ed37f87f7d8040ae2b4a6849e3514a848ddfb10dff40",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.hpp",
+      "sha256": "582e01b0879922a337c84fadc37d9972353f520f2a4a1f5ac584f1a9c477769a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "d13bb73acaa7f30e1d8ba02cc50b0414e3a05052901cb9d5b7dc707e9b13be04",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "ef7a8dae7e24c7d79800b229d6044388acbc9b97b23cdf3d6cf1576bbe613bd9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_skirt_brim.cpp",
+      "sha256": "57bfaa71baf7e90abf6c279aac8d4d82c60208a1225b1ae9b681b73751a3a996",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "113d8584324d2839216d4064aa300e455bb7ab73c6c0ff4cf039532f9ce1143d",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/CMakeLists.txt",
+      "sha256": "ca186d1c9aa76f0f50bfb4158616f6572ad3e7f310139cda36706ab084c1c041",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/libslic3r/test_bridge_detector.cpp",
+      "sha256": "77dffa2961e461bf48cbe0b0fed3216bdb081fd3038ca17ba0fc7ef0858a38e3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and immutable evidence; uncommitted source is explicitly distinguished from checkout anchor."
+    }
+  ],
+  "verified_utc": "2026-10-30T04:17:25.284Z",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex",
+    "method": "Source-bound revalidation on 2026-10-30: current source and evidence hashes refreshed after successful Release build (cmake --build build --config Release) and analyzer regression tests (4 tests passed); historical fixture conclusions retained without adding new parity claims.",
+    "summary": "Revalidated current source snapshots and retained the original evidence-scoped conclusion. The Release build returned 0 and scripts/tests/test_analyze_organic_support.py passed 4 tests; no new large-file or universal performance claim is introduced."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "brim-large-query-review-20261027"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -1,0 +1,133 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-bottom-root-continuity-20261025",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Independent organic bottom contacts are partitioned by visible model surface, retain collision-safe native root continuations and hand off to actual printed contact planes. Following body/interface paths are height-modulated above stepped contacts while ordered hollow-wall collections retain their order. The source-bound Release passes 31 organic/tree-bridge cases with 3626 assertions and four clearance/interface cases with 119 assertions. Two test2 exports have identical command sequences; the central 1.63-2.40 mm interval has continuous printed support, local bottom gaps are approximately 0.170003 mm, and no significant support/contact volume overlap remains in that interval. Earlier whole-component connectivity and single-floor gap measurements did not certify this local continuity and are superseded. Native roles, widths and patterns are retained; no physical-print or arbitrary-model guarantee is made.",
+  "scope": "Reviewed source and native Release acceptance on 2026-10-25; historical upstream/performance claims retain their original scope. No hardware print or universal model guarantee.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "support-interface",
+    "closed-contours",
+    "floating-support",
+    "z-gap",
+    "exact-output-change",
+    "source-revalidation",
+    "scope-audit"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "docs/evidence/organic-support-interface-trim-20261021.json",
+    "src/libslic3r/Layer.cpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "scripts/analyze_organic_support.py",
+    "docs/evidence/project-knowledge-revalidation-20261025.json",
+    "docs/evidence/organic-support-bottom-root-continuity-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "e33906b23c657505aafa5fc1cdb72e1f3c17612e9a257facc4c4bc135e71e613",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-interface-trim-20261021.json",
+      "sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Layer.cpp",
+      "sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "eccef7fcdde5bdf9665a027034b96c15c0a8637d434c36d35b61011bb74c51ad",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/analyze_organic_support.py",
+      "sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/project-knowledge-revalidation-20261025.json",
+      "sha256": "e84622f34c4c5df77fc65510fd6fc86e8f0e40270a8edb890fc15720bd0b7eb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-bottom-root-continuity-20261025.json",
+      "sha256": "5ca22c10361828f0f6d7740818683b6880d0acef76352fb34829a582a4321ba3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable root-continuity evidence; historical evidence remains historical."
+    }
+  ],
+  "verified_utc": "2026-10-25T04:53:01.514902Z",
+  "verification": {
+    "method": "Manual source and scope review, full organic/tree-bridge and clearance regressions, two unmodified Release CLI exports, per-plane geometry and actual extrusion interval checks.",
+    "summary": "Relocating a bottom contact without extending its original root leaves a local vertical void. Source-grid collision masks can erase a legal independently sliced root. A footprint crossing model steps requires separate visible surface contacts; succeeding paths require native height modulation over those contacts, including ordered hollow-wall collections.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-interface-and-bearing-20261025"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

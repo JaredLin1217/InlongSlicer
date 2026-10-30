@@ -1,0 +1,66 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-native-first-rearchitecture-revalidated-20261030",
+  "key": "organic-support-performance-architecture",
+  "type": "lesson",
+  "conclusion": "Run organic source topology repair before native OrcaSlicer toolpath generation, and keep full printed-path Clipper reconstruction as an explicit INLONG_SUPPORT_FULL_REPAIR fallback. On test.3mf this reduced the main Release slice to 197.8 seconds with zero log error or warning markers while preserving the source repair pass and 1696-file data directory.",
+  "scope": "InlongSlicer organic support slicing",
+  "modules": [
+    "TreeSupport3D",
+    "organic-support",
+    "toolpath-generation"
+  ],
+  "tags": [
+    "OrcaSlicer",
+    "native-first",
+    "Clipper",
+    "performance",
+    "support-repair",
+    "test.3mf"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "docs/evidence/organic-native-first-rearchitecture-20261028.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "d13bb73acaa7f30e1d8ba02cc50b0414e3a05052901cb9d5b7dc707e9b13be04",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "native-first organic support repair and measured Release validation"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "ef7a8dae7e24c7d79800b229d6044388acbc9b97b23cdf3d6cf1576bbe613bd9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "native-first organic support repair and measured Release validation"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-native-first-rearchitecture-20261028.json",
+      "sha256": "a00b8b429602e4d314d6eac02b48b4e20ba5a89d5a6136f157ebb24b731a8892",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "native-first organic support repair and measured Release validation"
+    }
+  ],
+  "verified_utc": "2026-10-30T04:17:25.284Z",
+  "verification": {
+    "method": "Source-bound revalidation on 2026-10-30: current source and evidence hashes refreshed after successful Release build (cmake --build build --config Release) and analyzer regression tests (4 tests passed); historical fixture conclusions retained without adding new parity claims.",
+    "summary": "Revalidated current source snapshots and retained the original evidence-scoped conclusion. The Release build returned 0 and scripts/tests/test_analyze_organic_support.py passed 4 tests; no new large-file or universal performance claim is introduced.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": "2027-01-26T07:07:06.9397691Z"
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-native-first-rearchitecture-20261028"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

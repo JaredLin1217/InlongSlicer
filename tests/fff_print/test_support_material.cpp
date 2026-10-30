@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <map>
 #include <tbb/global_control.h>
+#include <tbb/parallel_for.h>
 #include <boost/core/null_deleter.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
@@ -25,6 +26,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <functional>
+#include <fstream>
 #include <limits>
 #include <map>
 #include <mutex>
@@ -43,6 +45,295 @@
 
 using namespace Slic3r::Test;
 using namespace Slic3r;
+
+TEST_CASE("Local support overlap queries preserve native area thresholds and holes",
+          "[SupportMaterial][BearingCertificate][LocalAreaOverlap][Regression]")
+{
+    const double width = scale_(GENERATE(0.204, 0.408, 0.612, 1.224));
+    const double shift = GENERATE(0., 0.25, 1.5, 10.);
+    const bool hollow = GENERATE(false, true);
+    const bool interrupted = GENERATE(false, true);
+    const double rotation = GENERATE(0., 0.37);
+    auto circle = [&](double radius) {
+        Points points;
+        for (size_t i = 0; i < 64; ++i) {
+            const double angle = 2. * M_PI * i / 64.;
+            points.emplace_back(coord_t(std::llround(radius * std::cos(angle))),
+                coord_t(std::llround(radius * std::sin(angle))));
+        }
+        return Polygon(std::move(points));
+    };
+    ExPolygon region(circle(2. * width));
+    if (hollow) {
+        Polygon hole = circle(width);
+        hole.make_clockwise();
+        region.holes.push_back(std::move(hole));
+    }
+    Polygons foundation{circle(2. * width)};
+    if (hollow) {
+        Polygon hole = circle(width * 0.5);
+        hole.make_clockwise();
+        foundation.push_back(std::move(hole));
+    }
+    if (interrupted) {
+        const Polygon gap = BoundingBox(Point(coord_t(-0.25 * width), coord_t(-3. * width)),
+            Point(coord_t(0.25 * width), coord_t(3. * width))).polygon();
+        foundation = diff(foundation, Polygons{gap});
+    }
+    for (Polygon &polygon : foundation) polygon.translate(Point(coord_t(shift * width), 0));
+    region.rotate(rotation);
+    region.translate(Point::new_scale(1000., -500.));
+    for (Polygon &polygon : foundation) {
+        polygon.rotate(rotation);
+        polygon.translate(Point::new_scale(1000., -500.));
+    }
+    // Extra disjoint contours exercise rejection without changing winding in
+    // the subject; the nearby contour may contain it or cross a hole boundary.
+    for (size_t i = 0; i < 16; ++i) {
+        Polygon remote = circle(width);
+        remote.translate(Point::new_scale(-1000. - 10. * i, 500.));
+        foundation.push_back(std::move(remote));
+    }
+    auto bounds_of = [](const Polygons &polygons) {
+        std::vector<BoundingBox> bounds;
+        for (const Polygon &polygon : polygons) bounds.push_back(get_extents(polygon));
+        return bounds;
+    };
+    const double required = width * width * GENERATE(0., 0.05, 2., 12.);
+    const Polygons subject = to_polygons(region);
+    const bool expected = area(intersection(subject, foundation)) > required;
+    CHECK(TreeSupport3D::organic_support_local_overlap(subject, foundation,
+        bounds_of(foundation), required) == expected);
+    CHECK(TreeSupport3D::organic_support_local_overlap(subject, foundation, {}, required) == expected);
+    const auto index = TreeSupport3D::organic_support_overlap_index(foundation, size_t(64) << 20);
+    REQUIRE(index);
+    const bool certified = TreeSupport3D::organic_support_overlap_certificate(region, *index, required);
+    if (certified) CHECK(expected);
+    if (!interrupted && shift <= 0.25 && required <= width * width * 0.05) CHECK(certified);
+    const bool indexed_result = certified || TreeSupport3D::organic_support_local_overlap(subject, foundation,
+        bounds_of(foundation), required);
+    CHECK(indexed_result == expected);
+    CHECK_FALSE(TreeSupport3D::organic_support_overlap_index(foundation, 0));
+    if (hollow) {
+        Polygon in_hole = circle(width * 0.25);
+        in_hole.rotate(rotation);
+        in_hole.translate(Point::new_scale(1000., -500.));
+        const Polygons hole_mask{in_hole};
+        CHECK(intersection(subject, hole_mask).empty());
+        CHECK_FALSE(TreeSupport3D::organic_support_local_overlap(subject, hole_mask,
+            bounds_of(hole_mask), required));
+        const auto hole_index = TreeSupport3D::organic_support_overlap_index(hole_mask, size_t(64) << 20);
+        REQUIRE(hole_index);
+        CHECK_FALSE(TreeSupport3D::organic_support_overlap_certificate(region, *hole_index, required));
+    }
+}
+
+TEST_CASE("Overlap certificates retain thin closed bead rings and reject their empty holes",
+          "[SupportMaterial][LocalAreaOverlap][Regression]")
+{
+    const double width = scale_(GENERATE(0.204, 0.408, 0.612, 1.224));
+    const double radius = width * GENERATE(2., 10., 50.);
+    auto circle = [&](double r) {
+        Points points;
+        for (size_t i = 0; i < 128; ++i) {
+            const double angle = 2. * M_PI * i / 128.;
+            points.emplace_back(coord_t(std::llround(r * std::cos(angle))),
+                coord_t(std::llround(r * std::sin(angle))));
+        }
+        return Polygon(std::move(points));
+    };
+    ExPolygon ring(circle(radius));
+    Polygon hole = circle(radius - width * 0.5);
+    hole.make_clockwise();
+    ring.holes.push_back(hole);
+    const Polygons material = to_polygons(ring);
+    const auto index = TreeSupport3D::organic_support_overlap_index(material, size_t(16) << 20);
+    REQUIRE(index);
+    const double required = width * width * 0.002;
+    const bool certified = TreeSupport3D::organic_support_overlap_certificate(ring, *index, required);
+    CHECK(area(intersection(material, material)) > required);
+    if (radius <= 10. * width) CHECK(certified);
+    if (certified) CHECK(area(intersection(material, material)) > required);
+    const ExPolygon empty_center(circle(width * 0.25));
+    CHECK_FALSE(TreeSupport3D::organic_support_overlap_certificate(empty_center, *index, required));
+}
+
+TEST_CASE("Read-only overlap workers preserve native area decisions around holes",
+          "[SupportMaterial][LocalAreaOverlap][OverlapWorkers][Regression]")
+{
+    const size_t workers = GENERATE(size_t(1), size_t(4));
+    tbb::global_control concurrency(tbb::global_control::max_allowed_parallelism, workers);
+    const Polygon outer = BoundingBox(Point::new_scale(-12., -8.), Point::new_scale(12., 8.)).polygon();
+    Polygon hole = BoundingBox(Point::new_scale(-3., -3.), Point::new_scale(3., 3.)).polygon();
+    hole.make_clockwise();
+    const Polygons foundation = union_(Polygons{outer, hole});
+    const auto index = TreeSupport3D::organic_support_overlap_index(foundation, size_t(8) << 20, true);
+    REQUIRE(index);
+    std::vector<ExPolygon> queries;
+    for (size_t i = 0; i < 64; ++i)
+        queries.emplace_back(BoundingBox(Point::new_scale(-16. + 0.5 * i, -0.4),
+            Point::new_scale(-15.2 + 0.5 * i, 0.4)).polygon());
+    const double required = sqr(double(scale_(0.408))) * 0.05;
+    std::vector<char> serial(queries.size()), parallel(queries.size());
+    for (size_t i = 0; i < queries.size(); ++i)
+        serial[i] = TreeSupport3D::organic_support_overlap_certificate(queries[i], *index, required);
+    tbb::parallel_for(size_t(0), queries.size(), [&](size_t i) {
+        parallel[i] = TreeSupport3D::organic_support_overlap_certificate(queries[i], *index, required);
+    });
+    CHECK(serial == parallel);
+    for (size_t i = 0; i < queries.size(); ++i) {
+        const Polygons query = to_polygons(queries[i]);
+        const bool expected = area(intersection(query, foundation)) > required;
+        if (parallel[i]) CHECK(expected);
+        const bool actual = parallel[i] || TreeSupport3D::organic_support_local_overlap(query, foundation, {}, required);
+        CHECK(actual == expected);
+    }
+}
+
+TEST_CASE("A straight bridge certificate keeps native two-ended bearing rules",
+          "[SupportMaterial][BearingCertificate][Regression]")
+{
+    const double width = scale_(GENERATE(0.204, 0.408, 0.612, 1.224));
+    const double rotation = GENERATE(0., 0.37, 1.2);
+    const bool cantilever = GENERATE(false, true);
+    Polyline line{Points{Point::new_scale(-4., 0.), Point::new_scale(4., 0.)}};
+    Polygons foundation = offset(Polyline{Points{line.first_point(), line.first_point()}},
+        float(width), jtRound, scale_(0.001), etOpenRound);
+    if (!cantilever)
+        append(foundation, offset(Polyline{Points{line.last_point(), line.last_point()}},
+            float(width), jtRound, scale_(0.001), etOpenRound));
+    line.rotate(rotation);
+    line.translate(Point::new_scale(137., 143.));
+    for (Polygon &polygon : foundation) {
+        polygon.rotate(rotation);
+        polygon.translate(Point::new_scale(137., 143.));
+    }
+    std::vector<Linef> edges;
+    for (const Polygon &polygon : union_(foundation))
+        for (const Line &edge : polygon.lines())
+            edges.emplace_back(edge.a.cast<double>(), edge.b.cast<double>());
+    const AABBTreeLines::LinesDistancer<Linef> index(std::move(edges));
+    const bool certified = TreeSupport3D::organic_support_definitely_bridged(line, index, scale_(0.002));
+    CHECK(certified == !cantilever);
+    const bool native = TreeSupport3D::organic_support_unbacked_spans(line, foundation,
+        width * 0.5, width, scale_(0.002)).empty();
+    CHECK(certified == native);
+    Polyline bent = line;
+    const Point middle = ((line.first_point().cast<double>() + line.last_point().cast<double>()) * 0.5).cast<coord_t>();
+    bent.points.insert(bent.points.begin() + 1, middle + Point(0, coord_t(width)));
+    CHECK_FALSE(TreeSupport3D::organic_support_definitely_bridged(bent, index, scale_(0.002)));
+}
+
+TEST_CASE("A positive support bearing certificate preserves the native curved-wall checks",
+          "[SupportMaterial][BearingCertificate][Regression]")
+{
+    const double width = scale_(GENERATE(0.204, 0.408, 0.612, 1.224));
+    const double shift = GENERATE(0., 0.1, 0.7);
+    const bool curved = GENERATE(false, true);
+    const bool interrupted = GENERATE(false, true);
+    const size_t vertices = GENERATE(size_t(32), size_t(2048));
+    CAPTURE(width, shift, curved, interrupted, vertices);
+    Polyline line;
+    if (curved) {
+        for (size_t i = 0; i < vertices; ++i) {
+            const double angle = 2. * M_PI * i / vertices;
+            line.points.emplace_back(coord_t(std::llround(5. * width * std::cos(angle))),
+                coord_t(std::llround(5. * width * std::sin(angle))));
+        }
+        line.points.push_back(line.first_point());
+    } else
+        line.points = {Point(0, 0), Point(coord_t(8. * width), 0)};
+    Polyline previous = line;
+    previous.translate(Point(coord_t(std::llround(shift * width)), 0));
+    Polygons foundation = union_(offset(previous, float(width * 0.5), jtRound, scale_(0.001), etOpenRound));
+    if (interrupted) {
+        const double x = (curved ? 5. : 4.) * width;
+        const Polygon gap(Points{Point(coord_t(x - width), coord_t(-8. * width)),
+            Point(coord_t(x + width), coord_t(-8. * width)), Point(coord_t(x + width), coord_t(8. * width)),
+            Point(coord_t(x - width), coord_t(8. * width))});
+        foundation = diff(foundation, Polygons{gap});
+    }
+    std::vector<Linef> edges;
+    for (const Polygon &polygon : foundation)
+        for (const Line &edge : polygon.lines())
+            edges.emplace_back(edge.a.cast<double>(), edge.b.cast<double>());
+    const AABBTreeLines::LinesDistancer<Linef> index(std::move(edges));
+    const Polygons bead = offset(line, float(width * 0.5), jtRound, scale_(0.001), etOpenRound);
+    const double required = std::min(area(bead) * 0.05, width * width * 0.5);
+    const bool certified = TreeSupport3D::organic_support_definitely_backed(line, index, width, required);
+    if (certified) {
+        CHECK(TreeSupport3D::organic_support_unbacked_spans(line, foundation, width * 0.5, width,
+            scale_(0.002), 0., width * 0.5, curved).empty());
+        CHECK(area(intersection(bead, foundation)) >= required);
+    }
+    if (!interrupted && shift <= 0.1) CHECK(certified);
+    if (interrupted || shift >= 0.7) CHECK_FALSE(certified);
+}
+
+TEST_CASE("Support visibility routing preserves equal-distance corner ordering",
+          "[SupportMaterial][SupportRouting][Regression]")
+{
+    const Point from = Point::new_scale(-4., 0.), to = Point::new_scale(4., 0.);
+    ExPolygon region(Polygon{Points{Point::new_scale(-6., -3.), Point::new_scale(6., -3.),
+        Point::new_scale(6., 3.), Point::new_scale(-6., 3.)}});
+    Polygon hole{Points{Point::new_scale(-1., -1.), Point::new_scale(1., -1.),
+        Point::new_scale(1., 1.), Point::new_scale(-1., 1.)}};
+    hole.make_clockwise();
+    region.holes.push_back(std::move(hole));
+    const ExPolygons centers{region};
+    Points result{from};
+    REQUIRE(route_support_path(from, to, centers, offset_ex(centers, float(SCALED_EPSILON)), scale_(10.), result));
+    const Points expected{from, Point::new_scale(-1., -1.), Point::new_scale(1., -1.), to};
+    CHECK(result == expected);
+}
+
+TEST_CASE("Support visibility bounds keep point contacts and reject separated material",
+          "[SupportMaterial][SupportRouting][Regression]")
+{
+    const bool touching = GENERATE(false, true);
+    auto box = [](double x0, double y0, double x1, double y1) {
+        return ExPolygon(Polygon{Points{Point::new_scale(x0, y0), Point::new_scale(x1, y0),
+            Point::new_scale(x1, y1), Point::new_scale(x0, y1)}});
+    };
+    const ExPolygons centers{box(-3., -2., 0., 0.), touching ? box(0., 0., 2., 3.) : box(0.5, 0.5, 2., 3.)};
+    const Point from = Point::new_scale(-2., -1.), to = Point::new_scale(1., 2.);
+    Points result{from};
+    const ExPolygons visible = offset_ex(centers, float(SCALED_EPSILON));
+    CHECK(route_support_path(from, to, centers, visible, scale_(10.), result) == touching);
+    if (touching) {
+        CHECK(result.back() == to);
+        CHECK(diff_pl(Polylines{Polyline(result)}, visible).empty());
+    } else
+        CHECK(result == Points{from});
+}
+
+TEST_CASE("Support visibility workers preserve the native detour and settlement order",
+          "[SupportMaterial][SupportRouting][Regression]")
+{
+    const double rotation = GENERATE(0., 0.37);
+    ExPolygon domain(BoundingBox(Point::new_scale(-6., -4.), Point::new_scale(6., 4.)).polygon());
+    Polygon hole;
+    for (size_t i = 0; i < 256; ++i) {
+        const double angle = -2. * M_PI * i / 256.;
+        hole.points.push_back(Point::new_scale(1.5 * std::cos(angle), std::sin(angle)));
+    }
+    domain.holes.push_back(std::move(hole));
+    domain.rotate(rotation);
+    Polyline ends{Points{Point::new_scale(-4., 0.), Point::new_scale(4., 0.)}};
+    ends.rotate(rotation);
+    const ExPolygons centers{domain}, visible = offset_ex(centers, float(SCALED_EPSILON));
+    auto route = [&](size_t workers) {
+        tbb::global_control limit(tbb::global_control::max_allowed_parallelism, workers);
+        Points result{ends.first_point()};
+        const bool found = route_support_path(ends.first_point(), ends.last_point(), centers, visible, scale_(10.), result);
+        return std::make_pair(found, result);
+    };
+    const auto serial = route(1), parallel = route(4);
+    REQUIRE(serial.first);
+    CHECK(parallel == serial);
+    CHECK(serial.second.back() == ends.last_point());
+    CHECK(diff_pl(Polylines{Polyline(serial.second)}, visible).empty());
+}
 
 TEST_CASE("Organic trunk outer walls close at every branch diameter",
           "[SupportMaterial][OrganicTree][ClosedTrunks][Regression]")
@@ -71,6 +362,40 @@ TEST_CASE("Organic trunk outer walls close at every branch diameter",
         CHECK(path.first_point() == path.last_point());
         CHECK_FALSE(path.can_reverse());
     });
+}
+
+TEST_CASE("Organic hollow trunks omit sub-bead pinhole walls and preserve printable voids",
+          "[SupportMaterial][OrganicTree][ClosedTrunks][Regression]")
+{
+    const double width = GENERATE(0.4, 0.6);
+    const double hole_size = GENERATE(0.1, 2.);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({{"enable_support", true}, {"support_type", "tree(auto)"},
+        {"support_style", "organic"}, {"tree_support_wall_count", 1}});
+    Print print;
+    Model model;
+    init_print({make_cube(10., 10., 10.)}, print, model, config);
+    const SupportParameters params(*print.objects().front());
+    ExPolygon region;
+    region.contour = BoundingBox(Point::new_scale(-5., -5.), Point::new_scale(5., 5.)).polygon();
+    Polygon hole = BoundingBox(Point::new_scale(-hole_size * 0.5, -hole_size * 0.5),
+        Point::new_scale(hole_size * 0.5, hole_size * 0.5)).polygon();
+    hole.make_clockwise();
+    region.holes.push_back(hole);
+    const Flow flow(float(width), 0.2f, float(width));
+    ExtrusionEntityCollection generated;
+    tree_supports_generate_paths(generated.entities, to_polygons(region), flow, params);
+    size_t walls = 0;
+    bool keeps_outer = false;
+    for_each_extrusion_path(generated, [&](const ExtrusionPath &path) {
+        ++walls;
+        CHECK(path.first_point() == path.last_point());
+        const auto bounds = get_extents(path.polyline.to_polyline());
+        const BoundingBox expected = get_extents(region.contour);
+        keeps_outer |= bounds.min == expected.min && bounds.max == expected.max;
+    });
+    CHECK(keeps_outer);
+    CHECK(walls == (hole_size < width ? 1 : 2));
 }
 
 TEST_CASE("Organic sheath keeps every outer trunk contour closed",
@@ -125,6 +450,12 @@ TEST_CASE("Organic support distinguishes two-ended straight bridges from curved 
     CHECK_FALSE(TreeSupport3D::organic_support_unbacked_spans(
         Polyline{Points{point(2., 0.), point(4., 0.), point(4., 3.), point(0., 3.), point(0., 0.), point(2., 0.)}},
         around_seam, scale_(width * 0.5), scale_(width), scale_(0.002), 0., -1., true).empty());
+    const Polygons short_gap{rectangle(-1., -1., 2. - width * 0.9, 4.), rectangle(2., -1., 5., 4.)};
+    const Polyline closed{Points{point(1., 0.), point(4., 0.), point(4., 3.), point(0., 3.), point(0., 0.), point(1., 0.)}};
+    CHECK(TreeSupport3D::organic_support_unbacked_spans(closed, short_gap,
+        0., scale_(width), scale_(0.002), 0., -1., true).empty());
+    CHECK_FALSE(TreeSupport3D::organic_support_unbacked_spans(closed, one_end,
+        0., scale_(width), scale_(0.002), 0., -1., true).empty());
     const Polyline bow{Points{point(0., 0.), point(2.5, width * 0.2), point(5., 0.)}};
     CHECK(TreeSupport3D::organic_support_unbacked_spans(bow, two_ends, scale_(width * 0.5), scale_(width), scale_(0.002)).empty());
     CHECK_FALSE(TreeSupport3D::organic_support_unbacked_spans(bow, two_ends, scale_(width * 0.5), scale_(width), scale_(0.002), scale_(width * 0.45)).empty());
@@ -150,18 +481,17 @@ TEST_CASE("Closed support continuations reserve bearing under their source road"
         0., scale_(width), scale_(0.002), 0., -1., true).empty());
 }
 
-static TriangleMesh support_curved_tunnel()
+static TriangleMesh support_curved_tunnel(float outer_radius = 9.5f, float inner_radius = 7.5f,
+    float tunnel_length = 24.f, bool flat_foot = true)
 {
     constexpr int segments = 128;
-    constexpr float outer_radius = 9.5f;
-    constexpr float inner_radius = 7.5f;
     indexed_triangle_set mesh;
     for (int end = 0; end < 2; ++end)
         for (int ring = 0; ring < 2; ++ring)
             for (int index = 0; index < segments; ++index) {
                 const double angle = 2. * M_PI * index / segments;
                 const float radius = ring == 0 ? outer_radius : inner_radius;
-                mesh.vertices.emplace_back(24.f * end, float(radius * std::cos(angle)),
+                mesh.vertices.emplace_back(tunnel_length * end, float(radius * std::cos(angle)),
                     outer_radius + float(radius * std::sin(angle)));
             }
     auto quad = [&mesh](int a, int b, int c, int d) {
@@ -176,10 +506,178 @@ static TriangleMesh support_curved_tunnel()
         quad(2 * segments + index, 2 * segments + next, 3 * segments + next, 3 * segments + index);
     }
     TriangleMesh result(std::move(mesh));
-    TriangleMesh foot = make_cube(24.f, 19.f, 2.f);
-    foot.translate(0.f, -9.5f, 0.f);
-    result.merge(foot);
+    if (flat_foot) {
+        TriangleMesh foot = make_cube(tunnel_length, 2.f * outer_radius, 2.f);
+        foot.translate(0.f, -outer_radius, 0.f);
+        result.merge(foot);
+    }
     return result;
+}
+
+TEST_CASE("Independent organic bottom contacts retain a printed handoff to their trunks",
+          "[SupportMaterial][OrganicTree][BottomContact][Regression]")
+{
+    const double bottom_gap = 0.17;
+    const double minimum_height = 0.05;
+    const double maximum_height = 0.3;
+    const char *body_pattern = GENERATE("rectilinear", "hollow");
+    CAPTURE(body_pattern);
+    auto config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        {"enable_support", true}, {"support_type", "tree(auto)"}, {"support_style", "organic"},
+        {"nozzle_diameter", "0.4"}, {"layer_height", 0.2}, {"initial_layer_print_height", 0.18},
+        {"min_layer_height", "0.05"}, {"max_layer_height", "0.3"},
+        {"support_top_z_distance", bottom_gap}, {"support_bottom_z_distance", bottom_gap},
+        {"support_object_xy_distance", 0.4}, {"support_on_build_plate_only", false},
+        {"support_base_pattern", body_pattern}, {"support_base_pattern_spacing", 5.},
+        {"tree_support_wall_count", 1}, {"support_threshold_angle", 40}, {"bridge_no_support", false},
+        {"tree_support_branch_angle_organic", 30}, {"tree_support_branch_diameter_organic", 3.},
+        {"tree_support_branch_distance_organic", 1.}, {"tree_support_tip_diameter", 2.},
+        {"support_interface_top_layers", 4}, {"support_interface_bottom_layers", 2},
+        {"support_top_contact_pattern", "concentric"}, {"support_bottom_contact_pattern", "concentric"},
+        {"support_top_contact_spacing", 0.05}, {"support_bottom_contact_spacing", 0.05},
+        {"support_interface_pattern", "rectilinear"}, {"support_interface_spacing", 0.4},
+        {"independent_support_layer_height", true}, {"independent_support_top_contact_layer_height", true}
+    });
+    Print print;
+    init_and_process_print({support_curved_tunnel(4.f, 2.7f, 10.f, false)}, print, config);
+    const PrintObject &object = *print.objects().front();
+    size_t checked_contacts = 0;
+    size_t checked_trunks = 0;
+    for (const SupportLayer *layer : object.support_layers()) {
+        Polygons contacts;
+        for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+            if (path.is_force_no_extrusion() || path.mm3_per_mm <= 0.)
+                return;
+            CHECK(path.height >= minimum_height - EPSILON);
+            CHECK(path.height <= maximum_height + EPSILON);
+            Polygons previous_material;
+            for (const SupportLayer *below : object.support_layers())
+                if (below->print_z > layer->print_z - path.height + EPSILON &&
+                    below->print_z < layer->print_z - EPSILON)
+                    for_each_extrusion_path(below->support_fills, [&](const ExtrusionPath &predecessor) {
+                        if (!predecessor.is_force_no_extrusion() && predecessor.mm3_per_mm > 0.)
+                            append(previous_material, predecessor.polygons_covered_by_width());
+                    });
+            CAPTURE(layer->print_z, path.height);
+            CHECK(area(intersection(path.polygons_covered_by_width(), union_(previous_material))) <= sqr(double(scale_(0.1))));
+            if (path.role() == erSupportMaterial && !path.can_reverse() &&
+                path.first_point() == path.last_point() && layer->print_z - path.height > EPSILON) {
+                ++checked_trunks;
+                Polygons foundation;
+                for (const SupportLayer *below : object.support_layers())
+                    if (below->print_z >= layer->print_z - path.height - EPSILON &&
+                        below->print_z < layer->print_z - EPSILON)
+                        for_each_extrusion_path(below->support_fills, [&](const ExtrusionPath &predecessor) {
+                            if (!predecessor.is_force_no_extrusion() && predecessor.mm3_per_mm > 0.)
+                                append(foundation, predecessor.polygons_covered_by_width());
+                        });
+                for (const Layer *floor : object.layers())
+                    if (std::abs(floor->print_z - (layer->print_z - path.height - bottom_gap)) <= EPSILON)
+                        append(foundation, intersection(path.polygons_covered_by_width(), to_polygons(floor->lslices)));
+                CAPTURE(layer->print_z);
+                const Polylines unbacked = TreeSupport3D::organic_support_unbacked_spans(
+                    path.polyline.to_polyline(), union_(foundation), scale_(path.width * 0.5),
+                    scale_(path.width), scale_(0.002), 0., scale_(path.width * 0.5), true);
+                if (!unbacked.empty()) {
+                    if (const char *file = std::getenv("INLONG_TEST_HANDOFF_TRACE")) {
+                        std::ofstream out(file, std::ios::app);
+                        auto points = [&](const Points &pts) {
+                            out << '[';
+                            for (size_t i = 0; i < pts.size(); ++i) {
+                                if (i) out << ',';
+                                out << '[' << unscale<double>(pts[i].x()) << ',' << unscale<double>(pts[i].y()) << ']';
+                            }
+                            out << ']';
+                        };
+                        out << "{\"z\":" << layer->print_z << ",\"height\":" << path.height
+                            << ",\"width\":" << path.width << ",\"path\":";
+                        points(path.polyline.to_polyline().points);
+                        out << ",\"foundation\":[";
+                        for (size_t i = 0; i < foundation.size(); ++i) {
+                            if (i) out << ',';
+                            points(foundation[i].points);
+                        }
+                        out << "],\"unbacked\":[";
+                        for (size_t i = 0; i < unbacked.size(); ++i) {
+                            if (i) out << ',';
+                            points(unbacked[i].points);
+                        }
+                        out << "]}\n";
+                    }
+                }
+                CHECK(unbacked.empty());
+            }
+            if (path.role() != erSupportMaterialInterface)
+                return;
+            const double floor_z = layer->print_z - path.height - bottom_gap;
+            for (const Layer *floor : object.layers())
+                if (std::abs(floor->print_z - floor_z) <= EPSILON)
+                    append(contacts, intersection(path.polygons_covered_by_width(), to_polygons(floor->lslices)));
+        });
+        if (contacts.empty())
+            continue;
+        Polygons successors;
+        for (const SupportLayer *above : object.support_layers()) {
+            if (above->print_z <= layer->print_z + EPSILON ||
+                above->print_z > layer->print_z + maximum_height + EPSILON)
+                continue;
+            for_each_extrusion_path(above->support_fills, [&](const ExtrusionPath &path) {
+                if (path.is_force_no_extrusion() || path.mm3_per_mm <= 0.)
+                    return;
+                const double bottom = above->print_z - path.height;
+                const Polygons bead = path.polygons_covered_by_width();
+                if (bottom <= layer->print_z + EPSILON)
+                    append(successors, bead);
+                if (bottom < layer->print_z - EPSILON) {
+                    CAPTURE(layer->print_z, above->print_z, bottom);
+                    CHECK(area(intersection(bead, contacts)) <= sqr(double(scale_(0.1))));
+                }
+            });
+        }
+        for (const ExPolygon &component : union_ex(contacts)) {
+            if (component.area() <= sqr(double(scale_(0.1))))
+                continue;
+            ++checked_contacts;
+            CAPTURE(layer->print_z, component.area());
+            CHECK(area(intersection(to_polygons(component), successors)) > sqr(double(scale_(0.001))));
+        }
+    }
+    CHECK(checked_contacts > 0);
+    if (std::string(body_pattern) == "hollow")
+        CHECK(checked_trunks > 0);
+}
+
+TEST_CASE("Organic roof heads divide a straight strip into equal intervals",
+          "[SupportMaterial][OrganicTree][RoofSampling][Regression]")
+{
+    const double length = GENERATE(10., 23.);
+    const double angle = GENERATE(0., M_PI / 6., M_PI / 2.);
+    const double spacing = 3.;
+    Polygon strip{Points{Point::new_scale(-0.5, -length / 2.), Point::new_scale(0.5, -length / 2.),
+        Point::new_scale(0.5, length / 2.), Point::new_scale(-0.5, length / 2.)}};
+    strip.rotate(angle);
+    const Point translation = Point::new_scale(13.25, -7.75);
+    strip.translate(translation);
+    const Polylines samples = TreeSupport3D::organic_roof_tip_positions(Polygons{strip}, scale_(spacing));
+    REQUIRE(samples.size() == 1);
+    const Points &points = samples.front().points;
+    REQUIRE(points.size() >= 3);
+    const double expected = length / std::ceil(length / spacing);
+    for (size_t i = 0; i < points.size(); ++i) {
+        CHECK(contains(offset(Polygons{strip}, scale_(0.00001)), points[i]));
+        if (i > 0)
+            CHECK_THAT(unscale<double>((points[i] - points[i - 1]).cast<double>().norm()),
+                Catch::Matchers::WithinAbs(expected, 0.00001));
+    }
+    Polygon moved(strip);
+    const Point offset = Point::new_scale(-22.5, 13.4);
+    moved.translate(offset);
+    const Polylines again = TreeSupport3D::organic_roof_tip_positions(Polygons{moved}, scale_(spacing));
+    REQUIRE(again.size() == samples.size());
+    REQUIRE(again.front().size() == points.size());
+    for (size_t i = 0; i < points.size(); ++i)
+        CHECK((again.front()[i] - offset) == points[i]);
 }
 
 TEST_CASE("Organic support components reach a printed predecessor or a model landing on curved floors",
@@ -252,6 +750,7 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
     };
     std::ostringstream unanchored_locations;
     for (const SupportLayer *layer : object.support_layers()) {
+        Polygons ordered_plane;
         Polygons footprint;
         for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
             if (!path.is_force_no_extrusion() && path.mm3_per_mm > 0.)
@@ -284,7 +783,7 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
         };
         visit_road(layer->support_fills);
         for (const ExtrusionPaths &paths : roads) {
-            if ((std::string(body_pattern) == "hollow" || !paths.front().can_reverse()) && layer->print_z > layer_height + EPSILON &&
+            if (!paths.front().can_reverse() && layer->print_z > layer_height + EPSILON &&
                 paths.front().role() == erSupportMaterial && paths.front().first_point() != paths.back().last_point()) {
                 ++open_hollow_trunks;
                 unanchored_locations << " open trunk Z=" << layer->print_z;
@@ -318,7 +817,12 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
                         append(model_contact, intersection(bead, to_polygons(model_layer->lslices)));
             }
             const double road_area = area(union_(road));
-            if (grounded || road_area < sqr(double(scale_(nozzle))) * 0.05)
+            if (grounded) {
+                if (layer->support_fills.no_sort)
+                    append(ordered_plane, road);
+                continue;
+            }
+            if (road_area < sqr(double(scale_(nozzle))) * 0.05)
                 continue;
             Polygons previous;
             Polyline centerline;
@@ -334,6 +838,13 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
                     if (z >= layer->print_z - path.height - EPSILON && z < layer->print_z - EPSILON)
                         append(previous, intersection(round_bead(path), below));
             }
+            // Only already validated roads in an explicitly ordered layer
+            // may supply lateral bearing. Sortable neighbours cannot do so.
+            if (layer->support_fills.no_sort) {
+                const Polygons lateral = intersection(union_(road), union_(ordered_plane));
+                append(previous, lateral);
+                append(bearing, lateral);
+            }
             const Polylines unsupported = TreeSupport3D::organic_support_unbacked_spans(centerline,
                 union_(previous, model_contact), scale_(min_width * 0.5), scale_(min_width), scale_(0.002), 0., scale_(min_width * 0.5),
                 paths.front().role() == erSupportMaterial && !paths.front().can_reverse() && centerline.is_closed());
@@ -345,13 +856,16 @@ TEST_CASE("Organic support components reach a printed predecessor or a model lan
                     unscale<double>(centerline.first_point().y());
             }
             const double minimum_bearing = std::min(road_area * 0.05, sqr(double(scale_(max_width))) * 0.5);
-            if (area(union_(model_contact)) <= sqr(double(scale_(0.001))) &&
-                area(union_(bearing)) + sqr(double(scale_(0.001))) < minimum_bearing) {
+            const bool weak_bearing = area(union_(model_contact)) <= sqr(double(scale_(0.001))) &&
+                area(union_(bearing)) + sqr(double(scale_(0.001))) < minimum_bearing;
+            if (weak_bearing) {
                 ++weakly_anchored_strokes;
                 const BoundingBox bounds = get_extents(road);
                 unanchored_locations << " weak road Z=" << layer->print_z << " XY=" <<
                     unscale<double>(bounds.min.x()) << "," << unscale<double>(bounds.min.y());
             }
+            if (layer->support_fills.no_sort && !weak_bearing && unsupported.empty())
+                append(ordered_plane, road);
         }
         for (const ExPolygon &component : union_ex(footprint)) {
             if (component.area() < sqr(scale_(nozzle)) * 0.05)
@@ -572,6 +1086,193 @@ std::vector<const SupportLayer *> nonempty_support_layers(const Print &print)
         if (layer != nullptr && layer->has_extrusions())
             result.push_back(layer);
     return result;
+}
+
+TEST_CASE("Organic merge placement is deterministic and keeps valid support layer heights",
+          "[SupportMaterial][OrganicTree][Regression]")
+{
+    const TriangleMesh mesh = support_curved_tunnel();
+    DynamicPrintConfig config = organic_support_config(true, true, 0.2, 0.17, 0.05, 0.4);
+    config.set_deserialize_strict({
+        {"support_bottom_z_distance", "0.17"},
+        {"support_interface_bottom_layers", "2"},
+        {"tree_support_branch_distance_organic", "1"}
+    });
+    Print first_print, second_print;
+    init_and_process_print({mesh}, first_print, config);
+    init_and_process_print({mesh}, second_print, config);
+
+    const auto first_layers = nonempty_support_layers(first_print);
+    const auto second_layers = nonempty_support_layers(second_print);
+    REQUIRE(first_layers.size() > 10);
+    REQUIRE(first_layers.size() == second_layers.size());
+    double previous_z = 0.;
+    for (size_t index = 0; index < first_layers.size(); ++index) {
+        const SupportLayer *first = first_layers[index];
+        const SupportLayer *second = second_layers[index];
+        REQUIRE(first->print_z > previous_z + EPSILON);
+        REQUIRE(first->height >= 0.05 - EPSILON);
+        REQUIRE(first->height <= 0.4 + EPSILON);
+        REQUIRE_THAT(second->print_z, Catch::Matchers::WithinAbs(first->print_z, EPSILON));
+        REQUIRE_THAT(second->height, Catch::Matchers::WithinAbs(first->height, EPSILON));
+        REQUIRE(second->support_fills.entities.size() == first->support_fills.entities.size());
+        std::vector<ExtrusionPath> first_paths;
+        for_each_extrusion_path(first->support_fills, [&](const ExtrusionPath &path) { first_paths.push_back(path); });
+        size_t path_index = 0;
+        for_each_extrusion_path(second->support_fills, [&](const ExtrusionPath &path) {
+            REQUIRE(path_index < first_paths.size());
+            const ExtrusionPath &reference = first_paths[path_index++];
+            CHECK(path.role() == reference.role());
+            CHECK_THAT(path.width, Catch::Matchers::WithinAbs(reference.width, EPSILON));
+            CHECK_THAT(path.height, Catch::Matchers::WithinAbs(reference.height, EPSILON));
+            CHECK(path.polyline.to_polyline().points == reference.polyline.to_polyline().points);
+        });
+        REQUIRE(path_index == first_paths.size());
+        previous_z = first->print_z;
+    }
+}
+
+TEST_CASE("Organic tunnel contacts retain the model gap without growing intermediate interfaces",
+          "[SupportMaterial][OrganicTree][RoofSampling][Regression]")
+{
+    constexpr double layer_height = 0.2;
+    constexpr double bottom_gap = 0.17;
+    const double nozzle = GENERATE(0.4, 0.6);
+    const bool omit_bridges = GENERATE(false, true);
+    const TriangleMesh mesh = support_curved_tunnel(3.75f, 2.5f, 10.f, false);
+    DynamicPrintConfig config = organic_support_config(true, true, layer_height, bottom_gap, 0.05, 0.3);
+    config.set_deserialize_strict({
+        {"nozzle_diameter", std::to_string(nozzle)}, {"support_bottom_z_distance", bottom_gap},
+        {"printable_area", "-100x-100,100x-100,100x100,-100x100"},
+        {"support_object_xy_distance", 0.4}, {"support_object_first_layer_gap", 0.},
+        {"support_interface_bottom_layers", 2}, {"support_interface_top_layers", 4},
+        {"support_base_pattern", "rectilinear"}, {"support_base_pattern_spacing", 5.},
+        {"support_interface_pattern", "rectilinear"}, {"support_interface_spacing", 0.4},
+        {"support_top_contact_pattern", "concentric"}, {"support_bottom_contact_pattern", "concentric"},
+        {"support_top_contact_spacing", 0.05}, {"support_bottom_contact_spacing", 0.05},
+        {"tree_support_branch_diameter_organic", 3.}, {"tree_support_tip_diameter", 2.},
+        {"tree_support_branch_distance_organic", 1.}, {"tree_support_branch_angle_organic", 30},
+        {"tree_support_top_rate", "30%"}, {"support_threshold_angle", 40},
+        {"bridge_no_support", omit_bridges}, {"max_bridge_length", 10.}
+    });
+    Print print;
+    init_and_process_print({mesh}, print, config);
+    const PrintObject &object = *print.objects().front();
+    BoundingBox bounds;
+    for (const Layer *layer : object.layers())
+        bounds.merge(get_extents(layer->lslices));
+    const Point center = bounds.center();
+    double floor_z = 0.;
+    double ceiling_z = std::numeric_limits<double>::infinity();
+    for (const Layer *layer : object.layers())
+        if (contains(to_polygons(layer->lslices), center)) {
+            if (layer->print_z < 3.75)
+                floor_z = std::max(floor_z, layer->print_z);
+            else
+                ceiling_z = std::min(ceiling_z, layer->bottom_z());
+        }
+    REQUIRE(floor_z > 0.);
+    const coord_t half_length = scale_(4.);
+    const coord_t half_width = scale_(0.6);
+    const Polygons interior{Polygon{Points{center + Point(-half_length, -half_width),
+        center + Point(half_length, -half_width), center + Point(half_length, half_width),
+        center + Point(-half_length, half_width)}}};
+    const coord_t exterior_margin = scaled<coord_t>(nozzle);
+    const coord_t exterior_depth = scaled<coord_t>(10.);
+    const Polygons exterior{
+        BoundingBox(Point(center.x() - half_length, bounds.min.y() - exterior_depth),
+            Point(center.x() + half_length, bounds.min.y() - exterior_margin)).polygon(),
+        BoundingBox(Point(center.x() - half_length, bounds.max.y() + exterior_margin),
+            Point(center.x() + half_length, bounds.max.y() + exterior_depth)).polygon()};
+    Polygons floor;
+    for (const Layer *layer : object.layers())
+        if (std::abs(layer->print_z - floor_z) <= EPSILON)
+            floor = to_polygons(layer->lslices);
+    double first_contact_bottom = std::numeric_limits<double>::infinity();
+    double stray_interface = 0.;
+    double stray_bottom_contact = 0.;
+    double orphan_exterior_body = 0.;
+    double last_body_z = 0.;
+    double last_contact_z = 0.;
+    for (const SupportLayer *layer : object.support_layers())
+        for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+            if (!is_support(path.role()) || path.mm3_per_mm <= 0.)
+                return;
+            CHECK(path.height >= 0.05 - EPSILON);
+            const Polylines road{path.polyline.to_polyline()};
+            if (path.role() == erSupportMaterial && layer->print_z > floor_z + 0.5 && layer->print_z < ceiling_z - bottom_gap)
+                orphan_exterior_body += unscale<double>(total_length(intersection_pl(road, exterior)));
+            if (path.role() == erSupportMaterialInterface &&
+                std::abs(layer->print_z - path.height - floor_z - bottom_gap) <= 0.01)
+                stray_bottom_contact += unscale<double>(total_length(diff_pl(road, offset(floor, scale_(0.01)))));
+            const Polylines clipped = intersection_pl(Polylines{path.polyline.to_polyline()}, interior);
+            if (clipped.empty())
+                return;
+            if (path.role() == erSupportMaterial) {
+                last_body_z = std::max(last_body_z, layer->print_z);
+                return;
+            }
+            last_contact_z = std::max(last_contact_z, layer->print_z);
+            first_contact_bottom = std::min(first_contact_bottom, layer->print_z - path.height);
+            if (layer->print_z > floor_z + bottom_gap + 3. * layer_height && layer->print_z < 4.4)
+                stray_interface += unscale<double>(total_length(clipped));
+        });
+    REQUIRE(std::isfinite(first_contact_bottom));
+    CHECK_THAT(first_contact_bottom - floor_z, Catch::Matchers::WithinAbs(bottom_gap, 0.01));
+    CHECK_THAT(stray_interface, Catch::Matchers::WithinAbs(0., 0.001));
+    CHECK_THAT(stray_bottom_contact, Catch::Matchers::WithinAbs(0., 0.001));
+    CHECK_THAT(orphan_exterior_body, Catch::Matchers::WithinAbs(0., 0.001));
+    REQUIRE(last_body_z > 0.);
+    REQUIRE(last_contact_z > 0.);
+    CHECK(last_body_z < last_contact_z - EPSILON);
+    REQUIRE(std::isfinite(ceiling_z));
+    if (!omit_bridges)
+        CHECK_THAT(ceiling_z - last_contact_z, Catch::Matchers::WithinAbs(bottom_gap, 0.01));
+    else
+        CHECK(ceiling_z - last_contact_z > bottom_gap + 0.01);
+}
+
+TEST_CASE("Tree bridge support follows the bridge exclusion switch",
+          "[SupportMaterial][TreeBridge][Regression]")
+{
+    const char *style = GENERATE("organic", "tree_slim", "tree_strong", "tree_hybrid");
+    CAPTURE(style);
+    TriangleMesh mesh = make_cube(4.f, 8.f, 8.f);
+    mesh.translate(-10.f, -4.f, 0.f);
+    TriangleMesh other = make_cube(4.f, 8.f, 8.f);
+    other.translate(6.f, -4.f, 0.f);
+    TriangleMesh roof = make_cube(20.f, 8.f, 2.f);
+    roof.translate(-10.f, -4.f, 8.f);
+    mesh.merge(other);
+    mesh.merge(roof);
+    auto config = organic_support_config(true, true, 0.2, 0.17, 0.05, 0.3);
+    config.set_deserialize_strict({{"support_style", style}, {"nozzle_diameter", "0.4"},
+        {"printable_area", "-100x-100,100x-100,100x100,-100x100"},
+        {"support_object_first_layer_gap", 0.}, {"max_bridge_length", 100.},
+        {"support_remove_small_overhang", false}});
+    auto supported_length = [&](bool omit_bridges) {
+        config.set_deserialize_strict({{"bridge_no_support", omit_bridges}});
+        Print print;
+        init_and_process_print({mesh}, print, config);
+        const PrintObject &object = *print.objects().front();
+        const Point center = get_extents(object.layers().back()->lslices).center();
+        const Point half = Point::new_scale(2., 2.);
+        const Polygons window{BoundingBox(center - half, center + half).polygon()};
+        double length = 0.;
+        for (const SupportLayer *layer : object.support_layers())
+            if (layer->print_z < 8. + EPSILON)
+                for_each_extrusion_path(layer->support_fills, [&](const ExtrusionPath &path) {
+                    if (path.role() == erSupportMaterialInterface)
+                        length += unscale<double>(total_length(intersection_pl(Polylines{path.polyline.to_polyline()}, window)));
+                });
+        return length;
+    };
+    const double supported = supported_length(false);
+    const double omitted = supported_length(true);
+    CHECK(supported > 1.);
+    // Roofs beside the span may still project some interface into the window.
+    // Disabling bridge exclusion must restore the bridge's own coverage.
+    CHECK(omitted < supported);
 }
 
 bool is_on_regular_grid(double z, double layer_height)
@@ -2640,7 +3341,9 @@ TEST_CASE("Zero-gap organic support keeps a tilted cube covered", "[SupportMater
     if (gaps[2] == 0.) {
         REQUIRE(*zero_layers.rbegin() >= *normal_layers.rbegin() - 0.3 - EPSILON);
         const double expected_last_z = gaps[0] == 0. ? 60.5 : *normal_layers.rbegin();
-        REQUIRE_THAT(*zero_layers.rbegin(), Catch::Matchers::WithinAbs(expected_last_z, 0.3));
+        // GCodeReader stores Z as float. Subtracting its two rounded values
+        // can put an exact one-layer difference a few nanometers over 0.3 mm.
+        REQUIRE_THAT(*zero_layers.rbegin(), Catch::Matchers::WithinAbs(expected_last_z, 0.3 + EPSILON));
     } else {
         REQUIRE(*zero_layers.rbegin() > 0.);
     }
@@ -3206,6 +3909,721 @@ TEST_CASE("Contact and interface wall counts remain independent even with matchi
     CHECK(interface_count == size_t(interface_walls));
 }
 
+TEST_CASE("Concentric contact rings remain complete around one narrow center finish",
+          "[SupportMaterial][ContactWalls][ConcentricContact][Regression]")
+{
+    const double angle = GENERATE(0., M_PI / 6., M_PI / 2.);
+    const double width = GENERATE(2.2, 3.1);
+    CAPTURE(angle, width);
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    ExPolygons regions = offset_ex(offset_ex(rectangular_area(-width / 2., -6., width / 2., 6.), -scale_(0.4)),
+        scale_(0.4), jtRound, scale_(0.001));
+    for (ExPolygon &region : regions)
+        region.rotate(angle);
+    auto filler = std::unique_ptr<Fill>(Fill::new_from_type(ipConcentric));
+    filler->spacing = flow.spacing();
+    filler->set_bounding_box(get_extents(regions));
+    filler->angle = 0.;
+    FillParams params;
+    params.density = flow.spacing() / (flow.spacing() + 0.05);
+    params.flow = flow;
+    params.fill_concentric_gaps = true;
+    params.preserve_short_paths = true;
+    ExtrusionEntityCollection paths;
+    fill_support_interface_with_walls(paths.entities, regions, filler.get(), params,
+        erSupportMaterialInterface, flow, 1, true);
+    size_t rings = 0, center_finishes = 0;
+    for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+        const Polyline line = path.polyline.to_polyline();
+        if (line.is_closed())
+            ++rings;
+        else {
+            ++center_finishes;
+            // A center finish follows the long axis, rather than cross-hatching
+            // it or leaving two partially cut concentric sides.
+            Polyline aligned = line;
+            aligned.rotate(-angle);
+            const BoundingBox bounds = get_extents(aligned);
+            CHECK(unscale<double>(bounds.size().x()) < flow.width());
+            CHECK(unscale<double>(bounds.size().y()) > 8.);
+        }
+        CHECK(path.role() == erSupportMaterialInterface);
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(flow.width(), 0.00001));
+    });
+    CHECK(rings >= 2);
+    CHECK(center_finishes == 1);
+}
+
+TEST_CASE("Independent support heights keep concentric interface rings complete",
+          "[SupportMaterial][ContactWalls][ConcentricContact][InterfaceContinuity][Regression]")
+{
+    const double height = GENERATE(0.05, 0.12, 0.2, 0.35);
+    const double angle = GENERATE(0., M_PI / 6.);
+    const double width = GENERATE(2.2, 4.2);
+    CAPTURE(height, angle, width);
+    const Flow reference(0.408f, 0.2f, 0.4f);
+    const Flow flow = reference.with_height(float(height));
+    ExPolygons regions = offset_ex(offset_ex(rectangular_area(-width / 2., -6., width / 2., 6.), -scale_(0.4)),
+        scale_(0.4), jtRound, scale_(0.001));
+    for (ExPolygon &region : regions)
+        region.rotate(angle);
+    auto filler = std::unique_ptr<Fill>(Fill::new_from_type(ipConcentric));
+    // The planner aligns fillers using the nominal support height, while
+    // an independent contact layer can use a different physical bead height.
+    filler->spacing = reference.spacing();
+    filler->angle = 0.;
+    filler->set_bounding_box(get_extents(regions));
+    FillParams params;
+    params.density = reference.spacing() / (reference.spacing() + 0.05);
+    params.dont_adjust = true;
+    params.flow = flow;
+    params.fill_concentric_gaps = true;
+    params.preserve_short_paths = true;
+    ExtrusionEntityCollection paths;
+    fill_support_interface_with_walls(paths.entities, regions, filler.get(), params,
+        erSupportMaterialInterface, flow, 1, true);
+    size_t rings = 0, center_finishes = 0;
+    std::vector<double> ring_insets;
+    for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+        const Polyline line = path.polyline.to_polyline();
+        if (line.is_closed()) {
+            ++rings;
+            Polyline aligned = line;
+            aligned.rotate(-angle);
+            ring_insets.push_back(unscale<double>(get_extents(aligned).min.x()));
+        } else {
+            ++center_finishes;
+            Polyline aligned = line;
+            aligned.rotate(-angle);
+            CHECK(unscale<double>(get_extents(aligned).size().y()) > 12. - width - flow.width());
+        }
+        CHECK(path.role() == erSupportMaterialInterface);
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(flow.width(), 0.00001));
+        CHECK_THAT(path.height, Catch::Matchers::WithinAbs(height, 0.00001));
+    });
+    CHECK(rings >= 2);
+    CHECK(center_finishes <= 1);
+    std::sort(ring_insets.begin(), ring_insets.end());
+    // The requested wall uses normal wall spacing. Subsequent fill rings
+    // retain the process's 0.05 mm clear spacing at every physical height.
+    for (size_t i = 2; i < ring_insets.size(); ++i)
+        CHECK_THAT(ring_insets[i] - ring_insets[i - 1],
+            Catch::Matchers::WithinAbs(flow.spacing() + 0.05, 0.002));
+}
+
+TEST_CASE("Rectilinear interface links stay continuous around their wall clearance",
+          "[SupportMaterial][ContactWalls][InterfaceContinuity][Regression]")
+{
+    const double height = GENERATE(0.05, 0.2);
+    const double angle = GENERATE(0., M_PI / 6.);
+    CAPTURE(height, angle);
+    const Flow reference(0.408f, 0.2f, 0.4f);
+    const Flow flow = reference.with_height(float(height));
+    ExPolygons regions = offset_ex(offset_ex(rectangular_area(-1.5, -6., 1.5, 6.), -scale_(0.4)),
+        scale_(0.4), jtRound, scale_(0.001));
+    regions = diff_ex(regions, ExPolygons{rectangular_area(-2., -5., 0., 5.)});
+    for (ExPolygon &region : regions)
+        region.rotate(angle);
+    auto filler = std::unique_ptr<Fill>(Fill::new_from_type(ipRectilinear));
+    filler->spacing = reference.spacing();
+    filler->angle = angle;
+    filler->link_max_length = scale_(3. * (reference.spacing() + 0.4));
+    filler->set_bounding_box(get_extents(regions));
+    FillParams params;
+    params.density = reference.spacing() / (reference.spacing() + 0.4);
+    params.preserve_short_paths = true;
+    ExtrusionEntityCollection paths;
+    fill_support_interface_with_walls(paths.entities, regions, filler.get(), params,
+        erSupportMaterialInterface, flow, 1, true);
+    REQUIRE(paths.entities.size() > 1);
+    size_t short_paths = 0;
+    for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+        short_paths += path.length() < scale_(flow.width());
+        if (path.length() < scale_(flow.width()))
+            UNSCOPED_INFO("Short interface width " << path.width << ", length " << unscale<double>(path.length()));
+        CHECK(path.role() == erSupportMaterialInterface);
+        CHECK(path.mm3_per_mm > 0.);
+    });
+    CHECK(short_paths == 0);
+}
+
+TEST_CASE("Organic interface projection stays inside contact demand and owns each layer once",
+          "[SupportMaterial][OrganicTree][InterfaceDemand][Regression]")
+{
+    const double height = GENERATE(0.05, 0.2);
+    const double angle = GENERATE(0., M_PI / 6.);
+    const bool on_bed = GENERATE(false, true);
+    CAPTURE(height, angle, on_bed);
+    auto config = organic_support_config(true, true, 0.2, 0.17);
+    config.set_deserialize_strict({{"support_interface_top_layers", 4},
+        {"support_interface_pattern", "rectilinear"}, {"support_interface_spacing", 0.4}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    const SupportParameters params(object);
+    SupportGeneratorLayerStorage storage;
+    SupportGeneratorLayer base, contact, organic_interface;
+    const double z = on_bed ? height : 1.;
+    base.layer_type = SupporLayerType::Base;
+    organic_interface.layer_type = SupporLayerType::TopInterface;
+    base.print_z = organic_interface.print_z = z;
+    base.bottom_z = organic_interface.bottom_z = z - height;
+    base.height = organic_interface.height = height;
+    base.polygons = to_polygons(rectangular_area(-4., -1., 4., 11.));
+    organic_interface.polygons = to_polygons(rectangular_area(-1., 0., 1., 10.));
+    contact.layer_type = SupporLayerType::TopContact;
+    contact.print_z = z + 0.2;
+    contact.bottom_z = z;
+    contact.height = 0.2;
+    contact.polygons = organic_interface.polygons;
+    for (Polygons *polys : {&base.polygons, &contact.polygons, &organic_interface.polygons})
+        for (Polygon &polygon : *polys) polygon.rotate(angle);
+    const Polygons original_base = base.polygons;
+    const Polygons demand = organic_interface.polygons;
+    SupportGeneratorLayersPtr intermediate{&base}, precomputed{&organic_interface}, no_base_interfaces;
+    auto generated = generate_interface_layers(object.config(), params, {}, {&contact}, precomputed,
+        no_base_interfaces, intermediate, storage);
+    REQUIRE_FALSE(generated.first.empty());
+    const std::set<SupportGeneratorLayer *> owners(generated.first.begin(), generated.first.end());
+    CHECK(owners.size() == generated.first.size());
+    Polygons interface;
+    for (const auto *layer : generated.first) polygons_append(interface, layer->polygons);
+    if (!on_bed) {
+        CHECK(area(diff_ex(interface, offset(demand, SCALED_EPSILON))) < scale_(1.) * scale_(0.001));
+        CHECK(area(base.polygons) > 0.5 * area(original_base));
+    }
+    CHECK(diff_ex(contact.polygons, demand).empty());
+    CHECK(diff_ex(demand, contact.polygons).empty());
+    CHECK(area(diff_ex(original_base, union_(base.polygons, interface))) < scale_(1.) * scale_(0.001));
+}
+
+TEST_CASE("Stepped contact patches share their parent rim without filling the intervening region",
+          "[SupportMaterial][ContactRim][Regression]")
+{
+    const double nozzle = GENERATE(0.4, 0.6);
+    const int walls = GENERATE(0, 1, 2);
+    CAPTURE(nozzle, walls);
+    const Flow flow(float(nozzle * 1.02), float(nozzle * 0.5), float(nozzle));
+    const double width = flow.width();
+    const ExPolygons parent{rectangular_area(-3. * width, -8. * width, 3. * width, 8. * width)};
+    const ExPolygons patches{rectangular_area(-3. * width, -8. * width, -2.1 * width, 8. * width),
+        rectangular_area(2.1 * width, -8. * width, 3. * width, 8. * width)};
+    auto fill = std::unique_ptr<Fill>(Fill::new_from_type(ipConcentric));
+    fill->spacing = flow.spacing();
+    fill->set_bounding_box(get_extents(to_polygons(parent)));
+    fill->angle = 0.f;
+    fill->fixed_angle = true;
+    FillParams params;
+    params.density = flow.spacing() / (flow.spacing() + 0.05);
+    params.fill_concentric_gaps = true;
+    params.preserve_short_paths = true;
+    params.flow = flow;
+    ExtrusionEntityCollection result;
+    fill_support_interface_with_walls(result.entities, patches, fill.get(), params,
+        erSupportMaterialInterface, flow, walls, true, &parent);
+    size_t closed = 0;
+    for_each_extrusion_path(result, [&](const ExtrusionPath &path) {
+        const Polyline line = path.polyline.to_polyline();
+        const bool parent_rim = line.is_closed() &&
+            Polygon(Points(line.points.begin(), line.points.end() - 1)).contains(Point(0, 0));
+        if (parent_rim) {
+            ++closed;
+            CHECK_THAT(path.width, Catch::Matchers::WithinAbs(flow.width(), EPSILON));
+            CHECK_THAT(path.height, Catch::Matchers::WithinAbs(flow.height(), EPSILON));
+            CHECK_FALSE(path.can_reverse());
+            CHECK(diff_pl(Polylines{path.polyline.to_polyline()}, parent).empty());
+        } else
+            CHECK(diff_pl(Polylines{path.polyline.to_polyline()}, patches).empty());
+        CHECK(path.role() == erSupportMaterialInterface);
+    });
+    CHECK(closed == size_t(walls));
+}
+
+TEST_CASE("A contact pattern keeps its intentional gaps free of same-plane generic interface fill",
+          "[SupportMaterial][ContactAllocation][Regression]")
+{
+    const double clear_spacing = GENERATE(0.05, 0.6);
+    const int walls = GENERATE(0, 1);
+    CAPTURE(clear_spacing, walls);
+    auto generate = [&](bool add_generic) {
+        auto config = organic_support_config(true, true, 0.17, 0.17);
+        config.set_deserialize_strict({{"support_top_contact_pattern", "concentric"},
+            {"support_top_contact_spacing", clear_spacing}, {"support_top_contact_wall_count", walls},
+            {"support_interface_pattern", "rectilinear"}, {"support_interface_spacing", 0.4},
+            {"support_top_interface_wall_count", 1}, {"support_interface_top_layers", 4}});
+        Print print;
+        init_and_process_print({cube(4)}, print, config);
+        PrintObject &object = *print.get_object(0);
+        const SupportParameters support_params(object);
+        object.clear_support_layers();
+        object.add_support_layer(0, 0, 0.2, 0.2);
+        SupportLayer *target = object.add_support_layer(1, 1, 0.2, 0.4);
+        SupportGeneratorLayerStorage storage;
+        auto &contact = storage.allocate(SupporLayerType::TopContact);
+        contact.print_z = 0.4; contact.bottom_z = 0.2; contact.height = 0.2;
+        contact.idx_object_layer_above = 1;
+        contact.polygons = to_polygons(rectangular_area(-5., -3., 5., 3.));
+        auto &interface = storage.allocate(SupporLayerType::TopInterface);
+        interface.print_z = contact.print_z; interface.bottom_z = contact.bottom_z; interface.height = contact.height;
+        interface.polygons = contact.polygons;
+        generate_support_toolpaths(object.support_layers(), object.config(), support_params, object.slicing_parameters(),
+            {}, {}, {&contact}, {}, add_generic ? SupportGeneratorLayersPtr{&interface} : SupportGeneratorLayersPtr{}, {});
+        std::vector<Points> result;
+        for_each_extrusion_path(target->support_fills, [&](const ExtrusionPath &path) {
+            CHECK(path.role() == erSupportMaterialInterface);
+            result.push_back(path.polyline.to_polyline().points);
+        });
+        return result;
+    };
+    const auto contact_only = generate(false);
+    REQUIRE_FALSE(contact_only.empty());
+    CHECK(generate(true) == contact_only);
+}
+
+TEST_CASE("Compatible interface finishes join without changing flow or crossing a narrow corridor",
+          "[SupportMaterial][InterfaceSplice][Regression]")
+{
+    const double nozzle = GENERATE(0.4, 0.6);
+    const bool narrow = GENERATE(false, true);
+    CAPTURE(nozzle, narrow);
+    const Flow flow(nozzle + 0.008, 0.2, nozzle);
+    ExtrusionEntityCollection paths;
+    auto add = [&](double x1, double x2) {
+        ExtrusionPath path(erSupportMaterialInterface, flow.mm3_per_mm(), flow.width(), flow.height());
+        path.polyline = Polyline3(Polyline{Points{Point::new_scale(x1, 0.), Point::new_scale(x2, 0.)}});
+        paths.append(std::move(path));
+    };
+    add(0., 2.); add(3., 5.);
+    ExPolygons region{rectangular_area(-1., -1., 6., 1.)};
+    if (narrow) {
+        // Build the narrow throat by cutting both sides from the valid material.
+        region = diff_ex(region, ExPolygons{rectangular_area(2.3, -1., 2.7, -0.05),
+            rectangular_area(2.3, 0.05, 2.7, 1.)});
+    }
+    const size_t count = connect_support_interface_paths(paths, region, flow.height(), 8. * flow.scaled_width());
+    if (narrow) CHECK(count == 0);
+    else CHECK(count == 1);
+    CHECK(paths.entities.size() == (narrow ? 2 : 1));
+    double total = 0.;
+    for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+        CHECK(path.role() == erSupportMaterialInterface);
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(flow.width(), EPSILON));
+        CHECK_THAT(path.height, Catch::Matchers::WithinAbs(flow.height(), EPSILON));
+        CHECK_THAT(path.mm3_per_mm, Catch::Matchers::WithinAbs(flow.mm3_per_mm(), EPSILON));
+        total += path.length();
+    });
+    CHECK_THAT(unscale<double>(total), Catch::Matchers::WithinAbs(narrow ? 4. : 5., 0.001));
+}
+
+TEST_CASE("Interface splicing clips distant complex roads while preserving crossing keepouts",
+          "[SupportMaterial][InterfaceSplice][Regression]")
+{
+    const bool crossing = GENERATE(false, true);
+    CAPTURE(crossing);
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    auto make = [&](bool distant) {
+        auto paths = std::make_unique<ExtrusionEntityCollection>();
+        for (const auto &span : {std::pair{0., 2.}, std::pair{3., 5.}}) {
+            ExtrusionPath path(erSupportMaterialInterface, flow.mm3_per_mm(), flow.width(), flow.height());
+            path.polyline = Polyline3(Polyline{Points{Point::new_scale(span.first, 0.), Point::new_scale(span.second, 0.)}});
+            paths->append(std::move(path));
+        }
+        if (crossing) {
+            const double reach = distant ? 100. : 2.;
+            ExtrusionPath barrier(erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
+            barrier.polyline = Polyline3(Polyline{Points{Point::new_scale(2.5, -reach), Point::new_scale(2.5, reach)}});
+            paths->append(std::move(barrier));
+        }
+        return paths;
+    };
+    auto reference = make(false), actual = make(true);
+    Points ring;
+    for (int i = 0; i < 2000; ++i) {
+        const double angle = 2. * M_PI * i / 2000.;
+        const double radius = 100. + 0.1 * (i % 2);
+        ring.push_back(Point::new_scale(2.5 + radius * std::cos(angle), radius * std::sin(angle)));
+    }
+    ring.push_back(ring.front());
+    ExtrusionPath distant(erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
+    distant.polyline = Polyline3(Polyline(ring));
+    actual->append(std::move(distant));
+    const auto *original = dynamic_cast<const ExtrusionPath *>(actual->entities.back());
+    REQUIRE(original != nullptr);
+    const ExPolygons allowed{rectangular_area(-1., -1., 6., 1.)};
+    const size_t expected = connect_support_interface_paths(*reference, allowed, flow.height(), 8. * flow.scaled_width());
+    CHECK(expected == (crossing ? 0 : 1));
+    CHECK(connect_support_interface_paths(*actual, allowed, flow.height(), 8. * flow.scaled_width()) == expected);
+    auto interfaces = [](const ExtrusionEntityCollection &paths) {
+        std::vector<Points> result;
+        for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+            if (path.role() == erSupportMaterialInterface) result.push_back(path.polyline.to_polyline().points);
+        });
+        return result;
+    };
+    CHECK(interfaces(*actual) == interfaces(*reference));
+    CHECK(original->polyline.to_polyline().points == ring);
+}
+
+TEST_CASE("Dense local obstacles retain native roads when bounded interface planning is exhausted",
+          "[SupportMaterial][InterfaceSplice][Regression]")
+{
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    ExtrusionEntityCollection paths;
+    for (const auto &span : {std::pair{0., 2.}, std::pair{3., 5.}}) {
+        ExtrusionPath path(erSupportMaterialInterface, flow.mm3_per_mm(), flow.width(), flow.height());
+        path.polyline = Polyline3(Polyline{Points{Point::new_scale(span.first, 0.), Point::new_scale(span.second, 0.)}});
+        paths.append(std::move(path));
+    }
+    Points dense;
+    for (int i = 0; i < 10000; ++i)
+        dense.push_back(Point::new_scale(2.5 + 0.1 * (i % 2), -2. + 4. * i / 9999.));
+    ExtrusionPath barrier(erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
+    barrier.polyline = Polyline3(Polyline(dense));
+    paths.append(std::move(barrier));
+    CHECK(connect_support_interface_paths(paths, ExPolygons{rectangular_area(-1., -1., 6., 1.)},
+        flow.height(), 8. * flow.scaled_width()) == 0);
+    REQUIRE(paths.entities.size() == 3);
+    const auto *unchanged = dynamic_cast<const ExtrusionPath *>(paths.entities.back());
+    REQUIRE(unchanged != nullptr);
+    CHECK(unchanged->polyline.to_polyline().points == dense);
+    CHECK_THAT(unchanged->width, Catch::Matchers::WithinAbs(flow.width(), EPSILON));
+}
+
+TEST_CASE("Interface finishes follow a full-width turn around a keepout",
+          "[SupportMaterial][InterfaceSplice][Regression]")
+{
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    ExtrusionEntityCollection paths;
+    for (const auto &span : {std::pair{-2., -1.}, std::pair{1., 2.}}) {
+        ExtrusionPath path(erSupportMaterialInterface, flow.mm3_per_mm(), flow.width(), flow.height());
+        path.polyline = Polyline3(Polyline{Points{Point::new_scale(1., span.first), Point::new_scale(1., span.second)}});
+        paths.append(std::move(path));
+    }
+    ExPolygons allowed{rectangular_area(0.7, -2.3, 1.3, -0.7), rectangular_area(0.7, 0.7, 1.3, 2.3),
+        rectangular_area(0.1, -1.1, 1.3, 1.1)};
+    const ExPolygons keepout{rectangular_area(0.65, -0.6, 1.4, 0.6)};
+    allowed = diff_ex(union_ex(allowed), keepout);
+    CHECK(connect_support_interface_paths(paths, allowed, flow.height(), 8. * flow.scaled_width()) == 1);
+    CHECK(paths.entities.size() == 1);
+    for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(flow.width(), EPSILON));
+        CHECK(area(intersection_ex(path.polygons_covered_by_width(), keepout)) < sqr(double(scale_(0.002))));
+    });
+}
+
+TEST_CASE("A local interface detour keeps every bearing used by the upper layer",
+          "[SupportMaterial][InterfaceSplice][Regression]")
+{
+    const bool needs_inside = GENERATE(false, true);
+    CAPTURE(needs_inside);
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    ExtrusionEntityCollection paths;
+    auto road = [&](Points points) {
+        ExtrusionPath path(erSupportMaterialInterface, flow.mm3_per_mm(), flow.width(), flow.height());
+        path.polyline = Polyline3(Polyline(std::move(points)));
+        return path;
+    };
+    paths.append(road({Point::new_scale(0., 0.), Point::new_scale(4., 0.), Point::new_scale(4., 8.),
+        Point::new_scale(0., 8.), Point::new_scale(0., 0.)}));
+    paths.append(road({Point::new_scale(4.6, 3.3), Point::new_scale(4.8, 4.), Point::new_scale(4.6, 4.7)}));
+    const double x = needs_inside ? 3.8 : 4.8;
+    const ExtrusionPaths upper{road({Point::new_scale(x, 3.8), Point::new_scale(x, 4.2)})};
+    const size_t joined = connect_support_interface_paths(paths, ExPolygons{rectangular_area(-1., -1., 6., 9.)},
+        flow.height(), 8. * flow.scaled_width(), upper);
+    CHECK(joined == (needs_inside ? 0 : 1));
+    CHECK(paths.entities.size() == (needs_inside ? 2 : 1));
+}
+
+TEST_CASE("Joined interfaces start above existing printed material without changing their width",
+          "[SupportMaterial][InterfaceSplice][Regression]")
+{
+    auto config = organic_support_config(true, true, 0.2, 0.17);
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    object.clear_support_layers();
+    SupportLayer *lower = object.add_support_layer(0, 0, 0.2, 1.);
+    SupportLayer *upper = object.add_support_layer(1, 1, 0.3, 1.2);
+    auto add = [](SupportLayer &layer, double x, float height) {
+        const Flow flow(0.408f, height, 0.4f);
+        ExtrusionPath path(erSupportMaterialInterface, flow.mm3_per_mm(), flow.width(), flow.height());
+        path.polyline = Polyline3(Polyline{Points{Point::new_scale(x, 0.), Point::new_scale(x + 5., 0.)}});
+        layer.support_fills.append(std::move(path));
+    };
+    add(*lower, 0., 0.2f);
+    add(*upper, 0., 0.3f);
+    const ExtrusionEntity *changed = upper->support_fills.entities.back();
+    add(*upper, 10., 0.3f);
+    CHECK(modulate_joined_support_paths(object.support_layers(), 0.05f, {changed}) == 1);
+    for_each_extrusion_path(upper->support_fills, [&](const ExtrusionPath &path) {
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(0.408, EPSILON));
+        CHECK_THAT(path.height, Catch::Matchers::WithinAbs(
+            path.first_point().x() < scale_(5.) ? 0.2 : 0.3, EPSILON));
+    });
+}
+
+TEST_CASE("Compact generic interfaces use legal open strokes and retain upper contacts",
+          "[SupportMaterial][OrganicTree][CompactInterface][Regression]")
+{
+    const double nozzle = GENERATE(0.4, 0.6);
+    const double height = GENERATE(0.05, 0.2);
+    const double angle = GENERATE(0., M_PI / 6.);
+    CAPTURE(nozzle, height, angle);
+    auto config = organic_support_config(true, true, 0.2, 0.17);
+    config.set_deserialize_strict({{"nozzle_diameter", std::to_string(nozzle)},
+        {"support_interface_top_layers", 4}, {"support_interface_pattern", "rectilinear"},
+        {"support_interface_spacing", 0.4}, {"support_top_interface_wall_count", 1},
+        {"support_top_contact_pattern", "concentric"}, {"support_top_contact_wall_count", 1}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    const SupportParameters params(object);
+    const double width = params.support_material_interface_flow.width();
+    Points ring;
+    for (int i = 0; i < 32; ++i) {
+        const double a = angle + 2. * M_PI * i / 32.;
+        ring.emplace_back(scale_(0.8 * width * std::cos(a)), scale_(0.8 * width * std::sin(a)));
+    }
+    const Polygons shape{Polygon(std::move(ring))};
+    SupportGeneratorLayer roof, contact;
+    roof.layer_type = SupporLayerType::TopInterface;
+    roof.print_z = 1.; roof.height = height; roof.bottom_z = 1. - height;
+    roof.polygons = shape;
+    contact.layer_type = SupporLayerType::TopContact;
+    contact.print_z = 1.2; contact.height = 0.2; contact.bottom_z = 1.;
+    contact.polygons = shape;
+    object.clear_support_layers();
+    object.add_support_layer(0, 0, height, 1.);
+    object.add_support_layer(1, 1, 0.2, 1.2);
+    generate_support_toolpaths(object.support_layers(), object.config(), params, object.slicing_parameters(),
+        {}, {}, {&contact}, {}, {&roof}, {});
+    size_t lower_paths = 0, upper_paths = 0;
+    for_each_extrusion_path(object.support_layers().front()->support_fills, [&](const ExtrusionPath &path) {
+        ++lower_paths;
+        CHECK(path.role() == erSupportMaterialInterface);
+        CHECK_FALSE(path.polyline.to_polyline().is_closed());
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(width, EPSILON));
+    });
+    for_each_extrusion_path(object.support_layers().back()->support_fills,
+        [&](const ExtrusionPath &) { ++upper_paths; });
+    CHECK(lower_paths > 0);
+    CHECK(upper_paths > 0);
+    CHECK(diff_ex(contact.polygons, shape).empty());
+    CHECK(diff_ex(shape, contact.polygons).empty());
+}
+
+TEST_CASE("Isolated compact interfaces remain only when a later road needs them",
+          "[SupportMaterial][ContactWalls][InterfaceContinuity][Regression]")
+{
+    const double height = GENERATE(0.05, 0.2);
+    const double patch_width = GENERATE(1.8, 3.4);
+    CAPTURE(height, patch_width);
+    auto config = organic_support_config(true, true, 0.2, 0.2);
+    config.set_deserialize_strict({{"support_interface_pattern", "rectilinear"},
+        {"support_interface_spacing", 0.4}, {"support_top_contact_pattern", "concentric"},
+        {"support_top_contact_spacing", 0.05}, {"support_top_contact_wall_count", 1},
+        {"support_top_interface_wall_count", 1}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    const SupportParameters params(object);
+    const double width = params.support_material_interface_flow.width();
+    auto patch = [width](double x, double size) { return rectangular_area(x, 0., x + size * width, size * width); };
+    object.clear_support_layers();
+    object.add_support_layer(0, 0, height, 1.0);
+    object.add_support_layer(1, 0, 0.2, 1.2);
+    SupportGeneratorLayer generic, true_contact, upper, orphan_upper;
+    generic.layer_type = SupporLayerType::TopInterface;
+    true_contact.layer_type = upper.layer_type = SupporLayerType::TopContact;
+    generic.print_z = true_contact.print_z = 1.0;
+    generic.height = true_contact.height = height;
+    generic.bottom_z = true_contact.bottom_z = 1.0 - height;
+    generic.polygons = to_polygons(ExPolygons{patch(0., patch_width), patch(10., patch_width), patch(30., 10.)});
+    true_contact.polygons = to_polygons(patch(20., patch_width));
+    upper.print_z = 1.2;
+    upper.height = 0.2;
+    upper.bottom_z = 1.0;
+    upper.polygons = to_polygons(patch(0., patch_width));
+    orphan_upper.layer_type = SupporLayerType::TopInterface;
+    orphan_upper.print_z = 1.2;
+    orphan_upper.height = 0.2;
+    orphan_upper.bottom_z = 1.0;
+    orphan_upper.polygons = to_polygons(patch(10., patch_width));
+    generate_support_toolpaths(object.support_layers(), object.config(), params, object.slicing_parameters(), {},
+        {}, {&true_contact, &upper}, {}, {&generic, &orphan_upper}, {});
+    size_t needed = 0, orphan = 0, contact = 0, broad = 0;
+    for_each_extrusion_path(object.support_layers().front()->support_fills, [&](const ExtrusionPath &path) {
+        const double x = unscale<double>(path.first_point3().x());
+        if (x < 5.) ++needed;
+        else if (x < 15.) ++orphan;
+        else if (x < 25.) ++contact;
+        else ++broad;
+    });
+    CHECK(needed > 0);
+    CHECK(orphan == 0);
+    CHECK(contact > 0);
+    CHECK(broad > 0);
+}
+
+TEST_CASE("A narrow interface contour uses one center road without overlapping return sides",
+          "[SupportMaterial][ContactWalls][InterfaceContinuity][ManufacturableInterface][Regression]")
+{
+    const double height = GENERATE(0.05, 0.2);
+    const double angle = GENERATE(0., M_PI / 6.);
+    const InfillPattern pattern = GENERATE(ipRectilinear, ipConcentric);
+    CAPTURE(height, angle, pattern);
+    const Flow flow(0.408f, float(height), 0.4f);
+    ExPolygon region = rectangular_area(-0.725 * flow.width(), -6., 0.725 * flow.width(), 6.);
+    region.rotate(angle);
+    auto filler = std::unique_ptr<Fill>(Fill::new_from_type(pattern));
+    filler->spacing = flow.spacing();
+    filler->angle = 0.;
+    filler->set_bounding_box(get_extents(region));
+    FillParams params;
+    params.density = 0.8;
+    params.dont_adjust = true;
+    params.flow = flow;
+    params.preserve_short_paths = true;
+    params.fill_concentric_gaps = pattern == ipConcentric;
+    ExtrusionEntityCollection paths;
+    fill_support_interface_with_walls(paths.entities, {region}, filler.get(), params,
+        erSupportMaterialInterface, flow, 1, true);
+    size_t roads = 0;
+    double length = 0.;
+    for_each_extrusion_path(paths, [&](const ExtrusionPath &path) {
+        ++roads;
+        length += unscale<double>(path.length());
+        CHECK(path.first_point3() != path.last_point3());
+        CHECK_THAT(path.width, Catch::Matchers::WithinAbs(flow.width(), 0.00001));
+        CHECK_THAT(path.height, Catch::Matchers::WithinAbs(flow.height(), 0.00001));
+        Polygons covered;
+        path.polygons_covered_by_width(covered, 1.f);
+        CHECK_THAT(area(diff_ex(covered, ExPolygons{region})) * SCALING_FACTOR * SCALING_FACTOR,
+            Catch::Matchers::WithinAbs(0., 0.001));
+    });
+    CHECK(roads == 1);
+    CHECK(length > 10.);
+    CHECK(length < 12. + flow.width());
+}
+
+TEST_CASE("A bent narrow interface keeps its curved center road when its hull crosses a clearance",
+          "[SupportMaterial][ContactWalls][InterfaceContinuity][ManufacturableInterface][Regression]")
+{
+    const double height=GENERATE(0.05,0.2);
+    const double angle=GENERATE(0.,M_PI/6.);
+    CAPTURE(height,angle);
+    const Flow flow(0.408f,float(height),0.4f);
+    Polyline axis{Points{Point::new_scale(0.,-5.),Point::new_scale(0.35*flow.width(),0.),Point::new_scale(0.,5.)}};
+    axis.rotate(angle);
+    const ExPolygons source=union_ex(offset(axis,0.725f*float(flow.scaled_width()),jtRound,
+        double(SCALED_EPSILON),etOpenRound));
+    const ExPolygons centers=offset_ex(source,-0.5f*float(flow.scaled_width()));
+    REQUIRE(centers.size()==1);
+    const Polyline contour=centers.front().contour.split_at_first_point();
+    const Polylines roads=support_interface_single_road(contour,centers,flow.scaled_spacing(),flow.scaled_width());
+    if (roads.empty()) {
+        const ExPolygons legal=intersection_ex(opening_ex(intersection_ex(
+            union_ex(centers.front().contour.simplify(2.*SCALED_EPSILON)),centers),
+            10.f*float(SCALED_EPSILON)),centers);
+        UNSCOPED_INFO("Curved center components "<<legal.size());
+        if (legal.size()==1) {
+            UNSCOPED_INFO("Curved center holes "<<legal.front().holes.size()<<", valid "<<legal.front().is_valid()
+                <<", inset components "<<offset_ex(legal.front(),-0.5f*float(flow.scaled_spacing())).size()
+                <<", outside area "<<area(diff_ex(legal,centers)));
+            Polylines medial;
+            legal.front().medial_axis(SCALED_EPSILON,2.*flow.scaled_spacing(),&medial);
+            UNSCOPED_INFO("Curved center medial roads "<<medial.size());
+        }
+    }
+    REQUIRE_FALSE(roads.empty());
+    double length=0.;
+    for (const Polyline &road:roads) {
+        CHECK_FALSE(road.is_closed());
+        CHECK(diff_pl(Polylines{road},offset_ex(centers,float(SCALED_EPSILON))).empty());
+        length+=unscale<double>(road.length());
+    }
+    CHECK(length>8.);
+    CHECK(length<12.);
+}
+
+TEST_CASE("Narrow contact rescue never extrudes a bead below its physical layer height",
+          "[SupportMaterial][ContactWalls][InterfaceContinuity][ManufacturableInterface][Regression]")
+{
+    const double region_width = GENERATE(0.15, 0.30);
+    const double angle = GENERATE(0., M_PI / 6.);
+    CAPTURE(region_width, angle);
+    const Flow flow(0.408f, 0.2f, 0.4f);
+    ExPolygon region = rectangular_area(-region_width / 2., -3., region_width / 2., 3.);
+    region.rotate(angle);
+    auto config = organic_support_config(true, true, 0.2, 0.2);
+    config.set_deserialize_strict({{"support_top_contact_pattern", "concentric"},
+        {"support_top_contact_spacing", 0.05}, {"support_top_contact_wall_count", 1}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    object.clear_support_layers();
+    object.add_support_layer(0, 0, flow.height(), 1.0);
+    SupportGeneratorLayer contact;
+    contact.layer_type = SupporLayerType::TopContact;
+    contact.print_z = 1.0;
+    contact.bottom_z = 1.0 - flow.height();
+    contact.height = flow.height();
+    contact.polygons = to_polygons(region);
+    const SupportParameters params(object);
+    generate_support_toolpaths(object.support_layers(), object.config(), params, object.slicing_parameters(), {},
+        {}, {&contact}, {}, {}, {});
+    size_t roads = 0;
+    for_each_extrusion_path(object.support_layers().front()->support_fills, [&](const ExtrusionPath &path) {
+        ++roads;
+        CHECK(path.width + EPSILON >= path.height);
+        CHECK(path.mm3_per_mm > 0.);
+        Polygons covered;
+        path.polygons_covered_by_width(covered, 1.f);
+        CHECK_THAT(area(diff_ex(covered, ExPolygons{region})) * SCALING_FACTOR * SCALING_FACTOR,
+            Catch::Matchers::WithinAbs(0., 0.001));
+    });
+    CHECK((roads > 0) == (region_width >= flow.height()));
+}
+
+TEST_CASE("A single interface row avoids a long parallel boundary anchor",
+          "[SupportMaterial][ContactWalls][InterfaceContinuity][Regression]")
+{
+    const double height = GENERATE(0.05, 0.2);
+    CAPTURE(height);
+    auto config = organic_support_config(true, true, 0.2, 0.2);
+    config.set_deserialize_strict({{"support_interface_pattern", "rectilinear"},
+        {"support_interface_spacing", 0.4}, {"support_top_interface_wall_count", 1},
+        {"support_angle", 0.}});
+    Print print;
+    init_and_process_print({cube(4)}, print, config);
+    PrintObject &object = *print.get_object(0);
+    const SupportParameters params(object);
+    const double width = params.support_material_interface_flow.width();
+    object.clear_support_layers();
+    object.add_support_layer(0, 0, height, 1.0);
+    SupportGeneratorLayer interface;
+    interface.layer_type = SupporLayerType::TopInterface;
+    interface.print_z = 1.0;
+    interface.height = height;
+    interface.bottom_z = 1.0 - height;
+    interface.polygons = to_polygons(offset_ex(offset_ex(
+        rectangular_area(-1.7 * width, -6., 1.7 * width, 6.), -scale_(0.3)),
+        scale_(0.3), jtRound, scale_(0.001)));
+    generate_support_toolpaths(object.support_layers(), object.config(), params, object.slicing_parameters(), {},
+        {}, {}, {}, {&interface}, {});
+    double interior_length = 0.;
+    size_t walls = 0;
+    for_each_extrusion_path(object.support_layers().front()->support_fills, [&](const ExtrusionPath &path) {
+        if (path.polyline.first_point() == path.polyline.last_point())
+            ++walls;
+        else
+            interior_length += unscale<double>(path.length());
+    });
+    CHECK(walls == 1);
+    CHECK(interior_length > 8.);
+    CHECK(interior_length < 12. + 2. * width);
+}
+
 TEST_CASE("Requested support walls retain sub-line-width contact regions",
           "[SupportMaterial][ContactWalls][Regression]")
 {
@@ -3302,12 +4720,15 @@ TEST_CASE("Support walls and narrow gap fill retain their widths across overlapp
     for_each_extrusion_path(object.support_layers().back()->support_fills, [&](const ExtrusionPath &path) {
         if (path.polyline.to_polyline().first_point().x() > scale_(25.)) {
             CHECK(path.width <= 0.15f + float(EPSILON));
+            CHECK(path.width + EPSILON >= path.height);
             CHECK_THAT(path.height, Catch::Matchers::WithinAbs(overlapping ? 0.1 : 0.2, 0.00001));
             CHECK_THAT(path.mm3_per_mm, Catch::Matchers::WithinRel(Flow(path.width, path.height, 0.f).mm3_per_mm(), 0.00001));
             narrow_length += unscale<double>(path.polyline.length());
         }
     });
-    CHECK(narrow_length > 19.);
+    // The 0.15 mm strip is printable only after the lower plane reduces its
+    // actual bead height to 0.1 mm; a 0.2 mm-high bead cannot fit this strip.
+    CHECK((narrow_length > 19.) == overlapping);
 }
 
 TEST_CASE("Sub-line-width contact rings stay compatible with support height modulation",

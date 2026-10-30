@@ -94,7 +94,10 @@ void append_concentric_center_paths(
                 Polyline(Point(minor, bbox.min.y() - margin), Point(minor, bbox.max.y() + margin)));
         }
 
-        Polylines centerlines = intersection_pl(probes, region);
+        // Organic contact remainders follow the concentric center, including
+        // after rotation. Axis-aligned probes otherwise turn a narrow diagonal
+        // remainder into a ladder and can pack parallel beads too closely.
+        Polylines centerlines = preserve_compact_regions ? Polylines{} : intersection_pl(probes, region);
         centerlines.erase(
             std::remove_if(centerlines.begin(), centerlines.end(), [](const Polyline &polyline) {
                 return !polyline.is_valid() || polyline.length() <= SCALED_EPSILON;
@@ -118,6 +121,14 @@ void append_concentric_center_paths(
                 return !polyline.is_valid() || polyline.length() <= SCALED_EPSILON;
             }),
             medial_lines.end());
+
+        if (preserve_compact_regions && medial_lines.size() > 1) {
+            const auto longest = std::max_element(medial_lines.begin(), medial_lines.end(),
+                [](const Polyline &a, const Polyline &b) { return a.length() < b.length(); });
+            if (longest->length() > line_width)
+                medial_lines.erase(std::remove_if(medial_lines.begin(), medial_lines.end(),
+                    [line_width](const Polyline &line) { return line.length() < line_width; }), medial_lines.end());
+        }
 
         if (!medial_lines.empty()) {
             append(polylines_out, std::move(medial_lines));

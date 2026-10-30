@@ -57,6 +57,10 @@ namespace TreeSupport3D
 {
 class OrganicSupportLayerPlan;
 
+// Deterministic, component-local positions used to seed organic roof branches.
+// The returned polylines contain sample points, not printable connections.
+Polylines organic_roof_tip_positions(const Polygons &area, coord_t distance);
+
 
 struct AreaIncreaseSettings
 {
@@ -334,7 +338,8 @@ OrganicSupportLayerPlan organic_draw_branches(
     SupportGeneratorLayersPtr       &intermediate_layers,
     SupportGeneratorLayerStorage    &layer_storage,
 
-    std::function<void()> throw_on_cancel);
+    std::function<void()> throw_on_cancel,
+    bool                         *source_repaired = nullptr);
 
 } // namespace TreeSupport3D
 

@@ -1,0 +1,112 @@
+{
+  "schema_version": "inlong-product-evidence/v1",
+  "verified_utc": "2026-10-26T22:57:52.570518+00:00",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "objective": "Continue generic optimization of the top organic-support Clipper bottleneck while preserving accepted paths.",
+  "changes": [
+    "Deterministic path bounding-box broad phase with original path-index ordering.",
+    "Single-polygon overlap certificate and centreline containment before exact Clipper intersection.",
+    "Lazy per-layer path anchoring cache invalidated after lower-layer repair mutations.",
+    "Diagnostic bypass removed before final Release build."
+  ],
+  "source_sha256": {
+    "src/libslic3r/Support/SupportCommon.hpp": "b2b5c7ed7778dc84d14048e53ea44c18486f2be9ff1ab6a0e5f41caf36a94969",
+    "src/libslic3r/Fill/FillBase.hpp": "17507c53de3a915b952c85f418e1ce575a814671db71093345a41247d210008c",
+    "src/libslic3r/Brim.hpp": "7912a98e7d7a6b2d54c92d4c02cccc40f7344e7463a95e12008b8afddb492ee3",
+    "tests/fff_print/test_support_material.cpp": "113d8584324d2839216d4064aa300e455bb7ab73c6c0ff4cf039532f9ce1143d",
+    "src/libslic3r/Layer.cpp": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+    "src/libslic3r/Support/TreeSupport3D.hpp": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+    "src/libslic3r/GCode.cpp": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+    "tests/libslic3r/CMakeLists.txt": "ca186d1c9aa76f0f50bfb4158616f6572ad3e7f310139cda36706ab084c1c041",
+    "src/libslic3r/Support/SupportCommon.cpp": "49a12b5dc556fa99b8a0f3a0f43aede87c236c723aa8aba37c3519ce232930c1",
+    "src/libslic3r/Print.hpp": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+    "src/libslic3r/Fill/FillBase.cpp": "1042eb5cb513a298bc83e130a3563d03a62e4d32f4c98357289fe2896ec80286",
+    "tests/libslic3r/test_bridge_detector.cpp": "77dffa2961e461bf48cbe0b0fed3216bdb081fd3038ca17ba0fc7ef0858a38e3",
+    "src/libslic3r/Fill/FillRectilinear.cpp": "17c00e1a19446f38c8c30a3ef1fa0c2afcf083368fc16df4bb0dcf6b02b30b28",
+    "src/libslic3r/Print.cpp": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+    "src/libslic3r/BridgeDetector.cpp": "c38f20abff24dc4f1f82b88b3cc3c6fff79f05e7209d53d43304cd059f474a3b",
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "1387e599e2b257750a8661c6334cc8d886bc28ff5ab9cd8646de4068b2dd4eff",
+    "src/libslic3r/Support/TreeSupport.cpp": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+    "tests/fff_print/test_skirt_brim.cpp": "57bfaa71baf7e90abf6c279aac8d4d82c60208a1225b1ae9b681b73751a3a996",
+    "src/libslic3r/Brim.cpp": "51d3e8cb526e204b3ea267ea568f6d875b017039cb30a53d7424cca190d402da",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "66e2f8b2940f7acf9fd48021b78253399e13477f40356f05e2cffc72aa81539d"
+  },
+  "engine": {
+    "path": "build/src/Release/InlongSlicer.dll",
+    "sha256": "f1018bc5b1dcc2956d298bcf1a5278828132929e5947c04880a6efa0fc1a80b2"
+  },
+  "gui": {
+    "path": "build/src/Release/inlong-slicer.exe",
+    "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+  },
+  "configuration_restore": {
+    "path": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/final-anchor-release-1-build-result.json",
+    "sha256": "3224df5b27273c6ff6552bc686df79b5f54ec4c9e2a158168eecbf59caa12829"
+  },
+  "configuration_files": 854,
+  "completed_exact_outputs": {
+    "test2": {
+      "process": {
+        "path": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/final-test2-1/slice-process.json",
+        "sha256": "95a61d6bb53b696a47cabd4b14c211d9f1b1f12b3fad4d319be103ad64674747"
+      },
+      "equivalence": {
+        "path": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/final-test2-1/equivalence.json",
+        "sha256": "7d474eb9e85620c09a558e600253a728e3d338b2cd1f2455538a42f9513919f6"
+      },
+      "commands": 6358,
+      "metadata": 597,
+      "planes": 57
+    },
+    "organic_830_plane": {
+      "process": {
+        "path": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/anchor-organic-1/slice-process.json",
+        "sha256": "ba5bc776c931f21a86503167ef3e59ae0b42b6268708a6d7e1439e3fe4a4a15f"
+      },
+      "equivalence": {
+        "path": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/anchor-organic-1/equivalence.json",
+        "sha256": "29695794e37067d77dfaca64e8e37a289126fff0f1ab287196a099c18aba0663"
+      },
+      "commands": 453458,
+      "metadata": 15309,
+      "planes": 830
+    }
+  },
+  "large_export": {
+    "process": {
+      "path": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/anchor-large-1/slice-process.json",
+      "sha256": "859fc7add0eb928556b82330bb8757fbb0c9fcc7e52c981f78c9dea469c0f4f8"
+    },
+    "completed": false,
+    "timed_out": true,
+    "elapsed_seconds": 1802.073856,
+    "gcode_generated": false,
+    "limitation": "Current large export still timed out in top-layer printed anchoring; no original/optimized large exact comparison is claimed."
+  },
+  "stage_lines": {
+    "tree_support_total": "249.719 seconds",
+    "source_anchoring": "80.865 seconds",
+    "printed_anchoring": "incomplete at timeout",
+    "historical_user_target": "243 seconds"
+  },
+  "native_regression": {
+    "focused_assertions": 4351,
+    "focused_cases": 5,
+    "focused_log": {
+      "path": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/path-anchor-tests.log",
+      "sha256": "d1e211a06de7f61376d482905630cfe9a2e508e3cf2016f575c4b66da092f273"
+    }
+  },
+  "validation": {
+    "guidance": "passed",
+    "consumer_changed": "passed",
+    "release_ready": false,
+    "report": ".agents/runtime/runs/run-ab3d94af36c24737980716c8976c8fb2/validation/report.json"
+  },
+  "install": false,
+  "commit": false,
+  "push": false,
+  "target_achieved": false,
+  "scope_limit": "Completed fixtures prove exact path preservation. The large target remains unresolved because a complete current export was not produced."
+}

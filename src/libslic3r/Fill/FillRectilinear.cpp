@@ -2773,8 +2773,10 @@ bool FillRectilinear::fill_surface_by_lines(const Surface *surface, const FillPa
     ExPolygonWithOffset poly_with_offset(
         surface->expolygon,
         - rotate_vector.first,
-        float(scale_(this->overlap - (0.5 - INFILL_OVERLAP_OVER_SPACING) * this->spacing)),
-        float(scale_(this->overlap - 0.5f * this->spacing)));
+        params.boundary_is_center_domain ? -float(SCALED_EPSILON) :
+            float(scale_(this->overlap - (0.5 - INFILL_OVERLAP_OVER_SPACING) * this->spacing)),
+        params.boundary_is_center_domain ? -2.f * float(SCALED_EPSILON) :
+            float(scale_(this->overlap - 0.5f * this->spacing)));
     if (poly_with_offset.n_contours_inner == 0) {
         // Not a single infill line fits.
         //FIXME maybe one shall trigger the gap fill here?
@@ -3739,7 +3741,9 @@ Polylines FillSupportBase::fill_surface(const Surface *surface, const FillParams
 
     Polylines polylines_out;
     std::pair<float, Point> rotate_vector = this->_infill_direction(surface);
-    ExPolygonWithOffset poly_with_offset(surface->expolygon, - rotate_vector.first, float(scale_(this->overlap - 0.5 * this->spacing)));
+    ExPolygonWithOffset poly_with_offset(surface->expolygon, - rotate_vector.first,
+        params.boundary_is_center_domain ? -float(SCALED_EPSILON) :
+            float(scale_(this->overlap - 0.5 * this->spacing)));
     if (poly_with_offset.n_contours > 0) {
         Polylines fill_lines;
         coord_t line_spacing = coord_t(scale_(this->spacing) / params.density);

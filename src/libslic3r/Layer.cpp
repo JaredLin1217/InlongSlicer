@@ -382,10 +382,16 @@ void Layer::simplify_support_path(ExtrusionPath * path)
     const bool spiral_mode = print_config.spiral_mode;
     const bool enable_arc_fitting = print_config.enable_arc_fitting;
     const auto scaled_resolution = scaled<double>(print_config.resolution.value);
+    // Organic contacts may contain very narrow roads joining a trunk/roof.
+    // Do not simplify them at a coarser tolerance than the user's resolution;
+    // doing so can detach a road after support anchoring has already finished.
+    const double support_resolution = is_tree(this->object()->config().support_type) &&
+        this->object()->config().support_style == smsTreeOrganic ?
+        std::min(double(SCALED_SUPPORT_RESOLUTION), scaled_resolution) : SCALED_SUPPORT_RESOLUTION;
 
     if (enable_arc_fitting &&
         !spiral_mode) {
-        path->simplify_by_fitting_arc(SCALED_SUPPORT_RESOLUTION);
+        path->simplify_by_fitting_arc(support_resolution);
     } else {
         path->simplify(scaled_resolution);
     }
@@ -397,11 +403,14 @@ void Layer::simplify_support_multi_path(ExtrusionMultiPath* multipath)
     const bool spiral_mode = print_config.spiral_mode;
     const bool enable_arc_fitting = print_config.enable_arc_fitting;
     const auto scaled_resolution = scaled<double>(print_config.resolution.value);
+    const double support_resolution = is_tree(this->object()->config().support_type) &&
+        this->object()->config().support_style == smsTreeOrganic ?
+        std::min(double(SCALED_SUPPORT_RESOLUTION), scaled_resolution) : SCALED_SUPPORT_RESOLUTION;
 
     for (size_t i = 0; i < multipath->paths.size(); ++i) {
         if (enable_arc_fitting &&
             !spiral_mode) {
-            multipath->paths[i].simplify_by_fitting_arc(SCALED_SUPPORT_RESOLUTION);
+            multipath->paths[i].simplify_by_fitting_arc(support_resolution);
         } else {
             multipath->paths[i].simplify(scaled_resolution);
         }
@@ -414,11 +423,14 @@ void Layer::simplify_support_loop(ExtrusionLoop* loop)
     const bool spiral_mode = print_config.spiral_mode;
     const bool enable_arc_fitting = print_config.enable_arc_fitting;
     const auto scaled_resolution = scaled<double>(print_config.resolution.value);
+    const double support_resolution = is_tree(this->object()->config().support_type) &&
+        this->object()->config().support_style == smsTreeOrganic ?
+        std::min(double(SCALED_SUPPORT_RESOLUTION), scaled_resolution) : SCALED_SUPPORT_RESOLUTION;
 
     for (size_t i = 0; i < loop->paths.size(); ++i) {
         if (enable_arc_fitting &&
             !spiral_mode) {
-            loop->paths[i].simplify_by_fitting_arc(SCALED_SUPPORT_RESOLUTION);
+            loop->paths[i].simplify_by_fitting_arc(support_resolution);
         } else {
             loop->paths[i].simplify(scaled_resolution);
         }

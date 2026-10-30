@@ -1,0 +1,419 @@
+{
+  "log": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/anchor-large-1/slice.log",
+  "phases_seconds": {
+    "node_placement": 5.04817,
+    "draw_smoothing": 12.0334,
+    "draw_rasterization": 14.6053,
+    "draw_tree_layer_unions": 34.5642,
+    "draw_final_polygon_assembly": 88.1154,
+    "interface_generation": 6.71105,
+    "source_anchoring": 80.8654,
+    "physical_height_modulation": 7.67667,
+    "tree_support_total_ms": 249.719
+  },
+  "occurrences": {
+    "node_placement": 1,
+    "draw_smoothing": 1,
+    "draw_rasterization": 1,
+    "draw_tree_layer_unions": 1,
+    "draw_final_polygon_assembly": 1,
+    "interface_generation": 1,
+    "source_anchoring": 1,
+    "physical_height_modulation": 1,
+    "tree_support_total_ms": 1
+  },
+  "printed_anchoring_progress": {
+    "last_layer": 528,
+    "plan_layers": 555,
+    "components": 175989,
+    "local_overlaps": 176663,
+    "certified": 175875,
+    "indexes": 798
+  },
+  "process": {
+    "exit_code": -1,
+    "timed_out": true,
+    "elapsed_seconds": 1802.073856,
+    "cpu_seconds": 3263.0,
+    "peak_working_set_bytes": 6642774016,
+    "peak_private_bytes": 6672384000,
+    "data_unchanged": true,
+    "gcode_sha256": null
+  },
+  "complete_export": false,
+  "observed_phase_seconds": 499.33858999999995,
+  "largest_observed_phase": [
+    "tree_support_total_ms",
+    249.719
+  ],
+  "unattributed_elapsed_seconds": 1302.7352660000001,
+  "unattributed_phase_note": "For an incomplete export this is a lower bound for unlogged path validation, final toolpath work, and shutdown; it is not assigned to one stage without a completed export.",
+  "input": "C:/Users/v_jar/Downloads/test.3mf",
+  "interpretation": {
+    "largest_logged_tree_stage": "tree_support_total_ms / Organic draw profiling",
+    "remaining_bottleneck": "Printed anchoring / Clipper overlap work remains dominant after tree generation; no G-code was produced within either limit.",
+    "optimization_status": "Path broad phase, single-bead containment and per-layer anchor cache were implemented and passed exact fixture checks; target remains unmet",
+    "target_seconds": 243,
+    "target_achieved": false,
+    "latest_final_source": "The final Release source still timed out at 601.389892 seconds at layer 524/555; this is a diagnostic improvement boundary, not a completed export or a speedup claim.",
+    "shared_cache_result": "The final shared_ptr footprint-cache build still timed out at 601.3041695 seconds without G-code; the run was resource-variable and does not establish the 243-second target.",
+    "actual_run": "A real Release slice using the canonical data_dir ran for 1800.9490972 seconds, timed out at layer 541/555 during printed anchoring, and produced no G-code.",
+    "true_bottleneck": "Printed anchoring consumed 1285.19 seconds; source anchoring consumed 56.8337 seconds and tree support generation consumed 238.065 seconds. The dominant cost is serial printed-component/path validation and continuation planning, not the initial model slice."
+  },
+  "latest_final_measurement": {
+    "log": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/fast-filter-large-1/slice.log",
+    "phases_seconds": {
+      "node_placement": 5.57356,
+      "draw_smoothing": 12.3039,
+      "draw_rasterization": 15.112,
+      "draw_tree_layer_unions": 35.1958,
+      "draw_final_polygon_assembly": 89.2834,
+      "interface_generation": 7.25473,
+      "source_anchoring": 80.9624,
+      "physical_height_modulation": 7.73427,
+      "tree_support_total_ms": 256.303
+    },
+    "occurrences": {
+      "node_placement": 1,
+      "draw_smoothing": 1,
+      "draw_rasterization": 1,
+      "draw_tree_layer_unions": 1,
+      "draw_final_polygon_assembly": 1,
+      "interface_generation": 1,
+      "source_anchoring": 1,
+      "physical_height_modulation": 1,
+      "tree_support_total_ms": 1
+    },
+    "printed_anchoring_progress": {
+      "last_layer": 524,
+      "plan_layers": 555,
+      "components": 23686,
+      "local_overlaps": 306357,
+      "certified": 305565,
+      "indexes": 683
+    },
+    "process": {
+      "exit_code": -1,
+      "timed_out": true,
+      "elapsed_seconds": 601.389892,
+      "cpu_seconds": 2090.640625,
+      "peak_working_set_bytes": 6587842560,
+      "peak_private_bytes": 6650482688,
+      "data_unchanged": true,
+      "gcode_sha256": null
+    },
+    "complete_export": false,
+    "observed_phase_seconds": 509.72306000000003,
+    "largest_observed_phase": [
+      "tree_support_total_ms",
+      256.303
+    ],
+    "unattributed_elapsed_seconds": 91.666832,
+    "unattributed_phase_note": "For an incomplete export this is a lower bound for unlogged path validation, final toolpath work, and shutdown; it is not assigned to one stage without a completed export."
+  },
+  "runs": [
+    {
+      "name": "anchor-large-1-before-final-fast-path",
+      "timing": {
+        "phases_seconds": {
+          "node_placement": 5.04817,
+          "draw_smoothing": 12.0334,
+          "draw_rasterization": 14.6053,
+          "draw_tree_layer_unions": 34.5642,
+          "draw_final_polygon_assembly": 88.1154,
+          "interface_generation": 6.71105,
+          "source_anchoring": 80.8654,
+          "physical_height_modulation": 7.67667,
+          "tree_support_total_ms": 249.719
+        },
+        "printed_anchoring_progress": {
+          "last_layer": 528,
+          "plan_layers": 555,
+          "components": 175989,
+          "local_overlaps": 176663,
+          "certified": 175875,
+          "indexes": 798
+        },
+        "process": {
+          "exit_code": -1,
+          "timed_out": true,
+          "elapsed_seconds": 1802.073856,
+          "cpu_seconds": 3263.0,
+          "peak_working_set_bytes": 6642774016,
+          "peak_private_bytes": 6672384000,
+          "data_unchanged": true,
+          "gcode_sha256": null
+        },
+        "complete_export": false,
+        "observed_phase_seconds": 499.33858999999995,
+        "unattributed_elapsed_seconds": 1302.7352660000001
+      }
+    },
+    {
+      "name": "fast-filter-large-1-final-source",
+      "timing": {
+        "log": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/fast-filter-large-1/slice.log",
+        "phases_seconds": {
+          "node_placement": 5.57356,
+          "draw_smoothing": 12.3039,
+          "draw_rasterization": 15.112,
+          "draw_tree_layer_unions": 35.1958,
+          "draw_final_polygon_assembly": 89.2834,
+          "interface_generation": 7.25473,
+          "source_anchoring": 80.9624,
+          "physical_height_modulation": 7.73427,
+          "tree_support_total_ms": 256.303
+        },
+        "occurrences": {
+          "node_placement": 1,
+          "draw_smoothing": 1,
+          "draw_rasterization": 1,
+          "draw_tree_layer_unions": 1,
+          "draw_final_polygon_assembly": 1,
+          "interface_generation": 1,
+          "source_anchoring": 1,
+          "physical_height_modulation": 1,
+          "tree_support_total_ms": 1
+        },
+        "printed_anchoring_progress": {
+          "last_layer": 524,
+          "plan_layers": 555,
+          "components": 23686,
+          "local_overlaps": 306357,
+          "certified": 305565,
+          "indexes": 683
+        },
+        "process": {
+          "exit_code": -1,
+          "timed_out": true,
+          "elapsed_seconds": 601.389892,
+          "cpu_seconds": 2090.640625,
+          "peak_working_set_bytes": 6587842560,
+          "peak_private_bytes": 6650482688,
+          "data_unchanged": true,
+          "gcode_sha256": null
+        },
+        "complete_export": false,
+        "observed_phase_seconds": 509.72306000000003,
+        "largest_observed_phase": [
+          "tree_support_total_ms",
+          256.303
+        ],
+        "unattributed_elapsed_seconds": 91.666832,
+        "unattributed_phase_note": "For an incomplete export this is a lower bound for unlogged path validation, final toolpath work, and shutdown; it is not assigned to one stage without a completed export."
+      }
+    }
+  ],
+  "latest_shared_cache_measurement": {
+    "log": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/shared-large-1/slice.log",
+    "phases_seconds": {
+      "node_placement": 6.91394,
+      "draw_smoothing": 26.8325,
+      "draw_rasterization": 31.3126,
+      "draw_tree_layer_unions": 179.419,
+      "source_anchoring": 160.09
+    },
+    "occurrences": {
+      "node_placement": 1,
+      "draw_smoothing": 1,
+      "draw_rasterization": 1,
+      "draw_tree_layer_unions": 1,
+      "source_anchoring": 1
+    },
+    "printed_anchoring_progress": {
+      "last_layer": null,
+      "plan_layers": null,
+      "components": null,
+      "local_overlaps": null,
+      "certified": null,
+      "indexes": null
+    },
+    "process": {
+      "exit_code": -1,
+      "timed_out": true,
+      "elapsed_seconds": 601.3041695,
+      "cpu_seconds": 2031.140625,
+      "peak_working_set_bytes": 6586630144,
+      "peak_private_bytes": 6709415936,
+      "data_unchanged": true,
+      "gcode_sha256": null
+    },
+    "complete_export": false,
+    "observed_phase_seconds": 404.56804,
+    "largest_observed_phase": [
+      "draw_tree_layer_unions",
+      179.419
+    ],
+    "unattributed_elapsed_seconds": 196.73612949999995,
+    "unattributed_phase_note": "For an incomplete export this is a lower bound for unlogged path validation, final toolpath work, and shutdown; it is not assigned to one stage without a completed export."
+  },
+  "final_source_sha256": "013d62def0f1e2fed4997324aa89df64d723ed0e2a170888feaf4aaa44969f6a",
+  "implementation_updates": [
+    "Shared_ptr footprint cache, bounded model-slice cache, and immutable collision-mask/AABB cache reuse geometry under the existing live-memory budgets; cache invalidation remains limited to mutable printed footprints.",
+    "Printed anchoring uses a generic positive certificate against the immediate predecessor in parallel; uncertain roads continue through the original serial exact predicates, with no model/component-specific branch.",
+    "Interface joining uses a conservative deterministic AABB broad phase and cached chain length/vertex/closed metadata; the original candidate order, exact geometry checks, and routing remain authoritative.",
+    "Exact fixture verification remains required because incomplete test.3mf runs cannot certify whole-file G-code identity."
+  ],
+  "actual_release_measurement": {
+    "log": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/actual-test3mf-1/slice.log",
+    "phases_seconds": {
+      "node_placement": 7.91682,
+      "draw_smoothing": 16.2783,
+      "draw_rasterization": 14.8879,
+      "draw_tree_layer_unions": 39.6222,
+      "draw_final_polygon_assembly": 65.5977,
+      "interface_generation": 4.63913,
+      "source_anchoring": 56.8337,
+      "physical_height_modulation": 4.28221,
+      "printed_anchoring": 1285.19,
+      "tree_support_total_ms": 238.065
+    },
+    "occurrences": {
+      "node_placement": 1,
+      "draw_smoothing": 1,
+      "draw_rasterization": 1,
+      "draw_tree_layer_unions": 1,
+      "draw_final_polygon_assembly": 1,
+      "interface_generation": 1,
+      "source_anchoring": 1,
+      "physical_height_modulation": 1,
+      "printed_anchoring": 1,
+      "tree_support_total_ms": 1
+    },
+    "printed_anchoring_progress": {
+      "last_layer": 541,
+      "plan_layers": 555,
+      "components": 36379,
+      "local_overlaps": 302155,
+      "certified": 301242,
+      "indexes": 840
+    },
+    "process": {
+      "exit_code": -1,
+      "timed_out": true,
+      "elapsed_seconds": 1800.9490972,
+      "cpu_seconds": 3211.59375,
+      "peak_working_set_bytes": 6682484736,
+      "peak_private_bytes": 6716551168,
+      "data_unchanged": true,
+      "gcode_sha256": null
+    },
+    "complete_export": false,
+    "observed_phase_seconds": 1733.3129600000002,
+    "largest_observed_phase": [
+      "printed_anchoring",
+      1285.19
+    ],
+    "unattributed_elapsed_seconds": 67.6361371999999,
+    "unattributed_phase_note": "For an incomplete export this is a lower bound for unlogged path validation, final toolpath work, and shutdown; it is not assigned to one stage without a completed export."
+  },
+  "latest_cache64_measurement": {
+    "log": ".agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/actual-test3mf-cache64-1/slice.log",
+    "phases_seconds": {
+      "node_placement": 4.62483,
+      "draw_smoothing": 8.99722,
+      "draw_rasterization": 10.3594,
+      "draw_tree_layer_unions": 21.0875,
+      "draw_final_polygon_assembly": 64.637,
+      "interface_generation": 4.76618,
+      "source_anchoring": 59.7277,
+      "physical_height_modulation": 0.991215,
+      "printed_anchoring": 1161.31,
+      "interface_joining": 309.228,
+      "tree_support_total_ms": 174.349
+    },
+    "occurrences": {
+      "node_placement": 1,
+      "draw_smoothing": 1,
+      "draw_rasterization": 1,
+      "draw_tree_layer_unions": 1,
+      "draw_final_polygon_assembly": 1,
+      "interface_generation": 1,
+      "source_anchoring": 1,
+      "physical_height_modulation": 2,
+      "printed_anchoring": 1,
+      "interface_joining": 1,
+      "tree_support_total_ms": 1
+    },
+    "printed_anchoring_progress": {
+      "last_layer": 541,
+      "plan_layers": 555,
+      "components": 36379,
+      "local_overlaps": 17525,
+      "certified": 16926,
+      "indexes": 458
+    },
+    "process": {
+      "exit_code": -1,
+      "timed_out": true,
+      "elapsed_seconds": 1801.4404606,
+      "cpu_seconds": 3136.3125,
+      "peak_working_set_bytes": 6574731264,
+      "peak_private_bytes": 6627233792,
+      "data_unchanged": true,
+      "gcode_sha256": null
+    },
+    "complete_export": false,
+    "observed_phase_seconds": 1820.078045,
+    "largest_observed_phase": [
+      "printed_anchoring",
+      1161.31
+    ],
+    "unattributed_elapsed_seconds": 0.0,
+    "unattributed_phase_note": "For an incomplete export this is a lower bound for unlogged path validation, final toolpath work, and shutdown; it is not assigned to one stage without a completed export."
+  },
+  "latest_chain_grid_measurement": {
+    "log": "D:/Work/Nowing/GitHub/InlongSlicer/.agents/runtime/runs/run-e4990dba41d943a38eaf9fc9e446529f/work/actual-test3mf-chain-grid-1/slice.log",
+    "phases_seconds": {
+      "node_placement": 4.96351,
+      "draw_smoothing": 17.2858,
+      "draw_rasterization": 16.091,
+      "draw_tree_layer_unions": 37.9692,
+      "draw_final_polygon_assembly": 100.128,
+      "interface_generation": 9.45434,
+      "source_anchoring": 91.4216,
+      "physical_height_modulation": 7.62432,
+      "printed_anchoring": 1366.16,
+      "tree_support_total_ms": 271.985
+    },
+    "occurrences": {
+      "node_placement": 1,
+      "draw_smoothing": 1,
+      "draw_rasterization": 1,
+      "draw_tree_layer_unions": 1,
+      "draw_final_polygon_assembly": 1,
+      "interface_generation": 1,
+      "source_anchoring": 1,
+      "physical_height_modulation": 1,
+      "printed_anchoring": 1,
+      "tree_support_total_ms": 1
+    },
+    "printed_anchoring_progress": {
+      "last_layer": 541,
+      "plan_layers": 555,
+      "components": 36379,
+      "local_overlaps": 17525,
+      "certified": 16926,
+      "indexes": 458
+    },
+    "process": {
+      "exit_code": -1,
+      "timed_out": true,
+      "elapsed_seconds": 1801.1514372,
+      "cpu_seconds": 3075.453125,
+      "peak_working_set_bytes": 6694002688,
+      "peak_private_bytes": 6681743360,
+      "data_unchanged": false,
+      "gcode_sha256": null
+    },
+    "complete_export": false,
+    "observed_phase_seconds": 1923.08277,
+    "largest_observed_phase": [
+      "printed_anchoring",
+      1366.16
+    ],
+    "unattributed_elapsed_seconds": 0.0,
+    "unattributed_phase_note": "For an incomplete export this is a lower bound for unlogged path validation, final toolpath work, and shutdown; it is not assigned to one stage without a completed export."
+  },
+  "latest_final_source_note": "Current source includes bounded collision caching and generic interface-chain broad phase; latest complete large test.3mf export was not achieved within the 1800-second measurement limit."
+}

@@ -1,0 +1,1136 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "inlong-infinity-defaults-brim-priority-review-20261025",
+  "key": "inlong-infinity-process-defaults",
+  "type": "fact",
+  "conclusion": "The reviewed profile defaults remain: 63 selectable INLONG/_Infinity3DP machines resolve fan_speedup_time=0.5 s, fan_kickstart=0.1 s, fan_speedup_overhangs=false and part_cooling_fan_min_pwm=0; 46 indexed processes resolve seam_gap=0, brim_object_gap=0.1 mm, organic branch diameter=3.0 mm, bridge_flow=1.05 and bridge_density=105%. Bundle versions remain INLONG 01.05.01.29 and _Infinity3DP 01.28.15.24. All prior profile and cooling bindings except GCode.cpp are unchanged. Its complete diff only selects native same-material first-layer support overrides. Fresh Cooling/final-statistics/organic-handoff regressions pass 956 assertions in nine cases. The earlier full profile-resolution audit and fan timing measurements retain their historical scope. Commanded timing is not measured fan RPM, firmware arc timing or hardware acceleration; saved projects and custom overrides remain outside the preset audit.",
+  "scope": "Curated profiles, fan option declarations and emitted cooling behavior as of 2026-10-25; Commanded timing is not measured fan RPM, hardware acceleration or firmware arc timing. User preset/project overrides are outside the profile audit. Reviewed again after the 2026-10-25 same-material bed-support/Brim ownership change; older benchmark dates and limitations remain historical.",
+  "modules": [
+    "printer-profiles",
+    "gcode-cooling"
+  ],
+  "tags": [
+    "INLONG",
+    "Infinity3DP",
+    "seam_gap",
+    "brim_object_gap",
+    "bridge",
+    "organic-support",
+    "inheritance",
+    "fan_speedup_time",
+    "fan_kickstart",
+    "fan-timing",
+    "native-regression",
+    "source-revalidation",
+    "scope-audit"
+  ],
+  "files": [
+    "resources/profiles/INLONG/machine/Vulcan600_common.json",
+    "resources/profiles/INLONG/machine/Vulcan600 0.6mm nozzle.json",
+    "resources/profiles/INLONG/machine/Vulcan600 0.4mm nozzle.json",
+    "resources/profiles/INLONG/machine/Vulcan600 0.5mm nozzle.json",
+    "resources/profiles/INLONG/machine/Vulcan600 0.8mm nozzle.json",
+    "resources/profiles/INLONG/machine/Vulcan1200_common.json",
+    "resources/profiles/INLONG/machine/Vulcan1200 0.6mm nozzle.json",
+    "resources/profiles/INLONG/machine/Vulcan1200 0.4mm nozzle.json",
+    "resources/profiles/INLONG/machine/Vulcan1200 0.5mm nozzle.json",
+    "resources/profiles/INLONG/machine/Vulcan1200 0.8mm nozzle.json",
+    "resources/profiles/INLONG/machine/SC12060_common.json",
+    "resources/profiles/INLONG/machine/SC12060 0.4mm nozzle.json",
+    "resources/profiles/INLONG/machine/SC12060 0.6mm nozzle.json",
+    "resources/profiles/INLONG/machine/SC12060 0.8mm nozzle.json",
+    "resources/profiles/INLONG/process/sc_process_common.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.20mm.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.25mm.json",
+    "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+    "resources/profiles/INLONG/process/process_common.json",
+    "resources/profiles/INLONG/process/Layer_0.15mm.json",
+    "resources/profiles/INLONG/process/Layer_0.20mm.json",
+    "resources/profiles/INLONG/process/Layer_0.25mm.json",
+    "resources/profiles/INLONG/process/Layer_0.30mm.json",
+    "resources/profiles/INLONG/process/Layer_0.35mm.json",
+    "resources/profiles/INLONG.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX common.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.3mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.4mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.5mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.6mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.8mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 1.0mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 1.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO common.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.3mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.4mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.5mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.6mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.8mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 1.0mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 1.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 common.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.3mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.4mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.5mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.6mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.8mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 1.0mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 1.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 common.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.3mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.4mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.5mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.6mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.8mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 1.0mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 1.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO common.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.3mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.4mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.5mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.6mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.8mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 1.0mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 1.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 common.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.3mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.4mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.5mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.6mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.8mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 1.0mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 1.2mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD common.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.4mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.5mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.6mm nozzle.json",
+    "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.8mm nozzle.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_common.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_common.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.20mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+    "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+    "resources/profiles/_Infinity3DP.json",
+    "src/libslic3r/PrintConfig.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/GCodeWriter.cpp",
+    "src/libslic3r/GCode/CoolingBuffer.cpp",
+    "src/libslic3r/GCode/FanMover.cpp",
+    "tests/fff_print/test_cooling.cpp",
+    "src/slic3r/Utils/PresetUpdater.cpp",
+    "scripts/inlong_profile_tool.py",
+    "docs/evidence/fan-timing-and-profile-defaults-20261017.json",
+    "docs/evidence/layer-count-plan-fix-20261017.json",
+    "docs/evidence/application-updates-disabled-20261017.json",
+    "docs/evidence/upstream-main-d16ca97380-20261019.json",
+    "scripts/tests/test_inlong_profile_gcode.py",
+    "docs/evidence/project-knowledge-revalidation-20261025.json",
+    "docs/evidence/brim-priority-contract-review-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan600_common.json",
+      "sha256": "62fe7ff60d16326913c2b74bf7bea475b71e7d18364e14764ea053f55880f160",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan600 0.6mm nozzle.json",
+      "sha256": "df5281c7e5203aa1afbaf9b61c173dd3a1d2237c99050de9baa4e795d36583b4",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan600 0.4mm nozzle.json",
+      "sha256": "c4a39751dad44f6d937121b5531359fa2ff34173b6db35d7ed3402a1feb8b0e5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan600 0.5mm nozzle.json",
+      "sha256": "c6f35b0fc96426ae7ceaec8a1dc1b85e1331136bad37174bd8b79947bd9b1072",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan600 0.8mm nozzle.json",
+      "sha256": "703f22a8d6e9a8e8e1c4a38b5b7f131dd01125c2937c7cffce5a500a648840ec",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan1200_common.json",
+      "sha256": "10359de347b87f27914e47787202490c0d813949dbf43b0ec838aedceb21f4c9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan1200 0.6mm nozzle.json",
+      "sha256": "eced68890d188767c9c8858440f90edaa2724933933d6d73149f96f8fddf125e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan1200 0.4mm nozzle.json",
+      "sha256": "cb056d0b4bb4452a141c444517d7d22e8c74029d84c7d6632aa77f894e995bf2",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan1200 0.5mm nozzle.json",
+      "sha256": "68176446438dd4599358b5ffc04b946eaac50358f4a9022a0935f05bd14e8bb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/Vulcan1200 0.8mm nozzle.json",
+      "sha256": "0783db3b8c1e94ece71c837963a042872d004e9c1feba786d2218d617ac6b904",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/SC12060_common.json",
+      "sha256": "abefea9aebc9389ac3a902aa7c2d16ce9211e65d2980b2809a9b15e90dcae00c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/SC12060 0.4mm nozzle.json",
+      "sha256": "cf10df608f3467672457a1c4b08c99cf6d73f64ebca1010e946a35ff16248015",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/SC12060 0.6mm nozzle.json",
+      "sha256": "c7f45fdca0b03b06234559ca1d3a7e24dfde076c680cd4419143b8a94b104b52",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/machine/SC12060 0.8mm nozzle.json",
+      "sha256": "87619f5ec298b185b0adad76d5cca856cbb007362f19de1f60c1ba6fd4832037",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_process_common.json",
+      "sha256": "c6a2a0158119d4f672336be30b79747736070dd9c28a11042c0b4dbf1d7d69cb",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.20mm.json",
+      "sha256": "ca69f68b2830312522060616dd5a14ee685815a247777c9987f03ae4c31ec5b1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.25mm.json",
+      "sha256": "5121cf5a661b6e36716ce67d69bc04e5e38e1ec67cade377eb329c65719613c9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+      "sha256": "6eb17bbccd47b43a9287aad755735be26b835bd6d796fa3d407c7e566adfb369",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/process_common.json",
+      "sha256": "65edb5145be4f94bfbd8db9a93f28cc50cdc28f10570ce1abb6ff27489db445f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.15mm.json",
+      "sha256": "4178d8129ae3943ce5d5a7b61949f939c10a8e63c09ff5f843d57a05bf49fc9a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.20mm.json",
+      "sha256": "ae69be94106737d74afe674f644a0cad4cae120974a7d96482a1cb8d2abd7769",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.25mm.json",
+      "sha256": "7d45d65b4de4ea05854e373d060996be1fdb5eee4ae2580fadfe05498180e2cd",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.30mm.json",
+      "sha256": "e61a33e8af44f3f655b4787f6885a6d8f498cd6590e57bc6d742c0c1c535e912",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG/process/Layer_0.35mm.json",
+      "sha256": "f0c5505936f9c0faaccc25c976a31216fb35c2894821dd93a0440a38fa2f4656",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/INLONG.json",
+      "sha256": "df92eb13704e01d418f00da0a85ac2e215e78f37e52a2a41cd70bf62f513153b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX common.json",
+      "sha256": "72ac22771acb9c73568068d0e3f0b08c1c94493c15116c93e0a0edc7c761afea",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.2mm nozzle.json",
+      "sha256": "f66b544eaa38b76b3a1bd0225c890ccf60fb5e8cdd35dc677e168eda3fdf133a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.3mm nozzle.json",
+      "sha256": "fc0254cc7ce103032d2365e0686bc5f8c85d709de2932b042e9035fea6a81995",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.4mm nozzle.json",
+      "sha256": "29228dffb3923726ae40db5a2fbfd7c2fbec29f37c09b87e3b6ba462877721a4",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.5mm nozzle.json",
+      "sha256": "e635882797f4ba408836a03f1795797d11fc008db881fb127803fd5db2c2bca2",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.6mm nozzle.json",
+      "sha256": "ebf0bf9da7f0fc04acf5ae68f6c3debe77e6d39d3aacc8262b95867d9c577616",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.8mm nozzle.json",
+      "sha256": "dc21c5b910b6a027c1ea520851c1fec55b52af925f127559c9b2930aeb0dca87",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 1.0mm nozzle.json",
+      "sha256": "419698b41339ec4a401a5966cff77a8c44bd454ab230adda1398bd7d9e6e49c7",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 1.2mm nozzle.json",
+      "sha256": "74e0e8ac20225dcf24882ec5dbeed4434f0e1acc51e30d17adb147d849d42e59",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO common.json",
+      "sha256": "ccabffc8a3e118f843897e1dab7037026d9b097be1bfc3afa16e35c5fe1ae671",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.2mm nozzle.json",
+      "sha256": "02e4688a3d205e67522217cd80910befa9c8fd08a0feaab771088363916f53ae",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.3mm nozzle.json",
+      "sha256": "bf90d62e0ed5f86458680f760bced4c747b924b846415b50cfce71bc4811abd8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.4mm nozzle.json",
+      "sha256": "6cc45535ecfde721d89207070d40e7ce46b1698eb12dafce8f9c720e973a80c8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.5mm nozzle.json",
+      "sha256": "94a0508ff5f9b09026751f5062740d8c402cc216cbd8abc612cd74354b0e86eb",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.6mm nozzle.json",
+      "sha256": "781c472386d98de89f2fb44fd0f3d2f6ae961b87957f4ce749ffc0ab7ceb8252",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.8mm nozzle.json",
+      "sha256": "a1b38c9ba5af31b87761e64461a03d5c9bbb3d3a557f2b6dc77a04892ecdc3a1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 1.0mm nozzle.json",
+      "sha256": "813f5f99ea8fd7f4d18fe9d724c46e78c0b04d6afc6213016ef6be1f591cf6d8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 1.2mm nozzle.json",
+      "sha256": "14154fdfacce898f3936be9dc40d1103bbaa672aaea5e2f2cddcb7374965877a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 common.json",
+      "sha256": "e32c241234e6a8f2a6f89296f5f0a00c05a9327e6c9a20a209900b1ac7bb7ee9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.2mm nozzle.json",
+      "sha256": "d2cc1b5c1060135ea992d3c30450b58e2c74c2b4595e4f7ad443738b682ab9b0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.3mm nozzle.json",
+      "sha256": "8a7c076b42433a212e12b84d75d937c341e7cf0db5b0406a77e9c16371ae02d5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.4mm nozzle.json",
+      "sha256": "68367a19c5785e5c6e7b517f2a71c07b2ca02e1861205f8d415d1f6fed1ea9b3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.5mm nozzle.json",
+      "sha256": "f500330b677bf5f20d333cba8058e50a6dc3bcc85c0357983ecbf6dc5e862fe3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.6mm nozzle.json",
+      "sha256": "dca21e7a32c0ac384bf69cb743b2fe828570dbc03a43fcc612553c973ccb6d48",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.8mm nozzle.json",
+      "sha256": "aad33f5f1421ae755090c675836ad92351cbff5d9192f4843cc1d11a60ef8b81",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 1.0mm nozzle.json",
+      "sha256": "6a500ce22ee2d81fb56ab8972fd8c74f1801fe365b01fee0d78e63fcb7310dd5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 1.2mm nozzle.json",
+      "sha256": "8a68a0b77f45e0f826c99892e7d1820769fabbfef89a4ee592f70dd77f938e4c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 common.json",
+      "sha256": "487e6e1d6d9e5ca1b5eb804097aa166c45724b7f87571bb69e2a8630e3d7a84b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.2mm nozzle.json",
+      "sha256": "66a74079fda278dbfe29febde37313631d18b16106d2cc2079009bdc1ea89ac6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.3mm nozzle.json",
+      "sha256": "3c0aa6ed72e0e4f570ea751b05ce28a3793e8be55c244b68ccf166e7ef9065bf",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.4mm nozzle.json",
+      "sha256": "fbe3a2b60542100efd9b1133111ae65e8499941850d792f9e4524d061dc823cb",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.5mm nozzle.json",
+      "sha256": "599006cbed7fbdbf315d13dad3d2d2a0a8cdec8d27d1198befeebe6dafdf9950",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.6mm nozzle.json",
+      "sha256": "b0903d32444dbe2fac1e9f745da7bbecda14d8b76f966477a9c350f117e003f0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.8mm nozzle.json",
+      "sha256": "4e41d5d2b315b3d565140b9f38d171ba8fe16cdf75ab6d2ae868afa1d61e01de",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 1.0mm nozzle.json",
+      "sha256": "ef9dcdbfff58209eaa87384fb1a0f6e884de52a0f4024c43b5d570c8c3be22ca",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 1.2mm nozzle.json",
+      "sha256": "3f596fca4bf7685564112cb7a6bb625e801386ec16e64c35913191f2b1cbbb1c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO common.json",
+      "sha256": "f651209f67f971d6ba437046533120a6dda50a13e080722102d8f5a68860be7a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.2mm nozzle.json",
+      "sha256": "ff62a91a0f5aa1bd21370feff8a8c8094cb97f1853c8f4aff7266d34b7d1cc32",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.3mm nozzle.json",
+      "sha256": "04dc273d90f3b3efe03ad360c8e906b4574000072c38ff9fadc1f9f09e3bfd19",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.4mm nozzle.json",
+      "sha256": "fe86532401e170ed2d6c4c42914c3dc823f99359605f2b411c61399f40f2f81a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.5mm nozzle.json",
+      "sha256": "6fdb938f09e0ec0b6b35d731b0f37b4e2ea597e1c54525609e7c4e600036d0b3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.6mm nozzle.json",
+      "sha256": "b78ed3bf4315843c47a5ed1203471d59257add64f029265f8126b30eb528ec4e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.8mm nozzle.json",
+      "sha256": "2831ef1989c1ec54152ce5ea316dbd3a5ad3de33a947c10dfad425708c4b20a0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 1.0mm nozzle.json",
+      "sha256": "48773d3aec19b31ef057b472a9b2bc257d36b88ad50aec3554dd0a156b0745df",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 1.2mm nozzle.json",
+      "sha256": "56fc37c4ed10d8a1a31365d5e08729924a60a1fb48a4768b8498be4c8a31ff88",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 common.json",
+      "sha256": "18019bf6909cef4206a10f5e5142b58b8116d44dcdfd8c71286fa1e6be3c0ae3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.2mm nozzle.json",
+      "sha256": "cdaa51b5406a0f23e5a440d226e79ff25ba342a4622a54a3f13bf038d73c6a53",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.3mm nozzle.json",
+      "sha256": "9ccc4f7e8f807810171090546191a78a609592d0cd7871bf9092a2c48306ad61",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.4mm nozzle.json",
+      "sha256": "b140b284821012a75ab6e75be40804f571c468cc688471d562094da74af96300",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.5mm nozzle.json",
+      "sha256": "8c5655820c69568f6e8073097dcd3068d9fc4b16860b7bb37e60bca63f2ee03e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.6mm nozzle.json",
+      "sha256": "b61d1a7ce64a3c7799742eb87b9819b5d8ead3b27bba8475af9a1c5cd1505922",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.8mm nozzle.json",
+      "sha256": "35fd8a366b2456d7a5bee4d54e6bb1b7f06b6bf9c845b96655fa66407f78ebbd",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 1.0mm nozzle.json",
+      "sha256": "8ae220aec224cfb624ed663afecfcf7405e5b7c567fb02580b1b33319784b1c5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 1.2mm nozzle.json",
+      "sha256": "f4ba6d6ec855f4f5a76d5993c5ec6e04e0add8f99525c213622a3978ccb4de0b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD common.json",
+      "sha256": "85bbc57a95080ba70ff048702ca0ee5806d28c4cbeb2246a195ee299a6d0fabc",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.4mm nozzle.json",
+      "sha256": "ef89877a817458fb1f44ceece10f29e2d1d6c867c5eaeb161b0f977be23c3dc9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.5mm nozzle.json",
+      "sha256": "2220480d7f74406cd75ad9a6026b159b41e4583142fb45cbb7b5474601aeb30f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.6mm nozzle.json",
+      "sha256": "d2faa64b81dddd9c9099bc09e64b3bce160c917cbcbba20dca9c71b96b73f4d8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.8mm nozzle.json",
+      "sha256": "3bc15d3f7b9020a28ffb40c45b207b665b630ad5c4615ddc92663ff1dd2426cf",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+      "sha256": "54c923d6373e1a78e5c041725d3b5fec06f7c7bc9d8ec86412f0f00d7fe8d415",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+      "sha256": "25db01ea4da18428447a710a72d013484fe0abe43f2a76b30795bf79babcdc3f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+      "sha256": "5811ce1eab816a40bb2a1f8e03cc143e89e84ddadc7473a44c55a8e1f526d763",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.15mm.json",
+      "sha256": "debca04e804fa2a414bd7ba809c19fa0e18170cd6fb736ab32b5f5191730a976",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+      "sha256": "85959883ae4b6d777896affd3325f44cc430002acc641afed6ddad390d077797",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+      "sha256": "76b6f1166169065a5ac9814f34e3cf85b4c32f359d327f3197084bd9e4a94bf0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+      "sha256": "b13f6a9c0d8d0871f3ebf927450f9bd7f9840fa542a8b06002ef11b48ce48f34",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+      "sha256": "46b39a475d37d85d722e9d5b8a5e34efd976cd26f3ce414207091daebda11903",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.15mm.json",
+      "sha256": "6a65e4b9e3188f6562611e881d5a6f562ffd20aaf18a766a4b747f40c3a92843",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+      "sha256": "582539b059b26326517664beb01547da5fa879f6affd408f511fe8f39828933e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_common.json",
+      "sha256": "8309e91dc7b958e1a7cf7b3abb10d731d19fa15243c17addbd79dc0602ee3443",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+      "sha256": "0523acf96e8a067bc35cb74732b5b1be47e87a8b436814a6213a52ed3029d836",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+      "sha256": "c00c7c919c05e129085f76c7dd4d7c66999e88477665a8a71314ea4a791be7c9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.15mm.json",
+      "sha256": "affa888f1beae2fcb0a9e2ff1fe2b31c11dd1264bd1e92b7f78433d53666dae5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+      "sha256": "d65e3e7f879a49c9e5970f87f364d2361bfbfbae97ec5874ab0970268a93baf1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_common.json",
+      "sha256": "0c22b2f71714f069ce34bdd56eb8cdbdcd728c38d99be343823ef2265c8d2af8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+      "sha256": "3d425e77b26512b61aa488af579fa1761e517cee630fa4a1f88b1855d1df7830",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+      "sha256": "9a8c5b0e3ba101e8e37fd0c4b0a74b25b7313cbcc1b9b65f3e2a564eaab8ec0f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.15mm.json",
+      "sha256": "3751eb0e482ee7143963999c69ec1a93250f1c0b5c7046e3247d4ae9d850acd3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.20mm.json",
+      "sha256": "fb68db63d055936608508b8f7ba9a0eaf7281881fc4b0169a09cae9a2576ec1f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+      "sha256": "48b9673f2ca582aa3febc236acd1b4831524357f2e51ef3a63b31370ea416e6e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+      "sha256": "4478db682a9e0e9d94e2922e70dbd354cf9276246326aa2cb42c0a6b2f89bcc7",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+      "sha256": "127466cf99491be1910f703c6294a477e9a20989f6755363b7cd784305926076",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.15mm.json",
+      "sha256": "76af8e6198da7cdbc34e2483f4cbe984d5ec4c9d3f34192aefd802de608c9e7c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.20mm.json",
+      "sha256": "d7220120d0da2cbe1d27237446e55f9c5eef7ef9f50e942728f65e702a6f106e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_common.json",
+      "sha256": "5ab963f437fbba5423544c8decdf288fd963082a4b5ad62b985a772d8a8ccddd",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+      "sha256": "3fc7eb806323623275e19472812af26f964bb0d1ec56fc50604733cb60bd3884",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+      "sha256": "2cec9ea17a107212916e300ef0af89c793b9a6b94dfbe157111bbfa15216b67a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.15mm.json",
+      "sha256": "6b3e7e5a1bff6d908abc32b70e76c5e4a0c9c1d167885a8068c070a0096fe682",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+      "sha256": "f9aa876d927fc7191b90c2c26547c0a53f3a07b4ee0f3b38967c6462c5a7cb9e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+      "sha256": "883cf23eab6abce2fe2a8028c6a92c049abc251af154e6f07abe5b7b1df9f46f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+      "sha256": "b87ae19df869c7280da982e7212d208988f4943ccecf8acf5a3cc13aed86ab77",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.20mm.json",
+      "sha256": "8d8d754f1d4e1f7bca2edb79abbe64e1ca6689ba9aa772f571ae58eff87df911",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+      "sha256": "30f0c7a94b153bb21cdc04f242f1f05db23dbec4fdbafbf7613ca1b11621fc56",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+      "sha256": "a5e18c6aa522bdac139f1438e261e51752d855bbbd89218b29aa8d46121a8c0a",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+      "sha256": "1b2e41a7106feb92c52f4ecb8b8c21677144703602de4fc3a5fa0ac623e53a9b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/profiles/_Infinity3DP.json",
+      "sha256": "f04eb5cbe5794322ed72faf50662f26fcfa6f5eb1b73dcbd0301bc15ecde9675",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "sha256": "c9c8688d3637ecaa26514e7bb2ad2df8f82db94eae578f94258c4319af7d78d4",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Exhaustively reviewed same-material first-layer support-routing diff. Fan and final-statistics code is unchanged; checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCodeWriter.cpp",
+      "sha256": "e206058ff330a36eb6d6f1e614dcc77dc717b950f9e1b7b5d47725e5523b43d2",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode/CoolingBuffer.cpp",
+      "sha256": "c847d22f285f0d11f51352416105c6a185094fe72239cefc12faee417400816e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode/FanMover.cpp",
+      "sha256": "59cf44904546bd2fe754db6a8c62adbcb9bebfb779fb6510b4b054001bee0004",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_cooling.cpp",
+      "sha256": "1ac2c89b3da3efeee1350bdaa9cc5127b6c80bf52f4bb2b493eeb35bfdbdd837",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/Utils/PresetUpdater.cpp",
+      "sha256": "b0f540018c72c4372752b070472e51d01e9ca6d353dd121eb11e519e878db5e2",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/inlong_profile_tool.py",
+      "sha256": "ab4ad039b179188202c49fdc19c4621a3c0b02b192a4227584892d2541f376bd",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/fan-timing-and-profile-defaults-20261017.json",
+      "sha256": "a49a0ab63ffb9c65f866bfff9991a377ae13351e9cc27ccaa3b4fcd5c99424a1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/layer-count-plan-fix-20261017.json",
+      "sha256": "7fef73b395035c8885b04a1ec5c3382eb0e73cefb4a6e8d6aa940edb0b64cc14",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/application-updates-disabled-20261017.json",
+      "sha256": "89a732c3bdc09e5c19f1c90bf5c023074f205b7cdedaf1c699105ea004433db5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/upstream-main-d16ca97380-20261019.json",
+      "sha256": "4f8b0d13256eb11b423f1974862f4b1f6df76f22e211144f4e97be42a1584200",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_inlong_profile_gcode.py",
+      "sha256": "a71ab9aec55ba0c24560f8046e822357382185908fe8eccd5e94eae1a1402129",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/project-knowledge-revalidation-20261025.json",
+      "sha256": "e84622f34c4c5df77fc65510fd6fc86e8f0e40270a8edb890fc15720bd0b7eb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Curated profiles, fan option declarations and emitted cooling behavior; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/brim-priority-contract-review-20261025.json",
+      "sha256": "8a5e143dc46568789e88414b8cc0141b7e57d7a00969efc78660d6f37ea5a17d",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Immutable source-diff review and fresh native guard results; earlier benchmarks retain their original scope."
+    }
+  ],
+  "verified_utc": "2026-10-25T08:59:18.570546Z",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex",
+    "method": "Full changed-body review, exact unchanged binding verification and fresh native guard execution.",
+    "summary": "GCode.cpp only routes bed support through a preplanned per-instance collection. All other prior source bindings match; cooling, statistics and printed support handoff guards pass."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "inlong-infinity-defaults-review-20261025"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

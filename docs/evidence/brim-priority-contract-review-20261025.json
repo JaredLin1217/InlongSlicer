@@ -1,0 +1,41 @@
+{
+  "schema_version": "inlong-brim-contract-review/v1",
+  "verified_utc": "2026-10-25T08:59:18.570546Z",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "anchor_semantics": "HEAD anchors the checkout; reviewed uncommitted bytes are bound by SHA-256.",
+  "reviews": [
+    {
+      "id": "inlong-infinity-defaults-review-20261025",
+      "unchanged_bindings": 134,
+      "changed": [
+        {
+          "path": "src/libslic3r/GCode.cpp",
+          "before": "924a835c2fd8e26d369e96e0d69d15909a6b65b36b814a0664ff2da473391931",
+          "after": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5"
+        }
+      ]
+    },
+    {
+      "id": "upstream-print-statistics-placeholders-count-plan-20261022",
+      "unchanged_bindings": 6,
+      "changed": [
+        {
+          "path": "src/libslic3r/GCode.cpp",
+          "before": "924a835c2fd8e26d369e96e0d69d15909a6b65b36b814a0664ff2da473391931",
+          "after": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5"
+        }
+      ]
+    }
+  ],
+  "gcode_source_sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+  "reviewed_diff": "--- GCode.cpp before bed ownership\n+++ GCode.cpp after bed ownership\n@@ -7664,6 +7664,11 @@\n                     bool is_overridden = support_extrusion_role == erSupportMaterialInterface ? support_intf_overridden : support_overridden;\n                     if (is_overridden == (print_wipe_extrusions != 0)) {\n                         const ExtrusionEntityCollection *support_paths = instance_to_print.object_by_extruder.support;\n+                        if (first_layer && !instance_to_print.print_object.support_layers().empty() &&\n+                            layer_to_print.support_layer == instance_to_print.print_object.support_layers().front())\n+                            if (const auto *shared = print.first_layer_brim_support(\n+                                    {instance_to_print.print_object.id(), instance_to_print.instance_id}))\n+                                support_paths = shared;\n                         auto raft_override = raft_path_overrides.find({&instance_to_print.print_object, instance_to_print.instance_id});\n                         if (raft_override != raft_path_overrides.end())\n                             support_paths = raft_override->second;\n@@ -8066,10 +8071,16 @@\n                         m_need_change_layer_lift_z = true;\n                     }\n                     ExtrusionRole support_role = instance_to_print.object_by_extruder.support_extrusion_role;\n-                    gcode += this->extrude_support(*instance_to_print.object_by_extruder.support, support_role);\n+                    const ExtrusionEntityCollection *support_paths = instance_to_print.object_by_extruder.support;\n+                    if (first_layer && !instance_to_print.print_object.support_layers().empty() &&\n+                        layers[instance_to_print.layer_id].support_layer == instance_to_print.print_object.support_layers().front())\n+                        if (const auto *shared = print.first_layer_brim_support(\n+                                {instance_to_print.print_object.id(), instance_to_print.instance_id}))\n+                            support_paths = shared;\n+                    gcode += this->extrude_support(*support_paths, support_role);\n                     // Make sure ironing is the last (Orca names this role erIroning, not erSupportIroning).\n                     if (support_role == erMixed || support_role == erSupportMaterialInterface)\n-                        gcode += this->extrude_support(*instance_to_print.object_by_extruder.support, erIroning);\n+                        gcode += this->extrude_support(*support_paths, erIroning);\n                 }\n \n                 // --- Shared instance footer (mirrors Orca's main instance loop) ---\n",
+  "native_guards": {
+    "path": ".agents/runtime/runs/run-fc78383ded2643018303ad6dcbb82dc1/work/related-guards.log",
+    "sha256": "1d77d2efff68e14d89e563ff45b42898c75c95dddb8bca8f651c5cf18acf97d4",
+    "cases": 9,
+    "assertions": 956,
+    "filter": "[Cooling],Print statistics in custom G-code match the final print statistics,Independent organic bottom contacts retain a printed handoff to their trunks"
+  },
+  "method": "Manual exhaustive source-diff review, unchanged profile/cooling/processor/placeholder fingerprints, and fresh native Cooling, final-statistics and organic-handoff regressions.",
+  "conclusion": "Only native support-collection selection at the two emission paths changes in GCode.cpp. Fan command/advance/kick-start behavior, final reserved placeholder resolution, running extrusion totals and layer planning are unchanged. Historical profile-resolution and multi-project equality evidence retains its original dates and scope."
+}

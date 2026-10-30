@@ -1,0 +1,210 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "bundled-web-wizard-initialization-20261025",
+  "key": "bundled-web-wizard-initialization-contract",
+  "type": "fact",
+  "conclusion": "As of 2026-10-25, bundled wizard source still injects ORCA_UI_STRINGS before first navigation and translates data-i18n labels through i18n.js. Printer wrappers 21/24 share guide/21/common.js; material wrappers 22/23 share guide/22/common.js and submit full filament preset names through filalist/save_userguide_filaments. Native completion waits for both profile and page readiness; guide/0/load.js retains a three-minute fallback. The current host builds the profile view from available vendor data and its versioned cache. Five web-contract tests pass. These are static source/localization contracts, not a new interactive-browser or first-launch reliability result.",
+  "scope": "Bundled wizard source and localization contracts as of 2026-10-25; Static source checks do not establish current browser interaction or first-launch GUI behavior.",
+  "modules": [
+    "webguide",
+    "localization",
+    "presets"
+  ],
+  "tags": [
+    "wizard",
+    "filament",
+    "translation",
+    "merge-recovery",
+    "source-revalidation",
+    "scope-audit"
+  ],
+  "files": [
+    "resources/web/include/i18n.js",
+    "resources/web/guide/21/index.html",
+    "resources/web/guide/24/index.html",
+    "resources/web/guide/22/index.html",
+    "resources/web/guide/23/index.html",
+    "resources/web/guide/22/common.js",
+    "src/slic3r/GUI/WebGuideDialog.cpp",
+    "localization/i18n/zh_TW/InlongSlicer_zh_TW.po",
+    "localization/i18n/zh_CN/InlongSlicer_zh_CN.po",
+    "scripts/tests/test_web_ui_contracts.py",
+    "resources/web/guide/0/load.js",
+    "src/slic3r/GUI/WebGuideDialog.hpp",
+    "resources/web/guide/0/index.html",
+    "resources/web/guide/21/common.js",
+    "resources/web/guide/21/21.js",
+    "resources/web/guide/24/24.js",
+    "resources/web/guide/22/22.js",
+    "resources/web/guide/23/23.js",
+    "docs/evidence/project-knowledge-revalidation-20261025.json",
+    "src/slic3r/GUI/Widgets/WebViewHostDialog.cpp",
+    "src/slic3r/GUI/Widgets/WebViewHostDialog.hpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/include/i18n.js",
+      "sha256": "3dde0309ef7756adc987e264db14735a5300ce63759a89bd046da7380eec12fa",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/index.html",
+      "sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/24/index.html",
+      "sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/22/index.html",
+      "sha256": "85a2bb3caf06a42cffd36f974b6e57ad6d29fb23c0760322e4d75a16a5a02967",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/23/index.html",
+      "sha256": "f72521b882c7c49fe3b7a2f3a2abf5d15cdab95d732245c089e6085a9cccdfff",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/22/common.js",
+      "sha256": "c6ddf9a26f72da5bfd2c1a7c6f39945094f8ec04393c4d76129e4d3b6f27bed8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/WebGuideDialog.cpp",
+      "sha256": "d57f0d74e7129e4ccb6f194862854039276c4a8aabf0be0419ac26f526825ff7",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "localization/i18n/zh_TW/InlongSlicer_zh_TW.po",
+      "sha256": "167d2abf4abd894a290a16cad55fd7adc094d6faf74e1f2219882e485148207b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "localization/i18n/zh_CN/InlongSlicer_zh_CN.po",
+      "sha256": "c653d2b8914aba0842295728c08198d8c32a045f751253d1747defd6aa51b282",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/tests/test_web_ui_contracts.py",
+      "sha256": "fa05ed43642cf8bce35cb0c9c277cda8b8e5f5e37943cbb7e9342b72045ad62e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/0/load.js",
+      "sha256": "6a7e629c7d91d6a077d4bb162e216a58fe1f97d2e628aa207eca37ae9d7f7b88",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/WebGuideDialog.hpp",
+      "sha256": "b701d0fe9ada786762484df3dc9f7230a8f9564d13e2cbbaca2769671f853779",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/0/index.html",
+      "sha256": "d3b78e3047c640f1c9bc2221af5986c128d680b31d5c649c0325461e302b506b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/common.js",
+      "sha256": "b0d346607c907cd2b9dfdf2c27e3e12b9f82929bcd8f6c321f4aa356f3e2090e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/21/21.js",
+      "sha256": "ab029f27e7ee21bffdf6ee87e89523c7d4efd27fac8a68ff77409f8858e098f3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/24/24.js",
+      "sha256": "3b992245b262195b2a90ab12b59964b81fbfad54808bc81a87438593810d70c2",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/22/22.js",
+      "sha256": "9a5df44957044196bf139b6668a6a6bbe6f5ccf051f4e686cd607754c4eb8cf1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "resources/web/guide/23/23.js",
+      "sha256": "f7e361bd50ce168d19a5e1e782978a3aeefdaffefb81d2b859de3c6875fcf065",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/project-knowledge-revalidation-20261025.json",
+      "sha256": "e84622f34c4c5df77fc65510fd6fc86e8f0e40270a8edb890fc15720bd0b7eb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Bundled wizard source and localization contracts; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Widgets/WebViewHostDialog.cpp",
+      "sha256": "a9d449cfffe1ca0217143ca84c40eb1b110c10866f0ee9ef4da8a70c9bf40ab3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed ORCA_UI_STRINGS serialization and native WebView user-script injection contract."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/Widgets/WebViewHostDialog.hpp",
+      "sha256": "0309a7a7d410536fe9b96292eb0b962e283b9e1744b2cd74a2a3a30cb02fc34e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed ORCA_UI_STRINGS serialization and native WebView user-script injection contract."
+    }
+  ],
+  "verified_utc": "2026-10-25T03:15:23.249143Z",
+  "verification": {
+    "method": "Manual C++/JavaScript review, explicit source-order/readiness checks, and the five existing web-contract tests.",
+    "summary": "Only WebGuideDialog.cpp drifted among the twelve prior bindings. Translation injection still precedes first-page navigation. Profile/page readiness still jointly gate completion, with the three-minute JavaScript fallback. The current native source additionally derives profile data from the available vendor set and its versioned cache.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "bundled-web-wizard-initialization-20261016"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

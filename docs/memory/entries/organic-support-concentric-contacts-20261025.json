@@ -1,0 +1,149 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-concentric-contacts-20261025",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Organic concentric support contacts derive fill from the actual innermost wall, preserving complete contour rings instead of clipping them into open sides. Compact center remainders use medial-axis finishing instead of axis-aligned hatching. The source-bound Release passes 31 organic/tree-bridge cases with 3621 assertions, 15 contact/concentric cases and four clearance cases. Test2 at Z=6.03 mm changes from one closed ring, two open sides and two center strokes to one contact wall ring, one complete concentric fill ring and one center finish. Tree nodes and model/Brim geometry remain unchanged; the internal root stays continuous and the two local bottom gaps remain approximately 0.170003 mm. Source parameters remain concentric, one wall and 0.05 mm configured extra spacing. No hardware or universal-model guarantee is established.",
+  "scope": "Reviewed organic contact planning and source-bound Release geometry as of 2026-10-25; historical upstream and performance evidence retains its original scope.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "support-interface",
+    "closed-contours",
+    "floating-support",
+    "z-gap",
+    "exact-output-change",
+    "source-revalidation",
+    "scope-audit"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "docs/evidence/organic-support-interface-trim-20261021.json",
+    "src/libslic3r/Layer.cpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "scripts/analyze_organic_support.py",
+    "docs/evidence/project-knowledge-revalidation-20261025.json",
+    "docs/evidence/organic-support-bottom-root-continuity-20261025.json",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "docs/evidence/organic-support-concentric-contacts-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-interface-trim-20261021.json",
+      "sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Layer.cpp",
+      "sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "fd9abdcd3ff2110a4d0323faaf609cb05238b46121e593eaa3e533f41c71b330",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/analyze_organic_support.py",
+      "sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/project-knowledge-revalidation-20261025.json",
+      "sha256": "e84622f34c4c5df77fc65510fd6fc86e8f0e40270a8edb890fc15720bd0b7eb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-bottom-root-continuity-20261025.json",
+      "sha256": "5ca22c10361828f0f6d7740818683b6880d0acef76352fb34829a582a4321ba3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-concentric-contacts-20261025.json",
+      "sha256": "0cc117506c9efb92bcb21db9a0f26537836a6e61427a3fad6c2a6e3e26e9cf36",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and immutable concentric-contact acceptance; earlier evidence retains historical scope."
+    }
+  ],
+  "verified_utc": "2026-10-25T06:35:49.093285Z",
+  "verification": {
+    "method": "Manual source review, rotated narrow-contact regression, complete organic and contact/fill regression groups, two native Release exports and actual path/height analysis.",
+    "summary": "Independent offsets of a contact boundary and its walls allowed the wall keepout to split concentric loops. Axis-aligned center probes additionally produced parallel strokes and failed rotation invariance. Derive the infill boundary from the innermost printed wall with a numerical inset, and use the existing medial-axis fallback for compact organic contact remainders, dropping only sub-bead branch fragments when a longer center exists.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-bottom-root-continuity-20261025"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

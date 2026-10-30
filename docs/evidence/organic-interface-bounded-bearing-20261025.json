@@ -1,0 +1,599 @@
+{
+  "schema_version": "inlong-product-evidence/v1",
+  "primary_evidence": {
+    "path": "docs/evidence/organic-interface-bounded-20261025.json",
+    "sha256": "cb4c0135d8cf674ef4205ab31a488823109f7d53c4c59d53d02bd397b8761945"
+  },
+  "method": "Compare complete deposited support components with actual lower-plane material at each road physical bottom Z. A changed partial bead overlap is recorded separately from a newly detached component.",
+  "scope": "Relative software-geometry anchoring check; does not claim every point of a sparse interface has material directly beneath it.",
+  "components_checked": 79,
+  "newly_detached_components": [],
+  "component_anchors": [
+    {
+      "z": 0.18,
+      "component": 0,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 0.18,
+      "component": 1,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 0.18,
+      "component": 2,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 0,
+      "old_anchor_mm2": 4.579897905273288,
+      "new_anchor_mm2": 4.579897905273288,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 1,
+      "old_anchor_mm2": 19.727316090646568,
+      "new_anchor_mm2": 19.727316090646568,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 2,
+      "old_anchor_mm2": 14.325669717362812,
+      "new_anchor_mm2": 14.325669717362812,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 3,
+      "old_anchor_mm2": 4.078553744418452,
+      "new_anchor_mm2": 4.078553744418452,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 4,
+      "old_anchor_mm2": 4.547747055101915,
+      "new_anchor_mm2": 4.547747055101915,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 5,
+      "old_anchor_mm2": 0.7048722292796179,
+      "new_anchor_mm2": 0.7048722292796179,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 6,
+      "old_anchor_mm2": 4.078553744416757,
+      "new_anchor_mm2": 4.078553744416757,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 7,
+      "old_anchor_mm2": 19.72730032360322,
+      "new_anchor_mm2": 19.72730032360322,
+      "newly_detached": false
+    },
+    {
+      "z": 0.23,
+      "component": 8,
+      "old_anchor_mm2": 14.323724983362622,
+      "new_anchor_mm2": 14.323724983362622,
+      "newly_detached": false
+    },
+    {
+      "z": 0.43,
+      "component": 0,
+      "old_anchor_mm2": 4.298658552650404,
+      "new_anchor_mm2": 4.298658552650404,
+      "newly_detached": false
+    },
+    {
+      "z": 0.43,
+      "component": 1,
+      "old_anchor_mm2": 19.16284681686442,
+      "new_anchor_mm2": 18.999199642535316,
+      "newly_detached": false
+    },
+    {
+      "z": 0.43,
+      "component": 2,
+      "old_anchor_mm2": 10.951838239256272,
+      "new_anchor_mm2": 10.951838239256272,
+      "newly_detached": false
+    },
+    {
+      "z": 0.43,
+      "component": 3,
+      "old_anchor_mm2": 4.393943408308339,
+      "new_anchor_mm2": 4.393943408308339,
+      "newly_detached": false
+    },
+    {
+      "z": 0.43,
+      "component": 4,
+      "old_anchor_mm2": 0.5891052789481933,
+      "new_anchor_mm2": 0.5891052789481933,
+      "newly_detached": false
+    },
+    {
+      "z": 0.43,
+      "component": 5,
+      "old_anchor_mm2": 19.162758657278538,
+      "new_anchor_mm2": 18.999166090716955,
+      "newly_detached": false
+    },
+    {
+      "z": 0.43,
+      "component": 6,
+      "old_anchor_mm2": 10.956382153028185,
+      "new_anchor_mm2": 10.956382153028185,
+      "newly_detached": false
+    },
+    {
+      "z": 0.63,
+      "component": 0,
+      "old_anchor_mm2": 4.582153631042287,
+      "new_anchor_mm2": 4.582153631042287,
+      "newly_detached": false
+    },
+    {
+      "z": 0.63,
+      "component": 1,
+      "old_anchor_mm2": 10.047447098769391,
+      "new_anchor_mm2": 10.047447098769391,
+      "newly_detached": false
+    },
+    {
+      "z": 0.63,
+      "component": 2,
+      "old_anchor_mm2": 19.952283549109715,
+      "new_anchor_mm2": 19.951696465085686,
+      "newly_detached": false
+    },
+    {
+      "z": 0.63,
+      "component": 3,
+      "old_anchor_mm2": 4.585871020873279,
+      "new_anchor_mm2": 4.585871020873279,
+      "newly_detached": false
+    },
+    {
+      "z": 0.63,
+      "component": 4,
+      "old_anchor_mm2": 0.5689229318306133,
+      "new_anchor_mm2": 0.5689229318306133,
+      "newly_detached": false
+    },
+    {
+      "z": 0.63,
+      "component": 5,
+      "old_anchor_mm2": 19.953551297166012,
+      "new_anchor_mm2": 19.952965386835352,
+      "newly_detached": false
+    },
+    {
+      "z": 0.63,
+      "component": 6,
+      "old_anchor_mm2": 9.99345735178937,
+      "new_anchor_mm2": 9.99345735178937,
+      "newly_detached": false
+    },
+    {
+      "z": 0.8,
+      "component": 0,
+      "old_anchor_mm2": 4.285580360852064,
+      "new_anchor_mm2": 4.285580360852064,
+      "newly_detached": false
+    },
+    {
+      "z": 0.8,
+      "component": 1,
+      "old_anchor_mm2": 13.142209690438081,
+      "new_anchor_mm2": 13.142750792745,
+      "newly_detached": false
+    },
+    {
+      "z": 0.8,
+      "component": 2,
+      "old_anchor_mm2": 13.240768736643341,
+      "new_anchor_mm2": 13.240802595921183,
+      "newly_detached": false
+    },
+    {
+      "z": 0.8,
+      "component": 3,
+      "old_anchor_mm2": 3.5670982114270124,
+      "new_anchor_mm2": 3.5670982114270124,
+      "newly_detached": false
+    },
+    {
+      "z": 1.085,
+      "component": 0,
+      "old_anchor_mm2": 4.492493509058775,
+      "new_anchor_mm2": 4.492493509058775,
+      "newly_detached": false
+    },
+    {
+      "z": 1.085,
+      "component": 1,
+      "old_anchor_mm2": 7.337224541876992,
+      "new_anchor_mm2": 7.337108560220525,
+      "newly_detached": false
+    },
+    {
+      "z": 1.085,
+      "component": 2,
+      "old_anchor_mm2": 7.337562305925836,
+      "new_anchor_mm2": 7.337562305925836,
+      "newly_detached": false
+    },
+    {
+      "z": 1.085,
+      "component": 3,
+      "old_anchor_mm2": 4.492352644465717,
+      "new_anchor_mm2": 4.492352644465717,
+      "newly_detached": false
+    },
+    {
+      "z": 1.37,
+      "component": 0,
+      "old_anchor_mm2": 4.023549767375896,
+      "new_anchor_mm2": 4.023549767375896,
+      "newly_detached": false
+    },
+    {
+      "z": 1.37,
+      "component": 1,
+      "old_anchor_mm2": 9.920850128256662,
+      "new_anchor_mm2": 9.920850128256662,
+      "newly_detached": false
+    },
+    {
+      "z": 1.37,
+      "component": 2,
+      "old_anchor_mm2": 9.920715748115956,
+      "new_anchor_mm2": 9.920715748115956,
+      "newly_detached": false
+    },
+    {
+      "z": 1.37,
+      "component": 3,
+      "old_anchor_mm2": 3.0440433670293423,
+      "new_anchor_mm2": 3.0440433670293423,
+      "newly_detached": false
+    },
+    {
+      "z": 1.62667,
+      "component": 0,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.63,
+      "component": 0,
+      "old_anchor_mm2": 1.9908408712441816,
+      "new_anchor_mm2": 1.9908408712441816,
+      "newly_detached": false
+    },
+    {
+      "z": 1.63,
+      "component": 1,
+      "old_anchor_mm2": 9.920850128256662,
+      "new_anchor_mm2": 9.920850128256662,
+      "newly_detached": false
+    },
+    {
+      "z": 1.63,
+      "component": 2,
+      "old_anchor_mm2": 9.920715748115956,
+      "new_anchor_mm2": 9.920715748115956,
+      "newly_detached": false
+    },
+    {
+      "z": 1.63,
+      "component": 3,
+      "old_anchor_mm2": 2.5672064880375585,
+      "new_anchor_mm2": 2.5672064880375585,
+      "newly_detached": false
+    },
+    {
+      "z": 1.82667,
+      "component": 0,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.82667,
+      "component": 1,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.82667,
+      "component": 2,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.82667,
+      "component": 3,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.82667,
+      "component": 4,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.82667,
+      "component": 5,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.82667,
+      "component": 6,
+      "old_anchor_mm2": 0.0,
+      "new_anchor_mm2": 0.0,
+      "newly_detached": false
+    },
+    {
+      "z": 1.88667,
+      "component": 0,
+      "old_anchor_mm2": 2.6361768041816394,
+      "new_anchor_mm2": 2.6361768041816394,
+      "newly_detached": false
+    },
+    {
+      "z": 1.88667,
+      "component": 1,
+      "old_anchor_mm2": 10.427256602226091,
+      "new_anchor_mm2": 10.427256602226091,
+      "newly_detached": false
+    },
+    {
+      "z": 1.88667,
+      "component": 2,
+      "old_anchor_mm2": 2.661666691996558,
+      "new_anchor_mm2": 2.661666691996558,
+      "newly_detached": false
+    },
+    {
+      "z": 2.14333,
+      "component": 0,
+      "old_anchor_mm2": 13.025920797071624,
+      "new_anchor_mm2": 10.243857323195325,
+      "newly_detached": false
+    },
+    {
+      "z": 2.14333,
+      "component": 1,
+      "old_anchor_mm2": 2.3942191190845215,
+      "new_anchor_mm2": 2.3942191190845215,
+      "newly_detached": false
+    },
+    {
+      "z": 2.4,
+      "component": 0,
+      "old_anchor_mm2": 9.978860004328546,
+      "new_anchor_mm2": 9.978860004328546,
+      "newly_detached": false
+    },
+    {
+      "z": 2.7,
+      "component": 0,
+      "old_anchor_mm2": 11.877977736941917,
+      "new_anchor_mm2": 11.877977736941917,
+      "newly_detached": false
+    },
+    {
+      "z": 3.0,
+      "component": 0,
+      "old_anchor_mm2": 19.28314343959314,
+      "new_anchor_mm2": 19.28314343959314,
+      "newly_detached": false
+    },
+    {
+      "z": 3.3,
+      "component": 0,
+      "old_anchor_mm2": 19.309012172118557,
+      "new_anchor_mm2": 19.309012172118557,
+      "newly_detached": false
+    },
+    {
+      "z": 3.6,
+      "component": 0,
+      "old_anchor_mm2": 19.142540953290272,
+      "new_anchor_mm2": 19.142540953290272,
+      "newly_detached": false
+    },
+    {
+      "z": 3.86667,
+      "component": 0,
+      "old_anchor_mm2": 18.186744506075083,
+      "new_anchor_mm2": 18.186744506075083,
+      "newly_detached": false
+    },
+    {
+      "z": 4.13333,
+      "component": 0,
+      "old_anchor_mm2": 17.872290799012628,
+      "new_anchor_mm2": 17.872290799012628,
+      "newly_detached": false
+    },
+    {
+      "z": 4.4,
+      "component": 0,
+      "old_anchor_mm2": 18.251703977930745,
+      "new_anchor_mm2": 18.251703977930745,
+      "newly_detached": false
+    },
+    {
+      "z": 4.6,
+      "component": 0,
+      "old_anchor_mm2": 0.8757978844018076,
+      "new_anchor_mm2": 0.8757978844018076,
+      "newly_detached": false
+    },
+    {
+      "z": 4.6,
+      "component": 1,
+      "old_anchor_mm2": 9.311443999611646,
+      "new_anchor_mm2": 9.311443999611646,
+      "newly_detached": false
+    },
+    {
+      "z": 4.6,
+      "component": 2,
+      "old_anchor_mm2": 0.9653913208412114,
+      "new_anchor_mm2": 0.9653913208412114,
+      "newly_detached": false
+    },
+    {
+      "z": 4.8,
+      "component": 0,
+      "old_anchor_mm2": 0.9975055645100748,
+      "new_anchor_mm2": 0.9975055645100748,
+      "newly_detached": false
+    },
+    {
+      "z": 4.8,
+      "component": 1,
+      "old_anchor_mm2": 27.474378034050993,
+      "new_anchor_mm2": 27.746730520640263,
+      "newly_detached": false
+    },
+    {
+      "z": 4.8,
+      "component": 2,
+      "old_anchor_mm2": 1.092317931490641,
+      "new_anchor_mm2": 1.092317931490641,
+      "newly_detached": false
+    },
+    {
+      "z": 5.0,
+      "component": 0,
+      "old_anchor_mm2": 0.5591096302588777,
+      "new_anchor_mm2": 0.5591096302588777,
+      "newly_detached": false
+    },
+    {
+      "z": 5.0,
+      "component": 1,
+      "old_anchor_mm2": 27.48781034485076,
+      "new_anchor_mm2": 27.759206700546116,
+      "newly_detached": false
+    },
+    {
+      "z": 5.0,
+      "component": 2,
+      "old_anchor_mm2": 0.6276020252320651,
+      "new_anchor_mm2": 0.6276020252320651,
+      "newly_detached": false
+    },
+    {
+      "z": 5.23,
+      "component": 0,
+      "old_anchor_mm2": 18.129018768813225,
+      "new_anchor_mm2": 16.733873971326798,
+      "newly_detached": false
+    },
+    {
+      "z": 5.23,
+      "component": 1,
+      "old_anchor_mm2": 8.289504073826063,
+      "new_anchor_mm2": 6.883582668492915,
+      "newly_detached": false
+    },
+    {
+      "z": 5.43,
+      "component": 0,
+      "old_anchor_mm2": 17.1190267290303,
+      "new_anchor_mm2": 17.11149338073864,
+      "newly_detached": false
+    },
+    {
+      "z": 5.63,
+      "component": 0,
+      "old_anchor_mm2": 23.16968568089956,
+      "new_anchor_mm2": 22.868892506009026,
+      "newly_detached": false
+    },
+    {
+      "z": 5.83,
+      "component": 0,
+      "old_anchor_mm2": 18.909942581169666,
+      "new_anchor_mm2": 18.93314849181882,
+      "newly_detached": false
+    },
+    {
+      "z": 5.83,
+      "component": 1,
+      "old_anchor_mm2": 9.882954388388747,
+      "new_anchor_mm2": 9.882954388388747,
+      "newly_detached": false
+    },
+    {
+      "z": 6.03,
+      "component": 0,
+      "old_anchor_mm2": 21.180552500017,
+      "new_anchor_mm2": 21.179005889918226,
+      "newly_detached": false
+    }
+  ],
+  "partial_footprint_changes": [
+    {
+      "z": 0.23,
+      "lost_old_upper_bearing_mm2": 0.3231797082533671,
+      "printable_lost_upper_bearing_mm2": 0.3207839126085122
+    },
+    {
+      "z": 1.88667,
+      "lost_old_upper_bearing_mm2": 2.7612134394117738,
+      "printable_lost_upper_bearing_mm2": 2.7587263669163855
+    },
+    {
+      "z": 4.8,
+      "lost_old_upper_bearing_mm2": 0.0009155751177505573,
+      "printable_lost_upper_bearing_mm2": 0.0
+    },
+    {
+      "z": 5.0,
+      "lost_old_upper_bearing_mm2": 2.7981772243188425,
+      "printable_lost_upper_bearing_mm2": 2.7946916043418892
+    },
+    {
+      "z": 5.23,
+      "lost_old_upper_bearing_mm2": 0.0064262303256170964,
+      "printable_lost_upper_bearing_mm2": 0.0032052049592550935
+    },
+    {
+      "z": 5.43,
+      "lost_old_upper_bearing_mm2": 0.2948854475739915,
+      "printable_lost_upper_bearing_mm2": 0.29260138725094165
+    }
+  ],
+  "interpretation": "Planned interface clear spaces and shifted endpoint connections change partial bead overlap. Every previously anchored complete support component retains lower-plane contact. True model contacts and trunk geometry are separately protected and regression tested."
+}

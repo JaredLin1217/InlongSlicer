@@ -1,0 +1,461 @@
+{
+  "schema_version": "inlong-concentric-support-contacts/v1",
+  "verified_utc": "2026-10-25T06:35:49.093285Z",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "anchor_semantics": "The commit anchors the checkout; SHA-256 values identify reviewed uncommitted bytes. No commit, push or installation is performed.",
+  "source": {
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "src/libslic3r/Support/SupportCommon.cpp": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+    "tests/fff_print/test_support_material.cpp": "fd9abdcd3ff2110a4d0323faaf609cb05238b46121e593eaa3e533f41c71b330",
+    "src/libslic3r/Layer.cpp": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+    "src/libslic3r/Support/TreeSupport.cpp": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+    "src/libslic3r/Support/TreeSupport3D.hpp": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+    "scripts/analyze_organic_support.py": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6"
+  },
+  "engine": {
+    "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\inlong-slicer.exe",
+    "engine_sha256": "551ee0d1a92b8331d20154c9745ed4bad6ae123cdbc5bf2383b847e13a9d6fe9",
+    "project_sha256": "c453a645a079eaae32360f7e7ecb47d22a7f5e2b6b4a34b8e3cd66626bd510d5",
+    "source_sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "data_dir": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\data_dir",
+    "exit_code": 0,
+    "elapsed_seconds": 5.5943359,
+    "gcode": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted\\out\\plate_1.gcode",
+    "gcode_sha256": "683aed5917dd68c9214dcd119faac1b14d8a2c5c0a4b81a4ee82b6ff37aa6f18"
+  },
+  "organic_checks": [
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted-shard-1.log",
+      "sha256": "4840280a29209974d600294d97378c52893f5c71330c8d314dc5ab90003af6ba",
+      "assertions": 1648,
+      "cases": 5
+    },
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted-shard-2.log",
+      "sha256": "e7e0ec845a396832077af69f08f1ddc006419ed8fb13d1d3233763d28c380f27",
+      "assertions": 210,
+      "cases": 3
+    },
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted-shard-3.log",
+      "sha256": "55fbda43aa6d311b379416cc75d2d5dec78306a34464875c9baa384da582a012",
+      "assertions": 14,
+      "cases": 1
+    },
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted-shard-4.log",
+      "sha256": "cd717f76ad054788215dbf14c1de9073effeedfb867d882ba5eb498a7db8694e",
+      "assertions": 1749,
+      "cases": 22
+    }
+  ],
+  "organic_cases": 31,
+  "organic_assertions": 3621,
+  "contact_and_concentric_checks": {
+    "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\contact-fill-regression.log",
+    "sha256": "10101e4721248834caa9a8247440fc7e93f3bd1c5e369116aa8178a6b2257d23",
+    "assertions": 983,
+    "cases": 15
+  },
+  "clearance_checks": {
+    "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\clearance.log",
+    "sha256": "022c53f91275ed0273c49af1cea14cfefc88ee0557312d58d92c34e30fd8772b",
+    "assertions": 119,
+    "cases": 4
+  },
+  "slice": {
+    "gcode": ".agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted\\out\\plate_1.gcode",
+    "sha256": "683aed5917dd68c9214dcd119faac1b14d8a2c5c0a4b81a4ee82b6ff37aa6f18",
+    "planes": 57,
+    "role_paths": {
+      "Skirt": 3,
+      "Brim": 6,
+      "Support interface": 104,
+      "Support": 74,
+      "Outer wall": 75,
+      "Inner wall": 47,
+      "Overhang wall": 10,
+      "Gap infill": 41,
+      "Internal solid infill": 20,
+      "Top surface": 38,
+      "Bridge": 1
+    },
+    "instruction_count": 6387,
+    "same_instructions_as_attachment": false,
+    "error_markers": [],
+    "internal_window": [
+      {
+        "z": 1.37,
+        "roles": {
+          "Support interface": 2,
+          "Support": 2
+        },
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.4,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.6,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.62667,
+        "roles": {
+          "Support interface": 2
+        },
+        "central_roles": {
+          "Support interface": 2
+        },
+        "central_bead_area_mm2": 7.67126570000023,
+        "central_extrusion_bottoms": [
+          1.370003
+        ]
+      },
+      {
+        "z": 1.63,
+        "roles": {
+          "Support interface": 2,
+          "Support": 2
+        },
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.8,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.82667,
+        "roles": {
+          "Support interface": 10
+        },
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.88667,
+        "roles": {
+          "Support interface": 16,
+          "Support": 4
+        },
+        "central_roles": {
+          "Support interface": 13
+        },
+        "central_bead_area_mm2": 6.411649379098537,
+        "central_extrusion_bottoms": [
+          1.62667,
+          1.82667
+        ]
+      },
+      {
+        "z": 2.0,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 2.14333,
+        "roles": {
+          "Support": 3
+        },
+        "central_roles": {
+          "Support": 2
+        },
+        "central_bead_area_mm2": 4.066649325384962,
+        "central_extrusion_bottoms": [
+          1.886663
+        ]
+      },
+      {
+        "z": 2.2,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 2.4,
+        "roles": {
+          "Support": 2
+        },
+        "central_roles": {
+          "Support": 1
+        },
+        "central_bead_area_mm2": 0.8214236852161042,
+        "central_extrusion_bottoms": [
+          2.143333
+        ]
+      }
+    ],
+    "central_extrusion_intervals": [
+      [
+        1.370003,
+        2.4
+      ]
+    ],
+    "bottom_contacts": [
+      {
+        "z": 1.62666666666667,
+        "floors": [
+          {
+            "model_surface_z": 1.2,
+            "area_mm2": 9.960240230279929,
+            "source_gap_mm": 0.17000000000000304
+          }
+        ],
+        "source_area_mm2": 9.960240230279929,
+        "unmatched_area_mm2": 0.0,
+        "emitted_heights": [
+          0.256667
+        ],
+        "emitted_bottoms": [
+          1.370003
+        ]
+      },
+      {
+        "z": 1.82666666666667,
+        "floors": [
+          {
+            "model_surface_z": 1.4,
+            "area_mm2": 7.233634656343949,
+            "source_gap_mm": 0.17000000000000304
+          }
+        ],
+        "source_area_mm2": 7.233634656343949,
+        "unmatched_area_mm2": 0.0,
+        "emitted_heights": [
+          0.256667
+        ],
+        "emitted_bottoms": [
+          1.570003
+        ]
+      }
+    ],
+    "geometry_changes": [
+      {
+        "z": 0.43,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 0.000508594315578057,
+        "added_outside_0_002mm_mm2": 0.0
+      },
+      {
+        "z": 1.62667,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 7.177392684912568,
+        "added_outside_0_002mm_mm2": 0.0004525705269110145
+      },
+      {
+        "z": 1.82667,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 0.0,
+        "added_outside_0_002mm_mm2": 7.131331486808744
+      },
+      {
+        "z": 1.88667,
+        "role": "Support",
+        "removed_outside_0_002mm_mm2": 1.904637361792407,
+        "added_outside_0_002mm_mm2": 1.3079944361645894
+      },
+      {
+        "z": 1.88667,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 0.0,
+        "added_outside_0_002mm_mm2": 16.84188126147201
+      },
+      {
+        "z": 2.14333,
+        "role": "Support",
+        "removed_outside_0_002mm_mm2": 0.827501691392363,
+        "added_outside_0_002mm_mm2": 11.620927583292005
+      },
+      {
+        "z": 5.63,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 0.03375821382777039,
+        "added_outside_0_002mm_mm2": 0.0
+      },
+      {
+        "z": 6.03,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 1.806859980003398,
+        "added_outside_0_002mm_mm2": 0.7128722296478439
+      }
+    ],
+    "internal_volume_overlaps": [],
+    "support_height_range": [
+      0.05,
+      0.3
+    ]
+  },
+  "concentric": {
+    "z": 6.03,
+    "before": [
+      {
+        "closed": true,
+        "length_mm": 24.329930406883957,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          149.127,
+          144.699,
+          150.873,
+          155.3
+        ]
+      },
+      {
+        "closed": false,
+        "length_mm": 9.356000000000023,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          149.492,
+          146.596,
+          150.508,
+          154.936
+        ]
+      },
+      {
+        "closed": false,
+        "length_mm": 9.356000000000023,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          149.492,
+          145.064,
+          150.508,
+          153.404
+        ]
+      },
+      {
+        "closed": false,
+        "length_mm": 9.463999999999999,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          149.848,
+          145.268,
+          149.848,
+          154.732
+        ]
+      },
+      {
+        "closed": false,
+        "length_mm": 9.463999999999999,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          150.152,
+          145.268,
+          150.152,
+          154.732
+        ]
+      }
+    ],
+    "after": [
+      {
+        "closed": true,
+        "length_mm": 24.329930406883957,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          149.127,
+          144.699,
+          150.873,
+          155.3
+        ]
+      },
+      {
+        "closed": true,
+        "length_mm": 21.774000101296654,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          149.492,
+          145.064,
+          150.508,
+          154.936
+        ]
+      },
+      {
+        "closed": false,
+        "length_mm": 9.463999999999999,
+        "width_mm": 0.408,
+        "height_mm": 0.2,
+        "bounds": [
+          150.0,
+          145.268,
+          150.0,
+          154.732
+        ]
+      }
+    ],
+    "two_complete_rings": true,
+    "one_center_finish": true,
+    "gcode": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted\\out\\plate_1.gcode",
+    "gcode_sha256": "683aed5917dd68c9214dcd119faac1b14d8a2c5c0a4b81a4ee82b6ff37aa6f18"
+  },
+  "settings": {
+    "support_top_contact_pattern": "concentric",
+    "support_bottom_contact_pattern": "concentric",
+    "support_top_contact_wall_count": "1",
+    "support_bottom_contact_wall_count": "1",
+    "support_top_contact_spacing": "0.05",
+    "support_bottom_contact_spacing": "0.05",
+    "support_top_z_distance": "0.17",
+    "support_bottom_z_distance": "0.17"
+  },
+  "repeat_commands_identical": true,
+  "instruction_count": 6387,
+  "comparison_to_previous_release": {
+    "path": ".agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\accepted\\out\\plate_1.gcode",
+    "sha256": "5678743e8cd09bfd06c153b62fb824073630bbfff7a12f9a6a5fcbefe3f88ba8",
+    "xy_tolerance_mm": 0.002,
+    "changes": [
+      {
+        "z": 0.43,
+        "role": "Support interface",
+        "removed_mm2": 0.0005084516839994452,
+        "added_mm2": 0.0
+      },
+      {
+        "z": 5.63,
+        "role": "Support interface",
+        "removed_mm2": 0.033783088138567875,
+        "added_mm2": 0.0
+      },
+      {
+        "z": 6.03,
+        "role": "Support interface",
+        "removed_mm2": 1.806859980003398,
+        "added_mm2": 0.713008848615674
+      }
+    ],
+    "model_and_brim_unchanged": true,
+    "tree_nodes_identical": true
+  },
+  "finding": "Independent offsets of a contact boundary and its walls allowed the wall keepout to split concentric loops. Axis-aligned center probes additionally produced parallel strokes and failed rotation invariance. Derive the infill boundary from the innermost printed wall with a numerical inset, and use the existing medial-axis fallback for compact organic contact remainders, dropping only sub-bead branch fragments when a longer center exists.",
+  "preservation": "The original Release data_dir is used and its files are unchanged. Tree node topology, model and Brim geometry are preserved; actual model contact gaps and the repaired internal root interval remain valid. Contact patterns, configured walls, spacing and extrusion widths remain unchanged. No G-code instructions are edited.",
+  "limitations": [
+    "Evidence describes commanded geometry and printed slice surfaces; no physical print trial is performed.",
+    "Native regressions and this project do not certify every possible model.",
+    "Parsed path counts include width and height fragments."
+  ]
+}

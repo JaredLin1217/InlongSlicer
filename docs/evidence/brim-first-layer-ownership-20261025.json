@@ -1,0 +1,260 @@
+{
+  "schema_version": "inlong-brim-first-layer-ownership/v1",
+  "verified_utc": "2026-10-25T09:56:22.781729Z",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "anchor_semantics": "HEAD anchors the checkout. SHA-256 binds reviewed uncommitted source; no installation or Git publication is performed.",
+  "source": {
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "src/libslic3r/Print.cpp": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+    "src/libslic3r/GCode.cpp": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+    "src/libslic3r/Brim.cpp": "7e63b71f4b12fd9900a7fcd88ec535f084d1539cbc8e7bd3a2c9a9743df5c938",
+    "src/libslic3r/Brim.hpp": "336689942c0119c8d33a7ef83931a471bdcf6b7487762f642bcb54bde029c1ac",
+    "tests/fff_print/test_skirt_brim.cpp": "a4312abc2c1fc80a70d6d2c1e25dc725edeb6ac72b79c587361af622d3cc75fd",
+    "src/libslic3r/Support/SupportCommon.cpp": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "src/libslic3r/Print.hpp": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc"
+  },
+  "unchanged_tree_and_contact_source": {
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "src/libslic3r/Support/SupportCommon.cpp": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+    "tests/fff_print/test_support_material.cpp": "fd9abdcd3ff2110a4d0323faaf609cb05238b46121e593eaa3e533f41c71b330",
+    "src/libslic3r/Layer.cpp": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+    "src/libslic3r/Support/TreeSupport.cpp": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+    "src/libslic3r/Support/TreeSupport3D.hpp": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+    "scripts/analyze_organic_support.py": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6"
+  },
+  "engine": {
+    "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\inlong-slicer.exe",
+    "engine_sha256": "64fd5bc98165fb3fbb2572f0509cbf6d3508cd53dcf7f234eded202e8ce9bea3",
+    "gui_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+    "project_sha256": "c453a645a079eaae32360f7e7ecb47d22a7f5e2b6b4a34b8e3cd66626bd510d5",
+    "elapsed_seconds": 6.2342467,
+    "gcode": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-fc78383ded2643018303ad6dcbb82dc1\\work\\verified\\out\\plate_1.gcode",
+    "gcode_sha256": "ce7364265247545f2d4065686f34b2b5f5e69cb4ab2e636dcb36b40fa4679811",
+    "data_dir": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\data_dir"
+  },
+  "tests": [
+    {
+      "path": ".agents/runtime/runs/run-fc78383ded2643018303ad6dcbb82dc1/work/skirt-brim-all-3.log",
+      "sha256": "b9d363ba7e4af0b2a791a4b4133cf2fdc188b624a8a40fcdea4dacfc83795583",
+      "result": "882 assertions in 42 test cases"
+    },
+    {
+      "path": ".agents/runtime/runs/run-fc78383ded2643018303ad6dcbb82dc1/work/related-guards-3.log",
+      "sha256": "a8b678262b9cd6807cde152a1eefa99ee018373c3dbcd07d62098472c647c682",
+      "result": "956 assertions in 9 test cases"
+    }
+  ],
+  "native_test_sha256": "ca2c0bae7f5cc7243d19bb89a85fcc855336e9ee9ed21658c8f0d2fc00db7692",
+  "geometry": {
+    "baseline": ".agents\\runtime\\runs\\run-5c2e59c715f842e199ee0829313209b5\\work\\accepted\\out\\plate_1.gcode",
+    "current": ".agents\\runtime\\runs\\run-fc78383ded2643018303ad6dcbb82dc1\\work\\verified\\out\\plate_1.gcode",
+    "baseline_sha256": "7477f92e79c26d951083f86f997041edcbdebea85052f2b4f4be92411b2deeee",
+    "current_sha256": "ce7364265247545f2d4065686f34b2b5f5e69cb4ab2e636dcb36b40fa4679811",
+    "elapsed_seconds": 6.2342467,
+    "data_unchanged": true,
+    "layers": 57,
+    "z_planes": [
+      0.18,
+      0.2,
+      0.23,
+      0.4,
+      0.43,
+      0.6,
+      0.63,
+      0.8,
+      1.0,
+      1.085,
+      1.2,
+      1.37,
+      1.4,
+      1.6,
+      1.62667,
+      1.63,
+      1.8,
+      1.82667,
+      1.88667,
+      2.0,
+      2.14333,
+      2.2,
+      2.4,
+      2.6,
+      2.7,
+      2.8,
+      3.0,
+      3.2,
+      3.3,
+      3.4,
+      3.6,
+      3.8,
+      3.86667,
+      4.0,
+      4.13333,
+      4.2,
+      4.4,
+      4.6,
+      4.8,
+      5.0,
+      5.2,
+      5.23,
+      5.4,
+      5.43,
+      5.6,
+      5.63,
+      5.8,
+      5.83,
+      6.0,
+      6.03,
+      6.2,
+      6.4,
+      6.6,
+      6.8,
+      7.0,
+      7.2,
+      7.4
+    ],
+    "role_paths": {
+      "Skirt": 3,
+      "Brim": 6,
+      "Support interface": 138,
+      "Support": 105,
+      "Outer wall": 75,
+      "Inner wall": 47,
+      "Overhang wall": 10,
+      "Gap infill": 41,
+      "Internal solid infill": 20,
+      "Top surface": 38,
+      "Bridge": 1
+    },
+    "allowed_brim_area_mm2": 70.39037421643195,
+    "minimum_gap_width_mm": 0.200000002980232,
+    "before": {
+      "brim_fragments": 15,
+      "uncovered_mm2": 6.34536889677052,
+      "printable_uncovered_mm2": 4.111955050392891
+    },
+    "after": {
+      "brim_fragments": 6,
+      "uncovered_mm2": 0.0,
+      "printable_uncovered_mm2": 0.0,
+      "added_outside_allowed_mm2": 0.8340180147116409,
+      "widths_mm": [
+        0.42
+      ],
+      "connected_components": 1,
+      "closed_bead_loops": 6,
+      "interface_overlap_mm2": 0.0
+    },
+    "non_brim_geometry_changes": [
+      {
+        "z": 0.18,
+        "role": "Support",
+        "removed_mm2": 5.1950433858673195,
+        "added_mm2": 2.479173024563768e-07
+      },
+      {
+        "z": 0.18,
+        "role": "Support interface",
+        "removed_mm2": 4.406466829803099,
+        "added_mm2": 0.00344602028144219
+      }
+    ],
+    "bottom_contact_gaps_mm": [
+      0.17000000000000304,
+      0.17000000000000304,
+      0.17000000000000304
+    ],
+    "gcode_error_markers": [],
+    "log_warnings_errors": [],
+    "upper_support_changes": [],
+    "model_changes": [],
+    "note": "Native first-layer support may be replaced by same-material brim foundation. All model and higher support geometry must remain unchanged."
+  },
+  "foundation": {
+    "first_z": 0.18,
+    "patches_outside_all_model_projection": [
+      {
+        "bounds": [
+          150.6830000233352,
+          143.54302633895784,
+          152.03599267695105,
+          144.5189997899831
+        ],
+        "area_mm2": 0.7055938083585958,
+        "model_projection_overlap_mm2": 0,
+        "replacement_brim_fraction": 1.0000000000000009,
+        "remaining_interface_mm2": 0.0
+      },
+      {
+        "bounds": [
+          150.78201633327555,
+          155.61405795920064,
+          151.58899264644484,
+          156.30199264644486
+        ],
+        "area_mm2": 0.3416853455099868,
+        "model_projection_overlap_mm2": 0,
+        "replacement_brim_fraction": 0.9999999999999993,
+        "remaining_interface_mm2": 0.0
+      }
+    ],
+    "old_brim_components": 1,
+    "new_brim_components": 1,
+    "first_layer_roles": {
+      "Brim": 6,
+      "Support": 36,
+      "Support interface": 38
+    },
+    "old_foundation_area_mm2": 244.55433499547107,
+    "new_foundation_area_mm2": 243.91345695461524,
+    "lost_foundation_mm2": 0.9728251911752528,
+    "minimum_valid_bed_width_mm": 0.18,
+    "printable_lost_foundation_mm2": 0.0,
+    "first_supported_upper_planes": [
+      0.23
+    ],
+    "prior_upper_unsupported_mm2": 0.30379262323947087,
+    "current_upper_unsupported_mm2": 0.6314393484779908,
+    "newly_unsupported_mm2": 0.5022120931904719,
+    "prior_unbacked_upper_centerline_mm": 0.9219400620725744,
+    "current_unbacked_upper_centerline_mm": 0.6429446219210639,
+    "newly_unbacked_upper_centerline_mm": 0.5281656829733753
+  },
+  "determinism": {
+    "instructions_identical": true,
+    "instructions": 6737,
+    "repeat_gcode_sha256": "067d0bfc38353dd241cd34ca8c64bfc3258abb3893efaecaa702ae3d0e05ba16"
+  },
+  "configuration": {
+    "restored": [
+      {
+        "path": "build/src/Release/data_dir",
+        "files": 843,
+        "exact_match": true
+      },
+      {
+        "path": "build/InlongSlicer/data_dir",
+        "files": 0,
+        "exact_match": true
+      },
+      {
+        "path": "build/InlongSlicer_InlongOnly/data_dir",
+        "files": 0,
+        "exact_match": true
+      }
+    ],
+    "slice_files_unchanged": true,
+    "manifest": ".agents/runtime/runs/run-fc78383ded2643018303ad6dcbb82dc1/work/release-4-settings-before.json",
+    "manifest_sha256": "2fe409b07428b1ca1f0044f52290dab36c2c7f268e75d47eafe51877cc129e32"
+  },
+  "build": {
+    "command": "cmake --build build --config Release --target InlongSlicer_app_gui -- /m:1 /p:CL_MPCount=6",
+    "exit_code": 0,
+    "log": ".agents/runtime/runs/run-fc78383ded2643018303ad6dcbb82dc1/work/release-4-build.log",
+    "sha256": "22a35a7a2f8d6dda374b362309e1f9421000a940c0f1184596b36b405e9bcecf"
+  },
+  "implementation": "Give same-filament, planar, raft-free bed support to its own actual brim. Reserve physical support footprints of other instances/materials with a brim-width and simplification margin. Build per-instance support collections from final combined/uncombined brim bead coverage, preserving source support collections for parameter edits. Use organic support_islands, falling back to lslices, to identify bed support. Restore only previously printed material lost outside the brim by adaptive-width bed gap filling, with original role, layer height and flow ratio, capped at the original support width. Select overrides only for the real first support layer in both native emission paths.",
+  "limitations": "Bed ownership is not removal of upper tree branches. Different materials, raft, belt and nonplanar cases retain their protected support regions. Software bead coverage does not establish a universal physical printing guarantee."
+}

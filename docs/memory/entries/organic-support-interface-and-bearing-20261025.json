@@ -1,0 +1,125 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-interface-and-bearing-20261025",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "The reviewed 2026-10-25 organic support source separates same-plane body/interface footprints independently of top Z gap and filament mergeability. Structural trunk contours remain closed; bottom transitions and local native bridge bracing provide bearing without mirroring or reconstructing interface patterns. The matching Release verification passes 30 organic/tree-bridge cases with 2730 assertions, including 16 curved-floor combinations, plus 119 clearance/interface assertions. Two unmodified test2 exports contain identical 6279-command sequences and 56 planes. Original model geometry, support contours, 87 interface paths and six Brim paths are retained within output precision; support paths change from 65 to 71 through six local bridges at Z=4.4 mm. Bottom emitted geometry is 0.170003 mm above the model surface and the top gap is 0.17 mm. The earlier NAS-model 302-to-280 interface and 19560-wall counts remain historical. No physical print or arbitrary-model guarantee is claimed.",
+  "scope": "Current organic support role boundaries and source-bound Release acceptance as of 2026-10-25; Contact gaps are computed from printed model surfaces and extrusion height. No physical print trial or arbitrary-model performance guarantee is established.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "support-interface",
+    "closed-contours",
+    "floating-support",
+    "z-gap",
+    "exact-output-change",
+    "source-revalidation",
+    "scope-audit"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "docs/evidence/organic-support-interface-trim-20261021.json",
+    "src/libslic3r/Layer.cpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "tests/fff_print/test_support_material.cpp",
+    "scripts/analyze_organic_support.py",
+    "docs/evidence/project-knowledge-revalidation-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "b4106027fb936f24d1b6863a9273665522b9f6db656d522c05fc95a9021af433",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-interface-trim-20261021.json",
+      "sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Layer.cpp",
+      "sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "73a0c69cad846528af775373f9d85382a3373d80d5a602277a4449d0b689952d",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/analyze_organic_support.py",
+      "sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/project-knowledge-revalidation-20261025.json",
+      "sha256": "e84622f34c4c5df77fc65510fd6fc86e8f0e40270a8edb890fc15720bd0b7eb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source contract and dated audit for Current organic support role boundaries and source-bound Release acceptance; historical measurements retain their original scope."
+    }
+  ],
+  "verified_utc": "2026-10-25T03:15:23.249143Z",
+  "verification": {
+    "method": "Manual role/clearance/anchoring review plus exact hash equality with the immediately preceding Release build, 30-case/2730-assertion organic regression, 119 clearance/interface assertions, and two deterministic test2 exports.",
+    "summary": "SupportCommon.cpp and TreeSupport3D.cpp drifted; current code retains the same-plane interface keepout, closed structural contours, model-based contact positioning and local native bridge bracing. Prior NAS-model counts are historical, not current test2 measurements.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-support-interface-trim-20261022"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

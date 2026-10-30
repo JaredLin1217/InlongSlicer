@@ -1,0 +1,293 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-contact-walls-20261026",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Organic stepped bottom landings preserve the same connected parent perimeter independently from true contact infill patches. Configured nominal-width walls remain closed while direct landing model surfaces and Z planes stay unchanged. Added rim spans retain slab/blocker/bed constraints and receive native physical-height normalization over earlier printed support, including future trunk/interface handoffs. Printed contacts reserve their whole effective pattern allocation, including intentional spacing voids, so generic interface filling does not create short residual roads inside it. The bounded native connector planner and process roles remain intact. Current test2 has one closed Z=1.83 rim, no submillimetre Z=5.83 interfaces and no occupied-slab overlaps; direct landing minima remain approximately 0.170003 mm.",
+  "scope": "Reviewed native organic contact-rim and contact-allocation correction, source-bound test2 exports and complete selected native support/Brim tests as of 2026-10-26. Historical evidence retains its own anchors.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "support-interface",
+    "closed-contours",
+    "floating-support",
+    "z-gap",
+    "exact-output-change",
+    "source-revalidation",
+    "scope-audit"
+  ],
+  "files": [
+    "docs/evidence/organic-contact-walls-20261026.json",
+    "docs/evidence/organic-interface-bearing-review-20261025.json",
+    "docs/evidence/organic-interface-bounded-20261025.json",
+    "docs/evidence/organic-interface-bounded-bearing-20261025.json",
+    "docs/evidence/organic-interface-continuity-20261025.json",
+    "docs/evidence/organic-interface-demand-20261026.json",
+    "docs/evidence/organic-interface-manufacturing-20261026.json",
+    "docs/evidence/organic-interface-splice-20261026.json",
+    "docs/evidence/organic-support-bottom-root-continuity-20261025.json",
+    "docs/evidence/organic-support-concentric-contacts-20261025.json",
+    "docs/evidence/organic-support-interface-trim-20261021.json",
+    "docs/evidence/project-knowledge-revalidation-20261025.json",
+    "scripts/analyze_organic_support.py",
+    "src/libslic3r/Brim.cpp",
+    "src/libslic3r/Brim.hpp",
+    "src/libslic3r/Fill/FillBase.cpp",
+    "src/libslic3r/Fill/FillBase.hpp",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "src/libslic3r/Fill/FillRectilinear.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Layer.cpp",
+    "src/libslic3r/Print.cpp",
+    "src/libslic3r/Print.hpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/SupportCommon.hpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "tests/fff_print/test_skirt_brim.cpp",
+    "tests/fff_print/test_support_material.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-contact-walls-20261026.json",
+      "sha256": "cf750dcff049848282365341840993be39aa47e6e2d44c07080f792db4ad7df3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bearing-review-20261025.json",
+      "sha256": "829171c768c495b3d67a7c76938c7b7318510ec26429db8ef5f3a6ff099fa958",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bounded-20261025.json",
+      "sha256": "cb4c0135d8cf674ef4205ab31a488823109f7d53c4c59d53d02bd397b8761945",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bounded-bearing-20261025.json",
+      "sha256": "a8da607ccb52051257eae4e6e618b6dc0f91634963515b9179aecf447e7a74c3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-continuity-20261025.json",
+      "sha256": "f619f1003ec6af20e5eec3845cfab90cc4b4dcb5e9fe2136cc3baef9919c4795",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-demand-20261026.json",
+      "sha256": "4b4c1accfd8e3296cfb61b0463f4a791553f1a4c6221530aae5dedf61ab928b7",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-manufacturing-20261026.json",
+      "sha256": "c8758f06cf0b46389c7ca15b1de3bdaca560de018060fe8be00b45fa5723b675",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-splice-20261026.json",
+      "sha256": "30b55c23ce920f733a2d6d5b6225db9d43d7afd1477c8a39a5be569fff8beff6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-bottom-root-continuity-20261025.json",
+      "sha256": "5ca22c10361828f0f6d7740818683b6880d0acef76352fb34829a582a4321ba3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-concentric-contacts-20261025.json",
+      "sha256": "0cc117506c9efb92bcb21db9a0f26537836a6e61427a3fad6c2a6e3e26e9cf36",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-interface-trim-20261021.json",
+      "sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/project-knowledge-revalidation-20261025.json",
+      "sha256": "e84622f34c4c5df77fc65510fd6fc86e8f0e40270a8edb890fc15720bd0b7eb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/analyze_organic_support.py",
+      "sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.cpp",
+      "sha256": "51d3e8cb526e204b3ea267ea568f6d875b017039cb30a53d7424cca190d402da",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.hpp",
+      "sha256": "7912a98e7d7a6b2d54c92d4c02cccc40f7344e7463a95e12008b8afddb492ee3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillBase.cpp",
+      "sha256": "1042eb5cb513a298bc83e130a3563d03a62e4d32f4c98357289fe2896ec80286",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillBase.hpp",
+      "sha256": "17507c53de3a915b952c85f418e1ce575a814671db71093345a41247d210008c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillRectilinear.cpp",
+      "sha256": "17c00e1a19446f38c8c30a3ef1fa0c2afcf083368fc16df4bb0dcf6b02b30b28",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Layer.cpp",
+      "sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.hpp",
+      "sha256": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "ff2c4a01c720daf41349eecb7650fb21900602fc8e5aead6f19a5a3a57548ef5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.hpp",
+      "sha256": "b2b5c7ed7778dc84d14048e53ea44c18486f2be9ff1ab6a0e5f41caf36a94969",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "621749afb845eb97cebbcce2a9d6e61b921972bf5af9e361dfcf8cd43b9068fe",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_skirt_brim.cpp",
+      "sha256": "57bfaa71baf7e90abf6c279aac8d4d82c60208a1225b1ae9b681b73751a3a996",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "bde55b504adf9fc40bdaade8ffe4d73fe0a5d5ff536cb9a48f9f3eb1c74bc8a1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed current source and durable evidence; the checkout anchor does not identify uncommitted bytes."
+    }
+  ],
+  "verified_utc": "2026-10-26T07:21:08.408886+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex",
+    "method": "151 native cases and 8899 assertions; two identical native Release exports; all-plane geometry, physical-slab, landing-gap, role and width inspection.",
+    "summary": "Closed configured bottom rim restored and generic contact-gap remnants removed while model/Brim, direct landing localization and original contact process outputs remain stable."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-interface-splice-20261026"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

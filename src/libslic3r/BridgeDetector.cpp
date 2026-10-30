@@ -8,11 +8,17 @@
 #include "Line.hpp"
 #include "Polyline.hpp"
 #include "Point.hpp"
+#include "Support/SupportCacheBudget.hpp"
 #include <algorithm>
 #include <utility>
 #include <vector>
 #include <cstddef>
 #include <cmath>
+#include <limits>
+#include <thread>
+#include <tbb/global_control.h>
+#include <tbb/parallel_for.h>
+#include <tbb/task_arena.h>
 
 namespace Slic3r {
 
@@ -107,9 +113,30 @@ bool BridgeDetector::detect_angle(double bridge_direction_override)
         bridge in several directions and then sum the length of lines having both
         endpoints within anchors */
         
-    bool have_coverage = false;
-    for (size_t i_angle = 0; i_angle < candidates.size(); ++ i_angle)
-    {
+    // Each direction reads the same immutable masks and owns one score slot.
+    // Keep its summation order and the final original candidate ordering intact.
+    // Optional parallel work shares the live support-memory allowance and falls
+    // back to the same serial evaluator on constrained or unknown-memory hosts.
+    const BoundingBox bounds = get_extents(this->_anchor_regions);
+    const double diagonal = std::hypot(double(bounds.max.x()) - double(bounds.min.x()),
+                                      double(bounds.max.y()) - double(bounds.min.y()));
+    const double row_estimate = diagonal / std::max<coord_t>(1, this->spacing) + 2.;
+    const size_t maximum = std::numeric_limits<size_t>::max();
+    const size_t rows = row_estimate >= double(maximum) ? maximum : size_t(std::ceil(row_estimate));
+    auto product = [maximum](size_t a, size_t b) {
+        return b > 0 && a > maximum / b ? maximum : a * b;
+    };
+    size_t vertices = 0;
+    for (const Polygon &polygon : clip_area) vertices += polygon.size();
+    const size_t work = product(product(rows, vertices), candidates.size());
+    const size_t requested_workers = work < 32768 || candidates.size() < 4 ? 1 : std::min({
+        size_t(16), candidates.size(), size_t(std::max(1u, std::thread::hardware_concurrency())),
+        tbb::global_control::active_value(tbb::global_control::max_allowed_parallelism)});
+    const size_t temporary_bytes = std::max<size_t>(size_t(4) << 20, product(product(rows, vertices), size_t(128)));
+    SupportBatchBudget budget(requested_workers > 1 ? product(requested_workers, temporary_bytes) : 0,
+        requested_workers > 1 ? support_memory_snapshot() : SupportMemorySnapshot{});
+    const size_t workers = std::max<size_t>(1, std::min(requested_workers, budget.bytes() / temporary_bytes));
+    auto evaluate = [&](size_t i_angle) {
         const double angle = candidates[i_angle].angle;
 
         Lines lines;
@@ -149,9 +176,8 @@ bool BridgeDetector::detect_angle(double bridge_direction_override)
             }
         }
         if (total_length == 0.)
-            continue;
+            return false;
 
-        have_coverage = true;
         // Sum length of bridged lines.
         candidates[i_angle].coverage = total_length;
         /*  The following produces more correct results in some cases and more broken in others.
@@ -159,6 +185,20 @@ bool BridgeDetector::detect_angle(double bridge_direction_override)
         // $directions_coverage{$angle} = sum(map $_->area, @{$self->coverage($angle)}) // 0;
         // max length of bridged lines
         candidates[i_angle].max_length = max_length;
+        return true;
+    };
+    bool have_coverage = false;
+    if (workers <= 1) {
+        for (size_t i = 0; i < candidates.size(); ++i) have_coverage |= evaluate(i);
+    } else {
+        std::vector<unsigned char> covered(candidates.size(), 0);
+        tbb::task_arena arena{int(workers)};
+        arena.execute([&] {
+            tbb::parallel_for(tbb::blocked_range<size_t>(0, candidates.size(), 1), [&](const auto &range) {
+                for (size_t i = range.begin(); i < range.end(); ++i) covered[i] = evaluate(i);
+            });
+        });
+        have_coverage = std::any_of(covered.begin(), covered.end(), [](unsigned char value) { return value != 0; });
     }
 
     // if no direction produced coverage, then there's no bridge direction

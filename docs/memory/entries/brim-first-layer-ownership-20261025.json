@@ -1,0 +1,125 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "brim-first-layer-ownership-20261025",
+  "key": "brim-printable-gap-coverage",
+  "type": "lesson",
+  "conclusion": "Brim completeness needs both coverage and native first-layer ownership. Support contours previously punched holes in the brim and left projected interface pads outside the entire model projection. Same-filament raft-free planar bed support can be carried by a continuous brim foundation, while foreign instances/materials retain physical-width keepouts. Per-instance derived support collections preserve editable source paths and only replace the real first support layer. Deleting a partly covered wall centerline alone loses outside backing; adaptive-width restoration must use only the old bead footprint and preserve its role, height and flow ratio. Organic bed geometry is in support_islands, which may be populated while lslices is empty. The reviewed test2 Release produces 6 Brim paths forming one connected bead region, with no printable uncovered Brim or interface/Brim overlap. Both isolated old bed pads are covered by Brim. Model and higher support geometry and approximately 0.17 mm bottom contacts remain unchanged. Fifty-one native cases pass 1838 assertions; repeated exports have identical instructions. Hardware deposition and arbitrary-model guarantees are outside this evidence.",
+  "scope": "Reviewed source-bound native bed ownership, test2 Release exports, and protection of different material/raft/belt/per-instance paths as of 2026-10-25.",
+  "modules": [
+    "slicing",
+    "brim",
+    "support",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "brim",
+    "continuity",
+    "first-layer",
+    "interface",
+    "per-instance",
+    "physical-width",
+    "source-bound-release"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Print.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Brim.cpp",
+    "src/libslic3r/Brim.hpp",
+    "tests/fff_print/test_skirt_brim.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "src/libslic3r/Print.hpp",
+    "docs/evidence/brim-first-layer-ownership-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.cpp",
+      "sha256": "7e63b71f4b12fd9900a7fcd88ec535f084d1539cbc8e7bd3a2c9a9743df5c938",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.hpp",
+      "sha256": "336689942c0119c8d33a7ef83931a471bdcf6b7487762f642bcb54bde029c1ac",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_skirt_brim.cpp",
+      "sha256": "a4312abc2c1fc80a70d6d2c1e25dc725edeb6ac72b79c587361af622d3cc75fd",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.hpp",
+      "sha256": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/brim-first-layer-ownership-20261025.json",
+      "sha256": "7a43332688e11fa477d3fa2f35669a08425e6889c4ed4870074a7ad8215384be",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native bed-ownership planning and immutable Release geometry evidence; commit is the checkout anchor only."
+    }
+  ],
+  "verified_utc": "2026-10-25T09:56:22.781729Z",
+  "verification": {
+    "method": "Source review, planar clipping and multi-instance/material/raft regressions, complete skirt/brim and affected guards, two Release exports and actual bead/upper-layer/contact analysis.",
+    "summary": "Filling residual brim alone does not repair contours cut by projected bed interface regions. Allocate ownership before brim planning, trim only the derived bed support by the final physical brim beads, protect other instances by actual widths and keep all higher support paths unchanged.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "brim-printable-gap-coverage-20261025"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

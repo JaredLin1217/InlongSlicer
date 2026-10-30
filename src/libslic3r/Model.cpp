@@ -71,6 +71,7 @@
 #include <limits>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
 #include <set>
 #include <optional>
 #include <iostream>
@@ -95,6 +96,17 @@
 #define _L(s) Slic3r::I18N::translate(s)
 
 namespace Slic3r {
+
+static void trace_model_precheck(const char *message)
+{
+    const char *path = std::getenv("INLONG_MODEL_PRECHECK_TRACE");
+    if (path == nullptr)
+        return;
+    std::ofstream out(path, std::ios::app);
+    out << message << '\n';
+    out.flush();
+}
+
 const std::vector<std::string> CONST_FILAMENTS = {
     "",   "4",  "8",  "0C", "1C",  "2C",  "3C",  "4C",  "5C",  "6C",  "7C",  "8C",  "9C",  "AC",  "BC",  "CC","DC",//16
          "EC", "0FC", "1FC", "2FC", "3FC", "4FC", "5FC", "6FC", "7FC", "8FC", "9FC", "AFC", "BFC", "CFC", "DFC", "EFC",//32
@@ -835,8 +847,12 @@ double Model::max_z() const
 unsigned int Model::update_print_volume_state(const BuildVolume &build_volume)
 {
     unsigned int num_printable = 0;
-    for (ModelObject* model_object : this->objects)
+    trace_model_precheck((std::string("model.update.objects=") + std::to_string(this->objects.size())).c_str());
+    for (ModelObject* model_object : this->objects) {
+        trace_model_precheck("model.update.object.begin");
         num_printable += model_object->update_instances_print_volume_state(build_volume);
+        trace_model_precheck("model.update.object.end");
+    }
     //BBS: add logs for build_volume
     const BoundingBoxf3& print_volume = build_volume.bounding_volume();
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(", print_volume {%1%, %2%, %3%} to {%4%, %5%, %6%}, got %7% printable istances")        %print_volume.min.x() %print_volume.min.y() %print_volume.min.z()%print_volume.max.x() %print_volume.max.y() %print_volume.max.z() %num_printable;
@@ -3654,25 +3670,100 @@ void ModelInstance::get_arrange_polygon(void *ap, const Slic3r::DynamicPrintConf
 
 ModelInstanceEPrintVolumeState ModelInstance::calc_print_volume_state(const BuildVolume& build_volume) const
 {
+    trace_model_precheck("calc.enter");
+    auto is_axis_aligned = [](const Transform3d &matrix) {
+        constexpr double eps = 1e-9;
+        for (int row = 0; row < 3; ++row) {
+            int nonzero = 0;
+            for (int col = 0; col < 3; ++col)
+                if (std::abs(matrix.linear()(row, col)) > eps)
+                    ++nonzero;
+            if (nonzero > 1)
+                return false;
+        }
+        for (int col = 0; col < 3; ++col) {
+            int nonzero = 0;
+            for (int row = 0; row < 3; ++row)
+                if (std::abs(matrix.linear()(row, col)) > eps)
+                    ++nonzero;
+            if (nonzero > 1)
+                return false;
+        }
+        return true;
+    };
+    // For the common rectangular bed, a single model-part instance can be
+    // classified from its cached raw bounds.  The previous per-volume path
+    // asks for a convex hull while doing the same box test; on large meshes
+    // that work happens before slicing and can dwarf the actual print
+    // processing time.  Keep the per-volume exact path below for assemblies
+    // and non-rectangular beds, where a union bounding box could be too
+    // conservative.
+    if (build_volume.type() == BuildVolume_Type::Rectangle) {
+        size_t model_part_count = 0;
+        for (const ModelVolume *vol : this->object->volumes) {
+            if (!vol->is_model_part())
+                continue;
+            ++model_part_count;
+        }
+        trace_model_precheck((std::string("calc.rectangle.model_parts=") + std::to_string(model_part_count)).c_str());
+        if (model_part_count == 1) {
+            // The raw snug box walks every mesh vertex. For a rectangular bed
+            // the transformed mesh AABB is already a conservative and exact
+            // enough volume classification, while avoiding an O(vertex-count)
+            // precheck on very large imported meshes.
+            const ModelVolume *model_volume = nullptr;
+            for (const ModelVolume *vol : this->object->volumes)
+                if (vol->is_model_part()) {
+                    model_volume = vol;
+                    break;
+                }
+            const Transform3d matrix = this->get_matrix() * model_volume->get_matrix();
+            if (is_axis_aligned(matrix)) {
+                trace_model_precheck("calc.rectangle.axis_aligned");
+                trace_model_precheck("calc.rectangle.mesh_bbox.begin");
+                const BoundingBoxf3 instance_bbox = model_volume->mesh().bounding_box().transformed(matrix);
+                trace_model_precheck("calc.rectangle.mesh_bbox.end");
+                trace_model_precheck("calc.rectangle.volume_state.begin");
+                const BuildVolume::ObjectState state = build_volume.volume_state_bbox(instance_bbox);
+                trace_model_precheck("calc.rectangle.volume_state.end");
+                switch (state) {
+                case BuildVolume::ObjectState::Inside:     return ModelInstancePVS_Inside;
+                case BuildVolume::ObjectState::Outside:
+                case BuildVolume::ObjectState::Below:      return ModelInstancePVS_Fully_Outside;
+                case BuildVolume::ObjectState::Colliding:  return ModelInstancePVS_Partly_Outside;
+                case BuildVolume::ObjectState::Limited:    return ModelInstancePVS_Partly_Outside;
+                }
+            }
+        }
+    }
+
+
     enum {
         INSIDE = 1,
         OUTSIDE = 2
     };
 
     unsigned int inside_outside = 0;
+    trace_model_precheck("calc.fallback.begin");
     for (const ModelVolume* vol : this->object->volumes) {
         if (vol->is_model_part()) {
             //BBS: add bounding box empty check logic, for some volume is empty before split(it will be removed after split to object)
-            BoundingBoxf3 bb = vol->get_convex_hull().bounding_box();
+            // A rectangular build volume only needs the transformed model
+            // bounds to decide whether the object fits.  Rebuilding/reading a
+            // 3D convex hull here is needlessly expensive for large meshes
+            // and can dominate CLI slicing before Print::process() starts.
+            // Keep the exact convex-hull path for circular/convex/custom
+            // platforms, where the bed boundary is not described by a box.
+            const Transform3d matrix = this->get_matrix() * vol->get_matrix();
+            const bool rectangular_build_volume = build_volume.type() == BuildVolume_Type::Rectangle && is_axis_aligned(matrix);
+            const BoundingBoxf3 bb = rectangular_build_volume ? vol->mesh().bounding_box() : vol->get_convex_hull().bounding_box();
             Vec3d size = bb.size();
             if ((size.x() == 0.f) || (size.y() == 0.f) || (size.z() == 0.f)) {
                 BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(", object %1%'s vol %2% is empty, skip it, box: {%3%, %4%, %5%} to {%6%, %7%, %8%}")%this->object->name %vol->name                    %bb.min.x() %bb.min.y() %bb.min.z()%bb.max.x() %bb.max.y() %bb.max.z();
                 continue;
             }
 
-            const Transform3d matrix = this->get_matrix() * vol->get_matrix();
-
-            const auto bboxt = vol->get_convex_hull().transformed_bounding_box(matrix);
+            const auto bboxt = rectangular_build_volume ? bb.transformed(matrix) : vol->get_convex_hull().transformed_bounding_box(matrix);
             const BoundingBoxf bbox2d{to_2d(bboxt.min), to_2d(bboxt.max)};
             BuildVolume::ObjectState state;
             if (!build_volume.bounding_volume2d().inflated(BuildVolume::SceneEpsilon).overlap(bbox2d))

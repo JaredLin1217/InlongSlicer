@@ -1,0 +1,183 @@
+{
+  "schema_version": "inlong-brim-coverage/v1",
+  "verified_utc": "2026-10-25T07:31:32.053969Z",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "anchor_semantics": "HEAD anchors the checkout. Source hashes bind reviewed uncommitted bytes; no commit, push or installation is performed.",
+  "source": {
+    "src/libslic3r/Support/SupportCommon.cpp": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+    "tests/fff_print/test_skirt_brim.cpp": "18e55e69d932c8b832b6f7c907b3bc11531aad7f8781ca1dcd1969029aea007b",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "src/libslic3r/Brim.cpp": "29f00b4d3be2eeb6ef24925db25543e77daf46a330227db1482ce90e2f8f3087",
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "cmake/ResetBuildDataDirs.cmake": "600b0974f0a14d76cb7e1cf6176a6edb4b37de697b5fad95de23b73a5ad4d82b"
+  },
+  "engine": {
+    "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\inlong-slicer.exe",
+    "engine_sha256": "baf847b413c6a0c888ef4a8adf9030a492d9dff62e32b222e95ed266bf72cb26",
+    "gui_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+    "project_sha256": "c453a645a079eaae32360f7e7ecb47d22a7f5e2b6b4a34b8e3cd66626bd510d5",
+    "source": {
+      "src/libslic3r/Support/SupportCommon.cpp": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+      "tests/fff_print/test_skirt_brim.cpp": "18e55e69d932c8b832b6f7c907b3bc11531aad7f8781ca1dcd1969029aea007b",
+      "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+      "src/libslic3r/Brim.cpp": "29f00b4d3be2eeb6ef24925db25543e77daf46a330227db1482ce90e2f8f3087",
+      "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0"
+    },
+    "data_dir": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\data_dir",
+    "data_before": [],
+    "data_after": [],
+    "data_unchanged": true,
+    "exit_code": 0,
+    "elapsed_seconds": 14.5808322,
+    "gcode": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-5c2e59c715f842e199ee0829313209b5\\work\\accepted\\out\\plate_1.gcode",
+    "gcode_sha256": "7477f92e79c26d951083f86f997041edcbdebea85052f2b4f4be92411b2deeee"
+  },
+  "tests": [
+    {
+      "path": ".agents\\runtime\\runs\\run-5c2e59c715f842e199ee0829313209b5\\work\\skirt-brim-all.log",
+      "sha256": "d00741034d62d541d33908b86e5d066bc440fb040a15f1fad272e71743f99a6a",
+      "passed": "598 assertions in 39 test cases"
+    },
+    {
+      "path": ".agents\\runtime\\runs\\run-5c2e59c715f842e199ee0829313209b5\\work\\organic-handoff.log",
+      "sha256": "e0a20a34dabd476fa7ec728ee04746254ff99b29250243a5ecba278568080d2e",
+      "passed": "742 assertions in 1 test case"
+    }
+  ],
+  "native_test_sha256": "b2d1808f7a1271c20448debafbe190096f373941a4308a2c9577ac2ec2b52134",
+  "geometry": {
+    "baseline": ".agents\\runtime\\runs\\run-defc9f27095e4c699ab54e15ea03ee6f\\work\\accepted\\out\\plate_1.gcode",
+    "current": ".agents\\runtime\\runs\\run-5c2e59c715f842e199ee0829313209b5\\work\\accepted\\out\\plate_1.gcode",
+    "baseline_sha256": "683aed5917dd68c9214dcd119faac1b14d8a2c5c0a4b81a4ee82b6ff37aa6f18",
+    "current_sha256": "7477f92e79c26d951083f86f997041edcbdebea85052f2b4f4be92411b2deeee",
+    "elapsed_seconds": 14.5808322,
+    "data_unchanged": true,
+    "layers": 57,
+    "z_planes": [
+      0.18,
+      0.2,
+      0.23,
+      0.4,
+      0.43,
+      0.6,
+      0.63,
+      0.8,
+      1.0,
+      1.085,
+      1.2,
+      1.37,
+      1.4,
+      1.6,
+      1.62667,
+      1.63,
+      1.8,
+      1.82667,
+      1.88667,
+      2.0,
+      2.14333,
+      2.2,
+      2.4,
+      2.6,
+      2.7,
+      2.8,
+      3.0,
+      3.2,
+      3.3,
+      3.4,
+      3.6,
+      3.8,
+      3.86667,
+      4.0,
+      4.13333,
+      4.2,
+      4.4,
+      4.6,
+      4.8,
+      5.0,
+      5.2,
+      5.23,
+      5.4,
+      5.43,
+      5.6,
+      5.63,
+      5.8,
+      5.83,
+      6.0,
+      6.03,
+      6.2,
+      6.4,
+      6.6,
+      6.8,
+      7.0,
+      7.2,
+      7.4
+    ],
+    "role_paths": {
+      "Skirt": 3,
+      "Brim": 15,
+      "Support interface": 104,
+      "Support": 74,
+      "Outer wall": 75,
+      "Inner wall": 47,
+      "Overhang wall": 10,
+      "Gap infill": 41,
+      "Internal solid infill": 20,
+      "Top surface": 38,
+      "Bridge": 1
+    },
+    "allowed_brim_area_mm2": 63.54173506568979,
+    "minimum_gap_width_mm": 0.200000002980232,
+    "before": {
+      "brim_fragments": 6,
+      "uncovered_mm2": 2.127736459675725,
+      "printable_uncovered_mm2": 1.726089686211792
+    },
+    "after": {
+      "brim_fragments": 15,
+      "uncovered_mm2": 0.4398369657830344,
+      "printable_uncovered_mm2": 0.0,
+      "added_outside_allowed_mm2": 0.0,
+      "widths_mm": [
+        0.2,
+        0.369822,
+        0.373745,
+        0.375406,
+        0.42
+      ]
+    },
+    "non_brim_geometry_changes": [],
+    "bottom_contact_gaps_mm": [
+      0.17000000000000304,
+      0.17000000000000304,
+      0.17000000000000304
+    ],
+    "gcode_error_markers": [],
+    "log_warnings_errors": [],
+    "note": "Actual G-code bead widths are used. Remaining sub-width tips and model/support keepouts are not filled."
+  },
+  "determinism": {
+    "instructions_identical": true,
+    "instructions": 6473,
+    "unchanged_prior_support_and_fill_sources": {
+      "src/libslic3r/Fill/FillConcentric.cpp": true,
+      "src/libslic3r/Support/TreeSupport3D.cpp": true,
+      "src/libslic3r/Support/SupportCommon.cpp": true,
+      "tests/fff_print/test_support_material.cpp": true,
+      "src/libslic3r/Layer.cpp": true,
+      "src/libslic3r/Support/OrganicSupportPathBearing.hpp": true,
+      "src/libslic3r/Support/TreeSupport.cpp": true,
+      "src/libslic3r/Support/TreeSupport3D.hpp": true,
+      "scripts/analyze_organic_support.py": true
+    },
+    "native_test_sha256": "b2d1808f7a1271c20448debafbe190096f373941a4308a2c9577ac2ec2b52134"
+  },
+  "build": {
+    "command": "cmake --build build --config Release --target fff_print_tests InlongSlicer_app_gui -- /m:1",
+    "log": ".agents\\runtime\\runs\\run-5c2e59c715f842e199ee0829313209b5\\work\\build-release-6.log",
+    "sha256": "7f69fbdca54784174245b7492e0e61f3e6f6427f2abe4ec8fca6a03511c2b82a",
+    "exit_code": 0
+  },
+  "implementation": "Keep existing nominal brim loops. Use native medial widths for printable unfilled branches, convert physical widths to flow spacing, clip actual bead centers inside remaining legal area, and finish compact corners with inset narrow concentric loops. Minimum finish width is max(one quarter of nominal width, layer height).",
+  "limitations": "Software bead coverage is measured, not physical printer deposition. Deliberate model/support keepouts and sub-minimum-width tips are preserved. No universal all-model or hardware guarantee is established.",
+  "configuration_incident": "The existing GUI build target cleared Release/data_dir. Its 842 pre-build files were not snapshotted in this task. The latest discovered complete backup is dated 2026-10-19; recovery choice is pending separately. The three-dimensional project file is unchanged."
+}

@@ -1,0 +1,305 @@
+{
+  "schema_version": "inlong-organic-root-continuity/v1",
+  "verified_utc": "2026-10-25T04:53:01.514902Z",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "anchor_semantics": "The commit identifies the checkout; source hashes identify uncommitted reviewed bytes. No commit or push is performed.",
+  "source": {
+    "src/libslic3r/Layer.cpp": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+    "src/libslic3r/Support/SupportCommon.cpp": "e33906b23c657505aafa5fc1cdb72e1f3c17612e9a257facc4c4bc135e71e613",
+    "src/libslic3r/Support/TreeSupport.cpp": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "src/libslic3r/Support/TreeSupport3D.hpp": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+    "tests/fff_print/test_support_material.cpp": "eccef7fcdde5bdf9665a027034b96c15c0a8637d434c36d35b61011bb74c51ad",
+    "scripts/analyze_organic_support.py": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6"
+  },
+  "engine": {
+    "executable": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\inlong-slicer.exe",
+    "engine_sha256": "92e276c9a7c3987d5e275342b6ee665a1782ab0693ad5c42f9de9d95ea237f33",
+    "project_sha256": "c453a645a079eaae32360f7e7ecb47d22a7f5e2b6b4a34b8e3cd66626bd510d5",
+    "source_sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "data_dir": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\build\\src\\Release\\data_dir",
+    "exit_code": 0,
+    "elapsed_seconds": 6.6153269,
+    "gcode": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\accepted\\out\\plate_1.gcode",
+    "gcode_sha256": "5678743e8cd09bfd06c153b62fb824073630bbfff7a12f9a6a5fcbefe3f88ba8"
+  },
+  "slice": {
+    "gcode": ".agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\accepted\\out\\plate_1.gcode",
+    "sha256": "5678743e8cd09bfd06c153b62fb824073630bbfff7a12f9a6a5fcbefe3f88ba8",
+    "planes": 57,
+    "role_paths": {
+      "Skirt": 3,
+      "Brim": 6,
+      "Support interface": 109,
+      "Support": 74,
+      "Outer wall": 75,
+      "Inner wall": 47,
+      "Overhang wall": 10,
+      "Gap infill": 41,
+      "Internal solid infill": 20,
+      "Top surface": 38,
+      "Bridge": 1
+    },
+    "instruction_count": 6404,
+    "same_instructions_as_attachment": false,
+    "error_markers": [],
+    "internal_window": [
+      {
+        "z": 1.37,
+        "roles": {
+          "Support interface": 2,
+          "Support": 2
+        },
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.4,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.6,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.62667,
+        "roles": {
+          "Support interface": 2
+        },
+        "central_roles": {
+          "Support interface": 2
+        },
+        "central_bead_area_mm2": 7.67126570000023,
+        "central_extrusion_bottoms": [
+          1.370003
+        ]
+      },
+      {
+        "z": 1.63,
+        "roles": {
+          "Support interface": 2,
+          "Support": 2
+        },
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.8,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.82667,
+        "roles": {
+          "Support interface": 10
+        },
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 1.88667,
+        "roles": {
+          "Support interface": 16,
+          "Support": 4
+        },
+        "central_roles": {
+          "Support interface": 13
+        },
+        "central_bead_area_mm2": 6.406154886636837,
+        "central_extrusion_bottoms": [
+          1.62667,
+          1.82667
+        ]
+      },
+      {
+        "z": 2.0,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 2.14333,
+        "roles": {
+          "Support": 3
+        },
+        "central_roles": {
+          "Support": 2
+        },
+        "central_bead_area_mm2": 4.066649325384962,
+        "central_extrusion_bottoms": [
+          1.886663
+        ]
+      },
+      {
+        "z": 2.2,
+        "roles": {},
+        "central_roles": {},
+        "central_bead_area_mm2": 0.0,
+        "central_extrusion_bottoms": []
+      },
+      {
+        "z": 2.4,
+        "roles": {
+          "Support": 2
+        },
+        "central_roles": {
+          "Support": 1
+        },
+        "central_bead_area_mm2": 0.8214236852161042,
+        "central_extrusion_bottoms": [
+          2.143333
+        ]
+      }
+    ],
+    "central_extrusion_intervals": [
+      [
+        1.370003,
+        2.4
+      ]
+    ],
+    "bottom_contacts": [
+      {
+        "z": 1.62666666666667,
+        "floors": [
+          {
+            "model_surface_z": 1.2,
+            "area_mm2": 9.960240230279929,
+            "source_gap_mm": 0.17000000000000304
+          }
+        ],
+        "source_area_mm2": 9.960240230279929,
+        "unmatched_area_mm2": 0.0,
+        "emitted_heights": [
+          0.256667
+        ],
+        "emitted_bottoms": [
+          1.370003
+        ]
+      },
+      {
+        "z": 1.82666666666667,
+        "floors": [
+          {
+            "model_surface_z": 1.4,
+            "area_mm2": 7.233634656343949,
+            "source_gap_mm": 0.17000000000000304
+          }
+        ],
+        "source_area_mm2": 7.233634656343949,
+        "unmatched_area_mm2": 0.0,
+        "emitted_heights": [
+          0.256667
+        ],
+        "emitted_bottoms": [
+          1.570003
+        ]
+      }
+    ],
+    "geometry_changes": [
+      {
+        "z": 1.62667,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 7.177392684912568,
+        "added_outside_0_002mm_mm2": 0.0004525705269110145
+      },
+      {
+        "z": 1.82667,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 0.0,
+        "added_outside_0_002mm_mm2": 7.131331486808744
+      },
+      {
+        "z": 1.88667,
+        "role": "Support",
+        "removed_outside_0_002mm_mm2": 1.904637361792407,
+        "added_outside_0_002mm_mm2": 1.3079944361645894
+      },
+      {
+        "z": 1.88667,
+        "role": "Support interface",
+        "removed_outside_0_002mm_mm2": 0.0,
+        "added_outside_0_002mm_mm2": 16.83637644190893
+      },
+      {
+        "z": 2.14333,
+        "role": "Support",
+        "removed_outside_0_002mm_mm2": 0.827501691392363,
+        "added_outside_0_002mm_mm2": 11.620927583292005
+      }
+    ],
+    "internal_volume_overlaps": [],
+    "support_height_range": [
+      0.05,
+      0.3
+    ]
+  },
+  "repeat_instruction_count": 6404,
+  "repeat_commands_identical": true,
+  "native_checks": [
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\accepted-shard-1.log",
+      "sha256": "836ce42e6cf537d1812e1513935298ff0734de5a32a60f0f15a0c18f339570ff",
+      "assertions": 1653,
+      "cases": 5,
+      "exit_code": 0
+    },
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\accepted-shard-2.log",
+      "sha256": "1cf18130b92c4b8dd0c2373d8cf8480c7988400e633f87677793cf31ec199f34",
+      "assertions": 210,
+      "cases": 3,
+      "exit_code": 0
+    },
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\accepted-shard-3.log",
+      "sha256": "c808f059181fe32d41f4c822885206a3bf3b61c45b8bd29dc64cb700a5266c61",
+      "assertions": 14,
+      "cases": 1,
+      "exit_code": 0
+    },
+    {
+      "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\accepted-shard-4.log",
+      "sha256": "f859c77b88f5d7d565e5ec9394fa1169ab7f32a0f92c0eb774fc09a1abbd6f81",
+      "assertions": 1749,
+      "cases": 22,
+      "exit_code": 0
+    }
+  ],
+  "organic_case_total": 31,
+  "organic_assertion_total": 3626,
+  "clearance_checks": {
+    "cases": 4,
+    "assertions": 119,
+    "path": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-729b65cbb157482cbdaf5973f4fa552b\\work\\clearance-accepted.log",
+    "sha256": "0da0d590dba0c967079857ea02084ad7f8958466baf4200b9cc74356dc811f0f"
+  },
+  "finding": "Relocating a bottom contact without extending its original root leaves a local vertical void. Source-grid collision masks can erase a legal independently sliced root. A footprint crossing model steps requires separate visible surface contacts; succeeding paths require native height modulation over those contacts, including ordered hollow-wall collections.",
+  "preservation": "Native support/interface patterns, roles and widths are retained. Model, Brim, and paths at/above 2.40 mm are unchanged within 0.002 mm output precision. No G-code instructions were edited. The original Release data_dir is used; no alternative configuration directory, install, commit or push is created.",
+  "limitations": [
+    "Gap evidence uses printed model slice surfaces and extrusion bottoms, not hardware measurements.",
+    "31 organic/tree-bridge cases and this project do not establish correctness on every possible model.",
+    "Parsed path counts include height/width fragments and do not count only independent trunk contours."
+  ],
+  "superseded_prototypes": [
+    "fixed-1",
+    "fixed-2",
+    "final",
+    "final-repeat",
+    "verified",
+    "verified-repeat"
+  ],
+  "prototype_notes": "Early prototypes restored geometry but did not correctly modulate flow above stepped contacts. They are not accepted outputs. Compilation scope errors, a superseded-run executable lock, and a nested-collection modulation crash were resolved before this acceptance."
+}

@@ -7664,6 +7664,11 @@ LayerResult GCode::process_layer(
                     bool is_overridden = support_extrusion_role == erSupportMaterialInterface ? support_intf_overridden : support_overridden;
                     if (is_overridden == (print_wipe_extrusions != 0)) {
                         const ExtrusionEntityCollection *support_paths = instance_to_print.object_by_extruder.support;
+                        if (first_layer && !instance_to_print.print_object.support_layers().empty() &&
+                            layer_to_print.support_layer == instance_to_print.print_object.support_layers().front())
+                            if (const auto *shared = print.first_layer_brim_support(
+                                    {instance_to_print.print_object.id(), instance_to_print.instance_id}))
+                                support_paths = shared;
                         auto raft_override = raft_path_overrides.find({&instance_to_print.print_object, instance_to_print.instance_id});
                         if (raft_override != raft_path_overrides.end())
                             support_paths = raft_override->second;
@@ -8066,10 +8071,16 @@ LayerResult GCode::process_layer(
                         m_need_change_layer_lift_z = true;
                     }
                     ExtrusionRole support_role = instance_to_print.object_by_extruder.support_extrusion_role;
-                    gcode += this->extrude_support(*instance_to_print.object_by_extruder.support, support_role);
+                    const ExtrusionEntityCollection *support_paths = instance_to_print.object_by_extruder.support;
+                    if (first_layer && !instance_to_print.print_object.support_layers().empty() &&
+                        layers[instance_to_print.layer_id].support_layer == instance_to_print.print_object.support_layers().front())
+                        if (const auto *shared = print.first_layer_brim_support(
+                                {instance_to_print.print_object.id(), instance_to_print.instance_id}))
+                            support_paths = shared;
+                    gcode += this->extrude_support(*support_paths, support_role);
                     // Make sure ironing is the last (Orca names this role erIroning, not erSupportIroning).
                     if (support_role == erMixed || support_role == erSupportMaterialInterface)
-                        gcode += this->extrude_support(*instance_to_print.object_by_extruder.support, erIroning);
+                        gcode += this->extrude_support(*support_paths, erIroning);
                 }
 
                 // --- Shared instance footer (mirrors Orca's main instance loop) ---

@@ -1,0 +1,125 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "brim-support-continuity-20261025",
+  "key": "brim-printable-gap-coverage",
+  "type": "lesson",
+  "conclusion": "Complete same-material bed brim ownership still yields six connected Brim loops with unchanged model/higher support and 0.17 mm bottom contacts. Independent adaptive gap-fill entities can fragment the first-layer support even when their bead coverage is correct. Keep variable-width strokes in ordered native ExtrusionMultiPath chains. Small closed finishing loops can be embedded without opening their geometry. Short rounded connectors must fit the actual support_islands, preserve role, height and flow ratio, and avoid brim/other-role footprints; an old bead-footprint-only limit incorrectly treats planned infill space as a forbidden gap. Use the original bead footprint when no structural region is supplied. Fresh native and Release evidence demonstrates fewer continuous extrusion runs and short fragments, preserved brim and footing, deterministic repeat export and unchanged upper geometry. Disconnected regions and distinct process roles remain separate. Narrow interface finishing uses adaptive medial strokes instead of thin closed boundaries; restore the inset radius to width and preserve the boundary whenever the medial replacement loses printable footing. Base-support finishing remains unchanged.",
+  "scope": "Source-bound native first-layer support continuity, complete brim and test2 Release verification as of 2026-10-25; software geometry and export checks only.",
+  "modules": [
+    "slicing",
+    "brim",
+    "support",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "brim",
+    "continuity",
+    "first-layer",
+    "interface",
+    "per-instance",
+    "physical-width",
+    "source-bound-release"
+  ],
+  "files": [
+    "src/libslic3r/Brim.hpp",
+    "tests/fff_print/test_skirt_brim.cpp",
+    "src/libslic3r/Print.hpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "src/libslic3r/Print.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Brim.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "docs/evidence/brim-support-continuity-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.hpp",
+      "sha256": "88f3dff2feb8966e019c8aeaa3aea26b76504b7b6aadc4a6e4332cf4f1b34b0f",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_skirt_brim.cpp",
+      "sha256": "5e901aa63e8db9a39dc1744d8efe5a6fddcb0971a71fb916f5f89ee74950f792",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.hpp",
+      "sha256": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.cpp",
+      "sha256": "01d6740df6eef758b6efcde66861adb05ae01ed24fa5255736793ae4f4d4612e",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/brim-support-continuity-20261025.json",
+      "sha256": "07fd5a7c0ccfe412ff9952bf2d30d8274922868e68266c765666cf06c8c071a8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed first-layer native continuity source, regression tests and immutable Release evidence; commit is a checkout anchor only."
+    }
+  ],
+  "verified_utc": "2026-10-25T11:31:23.038551Z",
+  "verification": {
+    "method": "Rounded-bead containment, closed-loop/variable-flow/barrier/hole regressions, complete skirt/brim suite, related guards and repeated Release exports.",
+    "summary": "Continuous extrusion counts break on travel/retraction/layer/role changes, not width or speed metadata. Brim and all upper/model geometry remain unchanged.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "brim-first-layer-ownership-20261025"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

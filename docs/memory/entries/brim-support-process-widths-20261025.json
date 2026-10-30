@@ -1,0 +1,128 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "brim-support-process-widths-20261025",
+  "key": "brim-printable-gap-coverage",
+  "type": "lesson",
+  "conclusion": "After first-layer brim ownership and short-stroke splicing, adaptive local widths can still leave visibly thin seams. Normalize effective support widths using the original per-role and per-height process flow. Project centers only inside full-bead safe domains, route concave corners continuously, preserve flow ratio and exact joins, and reject changes that lose printable footing or cross brim/other-role geometry. A float slightly below the minimum-height width floor is roundoff, not a reason to reject the entire operation. The reviewed test2 exports use 0.42 mm Support and 0.408 mm Support interface with zero independent submillimetre extrusions. Six Brim loops remain closed at 0.42 mm; model and upper support geometry, three actual 0.17 mm contact gaps and current live configuration remain unchanged. This is source-bound software evidence, not a universal physical-print guarantee.",
+  "scope": "Reviewed native first-layer full process-width routing, regressions and deterministic test2 Release exports as of 2026-10-25.",
+  "modules": [
+    "slicing",
+    "brim",
+    "support",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "brim",
+    "center-domain",
+    "continuity",
+    "first-layer",
+    "float-rounding",
+    "interface",
+    "per-instance",
+    "physical-width",
+    "process-width",
+    "source-bound-release"
+  ],
+  "files": [
+    "src/libslic3r/Brim.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "src/libslic3r/Brim.hpp",
+    "src/libslic3r/Print.hpp",
+    "tests/fff_print/test_skirt_brim.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Print.cpp",
+    "src/libslic3r/GCode.cpp",
+    "docs/evidence/brim-support-process-widths-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.cpp",
+      "sha256": "d01dda7bde25288ae7b444e4b547162cd9b9277e518a6bed85214b453dfc7aa5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.hpp",
+      "sha256": "7912a98e7d7a6b2d54c92d4c02cccc40f7344e7463a95e12008b8afddb492ee3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.hpp",
+      "sha256": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_skirt_brim.cpp",
+      "sha256": "8f8dd4ff4dc86032b44f4e7c7c645c1e51cd98fa6b3dc704ca927583d0a973f8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "6095340cdb3f1105404921b9ebf6e0458b127eab6511d9ba6e72bd3a425b0bf8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/brim-support-process-widths-20261025.json",
+      "sha256": "326e8c0b4052e9ec30fac8698e48faa594dba88a0d8bfb3ad3c8e5d0b2ffbee1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed native width routing and immutable Release evidence; commit is a checkout anchor, not proof that uncommitted bytes are committed."
+    }
+  ],
+  "verified_utc": "2026-10-25T13:30:48.818676+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex",
+    "method": "60 native cases / 2505 assertions; two actual Release exports with identical instructions; complete first-layer geometry, widths, footing, brim closure and contact checks.",
+    "summary": "Effective process widths are constant; original brim, model/upper support geometry and 0.17 mm contacts are preserved."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "brim-support-interior-splice-20261025"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "brim-printable-gap-coverage-20261025",
+  "key": "brim-printable-gap-coverage",
+  "type": "lesson",
+  "conclusion": "Fixed-pitch brim offsets and opening can discard narrow branches and compact final remainders. Retain nominal loops and finish only uncovered legal area with flow-corrected medial paths and narrow concentric loops. Clip bead centers by the actual physical radius and keep width at least layer height. The reviewed Release passes 39 skirt/brim cases with 598 assertions and a 742-assertion organic handoff guard. Test2 printable void decreases from about 1.7261 mm2 to zero at a 0.20 mm minimum width; added beads stay inside the allowed area. Model and support bead geometry and 0.17 mm local bottom gaps are preserved. Two exports have identical instructions. This is software geometry evidence, not a physical all-model fill guarantee.",
+  "scope": "Reviewed native Brim implementation and source-bound Release test2 output as of 2026-10-25.",
+  "modules": [
+    "slicing",
+    "brim",
+    "regression"
+  ],
+  "tags": [
+    "brim",
+    "gap-fill",
+    "physical-width",
+    "keepouts",
+    "source-bound-release"
+  ],
+  "files": [
+    "src/libslic3r/Brim.cpp",
+    "tests/fff_print/test_skirt_brim.cpp",
+    "docs\\evidence\\brim-coverage-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.cpp",
+      "sha256": "29f00b4d3be2eeb6ef24925db25543e77daf46a330227db1482ce90e2f8f3087",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source and immutable native Release bead-coverage evidence; commit is only the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_skirt_brim.cpp",
+      "sha256": "18e55e69d932c8b832b6f7c907b3bc11531aad7f8781ca1dcd1969029aea007b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source and immutable native Release bead-coverage evidence; commit is only the checkout anchor."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs\\evidence\\brim-coverage-20261025.json",
+      "sha256": "fa1209d70980eb0421fc6957cf6ca2980b12e9e673e2da37fe9ab8a2feec8f20",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed source and immutable native Release bead-coverage evidence; commit is only the checkout anchor."
+    }
+  ],
+  "verified_utc": "2026-10-25T07:31:32.053969Z",
+  "verification": {
+    "method": "Manual source review, native rotated narrow-band and hole regression, full skirt/brim suite, organic handoff guard, two Release exports and physical bead coverage.",
+    "summary": "Existing loops omit narrow branches; strict full-radius clipping needs numerical width margin. The wall medial wrapper prunes compact corner branches and native skeleton edge rules reject non-facing corners. Concentric residual finishing fills those corners without changing model or support paths.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

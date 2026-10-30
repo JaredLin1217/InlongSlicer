@@ -1,0 +1,4565 @@
+{
+  "schema_version": "inlong-product-evidence/v1",
+  "verified_utc": "2026-10-25T15:00:12.850584+00:00",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "goal": "Repair native organic interface fragmentation at the user-observed 0.23 mm plane, preserving process parameters, brim and actual 0.17 mm contacts.",
+  "changed_files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Fill/FillBase.hpp",
+    "src/libslic3r/Fill/FillBase.cpp",
+    "src/libslic3r/Fill/FillRectilinear.cpp",
+    "tests/fff_print/test_support_material.cpp"
+  ],
+  "source_sha256": {
+    "src/libslic3r/Support/SupportCommon.cpp": "d49425bdadebb45ee80901e99c2d01aac52c1f3512b6750d01ed70f9e8366f05",
+    "src/libslic3r/Fill/FillRectilinear.cpp": "c9d3a5f1e66e94d6813c68e95ade8980bf92c44002e9a1f12eb7a497cc80c593",
+    "tests/fff_print/test_skirt_brim.cpp": "8f8dd4ff4dc86032b44f4e7c7c645c1e51cd98fa6b3dc704ca927583d0a973f8",
+    "src/libslic3r/Fill/FillBase.hpp": "17507c53de3a915b952c85f418e1ce575a814671db71093345a41247d210008c",
+    "src/libslic3r/Print.hpp": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+    "src/libslic3r/Support/TreeSupport3D.cpp": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+    "src/libslic3r/Brim.hpp": "7912a98e7d7a6b2d54c92d4c02cccc40f7344e7463a95e12008b8afddb492ee3",
+    "src/libslic3r/Fill/FillBase.cpp": "1042eb5cb513a298bc83e130a3563d03a62e4d32f4c98357289fe2896ec80286",
+    "src/libslic3r/Brim.cpp": "d01dda7bde25288ae7b444e4b547162cd9b9277e518a6bed85214b453dfc7aa5",
+    "src/libslic3r/Print.cpp": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+    "src/libslic3r/Fill/FillConcentric.cpp": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+    "tests/fff_print/test_support_material.cpp": "dc208a1338d5270aa318fdfebd64ae27f76225c3271eda761dca716b2dc98ca5",
+    "src/libslic3r/GCode.cpp": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5"
+  },
+  "diagnosis": {
+    "user_z_mm": 0.23,
+    "actual_layer_height_mm": 0.05,
+    "nominal_layer_height_mm": 0.2,
+    "configured_interface_pattern": "rectilinear",
+    "configured_interface_spacing_mm": 0.4,
+    "configured_contact_pattern": "concentric",
+    "configured_contact_spacing_mm": 0.05,
+    "causes": [
+      "Concentric fills used nominal-height spacing against actual-height wall keepouts",
+      "Rectilinear connections were generated before wall-clearance clipping, which split connections at concave corners",
+      "A compact generic interface projection had neither a same-plane connection nor any next-road/model demand"
+    ],
+    "reproduced_failures": [
+      {
+        "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/continuity-before.log",
+        "sha256": "d40d4aa0c3eefb67c710787a00ff58b0f487e8853257b75114e9e423c2ca9b20"
+      },
+      {
+        "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/rect-before.log",
+        "sha256": "20dc6453d0a15e16245b07cb816790e0775251ae57d19f6c42cb4d500b4f93ef"
+      },
+      {
+        "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/orphan-before.log",
+        "sha256": "7a117857e9496104d97be3a682c56e380a36c039a8b2c734f7cb3fbf2b518028"
+      }
+    ]
+  },
+  "correction": [
+    "Normalize concentric reference spacing and density together, preserving configured clear spacing",
+    "Plan interface fills directly within precomputed safe center domains; keep ordinary model-fill defaults unchanged",
+    "Preserve support/contact roles and actual-height flow; retain post-generation collision clipping",
+    "Remove only isolated compact generic interfaces with no same-plane road or later road starting at that Z",
+    "Protect true contacts, trunks, substantial platforms and any compact interface with actual downstream demand"
+  ],
+  "no_gcode_postprocessing": true,
+  "input_project": {
+    "path": "C:/Users/v_jar/Downloads/测试2.3mf",
+    "sha256": "c453a645a079eaae32360f7e7ecb47d22a7f5e2b6b4a34b8e3cd66626bd510d5"
+  },
+  "user_reference": {
+    "path": "C:/Users/v_jar/Downloads/15.gcode",
+    "sha256": "535ec19ea25016cf2487c5449bd623a3811b72d15939a57d8fb054385abb25a6"
+  },
+  "accepted_exports": [
+    {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/verify-final/out/plate_1.gcode",
+      "sha256": "0bd709e60155fbf0888884fca949a751506fffff5aaf990e761a654cbe93ad60"
+    },
+    {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/verify-repeat/out/plate_1.gcode",
+      "sha256": "f6c503fb013834d8042c28585cb727494621046fbf2cd404b8a3c43f3f7af751"
+    }
+  ],
+  "analysis_reports": [
+    {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/verify-final/layer-analysis.json",
+      "sha256": "3f491e70fcd352519472f5752eaf4dd6f7cae44acf47efeccf5bd2bd5f24ad21"
+    },
+    {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/verify-repeat/layer-analysis.json",
+      "sha256": "256016896c1d989ccc049be67b42f1ca205fbe3f158a36b4ed1f23539ef69c6f"
+    }
+  ],
+  "geometry": {
+    "reference": "D:\\Work\\Nowing\\GitHub\\InlongSlicer\\.agents\\runtime\\runs\\run-a3dd5c91c5c747d5b3f474b0e87eb9db\\work\\input-15.gcode",
+    "reference_sha256": "535ec19ea25016cf2487c5449bd623a3811b72d15939a57d8fb054385abb25a6",
+    "gcode": ".agents\\runtime\\runs\\run-a3dd5c91c5c747d5b3f474b0e87eb9db\\work\\verify-final\\out\\plate_1.gcode",
+    "gcode_sha256": "0bd709e60155fbf0888884fca949a751506fffff5aaf990e761a654cbe93ad60",
+    "layer_planes_before": [
+      0.18,
+      0.2,
+      0.23,
+      0.4,
+      0.43,
+      0.6,
+      0.63,
+      0.8,
+      1.0,
+      1.085,
+      1.2,
+      1.37,
+      1.4,
+      1.6,
+      1.62667,
+      1.63,
+      1.8,
+      1.82667,
+      1.88667,
+      2.0,
+      2.14333,
+      2.2,
+      2.4,
+      2.6,
+      2.7,
+      2.8,
+      3.0,
+      3.2,
+      3.3,
+      3.4,
+      3.6,
+      3.8,
+      3.86667,
+      4.0,
+      4.13333,
+      4.2,
+      4.4,
+      4.6,
+      4.8,
+      5.0,
+      5.2,
+      5.23,
+      5.4,
+      5.43,
+      5.6,
+      5.63,
+      5.8,
+      5.83,
+      6.0,
+      6.03,
+      6.2,
+      6.4,
+      6.6,
+      6.8,
+      7.0,
+      7.2,
+      7.4
+    ],
+    "layer_planes_after": [
+      0.18,
+      0.2,
+      0.23,
+      0.4,
+      0.43,
+      0.6,
+      0.63,
+      0.8,
+      1.0,
+      1.085,
+      1.2,
+      1.37,
+      1.4,
+      1.6,
+      1.62667,
+      1.63,
+      1.8,
+      1.82667,
+      1.88667,
+      2.0,
+      2.14333,
+      2.2,
+      2.4,
+      2.6,
+      2.7,
+      2.8,
+      3.0,
+      3.2,
+      3.3,
+      3.4,
+      3.6,
+      3.8,
+      3.86667,
+      4.0,
+      4.13333,
+      4.2,
+      4.4,
+      4.6,
+      4.8,
+      5.0,
+      5.2,
+      5.23,
+      5.4,
+      5.43,
+      5.6,
+      5.63,
+      5.8,
+      5.83,
+      6.0,
+      6.03,
+      6.2,
+      6.4,
+      6.6,
+      6.8,
+      7.0,
+      7.2,
+      7.4
+    ],
+    "layers": [
+      {
+        "z": 0.18,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.42
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                63.32701748915364,
+                18.73045439872297,
+                16.505141849071038,
+                138.6864982152476,
+                13.287066529281702,
+                34.16983442960766,
+                20.739512050284652,
+                34.72317964688277,
+                5.615558685331274,
+                75.41724063431951
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.42
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                63.32701748915364,
+                18.73045439872297,
+                16.505141849071038,
+                138.6864982152476,
+                13.287066529281702,
+                34.16983442960766,
+                20.739512050284652,
+                34.72317964688277,
+                5.615558685331274,
+                75.41724063431951
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 4,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.18
+              ],
+              "lengths_mm": [
+                23.30719244541196,
+                23.307284331495694,
+                1.375635244517587,
+                1.3756554865810064
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 4,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.18
+              ],
+              "lengths_mm": [
+                23.30719244541196,
+                23.307284331495694,
+                1.375635244517587,
+                1.3756554865810064
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 6,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.42
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                37.061856264719445,
+                34.67580995229606,
+                32.28942929748426,
+                29.916028849850086,
+                27.56825024742427,
+                25.228594392189255
+              ],
+              "closed_extrusions": 6
+            },
+            "after": {
+              "continuous_extrusions": 6,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.42
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                37.061856264719445,
+                34.67580995229606,
+                32.28942929748426,
+                29.916028849850086,
+                27.56825024742427,
+                25.228594392189255
+              ],
+              "closed_extrusions": 6
+            }
+          }
+        }
+      },
+      {
+        "z": 0.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 0.23,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 6,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.05
+              ],
+              "lengths_mm": [
+                11.448027481273586,
+                26.470904891805773,
+                11.512723501942833,
+                26.469577004477433,
+                11.506403800860687,
+                11.471260859730997
+              ],
+              "closed_extrusions": 4
+            },
+            "after": {
+              "continuous_extrusions": 6,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.05
+              ],
+              "lengths_mm": [
+                11.448027481273586,
+                26.470904891805773,
+                11.512723501942833,
+                26.469577004477433,
+                11.506403800860687,
+                11.471260859730997
+              ],
+              "closed_extrusions": 4
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 12,
+              "short_extrusions": 5,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.05
+              ],
+              "lengths_mm": [
+                22.20884179706626,
+                22.208837443560355,
+                26.429289122819966,
+                26.429252411067118,
+                2.2374693096681177,
+                0.9348614184168952,
+                9.725000000000023,
+                0.41827465180788737,
+                0.31263806093912816,
+                9.725000000000023,
+                0.4124027102120992,
+                0.31133079704833777
+              ],
+              "closed_extrusions": 5
+            },
+            "after": {
+              "continuous_extrusions": 7,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.05
+              ],
+              "lengths_mm": [
+                22.20883756299307,
+                22.208837443560355,
+                26.429289122819966,
+                26.429252411067118,
+                2.2374693096681177,
+                18.570952546526147,
+                18.57036507627437
+              ],
+              "closed_extrusions": 5
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 0.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 0.43,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 6,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                11.520343595569681,
+                26.235254557584607,
+                0.4170000000000016,
+                0.42399999999997817,
+                0.4170000000000016,
+                26.23982939312826,
+                0.4170000000000016,
+                0.42399999999997817,
+                0.4170000000000016,
+                11.525113724581393
+              ],
+              "closed_extrusions": 4
+            },
+            "after": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 6,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                11.520343595569681,
+                26.235254557584607,
+                0.4170000000000016,
+                0.42399999999997817,
+                0.4170000000000016,
+                26.23982939312826,
+                0.4170000000000016,
+                0.42399999999997817,
+                0.4170000000000016,
+                11.525113724581393
+              ],
+              "closed_extrusions": 4
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 7,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                22.518418138022838,
+                22.51945346578121,
+                18.883118203052984,
+                18.883118203052984,
+                26.284674449294247,
+                26.28563045240753,
+                1.8400875021542835
+              ],
+              "closed_extrusions": 7
+            },
+            "after": {
+              "continuous_extrusions": 7,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                22.518418138022838,
+                22.51945346578121,
+                18.879530384204504,
+                18.879530384204504,
+                26.284674449294247,
+                26.28563045240753,
+                1.8400875021542835
+              ],
+              "closed_extrusions": 7
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 0.6,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 0.63,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 6,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                11.451541461036422,
+                25.788580961563014,
+                0.3540000000000134,
+                0.34799999999998477,
+                0.3540000000000134,
+                25.851135706012418,
+                0.34499999999999886,
+                0.35200000000000387,
+                0.3439999999999941,
+                11.45552708731109
+              ],
+              "closed_extrusions": 4
+            },
+            "after": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 6,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                11.451541461036422,
+                25.788580961563014,
+                0.3540000000000134,
+                0.34799999999998477,
+                0.3540000000000134,
+                25.851135706012418,
+                0.34499999999999886,
+                0.35200000000000387,
+                0.3439999999999941,
+                11.45552708731109
+              ],
+              "closed_extrusions": 4
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 11,
+              "short_extrusions": 4,
+              "widths_mm": [
+                0.0991403,
+                0.102689,
+                0.106132,
+                0.109451,
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                25.118714125145413,
+                25.120039719105357,
+                19.97822449649069,
+                19.97822449649069,
+                0.20606067067736888,
+                0.17149344010777057,
+                0.20503902067656604,
+                0.1715721422609068,
+                23.91776724265066,
+                23.910338937877803,
+                1.7819800364423317
+              ],
+              "closed_extrusions": 7
+            },
+            "after": {
+              "continuous_extrusions": 11,
+              "short_extrusions": 4,
+              "widths_mm": [
+                0.100329,
+                0.103997,
+                0.107402,
+                0.110498,
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                25.118714125145413,
+                25.120039719105357,
+                19.97433473755172,
+                19.97433473755172,
+                0.20508778608197303,
+                0.1694992625352804,
+                0.20677418853920004,
+                0.17356554957710044,
+                23.91776724265066,
+                23.910338937877803,
+                1.7819800364423317
+              ],
+              "closed_extrusions": 7
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 0.8,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.17
+              ],
+              "lengths_mm": [
+                11.375545338569033,
+                11.375499176413834
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.17
+              ],
+              "lengths_mm": [
+                11.375545338569033,
+                11.375499176413834
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 4,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.17
+              ],
+              "lengths_mm": [
+                28.54163293399176,
+                28.592277395320817,
+                10.831999999999994,
+                10.75800000000001
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 4,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.17
+              ],
+              "lengths_mm": [
+                28.54163293399176,
+                28.592277395320817,
+                22.085336802856187,
+                22.022529752368243
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.0,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.085,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                11.301460863171716,
+                11.301491705305844
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                11.301460863171716,
+                11.301491705305844
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                25.535575598166844,
+                25.53550037868659
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                25.535575598166844,
+                25.53550037868659
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.37,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                10.942284567368725,
+                11.00045765606215
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                10.942284567368725,
+                11.00045765606215
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                25.535575598166844,
+                25.53550037868659
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.285
+              ],
+              "lengths_mm": [
+                25.535575598166844,
+                25.53550037868659
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.6,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.62667,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.17905,
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                20.379999999999995,
+                9.194000000000017
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.17905,
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                20.379999999999995,
+                9.194000000000017
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.63,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.26
+              ],
+              "lengths_mm": [
+                9.986266167993167,
+                9.74450609805329
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.26
+              ],
+              "lengths_mm": [
+                9.986266167993167,
+                9.74450609805329
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.26
+              ],
+              "lengths_mm": [
+                25.535575598166844,
+                25.53550037868659
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.26
+              ],
+              "lengths_mm": [
+                25.535575598166844,
+                25.53550037868659
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.8,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.82667,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 1,
+              "widths_mm": [
+                0.193194,
+                0.193196,
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                3.71838231377183,
+                4.619668268701076,
+                4.739473692687751,
+                5.008566270340006,
+                1.0900000000000034,
+                0.9720000000000084,
+                1.1189999999999998,
+                1.061000000000007,
+                2.3290000000000077,
+                2.150999999999982
+              ],
+              "closed_extrusions": 4
+            },
+            "after": {
+              "continuous_extrusions": 10,
+              "short_extrusions": 1,
+              "widths_mm": [
+                0.193194,
+                0.193196,
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                3.71838231377183,
+                4.619668268701076,
+                4.739473692687751,
+                5.008566270340006,
+                1.0900000000000034,
+                0.9720000000000084,
+                1.1189999999999998,
+                1.061000000000007,
+                2.3290000000000077,
+                2.150999999999982
+              ],
+              "closed_extrusions": 4
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 1.88667,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.256667,
+                0.26
+              ],
+              "lengths_mm": [
+                9.693820371704403,
+                10.098270008986946
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.256667,
+                0.26
+              ],
+              "lengths_mm": [
+                9.693820371704403,
+                10.098270008986946
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 6,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.0599999,
+                0.06,
+                0.256667,
+                0.26
+              ],
+              "lengths_mm": [
+                24.16907447707563,
+                1.6618581089075533,
+                2.0917158570499375,
+                2.1883118261144623,
+                2.0036466528849664,
+                9.649000000000001
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 3,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.0599999,
+                0.06,
+                0.256667,
+                0.26
+              ],
+              "lengths_mm": [
+                24.16907447707563,
+                3.098420038291777,
+                3.266957934368455
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 2.0,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 2.14333,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 3,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                10.052002577774948,
+                33.324334639159325,
+                12.807640905876909
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 3,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                10.052002577774948,
+                33.324334639159325,
+                12.807640905876909
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 2.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 2.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                39.29017800776796,
+                14.43593199158492
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.256667
+              ],
+              "lengths_mm": [
+                39.29017800776796,
+                14.43593199158492
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 2.6,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 2.7,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                37.53821832467745,
+                16.95487883370495
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                37.53821832467745,
+                16.95487883370495
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 2.8,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 3.0,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                37.0592844716527,
+                16.945123535506422
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                37.0592844716527,
+                16.945123535506422
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 3.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 3.3,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                36.56694656292812,
+                17.192102765502096
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                36.56694656292812,
+                17.192102765502096
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 3.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 3.6,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                35.95625278702041,
+                17.688094585105347
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.3
+              ],
+              "lengths_mm": [
+                35.95625278702041,
+                17.688094585105347
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 3.8,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 3.86667,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.266667
+              ],
+              "lengths_mm": [
+                35.25261219493071,
+                18.430734165829215
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.266667
+              ],
+              "lengths_mm": [
+                35.25261219493071,
+                18.430734165829215
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 4.0,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 4.13333,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.266667
+              ],
+              "lengths_mm": [
+                34.74752251294566,
+                19.179511430351454
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.266667
+              ],
+              "lengths_mm": [
+                34.74752251294566,
+                19.179511430351454
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 4.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 4.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 8,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.266667
+              ],
+              "lengths_mm": [
+                34.56966850125525,
+                19.830076122256774,
+                1.4309668060440561,
+                1.3297913370149208,
+                1.5872243067695035,
+                1.5020788927349993,
+                1.3288449871975279,
+                1.4400069444276875
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 8,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.266667
+              ],
+              "lengths_mm": [
+                34.56966850125525,
+                19.830076122256774,
+                1.4309668060440561,
+                1.3297913370149208,
+                1.5872243067695035,
+                1.5020788927349993,
+                1.3288449871975279,
+                1.4400069444276875
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 4.6,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                3.6820657837402786,
+                3.5559573996613474
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                3.6820657837402786,
+                3.5559573996613474
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                36.31845798414638,
+                58.07530852164136
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                36.31845798414638,
+                45.20152184786283
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 4.8,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                3.1105594747438867,
+                2.962365787395999
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                3.1105594747438867,
+                2.962365787395999
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                35.5618810248379,
+                58.81640468398313
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                35.5618810248379,
+                56.151457558132115
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.0,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                1.9840229995365284,
+                1.8284213639519535
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                1.9840229995365284,
+                1.8284213639519535
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                35.44778901267971,
+                58.924464517310454
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                35.44778901267971,
+                56.28287449999572
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.23,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 4,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.23
+              ],
+              "lengths_mm": [
+                25.531854092345085,
+                25.53200329648556,
+                24.056704786155183,
+                10.542095048446601
+              ],
+              "closed_extrusions": 3
+            },
+            "after": {
+              "continuous_extrusions": 4,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.23
+              ],
+              "lengths_mm": [
+                25.531854092345085,
+                25.53200329648556,
+                24.056704786155183,
+                8.673999999999978
+              ],
+              "closed_extrusions": 3
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.43,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                26.722259429411054,
+                32.5732021809195
+              ],
+              "closed_extrusions": 1
+            },
+            "after": {
+              "continuous_extrusions": 2,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                26.722259429411054,
+                29.97622078413245
+              ],
+              "closed_extrusions": 1
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.6,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.63,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 7,
+              "short_extrusions": 2,
+              "widths_mm": [
+                0.130937,
+                0.137831,
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                22.439817859109468,
+                22.439490985315572,
+                17.907000522289966,
+                17.907000522289966,
+                0.38763107367353156,
+                0.38763107367353156,
+                23.30609634168728
+              ],
+              "closed_extrusions": 5
+            },
+            "after": {
+              "continuous_extrusions": 9,
+              "short_extrusions": 4,
+              "widths_mm": [
+                0.0469323,
+                0.0650847,
+                0.131003,
+                0.138008,
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                22.439817859109468,
+                22.439490985315572,
+                17.907000522289966,
+                17.907000522289966,
+                0.38853940517647517,
+                0.19476501240082522,
+                0.3885394051764751,
+                0.1949844784898798,
+                23.30609634168728
+              ],
+              "closed_extrusions": 5
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.8,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 5.83,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 9,
+              "short_extrusions": 5,
+              "widths_mm": [
+                0.0582559,
+                0.0585406,
+                0.0740395,
+                0.0777276,
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                26.685705213832062,
+                22.73304328679213,
+                17.933238855574587,
+                7.793999999999983,
+                0.17160314813899963,
+                0.1298075498574793,
+                0.24824818015346933,
+                0.810500663045929,
+                0.8158744096678906
+              ],
+              "closed_extrusions": 5
+            },
+            "after": {
+              "continuous_extrusions": 9,
+              "short_extrusions": 5,
+              "widths_mm": [
+                0.0582559,
+                0.0585406,
+                0.0740395,
+                0.0777276,
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                26.685705213832062,
+                22.725733942202627,
+                17.928257196145058,
+                7.793999999999983,
+                0.17160314813899963,
+                0.1298075498574793,
+                0.24824818015346933,
+                0.810500663045929,
+                0.8158744096678906
+              ],
+              "closed_extrusions": 5
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 6.0,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 6.03,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 3,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                24.329930406883957,
+                21.774000101296654,
+                9.463999999999999
+              ],
+              "closed_extrusions": 2
+            },
+            "after": {
+              "continuous_extrusions": 3,
+              "short_extrusions": 0,
+              "widths_mm": [
+                0.408
+              ],
+              "heights_mm": [
+                0.2
+              ],
+              "lengths_mm": [
+                24.329930406883957,
+                21.772000000000048,
+                9.463999999999999
+              ],
+              "closed_extrusions": 2
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 6.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 6.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 6.6,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 6.8,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 7.0,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 7.2,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      },
+      {
+        "z": 7.4,
+        "paths": {
+          "Support": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Support interface": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          },
+          "Brim": {
+            "before": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            },
+            "after": {
+              "continuous_extrusions": 0,
+              "short_extrusions": 0,
+              "widths_mm": [],
+              "heights_mm": [],
+              "lengths_mm": [],
+              "closed_extrusions": 0
+            }
+          }
+        }
+      }
+    ],
+    "changes": [
+      {
+        "z": 0.23,
+        "role": "Support interface",
+        "removed_mm2": 3.055709674125476,
+        "added_mm2": 3.9202330596620754
+      },
+      {
+        "z": 0.63,
+        "role": "Support interface",
+        "removed_mm2": 6.535028493331491e-05,
+        "added_mm2": 0.0004396667696848673
+      },
+      {
+        "z": 0.8,
+        "role": "Support interface",
+        "removed_mm2": 3.0374835851530833,
+        "added_mm2": 10.139756932625865
+      },
+      {
+        "z": 1.88667,
+        "role": "Support interface",
+        "removed_mm2": 4.6726162449272,
+        "added_mm2": 0.18554729611708512
+      },
+      {
+        "z": 4.6,
+        "role": "Support interface",
+        "removed_mm2": 6.178774333970631,
+        "added_mm2": 1.8174240185507307
+      },
+      {
+        "z": 4.8,
+        "role": "Support interface",
+        "removed_mm2": 3.8048490956159666,
+        "added_mm2": 3.3496912752535257
+      },
+      {
+        "z": 5.0,
+        "role": "Support interface",
+        "removed_mm2": 3.81404744955114,
+        "added_mm2": 3.3685602830099795
+      },
+      {
+        "z": 5.23,
+        "role": "Support interface",
+        "removed_mm2": 0.49071687286557875,
+        "added_mm2": 0.0
+      },
+      {
+        "z": 5.43,
+        "role": "Support interface",
+        "removed_mm2": 0.8344091650128641,
+        "added_mm2": 0.12824968398944456
+      },
+      {
+        "z": 5.63,
+        "role": "Support interface",
+        "removed_mm2": 0.0,
+        "added_mm2": 0.022500650935889505
+      }
+    ],
+    "brim_changes": [],
+    "model_changes": [],
+    "bottom_contact_gaps_mm": [
+      0.17000000000000304,
+      0.17000000000000304,
+      0.17000000000000304
+    ],
+    "bearing_changes": [
+      {
+        "z": 0.23,
+        "lost_old_upper_bearing_mm2": 2.400189378968485,
+        "printable_lost_upper_bearing_mm2": 2.398079461102279
+      },
+      {
+        "z": 0.8,
+        "lost_old_upper_bearing_mm2": 0.3443798040838699,
+        "printable_lost_upper_bearing_mm2": 0.34247102553734704
+      },
+      {
+        "z": 1.88667,
+        "lost_old_upper_bearing_mm2": 3.5193405520554295,
+        "printable_lost_upper_bearing_mm2": 3.5153493292666425
+      },
+      {
+        "z": 4.6,
+        "lost_old_upper_bearing_mm2": 2.6310008459773258,
+        "printable_lost_upper_bearing_mm2": 2.617973235810134
+      },
+      {
+        "z": 4.8,
+        "lost_old_upper_bearing_mm2": 0.08021221939629783,
+        "printable_lost_upper_bearing_mm2": 0.043782860459175885
+      },
+      {
+        "z": 5.0,
+        "lost_old_upper_bearing_mm2": 0.3335574281603766,
+        "printable_lost_upper_bearing_mm2": 0.3298107335978063
+      },
+      {
+        "z": 5.23,
+        "lost_old_upper_bearing_mm2": 0.18969820826466854,
+        "printable_lost_upper_bearing_mm2": 0.18513909392111288
+      },
+      {
+        "z": 5.43,
+        "lost_old_upper_bearing_mm2": 0.7701091560564833,
+        "printable_lost_upper_bearing_mm2": 0.7599486680402212
+      }
+    ],
+    "errors": [],
+    "warnings": []
+  },
+  "raw_generator_stages_identical": true,
+  "repeated_instructions": {
+    "identical": true,
+    "count": 6531,
+    "sha256": "6182849e6dc4576d2b516d0f82b640c85d596902a9c0bda7a1a74677fda9deac"
+  },
+  "native_tests": {
+    "cases": 136,
+    "assertions": 7198,
+    "log": {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/native-final.log",
+      "sha256": "9e8ca597959e65e864b0b2ae508396f1fac327b55e389f45055e66a9d4f1cb4a"
+    },
+    "related_guards": {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/related-final.log",
+      "sha256": "65abb63eec593b8da7b35a415c820de81bc2bb75b26038794456fe2b4470ba2b"
+    },
+    "regression_coverage": [
+      "Independent heights and rotations with complete concentric rings and configured clear spacing",
+      "Concave rectilinear wall clearance without short fragments",
+      "Needed compact interfaces and true contacts retained; isolated orphan removed",
+      "Complete SupportMaterial and SkirtBrim suites",
+      "Cooling, statistics and independent organic root handoff"
+    ]
+  },
+  "engine": {
+    "path": "build/src/Release/InlongSlicer.dll",
+    "sha256": "64659a60d78fff44a4b1f2d5bf670e32bf3706c5d7c063eb126a7471df208bdc"
+  },
+  "gui": {
+    "path": "build/src/Release/inlong-slicer.exe",
+    "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+  },
+  "build": {
+    "command": "cmake --build build --config Release --target InlongSlicer_app_gui -- /m:1 /p:CL_MPCount=6",
+    "log": {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/release-final-build.log",
+      "sha256": "f6220501bba6a18cbc8ea5f70a3acaebd3c658f77cf789c42fbcc270d4f611d0"
+    },
+    "result": {
+      "exit_code": 0,
+      "elapsed_seconds": 1895.0195806,
+      "configuration_restored": [
+        {
+          "path": "build/src/Release/data_dir",
+          "files": 846,
+          "exact_match": true
+        },
+        {
+          "path": "build/InlongSlicer/data_dir",
+          "files": 0,
+          "exact_match": true
+        },
+        {
+          "path": "build/InlongSlicer_InlongOnly/data_dir",
+          "files": 0,
+          "exact_match": true
+        }
+      ]
+    }
+  },
+  "configuration": {
+    "data_dir": "build/src/Release/data_dir",
+    "files_preserved": 846,
+    "exact_hash_match": true,
+    "accepted_exports_unchanged": true,
+    "snapshot_manifest": {
+      "path": ".agents/runtime/runs/run-a3dd5c91c5c747d5b3f474b0e87eb9db/work/release-final-settings-before.json",
+      "sha256": "f0a2b8183add758e46916a541c28c2e2d042a8536e717471dd0a6e4a1b7d036e"
+    }
+  },
+  "scope_notes": [
+    "This evidence concerns actual native geometry and Release instructions, not a physical printer measurement.",
+    "Configured 0.4 mm interface spaces and separate valid support regions are retained.",
+    "The full per-layer report records remaining short paths at other heights rather than treating every short path as an orphan."
+  ],
+  "install": false,
+  "commit": false,
+  "push": false
+}

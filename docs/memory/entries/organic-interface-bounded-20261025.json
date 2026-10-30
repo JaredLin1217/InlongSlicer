@@ -1,0 +1,253 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-interface-bounded-20261025",
+  "key": "organic-support-landing-output-connectivity",
+  "type": "lesson",
+  "conclusion": "Organic sparse interfaces use native rectilinear final roads instead of the structural SupportBase density fallback. Bounded row connectors suppress long parallel return anchors, and explicit center domains retain valid single rows. Independent support heights require actual-flow spacing for concentric wall and fill planning, with density adjusted to preserve the configured clear spacing. Wall keepouts must be applied to the fill center domain before rectilinear connections are planned, rather than cutting those connections afterward. An explicit center-domain flag preserves normal model-fill defaults and handles holes. Generic compact interface remnants may be removed only when they are isolated from same-plane roads and no later extrusion starts on them; true model contacts, trunks and substantial platforms remain protected. The reviewed test2 Release eliminates all five independent submillimetre interface extrusions at Z=0.23 mm, while retaining both configured patterns/spacings, identical raw tree/contact geometry and three actual 0.17 mm bottom gaps. Complete SupportMaterial/SkirtBrim and related guards pass; repeated exports have identical instructions. This is source-bound software evidence.",
+  "scope": "Reviewed native interface continuity and source-bound test2 Release outputs as of 2026-10-25; historical evidence keeps its original anchors.",
+  "modules": [
+    "support",
+    "slicing",
+    "gcode",
+    "regression"
+  ],
+  "tags": [
+    "organic",
+    "support-interface",
+    "closed-contours",
+    "floating-support",
+    "z-gap",
+    "exact-output-change",
+    "source-revalidation",
+    "scope-audit"
+  ],
+  "files": [
+    "docs/evidence/organic-interface-bearing-review-20261025.json",
+    "docs/evidence/organic-interface-bounded-20261025.json",
+    "docs/evidence/organic-interface-continuity-20261025.json",
+    "docs/evidence/organic-support-bottom-root-continuity-20261025.json",
+    "docs/evidence/organic-support-concentric-contacts-20261025.json",
+    "docs/evidence/organic-support-interface-trim-20261021.json",
+    "docs/evidence/project-knowledge-revalidation-20261025.json",
+    "scripts/analyze_organic_support.py",
+    "src/libslic3r/Brim.cpp",
+    "src/libslic3r/Brim.hpp",
+    "src/libslic3r/Fill/FillBase.cpp",
+    "src/libslic3r/Fill/FillBase.hpp",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "src/libslic3r/Fill/FillRectilinear.cpp",
+    "src/libslic3r/GCode.cpp",
+    "src/libslic3r/Layer.cpp",
+    "src/libslic3r/Print.cpp",
+    "src/libslic3r/Print.hpp",
+    "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "tests/fff_print/test_skirt_brim.cpp",
+    "tests/fff_print/test_support_material.cpp",
+    "docs/evidence/organic-interface-bounded-bearing-20261025.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bearing-review-20261025.json",
+      "sha256": "829171c768c495b3d67a7c76938c7b7318510ec26429db8ef5f3a6ff099fa958",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bounded-20261025.json",
+      "sha256": "cb4c0135d8cf674ef4205ab31a488823109f7d53c4c59d53d02bd397b8761945",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-continuity-20261025.json",
+      "sha256": "f619f1003ec6af20e5eec3845cfab90cc4b4dcb5e9fe2136cc3baef9919c4795",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-bottom-root-continuity-20261025.json",
+      "sha256": "5ca22c10361828f0f6d7740818683b6880d0acef76352fb34829a582a4321ba3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-concentric-contacts-20261025.json",
+      "sha256": "0cc117506c9efb92bcb21db9a0f26537836a6e61427a3fad6c2a6e3e26e9cf36",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-interface-trim-20261021.json",
+      "sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/project-knowledge-revalidation-20261025.json",
+      "sha256": "e84622f34c4c5df77fc65510fd6fc86e8f0e40270a8edb890fc15720bd0b7eb1",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "scripts/analyze_organic_support.py",
+      "sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.cpp",
+      "sha256": "d01dda7bde25288ae7b444e4b547162cd9b9277e518a6bed85214b453dfc7aa5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Brim.hpp",
+      "sha256": "7912a98e7d7a6b2d54c92d4c02cccc40f7344e7463a95e12008b8afddb492ee3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillBase.cpp",
+      "sha256": "1042eb5cb513a298bc83e130a3563d03a62e4d32f4c98357289fe2896ec80286",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillBase.hpp",
+      "sha256": "17507c53de3a915b952c85f418e1ce575a814671db71093345a41247d210008c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "5ab391d0bd782b2f4a902a192ba2922801be394c319f8350573f0159ff24cbc0",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillRectilinear.cpp",
+      "sha256": "17c00e1a19446f38c8c30a3ef1fa0c2afcf083368fc16df4bb0dcf6b02b30b28",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.cpp",
+      "sha256": "e823e15eba545d096ecfe6c06512cfb081de2049c46146ac3a8d3ccda78890a5",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Layer.cpp",
+      "sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "516bc66326807b0fb740c544da4a7a6a92773afc78b9d17d6a574b6935b450ac",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.hpp",
+      "sha256": "644952e40f12146463dcd0b89a9fd9c39488b5303a78a30eb6b20ebccc168acc",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+      "sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "8b2203ded970c8d08db8ba9d9abbff6cb092ecfd02dbcbe6225fe98c1913f89c",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "0f591a09aa119b80a85be8cbe6de93424b78ac8a87c624d41ed859d2e065cf2b",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_skirt_brim.cpp",
+      "sha256": "8f8dd4ff4dc86032b44f4e7c7c645c1e51cd98fa6b3dc704ca927583d0a973f8",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "tests/fff_print/test_support_material.cpp",
+      "sha256": "70ec4347e64240fea793ab2eb81008db8ed18bc14da6798f14b2e4292d378c41",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed interface/flow implementation and immutable product evidence; commit is a checkout anchor only, not proof of uncommitted source bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-interface-bounded-bearing-20261025.json",
+      "sha256": "a8da607ccb52051257eae4e6e618b6dc0f91634963515b9179aecf447e7a74c3",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "Reviewed complete-component bearing audit and explicit partial-footprint differences."
+    }
+  ],
+  "verified_utc": "2026-10-25T16:04:38.419152+00:00",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex",
+    "method": "137 native cases / 7324 assertions, related guards, two actual Release exports and all-layer/contact checks.",
+    "summary": "Observed interface fragments are repaired; raw tree geometry, model paths, brim and actual contact clearance are preserved."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-interface-continuity-20261025"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

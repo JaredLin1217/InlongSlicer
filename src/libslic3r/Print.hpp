@@ -1166,6 +1166,10 @@ public:
 
     const ExtrusionEntityCollection& skirt() const { return m_skirt; }
     const std::vector<SkirtBrimGroup>& skirt_brim_groups() const { return m_skirt_brim_groups; }
+    const ExtrusionEntityCollection *first_layer_brim_support(const ObjectInstanceID &instance) const {
+        const auto found = m_brimSupportByInstance.find(instance);
+        return found == m_brimSupportByInstance.end() ? nullptr : &found->second;
+    }
     bool has_shared_per_object_skirt() const { return m_has_shared_per_object_skirt; }
     // Convex hull of the 1st layer extrusions, for bed leveling and placing the initial purge line.
     // It encompasses the object extrusions, support extrusions, skirt, brim, wipe tower.
@@ -1513,6 +1517,7 @@ private:
     std::map<ObjectID, ExtrusionEntityCollection>         m_brimMap;
     // Orca: Actual brim paths keyed by object instance.
     std::map<ObjectInstanceID, ExtrusionEntityCollection> m_brimMapByInstance;
+    std::map<ObjectInstanceID, ExtrusionEntityCollection> m_brimSupportByInstance;
     // Orca: Translated brim areas keyed by instance, used to find touching brims.
     std::map<ObjectInstanceID, ExPolygons>                m_objectBrimAreasByInstance;
     // Convex hull of the 1st layer extrusions.

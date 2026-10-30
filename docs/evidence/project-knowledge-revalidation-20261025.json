@@ -1,0 +1,1677 @@
+{
+  "schema_version": "inlong-project-knowledge-revalidation/v1",
+  "verified_utc": "2026-10-25T03:15:23.249143Z",
+  "checkout_anchor": "fc386d25aeffbe27140da85c883855cec34cd225",
+  "anchor_semantics": "The commit identifies the checkout; each SHA-256 identifies reviewed bytes, including uncommitted source. No commit or push is implied.",
+  "authorization": "The user requested correction of all four stale knowledge fingerprints after the support build.",
+  "source_audits": [
+    {
+      "id": "bundled-web-wizard-initialization-20261016",
+      "record_sha256": "b677558a8da1386878ac6e97422de4e223dd07b3b9f7edb90ee0a436b1136e9b",
+      "key": "bundled-web-wizard-initialization-contract",
+      "conclusion": "Bundled web pages translate through resources/web/include/i18n.js, data-i18n keys, and the host gettext dictionary ORCA_UI_STRINGS. Missing legacy text.js references or redundant declarations can abort initialization before RequestProfile. Printer pages 21 and 24 load guide/21/common.js and initialize its globals once; material pages 22 and 23 use guide/22/common.js without overriding its selection functions. Selection submits full preset names from filalist through save_userguide_filaments. Simplified and Traditional Chinese catalogs must cover the host keys used by static markup and dynamic controls. Loading-page completion waits for both native profile readiness and the userguide_loading_page_ready message emitted by guide/0/load.js; the existing slow-computer fallback remains.",
+      "scope": "InlongSlicer bundled web wizard and preset dialogs",
+      "verification": {
+        "method": "Current semantic delta review, web contract tests and gettext validation",
+        "summary": "Reviewed the 23-line WebGuideDialog delta and unchanged shared page imports, selection functions and bridge handlers. The new host readiness guard pairs with guide/0/load.js. All five current web contract tests and all 23 locale msgfmt checks pass after the catalog merge. The earlier 34 wizard-browser scenarios were not rerun in this sync; color-picker browser coverage is a different check. Reviewed source snapshots support the initialization contract, not a claim of a fresh manual native wizard session. File hashes bind the reviewed merge-worktree bytes; the pre-merge HEAD is a checkout anchor, not a claim that uncommitted bytes already belong to it.",
+        "result": "passed",
+        "reviewed_by": "Codex root agent"
+      },
+      "source_count": 12,
+      "changed_sources": [
+        {
+          "path": "src/slic3r/GUI/WebGuideDialog.cpp",
+          "recorded_sha256": "ef992a85caf03a4b0917bf2ccc98238dd486a7a4e5f82f7dfcaf1ea5350806a9",
+          "current_sha256": "d57f0d74e7129e4ccb6f194862854039276c4a8aabf0be0419ac26f526825ff7",
+          "matches": false,
+          "kind": "file_snapshot"
+        }
+      ],
+      "sources": [
+        {
+          "path": "resources/web/include/i18n.js",
+          "recorded_sha256": "3dde0309ef7756adc987e264db14735a5300ce63759a89bd046da7380eec12fa",
+          "current_sha256": "3dde0309ef7756adc987e264db14735a5300ce63759a89bd046da7380eec12fa",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/web/guide/21/index.html",
+          "recorded_sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73",
+          "current_sha256": "c797c6d970d37e813de4f7534390c5b83afc9a81dc67fdd3dd373179ccc99a73",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/web/guide/24/index.html",
+          "recorded_sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f",
+          "current_sha256": "4d643b2b4876f5241dddbfe62312c5a6f5ecd707455cd35db98e8f734d98ba8f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/web/guide/22/index.html",
+          "recorded_sha256": "85a2bb3caf06a42cffd36f974b6e57ad6d29fb23c0760322e4d75a16a5a02967",
+          "current_sha256": "85a2bb3caf06a42cffd36f974b6e57ad6d29fb23c0760322e4d75a16a5a02967",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/web/guide/23/index.html",
+          "recorded_sha256": "f72521b882c7c49fe3b7a2f3a2abf5d15cdab95d732245c089e6085a9cccdfff",
+          "current_sha256": "f72521b882c7c49fe3b7a2f3a2abf5d15cdab95d732245c089e6085a9cccdfff",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/web/guide/22/common.js",
+          "recorded_sha256": "c6ddf9a26f72da5bfd2c1a7c6f39945094f8ec04393c4d76129e4d3b6f27bed8",
+          "current_sha256": "c6ddf9a26f72da5bfd2c1a7c6f39945094f8ec04393c4d76129e4d3b6f27bed8",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/slic3r/GUI/WebGuideDialog.cpp",
+          "recorded_sha256": "ef992a85caf03a4b0917bf2ccc98238dd486a7a4e5f82f7dfcaf1ea5350806a9",
+          "current_sha256": "d57f0d74e7129e4ccb6f194862854039276c4a8aabf0be0419ac26f526825ff7",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "localization/i18n/zh_TW/InlongSlicer_zh_TW.po",
+          "recorded_sha256": "167d2abf4abd894a290a16cad55fd7adc094d6faf74e1f2219882e485148207b",
+          "current_sha256": "167d2abf4abd894a290a16cad55fd7adc094d6faf74e1f2219882e485148207b",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "localization/i18n/zh_CN/InlongSlicer_zh_CN.po",
+          "recorded_sha256": "c653d2b8914aba0842295728c08198d8c32a045f751253d1747defd6aa51b282",
+          "current_sha256": "c653d2b8914aba0842295728c08198d8c32a045f751253d1747defd6aa51b282",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "scripts/tests/test_web_ui_contracts.py",
+          "recorded_sha256": "fa05ed43642cf8bce35cb0c9c277cda8b8e5f5e37943cbb7e9342b72045ad62e",
+          "current_sha256": "fa05ed43642cf8bce35cb0c9c277cda8b8e5f5e37943cbb7e9342b72045ad62e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/web/guide/0/load.js",
+          "recorded_sha256": "6a7e629c7d91d6a077d4bb162e216a58fe1f97d2e628aa207eca37ae9d7f7b88",
+          "current_sha256": "6a7e629c7d91d6a077d4bb162e216a58fe1f97d2e628aa207eca37ae9d7f7b88",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/slic3r/GUI/WebGuideDialog.hpp",
+          "recorded_sha256": "b701d0fe9ada786762484df3dc9f7230a8f9564d13e2cbbaca2769671f853779",
+          "current_sha256": "b701d0fe9ada786762484df3dc9f7230a8f9564d13e2cbbaca2769671f853779",
+          "matches": true,
+          "kind": "file_snapshot"
+        }
+      ]
+    },
+    {
+      "id": "inlong-infinity-defaults-upstream-review-20261022",
+      "record_sha256": "5dd15cafba14b5e070b3fdd1f7f316b9234a7e78e58700c62040d77c2914f8a0",
+      "key": "inlong-infinity-process-defaults",
+      "conclusion": "All 63 selectable INLONG and _Infinity3DP machine/nozzle profiles resolve fan_speedup_time = 0.5 s, fan_kickstart = 0.1 s, fan_speedup_overhangs = false and part_cooling_fan_min_pwm = 0. Ten common machine templates carry these defaults. All 46 indexed process profiles retain seam_gap = 0, brim_object_gap = 0.1 mm and tree_support_branch_diameter_organic = 3.0 mm; nine common process templates retain bridge_flow = 1.05 and bridge_density = 105%. Bundle versions are INLONG 01.05.01.29 and _Infinity3DP 01.28.15.24. Historical native emitted-G-code verification confirmed fan advance and proportional kick-start after fixing long-move splitting and exact-boundary restoration. A 0 to 60% fan increase with kick-start 0.1 s gives 0.06 s at full PWM. Timing is based on commanded linear feedrate, not measured fan RPM or acceleration/arc-aware firmware time. A zero minimum PWM removes the speed floor without disabling cooling. Saved projects and custom user-preset overrides remain unchanged. The common emitted-layer plan now omits empty output planes, so they cannot trigger an extra cooling-layer transition. Built-in values and fan timing algorithms are unchanged; fan-insertion split points around a removed empty plane need not remain byte-identical.",
+      "scope": "Current curated-profile and cooling source contracts after upstream d16ca97380. Earlier fan timings and project-specific slicing measurements remain historical at their original anchors. Source bindings refreshed after the 2026-10-22 support-gap correction and Release reslice verification.",
+      "verification": {
+        "result": "passed",
+        "reviewed_by": "Codex root agent",
+        "method": "Semantic diff review, hash comparison of all prior sources and affected native/profile regression evidence.",
+        "summary": "Reviewed all 132 previous source snapshots: only inlong_profile_tool.py changed, adding custom-G-code diff reporting and optional output streams. The fork-compatible checker and all fan/profile/core sources remain intact. Current CLI/unit profile checks passed. The entire slicing-core subtree and built library, curated profile trees and current installed settings/binaries are unchanged. This is a semantic source-contract review, not a new fan or slicing benchmark."
+      },
+      "source_count": 133,
+      "changed_sources": [
+        {
+          "path": "src/libslic3r/PrintConfig.cpp",
+          "recorded_sha256": "5accc9d15800d074fd2f7a2c00b38ffde2a9ecd383ebd945f5857a49c264a14c",
+          "current_sha256": "c9c8688d3637ecaa26514e7bb2ad2df8f82db94eae578f94258c4319af7d78d4",
+          "matches": false,
+          "kind": "file_snapshot"
+        }
+      ],
+      "sources": [
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan600_common.json",
+          "recorded_sha256": "62fe7ff60d16326913c2b74bf7bea475b71e7d18364e14764ea053f55880f160",
+          "current_sha256": "62fe7ff60d16326913c2b74bf7bea475b71e7d18364e14764ea053f55880f160",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan600 0.6mm nozzle.json",
+          "recorded_sha256": "df5281c7e5203aa1afbaf9b61c173dd3a1d2237c99050de9baa4e795d36583b4",
+          "current_sha256": "df5281c7e5203aa1afbaf9b61c173dd3a1d2237c99050de9baa4e795d36583b4",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan600 0.4mm nozzle.json",
+          "recorded_sha256": "c4a39751dad44f6d937121b5531359fa2ff34173b6db35d7ed3402a1feb8b0e5",
+          "current_sha256": "c4a39751dad44f6d937121b5531359fa2ff34173b6db35d7ed3402a1feb8b0e5",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan600 0.5mm nozzle.json",
+          "recorded_sha256": "c6f35b0fc96426ae7ceaec8a1dc1b85e1331136bad37174bd8b79947bd9b1072",
+          "current_sha256": "c6f35b0fc96426ae7ceaec8a1dc1b85e1331136bad37174bd8b79947bd9b1072",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan600 0.8mm nozzle.json",
+          "recorded_sha256": "703f22a8d6e9a8e8e1c4a38b5b7f131dd01125c2937c7cffce5a500a648840ec",
+          "current_sha256": "703f22a8d6e9a8e8e1c4a38b5b7f131dd01125c2937c7cffce5a500a648840ec",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan1200_common.json",
+          "recorded_sha256": "10359de347b87f27914e47787202490c0d813949dbf43b0ec838aedceb21f4c9",
+          "current_sha256": "10359de347b87f27914e47787202490c0d813949dbf43b0ec838aedceb21f4c9",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan1200 0.6mm nozzle.json",
+          "recorded_sha256": "eced68890d188767c9c8858440f90edaa2724933933d6d73149f96f8fddf125e",
+          "current_sha256": "eced68890d188767c9c8858440f90edaa2724933933d6d73149f96f8fddf125e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan1200 0.4mm nozzle.json",
+          "recorded_sha256": "cb056d0b4bb4452a141c444517d7d22e8c74029d84c7d6632aa77f894e995bf2",
+          "current_sha256": "cb056d0b4bb4452a141c444517d7d22e8c74029d84c7d6632aa77f894e995bf2",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan1200 0.5mm nozzle.json",
+          "recorded_sha256": "68176446438dd4599358b5ffc04b946eaac50358f4a9022a0935f05bd14e8bb1",
+          "current_sha256": "68176446438dd4599358b5ffc04b946eaac50358f4a9022a0935f05bd14e8bb1",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/Vulcan1200 0.8mm nozzle.json",
+          "recorded_sha256": "0783db3b8c1e94ece71c837963a042872d004e9c1feba786d2218d617ac6b904",
+          "current_sha256": "0783db3b8c1e94ece71c837963a042872d004e9c1feba786d2218d617ac6b904",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/SC12060_common.json",
+          "recorded_sha256": "abefea9aebc9389ac3a902aa7c2d16ce9211e65d2980b2809a9b15e90dcae00c",
+          "current_sha256": "abefea9aebc9389ac3a902aa7c2d16ce9211e65d2980b2809a9b15e90dcae00c",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/SC12060 0.4mm nozzle.json",
+          "recorded_sha256": "cf10df608f3467672457a1c4b08c99cf6d73f64ebca1010e946a35ff16248015",
+          "current_sha256": "cf10df608f3467672457a1c4b08c99cf6d73f64ebca1010e946a35ff16248015",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/SC12060 0.6mm nozzle.json",
+          "recorded_sha256": "c7f45fdca0b03b06234559ca1d3a7e24dfde076c680cd4419143b8a94b104b52",
+          "current_sha256": "c7f45fdca0b03b06234559ca1d3a7e24dfde076c680cd4419143b8a94b104b52",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/machine/SC12060 0.8mm nozzle.json",
+          "recorded_sha256": "87619f5ec298b185b0adad76d5cca856cbb007362f19de1f60c1ba6fd4832037",
+          "current_sha256": "87619f5ec298b185b0adad76d5cca856cbb007362f19de1f60c1ba6fd4832037",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/sc_process_common.json",
+          "recorded_sha256": "c6a2a0158119d4f672336be30b79747736070dd9c28a11042c0b4dbf1d7d69cb",
+          "current_sha256": "c6a2a0158119d4f672336be30b79747736070dd9c28a11042c0b4dbf1d7d69cb",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/sc_Layer_0.20mm.json",
+          "recorded_sha256": "ca69f68b2830312522060616dd5a14ee685815a247777c9987f03ae4c31ec5b1",
+          "current_sha256": "ca69f68b2830312522060616dd5a14ee685815a247777c9987f03ae4c31ec5b1",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/sc_Layer_0.25mm.json",
+          "recorded_sha256": "5121cf5a661b6e36716ce67d69bc04e5e38e1ec67cade377eb329c65719613c9",
+          "current_sha256": "5121cf5a661b6e36716ce67d69bc04e5e38e1ec67cade377eb329c65719613c9",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/sc_Layer_0.30mm.json",
+          "recorded_sha256": "6eb17bbccd47b43a9287aad755735be26b835bd6d796fa3d407c7e566adfb369",
+          "current_sha256": "6eb17bbccd47b43a9287aad755735be26b835bd6d796fa3d407c7e566adfb369",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/process_common.json",
+          "recorded_sha256": "65edb5145be4f94bfbd8db9a93f28cc50cdc28f10570ce1abb6ff27489db445f",
+          "current_sha256": "65edb5145be4f94bfbd8db9a93f28cc50cdc28f10570ce1abb6ff27489db445f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/Layer_0.15mm.json",
+          "recorded_sha256": "4178d8129ae3943ce5d5a7b61949f939c10a8e63c09ff5f843d57a05bf49fc9a",
+          "current_sha256": "4178d8129ae3943ce5d5a7b61949f939c10a8e63c09ff5f843d57a05bf49fc9a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/Layer_0.20mm.json",
+          "recorded_sha256": "ae69be94106737d74afe674f644a0cad4cae120974a7d96482a1cb8d2abd7769",
+          "current_sha256": "ae69be94106737d74afe674f644a0cad4cae120974a7d96482a1cb8d2abd7769",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/Layer_0.25mm.json",
+          "recorded_sha256": "7d45d65b4de4ea05854e373d060996be1fdb5eee4ae2580fadfe05498180e2cd",
+          "current_sha256": "7d45d65b4de4ea05854e373d060996be1fdb5eee4ae2580fadfe05498180e2cd",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/Layer_0.30mm.json",
+          "recorded_sha256": "e61a33e8af44f3f655b4787f6885a6d8f498cd6590e57bc6d742c0c1c535e912",
+          "current_sha256": "e61a33e8af44f3f655b4787f6885a6d8f498cd6590e57bc6d742c0c1c535e912",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG/process/Layer_0.35mm.json",
+          "recorded_sha256": "f0c5505936f9c0faaccc25c976a31216fb35c2894821dd93a0440a38fa2f4656",
+          "current_sha256": "f0c5505936f9c0faaccc25c976a31216fb35c2894821dd93a0440a38fa2f4656",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/INLONG.json",
+          "recorded_sha256": "df92eb13704e01d418f00da0a85ac2e215e78f37e52a2a41cd70bf62f513153b",
+          "current_sha256": "df92eb13704e01d418f00da0a85ac2e215e78f37e52a2a41cd70bf62f513153b",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX common.json",
+          "recorded_sha256": "72ac22771acb9c73568068d0e3f0b08c1c94493c15116c93e0a0edc7c761afea",
+          "current_sha256": "72ac22771acb9c73568068d0e3f0b08c1c94493c15116c93e0a0edc7c761afea",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.2mm nozzle.json",
+          "recorded_sha256": "f66b544eaa38b76b3a1bd0225c890ccf60fb5e8cdd35dc677e168eda3fdf133a",
+          "current_sha256": "f66b544eaa38b76b3a1bd0225c890ccf60fb5e8cdd35dc677e168eda3fdf133a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.3mm nozzle.json",
+          "recorded_sha256": "fc0254cc7ce103032d2365e0686bc5f8c85d709de2932b042e9035fea6a81995",
+          "current_sha256": "fc0254cc7ce103032d2365e0686bc5f8c85d709de2932b042e9035fea6a81995",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.4mm nozzle.json",
+          "recorded_sha256": "29228dffb3923726ae40db5a2fbfd7c2fbec29f37c09b87e3b6ba462877721a4",
+          "current_sha256": "29228dffb3923726ae40db5a2fbfd7c2fbec29f37c09b87e3b6ba462877721a4",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.5mm nozzle.json",
+          "recorded_sha256": "e635882797f4ba408836a03f1795797d11fc008db881fb127803fd5db2c2bca2",
+          "current_sha256": "e635882797f4ba408836a03f1795797d11fc008db881fb127803fd5db2c2bca2",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.6mm nozzle.json",
+          "recorded_sha256": "ebf0bf9da7f0fc04acf5ae68f6c3debe77e6d39d3aacc8262b95867d9c577616",
+          "current_sha256": "ebf0bf9da7f0fc04acf5ae68f6c3debe77e6d39d3aacc8262b95867d9c577616",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 0.8mm nozzle.json",
+          "recorded_sha256": "dc21c5b910b6a027c1ea520851c1fec55b52af925f127559c9b2930aeb0dca87",
+          "current_sha256": "dc21c5b910b6a027c1ea520851c1fec55b52af925f127559c9b2930aeb0dca87",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 1.0mm nozzle.json",
+          "recorded_sha256": "419698b41339ec4a401a5966cff77a8c44bd454ab230adda1398bd7d9e6e49c7",
+          "current_sha256": "419698b41339ec4a401a5966cff77a8c44bd454ab230adda1398bd7d9e6e49c7",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX 1.2mm nozzle.json",
+          "recorded_sha256": "74e0e8ac20225dcf24882ec5dbeed4434f0e1acc51e30d17adb147d849d42e59",
+          "current_sha256": "74e0e8ac20225dcf24882ec5dbeed4434f0e1acc51e30d17adb147d849d42e59",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO common.json",
+          "recorded_sha256": "ccabffc8a3e118f843897e1dab7037026d9b097be1bfc3afa16e35c5fe1ae671",
+          "current_sha256": "ccabffc8a3e118f843897e1dab7037026d9b097be1bfc3afa16e35c5fe1ae671",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.2mm nozzle.json",
+          "recorded_sha256": "02e4688a3d205e67522217cd80910befa9c8fd08a0feaab771088363916f53ae",
+          "current_sha256": "02e4688a3d205e67522217cd80910befa9c8fd08a0feaab771088363916f53ae",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.3mm nozzle.json",
+          "recorded_sha256": "bf90d62e0ed5f86458680f760bced4c747b924b846415b50cfce71bc4811abd8",
+          "current_sha256": "bf90d62e0ed5f86458680f760bced4c747b924b846415b50cfce71bc4811abd8",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.4mm nozzle.json",
+          "recorded_sha256": "6cc45535ecfde721d89207070d40e7ce46b1698eb12dafce8f9c720e973a80c8",
+          "current_sha256": "6cc45535ecfde721d89207070d40e7ce46b1698eb12dafce8f9c720e973a80c8",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.5mm nozzle.json",
+          "recorded_sha256": "94a0508ff5f9b09026751f5062740d8c402cc216cbd8abc612cd74354b0e86eb",
+          "current_sha256": "94a0508ff5f9b09026751f5062740d8c402cc216cbd8abc612cd74354b0e86eb",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.6mm nozzle.json",
+          "recorded_sha256": "781c472386d98de89f2fb44fd0f3d2f6ae961b87957f4ce749ffc0ab7ceb8252",
+          "current_sha256": "781c472386d98de89f2fb44fd0f3d2f6ae961b87957f4ce749ffc0ab7ceb8252",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 0.8mm nozzle.json",
+          "recorded_sha256": "a1b38c9ba5af31b87761e64461a03d5c9bbb3d3a557f2b6dc77a04892ecdc3a1",
+          "current_sha256": "a1b38c9ba5af31b87761e64461a03d5c9bbb3d3a557f2b6dc77a04892ecdc3a1",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 1.0mm nozzle.json",
+          "recorded_sha256": "813f5f99ea8fd7f4d18fe9d724c46e78c0b04d6afc6213016ef6be1f591cf6d8",
+          "current_sha256": "813f5f99ea8fd7f4d18fe9d724c46e78c0b04d6afc6213016ef6be1f591cf6d8",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP IXBOX DUO 1.2mm nozzle.json",
+          "recorded_sha256": "14154fdfacce898f3936be9dc40d1103bbaa672aaea5e2f2cddcb7374965877a",
+          "current_sha256": "14154fdfacce898f3936be9dc40d1103bbaa672aaea5e2f2cddcb7374965877a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 common.json",
+          "recorded_sha256": "e32c241234e6a8f2a6f89296f5f0a00c05a9327e6c9a20a209900b1ac7bb7ee9",
+          "current_sha256": "e32c241234e6a8f2a6f89296f5f0a00c05a9327e6c9a20a209900b1ac7bb7ee9",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.2mm nozzle.json",
+          "recorded_sha256": "d2cc1b5c1060135ea992d3c30450b58e2c74c2b4595e4f7ad443738b682ab9b0",
+          "current_sha256": "d2cc1b5c1060135ea992d3c30450b58e2c74c2b4595e4f7ad443738b682ab9b0",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.3mm nozzle.json",
+          "recorded_sha256": "8a7c076b42433a212e12b84d75d937c341e7cf0db5b0406a77e9c16371ae02d5",
+          "current_sha256": "8a7c076b42433a212e12b84d75d937c341e7cf0db5b0406a77e9c16371ae02d5",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.4mm nozzle.json",
+          "recorded_sha256": "68367a19c5785e5c6e7b517f2a71c07b2ca02e1861205f8d415d1f6fed1ea9b3",
+          "current_sha256": "68367a19c5785e5c6e7b517f2a71c07b2ca02e1861205f8d415d1f6fed1ea9b3",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.5mm nozzle.json",
+          "recorded_sha256": "f500330b677bf5f20d333cba8058e50a6dc3bcc85c0357983ecbf6dc5e862fe3",
+          "current_sha256": "f500330b677bf5f20d333cba8058e50a6dc3bcc85c0357983ecbf6dc5e862fe3",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.6mm nozzle.json",
+          "recorded_sha256": "dca21e7a32c0ac384bf69cb743b2fe828570dbc03a43fcc612553c973ccb6d48",
+          "current_sha256": "dca21e7a32c0ac384bf69cb743b2fe828570dbc03a43fcc612553c973ccb6d48",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 0.8mm nozzle.json",
+          "recorded_sha256": "aad33f5f1421ae755090c675836ad92351cbff5d9192f4843cc1d11a60ef8b81",
+          "current_sha256": "aad33f5f1421ae755090c675836ad92351cbff5d9192f4843cc1d11a60ef8b81",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 1.0mm nozzle.json",
+          "recorded_sha256": "6a500ce22ee2d81fb56ab8972fd8c74f1801fe365b01fee0d78e63fcb7310dd5",
+          "current_sha256": "6a500ce22ee2d81fb56ab8972fd8c74f1801fe365b01fee0d78e63fcb7310dd5",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X1 1.2mm nozzle.json",
+          "recorded_sha256": "8a68a0b77f45e0f826c99892e7d1820769fabbfef89a4ee592f70dd77f938e4c",
+          "current_sha256": "8a68a0b77f45e0f826c99892e7d1820769fabbfef89a4ee592f70dd77f938e4c",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 common.json",
+          "recorded_sha256": "487e6e1d6d9e5ca1b5eb804097aa166c45724b7f87571bb69e2a8630e3d7a84b",
+          "current_sha256": "487e6e1d6d9e5ca1b5eb804097aa166c45724b7f87571bb69e2a8630e3d7a84b",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.2mm nozzle.json",
+          "recorded_sha256": "66a74079fda278dbfe29febde37313631d18b16106d2cc2079009bdc1ea89ac6",
+          "current_sha256": "66a74079fda278dbfe29febde37313631d18b16106d2cc2079009bdc1ea89ac6",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.3mm nozzle.json",
+          "recorded_sha256": "3c0aa6ed72e0e4f570ea751b05ce28a3793e8be55c244b68ccf166e7ef9065bf",
+          "current_sha256": "3c0aa6ed72e0e4f570ea751b05ce28a3793e8be55c244b68ccf166e7ef9065bf",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.4mm nozzle.json",
+          "recorded_sha256": "fbe3a2b60542100efd9b1133111ae65e8499941850d792f9e4524d061dc823cb",
+          "current_sha256": "fbe3a2b60542100efd9b1133111ae65e8499941850d792f9e4524d061dc823cb",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.5mm nozzle.json",
+          "recorded_sha256": "599006cbed7fbdbf315d13dad3d2d2a0a8cdec8d27d1198befeebe6dafdf9950",
+          "current_sha256": "599006cbed7fbdbf315d13dad3d2d2a0a8cdec8d27d1198befeebe6dafdf9950",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.6mm nozzle.json",
+          "recorded_sha256": "b0903d32444dbe2fac1e9f745da7bbecda14d8b76f966477a9c350f117e003f0",
+          "current_sha256": "b0903d32444dbe2fac1e9f745da7bbecda14d8b76f966477a9c350f117e003f0",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 0.8mm nozzle.json",
+          "recorded_sha256": "4e41d5d2b315b3d565140b9f38d171ba8fe16cdf75ab6d2ae868afa1d61e01de",
+          "current_sha256": "4e41d5d2b315b3d565140b9f38d171ba8fe16cdf75ab6d2ae868afa1d61e01de",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 1.0mm nozzle.json",
+          "recorded_sha256": "ef9dcdbfff58209eaa87384fb1a0f6e884de52a0f4024c43b5d570c8c3be22ca",
+          "current_sha256": "ef9dcdbfff58209eaa87384fb1a0f6e884de52a0f4024c43b5d570c8c3be22ca",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 1.2mm nozzle.json",
+          "recorded_sha256": "3f596fca4bf7685564112cb7a6bb625e801386ec16e64c35913191f2b1cbbb1c",
+          "current_sha256": "3f596fca4bf7685564112cb7a6bb625e801386ec16e64c35913191f2b1cbbb1c",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO common.json",
+          "recorded_sha256": "f651209f67f971d6ba437046533120a6dda50a13e080722102d8f5a68860be7a",
+          "current_sha256": "f651209f67f971d6ba437046533120a6dda50a13e080722102d8f5a68860be7a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.2mm nozzle.json",
+          "recorded_sha256": "ff62a91a0f5aa1bd21370feff8a8c8094cb97f1853c8f4aff7266d34b7d1cc32",
+          "current_sha256": "ff62a91a0f5aa1bd21370feff8a8c8094cb97f1853c8f4aff7266d34b7d1cc32",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.3mm nozzle.json",
+          "recorded_sha256": "04dc273d90f3b3efe03ad360c8e906b4574000072c38ff9fadc1f9f09e3bfd19",
+          "current_sha256": "04dc273d90f3b3efe03ad360c8e906b4574000072c38ff9fadc1f9f09e3bfd19",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.4mm nozzle.json",
+          "recorded_sha256": "fe86532401e170ed2d6c4c42914c3dc823f99359605f2b411c61399f40f2f81a",
+          "current_sha256": "fe86532401e170ed2d6c4c42914c3dc823f99359605f2b411c61399f40f2f81a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.5mm nozzle.json",
+          "recorded_sha256": "6fdb938f09e0ec0b6b35d731b0f37b4e2ea597e1c54525609e7c4e600036d0b3",
+          "current_sha256": "6fdb938f09e0ec0b6b35d731b0f37b4e2ea597e1c54525609e7c4e600036d0b3",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.6mm nozzle.json",
+          "recorded_sha256": "b78ed3bf4315843c47a5ed1203471d59257add64f029265f8126b30eb528ec4e",
+          "current_sha256": "b78ed3bf4315843c47a5ed1203471d59257add64f029265f8126b30eb528ec4e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 0.8mm nozzle.json",
+          "recorded_sha256": "2831ef1989c1ec54152ce5ea316dbd3a5ad3de33a947c10dfad425708c4b20a0",
+          "current_sha256": "2831ef1989c1ec54152ce5ea316dbd3a5ad3de33a947c10dfad425708c4b20a0",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 1.0mm nozzle.json",
+          "recorded_sha256": "48773d3aec19b31ef057b472a9b2bc257d36b88ad50aec3554dd0a156b0745df",
+          "current_sha256": "48773d3aec19b31ef057b472a9b2bc257d36b88ad50aec3554dd0a156b0745df",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X2 DUO 1.2mm nozzle.json",
+          "recorded_sha256": "56fc37c4ed10d8a1a31365d5e08729924a60a1fb48a4768b8498be4c8a31ff88",
+          "current_sha256": "56fc37c4ed10d8a1a31365d5e08729924a60a1fb48a4768b8498be4c8a31ff88",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 common.json",
+          "recorded_sha256": "18019bf6909cef4206a10f5e5142b58b8116d44dcdfd8c71286fa1e6be3c0ae3",
+          "current_sha256": "18019bf6909cef4206a10f5e5142b58b8116d44dcdfd8c71286fa1e6be3c0ae3",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.2mm nozzle.json",
+          "recorded_sha256": "cdaa51b5406a0f23e5a440d226e79ff25ba342a4622a54a3f13bf038d73c6a53",
+          "current_sha256": "cdaa51b5406a0f23e5a440d226e79ff25ba342a4622a54a3f13bf038d73c6a53",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.3mm nozzle.json",
+          "recorded_sha256": "9ccc4f7e8f807810171090546191a78a609592d0cd7871bf9092a2c48306ad61",
+          "current_sha256": "9ccc4f7e8f807810171090546191a78a609592d0cd7871bf9092a2c48306ad61",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.4mm nozzle.json",
+          "recorded_sha256": "b140b284821012a75ab6e75be40804f571c468cc688471d562094da74af96300",
+          "current_sha256": "b140b284821012a75ab6e75be40804f571c468cc688471d562094da74af96300",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.5mm nozzle.json",
+          "recorded_sha256": "8c5655820c69568f6e8073097dcd3068d9fc4b16860b7bb37e60bca63f2ee03e",
+          "current_sha256": "8c5655820c69568f6e8073097dcd3068d9fc4b16860b7bb37e60bca63f2ee03e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.6mm nozzle.json",
+          "recorded_sha256": "b61d1a7ce64a3c7799742eb87b9819b5d8ead3b27bba8475af9a1c5cd1505922",
+          "current_sha256": "b61d1a7ce64a3c7799742eb87b9819b5d8ead3b27bba8475af9a1c5cd1505922",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 0.8mm nozzle.json",
+          "recorded_sha256": "35fd8a366b2456d7a5bee4d54e6bb1b7f06b6bf9c845b96655fa66407f78ebbd",
+          "current_sha256": "35fd8a366b2456d7a5bee4d54e6bb1b7f06b6bf9c845b96655fa66407f78ebbd",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 1.0mm nozzle.json",
+          "recorded_sha256": "8ae220aec224cfb624ed663afecfcf7405e5b7c567fb02580b1b33319784b1c5",
+          "current_sha256": "8ae220aec224cfb624ed663afecfcf7405e5b7c567fb02580b1b33319784b1c5",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X3 1.2mm nozzle.json",
+          "recorded_sha256": "f4ba6d6ec855f4f5a76d5993c5ec6e04e0add8f99525c213622a3978ccb4de0b",
+          "current_sha256": "f4ba6d6ec855f4f5a76d5993c5ec6e04e0add8f99525c213622a3978ccb4de0b",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD common.json",
+          "recorded_sha256": "85bbc57a95080ba70ff048702ca0ee5806d28c4cbeb2246a195ee299a6d0fabc",
+          "current_sha256": "85bbc57a95080ba70ff048702ca0ee5806d28c4cbeb2246a195ee299a6d0fabc",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.4mm nozzle.json",
+          "recorded_sha256": "ef89877a817458fb1f44ceece10f29e2d1d6c867c5eaeb161b0f977be23c3dc9",
+          "current_sha256": "ef89877a817458fb1f44ceece10f29e2d1d6c867c5eaeb161b0f977be23c3dc9",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.5mm nozzle.json",
+          "recorded_sha256": "2220480d7f74406cd75ad9a6026b159b41e4583142fb45cbb7b5474601aeb30f",
+          "current_sha256": "2220480d7f74406cd75ad9a6026b159b41e4583142fb45cbb7b5474601aeb30f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.6mm nozzle.json",
+          "recorded_sha256": "d2faa64b81dddd9c9099bc09e64b3bce160c917cbcbba20dca9c71b96b73f4d8",
+          "current_sha256": "d2faa64b81dddd9c9099bc09e64b3bce160c917cbcbba20dca9c71b96b73f4d8",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/machine/Infinity3DP X600HD 0.8mm nozzle.json",
+          "recorded_sha256": "3bc15d3f7b9020a28ffb40c45b207b665b630ad5c4615ddc92663ff1dd2426cf",
+          "current_sha256": "3bc15d3f7b9020a28ffb40c45b207b665b630ad5c4615ddc92663ff1dd2426cf",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_common.json",
+          "recorded_sha256": "54c923d6373e1a78e5c041725d3b5fec06f7c7bc9d8ec86412f0f00d7fe8d415",
+          "current_sha256": "54c923d6373e1a78e5c041725d3b5fec06f7c7bc9d8ec86412f0f00d7fe8d415",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.08mm.json",
+          "recorded_sha256": "25db01ea4da18428447a710a72d013484fe0abe43f2a76b30795bf79babcdc3f",
+          "current_sha256": "25db01ea4da18428447a710a72d013484fe0abe43f2a76b30795bf79babcdc3f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.12mm.json",
+          "recorded_sha256": "5811ce1eab816a40bb2a1f8e03cc143e89e84ddadc7473a44c55a8e1f526d763",
+          "current_sha256": "5811ce1eab816a40bb2a1f8e03cc143e89e84ddadc7473a44c55a8e1f526d763",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.15mm.json",
+          "recorded_sha256": "debca04e804fa2a414bd7ba809c19fa0e18170cd6fb736ab32b5f5191730a976",
+          "current_sha256": "debca04e804fa2a414bd7ba809c19fa0e18170cd6fb736ab32b5f5191730a976",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_Layer_0.20mm.json",
+          "recorded_sha256": "85959883ae4b6d777896affd3325f44cc430002acc641afed6ddad390d077797",
+          "current_sha256": "85959883ae4b6d777896affd3325f44cc430002acc641afed6ddad390d077797",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_common.json",
+          "recorded_sha256": "76b6f1166169065a5ac9814f34e3cf85b4c32f359d327f3197084bd9e4a94bf0",
+          "current_sha256": "76b6f1166169065a5ac9814f34e3cf85b4c32f359d327f3197084bd9e4a94bf0",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.08mm.json",
+          "recorded_sha256": "b13f6a9c0d8d0871f3ebf927450f9bd7f9840fa542a8b06002ef11b48ce48f34",
+          "current_sha256": "b13f6a9c0d8d0871f3ebf927450f9bd7f9840fa542a8b06002ef11b48ce48f34",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.12mm.json",
+          "recorded_sha256": "46b39a475d37d85d722e9d5b8a5e34efd976cd26f3ce414207091daebda11903",
+          "current_sha256": "46b39a475d37d85d722e9d5b8a5e34efd976cd26f3ce414207091daebda11903",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.15mm.json",
+          "recorded_sha256": "6a65e4b9e3188f6562611e881d5a6f562ffd20aaf18a766a4b747f40c3a92843",
+          "current_sha256": "6a65e4b9e3188f6562611e881d5a6f562ffd20aaf18a766a4b747f40c3a92843",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/IXBOX_DUO_Layer_0.20mm.json",
+          "recorded_sha256": "582539b059b26326517664beb01547da5fa879f6affd408f511fe8f39828933e",
+          "current_sha256": "582539b059b26326517664beb01547da5fa879f6affd408f511fe8f39828933e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X1_common.json",
+          "recorded_sha256": "8309e91dc7b958e1a7cf7b3abb10d731d19fa15243c17addbd79dc0602ee3443",
+          "current_sha256": "8309e91dc7b958e1a7cf7b3abb10d731d19fa15243c17addbd79dc0602ee3443",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.08mm.json",
+          "recorded_sha256": "0523acf96e8a067bc35cb74732b5b1be47e87a8b436814a6213a52ed3029d836",
+          "current_sha256": "0523acf96e8a067bc35cb74732b5b1be47e87a8b436814a6213a52ed3029d836",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.12mm.json",
+          "recorded_sha256": "c00c7c919c05e129085f76c7dd4d7c66999e88477665a8a71314ea4a791be7c9",
+          "current_sha256": "c00c7c919c05e129085f76c7dd4d7c66999e88477665a8a71314ea4a791be7c9",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.15mm.json",
+          "recorded_sha256": "affa888f1beae2fcb0a9e2ff1fe2b31c11dd1264bd1e92b7f78433d53666dae5",
+          "current_sha256": "affa888f1beae2fcb0a9e2ff1fe2b31c11dd1264bd1e92b7f78433d53666dae5",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X1_Layer_0.20mm.json",
+          "recorded_sha256": "d65e3e7f879a49c9e5970f87f364d2361bfbfbae97ec5874ab0970268a93baf1",
+          "current_sha256": "d65e3e7f879a49c9e5970f87f364d2361bfbfbae97ec5874ab0970268a93baf1",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_common.json",
+          "recorded_sha256": "0c22b2f71714f069ce34bdd56eb8cdbdcd728c38d99be343823ef2265c8d2af8",
+          "current_sha256": "0c22b2f71714f069ce34bdd56eb8cdbdcd728c38d99be343823ef2265c8d2af8",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.08mm.json",
+          "recorded_sha256": "3d425e77b26512b61aa488af579fa1761e517cee630fa4a1f88b1855d1df7830",
+          "current_sha256": "3d425e77b26512b61aa488af579fa1761e517cee630fa4a1f88b1855d1df7830",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.12mm.json",
+          "recorded_sha256": "9a8c5b0e3ba101e8e37fd0c4b0a74b25b7313cbcc1b9b65f3e2a564eaab8ec0f",
+          "current_sha256": "9a8c5b0e3ba101e8e37fd0c4b0a74b25b7313cbcc1b9b65f3e2a564eaab8ec0f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.15mm.json",
+          "recorded_sha256": "3751eb0e482ee7143963999c69ec1a93250f1c0b5c7046e3247d4ae9d850acd3",
+          "current_sha256": "3751eb0e482ee7143963999c69ec1a93250f1c0b5c7046e3247d4ae9d850acd3",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_Layer_0.20mm.json",
+          "recorded_sha256": "fb68db63d055936608508b8f7ba9a0eaf7281881fc4b0169a09cae9a2576ec1f",
+          "current_sha256": "fb68db63d055936608508b8f7ba9a0eaf7281881fc4b0169a09cae9a2576ec1f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_DUO_common.json",
+          "recorded_sha256": "48b9673f2ca582aa3febc236acd1b4831524357f2e51ef3a63b31370ea416e6e",
+          "current_sha256": "48b9673f2ca582aa3febc236acd1b4831524357f2e51ef3a63b31370ea416e6e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.08mm.json",
+          "recorded_sha256": "4478db682a9e0e9d94e2922e70dbd354cf9276246326aa2cb42c0a6b2f89bcc7",
+          "current_sha256": "4478db682a9e0e9d94e2922e70dbd354cf9276246326aa2cb42c0a6b2f89bcc7",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.12mm.json",
+          "recorded_sha256": "127466cf99491be1910f703c6294a477e9a20989f6755363b7cd784305926076",
+          "current_sha256": "127466cf99491be1910f703c6294a477e9a20989f6755363b7cd784305926076",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.15mm.json",
+          "recorded_sha256": "76af8e6198da7cdbc34e2483f4cbe984d5ec4c9d3f34192aefd802de608c9e7c",
+          "current_sha256": "76af8e6198da7cdbc34e2483f4cbe984d5ec4c9d3f34192aefd802de608c9e7c",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X2_DUO_Layer_0.20mm.json",
+          "recorded_sha256": "d7220120d0da2cbe1d27237446e55f9c5eef7ef9f50e942728f65e702a6f106e",
+          "current_sha256": "d7220120d0da2cbe1d27237446e55f9c5eef7ef9f50e942728f65e702a6f106e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X3_common.json",
+          "recorded_sha256": "5ab963f437fbba5423544c8decdf288fd963082a4b5ad62b985a772d8a8ccddd",
+          "current_sha256": "5ab963f437fbba5423544c8decdf288fd963082a4b5ad62b985a772d8a8ccddd",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.08mm.json",
+          "recorded_sha256": "3fc7eb806323623275e19472812af26f964bb0d1ec56fc50604733cb60bd3884",
+          "current_sha256": "3fc7eb806323623275e19472812af26f964bb0d1ec56fc50604733cb60bd3884",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.12mm.json",
+          "recorded_sha256": "2cec9ea17a107212916e300ef0af89c793b9a6b94dfbe157111bbfa15216b67a",
+          "current_sha256": "2cec9ea17a107212916e300ef0af89c793b9a6b94dfbe157111bbfa15216b67a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.15mm.json",
+          "recorded_sha256": "6b3e7e5a1bff6d908abc32b70e76c5e4a0c9c1d167885a8068c070a0096fe682",
+          "current_sha256": "6b3e7e5a1bff6d908abc32b70e76c5e4a0c9c1d167885a8068c070a0096fe682",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X3_Layer_0.20mm.json",
+          "recorded_sha256": "f9aa876d927fc7191b90c2c26547c0a53f3a07b4ee0f3b38967c6462c5a7cb9e",
+          "current_sha256": "f9aa876d927fc7191b90c2c26547c0a53f3a07b4ee0f3b38967c6462c5a7cb9e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X600HD_common.json",
+          "recorded_sha256": "883cf23eab6abce2fe2a8028c6a92c049abc251af154e6f07abe5b7b1df9f46f",
+          "current_sha256": "883cf23eab6abce2fe2a8028c6a92c049abc251af154e6f07abe5b7b1df9f46f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.15mm.json",
+          "recorded_sha256": "b87ae19df869c7280da982e7212d208988f4943ccecf8acf5a3cc13aed86ab77",
+          "current_sha256": "b87ae19df869c7280da982e7212d208988f4943ccecf8acf5a3cc13aed86ab77",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.20mm.json",
+          "recorded_sha256": "8d8d754f1d4e1f7bca2edb79abbe64e1ca6689ba9aa772f571ae58eff87df911",
+          "current_sha256": "8d8d754f1d4e1f7bca2edb79abbe64e1ca6689ba9aa772f571ae58eff87df911",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.25mm.json",
+          "recorded_sha256": "30f0c7a94b153bb21cdc04f242f1f05db23dbec4fdbafbf7613ca1b11621fc56",
+          "current_sha256": "30f0c7a94b153bb21cdc04f242f1f05db23dbec4fdbafbf7613ca1b11621fc56",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.30mm.json",
+          "recorded_sha256": "a5e18c6aa522bdac139f1438e261e51752d855bbbd89218b29aa8d46121a8c0a",
+          "current_sha256": "a5e18c6aa522bdac139f1438e261e51752d855bbbd89218b29aa8d46121a8c0a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP/process/X600HD_Layer_0.35mm.json",
+          "recorded_sha256": "1b2e41a7106feb92c52f4ecb8b8c21677144703602de4fc3a5fa0ac623e53a9b",
+          "current_sha256": "1b2e41a7106feb92c52f4ecb8b8c21677144703602de4fc3a5fa0ac623e53a9b",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "resources/profiles/_Infinity3DP.json",
+          "recorded_sha256": "f04eb5cbe5794322ed72faf50662f26fcfa6f5eb1b73dcbd0301bc15ecde9675",
+          "current_sha256": "f04eb5cbe5794322ed72faf50662f26fcfa6f5eb1b73dcbd0301bc15ecde9675",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/PrintConfig.cpp",
+          "recorded_sha256": "5accc9d15800d074fd2f7a2c00b38ffde2a9ecd383ebd945f5857a49c264a14c",
+          "current_sha256": "c9c8688d3637ecaa26514e7bb2ad2df8f82db94eae578f94258c4319af7d78d4",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/GCode.cpp",
+          "recorded_sha256": "924a835c2fd8e26d369e96e0d69d15909a6b65b36b814a0664ff2da473391931",
+          "current_sha256": "924a835c2fd8e26d369e96e0d69d15909a6b65b36b814a0664ff2da473391931",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/GCodeWriter.cpp",
+          "recorded_sha256": "e206058ff330a36eb6d6f1e614dcc77dc717b950f9e1b7b5d47725e5523b43d2",
+          "current_sha256": "e206058ff330a36eb6d6f1e614dcc77dc717b950f9e1b7b5d47725e5523b43d2",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/GCode/CoolingBuffer.cpp",
+          "recorded_sha256": "c847d22f285f0d11f51352416105c6a185094fe72239cefc12faee417400816e",
+          "current_sha256": "c847d22f285f0d11f51352416105c6a185094fe72239cefc12faee417400816e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/GCode/FanMover.cpp",
+          "recorded_sha256": "59cf44904546bd2fe754db6a8c62adbcb9bebfb779fb6510b4b054001bee0004",
+          "current_sha256": "59cf44904546bd2fe754db6a8c62adbcb9bebfb779fb6510b4b054001bee0004",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "tests/fff_print/test_cooling.cpp",
+          "recorded_sha256": "1ac2c89b3da3efeee1350bdaa9cc5127b6c80bf52f4bb2b493eeb35bfdbdd837",
+          "current_sha256": "1ac2c89b3da3efeee1350bdaa9cc5127b6c80bf52f4bb2b493eeb35bfdbdd837",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/slic3r/Utils/PresetUpdater.cpp",
+          "recorded_sha256": "b0f540018c72c4372752b070472e51d01e9ca6d353dd121eb11e519e878db5e2",
+          "current_sha256": "b0f540018c72c4372752b070472e51d01e9ca6d353dd121eb11e519e878db5e2",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "scripts/inlong_profile_tool.py",
+          "recorded_sha256": "ab4ad039b179188202c49fdc19c4621a3c0b02b192a4227584892d2541f376bd",
+          "current_sha256": "ab4ad039b179188202c49fdc19c4621a3c0b02b192a4227584892d2541f376bd",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/fan-timing-and-profile-defaults-20261017.json",
+          "recorded_sha256": "a49a0ab63ffb9c65f866bfff9991a377ae13351e9cc27ccaa3b4fcd5c99424a1",
+          "current_sha256": "a49a0ab63ffb9c65f866bfff9991a377ae13351e9cc27ccaa3b4fcd5c99424a1",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/layer-count-plan-fix-20261017.json",
+          "recorded_sha256": "7fef73b395035c8885b04a1ec5c3382eb0e73cefb4a6e8d6aa940edb0b64cc14",
+          "current_sha256": "7fef73b395035c8885b04a1ec5c3382eb0e73cefb4a6e8d6aa940edb0b64cc14",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/application-updates-disabled-20261017.json",
+          "recorded_sha256": "89a732c3bdc09e5c19f1c90bf5c023074f205b7cdedaf1c699105ea004433db5",
+          "current_sha256": "89a732c3bdc09e5c19f1c90bf5c023074f205b7cdedaf1c699105ea004433db5",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/upstream-main-d16ca97380-20261019.json",
+          "recorded_sha256": "4f8b0d13256eb11b423f1974862f4b1f6df76f22e211144f4e97be42a1584200",
+          "current_sha256": "4f8b0d13256eb11b423f1974862f4b1f6df76f22e211144f4e97be42a1584200",
+          "matches": true,
+          "kind": "file_snapshot"
+        }
+      ]
+    },
+    {
+      "id": "organic-support-interface-trim-20261022",
+      "record_sha256": "b7f1076fb2f49e8cb0cf0bef52daca596547dfc1e241b1b545deb7a78fbd46c7",
+      "key": "organic-support-landing-output-connectivity",
+      "conclusion": "Organic tree support body and same-layer interface paths must be kept spatially disjoint even when the top Z gap is nonzero and support/interface use the same extruder. The previous keepout was gated on zero_gap_interface_top and non-mergeable filaments, so this project skipped it. Removing those gates trims the expanded interface footprint from organic support-body polygons. On the supplied project this reduced interface sections from 302 to 280, preserved 19,560 closed outer walls with zero nonclosed walls, passed 316 focused native assertions, and produced no warning/error lines. The canonical output intentionally changes because the mixed interface segments are removed; no physical print trial is included.",
+      "scope": "Current uncommitted source and source-bound Windows Release verification for the supplied organic-support project. No commit, push or physical printing trial. Source bindings refreshed after the 2026-10-22 support-gap correction and Release reslice verification.",
+      "verification": {
+        "result": "passed",
+        "reviewed_by": "Codex",
+        "summary": "Interface-overlap repair passed focused/native and project export checks; all profiled organic outer walls remained closed and no warning/error lines were emitted.",
+        "method": "Normal source-bound Release build, 316 focused native assertions, full export and outer-wall profile of the hashed NAS 3MF, guidance audit and Consumer Changed validation."
+      },
+      "source_count": 3,
+      "changed_sources": [
+        {
+          "path": "src/libslic3r/Support/SupportCommon.cpp",
+          "recorded_sha256": "2e8ffc9049a0a11c61a9e6c9773725dcf349ea48c2fb6e2266baa8b340c79720",
+          "current_sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+          "recorded_sha256": "969159ae33e3181711085f8d262a5f49cd67778ac640bd98959facc0b7c07223",
+          "current_sha256": "b4106027fb936f24d1b6863a9273665522b9f6db656d522c05fc95a9021af433",
+          "matches": false,
+          "kind": "file_snapshot"
+        }
+      ],
+      "sources": [
+        {
+          "path": "src/libslic3r/Support/SupportCommon.cpp",
+          "recorded_sha256": "2e8ffc9049a0a11c61a9e6c9773725dcf349ea48c2fb6e2266baa8b340c79720",
+          "current_sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+          "recorded_sha256": "969159ae33e3181711085f8d262a5f49cd67778ac640bd98959facc0b7c07223",
+          "current_sha256": "b4106027fb936f24d1b6863a9273665522b9f6db656d522c05fc95a9021af433",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/organic-support-interface-trim-20261021.json",
+          "recorded_sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+          "current_sha256": "e8cf38f5890563251e06fead503035cb28b09b0b8e07b8790bcd7077d91eb8af",
+          "matches": true,
+          "kind": "file_snapshot"
+        }
+      ]
+    },
+    {
+      "id": "upstream-main-support-scope-20261022",
+      "record_sha256": "997194d32d6c4a5be1c02241caf7430cde97b6f79898e22ead1c8a7a13ad9c48",
+      "key": "upstream-main-6d40-integration-verification",
+      "conclusion": "The October 17 Orca main integration remains historical. Ten of the eleven snapshots in its prior performance-scope record are still byte-identical. SupportCommon.cpp now adds complete organic contours and preserves direction-locked walls through height modulation; the previous snapshot matches checkout HEAD and the entire declared delta has been reviewed. Current generic support verification passes 127 native cases and 21017 assertions, plus two actual Release exports with 54221 matched closed outer contours and no bearing failures. The old large-project speed/output identities, GUI/macOS and remote observations retain their original dates and anchors. The current support repair changes support paths and material cost; it does not establish a new upstream integration or renew the old performance claims.",
+      "scope": "Current source-contract audit of the declared organic-support delta, bound to its reviewed normal Release evidence. Historical integration/runtime observations stay historical. No fresh upstream fetch, GUI/macOS audit or remote-ref verification is claimed. Source bindings refreshed after the 2026-10-22 support-gap correction and Release reslice verification.",
+      "verification": {
+        "result": "passed",
+        "reviewed_by": "Codex root agent",
+        "method": "Compared all eleven prior snapshots, reconstructed the old SupportCommon snapshot from checkout HEAD, reviewed its complete diff, and bound the changed source to current 127-case normal native and two-project actual-output evidence.",
+        "summary": "Replace the stale unchanged-source statement while retaining historical integration and performance observations at their original anchors."
+      },
+      "source_count": 14,
+      "changed_sources": [
+        {
+          "path": "src/libslic3r/Support/SupportCommon.cpp",
+          "recorded_sha256": "2e8ffc9049a0a11c61a9e6c9773725dcf349ea48c2fb6e2266baa8b340c79720",
+          "current_sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/Support/TreeSupport.cpp",
+          "recorded_sha256": "fed229ff0b3e2c7ac6a606901760dc6ffb5ca2a7b2ea7a2972468e628becc434",
+          "current_sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+          "matches": false,
+          "kind": "file_snapshot"
+        }
+      ],
+      "sources": [
+        {
+          "path": "CMakeLists.txt",
+          "recorded_sha256": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+          "current_sha256": "ab40c09b9e3ae430929fb026bd59412cbed2e35ded57fb79755f3b8164af8431",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/PNGReadWrite.cpp",
+          "recorded_sha256": "11beabe5fb2bdb7e4a4b50e2ff463cf25553384ad74239b92d9569bc7b415b26",
+          "current_sha256": "11beabe5fb2bdb7e4a4b50e2ff463cf25553384ad74239b92d9569bc7b415b26",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/utils.cpp",
+          "recorded_sha256": "a9870ee1ba3489dac6e8dd2e5998fbc722cba2f4ae87e52c0caa462e10b15920",
+          "current_sha256": "a9870ee1ba3489dac6e8dd2e5998fbc722cba2f4ae87e52c0caa462e10b15920",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/slic3r/plugin/PluginFsUtils.cpp",
+          "recorded_sha256": "4a8dd108fdf967e50e651a0975c7903f1a5dadabfcabf8ed42381161bb8fd54b",
+          "current_sha256": "4a8dd108fdf967e50e651a0975c7903f1a5dadabfcabf8ed42381161bb8fd54b",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/Support/SupportCommon.cpp",
+          "recorded_sha256": "2e8ffc9049a0a11c61a9e6c9773725dcf349ea48c2fb6e2266baa8b340c79720",
+          "current_sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/Support/TreeSupport.cpp",
+          "recorded_sha256": "fed229ff0b3e2c7ac6a606901760dc6ffb5ca2a7b2ea7a2972468e628becc434",
+          "current_sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+          "matches": false,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "src/libslic3r/Support/TreeSupport.hpp",
+          "recorded_sha256": "2cae88c07844389b2414f0101534b77b49d707682b129a5c9c6517d4d70b9743",
+          "current_sha256": "2cae88c07844389b2414f0101534b77b49d707682b129a5c9c6517d4d70b9743",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/upstream-sync-verification-20261017.json",
+          "recorded_sha256": "d1a1a96b39424ffec395ca4c36dcbab75773756756f6149f02ee1c3a21c47095",
+          "current_sha256": "d1a1a96b39424ffec395ca4c36dcbab75773756756f6149f02ee1c3a21c47095",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "InlongSlicer_doc/upstream_sync_20261017.md",
+          "recorded_sha256": "37d254f25e8a0980a9fbd251ed0f974513fcf80dd9450e80f6402e089f6d7f9e",
+          "current_sha256": "37d254f25e8a0980a9fbd251ed0f974513fcf80dd9450e80f6402e089f6d7f9e",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/large-project-compatibility-audit-20261017.json",
+          "recorded_sha256": "d7e6676ba3a68b839681252f01ac3352974d577f9a689817a2d32695849e4d0a",
+          "current_sha256": "d7e6676ba3a68b839681252f01ac3352974d577f9a689817a2d32695849e4d0a",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/large-project-slicing-performance-20261017.json",
+          "recorded_sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+          "current_sha256": "92e2eda56168fb0717eda814e90d097a3f1d752e7b137fbe5aceef6a1112130f",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/memory/entries/upstream-main-integration-20261017-performance-review.json",
+          "recorded_sha256": "be2ec1f5113184054643155526f9875fe59e2646aa2d0f565c68410d9625a270",
+          "current_sha256": "be2ec1f5113184054643155526f9875fe59e2646aa2d0f565c68410d9625a270",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/organic-support-closed-trunks-20261020.json",
+          "recorded_sha256": "e34e6b9f6270f93d4f5eba63b5a0871d743c336c6c0a4f4af60ed8c92e99be9b",
+          "current_sha256": "e34e6b9f6270f93d4f5eba63b5a0871d743c336c6c0a4f4af60ed8c92e99be9b",
+          "matches": true,
+          "kind": "file_snapshot"
+        },
+        {
+          "path": "docs/evidence/upstream-main-support-scope-20261020.json",
+          "recorded_sha256": "be04f069cc329036ae2b1e8d39f30cd5f4b71735db04996cbac99f32bcf2d7e4",
+          "current_sha256": "be04f069cc329036ae2b1e8d39f30cd5f4b71735db04996cbac99f32bcf2d7e4",
+          "matches": true,
+          "kind": "file_snapshot"
+        }
+      ]
+    }
+  ],
+  "semantic_reviews": [
+    {
+      "old_id": "bundled-web-wizard-initialization-20261016",
+      "reviewed_scope": "Bundled wizard source and localization contracts",
+      "finding": "Only WebGuideDialog.cpp drifted among the twelve prior bindings. Translation injection still precedes first-page navigation. Profile/page readiness still jointly gate completion, with the three-minute JavaScript fallback. The current native source additionally derives profile data from the available vendor set and its versioned cache.",
+      "method": "Manual C++/JavaScript review, explicit source-order/readiness checks, and the five existing web-contract tests.",
+      "limits": "Static source checks do not establish current browser interaction or first-launch GUI behavior."
+    },
+    {
+      "old_id": "inlong-infinity-defaults-upstream-review-20261022",
+      "reviewed_scope": "Curated profiles, fan option declarations and emitted cooling behavior",
+      "finding": "Only PrintConfig.cpp drifted among the 133 prior bindings. All 63 selectable machine profiles and 46 indexed processes still resolve the documented defaults; the cooling code and other 132 snapshots are unchanged. Fan option declarations remain present and the proportional kick-start calculation is intact.",
+      "method": "Complete inherited-profile resolution, eleven existing profile tests, configuration/source review and eight native cooling cases with 84 assertions.",
+      "limits": "Commanded timing is not measured fan RPM, hardware acceleration or firmware arc timing. User preset/project overrides are outside the profile audit."
+    },
+    {
+      "old_id": "organic-support-interface-trim-20261022",
+      "reviewed_scope": "Current organic support role boundaries and source-bound Release acceptance",
+      "finding": "SupportCommon.cpp and TreeSupport3D.cpp drifted; current code retains the same-plane interface keepout, closed structural contours, model-based contact positioning and local native bridge bracing. Prior NAS-model counts are historical, not current test2 measurements.",
+      "method": "Manual role/clearance/anchoring review plus exact hash equality with the immediately preceding Release build, 30-case/2730-assertion organic regression, 119 clearance/interface assertions, and two deterministic test2 exports.",
+      "limits": "Contact gaps are computed from printed model surfaces and extrusion height. No physical print trial or arbitrary-model performance guarantee is established."
+    },
+    {
+      "old_id": "upstream-main-support-scope-20261022",
+      "reviewed_scope": "Historical upstream integration versus current support verification",
+      "finding": "Twelve of the fourteen previous bindings are unchanged. SupportCommon.cpp and TreeSupport.cpp have advanced; the current support scope uses the newly source-bound acceptance evidence. The October 17 upstream integration and large-project benchmarks retain their original anchors.",
+      "method": "Hash audit of all fourteen bindings, manual declared support-scope review, immutable historical evidence review and source/binary matching to the completed Release verification.",
+      "limits": "No new upstream fetch, remote HEAD audit, macOS/GUI runtime test or large-project timing benchmark was performed."
+    }
+  ],
+  "profile_audit": {
+    "vendors": [
+      {
+        "brand": "INLONG",
+        "version": "01.05.01.29",
+        "selectable_machine_profiles": 11,
+        "indexed_process_profiles": 10
+      },
+      {
+        "brand": "_Infinity3DP",
+        "version": "01.28.15.24",
+        "selectable_machine_profiles": 52,
+        "indexed_process_profiles": 36
+      }
+    ],
+    "fan_defaults": {
+      "fan_speedup_time": "0.5",
+      "fan_kickstart": "0.1",
+      "fan_speedup_overhangs": "0",
+      "part_cooling_fan_min_pwm": "0"
+    },
+    "process_defaults": {
+      "seam_gap": "0",
+      "brim_object_gap": "0.1",
+      "tree_support_branch_diameter_organic": "3.0",
+      "bridge_flow": "1.05",
+      "bridge_density": "105%"
+    }
+  },
+  "fresh_checks": [
+    {
+      "log": ".agents/runtime/runs/run-c56aac88508a42269e436b4d2ee66c29/review/web-and-profile-contracts.log",
+      "sha256": "7735b701f720a3b6713e53e26eaef3fb018a97cf5043ea65f4b73809ea61533f",
+      "cases": 16,
+      "assertions": null,
+      "result": "passed",
+      "output": [
+        "test_active_markup_uses_the_host_translation_contract (scripts.tests.test_web_ui_contracts.TestWebUiContracts) ... ok",
+        "test_chinese_catalogs_cover_static_and_dynamic_web_labels (scripts.tests.test_web_ui_contracts.TestWebUiContracts) ... ok",
+        "test_every_bundled_page_loads_existing_local_scripts (scripts.tests.test_web_ui_contracts.TestWebUiContracts) ... ok",
+        "test_page_wrappers_do_not_override_shared_wizard_logic (scripts.tests.test_web_ui_contracts.TestWebUiContracts) ... ok",
+        "test_wizard_keeps_the_inlong_stealth_page (scripts.tests.test_web_ui_contracts.TestWebUiContracts) ... ok",
+        "test_all_declared_profiles_resolve_without_cycles (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_all_processes_inherit_approved_external_bridge_defaults (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_chamber_startup_uses_the_printer_and_material_control_target (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_custom_heatbreak_mode_does_not_gain_an_m710_command (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_declared_nozzle_variants_preserve_machine_topology (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_external_bridge_defaults_preserve_internal_bridge_settings (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_global_heatbreak_fan_follows_each_incoming_material (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_heatbreak_pwm_conversion_does_not_truncate_integer_division (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_material_fan_values_match_the_approved_table (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_printer_defaults_and_compatibility_references_exist (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "test_startup_retraction_uses_resolved_non_nullable_speed (scripts.tests.test_inlong_profile_gcode.TestInlongProfileGcode) ... ok",
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 16 tests in 0.845s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "log": ".agents/runtime/runs/run-c56aac88508a42269e436b4d2ee66c29/review/cooling-native.log",
+      "sha256": "40704298d072b82ca0aa139a8e1372edea385d91cc4f97b558dd859cf1e89f0a",
+      "cases": 8,
+      "assertions": 84,
+      "result": "passed",
+      "output": [
+        "Filters: [Cooling],\"Toolchange gcode is bracketed*\"",
+        "RNG seed: 3255531418",
+        "st=1, ",
+        "st=1, ",
+        "st=1, ",
+        "st=1, ",
+        "st=1, ",
+        "st=2, ",
+        "st=1, ",
+        "st=2, ",
+        "st=1, ",
+        "st=1, ",
+        "st=1, ",
+        "st=1, ",
+        "All tests passed (84 assertions in 8 test cases)",
+        "",
+        ""
+      ]
+    }
+  ],
+  "product_baseline": {
+    "source_and_binaries_match": true,
+    "files": [
+      {
+        "path": "src/libslic3r/Layer.cpp",
+        "expected_sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+        "actual_sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540",
+        "matches": true
+      },
+      {
+        "path": "src/libslic3r/Support/TreeSupport.cpp",
+        "expected_sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+        "actual_sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69",
+        "matches": true
+      },
+      {
+        "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+        "expected_sha256": "b4106027fb936f24d1b6863a9273665522b9f6db656d522c05fc95a9021af433",
+        "actual_sha256": "b4106027fb936f24d1b6863a9273665522b9f6db656d522c05fc95a9021af433",
+        "matches": true
+      },
+      {
+        "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+        "expected_sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+        "actual_sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667",
+        "matches": true
+      },
+      {
+        "path": "src/libslic3r/Support/SupportCommon.cpp",
+        "expected_sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e",
+        "actual_sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e",
+        "matches": true
+      },
+      {
+        "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+        "expected_sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+        "actual_sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38",
+        "matches": true
+      },
+      {
+        "path": "tests/fff_print/test_support_material.cpp",
+        "expected_sha256": "73a0c69cad846528af775373f9d85382a3373d80d5a602277a4449d0b689952d",
+        "actual_sha256": "73a0c69cad846528af775373f9d85382a3373d80d5a602277a4449d0b689952d",
+        "matches": true
+      },
+      {
+        "path": "scripts/analyze_organic_support.py",
+        "expected_sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6",
+        "actual_sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6",
+        "matches": true
+      },
+      {
+        "path": "scripts/tests/test_analyze_organic_support.py",
+        "expected_sha256": "0aee737342f3db7b5bf1b07ae380f139dccf0cb69ccbce0e443b923e62f11a23",
+        "actual_sha256": "0aee737342f3db7b5bf1b07ae380f139dccf0cb69ccbce0e443b923e62f11a23",
+        "matches": true
+      },
+      {
+        "path": "build/src/Release/InlongSlicer.dll",
+        "expected_sha256": "8ed1a8eb2c76afc3fb260cab07a3851205fa1d9512afcef78b8edcc8d7ef867b",
+        "actual_sha256": "8ed1a8eb2c76afc3fb260cab07a3851205fa1d9512afcef78b8edcc8d7ef867b",
+        "matches": true
+      },
+      {
+        "path": "build/src/Release/inlong-slicer.exe",
+        "expected_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "actual_sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26",
+        "matches": true
+      },
+      {
+        "path": "build/tests/fff_print/Release/fff_print_tests.exe",
+        "expected_sha256": "52ab1424c1fbc8420bfbc78c09a31df792bb39d290d5e90a1943854bee5354a5",
+        "actual_sha256": "52ab1424c1fbc8420bfbc78c09a31df792bb39d290d5e90a1943854bee5354a5",
+        "matches": true
+      }
+    ],
+    "prior_report": {
+      "path": ".agents/runtime/runs/run-82b877ed1ccc4f5084854866372a43df/evidence/verification-final.json",
+      "sha256": "cab8babb82e10d8884b62cb147a3387cd958e5f18b709217f408460a2fed8df7"
+    },
+    "source_manifest": [
+      {
+        "path": "src/libslic3r/Layer.cpp",
+        "last_write_utc": "2026-10-24T21:03:57.3732775Z",
+        "sha256": "827599d5b91539aa4c6bb9f1792692d4d73d7f284d4e2c22a7a0a810c019c540"
+      },
+      {
+        "path": "src/libslic3r/Support/TreeSupport.cpp",
+        "last_write_utc": "2026-10-24T21:12:05.7842060Z",
+        "sha256": "af50e3d1b69d76a50f17e7235520cbd0fe0464f8877b835137082b2e2ba70d69"
+      },
+      {
+        "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+        "last_write_utc": "2026-10-25T02:04:27.6718926Z",
+        "sha256": "b4106027fb936f24d1b6863a9273665522b9f6db656d522c05fc95a9021af433"
+      },
+      {
+        "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+        "last_write_utc": "2026-10-24T20:29:12.6517324Z",
+        "sha256": "7ba683c5e5048cdce7305c1c856706941f29320910aebfd1c4f9d67f07104667"
+      },
+      {
+        "path": "src/libslic3r/Support/SupportCommon.cpp",
+        "last_write_utc": "2026-10-25T01:42:44.0954487Z",
+        "sha256": "9b4e044fbe484005004d5bc6c310c6641e697ccc1c6576e19eadd452d6d7859e"
+      },
+      {
+        "path": "src/libslic3r/Support/OrganicSupportPathBearing.hpp",
+        "last_write_utc": "2026-10-25T01:35:10.9638718Z",
+        "sha256": "8bbcc5e9d21effa7aab19ff88bcb6b386ca3d8175f2ab9d90be9086d25961d38"
+      },
+      {
+        "path": "tests/fff_print/test_support_material.cpp",
+        "last_write_utc": "2026-10-25T01:42:44.1099586Z",
+        "sha256": "73a0c69cad846528af775373f9d85382a3373d80d5a602277a4449d0b689952d"
+      },
+      {
+        "path": "scripts/analyze_organic_support.py",
+        "last_write_utc": "2026-10-24T21:31:25.9268341Z",
+        "sha256": "3e4b4441f91a7f574f81fc37b6301f0ead3a885b0bf39ee9dc7c111bb15cfcc6"
+      },
+      {
+        "path": "scripts/tests/test_analyze_organic_support.py",
+        "last_write_utc": "2026-10-24T21:41:23.1108620Z",
+        "sha256": "0aee737342f3db7b5bf1b07ae380f139dccf0cb69ccbce0e443b923e62f11a23"
+      }
+    ],
+    "binaries": [
+      {
+        "path": "build/src/Release/InlongSlicer.dll",
+        "last_write_utc": "2026-10-25T02:06:52.8458599Z",
+        "sha256": "8ed1a8eb2c76afc3fb260cab07a3851205fa1d9512afcef78b8edcc8d7ef867b"
+      },
+      {
+        "path": "build/src/Release/inlong-slicer.exe",
+        "last_write_utc": "2026-10-16T09:46:04.3619054Z",
+        "sha256": "e5daebd0e8282bcf307cec27117df215dc65f1459afc33512423767660de9b26"
+      },
+      {
+        "path": "build/tests/fff_print/Release/fff_print_tests.exe",
+        "last_write_utc": "2026-10-25T02:04:57.1650125Z",
+        "sha256": "52ab1424c1fbc8420bfbc78c09a31df792bb39d290d5e90a1943854bee5354a5"
+      }
+    ],
+    "checks": {
+      "organic_and_tree_bridge": {
+        "cases": 30,
+        "passed": true,
+        "assertions": 2730,
+        "log": "organic-final.log"
+      },
+      "analyzer": {
+        "cases": 4,
+        "passed": true,
+        "log": "python-final.log"
+      },
+      "curved_floor_parameter_matrix": {
+        "passed": true,
+        "assertions": 128,
+        "combinations": 16,
+        "log": "curve-24.log"
+      },
+      "clearance_and_interface": {
+        "cases": 4,
+        "passed": true,
+        "assertions": 119,
+        "log": "clearance-final-24.log"
+      }
+    },
+    "slice_verification": {
+      "emitted_planes": 56,
+      "same_planes_as_baseline": true,
+      "role_paths": {
+        "Brim": 6,
+        "Support interface": 87,
+        "Support": 71
+      },
+      "baseline_role_paths": {
+        "Brim": 6,
+        "Support interface": 87,
+        "Support": 65
+      },
+      "support_ratio": 1.0923076923076922,
+      "repeat_instructions_identical": true,
+      "instruction_count": 6279,
+      "gcode_error_markers": [],
+      "geometry": {
+        "output_xy_tolerance_mm": 0.002,
+        "model_exact_symmetric_difference_mm2": 0.0,
+        "model_difference_outside_tolerance_mm2": 0.0,
+        "interface_difference_outside_tolerance_mm2": 0.0,
+        "brim_difference_outside_tolerance_mm2": 0.0,
+        "removed_original_support_outside_tolerance_mm2": 0.0,
+        "support_additions": [
+          {
+            "z": 4.4,
+            "role": "Support",
+            "added_area_mm2": 2.9348754566903517,
+            "removed_area_mm2": 0.0004404603321977246,
+            "removed_outside_output_tolerance_mm2": 0.0,
+            "added_outside_output_tolerance_mm2": 2.9234898462989474
+          }
+        ]
+      },
+      "contacts": [
+        {
+          "kind": "bottom",
+          "source_gap_mm": 0.17000000000000304,
+          "model_surface_z": 1.2,
+          "emitted_gaps_mm": [
+            0.170003
+          ]
+        },
+        {
+          "kind": "top",
+          "interface_z": 0.23,
+          "model_layer_above": 2,
+          "model_bottom_z": 0.39999999999999997,
+          "gap_mm": 0.16999999999999996,
+          "xy_overlap_mm2": 13.44306304962
+        },
+        {
+          "kind": "top",
+          "interface_z": 0.43,
+          "model_layer_above": 3,
+          "model_bottom_z": 0.6000000000000001,
+          "gap_mm": 0.1700000000000001,
+          "xy_overlap_mm2": 10.262642632379993
+        },
+        {
+          "kind": "top",
+          "interface_z": 0.63,
+          "model_layer_above": 4,
+          "model_bottom_z": 0.8,
+          "gap_mm": 0.17000000000000004,
+          "xy_overlap_mm2": 7.343543536200001
+        },
+        {
+          "kind": "top",
+          "interface_z": 1.63,
+          "model_layer_above": 9,
+          "model_bottom_z": 1.8,
+          "gap_mm": 0.17000000000000015,
+          "xy_overlap_mm2": 1.2429029016599977
+        },
+        {
+          "kind": "top",
+          "interface_z": 5.23,
+          "model_layer_above": 27,
+          "model_bottom_z": 5.3999999999999995,
+          "gap_mm": 0.16999999999999904,
+          "xy_overlap_mm2": 2.385545543160002
+        },
+        {
+          "kind": "top",
+          "interface_z": 5.63,
+          "model_layer_above": 29,
+          "model_bottom_z": 5.8,
+          "gap_mm": 0.16999999999999993,
+          "xy_overlap_mm2": 6.209469463259999
+        },
+        {
+          "kind": "top",
+          "interface_z": 5.83,
+          "model_layer_above": 30,
+          "model_bottom_z": 6.0,
+          "gap_mm": 0.16999999999999993,
+          "xy_overlap_mm2": 10.253493483239998
+        },
+        {
+          "kind": "top",
+          "interface_z": 6.03,
+          "model_layer_above": 31,
+          "model_bottom_z": 6.2,
+          "gap_mm": 0.16999999999999993,
+          "xy_overlap_mm2": 21.558558537
+        }
+      ],
+      "bearing": {
+        "components_checked": 74,
+        "unanchored": [],
+        "minimum_support_height_mm": 0.05,
+        "limitation": "Component bearing is not a mechanical strength proof; final curved-road regressions cover road-level bearing."
+      },
+      "external_support_area_at_z_1_8_mm2": 0.0,
+      "stray_interface_area_at_z_1_54_mm2": 0.0,
+      "source_input_unchanged": true
+    },
+    "gcode": {
+      "repeat_path": "fixed-24-repeat/out/plate_1.gcode",
+      "repeat_sha256": "2fb068553a09b771061cb5f8ad2281c50a2bb022fe899620ab5e001d6dc43fd9",
+      "path": "fixed-24/out/plate_1.gcode",
+      "sha256": "5c1d4bfae325b071d8f1142a780eb12a6b74d36a9907c29ef5ed7320b8c42d33"
+    }
+  },
+  "preservation": {
+    "old_records_rewritten": false,
+    "product_source_or_binaries_modified": false,
+    "settings_modified": false,
+    "install_commit_push_performed": false,
+    "historical_benchmarks_promoted_to_current_guarantees": false
+  },
+  "publication_plan": "Publish four reviewed v4 replacements with supersedes links using the deployed Migrate API, then run unfiltered recall and complete Consumer Checkpoint. Its subsequent receipt is stored separately so this evidence remains immutable."
+}

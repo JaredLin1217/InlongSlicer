@@ -16,6 +16,7 @@ add_executable(${_TEST_NAME}_tests
     test_bambu_networking.cpp
     test_belt_brim.cpp
     test_buildvolume.cpp
+    test_bridge_detector.cpp
     test_calib.cpp
     test_clipper_offset.cpp
     test_clipper_utils.cpp

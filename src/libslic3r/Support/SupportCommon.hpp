@@ -12,6 +12,7 @@
 #include <utility>
 #include <algorithm>
 #include <vector>
+#include <set>
 
 #include <memory>
 
@@ -24,6 +25,21 @@ namespace Slic3r {
 
 class PrintObject;
 class SupportLayer;
+
+// Follow a bounded native center domain without crossing holes or collisions.
+bool route_support_path(const Point &from, const Point &to, const ExPolygons &centers,
+    const ExPolygons &visible, double reach, Points &output);
+
+// Splice compatible interface fragments with full-width local connectors.
+// Model contacts retain their physical bottom and all unreplaced source roads.
+size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
+    const ExPolygons &allowed, float height, double max_link, const ExtrusionPaths &upper_paths = {},
+    std::set<const ExtrusionEntity *> *changed = nullptr);
+
+// Recompute the physical height of joined interface roads over printed planes.
+// XY geometry and process width remain intact; unmodified entities are retained.
+size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_height,
+    const std::set<const ExtrusionEntity *> &changed);
 
 // Build the common first-layer raft footprint. Box mode takes precedence over
 // filling internal contours so legacy presets with both options enabled remain
@@ -97,6 +113,12 @@ void tree_supports_generate_paths(ExtrusionEntitiesPtr &dst, const Polygons &pol
 
 // Add inward perimeter walls and fill only their interior. The same planner
 // serves normal, organic and non-organic tree contact/interface regions.
+// Return single-road centerlines when a closed interface contour has no
+// printable hollow interior. Regions are legal center domains, including
+// original holes/clearances. Empty output means the original contour stays.
+Polylines support_interface_single_road(
+    const Polyline &contour, const ExPolygons &regions, coord_t spacing, coord_t width);
+
 void fill_support_interface_with_walls(
     ExtrusionEntitiesPtr &dst,
     const ExPolygons     &regions,
@@ -105,7 +127,8 @@ void fill_support_interface_with_walls(
     ExtrusionRole         role,
     const Flow           &flow,
     int                   wall_count,
-    bool                  preserve_narrow_regions = false);
+    bool                  preserve_narrow_regions = false,
+    const ExPolygons     *wall_regions = nullptr);
 
 void fill_expolygons_with_sheath_generate_paths(
     ExtrusionEntitiesPtr &dst,
@@ -133,7 +156,7 @@ SupportGeneratorLayersPtr generate_support_layers(
 
 // Produce the support G-code.
 // Used by both classic and tree supports.
-void generate_support_toolpaths(
+size_t generate_support_toolpaths(
 	SupportLayerPtrs    				&support_layers,
 	const PrintObjectConfig 			&config,
 	const SupportParameters 			&support_params,
