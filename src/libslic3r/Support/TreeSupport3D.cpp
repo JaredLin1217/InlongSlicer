@@ -142,10 +142,16 @@ static const Layer *organic_bottom_contact_model_layer(
     const Layer *model_layer = nullptr;
     double best_overlap = 0.;
     const double min_area = sqr(double(scale_(0.001)));
+    const double footprint_area = area(footprint);
     const auto &layers = object.layers();
     const auto end = std::upper_bound(layers.begin(), layers.end(), expected_model_z + EPSILON,
         [](coordf_t z, const Layer *layer) { return z < layer->print_z; });
-    for (auto it = layers.begin(); it != end; ++it) {
+    // Search from the expected surface downward.  A complete overlap is the
+    // maximum possible score, and the historical tie rule prefers the higher
+    // layer, so it is safe to stop immediately once it is found.  Partial
+    // overlaps still run the same exact scan and selection rule below.
+    for (auto it = end; it != layers.begin();) {
+        --it;
         const Layer *candidate = *it;
         if (model_layer_bounds != nullptr) {
             const size_t index = size_t(std::distance(layers.begin(), it));
@@ -162,8 +168,47 @@ static const Layer *organic_bottom_contact_model_layer(
             model_layer = candidate;
             best_overlap = overlap;
         }
+        if (model_layer == candidate && footprint_area > min_area &&
+            overlap + min_area >= footprint_area)
+            return candidate;
     }
     return model_layer;
+}
+
+// smooth_outward() only changes duplicate/near-duplicate vertices and
+// concave corners.  Convex polygons without such vertices are already in the
+// fixed point of that operation, so avoid walking every vertex again while
+// preserving the exact native routine for every polygon that may change.
+static bool organic_polygon_needs_smoothing(const Polygon &polygon)
+{
+    if (polygon.size() < 3)
+        return true;
+    const coord_t duplicate_limit = scale_(0.01);
+    const int64_t duplicate_limit2 = sqr<int64_t>(duplicate_limit);
+    for (size_t idx = 0; idx < polygon.size(); ++idx) {
+        const Point &p0 = polygon[(idx + polygon.size() - 1) % polygon.size()];
+        const Point &p1 = polygon[idx];
+        const Point &p2 = polygon[(idx + 1) % polygon.size()];
+        if ((p1 - p0).cast<int64_t>().squaredNorm() <= duplicate_limit2 ||
+            cross2((p0 - p1).cast<int64_t>(), (p2 - p1).cast<int64_t>()) > 0)
+            return true;
+    }
+    return false;
+}
+
+static Polygons organic_smooth_outward_if_needed(Polygons polygons, coord_t distance)
+{
+    for (Polygon &polygon : polygons) {
+        if (!organic_polygon_needs_smoothing(polygon))
+            continue;
+        Polygons single;
+        single.emplace_back(std::move(polygon));
+        single = smooth_outward(std::move(single), distance);
+        polygon = single.empty() ? Polygon{} : std::move(single.front());
+    }
+    polygons.erase(std::remove_if(polygons.begin(), polygons.end(),
+        [](const Polygon &polygon) { return polygon.empty(); }), polygons.end());
+    return polygons;
 }
 
 // Opt-in geometry evidence from the actual generator, before G-code export.
@@ -7267,12 +7312,20 @@ OrganicSupportLayerPlan organic_draw_branches(
             Slice &slice = slices[layer_idx];
             assert(intermediate_layers[layer_idx] == nullptr);
             // INLONG: avoid union_ on empty inputs.
-            Polygons base_layer_polygons     = slice.polygons.empty() ? Polygons{} : union_(slice.polygons);
-            Polygons bottom_contact_polygons = slice.bottom_contacts.empty() ? Polygons{} : union_(slice.bottom_contacts);
+            Polygons base_layer_polygons;
+            if (slice.polygons.size() == 1 && slice.polygons.front().is_valid())
+                base_layer_polygons = std::move(slice.polygons);
+            else if (!slice.polygons.empty())
+                base_layer_polygons = union_(slice.polygons);
+            Polygons bottom_contact_polygons;
+            if (slice.bottom_contacts.size() == 1 && slice.bottom_contacts.front().is_valid())
+                bottom_contact_polygons = std::move(slice.bottom_contacts);
+            else if (!slice.bottom_contacts.empty())
+                bottom_contact_polygons = union_(slice.bottom_contacts);
 
             if (! base_layer_polygons.empty()) {
                 // Most of the time in this function is this union call. Can take 300+ ms when a lot of areas are to be unioned.
-                base_layer_polygons = smooth_outward(
+                base_layer_polygons = organic_smooth_outward_if_needed(
                     std::move(base_layer_polygons),
                     config.support_line_width); //FIXME was .smooth(50);
                 //smooth_outward(closing(std::move(bottom), closing_distance + minimum_island_radius, closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance) :
@@ -7296,12 +7349,20 @@ OrganicSupportLayerPlan organic_draw_branches(
                 const coordf_t gap = print_object.slicing_parameters().gap_object_support;
                 const coordf_t bottom_z = layer_plan.independent() ? layer_plan[layer_idx].bottom_z :
                     (layer_idx > 0 ? layer_z(print_object.slicing_parameters(), config, layer_idx - 1) : 0.);
-                for (const ExPolygon &component : union_ex(bottom_contact_polygons)) {
+                ExPolygons contact_components;
+                if (bottom_contact_polygons.size() == 1 && bottom_contact_polygons.front().is_valid())
+                    contact_components.emplace_back(std::move(bottom_contact_polygons.front()));
+                else
+                    contact_components = union_ex(bottom_contact_polygons);
+                for (const ExPolygon &component : contact_components) {
                     const Polygons footprint = to_polygons(component);
                     if (const Layer *model = organic_bottom_contact_model_layer(print_object, footprint, bottom_z - gap, &model_layer_bounds))
                         append(model_contacts, intersection(model->lslices, footprint));
                 }
-                bottom_contact_polygons = model_contacts.empty() ? Polygons{} : union_(model_contacts);
+                if (model_contacts.size() == 1 && model_contacts.front().is_valid())
+                    bottom_contact_polygons = std::move(model_contacts);
+                else
+                    bottom_contact_polygons = model_contacts.empty() ? Polygons{} : union_(model_contacts);
             }
             if (! bottom_contact_polygons.empty()) {
                 base_layer_polygons = diff(base_layer_polygons, bottom_contact_polygons);

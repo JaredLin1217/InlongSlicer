@@ -1,0 +1,41 @@
+{
+  "schema_version": "inlong-organic-support-performance/v1",
+  "verified_utc": "2026-10-30T09:28:35.816805Z",
+  "input": {
+    "path": "C:/Users/v_jar/Downloads/test.3mf",
+    "sha256": "ba86125d17a7103e6ae88b40f7d2f4a34acace011f230f4691be160ec375573d"
+  },
+  "release": {
+    "dll_sha256": "1908A270711F1F5525B1F6FEB6054DA14EB2D4E89A56108819F6A94AD20FECCA",
+    "exe_sha256": "8789E0F97E1479ADEA2D178258A7C0D32C2C09E5C52AA68960916338C9E8C4F9",
+    "build_command": "cmake --build build --config Release --target InlongSlicer_app_gui -- /m:1 /p:CL_MPCount=1"
+  },
+  "measurements": {
+    "baseline_seconds": 546.297,
+    "best_valid_seconds": 305.235,
+    "final_safe_run_seconds": 417.312,
+    "final_safe_run_cpu_seconds": 2015.578,
+    "final_safe_run_peak_working_set_bytes": 8240246784,
+    "final_safe_run_peak_private_bytes": 9393299456,
+    "final_safe_run_tree_support_seconds": 274.142,
+    "final_safe_run_final_polygon_assembly_seconds": 150.244,
+    "final_safe_run_physical_height_modulation_seconds": 3.58905,
+    "final_safe_run_support_toolpath_seconds": 22.8662,
+    "normalized_gcode_lines": 4448637,
+    "normalized_gcode_sha256": "2ea01260df2c825aab0c302c546f68f8a4eac068bf12279300c6b81902e18bcc"
+  },
+  "conclusion": {
+    "path_preserved": "All retained optimization runs normalized-identical to the safe reference.",
+    "target_four_minutes": "not achieved",
+    "remaining_bottleneck": "final polygon assembly and Clipper union; effective parallelism remains limited by geometry operations",
+    "rejected_experiments": [
+      "Per-tree union scheduling stalled under large-file memory pressure and was reverted.",
+      "Simplify/union shortcuts changed normalized G-code and were reverted."
+    ]
+  },
+  "source_files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp"
+  ],
+  "checkout_anchor": "896cc1dc8c2ee1aa7c23923e7af331bd45b40dfd"
+}

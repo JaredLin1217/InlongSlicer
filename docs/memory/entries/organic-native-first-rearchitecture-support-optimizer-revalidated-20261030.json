@@ -1,0 +1,74 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-native-first-rearchitecture-support-optimizer-revalidated-20261030",
+  "key": "organic-support-performance-architecture",
+  "type": "lesson",
+  "conclusion": "Native-first organic support generation and the explicit INLONG_SUPPORT_FULL_REPAIR fallback remain in place. The current Release build passes, and the added exact geometry fast paths preserve the normalized test.3mf output; the historical 197.8-second result is not carried forward as a current benchmark.",
+  "scope": "InlongSlicer organic support generation and exact-output performance review after generic geometry-cache changes.",
+  "modules": [
+    "TreeSupport3D",
+    "organic-support",
+    "toolpath-generation"
+  ],
+  "tags": [
+    "OrcaSlicer",
+    "native-first",
+    "Clipper",
+    "performance",
+    "support-repair",
+    "test.3mf"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/TreeSupport3D.hpp",
+    "docs/evidence/organic-native-first-rearchitecture-20261028.json",
+    "docs/evidence/organic-support-performance-20261030.json"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "51bf855cdcf304e0167812896860068ab56276b22226eb6c267ca7b79ff0631f",
+      "commit": "896cc1dc8c2ee1aa7c23923e7af331bd45b40dfd",
+      "locator": "Reviewed current source snapshot; the commit field is the checkout anchor and the hash covers the reviewed bytes."
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.hpp",
+      "sha256": "ef7a8dae7e24c7d79800b229d6044388acbc9b97b23cdf3d6cf1576bbe613bd9",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "native-first organic support repair and measured Release validation"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-native-first-rearchitecture-20261028.json",
+      "sha256": "a00b8b429602e4d314d6eac02b48b4e20ba5a89d5a6136f157ebb24b731a8892",
+      "commit": "fc386d25aeffbe27140da85c883855cec34cd225",
+      "locator": "native-first organic support repair and measured Release validation"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/evidence/organic-support-performance-20261030.json",
+      "sha256": "ef6e58a672ce03960c6a5d87c042b7105b74bd2f9a7debfff36bf17e61632b8f",
+      "commit": "896cc1dc8c2ee1aa7c23923e7af331bd45b40dfd",
+      "locator": "Durable performance receipt for the current Release build and normalized output comparison."
+    }
+  ],
+  "verified_utc": "2026-10-30T09:28:35.816805Z",
+  "verification": {
+    "result": "passed",
+    "reviewed_by": "Codex",
+    "method": "Source-bound revalidation on 2026-10-30 after the generic support performance changes: Release build completed, normalized test.3mf output comparison was reviewed, and the Consumer Changed checks passed. Historical fixture conclusions are retained only where their existing durable evidence still supports them.",
+    "summary": "Current source snapshots and the scoped evidence were revalidated. The four-minute target is explicitly unverified and no universal performance claim is introduced."
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-native-first-rearchitecture-revalidated-20261030"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -2413,11 +2413,45 @@ static void remove_unprintable_interface_paths(ExtrusionEntitiesPtr &entities)
 // Clipping an organic interface projection can leave a compact, isolated
 // platform that no later extrusion uses. Only generic interfaces are eligible:
 // true model contacts, trunks and substantial platforms keep their geometry.
+static BoundingBox support_path_bounds(const ExtrusionPath &path)
+{
+    BoundingBox bounds;
+    for (const Point3 &point : path.polyline.points)
+        bounds.merge(point.to_point());
+    if (bounds.defined)
+        bounds.offset(0.5 * scale_(std::abs(path.width)) + SCALED_EPSILON);
+    return bounds;
+}
+
 static void remove_unused_compact_interfaces(
     SupportLayerPtrs &layers,
     const std::vector<std::set<const ExtrusionEntity *>> &generic_interfaces,
     float process_width)
 {
+    const auto profile_started = std::chrono::steady_clock::now();
+    const double minimum_bead = scale_(process_width);
+    bool has_compact_candidate = false;
+    for (size_t index = 0; index < layers.size() && !has_compact_candidate; ++index) {
+        for (const ExtrusionEntity *entity : generic_interfaces[index]) {
+            double length = 0.;
+            float width = 0.f;
+            bool eligible = true;
+            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                eligible = eligible && path.role() == erSupportMaterialInterface && !path.z_contoured &&
+                    path.height > 0.f && path.width > 0.f;
+                length += path.length();
+                width = std::max(width, path.width);
+            });
+            const double bead = std::max<double>(scale_(std::max(width, process_width)), minimum_bead);
+            if (eligible && width > 0.f && length <= 32. * bead) {
+                has_compact_candidate = true;
+                break;
+            }
+        }
+    }
+    if (!has_compact_candidate)
+        return;
+
     struct Road {
         const ExtrusionEntity *owner;
         const ExtrusionPath *path;
@@ -2430,10 +2464,7 @@ static void remove_unused_compact_interfaces(
             for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
                 if (!is_support(path.role()) || path.z_contoured || path.height <= 0.f)
                     return;
-                BoundingBox bounds;
-                for (const Point3 &point : path.polyline.points)
-                    bounds.merge(point.to_point());
-                bounds.offset(0.5 * scale_(path.width) + SCALED_EPSILON);
+                BoundingBox bounds = support_path_bounds(path);
                 roads[i].push_back({entity, &path, bounds, layers[i]->print_z - path.height});
             });
     std::multimap<double, const Road *> upper_roads;
@@ -2492,6 +2523,8 @@ static void remove_unused_compact_interfaces(
             it = entities.erase(it);
         }
     }
+    BOOST_LOG_TRIVIAL(info) << "Organic compact interface cleanup: removed " << removed.size() <<
+        ", elapsed " << std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_started).count() << " seconds";
 }
 
 // Find a local continuous route in a full-bead center domain. Boundary vertices
@@ -3117,6 +3150,48 @@ size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_hei
     const std::set<const ExtrusionEntity *> &changed)
 {
     if (changed.empty()) return 0;
+
+    // Most organic prints enter this repair pass because a stepped contact
+    // exists, while every emitted road still ends exactly on its own output
+    // plane.  In that case the detailed pass would inspect every path and
+    // build bead polygons only to reject them by the same Z test below.  Do
+    // that test once up front.  This is deliberately only a vertical
+    // conservative prefilter: when any possible overlap remains, the exact
+    // footprint/intersection path below is unchanged.
+    std::vector<float> max_changed_height(layers.size(), 0.f);
+    for (size_t layer_idx = 0; layer_idx < layers.size(); ++layer_idx) {
+        const SupportLayer *layer = layers[layer_idx];
+        for (const ExtrusionEntity *entity : layer->support_fills.entities) {
+            if (changed.count(entity) == 0)
+                continue;
+            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                max_changed_height[layer_idx] = std::max(max_changed_height[layer_idx], path.height);
+            });
+        }
+    }
+    for (size_t layer_idx = 0; layer_idx < layers.size(); ++layer_idx) {
+        const float height = max_changed_height[layer_idx];
+        if (height <= 0.f)
+            continue;
+        const double lower_z = layers[layer_idx]->print_z - height + EPSILON;
+        for (size_t below_idx = layer_idx; below_idx-- > 0;) {
+            const double delta = layers[layer_idx]->print_z - layers[below_idx]->print_z;
+            if (delta < minimum_height - EPSILON)
+                continue;
+            if (layers[below_idx]->print_z > lower_z) {
+                // At least one path can vertically overlap a lower printed
+                // layer.  Keep all historical exact geometry checks.
+                goto exact_modulation;
+            }
+            // Layers are ordered by print_z; once below the lower bound no
+            // earlier layer can become a candidate.
+            break;
+        }
+    }
+    BOOST_LOG_TRIVIAL(info) << "Organic physical-height modulation: no vertical overlaps; skipped exact footprint checks";
+    return 0;
+
+exact_modulation:
     const auto profile_started = std::chrono::steady_clock::now();
     double max_height = 0.;
     for (const SupportLayer *layer : layers)
@@ -3127,6 +3202,7 @@ size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_hei
         SupportGeneratorLayer source;
         const SupportLayer *printed = nullptr;
         BoundingBox printed_bounds;
+        std::vector<BoundingBox> printed_island_bounds;
         bool initialized = false;
     };
     std::deque<PrintedLayer> recent;
@@ -3150,8 +3226,7 @@ size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_hei
                     // Keep earlier material lazy until an actual vertical
                     // overlap query needs it; completed lower layers are stable.
                     std::vector<PrintedLayer *> candidates;
-                    const BoundingBox path_bounds = get_extents(path.polyline.to_polyline()).inflated(
-                        0.5 * scale_(std::abs(path.width)) + SCALED_EPSILON);
+                    const BoundingBox path_bounds = support_path_bounds(path);
                     for (PrintedLayer &below : recent) {
                         if (below.source.print_z <= layer->print_z - path.height + EPSILON ||
                             layer->print_z - below.source.print_z < minimum_height - EPSILON)
@@ -3162,13 +3237,34 @@ size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_hei
                         // Clipper intersection. Empty islands retain the
                         // exact historical path because there is no safe
                         // rejection envelope.
-                        if (below.printed_bounds.defined && path_bounds.defined &&
-                            !below.printed_bounds.overlap(path_bounds))
-                            continue;
+                        if (path_bounds.defined) {
+                            if (!below.printed_island_bounds.empty()) {
+                                const bool overlaps_island = std::any_of(
+                                    below.printed_island_bounds.begin(), below.printed_island_bounds.end(),
+                                    [&path_bounds](const BoundingBox &island_bounds) {
+                                        return island_bounds.overlap(path_bounds);
+                                    });
+                                if (!overlaps_island)
+                                    continue;
+                            } else if (below.printed_bounds.defined && !below.printed_bounds.overlap(path_bounds)) {
+                                continue;
+                            }
+                        }
                         candidates.push_back(&below);
                     }
                     if (candidates.empty()) { result.push_back(path); return; }
                     const Polygons bead = path.polygons_covered_by_width();
+                    // support_islands is the union of the printable support
+                    // regions and therefore a conservative superset of the
+                    // emitted support beads.  Reject candidates that do not
+                    // touch that already-built envelope before constructing
+                    // the more expensive per-road union below.
+                    candidates.erase(std::remove_if(candidates.begin(), candidates.end(),
+                        [&bead](PrintedLayer *below) {
+                            return !below->printed->support_islands.empty() &&
+                                intersection(below->printed->support_islands, bead).empty();
+                        }), candidates.end());
+                    if (candidates.empty()) { result.push_back(path); return; }
                     for (PrintedLayer *below : candidates) {
                         if (!below->initialized) {
                             for_each_extrusion_path(below->printed->support_fills, [&](const ExtrusionPath &printed) {
@@ -3208,8 +3304,12 @@ size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_hei
         recent.emplace_back();
         recent.back().source.print_z = layer->print_z;
         recent.back().printed = layer;
-        if (!layer->support_islands.empty())
+        if (!layer->support_islands.empty()) {
             recent.back().printed_bounds = get_extents(layer->support_islands);
+            recent.back().printed_island_bounds.reserve(layer->support_islands.size());
+            for (const ExPolygon &island : layer->support_islands)
+                recent.back().printed_island_bounds.push_back(get_extents(island));
+        }
     }
     BOOST_LOG_TRIVIAL(info) << "Organic physical-height modulation: " <<
         std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_started).count() <<
