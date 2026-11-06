@@ -1,0 +1,51 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-interface-cleanup-missing-20261105",
+  "key": "organic-interface-cleanup-missing",
+  "type": "fact",
+  "conclusion": "Missing organic support interfaces must be distinguished from intentional nonzero interface spacing. In the supplied QQ case, the final detached-interface cleanup removes required contact paths when neither the current nor previous layer's support bead touches them. Disabling the final cleanup restores those paths; that diagnostic switch is not a production fix because it also retains unsupported geometry.",
+  "scope": "organic-support-interface-cleanup",
+  "modules": [
+    "SupportCommon"
+  ],
+  "tags": [
+    "organic-support",
+    "missing-interface",
+    "detached-contact",
+    "diagnosis-verified"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "dae892244bff044003d438cdbc4238c9c3f9798efdd7ca7ca6a24c13d17b593a",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "remove_detached_compact_contacts at lines 2900-3023, remove_unsupported_interfaces at 2518-2898, and their invocation at 4601-4605; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-dd3c8a2ea53e48ce90b8c69a0d932fb2/analysis/plate_1.gcode",
+      "sha256": "a91b788c4c94e46acf18b0c32c2acfbf4731f225b1522a8609a963e7c440963e",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "QQ sliced with the existing INLONG_RETAIN_INTERFACE_DIAGNOSTIC switch to establish which paths the final cleanup removes"
+    }
+  ],
+  "verified_utc": "2026-11-05T13:16:56Z",
+  "verification": {
+    "method": "Compared the supplied QQ G-code with an actual CLI slice of the same QQ project using the existing final-cleanup bypass. Measured interface counts and lengths per Z, and physical bead intersections with the current and previous support layers. No production source or process configuration was changed.",
+    "summary": "With cleanup bypassed, Z 0.45 changes from zero interface paths to 2 paths totaling 7.288440 mm, and Z 0.75 changes from one 0.852041 mm path to 7 paths totaling 13.474683 mm. Both restored Z 0.45 paths have zero bead overlap with the current and previous support layers, matching the detached-contact predicate. The configured support_interface_spacing is 0.4 mm, so some gaps are also intentional. Only this QQ case and cleanup stage were verified; no repair is claimed.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -42,7 +42,12 @@ inline SupportCacheBudget support_cache_budget(size_t physical, size_t available
         return result;
     available = std::min(available, physical);
     result.reserve = std::max(512 * mib, physical / 5);
-    result.headroom = std::max(256 * mib, physical / 32);
+    // Keep a bounded OS margin, but do not reserve a full 1/32 of large
+    // machines: after the model is resident that margin can collapse the
+    // final assembly scheduler to one worker even when several hundred MiB
+    // are still safely available. Low-memory hosts retain the fixed 256 MiB
+    // floor and the <=4 GiB no-cache rule below.
+    result.headroom = std::max(256 * mib, physical / 64);
     const size_t protected_bytes = result.reserve + result.headroom;
     if (physical <= 4 * gib || available <= protected_bytes)
         return result;

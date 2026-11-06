@@ -36,6 +36,68 @@ function(inlong_prepare_clipper_scanbeam source output result)
 
 ]=])
     string(REPLACE "${anchor}" "${anchor}${fast_path}" optimized "${engine}")
+
+    # Upstream Clipper2 #1115: local minima are already sorted by descending
+    # Y, so merge them with the dynamic scanline queue instead of pushing all
+    # minima into the priority queue during Reset().
+    set(local_minima_anchor [=[
+    LocalMinimaList::const_reverse_iterator i;
+    for (i = minima_list_.rbegin(); i != minima_list_.rend(); ++i)
+      InsertScanline((*i)->vertex->pt.y);
+
+    current_locmin_iter_ = minima_list_.begin();
+]=])
+    set(local_minima_patch [=[
+    // Inlong: local minima are already sorted by descending Y. Merge them
+    // with the dynamic scanline queue in PopScanline instead of pushing all
+    // minima up front.
+    current_locmin_iter_ = minima_list_.begin();
+]=])
+    string(FIND "${optimized}" "${local_minima_anchor}" local_minima_position)
+    if(local_minima_position LESS 0)
+        message(FATAL_ERROR "Reviewed Clipper local-minima anchor is missing")
+    endif()
+    string(REPLACE "${local_minima_anchor}" "${local_minima_patch}" optimized "${optimized}")
+
+    set(pop_scanline_anchor [=[
+  bool ClipperBase::PopScanline(int64_t& y)
+  {
+    if (scanline_list_.empty()) return false;
+    y = scanline_list_.top();
+    scanline_list_.pop();
+    while (!scanline_list_.empty() && y == scanline_list_.top())
+      scanline_list_.pop();  // Pop duplicates.
+    return true;
+  }
+]=])
+    set(pop_scanline_patch [=[
+  bool ClipperBase::PopScanline(int64_t& y)
+  {
+    // The local minima list is sorted by descending Y. Merge its next value
+    // with the dynamic scanline queue without changing the emitted order.
+    bool has_locmin = current_locmin_iter_ != minima_list_.end();
+    if (scanline_list_.empty())
+    {
+      if (!has_locmin) return false;
+      y = (*current_locmin_iter_)->vertex->pt.y;
+      return true;
+    }
+    y = scanline_list_.top();
+    // Keep the queue top when a higher local minimum is emitted; it belongs
+    // to the next scanbeam and must be compared again on the next call.
+    if (has_locmin && (*current_locmin_iter_)->vertex->pt.y > y)
+      y = (*current_locmin_iter_)->vertex->pt.y;
+    while (!scanline_list_.empty() && y == scanline_list_.top())
+      scanline_list_.pop(); // Pop duplicates.
+    return true;
+  }
+]=])
+    string(FIND "${optimized}" "${pop_scanline_anchor}" pop_scanline_position)
+    if(pop_scanline_position LESS 0)
+        message(FATAL_ERROR "Reviewed Clipper PopScanline anchor is missing")
+    endif()
+    string(REPLACE "${pop_scanline_anchor}" "${pop_scanline_patch}" optimized "${optimized}")
+
     get_filename_component(output_directory "${output}" DIRECTORY)
     file(MAKE_DIRECTORY "${output_directory}")
     set(existing "")

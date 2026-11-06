@@ -1,0 +1,77 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "knowledge-source-drift-retirement-20261106",
+  "key": "knowledge-source-drift-retirement-20261106",
+  "type": "decision",
+  "conclusion": "Retire the listed records as current evidence because their source snapshots no longer match the project. Their immutable files and history are preserved. This retraction does not assert that the original findings were false, and it does not retract the separately verified organic-direct-tip-contact-source-20261106 finding.",
+  "scope": "knowledge-source-drift-review",
+  "modules": [
+    "project-memory"
+  ],
+  "tags": [
+    "source-drift",
+    "retirement",
+    "preserved-history"
+  ],
+  "files": [
+    "docs/memory/entries"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-007a6f0f1f8a4ecdbe2e810b7d7a0b4c/validation/report.json",
+      "sha256": "06541764cca0a29a35c212b5bb355a6588653800bcd3cbb088f86982c6488256",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Consumer Checkpoint knowledge check listing the exact stale record IDs retired here"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "docs/memory/entries/organic-direct-tip-contact-source-20261106.json",
+      "sha256": "4f6ac750bea50359da3b05b71f392137878f4e14602eb6b7e8b7e2c47f0bf721",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Current source-verified direct-tip finding explicitly excluded from this source-drift retraction"
+    }
+  ],
+  "verified_utc": "2026-11-06T01:40:57Z",
+  "verification": {
+    "method": "Read the Consumer Checkpoint knowledge failure, matched every listed ID to an existing immutable record, and retired only the stale evidence. No old file was edited, and no fresh product verification is claimed for the retracted conclusions.",
+    "summary": "Retract 26 stale records while preserving their immutable history. The newly verified organic-direct-tip-contact-source-20261106 record remains active. This is source-evidence maintenance, not a functional verdict on the older product findings.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "retracted",
+  "supersedes": [],
+  "retracts": [
+    "agents4-consumer-publication-20261017",
+    "application-updates-upstream-review-20261019",
+    "brim-large-query-review-support-optimizer-revalidated-20261030",
+    "bundled-web-wizard-initialization-20261025",
+    "homepage-sidebar-hidden-20261017",
+    "inlong-infinity-defaults-brim-priority-review-20261025",
+    "moonraker-monitoring-compatibility-20261019",
+    "organic-clean-side-outlines-20261103",
+    "organic-first-layer-compact-tail-20261105",
+    "organic-full-support-restoration-20261104",
+    "organic-generic-base-completion-20261106",
+    "organic-interface-cleanup-missing-20261105",
+    "organic-interface-trunk-handoff-20261105",
+    "organic-large-contact-preservation-20261105",
+    "organic-large-query-performance-support-optimizer-revalidated-20261030",
+    "organic-native-first-rearchitecture-support-optimizer-revalidated-20261030",
+    "organic-support-benchmark-history-20261017",
+    "organic-tree-interface-z-bearing-20261104",
+    "support-memory-allowance-20261013",
+    "upstream-main-large-query-scope-support-optimizer-revalidated-20261030",
+    "upstream-profile-compatibility-20261019",
+    "upstream-statistics-brim-priority-scope-20261025",
+    "windows-full-install-stale-profiles-upstream-20261017-performance-review",
+    "windows-inlong-only-uv-pycache-review-20261019",
+    "windows-local-install-contract-20261017-performance-review",
+    "windows-msvc-install-parallelism-20261017-performance-review"
+  ],
+  "sensitive": false,
+  "reusable": true
+}

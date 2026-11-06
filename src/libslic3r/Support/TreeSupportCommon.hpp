@@ -23,6 +23,12 @@ namespace Slic3r
     static constexpr const size_t SUPPORT_TREE_CIRCLE_RESOLUTION = 25;
 namespace TreeSupport3D
 {
+
+// Organic branch topology uses one stable empty layer around the model. The
+// configured top/bottom Z gaps are physical contact settings and are applied
+// later when contact/interface layers are emitted. Keeping the topology grid
+// fixed prevents a contact-gap edit from rebuilding the trunk graph.
+static constexpr size_t organic_tree_topology_gap_layers = 1;
 using LayerIndex = int;
 
 enum class InterfacePreference
@@ -72,6 +78,9 @@ struct TreeSupportMeshGroupSettings {
         this->support_xy_distance_1st_layer = scaled<coord_t>(config.support_object_first_layer_gap.value);
         // Separation of interfaces, it is likely smaller than support_xy_distance.
         this->support_xy_distance_overhang = std::min(this->support_xy_distance, scaled<coord_t>(0.5 * external_perimeter_width));
+        // Keep these public distances raw because the independent output plan
+        // uses them for the physical contact plane. Topology-only consumers
+        // round them to the layer grid before building collision masks.
         this->support_top_distance      = scaled<coord_t>(slicing_params.gap_support_object);
         this->support_bottom_distance   = scaled<coord_t>(slicing_params.gap_object_support);
         this->support_roof_enable       = config.support_interface_top_layers.value > 0;
@@ -303,6 +312,7 @@ public:
     //              support_infill_angles(mesh_group_settings.support_infill_angles),
           support_roof_angles(mesh_group_settings.support_roof_angles),
           roof_pattern(mesh_group_settings.support_roof_pattern),
+          support_roof_layers(size_t(mesh_group_settings.support_roof_layers)),
           support_pattern(mesh_group_settings.support_pattern),
           support_roof_line_width(mesh_group_settings.support_roof_line_width),
           support_line_spacing(mesh_group_settings.support_line_spacing),
@@ -469,6 +479,10 @@ public:
      * \brief Pattern used in the support roof. May contain non relevant data if support roof is disabled.
      */
     SupportMaterialInterfacePattern roof_pattern;
+    // Number of generated support-interface layers used when a tree tip is
+    // recovered into a roof. Keep this as a layer count so cross-tree demand
+    // checks can inspect the complete physical contact window.
+    size_t support_roof_layers { 2 };
     /*!
      * \brief Pattern used in the support infill.
      */
@@ -524,7 +538,7 @@ public:
                xy_distance - xy_min_distance == other.xy_distance - other.xy_min_distance && // if the delta of xy_min_distance and xy_distance is different the collision areas have to be recalculated.
                support_rests_on_model == other.support_rests_on_model && increase_radius_until_layer == other.increase_radius_until_layer && min_dtt_to_model == other.min_dtt_to_model && max_to_model_radius_increase == other.max_to_model_radius_increase && maximum_move_distance == other.maximum_move_distance && maximum_move_distance_slow == other.maximum_move_distance_slow && z_distance_bottom_layers == other.z_distance_bottom_layers && support_line_width == other.support_line_width && 
                support_line_spacing == other.support_line_spacing && support_roof_line_width == other.support_roof_line_width && // can not be set on a per-mesh basis currently, so code to enable processing different roof line width in the same iteration seems useless.
-               support_bottom_offset == other.support_bottom_offset && support_wall_count == other.support_wall_count && support_pattern == other.support_pattern && roof_pattern == other.roof_pattern && // can not be set on a per-mesh basis currently, so code to enable processing different roof patterns in the same iteration seems useless.
+               support_bottom_offset == other.support_bottom_offset && support_wall_count == other.support_wall_count && support_pattern == other.support_pattern && roof_pattern == other.roof_pattern && support_roof_layers == other.support_roof_layers && // can not be set on a per-mesh basis currently, so code to enable processing different roof patterns in the same iteration seems useless.
                support_roof_angles == other.support_roof_angles && 
                //support_infill_angles == other.support_infill_angles && 
                increase_radius_until_radius == other.increase_radius_until_radius && support_bottom_layers == other.support_bottom_layers && layer_height == other.layer_height && z_distance_top_layers == other.z_distance_top_layers && resolution == other.resolution && // Infill generation depends on deviation and resolution.

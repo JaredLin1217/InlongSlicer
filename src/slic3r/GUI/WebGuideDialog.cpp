@@ -50,6 +50,8 @@
 #include <wx/setup.h>
 #include <unordered_set>
 #include <system_error>
+#include <thread>
+#include <tbb/task_arena.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
 #include <wx/strconv.h>
@@ -1585,29 +1587,18 @@ bool GuideFrame::BuildProfileDataFromVendors()
             BOOST_LOG_TRIVIAL(info) << "GuideFrame: rejecting cached profile data: " << e.what();
         }
 
-        // Load the vendors through the existing per-vendor API.  This keeps
-        // the Inlong bundle's profile/cache semantics while matching the
-        // upstream wizard's precedence and cancellation rules.
         PresetBundle bundle;
-        auto load_vendor = [](PresetBundle& into, const std::string& vendor,
-                              const boost::filesystem::path& dir, const PresetBundle* base) {
-            into.load_vendor_configs_from_json(dir.string(), vendor, PresetBundle::LoadSystem,
-                                               ForwardCompatibilitySubstitutionRule::EnableSilent, base);
-        };
-        for (const VendorSource& v : ordered) {
-            if (*m_cancel_token)
-                return false;
-            if (v.name == filament_library) {
-                load_vendor(bundle, v.name, v.dir, nullptr);
-            } else {
-                PresetBundle tmp;
-                load_vendor(tmp, v.name, v.dir, &bundle);
-                bundle.merge_presets(std::move(tmp));
-            }
-        }
-        const std::string errors;
+        std::vector<PresetBundle::VendorSource> sources;
+        sources.reserve(ordered.size());
+        for (const VendorSource& v : ordered)
+            sources.push_back({v.name, v.dir});
         std::vector<std::string> failed;
-        if (*m_cancel_token || bundle.vendors.empty())
+        tbb::task_arena load_arena(int(std::min(4u, std::max(1u, std::thread::hardware_concurrency()))));
+        load_arena.execute([&] {
+            bundle.load_vendors(sources, ForwardCompatibilitySubstitutionRule::EnableSilent, true,
+                m_cancel_token.get(), &failed);
+        });
+        if (*m_cancel_token || bundle.vendors.empty() || !failed.empty())
             return false;
         if (! BuildProfileJson(bundle, /*require_all_resource_vendors=*/false))
             return false;

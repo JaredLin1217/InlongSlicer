@@ -1,0 +1,62 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-open-closed-interface-bearing-20261104",
+  "key": "organic-open-closed-interface-bearing",
+  "type": "fact",
+  "conclusion": "Organic interface bearing cleanup must use the same 1.5-bead threshold for candidate selection and rejection, including paths from 1.0 to 1.79 mm that a legacy three-bead candidate gate skips. Long closed generic-interface loops and closed TopContact loops also require lower-bearing checks; closed BottomContact outlines remain exempt. Cache support-body road lookup once per layer to avoid rescanning it for every closed candidate.",
+  "scope": "organic-support-interface-bearing",
+  "modules": [
+    "SupportCommon"
+  ],
+  "tags": [
+    "organic-support",
+    "support-interface",
+    "top-contact",
+    "bottom-contact",
+    "closed-loop",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "45dacdde370cad2eec074f1313ef5286eebefdd1b21f0156fa00036ad8aedae4",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "unified max_unsupported_beads gate, closed TopContact handling, and per-layer lower-road cache; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-fde4ea3ec3c04229a24cdb93e2f3e414/final-qq/plate_1.gcode",
+      "sha256": "6ecb526e1cf7dd992298c3a2c9af9756b49145ca1b35cdb768c995283bf80dcb",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "inverted-triangle final G-code: 100 support paths, 22 interface paths, no cross-model closed connector and no sub-0.3mm remnants"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-fde4ea3ec3c04229a24cdb93e2f3e414/optimized-test2/plate_1.gcode",
+      "sha256": "df4a66b4293e0bfb6fc029500c7edefc37bb2d97e59a362051f3c042054cad20",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "test2 BottomContact outlines at Z 2.02667 retain lengths 21.399 and 21.418 mm"
+    }
+  ],
+  "verified_utc": "2026-11-04T04:21:18Z",
+  "verification": {
+    "method": "Release build, generator-stage and overhang analysis, three end-to-end model slices, open and closed path geometry checks, rendered layer inspection, timing repeat, git diff check, and Consumer Changed validation",
+    "summary": "The inverted-triangle model dropped from 167 to 22 interface paths with 100 support paths unchanged. Its remaining 3.2mm closed contact has only a 0.132mm unsupported gap and the four remaining open arcs over 1mm are fully supported. No cross-model long loop or sub-0.3mm remnant remains. The previous model sliced consistently with 1457 support and 149 interface paths; its repeat time was 8.238 seconds after per-layer caching. Test2 retains both complete BottomContact outlines. Consumer Changed passed at .agents/runtime/runs/run-4e47663cab2044b0a7d7a884aa6e3d7f/validation/report.json. The broader fff_print_tests target remains blocked by pre-existing missing organic support overlap symbols.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-interface-bearing-strict-20261104"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

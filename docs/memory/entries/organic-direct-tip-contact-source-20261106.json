@@ -1,0 +1,69 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-direct-tip-contact-source-20261106",
+  "key": "organic-direct-tip-contact-source",
+  "type": "fact",
+  "conclusion": "When support-angle overhang filtering drops a qualifying sharp tip that is exposed in the direct adjacent-layer difference, preserve that direct difference as a separate tip-contact source. Associate only tips that are both absent from the ordinary overhang adjacency and actually inside the direct difference, intersecting the local radius derived from the existing tip and interface-flow settings. Do not add this source to ordinary support regions, and keep the existing collision, clearance, blocker, bridge and critical-region rules.",
+  "scope": "organic-support-sharp-tip-contact-source",
+  "modules": [
+    "TreeSupport",
+    "TreeSupport3D"
+  ],
+  "tags": [
+    "organic-support",
+    "sharp-tip",
+    "contact-interface",
+    "direct-layer-difference",
+    "limited-verification"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport.cpp",
+    "src/libslic3r/Support/TreeSupport.hpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.cpp",
+      "sha256": "20a34369aa6ecb12186861fd275d838187d62a5900f7808927080f173bdece39",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "direct_overhangs and m_tip_contact_masks in detect_overhangs; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport.hpp",
+      "sha256": "828b49f2c5bff67a631fe1c6f8ca2d22e459dc33ca44d6f2d416509b88797257",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "tip_contact_masks accessor and generator-owned storage; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "c0f6ec8383c67323dfe74efab63690374d3000059227f5595ebe591d83575a8e",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "ordinary_adjacency and direct_areas filtering in generate_initial_areas; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-ab1431ed2b1646ada355ab70bc74d2a1/analysis/tip-endpoints/final-clean/plate_1.gcode",
+      "sha256": "e4c22427316c90cb1d41502c7d1964812f841d552d1037998bfca1532b1b3400",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Final QQ CLI slice with temporary diagnostics removed and no large stage trace"
+    }
+  ],
+  "verified_utc": "2026-11-06T01:13:51Z",
+  "verification": {
+    "method": "Built the actual Release application, sliced only QQ with the real CLI and the user's 150-degree tip setting, measured extrusion-width-adjusted endpoint gaps, checked source bearing and first-layer brim overlap, compared all final extrusion paths with the diagnostic build, and timed support generation without a large stage trace.",
+    "summary": "The original rear gaps of 2.105148 and 2.747612 mm failed the 1 mm regression. Final rear gaps are 0.572044 and 0.792387 mm at Z 0.60 and Z 0.90; front gaps remain 0.568936 and 0.557715 mm. Source bearing gaps at contact Z 0.45, 0.75 and 1.05 are zero, and first-layer interface/brim overlap is 0 mm2. All 800 final extrusion paths match the verified diagnostic build exactly. Support generation took 2.726 seconds and Print::process took 3.224 seconds without the large stage trace, versus 5.911 and 6.329 seconds in the original diagnostic run. Existing left-hand support/interface/brim paths have no removed or changed entries. Only QQ is verified; this is not a claim of universal model coverage or universal speedup.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -903,6 +903,9 @@ void fill_support_interface_with_walls(
         ExPolygons inner_wall_centers;
         for (; generated_walls < wall_count; ++ generated_walls) {
             ExPolygons centers = offset_ex(region, -half_width - generated_walls * spacing);
+            if (wall_regions != nullptr && wall_count == 1 && generated_walls == 0 &&
+                region.holes.empty() && centers.size() > 1)
+                centers = ExPolygons{region};
             if (centers.empty())
                 break;
             inner_wall_centers = centers;
@@ -988,7 +991,6 @@ void fill_support_interface_with_walls(
         dst.resize(first_narrow);
         append(dst, std::move(narrow_paths));
     }
-
     // A clipped interface can leave a positive-flow remnant shorter than the
     // printer's coordinate resolution. Keeping those remnants produces many
     // isolated one-segment islands on tree trunks; discard only new interface
@@ -2385,6 +2387,10 @@ static void remove_unprintable_interface_paths(ExtrusionEntitiesPtr &entities)
             else result.push_back(collection);
             continue;
         }
+        if (entity->role() == erSupportMaterialInterface && entity->length() < scale_(0.3)) {
+            delete entity;
+            continue;
+        }
         bool needs_filter = false;
         for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) { needs_filter |= invalid(path); });
         if (!needs_filter) { result.push_back(entity); continue; }
@@ -2410,9 +2416,9 @@ static void remove_unprintable_interface_paths(ExtrusionEntitiesPtr &entities)
     entities = std::move(result);
 }
 
-// Clipping an organic interface projection can leave a compact, isolated
-// platform that no later extrusion uses. Only generic interfaces are eligible:
-// true model contacts, trunks and substantial platforms keep their geometry.
+// Clipping an organic interface projection can leave an isolated platform
+// that no later extrusion uses. Compact generic interfaces use upper-path
+// ownership; every planar interface type also receives a lower-bearing check.
 static BoundingBox support_path_bounds(const ExtrusionPath &path)
 {
     BoundingBox bounds;
@@ -2423,73 +2429,321 @@ static BoundingBox support_path_bounds(const ExtrusionPath &path)
     return bounds;
 }
 
-static void remove_unused_compact_interfaces(
+static bool planar_support_interface(const ExtrusionPath &path)
+{
+    if (path.role() != erSupportMaterialInterface || path.height <= 0.f || path.width <= 0.f)
+        return false;
+    return !path.z_contoured || path.polyline.points.empty() ||
+        std::all_of(path.polyline.points.begin(), path.polyline.points.end(), [&](const Point3 &point) {
+            return point.z() == path.polyline.points.front().z();
+        });
+}
+
+struct Road {
+    const ExtrusionEntity *owner;
+    const ExtrusionPath *path;
+    BoundingBox bounds;
+    double bottom;
+};
+
+static bool interface_has_contact_footprint(
+    size_t index,
+    const ExtrusionEntity *entity,
+    const SupportLayerPtrs &layers,
+    const SupportGeneratorLayersPtr &top_contacts,
+    const SupportGeneratorLayersPtr &interface_layers,
+    SupportGeneratorLayerPager *pager,
+    size_t interface_layer_count,
+    float support_spacing,
+    double minimum_contact_area,
+    std::unordered_map<SupportGeneratorLayer *, std::pair<bool, ExPolygons>> &geometry_cache,
+    const std::vector<std::map<const ExtrusionEntity *, SupportGeneratorLayer *>> &interface_sources)
+{
+    const auto source = interface_sources[index].find(entity);
+    if (source == interface_sources[index].end() || source->second == nullptr)
+        return false;
+    auto geometry = [&](SupportGeneratorLayer *source, const SupportGeneratorLayersPtr &sources,
+                        uint32_t group, bool require_platform) -> const std::pair<bool, ExPolygons> & {
+        auto [it, inserted] = geometry_cache.try_emplace(source);
+        if (inserted) {
+            if (pager != nullptr) {
+                const auto layer = std::find(sources.begin(), sources.end(), source);
+                if (layer != sources.end())
+                    pager->load(group, size_t(layer - sources.begin()), *source);
+            }
+            it->second = {!require_platform ||
+                    (area(source->polygons) >= minimum_contact_area &&
+                        !offset(source->polygons, -0.5f * support_spacing).empty()),
+                union_ex(source->polygons)};
+            if (pager != nullptr)
+                SupportGeneratorLayerPager::release_payload(*source);
+        }
+        return it->second;
+    };
+    SupportGeneratorLayer *generic = source->second;
+    const bool top_contact = generic->layer_type == SupporLayerType::TopContact;
+    const auto &source_layers = top_contact ? top_contacts : interface_layers;
+    const uint32_t source_group = top_contact ? 1 : 3;
+    const auto &generic_geometry = geometry(generic, source_layers, source_group, true);
+    if (!generic_geometry.first)
+        return false;
+    const ExPolygons &generic_parts = generic_geometry.second;
+    const size_t first = top_contact && index + 1 > interface_layer_count ? index + 1 - interface_layer_count : 0;
+    const size_t begin = top_contact ? first : index;
+    const size_t end = top_contact ? index : std::min(layers.size(), index + interface_layer_count);
+    const SupporLayerType required_type = top_contact ? SupporLayerType::TopInterface : SupporLayerType::TopContact;
+    for (size_t upper = begin; upper < end; ++upper) {
+        std::vector<SupportGeneratorLayer *> contacts;
+        for (const ExtrusionEntity *candidate : layers[upper]->support_fills.entities) {
+            const auto contact = interface_sources[upper].find(candidate);
+            if (contact != interface_sources[upper].end() && contact->second != nullptr &&
+                contact->second->layer_type == required_type &&
+                std::find(contacts.begin(), contacts.end(), contact->second) == contacts.end())
+                contacts.push_back(contact->second);
+        }
+        for (SupportGeneratorLayer *contact : contacts) {
+            const auto &contact_layers = top_contact ? interface_layers : top_contacts;
+            const uint32_t contact_group = top_contact ? 3 : 1;
+            const ExPolygons &contact_parts = geometry(contact, contact_layers, contact_group, false).second;
+            for (const ExPolygon &generic_part : generic_parts)
+                for (const ExPolygon &contact_part : contact_parts)
+                    if (diff(to_polygons(generic_part), to_polygons(contact_part)).empty() &&
+                        diff(to_polygons(contact_part), to_polygons(generic_part)).empty())
+                        return true;
+        }
+    }
+    return false;
+}
+
+static void remove_unsupported_interfaces(
     SupportLayerPtrs &layers,
-    const std::vector<std::set<const ExtrusionEntity *>> &generic_interfaces,
+    const SupportGeneratorLayersPtr &top_contacts,
+    const SupportGeneratorLayersPtr &interface_layers,
+    SupportGeneratorLayerPager *pager,
+    const SupportParameters &support_params,
+    const SlicingParameters &slicing_params,
+    std::vector<std::set<const ExtrusionEntity *>> &generic_interfaces,
+    std::vector<std::map<const ExtrusionEntity *, SupporLayerType>> &interface_types,
+    std::vector<std::map<const ExtrusionEntity *, SupportGeneratorLayer *>> &interface_sources,
     float process_width)
 {
     const auto profile_started = std::chrono::steady_clock::now();
     const double minimum_bead = scale_(process_width);
-    bool has_compact_candidate = false;
-    for (size_t index = 0; index < layers.size() && !has_compact_candidate; ++index) {
-        for (const ExtrusionEntity *entity : generic_interfaces[index]) {
-            double length = 0.;
-            float width = 0.f;
-            bool eligible = true;
-            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
-                eligible = eligible && path.role() == erSupportMaterialInterface && !path.z_contoured &&
-                    path.height > 0.f && path.width > 0.f;
-                length += path.length();
-                width = std::max(width, path.width);
-            });
-            const double bead = std::max<double>(scale_(std::max(width, process_width)), minimum_bead);
-            if (eligible && width > 0.f && length <= 32. * bead) {
-                has_compact_candidate = true;
-                break;
+    constexpr double max_unsupported_beads = 1.5;
+    // A fill entity may combine a used contact arc with an unused long span.
+    // Split only entities containing such a span so each open path is judged
+    // independently, without changing ordinary contact path composition.
+    for (size_t index = 0; index < layers.size(); ++index) {
+        auto &entities = layers[index]->support_fills.entities;
+        ExtrusionEntitiesPtr split_entities;
+        bool changed = false;
+        for (ExtrusionEntity *entity : entities) {
+            auto *multi = dynamic_cast<ExtrusionMultiPath *>(entity);
+            const auto source = interface_types[index].find(entity);
+            const bool generic = generic_interfaces[index].count(entity) != 0;
+            const bool contact = source != interface_types[index].end() &&
+                (source->second == SupporLayerType::TopContact || source->second == SupporLayerType::BottomContact);
+            bool split = multi != nullptr && multi->paths.size() > 1 && (generic || contact);
+            if (split) {
+                split = std::any_of(multi->paths.begin(), multi->paths.end(), [&](const ExtrusionPath &path) {
+                    return path.length() > max_unsupported_beads * scale_(std::max(path.width, process_width)) &&
+                        path.first_point3() != path.last_point3();
+                });
             }
+            if (!split) {
+                split_entities.push_back(entity);
+                continue;
+            }
+            changed = true;
+            generic_interfaces[index].erase(entity);
+            for (const ExtrusionPath &path : multi->paths) {
+                auto *part = new ExtrusionMultiPath(path);
+                if (!multi->can_reverse())
+                    part->set_reverse();
+                if (generic)
+                    generic_interfaces[index].insert(part);
+                interface_types[index][part] = source->second;
+                interface_sources[index][part] = interface_sources[index][entity];
+                split_entities.push_back(part);
+            }
+            interface_types[index].erase(entity);
+            interface_sources[index].erase(entity);
+            delete entity;
         }
+        if (changed)
+            entities = std::move(split_entities);
     }
-    if (!has_compact_candidate)
+    size_t candidate_count = 0;
+    for (size_t index = 0; index < layers.size(); ++index)
+        for (const auto &[entity, type] : interface_types[index]) {
+            if (generic_interfaces[index].count(entity) == 0 && type != SupporLayerType::TopContact &&
+                type != SupporLayerType::BottomContact)
+                continue;
+            bool eligible = true;
+            bool has_path = false;
+            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                eligible = eligible && planar_support_interface(path);
+                has_path = true;
+            });
+            if (eligible && has_path)
+                ++candidate_count;
+        }
+    if (candidate_count == 0)
         return;
 
-    struct Road {
+    struct PathRef {
         const ExtrusionEntity *owner;
         const ExtrusionPath *path;
         BoundingBox bounds;
         double bottom;
     };
-    std::vector<std::vector<Road>> roads(layers.size());
-    for (size_t i = 0; i < layers.size(); ++i)
-        for (const ExtrusionEntity *entity : layers[i]->support_fills.entities)
-            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
-                if (!is_support(path.role()) || path.z_contoured || path.height <= 0.f)
-                    return;
-                BoundingBox bounds = support_path_bounds(path);
-                roads[i].push_back({entity, &path, bounds, layers[i]->print_z - path.height});
-            });
-    std::multimap<double, const Road *> upper_roads;
-    for (const auto &layer : roads)
-        for (const Road &road : layer)
-            upper_roads.emplace(road.bottom, &road);
+
+    struct LayerPathIndex {
+        std::vector<PathRef> paths;
+        // Prefix maxima let a query skip intervals whose right edge is
+        // strictly before the query's left edge while retaining exact AABB
+        // overlap semantics for every remaining path.
+        std::vector<int64_t> prefix_max_x;
+        double min_bottom = std::numeric_limits<double>::max();
+        double max_bottom = -std::numeric_limits<double>::max();
+    };
+
+    // Compact candidates are common on large organic jobs.  Re-walking every
+    // nested ExtrusionEntityCollection for every candidate makes cleanup
+    // quadratic in the number of interface roads.  Keep a bounded, per-call
+    // index of printable support paths and their AABBs when the live cache
+    // budget allows it.  The index is only an acceleration structure: all
+    // final overlap decisions still use the same exact intersection_pl test.
+    const SupportMemorySnapshot cleanup_memory = support_memory_snapshot();
+    const size_t cleanup_cache_limit = support_cache_budget(cleanup_memory.physical,
+        cleanup_memory.available).cache_limit;
+    const bool use_path_index = cleanup_cache_limit >= (size_t(128) << 20);
+    const size_t max_index_paths = use_path_index ? cleanup_cache_limit / 64 : 0;
+    std::vector<LayerPathIndex> support_paths;
+    size_t indexed_paths = 0;
+    bool path_index_complete = false;
+    if (use_path_index) {
+        support_paths.resize(layers.size());
+        for (size_t layer_idx = 0; layer_idx < layers.size() && indexed_paths <= max_index_paths; ++layer_idx)
+            for (const ExtrusionEntity *entity : layers[layer_idx]->support_fills.entities)
+                for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                    if (!is_support(path.role()) || path.z_contoured || path.height <= 0.f)
+                        return;
+                    if (indexed_paths < max_index_paths) {
+                        BoundingBox bounds = support_path_bounds(path);
+                        if (bounds.defined) {
+                            const double bottom = layers[layer_idx]->print_z - path.height;
+                            LayerPathIndex &layer = support_paths[layer_idx];
+                            layer.paths.push_back({entity, &path, bounds, bottom});
+                            layer.min_bottom = std::min(layer.min_bottom, bottom);
+                            layer.max_bottom = std::max(layer.max_bottom, bottom);
+                        }
+                    }
+                    ++indexed_paths;
+                });
+        if (indexed_paths > max_index_paths) {
+            support_paths.clear();
+            indexed_paths = 0;
+        } else {
+            path_index_complete = true;
+            for (LayerPathIndex &layer : support_paths) {
+                std::stable_sort(layer.paths.begin(), layer.paths.end(), [](const PathRef &lhs, const PathRef &rhs) {
+                    if (lhs.bounds.min.x() != rhs.bounds.min.x())
+                        return lhs.bounds.min.x() < rhs.bounds.min.x();
+                    if (lhs.bounds.max.x() != rhs.bounds.max.x())
+                        return lhs.bounds.max.x() < rhs.bounds.max.x();
+                    if (lhs.bounds.min.y() != rhs.bounds.min.y())
+                        return lhs.bounds.min.y() < rhs.bounds.min.y();
+                    return lhs.bounds.max.y() < rhs.bounds.max.y();
+                });
+                layer.prefix_max_x.reserve(layer.paths.size());
+                int64_t prefix_max = std::numeric_limits<int64_t>::min();
+                for (const PathRef &path : layer.paths) {
+                    prefix_max = std::max(prefix_max, int64_t(path.bounds.max.x()));
+                    layer.prefix_max_x.push_back(prefix_max);
+                }
+            }
+        }
+    }
+    // An oversized input deliberately falls back to the exact streaming
+    // walk.  Do not treat the cleared, incomplete index as an empty index:
+    // that would skip all overlap checks and can remove live compact
+    // interfaces (or index past the cleared vector on an upper-layer query).
+    const bool indexed = use_path_index && path_index_complete;
+    std::unordered_map<const ExtrusionPath *, BoundingBox> bounds_cache;
+    if (indexed)
+        bounds_cache.reserve(std::min(max_index_paths, size_t(1) << 20));
+    auto cached_bounds = [&](const ExtrusionPath &path) {
+        if (!indexed)
+            return support_path_bounds(path);
+        auto [it, inserted] = bounds_cache.try_emplace(&path);
+        if (inserted)
+            it->second = support_path_bounds(path);
+        return it->second;
+    };
+    auto any_indexed_path = [&](size_t layer_idx, const BoundingBox &query, auto &&predicate) {
+        if (!query.defined || layer_idx >= support_paths.size())
+            return false;
+        const LayerPathIndex &layer = support_paths[layer_idx];
+        if (layer.paths.empty())
+            return false;
+        const auto first_it = std::lower_bound(layer.prefix_max_x.begin(), layer.prefix_max_x.end(),
+            int64_t(query.min.x()));
+        const size_t first = size_t(first_it - layer.prefix_max_x.begin());
+        const auto end_it = std::upper_bound(layer.paths.begin(), layer.paths.end(), int64_t(query.max.x()),
+            [](int64_t x, const PathRef &path) { return x < int64_t(path.bounds.min.x()); });
+        const size_t end = size_t(end_it - layer.paths.begin());
+        for (size_t index = first; index < end; ++index) {
+            const PathRef &ref = layer.paths[index];
+            if (ref.bounds.overlap(query) && predicate(ref))
+                return true;
+        }
+        return false;
+    };
+    std::unordered_map<SupportGeneratorLayer *, std::pair<bool, ExPolygons>> geometry_cache;
     std::set<const ExtrusionEntity *> removed;
     for (size_t index = layers.size(); index-- > 0;) {
         auto &entities = layers[index]->support_fills.entities;
+        std::vector<Road> lower_roads;
+        bool lower_roads_ready = false;
+        auto prepare_lower_roads = [&] {
+            if (lower_roads_ready)
+                return;
+            lower_roads_ready = true;
+            for (size_t lower = index + 1; lower-- > 0;) {
+                for (const ExtrusionEntity *other : layers[lower]->support_fills.entities)
+                    for_each_extrusion_path(*other, [&](const ExtrusionPath &path) {
+                        if (path.role() == erSupportMaterial && !path.z_contoured && path.height > 0.f)
+                            lower_roads.push_back({other, &path, support_path_bounds(path),
+                                layers[lower]->print_z - path.height});
+                    });
+                if (lower == 0 || lower + 1 == index)
+                    break;
+            }
+        };
         for (auto it = entities.begin(); it != entities.end();) {
             ExtrusionEntity *entity = *it;
-            if (generic_interfaces[index].count(entity) == 0) { ++it; continue; }
+            const bool generic = generic_interfaces[index].count(entity) != 0;
+            const auto source_type = interface_types[index].find(entity);
+            const bool contact = source_type != interface_types[index].end() &&
+                (source_type->second == SupporLayerType::TopContact || source_type->second == SupporLayerType::BottomContact);
+            if (!generic && !contact) { ++it; continue; }
             double length = 0.;
             float width = 0.f;
             bool eligible = true;
+            bool long_open = false;
             for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
-                eligible = eligible && path.role() == erSupportMaterialInterface && !path.z_contoured &&
-                    path.height > 0.f && path.width > 0.f;
+                eligible = eligible && planar_support_interface(path);
                 length += path.length();
                 width = std::max(width, path.width);
+                long_open = long_open || (path.length() > max_unsupported_beads * scale_(std::max(path.width, process_width)) &&
+                    path.first_point3() != path.last_point3());
             });
             // A narrow fallback must not redefine what is compact for this
             // process; use the configured interface width for that decision.
             const double bead = scale_(std::max(width, process_width));
-            if (!eligible || width <= 0.f || length > 32. * bead) { ++it; continue; }
+            if (!eligible || width <= 0.f || (!generic && !long_open) ||
+                (!long_open && length > 32. * bead)) { ++it; continue; }
             Polygons footprint;
             for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
                 polygons_append(footprint, offset(path.polyline.to_polyline(), float(0.5 * scale_(path.width)),
@@ -2497,11 +2751,9 @@ static void remove_unused_compact_interfaces(
             });
             footprint = union_(footprint);
             const BoundingBox bounds = get_extents(footprint);
-            // Closed compact islands can have a perimeter much longer than
-            // four bead widths. Judge occupied area and span, not only path
-            // length, so an unused small ring cannot keep a whole orphan chain.
-            if (area(footprint) > 16. * bead * bead ||
-                bounds.size().cast<double>().norm() > 8. * bead) { ++it; continue; }
+            const bool compact = area(footprint) <= 16. * bead * bead &&
+                bounds.size().cast<double>().norm() <= 8. * bead;
+            if (!compact && !long_open) { ++it; continue; }
             std::map<float, Polygons> expanded;
             auto touches = [&](const Road &road) {
                 if (road.owner == entity || removed.count(road.owner) || !bounds.overlap(road.bounds))
@@ -2512,19 +2764,262 @@ static void remove_unused_compact_interfaces(
                         jtRound, double(SCALED_EPSILON));
                 return !intersection_pl(Polylines{road.path->polyline.to_polyline()}, entry->second).empty();
             };
-            bool needed = std::any_of(roads[index].begin(), roads[index].end(), touches);
+            auto check_path = [&](size_t road_layer, const ExtrusionEntity *owner,
+                                  const ExtrusionPath *path, double bottom_min, double bottom_max) {
+                if (owner == entity || removed.count(owner))
+                    return false;
+                const double bottom = layers[road_layer]->print_z - path->height;
+                if (bottom < bottom_min || bottom > bottom_max)
+                    return false;
+                return touches(Road{owner, path, cached_bounds(*path), bottom});
+            };
+            const bool bed_foundation = generic && layers[index]->bottom_z() <= slicing_params.raft_contact_top_z + EPSILON &&
+                std::abs(slicing_params.belt_floor_shear_factor) <= EPSILON;
+            bool needed = bed_foundation;
+            auto usable_same_layer = [&](const ExtrusionEntity *owner, const ExtrusionPath &) {
+                if (compact)
+                    return true;
+                const auto subject = interface_types[index].find(entity);
+                const auto contact = interface_types[index].find(owner);
+                if (subject == interface_types[index].end() || contact == interface_types[index].end())
+                    return false;
+                return (subject->second == SupporLayerType::TopInterface && contact->second == SupporLayerType::TopContact) ||
+                    (subject->second == SupporLayerType::BottomInterface && contact->second == SupporLayerType::BottomContact);
+            };
+            if (indexed) {
+                needed = any_indexed_path(index, bounds, [&](const PathRef &ref) {
+                    return usable_same_layer(ref.owner, *ref.path) && check_path(index, ref.owner, ref.path,
+                        -std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+                });
+            } else {
+                for (const ExtrusionEntity *other : layers[index]->support_fills.entities) {
+                    if (needed || other == entity || removed.count(other))
+                        continue;
+                    for_each_extrusion_path(*other, [&](const ExtrusionPath &path) {
+                        if (needed || !is_support(path.role()) || path.z_contoured || path.height <= 0.f ||
+                            !usable_same_layer(other, path))
+                            return;
+                        needed = touches(Road{other, &path, cached_bounds(path), layers[index]->print_z - path.height});
+                    });
+                }
+            }
             const double z = layers[index]->print_z;
-            for (auto upper = upper_roads.lower_bound(z - EPSILON);
-                 !needed && upper != upper_roads.end() && upper->first <= z + EPSILON; ++upper)
-                needed = touches(*upper->second);
-            if (needed) { ++it; continue; }
+            for (size_t upper_index = 0; !needed && upper_index < layers.size(); ++upper_index) {
+                if (upper_index == index || layers[upper_index]->print_z < z - EPSILON)
+                    continue;
+                if (indexed) {
+                    const LayerPathIndex &layer_index = support_paths[upper_index];
+                    if (layer_index.paths.empty() || layer_index.max_bottom < z - EPSILON ||
+                        layer_index.min_bottom > z + EPSILON)
+                        continue;
+                    needed = any_indexed_path(upper_index, bounds, [&](const PathRef &ref) {
+                        if (ref.bottom < z - EPSILON || ref.bottom > z + EPSILON)
+                            return false;
+                        return check_path(upper_index, ref.owner, ref.path, z - EPSILON, z + EPSILON);
+                    });
+                } else {
+                    for (const ExtrusionEntity *other : layers[upper_index]->support_fills.entities) {
+                        if (needed || other == entity || removed.count(other))
+                            continue;
+                        for_each_extrusion_path(*other, [&](const ExtrusionPath &path) {
+                            if (needed || !is_support(path.role()) || path.z_contoured || path.height <= 0.f)
+                                return;
+                            const double bottom = layers[upper_index]->print_z - path.height;
+                            if (bottom < z - EPSILON || bottom > z + EPSILON)
+                                return;
+                            needed = touches(Road{other, &path, cached_bounds(path), bottom});
+                        });
+                    }
+                }
+            }
+            if (!generic)
+                needed = true;
+            bool dangling_span = false;
+            if (long_open && interface_has_contact_footprint(index, entity, layers,
+                    top_contacts, interface_layers, pager, support_params.num_top_interface_layers,
+                    float(support_params.support_spacing), support_params.thresh_big_overhang, geometry_cache, interface_sources)) {
+                ++it;
+                continue;
+            }
+            if (long_open) {
+                prepare_lower_roads();
+                auto supported = [&](const Point &point, float interface_width) {
+                    const double interface_radius = 0.5 * scale_(interface_width);
+                    for (const Road &road : lower_roads) {
+                        if (double(point.x()) < road.bounds.min.x() - interface_radius ||
+                            double(point.x()) > road.bounds.max.x() + interface_radius ||
+                            double(point.y()) < road.bounds.min.y() - interface_radius ||
+                            double(point.y()) > road.bounds.max.y() + interface_radius)
+                            continue;
+                        const double bearing_radius = interface_radius + 0.5 * scale_(road.path->width) + SCALED_EPSILON;
+                        const Polyline line = road.path->polyline.to_polyline();
+                        for (size_t segment = 1; segment < line.points.size(); ++segment)
+                            if (line_alg::distance_to_squared(
+                                Line(line.points[segment - 1], line.points[segment]), point) <= bearing_radius * bearing_radius)
+                                return true;
+                    }
+                    return false;
+                };
+                for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                    if (dangling_span || path.length() <= max_unsupported_beads * bead ||
+                        (!generic && path.first_point3() == path.last_point3()))
+                        return;
+                    const Polyline line = path.polyline.to_polyline();
+                    double unsupported = 0.;
+                    for (size_t segment = 1; segment < line.points.size() && !dangling_span; ++segment) {
+                        const Point &a = line.points[segment - 1];
+                        const Point &b = line.points[segment];
+                        const Vec2d delta = (b - a).cast<double>();
+                        const double segment_length = delta.norm();
+                        if (segment_length <= EPSILON)
+                            continue;
+                        const size_t steps = std::max<size_t>(1, size_t(std::ceil(segment_length / bead)));
+                        for (size_t step = 0; step < steps; ++step) {
+                            const double t = (step + 0.5) / steps;
+                            const Point middle = (a.cast<double>() + t * delta).cast<coord_t>();
+                            unsupported = supported(middle, path.width) ? 0. : unsupported + segment_length / steps;
+                            if (unsupported > max_unsupported_beads * bead) {
+                                dangling_span = true;
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+            if (bed_foundation || (needed && !dangling_span)) { ++it; continue; }
             removed.insert(entity);
             delete entity;
             it = entities.erase(it);
         }
     }
-    BOOST_LOG_TRIVIAL(info) << "Organic compact interface cleanup: removed " << removed.size() <<
+    BOOST_LOG_TRIVIAL(info) << "Organic interface bearing cleanup: candidates " << candidate_count <<
+        ", removed " << removed.size() <<
         ", elapsed " << std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_started).count() << " seconds";
+}
+
+static size_t remove_detached_compact_contacts(
+    SupportLayerPtrs &layers,
+    std::vector<std::map<const ExtrusionEntity *, SupporLayerType>> &interface_types,
+    const SupportParameters &support_params,
+    const Point &support_offset,
+    float process_width)
+{
+    struct BearingRoad {
+        const ExtrusionPath *path;
+        BoundingBox bounds;
+        double top;
+        double bottom;
+    };
+    auto make_road = [](const ExtrusionPath &path, double z) {
+        return BearingRoad{&path, support_path_bounds(path), z, z - path.height};
+    };
+    auto touches = [](const BearingRoad &contact, const BearingRoad &foundation) {
+        if (foundation.bottom > contact.top + EPSILON || foundation.top < contact.bottom - EPSILON ||
+            !foundation.bounds.overlap(contact.bounds))
+            return false;
+        const double radius = 0.5 * scale_(std::abs(contact.path->width) + std::abs(foundation.path->width)) + SCALED_EPSILON;
+        const double radius2 = radius * radius;
+        const auto &contact_points = contact.path->polyline.points;
+        const auto &foundation_points = foundation.path->polyline.points;
+        if (contact_points.empty() || foundation_points.empty())
+            return false;
+        for (size_t i = 1; i < contact_points.size(); ++i) {
+            const Line contact_line(contact_points[i - 1].to_point(), contact_points[i].to_point());
+            BoundingBox contact_bounds;
+            contact_bounds.merge(contact_line.a);
+            contact_bounds.merge(contact_line.b);
+            contact_bounds.offset(radius);
+            for (size_t j = 1; j < foundation_points.size(); ++j) {
+                const Line foundation_line(foundation_points[j - 1].to_point(), foundation_points[j].to_point());
+                BoundingBox foundation_bounds;
+                foundation_bounds.merge(foundation_line.a);
+                foundation_bounds.merge(foundation_line.b);
+                if (!contact_bounds.overlap(foundation_bounds))
+                    continue;
+                Point intersection;
+                if (line_alg::intersection(contact_line, foundation_line, &intersection))
+                    return true;
+                if (std::min({line_alg::distance_to_squared(contact_line, foundation_line.a),
+                        line_alg::distance_to_squared(contact_line, foundation_line.b),
+                        line_alg::distance_to_squared(foundation_line, contact_line.a),
+                        line_alg::distance_to_squared(foundation_line, contact_line.b)}) <= radius2)
+                    return true;
+            }
+        }
+        return false;
+    };
+    auto any_touch = [&touches](const BearingRoad &contact, const std::vector<BearingRoad> &foundations) {
+        return std::any_of(foundations.begin(), foundations.end(),
+            [&contact, &touches](const BearingRoad &foundation) { return touches(contact, foundation); });
+    };
+
+    std::vector<BearingRoad> previous_bodies;
+    const auto started = std::chrono::steady_clock::now();
+    std::vector<BearingRoad> previous_supported;
+    size_t removed = 0;
+    for (size_t layer_idx = 0; layer_idx < layers.size(); ++layer_idx) {
+        const double z = layers[layer_idx]->print_z;
+        std::vector<BearingRoad> bodies;
+        std::vector<BearingRoad> supported;
+        for (const ExtrusionEntity *entity : layers[layer_idx]->support_fills.entities)
+            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                if (path.role() == erSupportMaterial && !path.z_contoured && path.height > 0.f && path.width > 0.f)
+                    bodies.emplace_back(make_road(path, z));
+            });
+
+        auto &entities = layers[layer_idx]->support_fills.entities;
+        for (auto it = entities.begin(); it != entities.end();) {
+            ExtrusionEntity *entity = *it;
+            const auto source = interface_types[layer_idx].find(entity);
+            const bool top_contact = source != interface_types[layer_idx].end() &&
+                source->second == SupporLayerType::TopContact;
+            bool has_interface = false;
+            bool all_detached = true;
+            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                if (!planar_support_interface(path)) {
+                    all_detached = false;
+                    return;
+                }
+                has_interface = true;
+                BearingRoad road = make_road(path, z);
+                const bool attached = any_touch(road, bodies) || any_touch(road, previous_bodies) ||
+                    any_touch(road, previous_supported) || any_touch(road, supported);
+                if (attached) {
+                    supported.emplace_back(std::move(road));
+                    all_detached = false;
+                    return;
+                }
+                const double bead = scale_(std::max(path.width, process_width));
+                if (!top_contact || !all_detached || path.length() > 32. * bead ||
+                    road.bounds.size().cast<double>().norm() > 8. * bead) {
+                    all_detached = false;
+                    return;
+                }
+                const bool compact = area(offset(path.polyline.to_polyline(), 0.5f * scale_(std::abs(path.width)),
+                    jtRound, double(SCALED_EPSILON), etOpenRound)) <= 16. * bead * bead;
+                all_detached = all_detached && compact;
+            });
+            if (has_interface && all_detached) {
+                interface_types[layer_idx].erase(entity);
+                delete entity;
+                it = entities.erase(it);
+                ++removed;
+            } else {
+                ++it;
+            }
+        }
+        previous_bodies = std::move(bodies);
+        previous_supported = std::move(supported);
+    }
+    const double elapsed = std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count();
+    if (removed > 0)
+        BOOST_LOG_TRIVIAL(info) << "Organic detached contact cleanup: removed " << removed <<
+            ", elapsed " << elapsed << " seconds";
+    if (const char *path = std::getenv("INLONG_ORGANIC_TIMING_TRACE")) {
+        std::ofstream out(path, std::ios::app);
+        out << elapsed << " organic.detached_contacts " << removed << "\n";
+    }
+    return removed;
 }
 
 // Find a local continuous route in a full-bead center domain. Boundary vertices
@@ -3327,7 +3822,9 @@ size_t generate_support_toolpaths(
     const SupportGeneratorLayersPtr     &top_contacts,
     const SupportGeneratorLayersPtr     &intermediate_layers,
     const SupportGeneratorLayersPtr     &interface_layers,
-    const SupportGeneratorLayersPtr     &base_interface_layers)
+    const SupportGeneratorLayersPtr     &base_interface_layers,
+    SupportGeneratorLayerPager          *pager,
+    const Point                         &support_offset)
 {
     size_t physical_height_adjustments = 0;
     // loop_interface_processor with a given circle radius.
@@ -3349,9 +3846,11 @@ size_t generate_support_toolpaths(
     // Insert the raft base layers.
     auto n_raft_layers = std::min<size_t>(support_layers.size(), std::max(0, int(slicing_params.raft_layers()) - 1));
 
+    tbb::task_arena raft_arena{ pager != nullptr ? 1 : int(std::max(1u, std::thread::hardware_concurrency())) };
+    raft_arena.execute([&] {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, n_raft_layers),
         [&support_layers, &raft_layers, &intermediate_layers, &config, &support_params, &slicing_params,
-            &bbox_object, &raft_angles, link_max_length_factor]
+            &bbox_object, &raft_angles, link_max_length_factor, pager]
             (const tbb::blocked_range<size_t>& range) {
         for (size_t support_layer_id = range.begin(); support_layer_id < range.end(); ++ support_layer_id)
         {
@@ -3359,6 +3858,8 @@ size_t generate_support_toolpaths(
             SupportLayer               &support_layer = *support_layers[support_layer_id];
             assert(support_layer.support_fills.entities.empty());
             SupportGeneratorLayer      &raft_layer    = *raft_layers[support_layer_id];
+            if (pager != nullptr && support_layer_id < intermediate_layers.size() && intermediate_layers[support_layer_id] != nullptr)
+                pager->load(2, support_layer_id, *intermediate_layers[support_layer_id]);
 
             std::unique_ptr<Fill> filler_interface = std::unique_ptr<Fill>(Fill::new_from_type(support_params.raft_interface_fill_pattern));
             std::unique_ptr<Fill> filler_support   = std::unique_ptr<Fill>(Fill::new_from_type(support_params.raft_base_fill_pattern));
@@ -3458,7 +3959,10 @@ size_t generate_support_toolpaths(
                 support_params.raft_interface_fill_pattern == ipConcentric);
 
             store_raft_regions();
+            if (pager != nullptr && support_layer_id < intermediate_layers.size() && intermediate_layers[support_layer_id] != nullptr)
+                SupportGeneratorLayerPager::release_payload(*intermediate_layers[support_layer_id]);
         }
+    });
     });
 
     struct LayerCacheItem {
@@ -3487,9 +3991,11 @@ size_t generate_support_toolpaths(
     };
     std::vector<LayerCache>             layer_caches(support_layers.size());
 
+    tbb::task_arena layer_arena{ pager != nullptr ? 1 : int(std::max(1u, std::thread::hardware_concurrency())) };
+    layer_arena.execute([&] {
     tbb::parallel_for(tbb::blocked_range<size_t>(n_raft_layers, support_layers.size()),
         [&config, &slicing_params, &support_params, &support_layers, &bottom_contacts, &top_contacts, &intermediate_layers, &interface_layers, &base_interface_layers, &layer_caches, &loop_interface_processor,
-            &bbox_object, &angles, n_raft_layers, link_max_length_factor]
+            &bbox_object, &angles, n_raft_layers, link_max_length_factor, pager]
             (const tbb::blocked_range<size_t>& range) {
         // Indices of the 1st layer in their respective container at the support layer height.
         size_t idx_layer_bottom_contact   = size_t(-1);
@@ -3562,6 +4068,21 @@ size_t generate_support_toolpaths(
                 idx_layer_interface       = idx_higher_or_equal(interface_layers,    idx_layer_interface,       fun);
                 idx_layer_base_interface  = idx_higher_or_equal(base_interface_layers, idx_layer_base_interface,fun);
             }
+            std::vector<SupportGeneratorLayer *> loaded_payloads;
+            auto hydrate = [&](uint32_t group, const SupportGeneratorLayersPtr &layers, size_t index) {
+                if (pager == nullptr || index >= layers.size() || layers[index] == nullptr)
+                    return;
+                SupportGeneratorLayer *layer = layers[index];
+                if (std::find(loaded_payloads.begin(), loaded_payloads.end(), layer) == loaded_payloads.end()) {
+                    pager->load(group, index, *layer);
+                    loaded_payloads.push_back(layer);
+                }
+            };
+            hydrate(0, bottom_contacts, idx_layer_bottom_contact);
+            hydrate(1, top_contacts, idx_layer_top_contact);
+            hydrate(2, intermediate_layers, idx_layer_intermediate);
+            hydrate(3, interface_layers, idx_layer_interface);
+            hydrate(4, base_interface_layers, idx_layer_base_interface);
             // Copy polygons from the layers.
             if (idx_layer_bottom_contact < bottom_contacts.size() && bottom_contacts[idx_layer_bottom_contact]->print_z < support_layer.print_z + EPSILON)
                 bottom_contact_layer.layer = bottom_contacts[idx_layer_bottom_contact];
@@ -3650,11 +4171,11 @@ size_t generate_support_toolpaths(
                 }
             }
 
-            // Organic tree support-material regions are generated from expanded
-            // wall polygons. Keep them separate from every same-Z interface
-            // footprint so interface paths cannot be emitted through the trunk.
             if (organic_tree &&
                 (!base_layer.empty() || !base_interface_layer.empty())) {
+                // Retain a bounded bead overlap at the existing handoff instead
+                // of separating the trunk and interface by another half line.
+                const coord_t trim_margin = -scale_(support_params.support_material_flow.nozzle_diameter() * 0.25);
                 Polygons interface_polygons;
                 if (!top_contact_layer.empty())
                     polygons_append(interface_polygons, top_contact_layer.polygons_to_extrude());
@@ -3665,16 +4186,10 @@ size_t generate_support_toolpaths(
                 }
                 if (!interface_layer.empty())
                     polygons_append(interface_polygons, interface_layer.polygons_to_extrude());
-                if (!interface_polygons.empty()) {
-                    const coord_t trim_margin = std::max(
-                        support_params.support_material_flow.scaled_width(),
-                        support_params.support_material_interface_flow.scaled_width()) / 2;
-                    Polygons interface_keepout = offset(interface_polygons, trim_margin);
-                    if (!base_layer.empty())
-                        base_layer.set_polygons_to_extrude(diff(base_layer.polygons_to_extrude(), interface_keepout));
-                    if (!base_interface_layer.empty())
-                        base_interface_layer.set_polygons_to_extrude(diff(base_interface_layer.polygons_to_extrude(), interface_keepout));
-                }
+                if (!base_layer.empty())
+                    base_layer.set_polygons_to_extrude(diff(base_layer.polygons_to_extrude(), offset(interface_polygons, trim_margin)));
+                if (!base_interface_layer.empty())
+                    base_interface_layer.set_polygons_to_extrude(diff(base_interface_layer.polygons_to_extrude(), offset(interface_polygons, trim_margin)));
             }
 
 #if 0
@@ -3784,13 +4299,18 @@ size_t generate_support_toolpaths(
                         interface_layer_type == InterfaceLayerType::TopContact ? support_params.top_contact_wall_count :
                         interface_layer_type == InterfaceLayerType::BottomContact ? support_params.bottom_contact_wall_count :
                         bottom_interface ? support_params.bottom_interface_wall_count : support_params.top_interface_wall_count;
+                    const bool forced_first_layer = filler_first_layer_ptr != nullptr && filler == filler_first_layer;
+                    const bool first_bed_interface = organic_tree && !interface_as_base && !raft_contact &&
+                        layer_ex.layer->bottom_z <= EPSILON && std::abs(slicing_params.belt_floor_shear_factor) <= EPSILON;
+                    const bool preserve_organic_narrow_regions = organic_tree && !interface_as_base && !first_bed_interface;
                     FillParams fill_params;
                     fill_params.density = density;
                     fill_params.dont_adjust = true;
                     fill_params.fill_concentric_gaps = fill_concentric_contact_gaps;
-                    fill_params.preserve_short_paths = organic_tree && !interface_as_base;
-                    fill_params.connect_concentric_loops = organic_tree && !interface_as_base && fill_pattern == ipConcentric;
-                    if (organic_tree && !raft_contact && !interface_as_base && fill_pattern == ipRectilinear) {
+                    fill_params.preserve_short_paths = preserve_organic_narrow_regions;
+                    fill_params.connect_concentric_loops = organic_tree && !interface_as_base &&
+                        fill_pattern == ipConcentric && !forced_first_layer;
+                    if (organic_tree && !raft_contact && !interface_as_base && !forced_first_layer && fill_pattern == ipRectilinear) {
                         // Generate the rows without unlimited contour anchors,
                         // then use the native bounded support connector. A long
                         // anchor beside a single narrow row would add another
@@ -3807,15 +4327,39 @@ size_t generate_support_toolpaths(
                         wall_regions = union_safety_offset_ex(*layer_ex.layer->contact_polygons);
                     if (!wall_regions.empty())
                         support_layer.support_islands = union_ex(support_layer.support_islands, wall_regions);
+                    const bool trace_interface_join = std::getenv("INLONG_INTERFACE_JOIN_TRACE") != nullptr;
+                    if (trace_interface_join)
+                        BOOST_LOG_TRIVIAL(info) << "Interface fill z=" << support_layer.print_z <<
+                            " type=" << int(interface_layer_type) << " pattern=" << fill_pattern <<
+                            " walls=" << wall_count << " regions=" << fill_regions.size() <<
+                            " concentric=" << fill_params.connect_concentric_loops <<
+                            " zigzag=" << fill_params.connect_support_zigzag;
+                    const size_t before_interface_fill = layer_ex.extrusions.size();
                     fill_support_interface_with_walls(layer_ex.extrusions, fill_regions, filler, fill_params,
                         interface_role, interface_flow, wall_count,
                         // Replacing the sparse structural planner must not
                         // also enable new under-width medial fragments. Keep
                         // the existing narrow-contact rescue policy separate
                         // from the choice of row-connection algorithm.
-                        organic_tree && !interface_as_base &&
+                        preserve_organic_narrow_regions &&
                             (legacy_fill_pattern == ipConcentric || legacy_fill_pattern == ipRectilinear),
                         wall_regions.empty() ? nullptr : &wall_regions);
+                    if (first_bed_interface && layer_ex.extrusions.size() == before_interface_fill)
+                        for (const ExPolygon &region : fill_regions)
+                            extrusion_entities_append_paths(layer_ex.extrusions, draw_perimeters(region, 0.),
+                                interface_role, interface_flow.mm3_per_mm(), interface_flow.width(), interface_flow.height());
+                    if (trace_interface_join) {
+                        BOOST_LOG_TRIVIAL(info) << "Interface fill z=" << support_layer.print_z <<
+                            " paths=" << before_interface_fill << " -> " << layer_ex.extrusions.size();
+                        for (const ExtrusionEntity *entity : layer_ex.extrusions)
+                            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
+                                BOOST_LOG_TRIVIAL(info) << "Interface path z=" << support_layer.print_z <<
+                                    " type=" << int(interface_layer_type) << " width=" << path.width <<
+                                    " height=" << path.height << " length=" << path.length() <<
+                                    " first=" << unscale<double>(path.first_point().x()) << "," << unscale<double>(path.first_point().y()) <<
+                                    " last=" << unscale<double>(path.last_point().x()) << "," << unscale<double>(path.last_point().y());
+                            });
+                    }
                     if (organic_tree && (interface_layer_type == InterfaceLayerType::TopContact ||
                                          interface_layer_type == InterfaceLayerType::BottomContact)) {
                         Polygons printed;
@@ -3985,15 +4529,20 @@ size_t generate_support_toolpaths(
                 // for (const ExPolygon &expoly : support_layer.support_islands)
                 //     support_layer.support_islands_bboxes.emplace_back(get_extents(expoly).inflated(SCALED_EPSILON));
             }
+            for (SupportGeneratorLayer *layer : loaded_payloads)
+                SupportGeneratorLayerPager::release_payload(*layer);
         } // for each support_layer_id
     });
+    });
 
-    // Track the original role before contacts/interfaces are flattened into
-    // one support collection; an interface role alone cannot identify contacts.
+    // Track the original role and source before contacts/interfaces are flattened
+    // into one support collection; an interface role alone cannot identify contacts.
     std::vector<std::set<const ExtrusionEntity *>> generic_interfaces(support_layers.size());
+    std::vector<std::map<const ExtrusionEntity *, SupporLayerType>> interface_types(support_layers.size());
+    std::vector<std::map<const ExtrusionEntity *, SupportGeneratorLayer *>> interface_sources(support_layers.size());
     // Now modulate the support layer height in parallel.
     tbb::parallel_for(tbb::blocked_range<size_t>(n_raft_layers, support_layers.size()),
-        [&support_layers, &layer_caches, &support_params, &bbox_object, &generic_interfaces]
+        [&support_layers, &layer_caches, &support_params, &bbox_object, &generic_interfaces, &interface_types, &interface_sources]
             (const tbb::blocked_range<size_t>& range) {
         for (size_t support_layer_id = range.begin(); support_layer_id < range.end(); ++ support_layer_id) {
             SupportLayer &support_layer = *support_layers[support_layer_id];
@@ -4002,12 +4551,15 @@ size_t generate_support_toolpaths(
             for (LayerCacheItem &layer_cache_item : layer_cache.nonempty) {
                 // Trim the extrusion height from the bottom by the overlapping layers.
                 modulate_extrusion_by_overlapping_layers(layer_cache_item.layer_extruded->extrusions, *layer_cache_item.layer_extruded->layer, layer_cache_item.overlapping);
+                const SupporLayerType type = layer_cache_item.layer_extruded->layer->layer_type;
                 if (support_params.support_style == smsTreeOrganic && !layer_cache_item.layer_extruded->layer->bridging)
                     remove_unprintable_interface_paths(layer_cache_item.layer_extruded->extrusions);
-                const SupporLayerType type = layer_cache_item.layer_extruded->layer->layer_type;
-                if (type == SupporLayerType::TopInterface || type == SupporLayerType::BottomInterface)
-                    generic_interfaces[support_layer_id].insert(layer_cache_item.layer_extruded->extrusions.begin(),
-                        layer_cache_item.layer_extruded->extrusions.end());
+                for (const ExtrusionEntity *entity : layer_cache_item.layer_extruded->extrusions) {
+                    interface_types[support_layer_id].emplace(entity, type);
+                    interface_sources[support_layer_id].emplace(entity, layer_cache_item.layer_extruded->layer);
+                    if (type == SupporLayerType::TopInterface || type == SupporLayerType::BottomInterface)
+                        generic_interfaces[support_layer_id].insert(entity);
+                }
                 support_layer.support_fills.append(std::move(layer_cache_item.layer_extruded->extrusions));
             }
 
@@ -4045,10 +4597,6 @@ size_t generate_support_toolpaths(
             }
         }
     });
-
-    if (support_params.support_style == smsTreeOrganic)
-        remove_unused_compact_interfaces(support_layers, generic_interfaces,
-            float(support_params.support_material_interface_flow.width()));
 
     if (support_params.support_style == smsTreeOrganic &&
         std::any_of(bottom_contacts.begin(), bottom_contacts.end(), [](const SupportGeneratorLayer *contact) {

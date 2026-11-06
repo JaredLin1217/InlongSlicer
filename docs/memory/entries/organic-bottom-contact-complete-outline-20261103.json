@@ -1,0 +1,65 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-bottom-contact-complete-outline-20261103",
+  "key": "organic-bottom-contact-complete-outline",
+  "type": "fact",
+  "conclusion": "For organic stepped bottom contacts, generate collision-checked closed wall regions first. If a single requested wall would split one hole-free parent contact region into multiple contours, retain the complete parent outline instead of treating the resulting contours as independent support islands. Local open and closed interface paths may then be merged using existing contact material plus a one-bead connection margin and a two-spacing distance cap. On the test2 sideways cylinder at Z 2.02667 this produces exactly two continuous extrusion groups, one for each side, without crossing the center gap.",
+  "scope": "organic-support-interface-continuity",
+  "modules": [
+    "SupportCommon",
+    "TreeSupport3D",
+    "FillConcentric"
+  ],
+  "tags": [
+    "organic-support",
+    "bottom-contact",
+    "outline",
+    "cylinder",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Fill/FillConcentric.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "2f1721a089e31cd740304088e29adb6b21d2e3c45a7d921de246d82112533582",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "connect_interface_wall_to_fill at line 871 and complete parent-outline fallback at line 1117; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "c1fc6915c67f1e80cfbf64e7486db7c533fccbaa816dd46d86e3ee203de3a8b3",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "collision-checked contact closing at lines 8931-8934; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-7107a48d2d574c588026cc150eca73e1/connected/plate_1.gcode",
+      "sha256": "0e3bb90bea22debd52c67e17a0b863fff715d34b108fb078ce772e26d4f89af1",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "test2 Z 2.02667 has two continuous extrusion groups with lengths 22.988 and 22.767 mm"
+    }
+  ],
+  "verified_utc": "2026-11-03T22:56:00Z",
+  "verification": {
+    "method": "Release InlongSlicer build, test2 and previous organic model end-to-end CLI slices, raw G-code continuity analysis, path rendering, Consumer Changed validation, and manual source review",
+    "summary": "The final Release target built successfully. Test2 Z 2.02667 has exactly two continuous extrusion groups with lengths 22.988 and 22.767 mm. Z 0.43 retains ten per-island paths and Z 0.2 retains forty paths. The previous organic model also sliced successfully with 1549 support-body paths and 1746 interface paths. Consumer Changed passed at .agents/runtime/runs/run-1a7db96dca7c456da7824b3543fe527d/validation/report.json. The broader fff_print_tests target remains blocked by pre-existing missing organic support overlap symbols.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-concentric-interface-continuity-20261103"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

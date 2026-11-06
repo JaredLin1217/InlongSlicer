@@ -387,7 +387,7 @@ public:
 
     // extract rendering data from the given parameters
     //BBS: add only gcode mode
-    void load_as_gcode(const GCodeProcessorResult& gcode_result, const Print& print, const std::vector<std::string>& str_tool_colors,
+    void load_as_gcode(GCodeProcessorResult& gcode_result, const Print& print, const std::vector<std::string>& str_tool_colors,
         const std::vector<std::string>& str_color_print_colors, const BuildVolume& build_volume,
         const std::vector<BoundingBoxf3>& exclude_bounding_box, ConfigOptionMode mode, bool only_gcode = false);
     void load_as_preview(libvgcode::GCodeInputData&& data);

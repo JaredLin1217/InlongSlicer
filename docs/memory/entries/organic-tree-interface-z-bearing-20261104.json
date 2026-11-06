@@ -1,0 +1,101 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-tree-interface-z-bearing-20261104",
+  "key": "organic-tree-interface-z-bearing",
+  "type": "fact",
+  "conclusion": "Organic tree-to-interface contact must be evaluated using actual XY bead overlap and Z-bearing, not rejected solely because a same-layer projection has a small XY gap. In the user's QQ case, all 20 measured trunk regions had direct interface contact with zero XY and Z gaps: the left tree at Z 6.15 contacts the Z 6.30 interface over 0.966880 mm2, and the right tree at Z 7.20 contacts the Z 7.05 interface over 0.128945 mm2. A bidirectional nearest-point short-link experiment was rejected because it changed QQ from 149 to 197 support paths and 127 to 142 interface paths, including 1 to 11 interface paths at Z 0.75 by retaining fragments that the detached-interface filter had removed. The restored implementation preserves the direct ordinary/sharp-tail contacts and normalized segment-bearing cleanup, matches every previously verified toolpath on all three models, and preserves the configured 0.15 mm model-to-contact Z gap.",
+  "scope": "organic-support-contact-bearing",
+  "modules": [
+    "SupportCommon",
+    "TreeSupport3D",
+    "Geometry"
+  ],
+  "tags": [
+    "organic-support",
+    "support-interface",
+    "tree-tip",
+    "z-bearing",
+    "detached-contact",
+    "duplicate-extrusion",
+    "regression-verified"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Support/TreeSupport3D.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "c41c8bdb3302a7a13d42b986a86bf5bea74f39581593a920797e2ea2734ce1eb",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Organic interface trimming and final remove_detached_compact_contacts; no experimental nearest-point contact_link block remains"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "94a04396a669ef1992c26e07f897d7d53fccea1c9b9fdbcbc8c4ced591216f61",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Ordinary and sharp-tail printed contacts retain collision-clipped direct overhang geometry"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-c88b7d772bec4ed6a3aab421a01129b5/analysis/final-qq/tree-contact-gaps.json",
+      "sha256": "79e43cf9f206fe55f87477cec7055cfe647e41ec56b9ff404e7525ee2c3f57a2",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "All 20 regions have a touching interface candidate with zero XY and Z gaps; left Z 6.15 and right Z 7.20 contact areas are 0.966880 and 0.128945 mm2"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-c88b7d772bec4ed6a3aab421a01129b5/analysis/final-qq/plate_1.gcode",
+      "sha256": "00b9e395206f687b17ede18cb54abe9d103e06e069817695ee2753642b3202bb",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "149 support paths and 127 interface paths; all 612 parsed paths match the established baseline exactly; zero of five detached targets and no closed interface over 15 mm"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-c88b7d772bec4ed6a3aab421a01129b5/analysis/final-test2/plate_1.gcode",
+      "sha256": "f5fc1aab5ee4533ce98946ba2da03bb5dbc316b387e2d04033df3ff327e6766b",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "115 support paths and 56 interface paths; all 412 parsed paths match baseline; bottom outlines remain 21.399401091148096 mm and 21.417713246996552 mm"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-c88b7d772bec4ed6a3aab421a01129b5/analysis/final-earlier/span.log",
+      "sha256": "ecc31dae10603f63c81eb921a25d3a715639b1120ff8cf330d92cffb133646d5",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "The earlier model retains five long unsupported interface paths, not 24; its 21199 parsed paths match baseline exactly, with 1414 support paths and 858 interface paths"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-c88b7d772bec4ed6a3aab421a01129b5/analysis/bidirectional-qq/comparison.json",
+      "sha256": "2479ad1e865dcdc3f2b33b16bb54a0e55c7c3de5c864cef36c6cac77207f69d5",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Rejected bidirectional nearest-point candidate: 197 support paths, 142 interface paths and 16.621352 mm2 added support coverage"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-2ff7e507898e4115b4d65d4cf693f974/validation/report.json",
+      "sha256": "0024a92f1b162b986a7ee610c3058ed60cf9467dd5d9754bd1d3ee65ede2dbac",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Consumer Changed passed syntax, JSON schema and diff checks; release_ready is false without a release request"
+    }
+  ],
+  "verified_utc": "2026-11-04T14:54:53Z",
+  "verification": {
+    "method": "Rebuilt the Release InlongSlicer target successfully, sliced QQ, test2 and the earlier floating-support model through the actual CLI, compared all parsed paths point-for-point against the accepted baselines, measured actual bead contact with zero Z gaps, and ran project guidance and Consumer Changed validation.",
+    "summary": "The restored code preserves all established geometry: QQ 149/127 with 612 exact paths, test2 115/56 with 412 exact paths and complete bottom outlines, earlier 1414/858 with 21199 exact paths and five long unsupported paths. The experimental short-link version was removed after its fragment regression. Latest measured earlier-model support generation was about 7.85 seconds and detached cleanup 1.32456 seconds; older host timings are not presented as a performance guarantee. Standard fff_print_tests remains blocked by pre-existing missing overlap symbols in unchanged test/header files, so that suite is not claimed as passing.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-detached-contact-bearing-20261104"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

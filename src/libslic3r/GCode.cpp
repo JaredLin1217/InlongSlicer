@@ -54,6 +54,7 @@
 #include "Time.hpp"
 #include "GCode/ExtrusionProcessor.hpp"
 #include "Support/SupportCommon.hpp"
+#include "Support/SupportCacheBudget.hpp"
 #include <Eigen/Geometry>
 #include <Shiny/ShinyMacros.h>
 #include <algorithm>
@@ -5004,6 +5005,50 @@ std::vector<PrecomputedOverhangLayer> precompute_overhang_layers(const std::vect
     return out;
 }
 
+struct GCodeExportMemoryPlan {
+    size_t pipeline_tokens{12};
+    bool release_support_geometry{false};
+};
+
+static GCodeExportMemoryPlan gcode_export_memory_plan()
+{
+    const SupportMemorySnapshot memory = support_memory_snapshot();
+    if (memory.physical == 0 || memory.available == 0)
+        return {};
+
+    const SupportCacheBudget budget = support_cache_budget(memory.physical, memory.available);
+    constexpr size_t token_bytes = size_t(128) << 20;
+    const size_t dynamic_bytes = budget.cache_limit != 0 ? budget.cache_limit :
+        std::max(size_t(16) << 20, memory.available / 8);
+    const size_t tokens = std::clamp(dynamic_bytes / token_bytes, size_t(1), size_t(12));
+    GCodeExportMemoryPlan plan;
+    plan.pipeline_tokens = tokens;
+    // When the cache budget is exhausted, retain only the current layer's
+    // support entities after it has been converted to G-code. This keeps the
+    // output order and geometry unchanged while preventing all support layers
+    // from competing with the processor buffers.
+    plan.release_support_geometry = budget.cache_limit == 0 || tokens < 12;
+    BOOST_LOG_TRIVIAL(info) << "G-code export memory plan: available=" << memory.available
+        << ", physical=" << memory.physical << ", pipeline_tokens=" << plan.pipeline_tokens
+        << ", release_support_geometry=" << plan.release_support_geometry;
+    return plan;
+}
+
+static void release_processed_support_geometry(const GCode::LayerToPrint &layer)
+{
+    if (layer.support_layer == nullptr)
+        return;
+    // LayerToPrint intentionally exposes const source pointers to the export
+    // planner. At this point process_layer() has consumed this layer and the
+    // G-code string is already detached, so releasing its source geometry is
+    // safe and does not alter the emitted path.
+    SupportLayer *support = const_cast<SupportLayer *>(layer.support_layer);
+    support->support_fills.clear();
+    support->support_islands.clear();
+    support->raft_support_islands.clear();
+    support->raft_interface_islands.clear();
+}
+
 // Hands out the index of each layer to process_layers(), then computes the layers' overhang data in parallel.
 template<typename LayersAt>
 static auto precomputed_layers_source(size_t &next_index, size_t layer_count, bool nop_layer, bool overhang_fan, LayersAt layers_at)
@@ -5044,12 +5089,13 @@ void GCode::process_layers(
     GCodeOutputStream                                                   &output_stream)
 {
     // The pipeline is variable: The vase mode filter is optional.
+    const GCodeExportMemoryPlan memory_plan = gcode_export_memory_plan();
     size_t layer_to_print_idx = 0;
     const auto source = precomputed_layers_source(layer_to_print_idx, layers_to_print.size(), m_pressure_equalizer != nullptr,
         overhang_fan_enabled(print.config(), m_enable_cooling_markers),
         [&layers_to_print](size_t index) -> const std::vector<LayerToPrint> & { return layers_to_print[index].second; });
     const auto generator = tbb::make_filter<PrecomputedLayer, LayerResult>(slic3r_tbb_filtermode::serial_in_order,
-        [this, &print, &tool_ordering, &print_object_instances_ordering, &layers_to_print](PrecomputedLayer precomputed) -> LayerResult {
+        [this, &print, &tool_ordering, &print_object_instances_ordering, &layers_to_print, memory_plan](PrecomputedLayer precomputed) -> LayerResult {
             if (precomputed.index == size_t(-1))
                 return LayerResult::make_nop_layer_result();
             const std::pair<coordf_t, std::vector<LayerToPrint>>& layer = layers_to_print[precomputed.index];
@@ -5061,7 +5107,11 @@ void GCode::process_layers(
             check_placeholder_parser_failed();
             print.throw_if_canceled();
             m_extrusion_quality_estimator.set_precomputed_layers(std::move(precomputed.overhang_layers));
-            return this->process_layer(print, layer.second, layer_tools, &layer == &layers_to_print.back(), &print_object_instances_ordering, tool_ordering.get_most_used_extruder(), size_t(-1));
+            LayerResult result = this->process_layer(print, layer.second, layer_tools, &layer == &layers_to_print.back(), &print_object_instances_ordering, tool_ordering.get_most_used_extruder(), size_t(-1));
+            if (memory_plan.release_support_geometry)
+                for (const LayerToPrint &entry : layer.second)
+                    release_processed_support_geometry(entry);
+            return result;
         });
     if (m_spiral_vase) {
         float nozzle_diameter  = EXTRUDER_CONFIG(nozzle_diameter);
@@ -5120,13 +5170,13 @@ void GCode::process_layers(
 
     // The pipeline elements are joined using const references, thus no copying is performed.
     if (m_spiral_vase && m_pressure_equalizer)
-        tbb::parallel_pipeline(12, source & generator & spiral_mode & pressure_equalizer & cooling & fan_mover & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & spiral_mode & pressure_equalizer & cooling & fan_mover & output);
     else if (m_spiral_vase)
-    	tbb::parallel_pipeline(12, source & generator & spiral_mode & cooling & fan_mover & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & spiral_mode & cooling & fan_mover & output);
     else if	(m_pressure_equalizer)
-        tbb::parallel_pipeline(12, source & generator & pressure_equalizer & cooling & fan_mover & pa_processor_filter & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & pressure_equalizer & cooling & fan_mover & pa_processor_filter & output);
     else
-    	tbb::parallel_pipeline(12, source & generator & cooling & fan_mover & pa_processor_filter & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & cooling & fan_mover & pa_processor_filter & output);
     // The estimator's precomputed data points into this print's layers.
     m_extrusion_quality_estimator.set_precomputed_layers({});
 
@@ -5145,12 +5195,13 @@ void GCode::process_layers(
     const bool                               prime_extruder)
 {
     // The pipeline is variable: The vase mode filter is optional.
+    const GCodeExportMemoryPlan memory_plan = gcode_export_memory_plan();
     size_t layer_to_print_idx = 0;
     const auto source = precomputed_layers_source(layer_to_print_idx, layers_to_print.size(), m_pressure_equalizer != nullptr,
         overhang_fan_enabled(print.config(), m_enable_cooling_markers),
         [&layers_to_print](size_t index) { return std::vector<LayerToPrint>{layers_to_print[index]}; });
     const auto generator = tbb::make_filter<PrecomputedLayer, LayerResult>(slic3r_tbb_filtermode::serial_in_order,
-        [this, &print, &tool_ordering, &layers_to_print, single_object_idx, prime_extruder](PrecomputedLayer precomputed) -> LayerResult {
+        [this, &print, &tool_ordering, &layers_to_print, single_object_idx, prime_extruder, memory_plan](PrecomputedLayer precomputed) -> LayerResult {
             if (precomputed.index == size_t(-1))
                 return LayerResult::make_nop_layer_result();
             LayerToPrint &layer = layers_to_print[precomputed.index];
@@ -5159,7 +5210,10 @@ void GCode::process_layers(
             check_placeholder_parser_failed();
             print.throw_if_canceled();
             m_extrusion_quality_estimator.set_precomputed_layers(std::move(precomputed.overhang_layers));
-            return this->process_layer(print, { std::move(layer) }, tool_ordering.tools_for_layer(layer.print_z()), &layer == &layers_to_print.back(), nullptr, tool_ordering.get_most_used_extruder(), single_object_idx, prime_extruder);
+            LayerResult result = this->process_layer(print, { std::move(layer) }, tool_ordering.tools_for_layer(layer.print_z()), &layer == &layers_to_print.back(), nullptr, tool_ordering.get_most_used_extruder(), single_object_idx, prime_extruder);
+            if (memory_plan.release_support_geometry)
+                release_processed_support_geometry(layer);
+            return result;
         });
     if (m_spiral_vase) {
         float nozzle_diameter  = EXTRUDER_CONFIG(nozzle_diameter);
@@ -5215,13 +5269,13 @@ void GCode::process_layers(
 
     // The pipeline elements are joined using const references, thus no copying is performed.
     if (m_spiral_vase && m_pressure_equalizer)
-        tbb::parallel_pipeline(12, source & generator & spiral_mode & pressure_equalizer & cooling & fan_mover & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & spiral_mode & pressure_equalizer & cooling & fan_mover & output);
     else if (m_spiral_vase)
-    	tbb::parallel_pipeline(12, source & generator & spiral_mode & cooling & fan_mover & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & spiral_mode & cooling & fan_mover & output);
     else if	(m_pressure_equalizer)
-        tbb::parallel_pipeline(12, source & generator & pressure_equalizer & cooling & fan_mover & pa_processor_filter & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & pressure_equalizer & cooling & fan_mover & pa_processor_filter & output);
     else
-    	tbb::parallel_pipeline(12, source & generator & cooling & fan_mover & pa_processor_filter & output);
+        tbb::parallel_pipeline(memory_plan.pipeline_tokens, source & generator & cooling & fan_mover & pa_processor_filter & output);
     // The estimator's precomputed data points into this print's layers.
     m_extrusion_quality_estimator.set_precomputed_layers({});
 }

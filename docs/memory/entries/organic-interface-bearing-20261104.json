@@ -1,0 +1,58 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-interface-bearing-20261104",
+  "key": "organic-interface-bearing",
+  "type": "fact",
+  "conclusion": "Organic support interface cleanup must measure lower bearing along each open path, not infer printability from contact ownership or an upper-path touch. Split mixed multipaths containing long open spans, then remove a planar interface path only when its continuously unsupported run exceeds eight bead widths. Bearing uses the actual support and interface bead radii on the current and preceding support layers. Closed contact outlines and genuinely non-planar paths remain outside this removal rule.",
+  "scope": "organic-support-interface-bearing",
+  "modules": [
+    "SupportCommon"
+  ],
+  "tags": [
+    "organic-support",
+    "support-interface",
+    "lower-bearing",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "b55dc3ca05e8c446404d1c0e849ff22cbe27f7f97e6fc10fd327f40517e1b149",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "remove_unsupported_interfaces and planar_support_interface; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-add709a5a2424f39940569bb3b6c3e00/final/plate_1.gcode",
+      "sha256": "57ac29ad313d9f599d5839ff2fb4fce4ce155391a352d58e06956b8702c856d3",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "problem-model final G-code: 1457 support paths and 1228 interface paths; former 10.728 and 10.419 mm open spans at Z 6.75 are absent"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-add709a5a2424f39940569bb3b6c3e00/test2-final/plate_1.gcode",
+      "sha256": "8f864fc97ec385e935364d4b7dda099e8c3f34ff83bc1b8d3d6369c6b91ba042",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "test2 final G-code: closed contact outlines at Z 2.02667 retain lengths 21.399 and 21.418 mm"
+    }
+  ],
+  "verified_utc": "2026-11-04T03:05:53Z",
+  "verification": {
+    "method": "Release build, two end-to-end model slices, G-code path and closure measurements, git diff check, and Consumer Changed validation",
+    "summary": "The problem model sliced in 7.479 seconds with support paths unchanged at 1457 and interface paths reduced from 1316 to 1228. The two baseline open spans at Z 6.75 were removed. Test2 sliced in 3.728 seconds and retained its two complete closed outlines. Consumer Changed passed at .agents/runtime/runs/run-f9d34075fd4a4b5baeef8d209f99b0d3/validation/report.json. The broader fff_print_tests target remains blocked by pre-existing missing organic support overlap symbols.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-elongated-contact-exceptions-20261104",
+  "key": "organic-elongated-contact-exceptions",
+  "type": "fact",
+  "conclusion": "Sharp-tip and sharp-tail contact exceptions should be limited to genuinely elongated support regions (at least a 4:1 aspect ratio on any source polygon) whose contact footprint exceeds 1.85 times the original overhang area. This preserves the opposite-side contact required by the side-lying cylinder while suppressing duplicate long loops on broad overhangs. Generic closed TopInterface paths must not be deleted by this policy; closed-path trimming is restricted to TopContact.",
+  "scope": "organic-support-contact-generation",
+  "modules": [
+    "TreeSupport3D",
+    "SupportCommon"
+  ],
+  "tags": [
+    "organic-support",
+    "top-contact",
+    "sharp-tip",
+    "closed-loop",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp",
+    "src/libslic3r/Support/SupportCommon.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "f3caea14bbd17c3b4596fab6ec0bbfd7c1effb750e09a8292a47bb6afb427fc6",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "per-polygon elongated-support and raw-overhang ratio filtering; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-ffc79319be18455494fec99891ed4b84/top-only-qq/plate_1.gcode",
+      "sha256": "01e6044f6d948b983b9aaf3664c24a64604d5fdfa71c50b06d26076b50f0703c",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "qq final output: 20 support paths and 6 interface paths; no open interface path over 1mm and no long closed connector"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-ffc79319be18455494fec99891ed4b84/top-only-test2/plate_1.gcode",
+      "sha256": "7cd00812c4c1f7bfd3cb833c342d1f68170600f038934a58e8b7b32872ba8ac7",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "test2 final output: all 56 interface paths restored; both 21.399 and 21.418 mm BottomContact outlines remain closed"
+    }
+  ],
+  "verified_utc": "2026-11-04T08:32:46Z",
+  "verification": {
+    "method": "Release build, contact-source predicate tracing, three end-to-end model slices, open and closed path measurements, git diff check, and Consumer Changed validation",
+    "summary": "Per-polygon elongated filtering removed the qq long closed connectors while preserving test2. QQ has 20 support and 6 interface paths with no open interface path over 1mm. Test2 retains all 56 interfaces and both complete BottomContact outlines. The previous organic model completed with 767 support and 396 interface paths in 6.575 seconds. Consumer Changed passed at .agents/runtime/runs/run-4f041dbf640a4a43ad6fb5c785c2839a/validation/report.json. The broader fff_print_tests target remains blocked by pre-existing missing organic support overlap symbols.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "organic-closed-contact-preservation-20261104"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

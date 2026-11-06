@@ -73,8 +73,10 @@
 #include "slic3r/GUI/Event.hpp"
 #include <string_view>
 #include <functional>
+#include <new>
 #include "libslic3r/CustomGCode.hpp"
 #include "libslic3r/ExtrusionEntity.hpp"
+#include "libslic3r/Support/SupportCacheBudget.hpp"
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 
@@ -1382,7 +1384,7 @@ static Transform3d compute_belt_back_transform(const PrintConfig& cfg)
 }
 
 //BBS: always load shell at preview
-void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const Print& print, const std::vector<std::string>& str_tool_colors,
+void GCodeViewer::load_as_gcode(GCodeProcessorResult& gcode_result, const Print& print, const std::vector<std::string>& str_tool_colors,
                 const std::vector<std::string>& str_color_print_colors, const BuildVolume& build_volume,
                 const std::vector<BoundingBoxf3>& exclude_bounding_box, ConfigOptionMode mode, bool only_gcode)
 {
@@ -1560,8 +1562,41 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
             belt_inv = Transform3d(Eigen::Translation3d(d)) * belt_inv;
         }
     }
-    libvgcode::GCodeInputData data = libvgcode::convert(gcode_result, str_tool_colors, str_color_print_colors, m_viewer,
-        apply_belt ? &belt_inv : nullptr);
+    // Preview conversion temporarily holds the parsed moves and a second
+    // vertex representation. On a large organic-support job that transient
+    // allocation can exceed the remaining physical memory even though the
+    // G-code file was exported successfully. Use the live memory budget to
+    // skip only the optional preview conversion, then release the parsed moves
+    // and leave the exported file available for the user.
+    const SupportMemorySnapshot preview_memory = support_memory_snapshot();
+    const size_t estimated_preview_bytes = gcode_result.moves.size() >
+        std::numeric_limits<size_t>::max() / (sizeof(libvgcode::PathVertex) * 2) ?
+        std::numeric_limits<size_t>::max() :
+        gcode_result.moves.size() * sizeof(libvgcode::PathVertex) * 2;
+    const bool preview_memory_pressure = preview_memory.available != 0 &&
+        estimated_preview_bytes > preview_memory.available / 2;
+    if (preview_memory_pressure && !print.is_BBL_printer()) {
+        BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": skipped preview conversion under memory pressure; moves="
+            << gcode_result.moves.size() << ", estimated_preview_bytes=" << estimated_preview_bytes
+            << ", available=" << preview_memory.available;
+        std::vector<GCodeProcessorResult::MoveVertex>().swap(gcode_result.moves);
+        gcode_result.unlock();
+        wxGetApp().plater()->schedule_background_process();
+        return;
+    }
+
+    std::unique_ptr<libvgcode::GCodeInputData> data;
+    try {
+        data = std::make_unique<libvgcode::GCodeInputData>(libvgcode::convert(gcode_result, str_tool_colors, str_color_print_colors, m_viewer,
+            apply_belt ? &belt_inv : nullptr));
+    } catch (const std::bad_alloc &) {
+        BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": preview conversion allocation failed; keeping exported G-code usable";
+        if (!print.is_BBL_printer())
+            std::vector<GCodeProcessorResult::MoveVertex>().swap(gcode_result.moves);
+        gcode_result.unlock();
+        wxGetApp().plater()->schedule_background_process();
+        return;
+    }
 
 //#define ENABLE_DATA_EXPORT 1
 //#if ENABLE_DATA_EXPORT
@@ -1655,9 +1690,50 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
 //    }
 //#endif // ENABLE_DATA_EXPORT
 
+    // The slicer result still owns every parsed move while libvgcode builds
+    // its preview vertices.  Keeping both copies resident is the second
+    // bad-allocation peak on large exports: export already succeeded, then
+    // the GUI allocates another several hundred MB for the viewer.  Compute
+    // the small pieces of move metadata used below, then release the source
+    // move vector before handing the preview data to libvgcode.  BBL printers
+    // retain the source because their post-processing path may reload moves.
+    std::vector<double> belt_layer_zs_from_moves;
+    if (is_belt) {
+        unsigned int src_layer_id = std::numeric_limits<unsigned int>::max();
+        for (size_t i = 1; i < gcode_result.moves.size(); ++ i) {
+            const GCodeProcessorResult::MoveVertex &mv = gcode_result.moves[i];
+            if (mv.layer_id != src_layer_id) {
+                src_layer_id = mv.layer_id;
+                belt_layer_zs_from_moves.emplace_back(double(mv.print_z));
+            }
+        }
+    }
+    m_move_type_counts.fill(0);
+    for (auto& move_type_times : m_move_type_times)
+        move_type_times.fill(0.0f);
+    m_move_type_distances.fill(0.0f);
+    for (const GCodeProcessorResult::MoveVertex& move : gcode_result.moves) {
+        if (move.internal_only)
+            continue;
+        const size_t move_type = static_cast<size_t>(move.type);
+        if (move_type < m_move_type_counts.size()) {
+            ++m_move_type_counts[move_type];
+            for (size_t mode = 0; mode < move.time.size(); ++mode)
+                m_move_type_times[move_type][mode] += move.time[mode];
+            if (move.type == EMoveType::Retract || move.type == EMoveType::Unretract)
+                m_move_type_distances[move_type] += std::fabs(move.delta_extruder);
+            else
+                m_move_type_distances[move_type] += move.travel_dist;
+        }
+    }
+    if (!print.is_BBL_printer()) {
+        std::vector<GCodeProcessorResult::MoveVertex>().swap(gcode_result.moves);
+        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": released source G-code moves before viewer load";
+    }
+
     // send data to the viewer
     m_viewer.reset_default_extrusion_roles_colors();
-    m_viewer.load(std::move(data));
+    m_viewer.load(std::move(*data));
 
     // Belt printers: libvgcode labels a layer with the height of its toolpaths, which
     // on a tilted layer is wherever its last extrusion happened to end, and the layer
@@ -1665,19 +1741,9 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
     // increases.  Give it the layers' print Z instead (the slicer's layer Z, which
     // increases along the belt), numbered the way libvgcode::convert() numbers the
     // layers: consecutively over the moves that exist.
-    m_belt_layer_zs.clear();
-    if (is_belt) {
-        unsigned int src_layer_id = std::numeric_limits<unsigned int>::max();
-        for (size_t i = 1; i < gcode_result.moves.size(); ++ i) {
-            const GCodeProcessorResult::MoveVertex &mv = gcode_result.moves[i];
-            if (mv.layer_id != src_layer_id) {
-                src_layer_id = mv.layer_id;
-                m_belt_layer_zs.emplace_back(double(mv.print_z));
-            }
-        }
-        if (m_belt_layer_zs.size() != m_viewer.get_layers_count())
-            m_belt_layer_zs.clear();
-    }
+    m_belt_layer_zs = std::move(belt_layer_zs_from_moves);
+    if (m_belt_layer_zs.size() != m_viewer.get_layers_count())
+        m_belt_layer_zs.clear();
 
 // #if !VGCODE_ENABLE_COG_AND_TOOL_MARKERS
 //     const size_t vertices_count = m_viewer.get_vertices_count();
@@ -1731,25 +1797,6 @@ void GCodeViewer::load_as_gcode(const GCodeProcessorResult& gcode_result, const 
     m_last_result_id = gcode_result.id;
     m_last_belt_show_designed = m_belt_show_designed;
     m_gcode_result = &gcode_result;
-    m_move_type_counts.fill(0);
-    for (auto& move_type_times : m_move_type_times)
-        move_type_times.fill(0.0f);
-    m_move_type_distances.fill(0.0f);
-    for (const GCodeProcessorResult::MoveVertex& move : gcode_result.moves) {
-        if (move.internal_only)
-            continue;
-
-        const size_t move_type = static_cast<size_t>(move.type);
-        if (move_type < m_move_type_counts.size()) {
-            ++m_move_type_counts[move_type];
-            for (size_t mode = 0; mode < move.time.size(); ++mode)
-                m_move_type_times[move_type][mode] += move.time[mode];
-            if (move.type == EMoveType::Retract || move.type == EMoveType::Unretract)
-                m_move_type_distances[move_type] += std::fabs(move.delta_extruder);
-            else
-                m_move_type_distances[move_type] += move.travel_dist;
-        }
-    }
     m_only_gcode_in_preview = only_gcode;
 
     m_sequential_view.gcode_window.load_gcode(gcode_result.filename, gcode_result.lines_ends);
@@ -2702,7 +2749,9 @@ void GCodeViewer::enable_moves_slider(bool enable) const
 
 void GCodeViewer::update_moves_slider(bool set_to_max)
 {
-    if (m_gcode_result->moves.empty())
+    // The source move vector may be released after libvgcode has built the
+    // preview, so use the viewer's own vertices as the availability check.
+    if (m_viewer.get_vertices_count() == 0)
         return;
 
     const libvgcode::Interval& range = m_viewer.get_view_enabled_range();

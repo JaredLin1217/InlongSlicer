@@ -377,9 +377,9 @@ Polygons TreeModelVolumes::getCollisionWithoutXY(const coord_t radius, LayerInde
             continue;
 
         const coord_t layer_height = settings.layer_height;
+        const bool current_outline = outline_idx == m_current_outline_idx;
         const int z_distance_bottom_layers = int(round(double(settings.support_bottom_distance) / double(layer_height)));
         const int z_distance_top_layers = int(round(double(settings.support_top_distance) / double(layer_height)));
-        const bool current_outline = outline_idx == m_current_outline_idx;
         // For the current model, sharp-tail contact clearance is derived from
         // the configured Z gap (the legacy tree path's behavior), not from
         // support_object_xy_distance.  Other grouped outlines keep their
@@ -436,8 +436,8 @@ Polygons TreeModelVolumes::getCollisionForContact(const coord_t radius, LayerInd
             continue;
 
         const coord_t layer_height = settings.layer_height;
-        const int z_distance_bottom_layers = int(round(double(settings.support_bottom_distance) / double(layer_height)));
         const bool current_outline = outline_idx == m_current_outline_idx;
+        const int z_distance_bottom_layers = int(round(double(settings.support_bottom_distance) / double(layer_height)));
         const coord_t contact_xy_distance = current_outline ? xy_distance : settings.support_xy_distance;
         const coord_t contact_z_distance = current_outline ? z_distance : settings.support_top_distance;
         const int z_distance_top_layers = int(round(double(contact_z_distance) / double(layer_height)));
@@ -602,9 +602,8 @@ void TreeModelVolumes::calculateCollision(const coord_t radius, const LayerIndex
     for (size_t outline_idx : layer_outline_indices)
         if (const std::vector<Polygons> &outlines = m_layer_outlines[outline_idx].second; ! outlines.empty()) {
             const TreeSupportMeshGroupSettings  &settings = m_layer_outlines[outline_idx].first;
-            const coord_t       layer_height              = settings.layer_height;
-            const int           z_distance_bottom_layers  = int(round(double(settings.support_bottom_distance) / double(layer_height)));
-            const int           z_distance_top_layers     = int(round(double(settings.support_top_distance) / double(layer_height)));
+            const int           z_distance_bottom_layers  = int(organic_tree_topology_gap_layers);
+            const int           z_distance_top_layers     = int(organic_tree_topology_gap_layers);
             const coord_t       xy_distance               = outline_idx == m_current_outline_idx ? m_current_min_xy_dist : 
                 // technically this causes collision for the normal xy_distance to be larger by m_current_min_xy_dist_delta for all 
                 // not currently processing meshes as this delta will be added at request time.

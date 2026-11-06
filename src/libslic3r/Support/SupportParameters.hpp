@@ -290,7 +290,6 @@ struct SupportParameters {
                 support_style = smsGrid;
             }
         }
-
         independent_layer_height = print_config.independent_support_layer_height;
         organic_independent_layer_height =
             support_style == smsTreeOrganic &&

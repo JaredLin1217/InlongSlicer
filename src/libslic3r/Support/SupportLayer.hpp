@@ -3,8 +3,17 @@
 
 #include <memory>
 #include <cstddef>
+#include <cstdint>
+#include <atomic>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <limits>
+#include <mutex>
 #include <oneapi/tbb/scalable_allocator.h>
 #include <oneapi/tbb/spin_mutex.h>
+#include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 // for Slic3r::deque
@@ -144,6 +153,202 @@ private:
 	tbb::spin_mutex                         									m_mutex;
 };
 using SupportGeneratorLayersPtr		= std::vector<SupportGeneratorLayer*>;
+
+// Optional disk-backed payload store for organic support source layers. The
+// layer metadata remains resident so ordering and Z lookups stay cheap; only
+// polygon payloads are paged in for the layer currently being converted to
+// toolpaths.
+class SupportGeneratorLayerPager
+{
+public:
+    static constexpr uint32_t GroupCount = 5;
+
+    explicit SupportGeneratorLayerPager(size_t layer_count) : m_layer_count(layer_count), m_offsets(GroupCount * layer_count, invalid_offset())
+    {
+        static std::atomic<uint64_t> next_id{ 0 };
+        const uint64_t id = next_id.fetch_add(1, std::memory_order_relaxed);
+        const uint64_t stamp = uint64_t(std::chrono::steady_clock::now().time_since_epoch().count());
+        m_path = std::filesystem::temp_directory_path() /
+            ("inlong-support-layers-" + std::to_string(stamp) + "-" + std::to_string(id) + ".bin");
+        m_output.open(m_path, std::ios::binary | std::ios::trunc);
+        if (!m_output)
+            throw std::runtime_error("Unable to create support layer page file.");
+    }
+
+    ~SupportGeneratorLayerPager()
+    {
+        m_output.close();
+        m_input.close();
+        std::error_code error;
+        std::filesystem::remove(m_path, error);
+    }
+
+    SupportGeneratorLayerPager(const SupportGeneratorLayerPager &) = delete;
+    SupportGeneratorLayerPager &operator=(const SupportGeneratorLayerPager &) = delete;
+
+    static void release_payload(SupportGeneratorLayer &layer)
+    {
+        Polygons().swap(layer.polygons);
+        if (layer.contact_polygons)
+            Polygons().swap(*layer.contact_polygons);
+        if (layer.overhang_polygons)
+            Polygons().swap(*layer.overhang_polygons);
+        if (layer.enforcer_polygons)
+            Polygons().swap(*layer.enforcer_polygons);
+    }
+
+    void spill(uint32_t group, size_t layer_idx, SupportGeneratorLayer &layer)
+    {
+        if (group >= GroupCount || layer_idx >= m_layer_count)
+            throw std::runtime_error("Support layer page index out of range.");
+        const uint64_t offset = uint64_t(m_output.tellp());
+        m_offsets[size_t(group) * m_layer_count + layer_idx] = offset;
+        write_layer(m_output, layer);
+        if (!m_output)
+            throw std::runtime_error("Unable to write support layer page file.");
+    }
+
+    void finish_write()
+    {
+        m_output.close();
+        m_input.open(m_path, std::ios::binary);
+        if (!m_input)
+            throw std::runtime_error("Unable to open support layer page file.");
+    }
+
+    void load(uint32_t group, size_t layer_idx, SupportGeneratorLayer &layer)
+    {
+        if (group >= GroupCount || layer_idx >= m_layer_count)
+            throw std::runtime_error("Support layer page index out of range.");
+        const uint64_t offset = m_offsets[size_t(group) * m_layer_count + layer_idx];
+        // Protect the whole hydrate transaction. A source layer can be
+        // referenced by more than one output role, so releasing its payload
+        // outside the read lock would race with another hydrate even when the
+        // underlying file cursor itself is protected.
+        const std::lock_guard<std::mutex> lock(m_input_mutex);
+        release_payload(layer);
+        if (offset == invalid_offset())
+            return;
+        // The toolpath planner may hydrate adjacent output layers in parallel.
+        // std::ifstream keeps one shared cursor, so an unlocked seek/read can
+        // interleave records and turn a valid page into an arbitrary polygon
+        // count. On large jobs that manifests as bad allocation while the
+        // corrupted count is reserved. Keep the disk read atomic; Clipper
+        // processing remains outside this lock.
+        m_input.clear();
+        m_input.seekg(std::streamoff(offset));
+        if (!m_input || !read_layer(m_input, layer))
+            throw std::runtime_error("Unable to read support layer page file.");
+    }
+
+private:
+    static constexpr uint64_t invalid_offset() { return std::numeric_limits<uint64_t>::max(); }
+
+    static void write_u8(std::ofstream &stream, uint8_t value) { stream.write(reinterpret_cast<const char *>(&value), sizeof(value)); }
+    static void write_u32(std::ofstream &stream, uint32_t value) { stream.write(reinterpret_cast<const char *>(&value), sizeof(value)); }
+    static void write_u64(std::ofstream &stream, uint64_t value) { stream.write(reinterpret_cast<const char *>(&value), sizeof(value)); }
+    static void write_i64(std::ofstream &stream, int64_t value) { stream.write(reinterpret_cast<const char *>(&value), sizeof(value)); }
+    static void write_f64(std::ofstream &stream, double value) { stream.write(reinterpret_cast<const char *>(&value), sizeof(value)); }
+    static bool read_u8(std::ifstream &stream, uint8_t &value) { return bool(stream.read(reinterpret_cast<char *>(&value), sizeof(value))); }
+    static bool read_u32(std::ifstream &stream, uint32_t &value) { return bool(stream.read(reinterpret_cast<char *>(&value), sizeof(value))); }
+    static bool read_u64(std::ifstream &stream, uint64_t &value) { return bool(stream.read(reinterpret_cast<char *>(&value), sizeof(value))); }
+    static bool read_i64(std::ifstream &stream, int64_t &value) { return bool(stream.read(reinterpret_cast<char *>(&value), sizeof(value))); }
+    static bool read_f64(std::ifstream &stream, double &value) { return bool(stream.read(reinterpret_cast<char *>(&value), sizeof(value))); }
+
+    static void write_polygons(std::ofstream &stream, const Polygons &polygons)
+    {
+        write_u32(stream, uint32_t(polygons.size()));
+        for (const Polygon &polygon : polygons) {
+            write_u32(stream, uint32_t(polygon.size()));
+            for (const Point &point : polygon.points) {
+                write_i64(stream, int64_t(point.x()));
+                write_i64(stream, int64_t(point.y()));
+            }
+        }
+    }
+
+    static bool read_polygons(std::ifstream &stream, Polygons &polygons)
+    {
+        uint32_t polygon_count = 0;
+        if (!read_u32(stream, polygon_count))
+            return false;
+        polygons.clear();
+        polygons.reserve(polygon_count);
+        for (uint32_t polygon_idx = 0; polygon_idx < polygon_count; ++polygon_idx) {
+            uint32_t point_count = 0;
+            if (!read_u32(stream, point_count))
+                return false;
+            Polygon &polygon = polygons.emplace_back();
+            polygon.points.reserve(point_count);
+            for (uint32_t point_idx = 0; point_idx < point_count; ++point_idx) {
+                int64_t x = 0, y = 0;
+                if (!read_i64(stream, x) || !read_i64(stream, y))
+                    return false;
+                polygon.points.emplace_back(Point(coord_t(x), coord_t(y)));
+            }
+        }
+        return true;
+    }
+
+    static void write_layer(std::ofstream &stream, const SupportGeneratorLayer &layer)
+    {
+        write_u32(stream, uint32_t(layer.layer_type));
+        write_f64(stream, layer.print_z);
+        write_f64(stream, layer.bottom_z);
+        write_f64(stream, layer.height);
+        write_u64(stream, uint64_t(layer.idx_object_layer_above));
+        write_u64(stream, uint64_t(layer.idx_object_layer_below));
+        write_u8(stream, layer.bridging ? 1 : 0);
+        write_polygons(stream, layer.polygons);
+        auto write_optional = [&stream](const std::unique_ptr<Polygons> &polygons) {
+            write_u8(stream, polygons ? 1 : 0);
+            if (polygons)
+                write_polygons(stream, *polygons);
+        };
+        write_optional(layer.contact_polygons);
+        write_optional(layer.overhang_polygons);
+        write_optional(layer.enforcer_polygons);
+    }
+
+    static bool read_layer(std::ifstream &stream, SupportGeneratorLayer &layer)
+    {
+        uint32_t type = 0;
+        uint8_t bridging = 0;
+        uint64_t above = 0, below = 0;
+        double print_z = 0., bottom_z = 0., height = 0.;
+        if (!read_u32(stream, type) || !read_f64(stream, print_z) || !read_f64(stream, bottom_z) || !read_f64(stream, height) ||
+            !read_u64(stream, above) || !read_u64(stream, below) || !read_u8(stream, bridging))
+            return false;
+        layer.layer_type = SupporLayerType(type);
+        layer.print_z = coordf_t(print_z);
+        layer.bottom_z = coordf_t(bottom_z);
+        layer.height = coordf_t(height);
+        layer.idx_object_layer_above = size_t(above);
+        layer.idx_object_layer_below = size_t(below);
+        layer.bridging = bridging != 0;
+        if (!read_polygons(stream, layer.polygons))
+            return false;
+        auto read_optional = [&stream](std::unique_ptr<Polygons> &polygons) {
+            uint8_t present = 0;
+            if (!read_u8(stream, present))
+                return false;
+            if (present) {
+                polygons = std::make_unique<Polygons>();
+                return read_polygons(stream, *polygons);
+            }
+            polygons.reset();
+            return true;
+        };
+        return read_optional(layer.contact_polygons) && read_optional(layer.overhang_polygons) && read_optional(layer.enforcer_polygons);
+    }
+
+    size_t m_layer_count{ 0 };
+    std::filesystem::path m_path;
+    std::ofstream m_output;
+    std::ifstream m_input;
+    std::mutex m_input_mutex;
+    std::vector<uint64_t> m_offsets;
+};
 
 } // namespace Slic3r
 

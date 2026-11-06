@@ -1,0 +1,58 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-interface-trunk-handoff-20261105",
+  "key": "organic-interface-trunk-handoff",
+  "type": "fact",
+  "conclusion": "At the existing organic same-layer base/interface handoff, replacing the additional half-line-width separation with a small negative offset derived from the actual support nozzle diameter can reduce interface-to-trunk bead gaps without adding trees, expanding interfaces or changing brim. This was verified only as a limited QQ improvement, not as a universal fix or proof that interfaces lacking any corresponding tree geometry are supported.",
+  "scope": "organic-support-interface-trunk-handoff",
+  "modules": [
+    "SupportCommon"
+  ],
+  "tags": [
+    "organic-support",
+    "interface-bearing",
+    "process-parameters",
+    "limited-verification"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "dae892244bff044003d438cdbc4238c9c3f9798efdd7ca7ca6a24c13d17b593a",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Organic base/interface trim_margin at lines 4176-4178; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-214a14c6a5094d13822240c0e07b5561/validation/report.json",
+      "sha256": "9d176ea4557e33f2567088ac6c4d31752f511258e48e033d4a34e03187575086",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Consumer Changed receipt: syntax, JSON schema and diff checks passed; these are mechanical checks, not a complete geometry guarantee"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-08f115268a1847c9876a8eaf80544dfa/analysis/final-gap-only/plate_1.gcode",
+      "sha256": "627f3ab92b1d455d8d170cab0eccb3afcfb6476fc960b1e246d5d39e0d2f437b",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Final QQ slice with only the handoff adjustment and pre-existing work preserved"
+    }
+  ],
+  "verified_utc": "2026-11-05T12:59:46Z",
+  "verification": {
+    "method": "Built the Release InlongSlicer target with one worker and sliced only QQ through the actual CLI. Compared physical extrusion-bead gaps against the supplied QQ G-code using the measured path widths, preserved the original checker and separately measured physical bead gaps without changing production test paths.",
+    "summary": "At Z 0.75 the physical gap fell from 0.339309 to 0.159390 mm; at Z 0.90 it fell from 0.309352 to 0.299805 mm. Z 0.60 remained unchanged at 0.614026 mm and the strict original checker remains false. The first layer retained 9 interface paths and brim overlap was zero. Final support generation took 1.185 seconds in the recorded process trace; this is not a controlled timing benchmark. All cylinder, broad-foundation, reach/exception and temporary diagnostic experiments were reverted. Only QQ was verified; arbitrary models and other nozzle sizes were not tested.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

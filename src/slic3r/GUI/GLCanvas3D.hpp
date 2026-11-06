@@ -1262,7 +1262,7 @@ public:
     void set_shells_on_previewing(bool is_preview) { m_gcode_viewer.set_shells_on_preview(is_preview); }
 
     //BBS: add only gcode mode
-    void load_gcode_preview(const GCodeProcessorResult& gcode_result, const std::vector<std::string>& str_tool_colors,
+    void load_gcode_preview(GCodeProcessorResult& gcode_result, const std::vector<std::string>& str_tool_colors,
         const std::vector<std::string>& str_color_print_colors, bool only_gcode);
     void set_gcode_view_type(libvgcode::EViewType type) { return m_gcode_viewer.set_view_type(type); }
     libvgcode::EViewType get_gcode_view_type() const { return m_gcode_viewer.get_view_type(); }

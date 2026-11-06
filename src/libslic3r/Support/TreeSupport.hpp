@@ -429,6 +429,7 @@ public:
     enum OverhangType { Detected = 0, Enforced, SharpTail };
     std::map<const ExPolygon*, OverhangType> overhang_types;
     std::vector<std::pair<Vec3f, Vec3f>>      m_vertical_enforcer_points;
+    const std::vector<ExPolygons> &tip_contact_masks() const { return m_tip_contact_masks; }
 
 private:
     /*!
@@ -444,6 +445,7 @@ private:
     const PrintObjectConfig* m_object_config;
     SlicingParameters        m_slicing_params;
     std::vector<ExPolygons>  m_manual_contact_masks;
+    std::vector<ExPolygons>  m_tip_contact_masks;
     // Various precomputed support parameters to be shared with external functions.
     SupportParameters   m_support_params;
     size_t          m_raft_layers = 0;  // number of raft layers, including raft base, raft interface, raft gap

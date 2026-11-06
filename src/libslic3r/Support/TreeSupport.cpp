@@ -720,6 +720,7 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
     m_object->clear_tree_support_preview_cache();
     overhang_types.clear();
     m_manual_contact_masks.assign(m_object->layer_count(), {});
+    m_tip_contact_masks.assign(m_object->layer_count(), {});
 
     const PrintObjectConfig& config = m_object->config();
     SupportType stype = support_type;
@@ -873,6 +874,18 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
     std::chrono::time_point<clock_> t0{ clock_::now() };
     // main part of overhang detection can be parallel
     tbb::concurrent_vector<ExPolygons> overhangs_all_layers(m_object->layer_count());
+    std::vector<Points> model_tip_points(m_object->layer_count());
+    if (config.support_tip_turn_angle.value < 180. - EPSILON) {
+        const double turn_angle = std::max(0., M_PI - Geometry::deg2rad(config.support_tip_turn_angle.value) - 1e-6);
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, m_object->layer_count()),
+            [&](const tbb::blocked_range<size_t> &range) {
+                for (size_t layer_nr = range.begin(); layer_nr < range.end(); ++layer_nr)
+                    for (const ExPolygon &slice : m_object->get_layer(layer_nr)->lslices) {
+                        const Points tips = slice.contour.convex_points(turn_angle);
+                        model_tip_points[layer_nr].insert(model_tip_points[layer_nr].end(), tips.begin(), tips.end());
+                    }
+            });
+    }
     tbb::parallel_for(tbb::blocked_range<size_t>(0, m_object->layer_count()),
         [&](const tbb::blocked_range<size_t>& range) {
             for (size_t layer_nr = range.begin(); layer_nr < range.end(); layer_nr++) {
@@ -887,8 +900,11 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
                 if (layer->lower_layer == nullptr) {
                     for (auto& slice : layer->lslices_extrudable) {
                         auto bbox_size = get_extents(slice).size();
-                        if (!((bbox_size.x() > length_thresh_well_supported && bbox_size.y() > length_thresh_well_supported))
-                            && g_config_support_sharp_tails) {
+                        // A compact tip already on the bed needs no propagated
+                        // tail tree. Keep elongated first-layer tails and rafts.
+                        const bool can_propagate = m_slicing_params.has_raft() ||
+                            bbox_size.x() > length_thresh_well_supported || bbox_size.y() > length_thresh_well_supported;
+                        if (can_propagate && g_config_support_sharp_tails) {
                             layer->sharp_tails.push_back(slice);
                             layer->sharp_tails_height.push_back(layer->height);
                         }
@@ -962,6 +978,19 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
                 // normal overhang
                 ExPolygons lower_layer_offseted = offset_ex(effective_lower, support_offset_scaled, SUPPORT_SURFACES_OFFSET_PARAMETERS);
                 overhangs_all_layers[layer_nr] = diff_ex(curr_polys, lower_layer_offseted);
+                if (!model_tip_points[layer_nr].empty()) {
+                    // Sharp-tip contacts also need the direct, unexpanded slice
+                    // difference. The support-angle offset can legitimately
+                    // cover a tiny tip that still needs a local contact roof.
+                    // These areas are never added to ordinary support regions.
+                    ExPolygons direct_overhangs = diff_ex(layer->lslices, effective_lower);
+                    const Polygons proximity = to_polygons(offset_ex(direct_overhangs, extrusion_width_scaled,
+                        SUPPORT_SURFACES_OFFSET_PARAMETERS));
+                    const bool retain = std::any_of(model_tip_points[layer_nr].begin(), model_tip_points[layer_nr].end(),
+                        [&](const Point &tip) { return contains(proximity, tip); });
+                    if (retain)
+                        m_tip_contact_masks[layer_nr] = std::move(direct_overhangs);
+                }
 
                 double duration{ std::chrono::duration_cast<second_>(clock_::now() - t0).count() };
                 if (duration > 30 || overhangs_all_layers[layer_nr].size() > 100) {
@@ -1212,12 +1241,14 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
             // which are not valid polygons, and will be removed by offset_ex. union_ can make these polygons right.
             ExPolygons blocker = offset_ex(union_(blockers[layer_nr]), scale_(radius_sample_resolution));
             layer->loverhangs = diff_ex(layer->loverhangs, blocker);
+            m_tip_contact_masks[layer_nr] = diff_ex(m_tip_contact_masks[layer_nr], blocker);
             layer->cantilevers = diff_ex(layer->cantilevers, blocker);
             sharp_tail_overhangs = diff_ex(sharp_tail_overhangs, blocker);
         }
 
         if (support_critical_regions_only && is_auto(stype)) {
             layer->loverhangs.clear();  // remove oridinary overhangs, only keep cantilevers and sharp tails (added later)
+            m_tip_contact_masks[layer_nr].clear();
             append(layer->loverhangs, layer->cantilevers);
         }
 
@@ -1225,6 +1256,11 @@ void TreeSupport::detect_overhangs(bool check_support_necessity/* = false*/)
             // do not break bridge as the interface will be poor, see #4318
             bool break_bridge = false;
             m_object->remove_bridges_from_contacts(lower_layer, layer, extrusion_width_scaled, &layer->loverhangs, max_bridge_length, break_bridge);
+        }
+        if (bridge_no_support && !m_tip_contact_masks[layer_nr].empty() && lower_layer) {
+            bool break_bridge = false;
+            m_object->remove_bridges_from_contacts(lower_layer, layer, extrusion_width_scaled,
+                &m_tip_contact_masks[layer_nr], max_bridge_length, break_bridge);
         }
 
 		int nDetected = layer->loverhangs.size();

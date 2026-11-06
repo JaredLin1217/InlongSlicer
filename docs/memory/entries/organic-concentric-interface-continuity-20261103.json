@@ -1,0 +1,62 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-concentric-interface-continuity-20261103",
+  "key": "organic-concentric-interface-continuity",
+  "type": "fact",
+  "conclusion": "Organic concentric interface walls, inset loops, and center finishes can be joined into one source ExtrusionPath before physical-height modulation when each connector is bounded by local spacing and its full bead remains inside the union of legal contact and wall regions. Height modulation then preserves the source relationship as an ExtrusionMultiPath. A bottom-contact region without a continuous full-width legal corridor must remain disconnected rather than forcing an unsupported bridge.",
+  "scope": "organic-support-interface-continuity",
+  "modules": [
+    "SupportCommon",
+    "FillConcentric"
+  ],
+  "tags": [
+    "organic-support",
+    "interface",
+    "concentric",
+    "height-modulation",
+    "regression"
+  ],
+  "files": [
+    "src/libslic3r/Support/SupportCommon.cpp",
+    "src/libslic3r/Fill/FillConcentric.cpp",
+    "tests/fff_print/test_support_material.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/SupportCommon.cpp",
+      "sha256": "d5ce72501377d13caded012e255ccbd084fee6f9e6edb463fbaf8a8228fef127",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "connect_interface_wall_to_fill at line 871 and join_regions at line 1173; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Fill/FillConcentric.cpp",
+      "sha256": "354da977747c28c20af4b64bb66bf0844801f011c8eac623987c75b385201e16",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "center finishes precede local loop joining and max_gap at lines 298-309; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-f6c36e4d83214a69b03a99905624ff97/joined/plate_1.gcode",
+      "sha256": "5e4741a390078ea83d6d620db429c1b88ca154e6ba245df0ed21bf0a8f20bd63",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "test2 final slice: interface paths 335 to 245, Z 0.43 paths 30 to 10, Z 0.2 restored to 40, interface length 1098.385 to 1148.657 mm"
+    }
+  ],
+  "verified_utc": "2026-11-03T21:45:49Z",
+  "verification": {
+    "method": "Release InlongSlicer build, test2 and previous organic model end-to-end CLI slices, path and segment analysis, Consumer Changed validation, and manual source review",
+    "summary": "The final Release target built and both models sliced successfully. Test2 retained support-body paths at 153, reduced interface paths from 335 to 245, increased interface length from 1098.385 to 1148.657 mm, and connected each of ten contact islands at Z 0.43 into one path. Z 2.02667 has no full-width legal connector and remains split. Consumer Changed passed at .agents/runtime/runs/run-fd3bd98d1d104456beeffcfde2f9cc6d/validation/report.json. The broader fff_print_tests target remains blocked by pre-existing missing organic_support_overlap_certificate, organic_support_overlap_index, and organic_support_local_overlap symbols.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
