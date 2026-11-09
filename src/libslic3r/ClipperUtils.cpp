@@ -205,6 +205,31 @@ inline int64_t py(const Point &pt) { return pt.y(); }
 inline int64_t px(const C2::Point64 &pt) { return pt.x; }
 inline int64_t py(const C2::Point64 &pt) { return pt.y; }
 
+class PolygonRangeProvider {
+public:
+    PolygonRangeProvider(const Polygons::const_iterator &begin, const Polygons::const_iterator &end) : m_begin(begin), m_end(end) {}
+
+    struct iterator : public ClipperUtils::PathsProviderIteratorBase {
+        explicit iterator(const Polygons::const_iterator &it) : m_it(it) {}
+        const Points &operator*() const { return m_it->points; }
+        bool operator==(const iterator &rhs) const { return m_it == rhs.m_it; }
+        bool operator!=(const iterator &rhs) const { return !(*this == rhs); }
+        const Points &operator++(int) { return (m_it++)->points; }
+        iterator &operator++() { ++m_it; return *this; }
+    private:
+        Polygons::const_iterator m_it;
+    };
+
+    iterator cbegin() const { return iterator(m_begin); }
+    iterator begin() const { return this->cbegin(); }
+    iterator cend() const { return iterator(m_end); }
+    iterator end() const { return this->cend(); }
+    size_t size() const { return size_t(std::distance(m_begin, m_end)); }
+
+private:
+    Polygons::const_iterator m_begin, m_end;
+};
+
 template<typename PathsProvider>
 C2::Paths64 to_paths64(PathsProvider &&paths)
 {
@@ -701,6 +726,8 @@ Slic3r::Polygons intersection(const Slic3r::Polygons& subject, const Slic3r::Pol
 
 Slic3r::Polygons union_(const Slic3r::Polygons &subject)
     { return _clipper(ctUnion, ClipperUtils::PolygonsProvider(subject), ClipperUtils::EmptyPathsProvider(), ApplySafetyOffset::No); }
+Slic3r::Polygons union_(const Slic3r::Polygons::const_iterator &begin, const Slic3r::Polygons::const_iterator &end)
+    { return _clipper(ctUnion, PolygonRangeProvider(begin, end), ClipperUtils::EmptyPathsProvider(), ApplySafetyOffset::No); }
 Slic3r::Polygons union_(const Slic3r::ExPolygons &subject)
     { return _clipper(ctUnion, ClipperUtils::ExPolygonsProvider(subject), ClipperUtils::EmptyPathsProvider(), ApplySafetyOffset::No); }
 Slic3r::Polygons union_(const Slic3r::Polygons &subject, const PolyFillType fillType)

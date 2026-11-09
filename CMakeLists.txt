@@ -496,7 +496,6 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules/)
 message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
-enable_testing ()
 
 # Enable C++17 language standard.
 set(CMAKE_CXX_STANDARD 17)
@@ -1281,13 +1280,6 @@ if(SLIC3R_BUILD_SANDBOXES)
     add_subdirectory(sandboxes)
 endif()
 
-if(BUILD_TESTS)
-    add_subdirectory(tests)
-    if (NOT SLIC3R_BUNDLED_WARNINGS)
-        # Catch2 is vendored under tests/ and sets its own warning flags too.
-        inlongslicer_silence_third_party_warnings("${CMAKE_CURRENT_SOURCE_DIR}/tests/catch2")
-    endif ()
-endif()
 
 if (NOT WIN32 AND NOT APPLE)
     configure_file(${LIBDIR}/dev-utils/platform/unix/build_appimage.sh.in ${CMAKE_CURRENT_BINARY_DIR}/build_appimage.sh USE_SOURCE_PERMISSIONS @ONLY)

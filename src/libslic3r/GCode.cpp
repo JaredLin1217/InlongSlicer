@@ -2921,6 +2921,8 @@ void GCode::do_export(Print* print, const char* path, GCodeProcessorResult* resu
         throw;
     }
     file.close();
+    if (file.process_batches() > 0)
+        BOOST_LOG_TRIVIAL(info) << "G-code processor batches: " << file.process_batches();
 
     check_placeholder_parser_failed();
 
@@ -9095,14 +9097,25 @@ bool GCode::GCodeOutputStream::is_error() const
     return ::ferror(this->f);
 }
 
+void GCode::GCodeOutputStream::flush_processing()
+{
+    if (m_processing_buffer.empty())
+        return;
+    m_processor.process_buffer(m_processing_buffer);
+    m_processing_buffer.clear();
+    ++m_process_batches;
+}
+
 void GCode::GCodeOutputStream::flush()
 {
+    this->flush_processing();
     ::fflush(this->f);
 }
 
 void GCode::GCodeOutputStream::close()
 {
     if (this->f) {
+        this->flush_processing();
         ::fclose(this->f);
         this->f = nullptr;
     }
@@ -9111,11 +9124,11 @@ void GCode::GCodeOutputStream::close()
 void GCode::GCodeOutputStream::write(const char *what)
 {
     if (what != nullptr) {
-        const char* gcode = what;
-        // writes string to file
-        fwrite(gcode, 1, ::strlen(gcode), this->f);
-        //FIXME don't allocate a string, maybe process a batch of lines?
-        m_processor.process_buffer(std::string(gcode));
+        const size_t length = ::strlen(what);
+        fwrite(what, 1, length, this->f);
+        m_processing_buffer.append(what, length);
+        if (m_processing_buffer.size() >= processing_buffer_limit)
+            this->flush_processing();
     }
 }
 

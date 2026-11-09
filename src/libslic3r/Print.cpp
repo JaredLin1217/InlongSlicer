@@ -120,24 +120,6 @@ using namespace nlohmann;
 
 namespace Slic3r {
 
-// Optional, low-overhead stage tracing for diagnosing long CLI slices.  The
-// trace is disabled unless the caller supplies an output path, and therefore
-// does not affect normal slicing or generated paths.
-static void trace_print_process_stage(const char *stage)
-{
-    const char *path = std::getenv("INLONG_PRINT_PROCESS_TRACE");
-    if (path == nullptr || *path == '\0' || stage == nullptr)
-        return;
-    static std::mutex trace_mutex;
-    static const auto trace_start = std::chrono::steady_clock::now();
-    const auto now = std::chrono::steady_clock::now();
-    const double elapsed = std::chrono::duration<double>(now - trace_start).count();
-    std::lock_guard<std::mutex> lock(trace_mutex);
-    std::ofstream out(path, std::ios::app);
-    if (out)
-        out << std::fixed << std::setprecision(3) << elapsed << " " << stage << "\n";
-}
-
 Print::SlicingPipelineHookFn Print::s_slicing_pipeline_hook_fn = nullptr;
 
 template class PrintState<PrintStep, psCount>;
@@ -3156,7 +3138,6 @@ std::map<ObjectID, unsigned int> getObjectExtruderMap(const Print& print) {
 // Slicing process, running at a background thread.
 void Print::process(long long *time_cost_with_cache, bool use_cache)
 {
-    trace_print_process_stage("process.begin");
     long long start_time = 0, end_time = 0;
     if (time_cost_with_cache)
         *time_cost_with_cache = 0;
@@ -3177,7 +3158,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
     if (m_objects.empty())
         return;
 
-    trace_print_process_stage("process.objects.ready");
 
     // Belt purge prism: _plan_belt_purge() (psWipeTower) truncates the prism's
     // layers and drops its unclaimed fills, stashing both so a replan can undo
@@ -3257,7 +3237,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
     // so sharing layers between "identical" objects is wrong.
     bool belt_no_share = m_config.belt_printer.value;
     if (!use_cache) {
-        trace_print_process_stage("process.object_steps.begin");
         for (int index = 0; index < object_count; index++)
         {
             PrintObject *obj =  m_objects[index];
@@ -3320,10 +3299,8 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         // SlicingPipeline: dedicated slice loop so the Slice boundary is hookable before perimeters.
         for (PrintObject *obj : m_objects) {
             if (need_slicing_objects.count(obj) != 0) {
-                trace_print_process_stage("object.slice.begin");
                 const bool was_done = obj->is_step_done(posSlice);
                 obj->slice();
-                trace_print_process_stage("object.slice.end");
                 hook_after(obj, was_done, posSlice, SlicingPipelineStepPlugin::posSlice);
                 // re-snapshot each layer's raw_slices AFTER the Slice hook ran, so the
                 // plugin's mutation becomes the untyped baseline. Without this, a later
@@ -3342,10 +3319,8 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         }
         for (PrintObject *obj : m_objects) {
             if (need_slicing_objects.count(obj) != 0) {
-                trace_print_process_stage("object.perimeters.begin");
                 const bool was_done = obj->is_step_done(posPerimeters);
                 obj->make_perimeters();   // slice() inside is a no-op: posSlice already DONE
-                trace_print_process_stage("object.perimeters.end");
                 hook_after(obj, was_done, posPerimeters, SlicingPipelineStepPlugin::posPerimeters);
             } else {
                 if (obj->set_started(posPerimeters)) obj->set_done(posPerimeters);
@@ -3353,10 +3328,8 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         }
         for (PrintObject *obj : m_objects) {
             if (need_slicing_objects.count(obj) != 0) {
-                trace_print_process_stage("object.curled.begin");
                 const bool was_done = obj->is_step_done(posEstimateCurledExtrusions);
                 obj->estimate_curled_extrusions();
-                trace_print_process_stage("object.curled.end");
                 hook_after(obj, was_done, posEstimateCurledExtrusions, SlicingPipelineStepPlugin::posEstimateCurledExtrusions);
             }
             else {
@@ -3366,7 +3339,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         }
         for (PrintObject *obj : m_objects) {
             if (need_slicing_objects.count(obj) != 0) {
-                trace_print_process_stage("object.infill.begin");
                 // split prepare_infill (fill-surface prep) from infill (make_fills) so a
                 // plugin can mutate fill surfaces at the PrepareInfill seam and have make_fills
                 // consume them (unlike the Infill seam, which fires after the fills are already
@@ -3377,7 +3349,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
                 hook_after(obj, prepare_was_done, posPrepareInfill, SlicingPipelineStepPlugin::posPrepareInfill);
                 const bool was_done = obj->is_step_done(posInfill);
                 obj->infill();
-                trace_print_process_stage("object.infill.end");
                 hook_after(obj, was_done, posInfill, SlicingPipelineStepPlugin::posInfill);
             }
             else {
@@ -3389,10 +3360,8 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         }
         for (PrintObject *obj : m_objects) {
             if (need_slicing_objects.count(obj) != 0) {
-                trace_print_process_stage("object.ironing.begin");
                 const bool was_done = obj->is_step_done(posIroning);
                 obj->ironing();
-                trace_print_process_stage("object.ironing.end");
                 hook_after(obj, was_done, posIroning, SlicingPipelineStepPlugin::posIroning);
             }
             else {
@@ -3403,7 +3372,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
 
         // Z-Contouring
         for (PrintObject *obj : m_objects) {
-            trace_print_process_stage("object.contouring.begin");
             bool need_contouring = need_slicing_objects.count(obj) != 0 && obj->need_z_contouring();
             if (need_contouring) {
                 const bool was_done = obj->is_step_done(posContouring);
@@ -3413,7 +3381,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
                 if (obj->set_started(posContouring))
                     obj->set_done(posContouring);
             }
-            trace_print_process_stage("object.contouring.end");
         }
 
         // SlicingPipeline: support runs in the parallel block below; the hook must fire in a
@@ -3423,7 +3390,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
             for (size_t i = 0; i < m_objects.size(); ++i)
                 sup_was_done[i] = m_objects[i]->is_step_done(posSupportMaterial) ? 1 : 0;
 
-        trace_print_process_stage("object.support.begin");
         tbb::parallel_for(tbb::blocked_range<int>(0, int(m_objects.size())),
             [this, need_slicing_objects](const tbb::blocked_range<int>& range) {
                 for (int i = range.begin(); i < range.end(); i++) {
@@ -3439,13 +3405,10 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
                 }
             }
         );
-        trace_print_process_stage("object.support.end");
         // The belt brim keeps clear of every object's layers and support layers,
         // so it runs once no support step is rebuilding them any more.
-        trace_print_process_stage("object.belt_brim.begin");
         for (PrintObject *obj : m_objects)
             obj->generate_belt_brim();
-        trace_print_process_stage("object.belt_brim.end");
 
         if (m_pipeline_plugin_active)
             for (size_t i = 0; i < m_objects.size(); ++i)
@@ -3464,7 +3427,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
                     obj->set_done(posDetectOverhangsForLift);
             }
         }
-        trace_print_process_stage("object_steps.end");
     }
     else {
         for (PrintObject *obj : m_objects) {
@@ -3497,7 +3459,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         }
     }
 
-    trace_print_process_stage("shared_layers.begin");
     for (PrintObject *obj : m_objects)
     {
         if (need_slicing_objects.count(obj) == 0) {
@@ -3505,11 +3466,9 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
             obj->copy_layers_overhang_from_shared_object();
         }
     }
-    trace_print_process_stage("shared_layers.end");
 
 
 
-    trace_print_process_stage("wipe_tower.begin");
     if (this->set_started(psWipeTower)) {
         {
             std::vector<std::set<int>> geometric_unprintables(m_config.nozzle_diameter.size());
@@ -3543,7 +3502,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         this->set_done(psWipeTower);
         if (m_pipeline_plugin_active) run_pipeline_hook(SlicingPipelineStepPlugin::psWipeTower, nullptr);
     }
-    trace_print_process_stage("wipe_tower.end");
 
     if (this->has_wipe_tower()) {
         m_fake_wipe_tower.set_pos({ m_config.wipe_tower_x.get_at(m_plate_index), m_config.wipe_tower_y.get_at(m_plate_index) });
@@ -3555,7 +3513,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
         this->validate_compacted_wipe_tower_clearance();
     }
 
-    trace_print_process_stage("skirt_brim.begin");
     if (this->set_started(psSkirtBrim)) {
         this->set_status(70, L("Generating skirt & brim"));
 
@@ -3829,9 +3786,7 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
             *time_cost_with_cache = *time_cost_with_cache + end_time - start_time;
         }
     }
-    trace_print_process_stage("skirt_brim.end");
     //BBS
-    trace_print_process_stage("simplify.begin");
     for (PrintObject *obj : m_objects) {
         if (((!use_cache)&&(need_slicing_objects.count(obj) != 0))
             || (use_cache &&(re_slicing_objects.count(obj) != 0))){
@@ -3852,7 +3807,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
                 obj->set_done(posSimplifySupportPath);
         }
     }
-    trace_print_process_stage("simplify.end");
 
     // BBS
     bool has_adaptive_layer_height = false;
@@ -3862,7 +3816,6 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
             break;
         }
     }
-    trace_print_process_stage("conflict_check.begin");
     if(!m_no_check /*&& !has_adaptive_layer_height*/)
     {
         using Clock                 = std::chrono::high_resolution_clock;
@@ -3882,10 +3835,8 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
             BOOST_LOG_TRIVIAL(error) << boost::format("gcode path conflicts found between %1% and %2%")%conflictRes.value()._objName1 %conflictRes.value()._objName2;
         }
     }
-    trace_print_process_stage("conflict_check.end");
 
     BOOST_LOG_TRIVIAL(info) << "Slicing process finished." << log_memory_info();
-    trace_print_process_stage("process.end");
 
     {
         LifecycleEventContext ctx;

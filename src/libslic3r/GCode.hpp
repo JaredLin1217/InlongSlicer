@@ -417,6 +417,7 @@ protected:
 
         bool is_open() const { return f; }
         bool is_error() const;
+        size_t process_batches() const { return m_process_batches; }
 
         void flush();
         void close();
@@ -434,8 +435,12 @@ protected:
         void write_format(const char* format, ...);
 
     private:
+        static constexpr size_t processing_buffer_limit = 64 * 1024;
         FILE *f = nullptr;
         GCodeProcessor &m_processor;
+        std::string m_processing_buffer;
+        size_t m_process_batches{0};
+        void flush_processing();
     };
 
     // Virtual hooks for belt printer subclass (BeltGCode).

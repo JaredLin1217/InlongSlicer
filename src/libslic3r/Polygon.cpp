@@ -624,12 +624,17 @@ bool remove_degenerate(Polygons &polys)
     return modified;
 }
 
-bool remove_small(Polygons &polys, double min_area)
+bool remove_small(Polygons &polys, double min_area, double *remaining_area)
 {
+    if (remaining_area != nullptr)
+        *remaining_area = 0.;
     bool modified = false;
     size_t j = 0;
     for (size_t i = 0; i < polys.size(); ++ i) {
-        if (std::abs(polys[i].area()) >= min_area) {
+        const double polygon_area = polys[i].area();
+        if (std::abs(polygon_area) >= min_area) {
+            if (remaining_area != nullptr)
+                *remaining_area += polygon_area;
             if (j < i) 
                 std::swap(polys[i].points, polys[j].points);
             ++ j;

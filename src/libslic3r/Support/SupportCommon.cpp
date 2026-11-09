@@ -34,6 +34,7 @@
 #include <clipper2/clipper.h>
 
 #include "SupportCommon.hpp"
+#include "SupportPolygonAccumulator.hpp"
 #include "SupportLayer.hpp"
 #include "SupportParameters.hpp"
 #include "SupportCacheBudget.hpp"
@@ -57,6 +58,19 @@
 #include "libslic3r/MultiMaterialSegmentation.hpp"
 
 namespace Slic3r {
+
+Polygons organic_bounded_union(const Polygons &polygons)
+{
+    constexpr size_t chunk_size = 64;
+    if (polygons.empty())
+        return {};
+    Polygons merged;
+    for (size_t begin = 0; begin < polygons.size(); begin += chunk_size) {
+        const size_t end = std::min(begin + chunk_size, polygons.size());
+        append_support_polygons(merged, union_(polygons.begin() + begin, polygons.begin() + end));
+    }
+    return union_(merged);
+}
 
 // how much we extend support around the actual contact area
 //FIXME this should be dependent on the nozzle diameter!
@@ -212,8 +226,7 @@ std::pair<SupportGeneratorLayersPtr, SupportGeneratorLayersPtr> generate_interfa
 
     if (! intermediate_layers.empty() && support_params.has_interfaces()) {
         const auto profile_started = std::chrono::steady_clock::now();
-        const bool legacy_interface = support_params.support_style != smsTreeOrganic ||
-                                      std::getenv("INLONG_SUPPORT_LEGACY_INTERFACE") != nullptr;
+        const bool legacy_interface = support_params.support_style != smsTreeOrganic;
         // For all intermediate layers, collect top contact surfaces, which are not further than support_material_interface_layers.
         BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_interface_layers() in parallel - start";
         const bool                 snug_supports          = support_params.support_style == smsSnug;
@@ -2903,44 +2916,55 @@ static size_t remove_detached_interfaces(
     const SlicingParameters &slicing_params)
 {
     struct BearingRoad {
+        struct Segment {
+            Line line;
+            BoundingBox bounds;
+        };
         const ExtrusionPath *path;
         BoundingBox bounds;
         double top;
         double bottom;
+        mutable std::vector<Segment> segments;
     };
     auto make_road = [](const ExtrusionPath &path, double z) {
         return BearingRoad{&path, support_path_bounds(path), z, z - path.height};
     };
-    auto touches = [](const BearingRoad &contact, const BearingRoad &foundation) {
+    auto prepare_segments = [](const BearingRoad &road) {
+        if (!road.segments.empty())
+            return;
+        const auto &points = road.path->polyline.points;
+        road.segments.reserve(points.size() - 1);
+        for (size_t i = 1; i < points.size(); ++i) {
+            Line line(points[i - 1].to_point(), points[i].to_point());
+            BoundingBox bounds;
+            bounds.merge(line.a);
+            bounds.merge(line.b);
+            road.segments.push_back({std::move(line), bounds});
+        }
+    };
+    auto touches = [&prepare_segments](const BearingRoad &contact, const BearingRoad &foundation) {
         if (foundation.bottom > contact.top + EPSILON || foundation.top < contact.bottom - EPSILON ||
             !foundation.bounds.overlap(contact.bounds))
             return false;
         const double radius = 0.5 * scale_(std::abs(contact.path->width) + std::abs(foundation.path->width)) + SCALED_EPSILON;
         const double radius2 = radius * radius;
-        const auto &contact_points = contact.path->polyline.points;
-        const auto &foundation_points = foundation.path->polyline.points;
-        if (contact_points.empty() || foundation_points.empty())
+        if (contact.path->polyline.points.size() < 2 || foundation.path->polyline.points.size() < 2)
             return false;
-        for (size_t i = 1; i < contact_points.size(); ++i) {
-            const Line contact_line(contact_points[i - 1].to_point(), contact_points[i].to_point());
-            BoundingBox contact_bounds;
-            contact_bounds.merge(contact_line.a);
-            contact_bounds.merge(contact_line.b);
+        prepare_segments(contact);
+        prepare_segments(foundation);
+        for (const auto &contact_segment : contact.segments) {
+            BoundingBox contact_bounds = contact_segment.bounds;
             contact_bounds.offset(radius);
-            for (size_t j = 1; j < foundation_points.size(); ++j) {
-                const Line foundation_line(foundation_points[j - 1].to_point(), foundation_points[j].to_point());
-                BoundingBox foundation_bounds;
-                foundation_bounds.merge(foundation_line.a);
-                foundation_bounds.merge(foundation_line.b);
-                if (!contact_bounds.overlap(foundation_bounds))
+            for (const auto &foundation_segment : foundation.segments) {
+                if (!contact_bounds.overlap(foundation_segment.bounds))
                     continue;
                 Point intersection;
-                if (line_alg::intersection(contact_line, foundation_line, &intersection))
+                if (line_alg::intersection(contact_segment.line, foundation_segment.line, &intersection))
                     return true;
-                if (std::min({line_alg::distance_to_squared(contact_line, foundation_line.a),
-                        line_alg::distance_to_squared(contact_line, foundation_line.b),
-                        line_alg::distance_to_squared(foundation_line, contact_line.a),
-                        line_alg::distance_to_squared(foundation_line, contact_line.b)}) <= radius2)
+                if (std::min({line_alg::distance_to_squared(contact_segment.line, foundation_segment.line.a),
+                        line_alg::distance_to_squared(contact_segment.line, foundation_segment.line.b),
+                        line_alg::distance_to_squared(foundation_segment.line, contact_segment.line.a),
+                        line_alg::distance_to_squared(foundation_segment.line, contact_segment.line.b)}) <= radius2)
                     return true;
             }
         }
@@ -3036,10 +3060,6 @@ static size_t remove_detached_interfaces(
     if (removed > 0)
         BOOST_LOG_TRIVIAL(info) << "Organic detached contact cleanup: removed " << removed <<
             ", elapsed " << elapsed << " seconds";
-    if (const char *path = std::getenv("INLONG_ORGANIC_TIMING_TRACE")) {
-        std::ofstream out(path, std::ios::app);
-        out << elapsed << " organic.detached_contacts " << removed << "\n";
-    }
     return removed;
 }
 
@@ -3217,14 +3237,6 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
     const ExPolygons &allowed, float height, double max_link, const ExtrusionPaths &upper_paths,
     std::set<const ExtrusionEntity *> *changed)
 {
-    auto trace = [&](const char *event, size_t index, size_t other, double value) {
-        if (const char *file = std::getenv("INLONG_INTERFACE_JOIN_TRACE")) {
-            static std::mutex mutex;
-            const std::lock_guard<std::mutex> lock(mutex);
-            std::ofstream(file, std::ios::app) << "{\"event\":\"" << event << "\",\"index\":" << index
-                << ",\"other\":" << other << ",\"height\":" << height << ",\"value\":" << value << "}\n";
-        }
-    };
     struct Chain {
         ExtrusionEntity **slot;
         ExtrusionPaths paths;
@@ -3280,7 +3292,6 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
         }
     };
     gather(collection);
-    trace("chains", chains.size(), allowed.size(), height);
     auto length = [](const ExtrusionPaths &paths) {
         double result = 0.;
         for (const ExtrusionPath &path : paths) result += path.length();
@@ -3443,7 +3454,6 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
         // Bound geometric routing work on dense support layers. Retaining a
         // fragment is safer than searching unrelated parts of a large model.
         if (candidates.size() > 8) candidates.resize(8);
-        trace("candidates", small, candidates.size(), unscale<double>(small_length));
         for (const Candidate &candidate : candidates) {
             ExtrusionPaths receiver = chains[candidate.index].paths;
             if (candidate.receiver_reversed) reverse(receiver);
@@ -3502,7 +3512,6 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
             };
             add_others(collection);
             if (too_complex) {
-                trace("complex_obstacles", small, candidate.index, double(obstacle_vertices));
                 continue;
             }
             for (const auto &[line, width] : obstacles)
@@ -3535,26 +3544,22 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
                     window.max, Point(window.min.x(), window.max.y())}};
                 const ExPolygons local_visible = intersection_ex(visible, Polygons{clip});
                 if (!route_support_path(a.to_point(), b.to_point(), centers, local_visible, max_link, points)) {
-                    trace("no_route", small, candidate.index, unscale<double>((a - b).cast<double>().norm()));
                     return false;
                 }
                 Polyline line(std::move(points));
                 if (line.length() > 1.5 * max_link) {
-                    trace("route_length", small, candidate.index, unscale<double>(line.length()));
                     return false;
                 }
                 ExtrusionPath path(flow);
                 path.polyline = Polyline3(std::move(line));
                 const ExPolygons fit_material = union_ex(material, offset(original, 4.f * float(SCALED_EPSILON)));
                 if (area(diff_ex(path.polygons_covered_by_width(), fit_material)) > sqr(double(scale_(0.002)))) {
-                    trace("bead_outside", small, candidate.index, 0.);
                     return false;
                 }
                 double retraced = 0.;
                 for (const Polyline &overlap : intersection_pl(Polylines{path.polyline.to_polyline()},
                         offset(original, -0.25f * float(scale_(flow.width))))) retraced += overlap.length();
                 if (retraced > 1.5 * scale_(flow.width)) {
-                    trace("retrace", small, candidate.index, unscale<double>(retraced));
                     return false;
                 }
                 output.push_back(std::move(path));
@@ -3621,7 +3626,6 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
                     }
                 }
                 if (loses_bearing) {
-                    trace("coverage", small, candidate.index, 0.);
                     continue;
                 }
             }
@@ -3646,7 +3650,6 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
             chains[small].paths.clear();
             chains[small].vertices = 0;
             ++joined;
-            trace("joined", small, candidate.index, 0.);
             break;
         }
     }
@@ -3663,8 +3666,10 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
 }
 
 size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_height,
-    const std::set<const ExtrusionEntity *> &changed)
+    const std::set<const ExtrusionEntity *> &changed, std::vector<coordf_t> *affected_print_zs)
 {
+    if (affected_print_zs != nullptr)
+        affected_print_zs->clear();
     if (changed.empty()) return 0;
 
     // Most organic prints enter this repair pass because a stepped contact
@@ -3813,6 +3818,8 @@ exact_modulation:
                     delete entity;
                     entity = replacement;
                     ++adjusted;
+                    if (affected_print_zs != nullptr)
+                        affected_print_zs->push_back(layer->print_z);
                 }
             }
         };
@@ -3845,8 +3852,11 @@ size_t generate_support_toolpaths(
     const SupportGeneratorLayersPtr     &interface_layers,
     const SupportGeneratorLayersPtr     &base_interface_layers,
     SupportGeneratorLayerPager          *pager,
-    const Point                         &support_offset)
+    const Point                         &support_offset,
+    std::vector<coordf_t>              *affected_print_zs)
 {
+    if (affected_print_zs != nullptr)
+        affected_print_zs->clear();
     size_t physical_height_adjustments = 0;
     // loop_interface_processor with a given circle radius.
     LoopInterfaceProcessor loop_interface_processor(1.5 * support_params.support_material_interface_flow.scaled_width());
@@ -4207,10 +4217,11 @@ size_t generate_support_toolpaths(
                 }
                 if (!interface_layer.empty())
                     polygons_append(interface_polygons, interface_layer.polygons_to_extrude());
+                const Polygons trimmed_interface = offset(interface_polygons, trim_margin);
                 if (!base_layer.empty())
-                    base_layer.set_polygons_to_extrude(diff(base_layer.polygons_to_extrude(), offset(interface_polygons, trim_margin)));
+                    base_layer.set_polygons_to_extrude(diff(base_layer.polygons_to_extrude(), trimmed_interface));
                 if (!base_interface_layer.empty())
-                    base_interface_layer.set_polygons_to_extrude(diff(base_interface_layer.polygons_to_extrude(), offset(interface_polygons, trim_margin)));
+                    base_interface_layer.set_polygons_to_extrude(diff(base_interface_layer.polygons_to_extrude(), trimmed_interface));
             }
 
 #if 0
@@ -4348,13 +4359,6 @@ size_t generate_support_toolpaths(
                         wall_regions = union_safety_offset_ex(*layer_ex.layer->contact_polygons);
                     if (!wall_regions.empty())
                         support_layer.support_islands = union_ex(support_layer.support_islands, wall_regions);
-                    const bool trace_interface_join = std::getenv("INLONG_INTERFACE_JOIN_TRACE") != nullptr;
-                    if (trace_interface_join)
-                        BOOST_LOG_TRIVIAL(info) << "Interface fill z=" << support_layer.print_z <<
-                            " type=" << int(interface_layer_type) << " pattern=" << fill_pattern <<
-                            " walls=" << wall_count << " regions=" << fill_regions.size() <<
-                            " concentric=" << fill_params.connect_concentric_loops <<
-                            " zigzag=" << fill_params.connect_support_zigzag;
                     const size_t before_interface_fill = layer_ex.extrusions.size();
                     fill_support_interface_with_walls(layer_ex.extrusions, fill_regions, filler, fill_params,
                         interface_role, interface_flow, wall_count,
@@ -4369,26 +4373,16 @@ size_t generate_support_toolpaths(
                         for (const ExPolygon &region : fill_regions)
                             extrusion_entities_append_paths(layer_ex.extrusions, draw_perimeters(region, 0.),
                                 interface_role, interface_flow.mm3_per_mm(), interface_flow.width(), interface_flow.height());
-                    if (trace_interface_join) {
-                        BOOST_LOG_TRIVIAL(info) << "Interface fill z=" << support_layer.print_z <<
-                            " paths=" << before_interface_fill << " -> " << layer_ex.extrusions.size();
-                        for (const ExtrusionEntity *entity : layer_ex.extrusions)
-                            for_each_extrusion_path(*entity, [&](const ExtrusionPath &path) {
-                                BOOST_LOG_TRIVIAL(info) << "Interface path z=" << support_layer.print_z <<
-                                    " type=" << int(interface_layer_type) << " width=" << path.width <<
-                                    " height=" << path.height << " length=" << path.length() <<
-                                    " first=" << unscale<double>(path.first_point().x()) << "," << unscale<double>(path.first_point().y()) <<
-                                    " last=" << unscale<double>(path.last_point().x()) << "," << unscale<double>(path.last_point().y());
-                            });
-                    }
                     if (organic_tree && (interface_layer_type == InterfaceLayerType::TopContact ||
                                          interface_layer_type == InterfaceLayerType::BottomContact)) {
                         Polygons printed;
                         for (const ExtrusionEntity *entity : layer_ex.extrusions)
                             if (entity != nullptr) entity->polygons_covered_by_width(printed, 1.f);
-                        for (const ExPolygon &part : fill_regions)
-                            if (area(intersection(printed, to_polygons(part))) > sqr(double(scale_(0.001))))
-                                polygons_append(contact_keepout, to_polygons(part));
+                        for (const ExPolygon &part : fill_regions) {
+                            Polygons footprint = to_polygons(part);
+                            if (area(intersection(printed, footprint)) > sqr(double(scale_(0.001))))
+                                polygons_append(contact_keepout, std::move(footprint));
+                        }
                     }
                     // Only generic roofs use compact source arcs. A true
                     // top/bottom contact pad and a model-landing interface
@@ -4412,7 +4406,7 @@ size_t generate_support_toolpaths(
                         if (entity != nullptr)
                             entity->polygons_covered_by_width(contact_keepout, 1.f);
                 if (!contact_keepout.empty())
-                    contact_keepout = union_(std::move(contact_keepout));
+                    contact_keepout = organic_bounded_union(std::move(contact_keepout));
             }
             const bool interface_layer_enabled = !interface_layer.empty() &&
                 (interface_layer.layer->layer_type == SupporLayerType::BottomInterface ? bottom_interfaces : top_interfaces);
@@ -4637,8 +4631,11 @@ size_t generate_support_toolpaths(
                 else if (is_support(entity->role())) support_owners.insert(entity);
         };
         for (const SupportLayer *layer : support_layers) collect(layer->support_fills);
+        std::vector<coordf_t> adjusted_print_zs;
         physical_height_adjustments = modulate_joined_support_paths(
-            support_layers, float(slicing_params.min_layer_height), support_owners);
+            support_layers, float(slicing_params.min_layer_height), support_owners, &adjusted_print_zs);
+        if (affected_print_zs != nullptr)
+            *affected_print_zs = std::move(adjusted_print_zs);
     }
 
 #ifndef NDEBUG

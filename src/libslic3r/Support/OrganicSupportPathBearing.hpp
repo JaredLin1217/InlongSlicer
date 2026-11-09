@@ -5,11 +5,221 @@
 #include "../BoundingBox.hpp"
 #include "../Line.hpp"
 #include "../Polyline.hpp"
+#include "../ExtrusionEntity.hpp"
 #include "../AABBTreeLines.hpp"
+#include "../AABBTreeIndirect.hpp"
 
 #include <algorithm>
+#include <functional>
+#include <map>
+#include <memory>
 
 namespace Slic3r::TreeSupport3D {
+
+struct OrganicSupportPolygonGeometry {
+    using PolygonTree = AABBTreeIndirect::Tree<2, coord_t>;
+
+    Polygons polygons;
+    std::vector<BoundingBox> polygon_bounds;
+    BoundingBox bounds;
+    size_t vertex_count{0};
+    PolygonTree polygon_tree;
+
+    OrganicSupportPolygonGeometry() = default;
+    explicit OrganicSupportPolygonGeometry(const Polygons &input) : polygons(input) { initialize(); }
+    explicit OrganicSupportPolygonGeometry(Polygons &&input) : polygons(std::move(input)) { initialize(); }
+
+    size_t spatial_bytes() const
+    {
+        return polygon_bounds.capacity() * sizeof(BoundingBox) +
+            polygon_tree.nodes().capacity() * sizeof(PolygonTree::Node);
+    }
+
+private:
+    void initialize()
+    {
+        polygon_bounds.reserve(polygons.size());
+        std::vector<AABBTreeIndirect::BoundingBoxWrapper> boxes;
+        boxes.reserve(polygons.size());
+        for (size_t index = 0; index < polygons.size(); ++index) {
+            const Polygon &polygon = polygons[index];
+            vertex_count += polygon.size();
+            const BoundingBox polygon_box = get_extents(polygon);
+            polygon_bounds.push_back(polygon_box);
+            if (polygon_box.defined) {
+                bounds.merge(polygon_box);
+                boxes.emplace_back(index, polygon_box);
+            }
+        }
+        polygon_tree.build_modify_input(boxes);
+    }
+};
+
+class OrganicSupportOrderedPlane {
+public:
+    void append(const Polygons &polygons)
+    {
+        if (polygons.empty())
+            return;
+        const size_t index = m_entries.size();
+        m_entries.emplace_back(polygons);
+        const BoundingBox &bounds = m_entries.back().bounds;
+        if (bounds.defined)
+            m_min_x.emplace(bounds.min.x(), index);
+    }
+
+    size_t size() const { return m_entries.size(); }
+
+    template<typename Callback>
+    void for_each_geometry(const BoundingBox &query, Callback &&callback) const
+    {
+        if (!query.defined)
+            return;
+        std::vector<size_t> candidates;
+        const auto end = m_min_x.upper_bound(query.max.x());
+        for (auto it = m_min_x.begin(); it != end; ++it) {
+            const size_t index = it->second;
+            if (m_entries[index].bounds.overlap(query))
+                candidates.push_back(index);
+        }
+        std::sort(candidates.begin(), candidates.end());
+        for (const size_t index : candidates)
+            callback(m_entries[index]);
+    }
+
+private:
+    std::vector<OrganicSupportPolygonGeometry> m_entries;
+    std::multimap<coord_t, size_t> m_min_x;
+};
+
+struct OrganicSupportClippingStats {
+    size_t candidate_polygons{0};
+    size_t candidate_vertices{0};
+};
+
+inline Polygons organic_support_clipped_candidates(const BoundingBox &bead_bounds,
+    const OrganicSupportPolygonGeometry &material, OrganicSupportClippingStats *stats = nullptr)
+{
+    if (!bead_bounds.defined || !material.bounds.defined || !material.bounds.overlap(bead_bounds))
+        return {};
+    const OrganicSupportPolygonGeometry::PolygonTree::BoundingBox query(bead_bounds.min, bead_bounds.max);
+    std::vector<size_t> overlapping;
+    AABBTreeIndirect::traverse(material.polygon_tree,
+        [&query](const OrganicSupportPolygonGeometry::PolygonTree::Node &node) { return node.bbox.intersects(query); },
+        [&overlapping](const OrganicSupportPolygonGeometry::PolygonTree::Node &node) {
+            overlapping.push_back(node.idx);
+            return true;
+        });
+    std::sort(overlapping.begin(), overlapping.end());
+    Polygons candidates;
+    candidates.reserve(overlapping.size());
+    for (const size_t index : overlapping) {
+        if (!material.polygon_bounds[index].overlap(bead_bounds))
+            continue;
+        if (stats != nullptr) {
+            ++stats->candidate_polygons;
+            stats->candidate_vertices += material.polygons[index].size();
+        }
+        Polygon candidate = ClipperUtils::clip_clipper_polygon_with_subject_bbox(material.polygons[index], bead_bounds);
+        if (!candidate.empty())
+            candidates.push_back(std::move(candidate));
+    }
+    return candidates;
+}
+
+inline Polygons organic_support_clipped_intersection(const Polygons &bead, const BoundingBox &bead_bounds,
+    const OrganicSupportPolygonGeometry &material, OrganicSupportClippingStats *stats = nullptr)
+{
+    if (bead.empty() || material.polygons.empty())
+        return {};
+    const Polygons candidates = organic_support_clipped_candidates(bead_bounds.inflated(SCALED_EPSILON), material, stats);
+    return candidates.empty() ? Polygons{} : intersection(bead, candidates);
+}
+
+inline Polygons organic_support_clipped_intersection(const Polygons &bead, const OrganicSupportPolygonGeometry &material,
+    OrganicSupportClippingStats *stats = nullptr)
+{
+    return organic_support_clipped_intersection(bead, get_extents(bead), material, stats);
+}
+
+struct OrganicSupportBeadGeometry {
+    Polygons polygons;
+    BoundingBox bounds;
+    size_t vertex_count{0};
+};
+
+inline double organic_support_bead_arc_tolerance(double config_resolution)
+{
+    return std::min(scaled<double>(0.03), config_resolution);
+}
+
+inline std::shared_ptr<const OrganicSupportBeadGeometry> make_organic_support_bead_geometry(const Polyline &line, float width,
+    double arc_tolerance = scale_(0.01))
+{
+    auto result = std::make_shared<OrganicSupportBeadGeometry>();
+    result->polygons = offset(line, float(scale_(width * 0.5)), jtRound, arc_tolerance, etOpenRound);
+    result->bounds = get_extents(result->polygons);
+    for (const Polygon &polygon : result->polygons)
+        result->vertex_count += polygon.size();
+    return result;
+}
+
+inline Polygons organic_support_accumulate_bead_polygons(
+    const std::vector<std::shared_ptr<const OrganicSupportBeadGeometry>> &beads)
+{
+    Polygons result;
+    for (const auto &bead : beads)
+        append(result, bead->polygons);
+    return result;
+}
+
+struct OrganicSupportRoadGeometry {
+    Polyline line;
+    BoundingBox bead_bounds;
+    std::vector<std::shared_ptr<const OrganicSupportBeadGeometry>> path_beads;
+    double width{std::numeric_limits<double>::max()};
+    double max_width{0.};
+    double latest_bottom{-std::numeric_limits<double>::max()};
+    bool continuous{true};
+    bool uniform{true};
+};
+
+inline const ExtrusionPath &organic_support_road_path(const ExtrusionPath &path) { return path; }
+inline const ExtrusionPath &organic_support_road_path(std::reference_wrapper<const ExtrusionPath> path) { return path.get(); }
+
+template<typename PathRange, typename BeadProvider>
+inline OrganicSupportRoadGeometry make_organic_support_road_geometry(const PathRange &paths, double target_print_z,
+    BeadProvider &&bead_provider)
+{
+    OrganicSupportRoadGeometry result;
+    result.path_beads.reserve(paths.size());
+    for (const auto &entry : paths) {
+        const ExtrusionPath &path = organic_support_road_path(entry);
+        Polyline part = path.polyline.to_polyline();
+        auto bead = bead_provider(path, part);
+        result.bead_bounds.merge(bead->bounds);
+        if (result.line.empty())
+            result.line = std::move(part);
+        else if (result.line.last_point() == part.first_point())
+            result.line.points.insert(result.line.points.end(), part.points.begin() + 1, part.points.end());
+        else
+            result.continuous = false;
+        result.uniform &= std::abs(path.width - organic_support_road_path(paths.front()).width) < EPSILON &&
+            std::abs(path.height - organic_support_road_path(paths.front()).height) < EPSILON;
+        result.width = std::min(result.width, double(path.width));
+        result.max_width = std::max(result.max_width, double(path.width));
+        result.latest_bottom = std::max(result.latest_bottom, target_print_z - path.height);
+        result.path_beads.emplace_back(std::move(bead));
+    }
+    return result;
+}
+
+inline OrganicSupportRoadGeometry make_organic_support_road_geometry(const ExtrusionPaths &paths, double target_print_z)
+{
+    return make_organic_support_road_geometry(paths, target_print_z, [](const ExtrusionPath &path, const Polyline &line) {
+        return make_organic_support_bead_geometry(line, path.width);
+    });
+}
 
 // An open straight bridge with both ends strictly inside the real foundation
 // passes the native span checker: interior clipped spans have two anchors and
@@ -100,12 +310,16 @@ inline Polylines organic_support_closed_contours(const Polyline &source, const P
     return result;
 }
 
+struct OrganicSupportSpanStats {
+    size_t endpoint_offset_calls{0};
+};
+
 // Return only spans that cannot be printed from the existing foundation.
 // Straight bridges need support at both ends; a curved cantilever does not
 // acquire a foundation merely because another part of its loop is supported.
 inline Polylines organic_support_unbacked_spans(const Polyline &line, const Polygons &foundation,
     double lateral_reach, double line_width, double coordinate_tolerance, double relative_simplification = 0.,
-    double maximum_bridge_deviation = -1., bool complete_contour = false)
+    double maximum_bridge_deviation = -1., bool complete_contour = false, OrganicSupportSpanStats *stats = nullptr)
 {
     if (!line.is_valid())
         return {};
@@ -142,14 +356,24 @@ inline Polylines organic_support_unbacked_spans(const Polyline &line, const Poly
             break;
         }
     }
-    const Polygons endpoints = offset(reachable, coordinate_tolerance);
+    Polygons endpoints;
+    bool endpoints_ready = false;
+    auto endpoint_region = [&]() -> const Polygons & {
+        if (!endpoints_ready) {
+            endpoints = offset(reachable, coordinate_tolerance);
+            endpoints_ready = true;
+            if (stats != nullptr)
+                ++stats->endpoint_offset_calls;
+        }
+        return endpoints;
+    };
     spans.erase(std::remove_if(spans.begin(), spans.end(), [&](const Polyline &span) {
         if (span.length() <= permitted_gap)
             return !complete_contour ||
-                (contains(endpoints, span.first_point()) && contains(endpoints, span.last_point()));
+                (contains(endpoint_region(), span.first_point()) && contains(endpoint_region(), span.last_point()));
         if (complete_contour)
             return false;
-        if (!contains(endpoints, span.first_point()) || !contains(endpoints, span.last_point()))
+        if (!contains(endpoint_region(), span.first_point()) || !contains(endpoint_region(), span.last_point()))
             return false;
         const Line bridge(span.first_point(), span.last_point());
         const double requested_deviation = maximum_bridge_deviation < 0. ? line_width * 0.25 : maximum_bridge_deviation;
@@ -159,6 +383,48 @@ inline Polylines organic_support_unbacked_spans(const Polyline &line, const Poly
         });
     }), spans.end());
     return spans;
+}
+
+inline std::vector<bool> organic_support_select_brace_candidates(const std::vector<std::vector<size_t>> &coverage,
+    const std::vector<double> &lengths)
+{
+    std::vector<std::vector<size_t>> sample_candidates;
+    std::vector<size_t> gains(coverage.size(), 0);
+    for (size_t candidate = 0; candidate < coverage.size(); ++candidate) {
+        gains[candidate] = coverage[candidate].size();
+        for (const size_t sample : coverage[candidate]) {
+            if (sample >= sample_candidates.size())
+                sample_candidates.resize(sample + 1);
+            sample_candidates[sample].push_back(candidate);
+        }
+    }
+    std::vector<bool> covered(sample_candidates.size(), false), selected(coverage.size(), false);
+    for (;;) {
+        size_t best = coverage.size(), best_gain = 0;
+        double best_length = std::numeric_limits<double>::max();
+        for (size_t candidate = 0; candidate < coverage.size(); ++candidate) {
+            if (selected[candidate])
+                continue;
+            const size_t gain = gains[candidate];
+            if (gain > best_gain || (gain > 0 && gain == best_gain && lengths[candidate] < best_length)) {
+                best = candidate;
+                best_gain = gain;
+                best_length = lengths[candidate];
+            }
+        }
+        if (best == coverage.size())
+            break;
+        selected[best] = true;
+        for (const size_t sample : coverage[best]) {
+            if (covered[sample])
+                continue;
+            covered[sample] = true;
+            for (const size_t candidate : sample_candidates[sample])
+                if (gains[candidate] > 0)
+                    --gains[candidate];
+        }
+    }
+    return selected;
 }
 
 } // namespace Slic3r::TreeSupport3D

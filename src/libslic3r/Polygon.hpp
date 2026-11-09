@@ -147,7 +147,7 @@ bool remove_sticks(Polygons &polys);
 
 // Remove polygons with less than 3 edges.
 bool remove_degenerate(Polygons &polys);
-bool remove_small(Polygons &polys, double min_area);
+bool remove_small(Polygons &polys, double min_area, double *remaining_area = nullptr);
 void remove_collinear(Polygon &poly);
 void remove_collinear(Polygons &polys);
 

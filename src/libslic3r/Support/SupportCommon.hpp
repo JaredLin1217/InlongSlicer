@@ -23,6 +23,8 @@ namespace Slic3r { struct SlicingParameters; }
 
 namespace Slic3r {
 
+Polygons organic_bounded_union(const Polygons &polygons);
+
 class PrintObject;
 class SupportLayer;
 
@@ -39,7 +41,7 @@ size_t connect_support_interface_paths(ExtrusionEntityCollection &collection,
 // Recompute the physical height of joined interface roads over printed planes.
 // XY geometry and process width remain intact; unmodified entities are retained.
 size_t modulate_joined_support_paths(SupportLayerPtrs &layers, float minimum_height,
-    const std::set<const ExtrusionEntity *> &changed);
+    const std::set<const ExtrusionEntity *> &changed, std::vector<coordf_t> *affected_print_zs = nullptr);
 
 // Build the common first-layer raft footprint. Box mode takes precedence over
 // filling internal contours so legacy presets with both options enabled remain
@@ -168,7 +170,8 @@ size_t generate_support_toolpaths(
 	const SupportGeneratorLayersPtr   	&interface_layers,
     const SupportGeneratorLayersPtr   	&base_interface_layers,
     SupportGeneratorLayerPager         *pager = nullptr,
-    const Point                        &support_offset = Point());
+    const Point                        &support_offset = Point(),
+    std::vector<coordf_t>              *affected_print_zs = nullptr);
 
 // FN_HIGHER_EQUAL: the provided object pointer has a Z value >= of an internal threshold.
 // Find the first item with Z value >= of an internal threshold of fn_higher_equal.

@@ -554,6 +554,7 @@ inline Slic3r::Lines intersection_ln(const Slic3r::Line &subject, const Slic3r::
 }
 
 Slic3r::Polygons union_(const Slic3r::Polygons &subject);
+Slic3r::Polygons union_(const Slic3r::Polygons::const_iterator &begin, const Slic3r::Polygons::const_iterator &end);
 Slic3r::Polygons union_(const Slic3r::ExPolygons &subject);
 Slic3r::Polygons union_(const Slic3r::Polygons &subject, const PolyFillType fillType);
 Slic3r::Polygons union_(const Slic3r::Polygons &subject, const Slic3r::Polygons &subject2);

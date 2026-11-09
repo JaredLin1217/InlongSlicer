@@ -177,16 +177,6 @@ using json = nlohmann::json;
 
 using namespace Slic3r;
 
-static void trace_cli_precheck(const char *message)
-{
-    const char *path = std::getenv("INLONG_CLI_PRECHECK_TRACE");
-    if (path == nullptr)
-        return;
-    std::ofstream out(path, std::ios::app);
-    out << message << '\n';
-    out.flush();
-}
-
 /*typedef struct _error_message{
     int code;
     std::string message;
@@ -6497,14 +6487,12 @@ int CLI::run(int argc, char **argv)
                         else if ((plate_to_slice != 0) || pre_check) {
                             long long triangle_count = 0;
                             const auto precheck_geometry_started = std::chrono::steady_clock::now();
-                            trace_cli_precheck("geometry.begin");
                             int printable_instances = 0;
                             int skipped_count = 0;
                             std::vector<std::set<int>> unprintable_filament_ids(new_extruder_count, std::set<int>());
                             for (ModelObject* model_object : model.objects)
                                 for (ModelInstance *i : model_object->instances)
                                 {
-                                    trace_cli_precheck("geometry.instance.begin");
                                     i->use_loaded_id_for_label = true;
                                     if (skip_maps.find(i->loaded_id) != skip_maps.end()) {
                                         skip_maps[i->loaded_id] = true;
@@ -6548,19 +6536,15 @@ int CLI::run(int argc, char **argv)
                                         const Transform3d& inst_matrix = i->get_transformation().get_matrix();
 
                                         //get object filaments
-                                        trace_cli_precheck("geometry.object_filaments.begin");
                                         std::set<int> object_filaments;
                                         for (const ModelVolume *vol : model_object->volumes) {
                                             std::vector<int> filaments = vol->get_extruders();
                                             object_filaments.insert(filaments.begin(), filaments.end());
                                         }
-                                        trace_cli_precheck("geometry.object_filaments.end");
                                         for (const ModelVolume* vol : model_object->volumes)
                                         {
                                             if (vol->is_model_part()) {
-                                                trace_cli_precheck("geometry.facets.begin");
                                                 size_t volume_triangle_count = vol->mesh().facets_count();
-                                                trace_cli_precheck("geometry.facets.end");
                                                 triangle_count += volume_triangle_count;
                                                 BOOST_LOG_TRIVIAL(debug) << boost::format("volume triangle count %1%, total %2%")%volume_triangle_count %triangle_count;
                                                 if ((max_triangle_count_per_plate != 0) && (triangle_count > max_triangle_count_per_plate))
@@ -6601,7 +6585,6 @@ int CLI::run(int argc, char **argv)
 
                                     if (i->print_volume_state == ModelInstancePVS_Inside)
                                         printable_instances++;
-                                    trace_cli_precheck("geometry.instance.end");
                                 }
 
                             if (printable_instances == 0) {
@@ -6610,16 +6593,12 @@ int CLI::run(int argc, char **argv)
                                 flush_and_exit(CLI_NO_SUITABLE_OBJECTS_AFTER_SKIP);
                             }
 
-                            trace_cli_precheck("geometry.end");
                             BOOST_LOG_TRIVIAL(info) << "CLI precheck geometry: triangles=" << triangle_count
                                 << ", printable_instances=" << printable_instances << ", elapsed="
                                 << std::chrono::duration<double>(std::chrono::steady_clock::now() - precheck_geometry_started).count()
                                 << " seconds";
 
-                            trace_cli_precheck("post.geometry.begin");
-                            trace_cli_precheck("post.geometry.get_extruders.begin");
                             std::vector<int> plate_filaments = part_plate->get_extruders_under_cli(true, m_print_config);
-                            trace_cli_precheck("post.geometry.get_extruders.end");
                             std::vector<int> used_tpu_filaments;
                             for (int f_index = 0; f_index < plate_filaments.size(); f_index++) {
                                 if (plate_filaments[f_index] <= filament_count) {
@@ -6630,9 +6609,7 @@ int CLI::run(int argc, char **argv)
                                     }
                                 }
                             }
-                            trace_cli_precheck("post.geometry.tpu.begin");
                             bool tpu_valid = part_plate->check_tpu_printable_status(m_print_config, used_tpu_filaments);
-                            trace_cli_precheck("post.geometry.tpu.end");
                             if (!tpu_valid) {
                                 BOOST_LOG_TRIVIAL(error) << boost::format("plate %1% : Found 2 or more tpu filaments on plate ") % (index + 1);
                                 record_exit_reson(outfile_dir, CLI_ONLY_ONE_TPU_SUPPORTED, index + 1, cli_errors[CLI_ONLY_ONE_TPU_SUPPORTED], sliced_info);
@@ -6645,7 +6622,6 @@ int CLI::run(int argc, char **argv)
                             const auto *is_mixed_opt   = m_print_config.option<ConfigOptionBools>("filament_is_mixed");
                             const auto *components_opt = m_print_config.option<ConfigOptionStrings>("filament_mixed_components");
                             if (is_mixed_opt && components_opt && has_any_mixed_filament(is_mixed_opt->values)) {
-                                trace_cli_precheck("post.geometry.mixed.begin");
                                 const auto &is_mixed   = is_mixed_opt->values;
                                 const auto &components = components_opt->values;
                                 const size_t num_physical = static_cast<size_t>(filament_count) - static_cast<size_t>(std::count(is_mixed.begin(), is_mixed.end(), true));
@@ -6668,11 +6644,8 @@ int CLI::run(int argc, char **argv)
                                     record_exit_reson(outfile_dir, CLI_MIXED_FILAMENT_INVALID, index + 1, cli_errors[CLI_MIXED_FILAMENT_INVALID], sliced_info);
                                     flush_and_exit(CLI_MIXED_FILAMENT_INVALID);
                                 }
-                                trace_cli_precheck("post.geometry.mixed.end");
                             }
-                            trace_cli_precheck("post.geometry.end");
 
-                            trace_cli_precheck("post.geometry.extruder_map.begin");
                             if (new_extruder_count > 1) {
                                 std::vector<std::vector<int>> unprintable_filament_vec;
                                 for (const std::set<int>& filamnt_ids : unprintable_filament_ids) {
@@ -6873,12 +6846,9 @@ int CLI::run(int argc, char **argv)
                         //BOOST_LOG_TRIVIAL(info) << boost::format("print_volume {%1%,%2%,%3%}->{%4%, %5%, %6%}, has %7% printables") % print_volume.min(0) % print_volume.min(1)
                         //    % print_volume.min(2) % print_volume.max(0) % print_volume.max(1) % print_volume.max(2) % count << std::endl;
 #endif
-                            trace_cli_precheck("post.geometry.extruder_map.end");
-                            trace_cli_precheck("print_config.copy.begin");
                             DynamicPrintConfig new_print_config = m_print_config;
                         new_print_config.apply(*part_plate->config());
                             new_print_config.apply(m_extra_config, true);
-                            trace_cli_precheck("print_config.copy.end");
 						if (m_print_config.option<ConfigOptionFloat>("layer_height"))
                             sliced_info.layer_height = m_print_config.option<ConfigOptionFloat>("layer_height")->value;
 						if (m_print_config.option<ConfigOptionInt>("wall_loops"))
@@ -6938,9 +6908,7 @@ int CLI::run(int argc, char **argv)
                             ConfigOptionEnumsGeneric* final_nozzle_volume_type_opt = new_print_config.option<ConfigOptionEnumsGeneric>("nozzle_volume_type", true);
                             final_nozzle_volume_type_opt->values.resize(new_extruder_count, nvtStandard);
                         }
-                        trace_cli_precheck("print.apply.begin");
                         print->apply(model, new_print_config);
-                        trace_cli_precheck("print.apply.end");
                         BOOST_LOG_TRIVIAL(info) << boost::format("set no_check to %1%:")%no_check;
                         print->set_no_check_flag(no_check);//BBS
 
@@ -6963,9 +6931,7 @@ int CLI::run(int argc, char **argv)
 
                         std::vector<StringObjectException> warnings;
                         print_fff->set_check_multi_filaments_compatibility(!allow_mix_temp);
-                        trace_cli_precheck("print.validate.begin");
                         auto err = print->validate(&warnings);
-                        trace_cli_precheck("print.validate.end");
                         if (!err.string.empty()) {
                             if ((STRING_EXCEPT_LAYER_HEIGHT_EXCEEDS_LIMIT == err.type) && no_check) {
                                 BOOST_LOG_TRIVIAL(warning) << "got warnings: "<< err.string << std::endl;
@@ -7004,19 +6970,16 @@ int CLI::run(int argc, char **argv)
                                 BOOST_LOG_TRIVIAL(warning) << "got warnings: "<< w.string << std::endl;
                         }
 
-                        trace_cli_precheck("print.empty.begin");
                         if (print->empty()) {
                             BOOST_LOG_TRIVIAL(error) << "plate "<< index+1<< ": Nothing to be sliced, Either the print is empty or no object is fully inside the print volume after apply." << std::endl;
                             record_exit_reson(outfile_dir, CLI_NO_SUITABLE_OBJECTS, index+1, cli_errors[CLI_NO_SUITABLE_OBJECTS], sliced_info);
                             flush_and_exit(CLI_NO_SUITABLE_OBJECTS);
                         }
                         else {
-                            trace_cli_precheck("print.empty.end");
                             if (pre_check && (partplate_list.get_plate_count() > 1)) //continue to next plate directly
                                 continue;
                             try {
                                 std::string outfile_final;
-                                trace_cli_precheck("print.process.begin");
                                 BOOST_LOG_TRIVIAL(info) << "start Print::process for partplate "<<index+1 << std::endl;
 #if defined(__linux__) || defined(__LINUX__)
                                 BOOST_LOG_TRIVIAL(info) << "cli callback mgr started:  "<<g_cli_callback_mgr.m_started << std::endl;
