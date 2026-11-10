@@ -1,0 +1,61 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "gcode-header-abi-stale-objects-20261110",
+  "key": "gcode-header-abi-stale-objects",
+  "type": "fact",
+  "conclusion": "On this Windows Ninja build, adding data members to GCode.hpp does not trigger recompilation of every direct consumer. A stale Print.cpp.obj allocates GCode with the old class size, which corrupts members and can surface as an access violation in m_skirt_group_done.clear() during GCode::do_export. Rebuild GCode.cpp, Print.cpp, calib.cpp and BeltGCode.cpp together after changing GCode.hpp; do not misattribute this build-ABI failure to the organic support stage named by the last flushed log line.",
+  "scope": "windows-ninja-gcode-incremental-build",
+  "modules": [
+    "GCode",
+    "Print"
+  ],
+  "tags": [
+    "build",
+    "abi",
+    "ninja",
+    "incremental-build",
+    "crash-diagnosis"
+  ],
+  "files": [
+    "src/libslic3r/GCode.hpp",
+    "src/libslic3r/Print.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.hpp",
+      "sha256": "790035eac119ad75c8c016b84017325775374da3ee39748ac9c2ca9de5d6f7fe",
+      "commit": "0de8aeaaf16e971690710bc3305fb3e860730a67",
+      "locator": "Uncommitted support-node state members; checkout anchor only, uncommitted bytes are not in this commit"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "03c86dee2288d3bfbfb4ceb75e3d4b46741aa3b20113fe60d809337aab3e3678",
+      "commit": "0de8aeaaf16e971690710bc3305fb3e860730a67",
+      "locator": "Print::export_gcode allocates GCode and BeltGCode with std::make_unique"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-5de05141175345a794812234bf47a0bb/crash/log/crash_Tue_Nov_10_13_35_23_0.log",
+      "sha256": "98fd18dd1c01cbe89a0b81755905dfef106854cb4bbbe0157049d9b2693039fd",
+      "commit": "0de8aeaaf16e971690710bc3305fb3e860730a67",
+      "locator": "0xC0000005 in std::vector<double>::_Tidy called from GCode::do_export"
+    }
+  ],
+  "verified_utc": "2026-11-10T06:04:36Z",
+  "verification": {
+    "method": "Native exception call stack, targeted disassembly, object timestamp and Ninja dependency inspection, forced recompilation of all direct GCode.hpp consumers, then a complete 1178-layer test.3mf slice.",
+    "summary": "The stale Print.cpp.obj predated GCode.hpp by hours and Ninja reported zero dependencies for it. Disassembly showed invalid vector state at m_skirt_group_done.clear(). After rebuilding Print.cpp, calib.cpp, BeltGCode.cpp and GCode.cpp, the same test.3mf completed G-code export instead of exiting with code 2816.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

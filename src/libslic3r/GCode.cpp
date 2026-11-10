@@ -4707,6 +4707,10 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
         file.write("M981 S0 P20000 ; close spaghetti detector\n");
     }
 
+    std::string pending_support_e;
+    flush_support_pending_e(pending_support_e);
+    file.write(pending_support_e);
+
     // adds tag for processor
     file.write_format(";%s%s\n", GCodeProcessor::reserved_tag(GCodeProcessor::ETags::Role).c_str(), ExtrusionEntity::role_to_string(erCustom).c_str());
 
@@ -9156,9 +9160,92 @@ static bool overhang_fan_active(float overlap, int overhang_fan_threshold, Extru
     return overlap_threshold >= 0.f && overlap <= overlap_threshold;
 }
 
+double GCode::take_support_pending_e()
+{
+    const double result = m_support_pending_e;
+    m_support_pending_e = 0.;
+    return result;
+}
+
+void GCode::flush_support_pending_e(std::string &out)
+{
+    if (m_support_pending_e == 0.)
+        return;
+    m_writer.filament()->extrude(m_support_pending_e);
+    m_support_pending_e = 0.;
+    GCodeG1Formatter formatter;
+    formatter.emit_e(m_writer.filament()->E());
+    formatter.append_to(out);
+}
+
+void GCode::emit_support_to_xy(std::string &out, const Vec2d &point, double dE, const std::string &comment, bool force_no_extrusion)
+{
+    const Vec2d quantized_point{GCodeFormatter::quantize_xyzf(point.x()), GCodeFormatter::quantize_xyzf(point.y())};
+    if (force_no_extrusion) {
+        m_writer.extrude_to_xy(out, point, dE, comment, true);
+        m_last_support_point = quantized_point;
+        m_support_position_valid = true;
+        return;
+    }
+    dE += take_support_pending_e();
+    if (m_support_position_valid && (quantized_point - m_last_support_point).norm() < 0.010000001) {
+        m_support_pending_e += dE;
+        return;
+    }
+    m_writer.extrude_to_xy(out, point, dE, comment, force_no_extrusion);
+    m_last_support_point = quantized_point;
+    m_support_position_valid = true;
+}
+
+void GCode::emit_support_arc_to_xy(std::string &out, const Vec2d &point, const Vec2d &center_offset, double dE,
+    const bool is_ccw, const std::string &comment, bool force_no_extrusion)
+{
+    const Vec2d quantized_point{GCodeFormatter::quantize_xyzf(point.x()), GCodeFormatter::quantize_xyzf(point.y())};
+    if (force_no_extrusion) {
+        m_writer.extrude_arc_to_xy(out, point, center_offset, dE, is_ccw, comment, true);
+        m_last_support_point = quantized_point;
+        m_support_position_valid = true;
+        return;
+    }
+    dE += take_support_pending_e();
+    const bool near_duplicate = m_support_position_valid && (quantized_point - m_last_support_point).norm() < 0.010000001;
+    if (near_duplicate || !m_writer.kinematics().supports_arc_moves()) {
+        const Vec2d start = m_writer.get_position().head<2>();
+        const Vec2d center = start + center_offset;
+        const double radius = center_offset.norm();
+        double a0 = std::atan2(start.y() - center.y(), start.x() - center.x());
+        double a1 = std::atan2(point.y() - center.y(), point.x() - center.x());
+        double sweep = a1 - a0;
+        if (is_ccw) { while (sweep <= 0.) sweep += 2. * PI; }
+        else        { while (sweep >= 0.) sweep -= 2. * PI; }
+        if (near_duplicate && (radius < EPSILON || std::abs(sweep) * radius < 0.01)) {
+            m_support_pending_e += dE;
+            return;
+        }
+        if (radius < EPSILON) {
+            emit_support_to_xy(out, point, dE, comment, force_no_extrusion);
+            return;
+        }
+        constexpr double tolerance = 0.005;
+        const double max_angle = tolerance >= radius ? PI : 2. * std::acos(1. - tolerance / radius);
+        const int segments = std::max(2, int(std::ceil(std::abs(sweep) / std::max(max_angle, EPSILON))));
+        for (int i = 1; i <= segments; ++i) {
+            const double angle = a0 + sweep * (double(i) / double(segments));
+            const Vec2d destination = i == segments ? point : Vec2d(center.x() + radius * std::cos(angle), center.y() + radius * std::sin(angle));
+            emit_support_to_xy(out, destination, dE / double(segments), i == segments ? comment : std::string(), force_no_extrusion);
+        }
+        return;
+    }
+    m_writer.extrude_arc_to_xy(out, point, center_offset, dE, is_ccw, comment, force_no_extrusion);
+    m_last_support_point = quantized_point;
+    m_support_position_valid = true;
+}
+
 std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_description, double speed)
 {
     std::string gcode;
+    if (!is_support(path.role()))
+        flush_support_pending_e(gcode);
 
     // Keep tree support material and its interface as separate printed
     // roads.  The support ordering code may place two role-specific paths at
@@ -9971,12 +10058,13 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
                 if (m_config.gcode_comments && oldE > 0 && oldE != dE)
                     segment_description += Slic3r::format(" | Old Flow Value: %0.5f Length: %0.5f", oldE, segment_length);
             }
-
             const Vec2d sub_dest = gcode_a + (gcode_b - gcode_a) * t1;
-            gcode += m_writer.extrude_to_xy(
-                sub_dest,
-                dE,
-                GCodeWriter::full_gcode_comment ? segment_description : "", path.is_force_no_extrusion());
+            if (is_support(path.role()))
+                emit_support_to_xy(gcode, sub_dest, dE,
+                    GCodeWriter::full_gcode_comment ? segment_description : "", path.is_force_no_extrusion());
+            else
+                m_writer.extrude_to_xy(gcode, sub_dest, dE,
+                    GCodeWriter::full_gcode_comment ? segment_description : "", path.is_force_no_extrusion());
         };
         {
             if (m_enable_cooling_markers) {
@@ -10098,10 +10186,13 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
 
                     } else if (sloped == nullptr) {
                         // Normal extrusion
-                        m_writer.extrude_to_xy(gcode,
-                            this->point_to_gcode(line.b.to_point()),
-                            dE,
-                            flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
+                        if (is_support(path.role()))
+                            emit_support_to_xy(gcode, this->point_to_gcode(line.b.to_point()), dE,
+                                flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
+                        else
+                            m_writer.extrude_to_xy(gcode,
+                                this->point_to_gcode(line.b.to_point()), dE,
+                                flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
                     } else {
                         // Sloped extrusion
                         const auto [z_ratio, e_ratio] = sloped->interpolate(path_length / total_length);
@@ -10114,6 +10205,7 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
                     }
                     check_and_insert_timelapse(line.b.to_point()); // Inline farthest-point snapshot
                 }
+
             } else {
                 // BBS: start to generate gcode from arc fitting data which includes line and arc
                 const std::vector<PathFittingData>& fitting_result = path.polyline.fitting_result;
@@ -10200,10 +10292,13 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
                                     flow_description = description + Slic3r::format(" | Old Flow Value: %0.5f Length: %0.5f",oldE, line_length);
                                 }
                             }
-                            m_writer.extrude_to_xy(gcode,
-                                this->point_to_gcode(line.b),
-                                dE,
-                                flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
+                            if (is_support(path.role()))
+                                emit_support_to_xy(gcode, this->point_to_gcode(line.b), dE,
+                                    flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
+                            else
+                                m_writer.extrude_to_xy(gcode,
+                                    this->point_to_gcode(line.b), dE,
+                                    flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
                             check_and_insert_timelapse(line.b); // Inline farthest-point snapshot
                         }
                         break;
@@ -10236,12 +10331,15 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
                                 flow_description = description + Slic3r::format(" | Old Flow Value: %0.5f Length: %0.5f",oldE, arc_length);
                             }
                         }
-                        m_writer.extrude_arc_to_xy(gcode,
-                            this->point_to_gcode(arc.end_point),
-                            center_offset,
-                            dE,
-                            arc.direction == ArcDirection::Arc_Dir_CCW,
-                            flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
+                        if (is_support(path.role()))
+                            emit_support_arc_to_xy(gcode, this->point_to_gcode(arc.end_point), center_offset, dE,
+                                arc.direction == ArcDirection::Arc_Dir_CCW,
+                                flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
+                        else
+                            m_writer.extrude_arc_to_xy(gcode,
+                                this->point_to_gcode(arc.end_point), center_offset, dE,
+                                arc.direction == ArcDirection::Arc_Dir_CCW,
+                                flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
                         check_and_insert_timelapse(arc.end_point); // Inline farthest-point snapshot
                         break;
                     }
@@ -10251,6 +10349,7 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
                         break;
                     }
                 }
+
             }
         }
     } else {
@@ -10393,7 +10492,10 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string &path_d
                                         flow_description.empty() ? description : flow_description);
             } else if (sloped == nullptr) {
                 // Normal extrusion
-                m_writer.extrude_to_xy(gcode, p.head<2>(), dE, flow_description.empty() ? description : flow_description);
+                if (is_support(path.role()))
+                    emit_support_to_xy(gcode, p.head<2>(), dE, flow_description.empty() ? description : flow_description, path.is_force_no_extrusion());
+                else
+                    m_writer.extrude_to_xy(gcode, p.head<2>(), dE, flow_description.empty() ? description : flow_description);
             } else {
                 // Sloped extrusion
                 const auto [z_ratio, e_ratio] = sloped->interpolate(path_length / total_length);

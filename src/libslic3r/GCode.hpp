@@ -838,6 +838,9 @@ protected:
     // Bedslinger mass model: cumulative printed mass at the previous layer, used to derive
     // the current layer mass for the per-layer Y acceleration limit (curr_y_acceleration_limit).
     double                              m_last_layer_accumulated_mass{ 0.0 };
+    double                              m_support_pending_e{0.0};
+    Vec2d                               m_last_support_point{0.0, 0.0};
+    bool                                m_support_position_valid{false};
 
     Point3                              m_last_pos;
     bool                                m_last_pos_defined;
@@ -938,6 +941,10 @@ protected:
     WarpPreventionGCodeAdapter& warp_prevention_adapter();
     std::string _extrude(const ExtrusionPath &path, const std::string &path_description = "", double speed = -1);
     bool _needSAFC(const ExtrusionPath &path);
+    double take_support_pending_e();
+    void flush_support_pending_e(std::string &out);
+    void emit_support_to_xy(std::string &out, const Vec2d &point, double dE, const std::string &comment, bool force_no_extrusion);
+    void emit_support_arc_to_xy(std::string &out, const Vec2d &point, const Vec2d &center_offset, double dE, bool is_ccw, const std::string &comment, bool force_no_extrusion);
     void print_machine_envelope(GCodeOutputStream& file, Print& print);
     void _print_first_layer_bed_temperature(GCodeOutputStream &file, Print &print, const std::string &gcode, unsigned int first_printing_extruder_id, bool wait);
     void _print_first_layer_extruder_temperatures(GCodeOutputStream &file, Print &print, const std::string &gcode, unsigned int first_printing_extruder_id, bool wait);
