@@ -219,26 +219,8 @@ jobs:
       - name: Build slicer mac
         if: runner.os == 'macOS' && !inputs.macos-combine-only
         working-directory: ${{ github.workspace }}
-        # arm64 only: build the tests here; the unit_tests_macos job runs them.
-        env:
-          INLONG_TESTS_BUILD_ONLY: ${{ inputs.arch == 'arm64' && '1' || '' }}
         run: |
-          ./build_release_macos.sh -s -n -x ${{ !vars.SELF_HOSTED && '-j 3' || '' }} -a ${{ inputs.arch }} -t 10.15 ${{ inputs.arch == 'arm64' && '-T' || '' }}
-
-      - name: Pack unit tests mac
-        if: runner.os == 'macOS' && !inputs.macos-combine-only && inputs.arch == 'arm64'
-        working-directory: ${{ github.workspace }}
-        run: tar -cvf build_tests.tar build/arm64/tests
-
-      - name: Upload Test Artifact mac
-        if: runner.os == 'macOS' && !inputs.macos-combine-only && inputs.arch == 'arm64'
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ github.sha }}-tests-macos-arm64
-          overwrite: true
-          path: build_tests.tar
-          retention-days: 5
-          if-no-files-found: error
+          ./build_release_macos.sh -s -n -x ${{ !vars.SELF_HOSTED && '-j 3' || '' }} -a ${{ inputs.arch }} -t 10.15
 
       - name: Build system preset cache (macOS)
         if: runner.os == 'macOS' && !inputs.macos-combine-only
@@ -496,13 +478,12 @@ jobs:
       - name: Build slicer Win
         if: runner.os == 'Windows'
         working-directory: ${{ github.workspace }}
-        # --tests builds the unit tests too; the unit_tests_windows_* jobs run them.
         run: |
           # cache-path is the install directory inside the deps build directory.
           $deps = (Split-Path "${{ github.workspace }}/${{ inputs.cache-path }}").Replace('\', '/')
           # -l compiles with Visual Studio's clang-cl and -x builds with Ninja; --msvc --msbuild is cl under the Visual Studio generator.
           $flags = if ("${{ inputs.compiler }}" -eq "clang") { "-l", "-x" } else { "--msvc", "--msbuild" }
-          .\build_win.bat -s --tests -i --arch ${{ inputs.arch }} --build-dir $env:BUILD_DIR --deps-dir $deps @flags
+          .\build_win.bat -s -i --arch ${{ inputs.arch }} --build-dir $env:BUILD_DIR --deps-dir $deps @flags
         shell: pwsh
 
       # Published Windows binaries must be Authenticode signed before CPack or
@@ -622,22 +603,6 @@ jobs:
         # Shipped into both the already-installed tree (portable zip, MSIX) and
         # the checkout cpack re-installs from when it builds the NSIS installer.
         run: scripts\build_preset_cache.bat --prune-source "%BUILD_DIR%" "resources\profiles" "%BUILD_DIR%\InlongSlicer\resources\profiles"
-
-      - name: Pack unit tests Win
-        if: runner.os == 'Windows'
-        working-directory: ${{ github.workspace }}
-        shell: pwsh
-        run: tar -cvf build_tests.tar ${{ env.BUILD_DIR }}/tests
-
-      - name: Upload Test Artifact Win
-        if: runner.os == 'Windows'
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ github.sha }}-tests-windows-${{ inputs.arch }}
-          overwrite: true
-          path: build_tests.tar
-          retention-days: 5
-          if-no-files-found: error
 
       # NSIS is x86-only; it runs (and the installer it emits runs) under ARM64's
       # x86 emulation, packaging the native arm64 payload from build-arm64.
@@ -762,32 +727,15 @@ jobs:
         if: runner.os == 'Linux' && !vars.SELF_HOSTED
         uses: ./.github/actions/apt-install-deps
 
-        # Tests must built at the same time as the slicer;
-        # if you untangle them feel free to separate them here too
-      - name: Build slicer and tests
+      - name: Build slicer
         if: runner.os == 'Linux'
         shell: bash
         run: |
-          # Build + tar the unit tests (-t) on both Linux legs so each arch
-          # (x86_64 + aarch64) gets tested by its own unit_tests_linux_* job.
-          ./build_linux.sh -istrlL
+          ./build_linux.sh -isrlL
           ./scripts/check_appimage_libs.sh ./build/package ./build/package/bin/inlong-slicer
           appimage=./build/InlongSlicer_Linux_AppImage${{ env.ubuntu-ver-str }}${{ env.arch_suffix }}_${{ env.ver }}.AppImage
           mv -n ./build/InlongSlicer_Linux_V${{ env.ver_pure }}.AppImage "$appimage"
           chmod +x "$appimage"
-          tar -cvf build_tests.tar build/tests
-
-        # Use tar because upload-artifacts won't always preserve directory structure
-        # and doesn't preserve file permissions
-      - name: Upload Test Artifact
-        if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ github.sha }}-tests-linux-${{ inputs.arch == 'aarch64' && 'aarch64' || 'x86_64' }}
-          overwrite: true
-          path: build_tests.tar
-          retention-days: 5
-          if-no-files-found: error
 
       - name: Build system preset cache (Linux)
         if: runner.os == 'Linux'

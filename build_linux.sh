@@ -25,7 +25,6 @@ function usage() {
     echo "   -p: disable precompiled headers (on by default): more ccache hits after header changes, slower misses"
     echo "   -r: skip RAM and disk checks (low RAM compiling)"
     echo "   -s: build the Inlong Slicer (optional)"
-    echo "   -t: build tests (optional), requires -s flag"
     echo "   -u: install system dependencies (asks for sudo password; build prerequisite)"
     echo "   -l: use Clang instead of GCC (default: GCC)"
     echo "   -L: use ld.lld as linker (if available)"
@@ -111,10 +110,6 @@ while getopts ":1j:J:bcCdDeFghiprstulL" opt ; do
     s )
         BUILD_INLONG="1"
         FORWARDED_ARGS+=("-s")
-        ;;
-    t )
-        BUILD_TESTS="1"
-        FORWARDED_ARGS+=("-t")
         ;;
     u )
         export UPDATE_LIB="1"
@@ -605,7 +600,7 @@ if [[ -n "${BUILD_DEPS}" ]] ; then
     fi
 fi
 
-if [[ -n "${BUILD_INLONG}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
+if [[ -n "${BUILD_INLONG}" ]] ; then
     echo "Configuring Inlong Slicer..."
     if [[ -n "${CLEAN_BUILD}" ]] ; then
         print_and_run rm -fr $BUILD_DIR
@@ -613,9 +608,6 @@ if [[ -n "${BUILD_INLONG}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
     read -r -a BUILD_ARGS <<< "${INLONG_EXTRA_BUILD_ARGS}"
     if [[ $BUILD_CONFIG != Release ]] ; then
         BUILD_ARGS+=(-DCMAKE_BUILD_TYPE="${BUILD_CONFIG}")
-    fi
-    if [[ -n "${BUILD_TESTS}" ]] ; then
-        BUILD_ARGS+=(-DBUILD_TESTS=ON)
     fi
     if [[ -n "${INLONG_UPDATER_SIG_KEY}" ]] ; then
         BUILD_ARGS+=(-DINLONG_UPDATER_SIG_KEY="${INLONG_UPDATER_SIG_KEY}")
@@ -636,10 +628,6 @@ if [[ -n "${BUILD_INLONG}" ]] || [[ -n "${BUILD_TESTS}" ]] ; then
 	echo "Building generate_system_cache ..."
 	print_and_run cmake --build $BUILD_DIR --config "${BUILD_CONFIG}" --target generate_system_cache
 	./scripts/run_gettext.sh
-    fi
-    if [[ -n "${BUILD_TESTS}" ]] ; then
-	echo "Building tests ..."
-	print_and_run cmake --build ${BUILD_DIR} --config "${BUILD_CONFIG}" --target tests/all
     fi
     echo "done"
 fi

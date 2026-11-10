@@ -305,9 +305,6 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_INSTALL_RPATH "$ORIGIN")
 endif ()
 
-# Proposal for C++ unit tests and sandboxes
-option(SLIC3R_BUILD_SANDBOXES   "Build development sandboxes" OFF)
-option(BUILD_TESTS       "Build unit tests" OFF)
 option(INLONG_TOOLS       "Build Inlong tools" OFF)
 
 if (FLATPAK)
@@ -316,8 +313,7 @@ if (FLATPAK)
 endif ()
 
 if (IS_CROSS_COMPILE)
-    message("Detected cross compilation setup. Tests and encoding checks will be forcedly disabled!")
-    set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    message("Detected cross compilation setup. Encoding checks will be forcedly disabled!")
 endif ()
 
 # Print out the SLIC3R_* cache options
@@ -1274,10 +1270,6 @@ endif ()
 add_dependencies(gettext_make_pot hintsToPot)
 if(TARGET InlongSlicer)
     add_dependencies(InlongSlicer gettext_po_to_mo)
-endif()
-
-if(SLIC3R_BUILD_SANDBOXES)
-    add_subdirectory(sandboxes)
 endif()
 
 

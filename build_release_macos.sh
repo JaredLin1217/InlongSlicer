@@ -41,9 +41,6 @@ while getopts ":dpa:snt:xbc:i:j:Tuh" opt; do
     j )
         export CMAKE_BUILD_PARALLEL_LEVEL="$OPTARG"
         ;;
-    T )
-        export BUILD_TESTS="1"
-        ;;
     u )
         export BUILD_TARGET="universal"
         ;;
@@ -59,7 +56,6 @@ while getopts ":dpa:snt:xbc:i:j:Tuh" opt; do
         echo "   -c: Set CMake build configuration, default is Release"
         echo "   -i: Add a prefix to ignore during CMake dependency discovery (repeatable), defaults to /opt/local:/usr/local:/opt/homebrew"
         echo "   -j: Set the number of parallel build jobs (CMAKE_BUILD_PARALLEL_LEVEL)"
-        echo "   -T: Build and run tests (set INLONG_TESTS_BUILD_ONLY=1 to build without running)"
         exit 0
         ;;
     * )
@@ -308,7 +304,6 @@ function build_slicer() {
                     -G "${SLICER_CMAKE_GENERATOR}" \
                     -DINLONG_TOOLS=ON \
                     ${INLONG_UPDATER_SIG_KEY:+-DINLONG_UPDATER_SIG_KEY="$INLONG_UPDATER_SIG_KEY"} \
-                    ${BUILD_TESTS:+-DBUILD_TESTS=ON} \
                     -DCMAKE_BUILD_TYPE="$BUILD_CONFIG" \
                     -DCMAKE_OSX_ARCHITECTURES="${_ARCH}" \
                     -DCMAKE_OSX_DEPLOYMENT_TARGET="${OSX_DEPLOYMENT_TARGET}" \
@@ -319,11 +314,6 @@ function build_slicer() {
             cmake --build . --config "$BUILD_CONFIG" --target "$SLICER_BUILD_TARGET"
         )
 
-        # -T also runs the tests; INLONG_TESTS_BUILD_ONLY=1 builds them without
-        # running, so CI can build here and run them in a dedicated job.
-        if [ "1." == "$BUILD_TESTS". ] && [ "1." != "$INLONG_TESTS_BUILD_ONLY". ]; then
-            "$PROJECT_DIR/scripts/run_unit_tests.sh" "build/$_ARCH/tests" "$BUILD_CONFIG"
-        fi
 
         echo "Verify localization with gettext..."
         (

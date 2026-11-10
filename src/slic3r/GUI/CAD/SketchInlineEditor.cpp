@@ -61,22 +61,6 @@ bool parse_value(const char* text, double& out)
     return true;
 }
 
-// One machine-readable line per event of the click-edit contract, for the UX check that runs
-// after every build (scripts/CAD/check-gui-click-edit.py). Deliberately NOT the same switch as
-// ORCA_CAD_KEYTRACE: that one is a debugging firehose, this one is an assertion surface and its
-// format is a contract the script parses.
-//
-// The pair that matters is `open` vs `commit`: the check always types a value DIFFERENT from the
-// prefill, so a field that is on screen but not editable commits its prefill and the two lines
-// disagree. A focus flag cannot show that — it read 0 even when typing worked — but the number
-// the user actually gets can.
-void ux_trace(const char* event, const std::string& title, const std::string& detail)
-{
-    if (!std::getenv("ORCA_CAD_UXTRACE")) return;
-    std::fprintf(stderr, "[UX] %s title=%s %s\n", event, title.c_str(), detail.c_str());
-    std::fflush(stderr);
-}
-
 } // namespace
 
 void SketchInlineEditor::open(const wxPoint& canvas_px, double value, const std::string& title,
@@ -97,7 +81,6 @@ void SketchInlineEditor::open(const wxPoint& canvas_px, double value, const std:
     // ImGui takes keyboard focus for one frame on request; asking on the frame the field first
     // appears is what makes typing land without a click. There is no window manager to consult.
     m_focus_pending = true;
-    ux_trace("open", m_title, "prefill=" + v);
 }
 
 void SketchInlineEditor::close()
@@ -122,7 +105,6 @@ void SketchInlineEditor::commit()
 
 void SketchInlineEditor::do_cancel()
 {
-    ux_trace("cancel", m_title, "");
     auto cb = m_cancel;
     close();
     if (cb) cb();
@@ -142,7 +124,6 @@ bool SketchInlineEditor::refuse(const std::string& why)
     m_err           = why;
     m_open          = true;
     m_focus_pending = true;
-    ux_trace("refused", m_title, "reason=" + why);
     return true;
 }
 
@@ -157,12 +138,10 @@ void SketchInlineEditor::do_commit()
         // Refusing input in silence is indistinguishable from the app having frozen: the field
         // just sits there and the user has no idea what it wants. Say so in the title line and
         // keep editing.
-        ux_trace("refused", m_title, std::string("typed=") + m_buf);
         m_err = (m_buf[0] == '\0') ? _u8L("Enter a number") : _u8L("Not a number");
         m_focus_pending = true;
         return;
     }
-    ux_trace("commit", m_title, std::string("typed=") + m_buf + " value=" + fmt_value(v, 4));
     auto cb = m_commit;
     m_last = Closed{ m_anchor, m_title, std::string(m_buf), m_commit, m_cancel, m_prefill_value, m_prefill_text };
     close();
@@ -215,18 +194,6 @@ bool SketchInlineEditor::render(ImGuiWrapper& imgui, float scale)
     m_active = ImGui::IsItemActive();
     // Tab accepts the value like Enter does (and moves on to the next queued field, if any).
     const bool tabbed = m_active && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Tab));
-    // MEASUREMENT, not a fix: one line per frame saying whether ImGui believes it owns the
-    // keyboard and whether our widget is the active one. "Typing does not arrive" has two very
-    // different causes — no FRAMES (this canvas repaints on demand only, so an idle canvas never
-    // processes ImGui's queued characters) versus frames that run while the input is not active —
-    // and they are indistinguishable from outside.
-    if (std::getenv("ORCA_CAD_UXTRACE")) {
-        const ImGuiIO& io = ImGui::GetIO();
-        std::fprintf(stderr, "[UX] frame title=%s want_text=%d want_kb=%d active=%d buf=%s\n",
-                     m_title.c_str(), (int) io.WantTextInput, (int) io.WantCaptureKeyboard,
-                     (int) ImGui::IsItemActive(), m_buf);
-        std::fflush(stderr);
-    }
     ImGui::PopItemWidth();
     imgui.end();
     ImGui::PopStyleVar();

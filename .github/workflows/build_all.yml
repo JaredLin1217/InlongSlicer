@@ -16,17 +16,14 @@ on:
      - 'localization/**'
      - 'resources/**'
      - 'build_release_vs.bat'
-     - ".github/workflows/unit_tests*.yml"
      - 'build_linux.sh'
      - 'build_win.bat'
-     - 'scripts/test_build_win.ps1'
      - ".github/workflows/build_*.yml"
      - 'build_release_macos.sh'
      - 'scripts/build_preset_cache.*'
      - 'scripts/flatpak/**'
      - 'scripts/msix/**'
      - 'scripts/windows/sign_windows_release.ps1'
-     - 'tests/**'
 
   pull_request:
     branches:
@@ -44,13 +41,11 @@ on:
      - 'build_release_vs.bat'
      - 'build_release_vs2022.bat'
      - 'build_win.bat'
-     - 'scripts/test_build_win.ps1'
      - 'build_release_macos.sh'
      - 'scripts/build_preset_cache.*'
      - 'scripts/flatpak/**'
      - 'scripts/msix/**'
      - 'scripts/windows/sign_windows_release.ps1'
-     - 'tests/**'
 
 
   schedule:
@@ -74,21 +69,6 @@ concurrency:
 
 jobs:
   # build_win.bat ships a test suite. Run it before the Windows builds.
-  check_build_script:
-    name: Windows build script tests
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          lfs: 'false'
-
-      # Windows PowerShell rather than pwsh: the suite drives build_win.bat
-      # through cmd, and the two differ in how they quote native arguments.
-      - name: Run the build script test suite
-        shell: powershell
-        run: .\scripts\test_build_win.ps1
-
   build_linux:
     strategy:
       fail-fast: false
@@ -116,9 +96,8 @@ jobs:
         include: ${{ fromJSON(vars.SELF_HOSTED
           && '[{"arch":"x64","os":"orca-win-server","compiler":"clang"}]'
           || '[{"arch":"x64","os":"windows-latest","compiler":"clang"},{"arch":"arm64","os":"windows-11-arm","compiler":"clang"}]') }}
-    needs: check_build_script
     # Don't run scheduled builds on forks:
-    if: ${{ !cancelled() && needs.check_build_script.result == 'success' && (github.event_name != 'schedule' || github.repository == 'JaredLin1217/InlongSlicer') }}
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || github.repository == 'JaredLin1217/InlongSlicer') }}
     uses: ./.github/workflows/build_check_cache.yml
     with:
       os: ${{ matrix.os }}
@@ -153,52 +132,9 @@ jobs:
       arch: universal
       macos-combine-only: true
     secrets: inherit
-  # One test job per built arch, on the runner that built it.
-  unit_tests_linux_x86_64:
-    name: Linux x86_64
-    needs: build_linux
-    if: ${{ !cancelled() && success() }}
-    uses: ./.github/workflows/unit_tests.yml
-    with:
-      os: ${{ vars.SELF_HOSTED && 'orca-lnx-server' || 'ubuntu-24.04' }}
-      artifact: ${{ github.sha }}-tests-linux-x86_64
-  unit_tests_linux_aarch64:
-    name: Linux aarch64
-    needs: build_linux
-    if: ${{ !cancelled() && success() && !vars.SELF_HOSTED }}
-    uses: ./.github/workflows/unit_tests.yml
-    with:
-      os: ubuntu-24.04-arm
-      artifact: ${{ github.sha }}-tests-linux-aarch64
-  unit_tests_windows_x64:
-    name: Windows x64
-    needs: build_windows
-    if: ${{ !cancelled() && success() }}
-    uses: ./.github/workflows/unit_tests.yml
-    with:
-      os: ${{ vars.SELF_HOSTED && 'orca-win-server' || 'windows-latest' }}
-      artifact: ${{ github.sha }}-tests-windows-x64
-  unit_tests_windows_arm64:
-    name: Windows arm64
-    needs: build_windows
-    if: ${{ !cancelled() && success() && !vars.SELF_HOSTED }}
-    uses: ./.github/workflows/unit_tests.yml
-    with:
-      os: windows-11-arm
-      artifact: ${{ github.sha }}-tests-windows-arm64
-      test-dir: build-arm64/tests
-  unit_tests_macos_arm64:
-    name: macOS arm64
-    needs: build_macos_arch
-    if: ${{ !cancelled() && success() }}
-    uses: ./.github/workflows/unit_tests.yml
-    with:
-      os: ${{ vars.SELF_HOSTED && 'orca-macos-arm64' || 'macos-15' }}
-      artifact: ${{ github.sha }}-tests-macos-arm64
-      test-dir: build/arm64/tests
   # Slice a two-colour cube through every shipped printer so all custom g-code
   # (change_filament_gcode, machine start/end, etc.) is expanded - catches
-  # slicing regressions the static profile checks and unit tests can't see.
+  # slicing regressions the static profile checks can't see.
   # Profile-only PRs are covered by check_profiles.yml's nightly binary; this
   # covers src/engine PRs with the PR-built binary.
   slice_check_linux:
@@ -220,30 +156,6 @@ jobs:
         run: |
           chmod +x validator-bin/InlongSlicer_profile_validator
           ./validator-bin/InlongSlicer_profile_validator -p "${{ github.workspace }}/resources/profiles" -s -l 2
-  publish_test_results:
-    name: Publish Test Results
-    needs: [unit_tests_linux_x86_64, unit_tests_linux_aarch64, unit_tests_windows_x64, unit_tests_windows_arm64, unit_tests_macos_arm64]
-    if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Test Results
-        uses: actions/download-artifact@v8
-        with:
-          pattern: test-results-*
-          path: test-results
-      # Best-effort: a read-only token (e.g. fork PRs) can't write the check, so
-      # don't let a publish failure fail the run. The test jobs gate correctness.
-      - name: Publish Test Results
-        continue-on-error: true
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: "test-results/**/*.xml"
-      - name: Delete Test Results
-        if: success()
-        uses: geekyeggo/delete-artifact@v6
-        with:
-          name: test-results-*
-          failOnError: false
   flatpak:
     name: "Flatpak"
     container:

@@ -117,10 +117,9 @@ Both `cmake --build build --config Release --target install` and
 `cmake --build build --config Release --target install_only_inlong` completed
 successfully from clean source commit
 `bc4d9aa5de8c6d6de7333898d024342a15197bc6`. Existing dependencies were reused;
-the full target also built the remaining configured test and utility targets.
-This establishes compilation of those additional targets, not execution of
-their test cases. The build retains linker warnings, including LNK4098 in the
-auxiliary `texture_unwrap_dump` target.
+the full target also built the remaining configured utility targets.
+This establishes compilation of those additional targets. The build retains
+linker warnings, including LNK4098.
 
 The full output at `build/InlongSlicer` contains 14,756 profile-related files.
 The filtered output at `build/InlongSlicer_InlongOnly` contains 734. Every file

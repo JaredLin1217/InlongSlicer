@@ -59,9 +59,8 @@
 #endif // SUPPORT_USE_AGG_RASTERIZER
 
 // #define SLIC3R_DEBUG
-// #define SUPPORT_TREE_DEBUG_TO_SVG
 // Make assert active if SLIC3R_DEBUG
-#if defined(SLIC3R_DEBUG) || defined(SUPPORT_TREE_DEBUG_TO_SVG)
+#if defined(SLIC3R_DEBUG)
     #define DEBUG
     #define _DEBUG
     #undef NDEBUG
@@ -331,13 +330,8 @@ static Polygons contours_simplified(const Vec2i32 &grid_size, const double pixel
     // 3) Scale the polygons back into world, shrink slightly and remove collinear points.
     for (Polygon &poly : out) {
         for (Point &p : poly.points) {
-#if 0
-            p.x() = (p.x() + 1) * pixel_size + left_bottom.x();
-            p.y() = (p.y() + 1) * pixel_size + left_bottom.y();
-#else
             p *= pixel_size;
             p += left_bottom;
-#endif
         }
         // Shrink the contour slightly, so if the same contour gets discretized and simplified again, one will get the same result.
         // Remove collinear points.
@@ -782,18 +776,6 @@ public:
             // Create an EdgeGrid, initialize it with projection, initialize signed distance field.
             m_grid.set_bbox(bbox);
             m_grid.create(*m_support_polygons, grid_resolution);
-    #if 0
-            if (m_grid.has_intersecting_edges()) {
-                // EdgeGrid fails to produce valid signed distance function for self-intersecting polygons.
-                m_support_polygons_rotated = simplify_polygons(*m_support_polygons);
-                m_support_polygons = &m_support_polygons_rotated;
-                m_grid.set_bbox(bbox);
-                m_grid.create(*m_support_polygons, grid_resolution);
-    //            assert(! m_grid.has_intersecting_edges());
-                printf("SupportGridPattern: fixing polygons with intersection %s\n",
-                    m_grid.has_intersecting_edges() ? "FAILED" : "SUCCEEDED");
-            }
-    #endif
             m_grid.calculate_sdf();
     #endif // SUPPORT_USE_AGG_RASTERIZER
             break;
@@ -1113,31 +1095,6 @@ private:
     }
 #endif // SUPPORT_USE_AGG_RASTERIZER
 
-#if 0
-    // Get some internal point of an expolygon, to be used as a representative
-    // sample to test, whether this island is inside another island.
-    //FIXME this was quick, but not sufficiently robust.
-    static Point island_sample(const ExPolygon &expoly)
-    {
-        // Find the lowest point lexicographically.
-        const Point *pt_min = &expoly.contour.points.front();
-        for (size_t i = 1; i < expoly.contour.points.size(); ++ i)
-            if (expoly.contour.points[i] < *pt_min)
-                pt_min = &expoly.contour.points[i];
-
-        // Lowest corner will always be convex, in worst case denegenerate with zero angle.
-        const Point &p1 = (pt_min == &expoly.contour.points.front()) ? expoly.contour.points.back() : *(pt_min - 1);
-        const Point &p2 = *pt_min;
-        const Point &p3 = (pt_min == &expoly.contour.points.back()) ? expoly.contour.points.front() : *(pt_min + 1);
-
-        Vector v  = (p3 - p2) + (p1 - p2);
-        double l2 = double(v(0))*double(v(0))+double(v(1))*double(v(1));
-        if (l2 == 0.)
-            return p2;
-        double coef = 20. / sqrt(l2);
-        return Point(p2(0) + coef * v(0), p2(1) + coef * v(1));
-    }
-#endif
 
     // Sample one internal point per expolygon.
     // FIXME this is quite an overkill to calculate a complete offset just to get a single point, but at least it is robust.
@@ -1147,9 +1104,6 @@ private:
         pts.reserve(expolygons.size());
         for (const ExPolygon &expoly : expolygons)
             if (expoly.contour.points.size() > 2) {
-                #if 0
-                    pts.push_back(island_sample(expoly));
-                #else 
                     Polygons polygons = offset(expoly, - 20.f);
                     for (const Polygon &poly : polygons)
                         if (! poly.points.empty()) {
@@ -1161,7 +1115,6 @@ private:
                                 pts.push_back(poly.points[i]);
                             break;
                         }
-                #endif
             }
         // Sort the points lexicographically, so a binary search could be used to locate points inside a bounding box.
         std::sort(pts.begin(), pts.end());
@@ -1304,16 +1257,7 @@ namespace SupportMaterialInternal {
                 SUPPORT_SURFACES_OFFSET_PARAMETERS);
             // Collect perimeters of this layer.
             //FIXME split_at_first_point() could split a bridge mid-way
-        #if 0
-            Polylines overhang_perimeters = layerm.perimeters.as_polylines();
-            // workaround for Clipper bug, see Slic3r::Polygon::clip_as_polyline()
-            for (Polyline &polyline : overhang_perimeters)
-                polyline.points[0].x += 1;
-            // Trim the perimeters of this layer by the lower layer to get the unsupported pieces of perimeters.
-            overhang_perimeters = diff_pl(overhang_perimeters, lower_grown_slices);
-        #else
             Polylines overhang_perimeters = diff_pl(layerm.perimeters.as_polylines(), lower_grown_slices);
-        #endif
             
             // only consider straight overhangs
             // only consider overhangs having endpoints inside layer's slices
@@ -1721,20 +1665,7 @@ static inline std::tuple<Polygons, Polygons, double> detect_contacts(
                 // For the same reason, the non-bridging support area may be smaller than the bridging support area!
                 slices_margin_update(std::min(lower_layer_offset, float(scale_(gap_xy))), no_interface_offset);
                 // Offset the contact polygons outside.
-#if 0
-                for (size_t i = 0; i < NUM_MARGIN_STEPS; ++ i) {
-                    diff_polygons = diff(
-                        offset(
-                            diff_polygons,
-                            scaled<float>(SUPPORT_MATERIAL_MARGIN / NUM_MARGIN_STEPS),
-                            jtRound,
-                            // round mitter limit
-                            scale_(0.05)),
-                        slices_margin.polygons);
-                }
-#else
                 diff_polygons = diff(diff_polygons, slices_margin.polygons);
-#endif
             }
             polygons_append(contact_polygons, diff_polygons);
         } // for each layer.region
@@ -2276,14 +2207,6 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::top_contact_layers(
                     }
 
                     // 2.2 If sharp tail below, check whether it support this region enough.
-#if 0
-                    // judge by area isn't reliable, failure cases include 45 degree rotated cube
-                    float       supported_area = area(supported_by_lower);
-                    if (supported_area > area_thresh_well_supported) {
-                        is_sharp_tail = false;
-                        break;
-                    }
-#endif
                     BoundingBox bbox = get_extents(supported_by_lower);
                     if (bbox.size().x() > length_thresh_well_supported && bbox.size().y() > length_thresh_well_supported) {
                         is_sharp_tail = false;
@@ -2373,16 +2296,6 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::top_contact_layers(
                 }
             }
 
-#ifdef SUPPORT_TREE_DEBUG_TO_SVG
-            const Layer* layer1 = object.get_layer(cluster.min_layer);
-            BoundingBox bbox = get_extents(cluster.merged_overhangs_dilated);
-            bbox.merge(get_extents(layer1->lslices));
-            SVG svg(format("SVG/overhangCluster_%s_%s_tail=%s_cantilever=%s_small=%s.svg", cluster.min_layer, layer1->print_z, cluster.is_sharp_tail, cluster.is_cantilever, cluster.is_small_overhang), bbox);
-            if (svg.is_opened()) {
-                svg.draw(layer1->lslices, "red");
-                svg.draw(cluster.merged_overhangs_dilated, "blue");
-            }
-#endif
 
             // 5. remove small overhangs
             if (cluster.is_small_overhang) {
@@ -2810,18 +2723,11 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::bottom_contact_layers_and_
 #endif // SLIC3R_DEBUG
             // Contact surfaces are expanded away from the object, trimmed by the object.
             // Use a slight positive offset to overlap the touching regions.
-#if 0
-            // Merge and collect the contact polygons. The contact polygons are inflated, but not extended into a grid form.
-            polygons_append(polygons_new,  offset(*top_contact.contact_polygons,  SCALED_EPSILON));
-            if (top_contact.enforcer_polygons)
-                polygons_append(enforcers_new, offset(*top_contact.enforcer_polygons, SCALED_EPSILON));
-#else
             // Consume the contact_polygons. The contact polygons are already expanded into a grid form, and they are a tiny bit smaller
             // than the grid cells.
             polygons_append(polygons_new,  std::move(*top_contact.contact_polygons));
             if (top_contact.enforcer_polygons)
                 polygons_append(enforcers_new, std::move(*top_contact.enforcer_polygons));
-#endif
             // These are the overhang surfaces. They are touching the object and they are not expanded away from the object.
             // Use a slight positive offset to overlap the touching regions.
             polygons_append(polygons_new, expand(*top_contact.overhang_polygons, float(SCALED_EPSILON)));
@@ -3286,21 +3192,6 @@ void PrintObjectSupportMaterial::generate_base_layers(
                         ApplySafetyOffset::Yes); // safety offset to merge the touching source polygons
                 layer_intermediate.layer_type = SupporLayerType::Base;
 
-        #if 0
-                    // coordf_t fillet_radius_scaled = scale_(m_object_config->support_base_pattern_spacing);
-                    // Fillet the base polygons and trim them again with the top, interface and contact layers.
-                    $base->{$i} = diff(
-                        offset2(
-                            $base->{$i}, 
-                            $fillet_radius_scaled, 
-                            -$fillet_radius_scaled,
-                            # Use a geometric offsetting for filleting.
-                            JT_ROUND,
-                            0.2*$fillet_radius_scaled),
-                        $trim_polygons,
-                        false); // don't apply the safety offset.
-                }
-        #endif
             }
         });
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::generate_base_layers() in parallel - end";

@@ -82,31 +82,6 @@ TreeModelVolumes::TreeModelVolumes(
     m_machine_border{ calculateMachineBorderCollision(build_volume.polygon()) }
 {
     m_bed_area = build_volume.polygon();
-#if 0
-    std::unordered_map<size_t, size_t> mesh_to_layeroutline_idx;
-    for (size_t mesh_idx = 0; mesh_idx < storage.meshes.size(); ++ mesh_idx) {
-        SliceMeshStorage mesh = storage.meshes[mesh_idx];
-        bool added = false;
-        for (size_t idx = 0; idx < m_layer_outlines.size(); ++ idx)
-            if (TreeSupport::TreeSupportSettings(m_layer_outlines[idx].first) == TreeSupport::TreeSupportSettings(mesh.settings)) {
-                added = true;
-                mesh_to_layeroutline_idx[mesh_idx] = idx;
-            }
-        if (! added) {
-            mesh_to_layeroutline_idx[mesh_idx] = m_layer_outlines.size();
-            m_layer_outlines.emplace_back(mesh.settings, std::vector<Polygons>(storage.support.supportLayers.size(), Polygons()));
-        }
-    }
-    for (size_t idx = 0; idx < m_layer_outlines.size(); ++ idx) {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, m_layer_outlines[idx].second.size()),
-            [&](const tbb::blocked_range<size_t> &range) {
-            for (const size_t layer_idx = range.begin(); layer_idx < range.end(); ++ layer_idx)
-                m_layer_outlines[idx].second[layer_idx] = union_(m_layer_outlines[idx].second[layer_idx]); 
-        });
-    }
-    m_current_outline_idx = mesh_to_layeroutline_idx[current_mesh_idx];
-
-#else
     {
         m_anti_overhang = print_object.slice_support_blockers();
         TreeSupportMeshGroupSettings mesh_settings(print_object);
@@ -171,7 +146,6 @@ TreeModelVolumes::TreeModelVolumes(
             }
         }
     }
-#endif
 
     m_support_rests_on_model = false;
     m_min_resolution  = std::numeric_limits<coord_t>::max();
@@ -180,34 +154,6 @@ TreeModelVolumes::TreeModelVolumes(
         m_min_resolution = std::min(m_min_resolution, data_pair.first.resolution);
     }
 
-#if 0
-    for (size_t mesh_idx = 0; mesh_idx < storage.meshes.size(); mesh_idx++) {
-        SliceMeshStorage mesh = storage.meshes[mesh_idx];
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, m_layer_outlines[mesh_to_layeroutline_idx[mesh_idx]].second.size()),
-            [&](const tbb::blocked_range<size_t> &range) {
-            for (size_t layer_idx = range.begin(); layer_idx < range.end(); ++ layer_idx)
-                if (layer_idx < mesh.layer_nr_max_filled_layer) {
-                    Polygons outline = extractOutlineFromMesh(mesh, layer_idx);
-                    append(m_layer_outlines[mesh_to_layeroutline_idx[mesh_idx]].second[layer_idx], outline);
-                }
-        });
-    }
-    if (! additional_excluded_areas.empty()) {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, m_anti_overhang.size()),
-            [&](const tbb::blocked_range<size_t> &range) {
-            for (size_t layer_idx = range.begin(); layer_idx < range.end(); ++ layer_idx) {
-                if (layer_idx < coord_t(additional_excluded_areas.size()))
-                    append(m_anti_overhang[layer_idx], additional_excluded_areas[layer_idx]);
-    //          if (SUPPORT_TREE_AVOID_SUPPORT_BLOCKER)
-    //              append(m_anti_overhang[layer_idx], storage.support.supportLayers[layer_idx].anti_overhang);
-    //FIXME block wipe tower
-    //          if (storage.primeTower.enabled)
-    //              append(m_anti_overhang[layer_idx], layer_idx == 0 ? storage.primeTower.outer_poly_first_layer : storage.primeTower.outer_poly);
-                m_anti_overhang[layer_idx] = union_(m_anti_overhang[layer_idx]);
-            }
-        });
-    }
-#endif
 }
 
 void TreeModelVolumes::precalculate(const PrintObject& print_object, const coord_t max_layer, std::function<void()> throw_on_cancel)
@@ -309,42 +255,6 @@ void TreeModelVolumes::precalculate(const PrintObject& print_object, const coord
 //    m_precalculated = true;
     BOOST_LOG_TRIVIAL(info) << "Precalculating collision took" << dur_col << " ms. Precalculating avoidance took " << dur_avo << " ms.";
 
-#if 0
-    // Paint caches into SVGs:
-    auto paint_cache_into_SVGs = [this](const RadiusLayerPolygonCache &cache, std::string_view name) {
-        const std::vector<std::pair<RadiusLayerPair, std::reference_wrapper<const Polygons>>> sorted = cache.sorted();
-        static constexpr const std::string_view colors[] = {
-            "red", "green", "blue", "magenta", "orange"
-        };
-        static constexpr const size_t num_colors = sizeof(colors) / sizeof(colors[0]);
-        for (size_t i = 0; i < sorted.size();) {
-            // Find range of cache items with the same layer index.
-            size_t j = i;
-            for (++ j; j < sorted.size() && sorted[i].first.second == sorted[j].first.second; ++ j) ;
-            // Collect expolygons in reverse order (largest to smallest).
-            std::vector<std::pair<Slic3r::ExPolygons, SVG::ExPolygonAttributes>> expolygons_with_attributes;
-            for (int k = int(j - 1); k >= int(i); -- k) {
-                std::string legend = format("radius-%1%", unscaled<float>(sorted[k].first.first));
-                expolygons_with_attributes.push_back({ union_ex(sorted[k].second), SVG::ExPolygonAttributes(legend, std::string(colors[(k - int(i)) % num_colors]), 1.) });
-                SVG::export_expolygons(debug_out_path("treesupport_cache-%s-%d-%s.svg", name.data(), sorted[i].first.second, legend.c_str()), { expolygons_with_attributes.back() });
-            }
-            // Render the range of per radius collision polygons into a common SVG.
-            SVG::export_expolygons(debug_out_path("treesupport_cache-%s-%d.svg", name.data(), sorted[i].first.second), expolygons_with_attributes);
-            i = j;
-        }
-    };
-    paint_cache_into_SVGs(m_collision_cache,                    "collision_cache");
-    paint_cache_into_SVGs(m_collision_cache_holefree,           "collision_cache_holefree");
-    paint_cache_into_SVGs(m_avoidance_cache,                    "avoidance_cache");
-    paint_cache_into_SVGs(m_avoidance_cache_slow,               "avoidance_cache_slow");
-    paint_cache_into_SVGs(m_avoidance_cache_to_model,           "avoidance_cache_to_model");
-    paint_cache_into_SVGs(m_avoidance_cache_to_model_slow,      "avoidance_cache_to_model_slow");
-    paint_cache_into_SVGs(m_placeable_areas_cache,              "placable_areas_cache");
-    paint_cache_into_SVGs(m_avoidance_cache_holefree,           "avoidance_cache_holefree");
-    paint_cache_into_SVGs(m_avoidance_cache_holefree_to_model,  "avoidance_cache_holefree_to_model");
-    paint_cache_into_SVGs(m_wall_restrictions_cache,            "wall_restrictions_cache");
-    paint_cache_into_SVGs(m_wall_restrictions_cache_min,        "wall_restrictions_cache_min");
-#endif
 }
 
 const Polygons& TreeModelVolumes::getCollision(const coord_t orig_radius, LayerIndex layer_idx, bool min_xy_dist) const

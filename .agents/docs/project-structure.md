@@ -31,8 +31,6 @@ consumer. It is not an Agents distribution provider.
   records. Inspect and preview cleanup; never clear the runtime root.
 - `.agents/docs/templates/codex-hooks.json` is an optional template. Deployment
   does not activate native hooks or change local/global Codex settings.
-- `tests/AGENTS.md` adds valid test-scope rules and is not a competing root
-  layout.
 - Deployment does not replace product files, local configuration, project
   knowledge, or project-owned skills.
 
@@ -40,11 +38,10 @@ consumer. It is not an Agents distribution provider.
 
 | Area | Purpose | Change guidance |
 |---|---|---|
-| `src/libslic3r/` | Slicing engine and geometry | Run the smallest relevant unit or FFF test target. |
+| `src/libslic3r/` | Slicing engine and geometry | Verify the affected Release target and a real slicing scenario. |
 | `src/slic3r/` | Desktop application and GUI | Preserve Inlong identity and verify the Release application when changed. |
 | `resources/profiles/` | Printer, process, and material profiles | Validate cross-profile relationships, not file presence alone. |
 | `localization/i18n/` | Gettext sources using `InlongSlicer_*.po` | Rebuild catalogs and verify the staged runtime resource. |
-| `tests/` | Catch2 and integration tests | Follow `tests/AGENTS.md`. |
 | `cmake/`, `CMakeLists.txt`, `src/CMakeLists.txt` | Build, install, and package contracts | Verify the affected target before a full install. |
 | `.github/workflows/` | CI and release automation | Keep platform and packaging behavior aligned with local build entry points. |
 | `InlongSlicer_doc/` | Product-specific migration and operating records | Treat the branding migration record as the source of truth during upstream merges. |

@@ -7,11 +7,8 @@
 # only `patch` and `update` stamps -- no build, no install -- so the dependency was fetched
 # and then never built, in the image or out of it.
 #
-# The consequence was that scripts/CAD/run-kernel-tests.sh failed at CMake CONFIGURE time,
-# before a single source file compiled, so THIS FORK'S KERNEL SUITE COULD NOT RUN AT ALL.
-# Every kernel change ported here was parity-checked against Snapmaker and never independently
-# tested (w80c). The Snapmaker fork does not hit this: its base requires neither
-# assimp nor OpenCV.
+# The consequence was a CMake CONFIGURE failure before any source compiled. The
+# Snapmaker fork does not hit this: its base requires neither assimp nor OpenCV.
 #
 # WHY A LAYER AND NOT A FULL DEPS REBUILD. Rebuilding every dependency takes hours and would
 # rewrite artifacts that are currently working. This adds exactly the one missing package on
@@ -29,7 +26,6 @@
 #   VERIFY:
 #     docker run --rm orcacad-deps sh -c \
 #       'ls /OrcaSlicer/deps/build/destdir/usr/local/lib/cmake/assimp*'
-#     scripts/CAD/run-kernel-tests.sh
 #
 FROM orcacad-deps
 

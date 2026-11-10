@@ -90,9 +90,4 @@ docker run --rm \
         exit \$rc
     " || rc=$?
 
-# A target-only build writes src/Release/, but this fork's start-headless-gui.sh may default BIN to the
-# PACKAGED path that only build_linux.sh refreshes — launching with the default would then run a
-# stale binary. Pass BIN explicitly. See scripts/CAD/rig_build_traps.md.
-echo "=== launch the rig on the binary just built ==="
-echo "  docker exec -e BIN=/OrcaSlicer/build/src/Release/$BIN ${PREFIX}-gui /OrcaSlicer/scripts/CAD/start-headless-gui.sh"
 exit "$rc"

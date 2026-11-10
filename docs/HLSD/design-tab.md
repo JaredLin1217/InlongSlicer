@@ -336,8 +336,7 @@ An invariant across 93 verbs and 20 selection kinds does not survive by review, 
 exists once, as data: `scripts/CAD/tool_atlas.json` carries every verb with its row, key, icon,
 accepted selections, preconditions and refusal string, and `scripts/CAD/gen_offer_table.py`
 emits `src/slic3r/GUI/CAD/DesignOffer.hpp` from it. The header is checked in and never
-hand-edited; `scripts/CAD/run-all-checks.sh` runs the generator with `--check` as its first
-rung, which is what makes "GENERATED — DO NOT EDIT" a fact rather than a request. The generator
+hand-edited. Run `scripts/CAD/gen_offer_table.py --check` after changing the atlas. The generator
 also refuses an atlas with a duplicate verb id, since `mcp_run_verb` resolves a verb by id and
 would make the second one unreachable.
 
@@ -367,15 +366,3 @@ scripted action and a clicked one cannot diverge. It is off unless the variable 
 | `src/slic3r/GUI/CAD/DesignInteraction.hpp` | the Esc level contract |
 | `src/slic3r/GUI/CAD/DesignOffer.hpp` | generated offer table |
 | `scripts/CAD/tool_atlas.json` | source of truth for the offer |
-
-## Verification
-
-The kernel is covered by Catch2 suites in `tests/libslic3r/` (`test_caddocument`,
-`test_sketchconstraints`, `test_sketchedit`, `test_sketchimport`, `test_sketchinference`,
-`test_sketchprofile`, `test_slvs_constraints`), which need no display;
-`scripts/CAD/run-kernel-tests.sh` builds only `libslic3r_tests` and runs them headless.
-
-The GUI half is not covered by CI, which has no OpenGL canvas or synthetic input: the ladders
-in `scripts/CAD/` drive a running application in a local rig instead, and
-`scripts/CAD/run-all-checks.sh` is the gate that runs all of them. A green kernel run says
-nothing about the viewport, so the two are reported separately rather than as one number.

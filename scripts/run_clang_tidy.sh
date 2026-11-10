@@ -221,7 +221,7 @@ fi
 # The same configure as CI. DEP_BUILD_DIR is named outright: CMake would otherwise
 # derive it from the build directory's name.
 cmake_args=(-S . -B "$BUILD_DIR" -G Ninja -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DSLIC3R_PCH=OFF -DINLONG_TOOLS=ON -DBUILD_TESTS=ON
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DSLIC3R_PCH=OFF -DINLONG_TOOLS=ON
     -DDEP_BUILD_DIR="$DEPS_DIR")
 if [ "$OS" = Darwin ]; then
     cmake_args+=(-DCMAKE_OSX_ARCHITECTURES="$ARCH" "-DCMAKE_IGNORE_PREFIX_PATH=/opt/local;/usr/local;/opt/homebrew")

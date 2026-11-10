@@ -117,8 +117,6 @@ using namespace std::chrono_literals;
 #define MINUTE_30 1800000    //ms
 #define TIME_OUT  5000       //ms
 
-#define INLONG_NETWORK_DEBUG
-
 float string_to_float(const std::string& str_value) {
     float value = 0.0;
     fast_float::from_chars(str_value.c_str(), str_value.c_str() + str_value.size(), value);
@@ -2904,11 +2902,6 @@ static ENUM enum_index_of(char const *key, char const **enum_names, int enum_cou
 
 int MachineObject::parse_json(std::string tunnel, std::string payload, bool key_field_only)
 {
-#ifdef INLONG_NETWORK_DEBUG
-    BOOST_LOG_TRIVIAL(info) << "parse_json: payload = " << payload;
-    flush_logs();
-#endif
-
     if (tunnel == "lan") last_lan_msg_time_ = std::chrono::system_clock::now();
     if (tunnel == "cloud") last_cloud_msg_time_ = std::chrono::system_clock::now();
 

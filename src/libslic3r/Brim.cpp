@@ -29,13 +29,10 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
-#include <fstream>
 #include <functional>
-#include <iomanip>
 #include <iterator>
 #include <limits>
 #include <map>
-#include <mutex>
 #include <set>
 #include <tuple>
 #include <string>
@@ -1046,41 +1043,6 @@ static void fill_bed_gaps(ExtrusionEntityCollection &brim, const ExPolygons &all
     }
 }
 
-// Opt-in evidence from the actual allowed area, before G-code rounding.
-static void trace_brim_coverage(const ExPolygons &allowed, const ExtrusionEntityCollection &brim,
-    const Print &print, bool apply_plate_offset)
-{
-    const char *path = std::getenv("INLONG_BRIM_STAGE_TRACE");
-    if (path == nullptr)
-        return;
-    static std::mutex mutex;
-    const std::lock_guard<std::mutex> guard(mutex);
-    std::ofstream out(path, std::ios::app);
-    out << std::setprecision(15);
-    const Vec3d origin = apply_plate_offset ? print.get_plate_origin() : Vec3d::Zero();
-    auto polygons = [&](const Polygons &polys) {
-        out << '[';
-        for (size_t i = 0; i < polys.size(); ++i) {
-            if (i) out << ',';
-            out << '[';
-            for (size_t j = 0; j < polys[i].points.size(); ++j) {
-                if (j) out << ',';
-                out << '[' << unscale<double>(polys[i].points[j].x()) + origin.x() << ','
-                    << unscale<double>(polys[i].points[j].y()) + origin.y() << ']';
-            }
-            out << ']';
-        }
-        out << ']';
-    };
-    const Flow flow = print.brim_flow();
-    out << "{\"width\":" << flow.width() << ",\"height\":" << flow.height()
-        << ",\"spacing\":" << flow.spacing() << ",\"allowed\":";
-    polygons(to_polygons(allowed));
-    out << ",\"coverage\":";
-    polygons(union_(brim.polygons_covered_by_width()));
-    out << "}\n";
-}
-
 static ExtrusionEntityCollection makeBrimInfillImpl(const ExPolygons& singleBrimArea, const Print& print, const Polygons& islands_area, bool apply_plate_offset) {
     Polygons        loops = tryExPolygonOffset(singleBrimArea, print);
     Flow  flow = print.brim_flow();
@@ -1113,7 +1075,6 @@ static ExtrusionEntityCollection makeBrimInfillImpl(const ExPolygons& singleBrim
 
     extrusion_entities_append_loops_and_paths(brim.entities, std::move(all_loops), erBrim, float(flow.mm3_per_mm()), float(flow.width()), float(print.skirt_first_layer_height()));
     fill_bed_gaps(brim, singleBrimArea, flow);
-    trace_brim_coverage(singleBrimArea, brim, print, apply_plate_offset);
 
     if (apply_plate_offset) {
         //BBS: finally apply the plate offset which may very large
@@ -1188,15 +1149,7 @@ static Polylines single_bed_interface_arc(const Polyline &loop,const Flow &flow,
 bool normalize_bed_support_widths(ExtrusionEntityCollection &result,
     const ExtrusionEntityCollection &source,const Polygons &brim_coverage,const ExPolygons &support_regions)
 {
-    auto trace=[](bool success,const char *reason) {
-        if (const char *file=std::getenv("INLONG_BED_WIDTH_TRACE")) {
-            static std::mutex mutex;
-            const std::lock_guard<std::mutex> guard(mutex);
-            std::ofstream(file,std::ios::app)<<"{\"normalized\":"<<(success?"true":"false")
-                <<",\"reason\":\""<<reason<<"\"}\n";
-        }
-    };
-    auto fail=[&](const char *reason) { trace(false,reason); return false; };
+    auto fail=[](const char *) { return false; };
     if (result.empty()) return true;
     if (support_regions.empty()) return fail("no_support_regions");
     const float tolerance=20.f*float(SCALED_EPSILON);
@@ -1321,7 +1274,6 @@ bool normalize_bed_support_widths(ExtrusionEntityCollection &result,
         0.5f*float(scale_(minimum_height)));
     if (area(lost)*SCALING_FACTOR*SCALING_FACTOR>0.002) return fail("printable_foundation_loss");
     result=std::move(candidate);
-    trace(true,"full_process_widths");
     return true;
 }
 
@@ -1330,15 +1282,6 @@ bool normalize_bed_support_widths(ExtrusionEntityCollection &result,
 static void splice_short_bed_paths(ExtrusionEntityCollection &result,
     const std::map<ExtrusionRole,ExPolygons> &allowed, bool full_width_only)
 {
-    auto trace=[](const char *event,size_t index,size_t other,bool ok,double value) {
-        if (const char *file=std::getenv("INLONG_BED_JOIN_TRACE")) {
-            static std::mutex mutex;
-            const std::lock_guard<std::mutex> guard(mutex);
-            std::ofstream(file,std::ios::app)<<std::setprecision(12)
-                <<"{\"event\":\""<<event<<"\",\"index\":"<<index<<",\"other\":"<<other
-                <<",\"ok\":"<<(ok?"true":"false")<<",\"value\":"<<value<<"}\n";
-        }
-    };
     auto ratio = [](const ExtrusionPath &p) {
         return p.mm3_per_mm/(p.height*(p.width-p.height*(1.-0.25*PI)));
     };
@@ -1397,10 +1340,6 @@ static void splice_short_bed_paths(ExtrusionEntityCollection &result,
             return diff_ex(offset(path.polyline.to_polyline(),float(scale_(width*0.5f)),jtRound,
                 double(SCALED_EPSILON),etOpenRound),fit_domain).empty();
         };
-        if (full_width_only && std::getenv("INLONG_BED_JOIN_TRACE"))
-            trace("connector_original_excess",0,0,fits(maximum),area(diff_ex(
-                offset(path.polyline.to_polyline(),float(scale_(maximum*0.5f)),jtRound,
-                    double(SCALED_EPSILON),etOpenRound),allowed.at(path.role())))*SCALING_FACTOR*SCALING_FACTOR);
         if (!fits(maximum) && full_width_only) {
             const ExPolygons centers=offset_ex(fit_domain,-0.5f*float(scale_(maximum)));
             const ExPolygons visible=offset_ex(centers,float(SCALED_EPSILON));
@@ -1434,14 +1373,6 @@ static void splice_short_bed_paths(ExtrusionEntityCollection &result,
                 valid=p.role()==chains[i][0].role() && p.height==chains[i][0].height &&
                     std::abs(ratio(p)-ratio(chains[i][0]))<0.00001 &&
                     chains[i][j-1].last_point3()==p.first_point3();
-        }
-        if (full_width_only && !chains[i].empty() && chains[i].front().role()==erSupportMaterialInterface) {
-            trace("chain",i,chains[i].size(),valid,length(chains[i]));
-            trace("reversible",i,0,result.entities[i]->can_reverse(),0.);
-            for (size_t j=0;j<chains[i].size();++j) {
-                trace("ratio",i,j,true,ratio(chains[i][j]));
-                trace("height",i,j,true,chains[i][j].height);
-            }
         }
         if (!valid) chains[i].clear();
     }
@@ -1483,7 +1414,6 @@ static void splice_short_bed_paths(ExtrusionEntityCollection &result,
             std::stable_sort(end_candidates.begin(),end_candidates.end(),[](const EndCandidate &a,const EndCandidate &b) {
                 return std::tie(a.distance,a.index,a.reversed)<std::tie(b.distance,b.index,b.reversed);
             });
-            trace("end_candidates",small,end_candidates.size(),true,small_length);
             bool closed=false;
             for (const auto &candidate:end_candidates) {
                 ExtrusionPaths finish=chains[small];
@@ -1494,12 +1424,10 @@ static void splice_short_bed_paths(ExtrusionEntityCollection &result,
                 ExtrusionPaths proposed=chains[candidate.index];
                 const bool first_fits=connector(proposed.back().last_point3(),finish.front().first_point3(),finish.front(),
                     std::min(proposed.back().width,finish.front().width),proposed);
-                trace("end_entry",small,candidate.index,first_fits,candidate.distance);
                 if (!first_fits) continue;
                 proposed.insert(proposed.end(),finish.begin(),finish.end());
                 const bool last_fits=connector(proposed.back().last_point3(),proposed.front().first_point3(),finish.back(),
                     std::min(finish.back().width,proposed.front().width),proposed);
-                trace("end_exit",small,candidate.index,last_fits,candidate.distance);
                 if (!last_fits) continue;
                 auto *multi=new ExtrusionMultiPath;
                 multi->paths=proposed;

@@ -71,7 +71,6 @@
 #include <limits>
 #include <sstream>
 #include <iomanip>
-#include <fstream>
 #include <set>
 #include <optional>
 #include <iostream>
@@ -96,16 +95,6 @@
 #define _L(s) Slic3r::I18N::translate(s)
 
 namespace Slic3r {
-
-static void trace_model_precheck(const char *message)
-{
-    const char *path = std::getenv("INLONG_MODEL_PRECHECK_TRACE");
-    if (path == nullptr)
-        return;
-    std::ofstream out(path, std::ios::app);
-    out << message << '\n';
-    out.flush();
-}
 
 const std::vector<std::string> CONST_FILAMENTS = {
     "",   "4",  "8",  "0C", "1C",  "2C",  "3C",  "4C",  "5C",  "6C",  "7C",  "8C",  "9C",  "AC",  "BC",  "CC","DC",//16
@@ -847,12 +836,8 @@ double Model::max_z() const
 unsigned int Model::update_print_volume_state(const BuildVolume &build_volume)
 {
     unsigned int num_printable = 0;
-    trace_model_precheck((std::string("model.update.objects=") + std::to_string(this->objects.size())).c_str());
-    for (ModelObject* model_object : this->objects) {
-        trace_model_precheck("model.update.object.begin");
+    for (ModelObject* model_object : this->objects)
         num_printable += model_object->update_instances_print_volume_state(build_volume);
-        trace_model_precheck("model.update.object.end");
-    }
     //BBS: add logs for build_volume
     const BoundingBoxf3& print_volume = build_volume.bounding_volume();
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(", print_volume {%1%, %2%, %3%} to {%4%, %5%, %6%}, got %7% printable istances")        %print_volume.min.x() %print_volume.min.y() %print_volume.min.z()%print_volume.max.x() %print_volume.max.y() %print_volume.max.z() %num_printable;
@@ -3670,7 +3655,6 @@ void ModelInstance::get_arrange_polygon(void *ap, const Slic3r::DynamicPrintConf
 
 ModelInstanceEPrintVolumeState ModelInstance::calc_print_volume_state(const BuildVolume& build_volume) const
 {
-    trace_model_precheck("calc.enter");
     auto is_axis_aligned = [](const Transform3d &matrix) {
         constexpr double eps = 1e-9;
         for (int row = 0; row < 3; ++row) {
@@ -3705,7 +3689,6 @@ ModelInstanceEPrintVolumeState ModelInstance::calc_print_volume_state(const Buil
                 continue;
             ++model_part_count;
         }
-        trace_model_precheck((std::string("calc.rectangle.model_parts=") + std::to_string(model_part_count)).c_str());
         if (model_part_count == 1) {
             // The raw snug box walks every mesh vertex. For a rectangular bed
             // the transformed mesh AABB is already a conservative and exact
@@ -3719,13 +3702,8 @@ ModelInstanceEPrintVolumeState ModelInstance::calc_print_volume_state(const Buil
                 }
             const Transform3d matrix = this->get_matrix() * model_volume->get_matrix();
             if (is_axis_aligned(matrix)) {
-                trace_model_precheck("calc.rectangle.axis_aligned");
-                trace_model_precheck("calc.rectangle.mesh_bbox.begin");
                 const BoundingBoxf3 instance_bbox = model_volume->mesh().bounding_box().transformed(matrix);
-                trace_model_precheck("calc.rectangle.mesh_bbox.end");
-                trace_model_precheck("calc.rectangle.volume_state.begin");
                 const BuildVolume::ObjectState state = build_volume.volume_state_bbox(instance_bbox);
-                trace_model_precheck("calc.rectangle.volume_state.end");
                 switch (state) {
                 case BuildVolume::ObjectState::Inside:     return ModelInstancePVS_Inside;
                 case BuildVolume::ObjectState::Outside:
@@ -3737,14 +3715,12 @@ ModelInstanceEPrintVolumeState ModelInstance::calc_print_volume_state(const Buil
         }
     }
 
-
     enum {
         INSIDE = 1,
         OUTSIDE = 2
     };
 
     unsigned int inside_outside = 0;
-    trace_model_precheck("calc.fallback.begin");
     for (const ModelVolume* vol : this->object->volumes) {
         if (vol->is_model_part()) {
             //BBS: add bounding box empty check logic, for some volume is empty before split(it will be removed after split to object)

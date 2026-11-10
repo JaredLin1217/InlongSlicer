@@ -330,15 +330,6 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
         bool found_existing_group = false;
         TreeSupportSettings next_settings{ TreeSupportMeshGroupSettings{ print_object }, print_object.slicing_parameters() };
         //FIXME for now only a single object per group is enabled.
-#if 0
-        for (size_t idx = 0; idx < grouped_meshes.size(); ++ idx)
-            if (next_settings == grouped_meshes[idx].first) {
-                found_existing_group = true;
-                grouped_meshes[idx].second.emplace_back(object_id);
-                // handle some settings that are only used for performance reasons. This ensures that a horrible set setting intended to improve performance can not reduce it drastically.
-                grouped_meshes[idx].first.performance_interface_skip_layers = std::min(grouped_meshes[idx].first.performance_interface_skip_layers, next_settings.performance_interface_skip_layers);
-            }
-#endif
         if (! found_existing_group)
             grouped_meshes.emplace_back(next_settings, std::vector<size_t>{ object_id });
 
@@ -347,176 +338,10 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
             largest_printed_mesh_idx = object_id;
     }
 
-#if 0
-    {
-        std::vector<coord_t> known_z(storage.meshes[largest_printed_mesh_idx].layers.size());
-        for (size_t z = 0; z < storage.meshes[largest_printed_mesh_idx].layers.size(); z++)
-            known_z[z] = storage.meshes[largest_printed_mesh_idx].layers[z].printZ;
-        for (size_t idx = 0; idx < grouped_meshes.size(); ++ idx)
-            grouped_meshes[idx].first.setActualZ(known_z);
-    }
-#endif
 
     return grouped_meshes;
 }
 
-#if 0
-// todo remove as only for debugging relevant
-[[nodiscard]] static std::string getPolygonAsString(const Polygons& poly)
-{
-    std::string ret;
-    for (auto path : poly)
-        for (Point p : path) {
-            if (ret != "")
-                ret += ",";
-            ret += "(" + std::to_string(p.x()) + "," + std::to_string(p.y()) + ")";
-        }
-    return ret;
-}
-
-[[nodiscard]] static const std::vector<Polygons> generate_overhangs(const TreeSupportSettings &settings, PrintObject &print_object, std::function<void()> throw_on_cancel)
-{
-    const size_t num_raft_layers   = settings.raft_layers.size();
-    const size_t num_object_layers = print_object.layer_count();
-    const size_t num_layers        = num_object_layers + num_raft_layers;
-    std::vector<Polygons> out(num_layers, Polygons{});
-
-    const PrintConfig       &print_config           = print_object.print()->config();
-    const PrintObjectConfig &config                 = print_object.config();
-    const bool               support_auto           = config.enable_support.value && is_auto(config.support_type.value);
-    const int                support_enforce_layers = config.enforce_support_layers.value;
-    std::vector<Polygons>    enforcers_layers{ print_object.slice_support_enforcers() };
-    std::vector<Polygons>    blockers_layers{ print_object.slice_support_blockers() };
-    print_object.project_and_append_custom_facets(false, EnforcerBlockerType::ENFORCER, enforcers_layers);
-    print_object.project_and_append_custom_facets(false, EnforcerBlockerType::BLOCKER, blockers_layers);
-    const int                support_threshold      = config.support_threshold_angle.value;
-    const bool               support_threshold_auto = support_threshold == 0;
-    // +1 makes the threshold inclusive
-    double                   tan_threshold          = support_threshold_auto ? 0. : tan(M_PI * double(support_threshold + 1) / 180.);
-    // Build plate tilt: compute per-layer XY shift for tilted gravity direction
-    const Vec2d              tilt_slope             = build_plate_tilt_slope(print_config);
-    const bool               has_tilt               = tilt_slope.cwiseAbs().maxCoeff() > EPSILON;
-    //FIXME this is a fudge constant!
-    auto                     enforcer_overhang_offset = scaled<double>(config.tree_support_tip_diameter.value);
-    const coordf_t radius_sample_resolution = g_config_tree_support_collision_resolution;
-
-    // calc the extrudable expolygons of each layer
-    const coordf_t extrusion_width = config.line_width.value;
-    const coordf_t extrusion_width_scaled = scale_(extrusion_width);
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, print_object.layer_count()),
-        [&](const tbb::blocked_range<size_t>& range) {
-            for (size_t layer_nr = range.begin(); layer_nr < range.end(); layer_nr++) {
-                if (print_object.print()->canceled())
-                    break;
-                Layer* layer = print_object.get_layer(layer_nr);
-                // Filter out areas whose diameter that is smaller than extrusion_width, but we don't want to lose any details.
-                layer->lslices_extrudable = intersection_ex(layer->lslices, offset2_ex(layer->lslices, -extrusion_width_scaled / 2, extrusion_width_scaled));
-            }
-        });
-
-    size_t num_overhang_layers = support_auto ? num_object_layers : std::min(num_object_layers, std::max(size_t(support_enforce_layers), enforcers_layers.size()));
-    tbb::parallel_for(tbb::blocked_range<LayerIndex>(1, num_overhang_layers),
-        [&print_object, &config, &print_config, &enforcers_layers, &blockers_layers,
-         support_auto, support_enforce_layers, support_threshold_auto, tan_threshold, enforcer_overhang_offset, num_raft_layers, radius_sample_resolution, has_tilt, tilt_slope, &throw_on_cancel, &out]
-        (const tbb::blocked_range<LayerIndex> &range) {
-        for (LayerIndex layer_id = range.begin(); layer_id < range.end(); ++ layer_id) {
-            const Layer   &current_layer  = *print_object.get_layer(layer_id);
-            const Layer   &lower_layer    = *print_object.get_layer(layer_id - 1);
-            // Full overhangs with zero lower_layer_offset and no blockers applied.
-            Polygons       raw_overhangs;
-            bool           raw_overhangs_calculated = false;
-            // Final overhangs.
-            Polygons       overhangs;
-            // For how many layers full overhangs shall be supported.
-            const bool     enforced_layer = layer_id < support_enforce_layers;
-            if (support_auto || enforced_layer) {
-                float lower_layer_offset;
-                if (enforced_layer)
-                    lower_layer_offset = 0;
-                else if (support_threshold_auto) {
-                    float external_perimeter_width = 0;
-                    for (const LayerRegion *layerm : lower_layer.regions())
-                        external_perimeter_width += layerm->flow(frExternalPerimeter).scaled_width();
-                    external_perimeter_width /= lower_layer.region_count();
-                    lower_layer_offset = external_perimeter_width - float(scale_(config.support_threshold_overlap.get_abs_value(unscale_(external_perimeter_width))));
-                } else
-                    lower_layer_offset = scaled<float>(lower_layer.height / tan_threshold);
-                // Apply build plate tilt: shift lower layer polygons to simulate tilted gravity
-                Polygons lower_layer_offseted;
-                if (has_tilt) {
-                    Polygons lower_src = to_polygons(lower_layer.lslices_extrudable);
-                    translate(lower_src, Point::new_scale(tilt_slope * lower_layer.height));
-                    lower_layer_offseted = offset(lower_src, lower_layer_offset);
-                } else {
-                    lower_layer_offseted = offset(lower_layer.lslices_extrudable, lower_layer_offset);
-                }
-                overhangs = diff(current_layer.lslices_extrudable, lower_layer_offseted);
-                if (lower_layer_offset == 0) {
-                    raw_overhangs = overhangs;
-                    raw_overhangs_calculated = true;
-                }
-                if (! (enforced_layer || blockers_layers.empty() || blockers_layers[layer_id].empty()))
-                    overhangs = diff(overhangs, offset_ex(union_(blockers_layers[layer_id]), scale_(radius_sample_resolution)), ApplySafetyOffset::Yes);
-                //if (config.bridge_no_support) {
-                //    for (const LayerRegion *layerm : current_layer.regions())
-                //        remove_bridges_from_contacts(print_config, lower_layer, *layerm,
-                //            float(layerm->flow(frExternalPerimeter).scaled_width()), overhangs);
-                //}
-            }
-            //check_self_intersections(overhangs, "generate_overhangs1");
-            if (! enforcers_layers.empty() && ! enforcers_layers[layer_id].empty()) {
-                // Has some support enforcers at this layer, apply them to the overhangs, don't apply the support threshold angle.
-                //enforcers_layers[layer_id] = union_(enforcers_layers[layer_id]);
-                //check_self_intersections(enforcers_layers[layer_id], "generate_overhangs - enforcers");
-                //check_self_intersections(to_polygons(lower_layer.lslices), "generate_overhangs - lowerlayers");
-                if (Polygons enforced_overhangs = intersection(raw_overhangs_calculated ? raw_overhangs : diff(current_layer.lslices, lower_layer.lslices), enforcers_layers[layer_id] /*, ApplySafetyOffset::Yes */);
-                    ! enforced_overhangs.empty()) {
-                    //FIXME this is a hack to make enforcers work on steep overhangs.
-                    //check_self_intersections(enforced_overhangs, "generate_overhangs - enforced overhangs1");
-                    //Polygons enforced_overhangs_prev = enforced_overhangs;
-                    //check_self_intersections(to_polygons(union_ex(enforced_overhangs)), "generate_overhangs - enforced overhangs11");
-                    //check_self_intersections(offset(union_ex(enforced_overhangs),
-                    //FIXME enforcer_overhang_offset is a fudge constant!
-                    enforced_overhangs = diff(offset(union_ex(enforced_overhangs), enforcer_overhang_offset),
-                        lower_layer.lslices);
-                    //check_self_intersections(enforced_overhangs, "generate_overhangs - enforced overhangs2");
-                    overhangs = overhangs.empty() ? std::move(enforced_overhangs) : union_(overhangs, enforced_overhangs);
-                    //check_self_intersections(overhangs, "generate_overhangs - enforcers");
-                }
-            }
-            out[layer_id + num_raft_layers] = std::move(overhangs);
-            throw_on_cancel();
-        }
-    });
-
-#if 0
-    if (num_raft_layers > 0) {
-        const Layer   &first_layer = *print_object.get_layer(0);
-        // Final overhangs.
-        Polygons       overhangs = 
-            // Don't apply blockes on raft layer.
-            //(! blockers_layers.empty() && ! blockers_layers[layer_id].empty() ? 
-            //    diff(first_layer.lslices, blockers_layers[layer_id], ApplySafetyOffset::Yes) :
-                to_polygons(first_layer.lslices);
-#if 0
-        if (! enforcers_layers.empty() && ! enforcers_layers[layer_id].empty()) {
-            if (Polygons enforced_overhangs = intersection(first_layer.lslices, enforcers_layers[layer_id] /*, ApplySafetyOffset::Yes */);
-                ! enforced_overhangs.empty()) {
-                //FIXME this is a hack to make enforcers work on steep overhangs.
-                //FIXME enforcer_overhang_offset is a fudge constant!
-                enforced_overhangs = offset(union_ex(enforced_overhangs), enforcer_overhang_offset);
-                overhangs = overhangs.empty() ? std::move(enforced_overhangs) : union_(overhangs, enforced_overhangs);
-            }
-        }   
-#endif
-        out[num_raft_layers] = std::move(overhangs);
-        throw_on_cancel();
-    }
-#endif
-
-    return out;
-}
-#endif
 
 /*!
  * \brief Precalculates all avoidances, that could be required.
@@ -648,26 +473,6 @@ static std::vector<std::pair<TreeSupportSettings, std::vector<size_t>>> group_me
     return result;
 }
 
-#if 0
-/*!
- * \brief Converts lines in internal format into a Polygons object representing these lines.
- *
- * \param lines[in] The lines that will be converted.
- * \return All lines of the \p lines object as a Polygons object.
- */
-[[nodiscard]] static Polylines convert_internal_to_lines(LineInformations lines)
-{
-    Polylines result;
-    for (LineInformation line : lines) {
-        Polyline path;
-        for (auto point_data : line)
-            path.points.emplace_back(point_data.first);
-        result.emplace_back(std::move(path));
-    }
-    validate_range(result);
-    return result;
-}
-#endif
 
 /*!
  * \brief Evaluates if a point has to be added now. Required for a split_lines call in generate_initial_areas().
@@ -954,45 +759,6 @@ Polylines organic_roof_tip_positions(const Polygons &area, coord_t distance)
     const SupportParameters &support_params,
     bool roof, LayerIndex layer_idx, coord_t support_infill_distance)
 {
-#if 0
-    Polygons gaps;
-    // as we effectivly use lines to place our supportPoints we may use the Infill class for it, while not made for it it works perfect
-
-    const EFillMethod pattern = roof ? config.roof_pattern : config.support_pattern;
-
-//    const bool zig_zaggify_infill = roof ? pattern == EFillMethod::ZIG_ZAG : config.zig_zaggify_support;
-    const bool connect_polygons = false;
-    constexpr coord_t support_roof_overlap = 0;
-    constexpr size_t infill_multiplier = 1;
-    constexpr coord_t outline_offset = 0;
-    const int support_shift = roof ? 0 : support_infill_distance / 2;
-    const size_t wall_line_count = include_walls && !roof ? config.support_wall_count : 0;
-    const Point infill_origin;
-    constexpr Polygons* perimeter_gaps = nullptr;
-    constexpr bool use_endpieces = true;
-    const bool connected_zigzags = roof ? false : config.connect_zigzags;
-    const size_t zag_skip_count = roof ? 0 : config.zag_skip_count;
-    constexpr coord_t pocket_size = 0;
-    std::vector<AngleRadians> angles = roof ? config.support_roof_angles : config.support_infill_angles;
-    std::vector<VariableWidthLines> toolpaths;
-
-    const coord_t z = config.getActualZ(layer_idx);
-    int divisor = static_cast<int>(angles.size());
-    int index = ((layer_idx % divisor) + divisor) % divisor;
-    const AngleRadians fill_angle = angles[index];
-    Infill roof_computation(pattern, true /* zig_zaggify_infill */, connect_polygons, polygon,
-        roof ? config.support_roof_line_width : config.support_line_width, support_infill_distance, support_roof_overlap, infill_multiplier,
-        fill_angle, z, support_shift, config.resolution, wall_line_count, infill_origin,
-        perimeter_gaps, connected_zigzags, use_endpieces, false /* skip_some_zags */, zag_skip_count, pocket_size);
-    Polygons polygons;
-    Polygons lines;
-    roof_computation.generate(toolpaths, polygons, lines, config.settings);
-    append(lines, to_polylines(polygons));
-    return lines;
-#else
-//    const bool connected_zigzags = roof ? false : config.connect_zigzags;
-//    const int support_shift = roof ? 0 : support_infill_distance / 2;
-
     const Flow            &flow   = roof ? support_params.support_material_interface_flow : support_params.support_material_flow;
     std::unique_ptr<Fill>  filler = std::unique_ptr<Fill>(Fill::new_from_type(roof ? support_params.interface_fill_pattern : support_params.base_fill_pattern));
     FillParams             fill_params;
@@ -1032,7 +798,6 @@ Polylines organic_roof_tip_positions(const Polygons &area, coord_t distance)
     }
     validate_range(out);
     return out;
-#endif
 }
 
 /*!
@@ -1379,14 +1144,7 @@ public:
             const bool use_continuous_roof = continuous_roof_area != nullptr || continuous_roof_area_no_xy != nullptr || continuous_roof_area_tip != nullptr;
             auto evaluateRoofWillGenerate = [&](const std::pair<Point, LineStatus> &p) {
                 //FIXME Vojtech: The circle is just shifted, it has a known size, the infill should fit all the time!
-    #if 0
-                Polygon roof_circle;
-                for (Point corner : base_circle)
-                    roof_circle.points.emplace_back(p.first + corner * config.min_radius);
-                return !generate_support_infill_lines({ roof_circle }, config, true, insert_layer_idx - dtt_roof_tip, config.support_roof_line_distance).empty();
-    #else
                 return true;
-    #endif
             };
 
             {
@@ -1587,24 +1345,6 @@ void finalize_raft_contact(
                     }
                     return false;
                 }), first_layer_move_bounds.end());
-    #if 0
-            // Remove the remaining tips from the raft: Closing operation on tip circles.
-            if (! first_layer_move_bounds.empty()) {
-                const double eps = 0.1;
-                // All tips supporting this layer are expected to have the same radius.
-                double       radius = support_element_radius(config, first_layer_move_bounds.front());
-                // Connect the tips with the following closing radius.
-                double       closing_distance = radius;
-                Polygon      circle = make_circle(radius + closing_distance, eps);
-                Polygons     circles;
-                circles.reserve(first_layer_move_bounds.size());
-                for (const SupportElement &el : first_layer_move_bounds) {
-                    circles.emplace_back(circle);
-                    circles.back().translate(el.state.result_on_layer);
-                }
-                raft_polygons = diff(raft_polygons, offset(union_(circles), - closing_distance));
-            }
-    #endif
         }
     }
 }
@@ -1950,10 +1690,6 @@ static void generate_initial_areas(
 
     const bool min_xy_dist = config.xy_distance >= config.xy_min_distance;
 
-#if 0
-    if (mesh.overhang_areas.size() <= z_distance_delta)
-        return;
-#endif
 
     const coord_t connect_length = (config.support_line_width * 100. / mesh_group_settings.support_tree_top_rate) + std::max(2. * config.min_radius - 1.0 * config.support_line_width, 0.0);
     // As r*r=x*x+y*y (circle equation): If a circle with center at (0,0) the top most point is at (0,r) as in y=r.
@@ -2022,12 +1758,9 @@ static void generate_initial_areas(
 
 
     std::vector<RichInterfacePlacer::PendingPlacement> placements(raw_overhangs.size());
-    std::atomic<size_t> completed_raw_overhangs{0};
-    std::atomic<size_t> roof_sample_nanoseconds{0}, regular_sample_nanoseconds{0};
 
     tbb::parallel_for(tbb::blocked_range<size_t>(0, raw_overhangs.size()),
         [&volumes, &config, &print_object, &raw_overhangs, &mesh_group_settings, &interface_placer, &move_bounds, &placements,
-         &completed_raw_overhangs, &roof_sample_nanoseconds, &regular_sample_nanoseconds,
          z_distance_delta,
          min_xy_dist, roof_enabled, num_support_roof_layers, extra_outset, circle_length_to_half_linewidth_change, connect_length,
          force_tip_to_roof, num_support_layers, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
@@ -2239,50 +1972,6 @@ static void generate_initial_areas(
                     overhang_regular   = union_(overhang_regular, diff(safe_offset_inc(remaining_overhang, extra_total_offset_acc, raw_collision, offset_step, 0, 1), relevant_forbidden));
                     //check_self_intersections(overhang_regular, "overhang_regular2");
                 }
-#if 0
-                // If the xy distance overrides the z distance, some support needs to be inserted further down.
-                //=> Analyze which support points do not fit on this layer and check if they will fit a few layers down (while adding them an infinite amount of layers down would technically be closer the setting description, it would not produce reasonable results. )
-                if (! min_xy_dist) {
-                    LineInformations overhang_lines;
-                    {
-                        //Vojtech: Generate support heads at support_tree_branch_distance spacing by producing a zig-zag infill at support_tree_branch_distance spacing,
-                        // which is then resmapled
-                        // support_line_width to form a line here as otherwise most will be unsupported. Technically this violates branch distance,
-                        // mbut not only is this the only reasonable choice, but it ensures consistent behavior as some infill patterns generate
-                        // each line segment as its own polyline part causing a similar line forming behavior. Also it is assumed that
-                        // the area that is valid a layer below is to small for support roof.
-                        Polylines polylines = ensure_maximum_distance_polyline(
-                            generate_support_infill_lines(remaining_overhang, support_params, false, layer_idx, mesh_group_settings.support_tree_branch_distance),
-                            config.min_radius, 1);
-                        if (polylines.size() <= 3)
-                            // add the outer wall to ensure it is correct supported instead
-                            polylines = ensure_maximum_distance_polyline(to_polylines(remaining_overhang), connect_length, 3);
-                        for (const auto &line : polylines) {
-                            LineInformation res_line;
-                            for (Point p : line)
-                                res_line.emplace_back(p, LineStatus::INVALID);
-                            overhang_lines.emplace_back(res_line);
-                        }
-                        validate_range(overhang_lines);
-                    }
-                    for (size_t lag_ctr = 1; lag_ctr <= max_overhang_insert_lag && !overhang_lines.empty() && layer_idx - coord_t(lag_ctr) >= 1; lag_ctr++) {
-                        // get least restricted avoidance for layer_idx-lag_ctr
-                        const Polygons &relevant_forbidden_below = config.support_rests_on_model ?
-                            volumes.getCollision(config.getRadius(0), layer_idx - lag_ctr, min_xy_dist) :
-                            volumes.getAvoidance(config.getRadius(0), layer_idx - lag_ctr, AvoidanceType::Fast, false, min_xy_dist);
-                        // it is not required to offset the forbidden area here as the points wont change: If points here are not inside the forbidden area neither will they be later when placing these points, as these are the same points.
-                        auto evaluatePoint = [&](std::pair<Point, LineStatus> p) { return contains(relevant_forbidden_below, p.first); };
-
-                        std::pair<LineInformations, LineInformations> split = split_lines(overhang_lines, evaluatePoint); // keep all lines that are invalid
-                        overhang_lines = split.first;
-                        // Set all now valid lines to their correct LineStatus. Easiest way is to just discard Avoidance information for each point and evaluate them again.
-                        LineInformations fresh_valid_points = convert_lines_to_internal(volumes, config, convert_internal_to_lines(split.second), layer_idx - lag_ctr);
-                        validate_range(fresh_valid_points);
-
-                        rich_interface_placer.add_points_along_lines(fresh_valid_points, (force_tip_to_roof && lag_ctr <= num_support_roof_layers) ? num_support_roof_layers : 0, layer_idx - lag_ctr, false, roof_enabled ? num_support_roof_layers : 0);
-                    }
-                }
-#endif
             }
 
             throw_on_cancel();
@@ -2343,11 +2032,8 @@ static void generate_initial_areas(
                     Polygons contact_area = contact_for_support(support_area, ordinary_contact_roof, false, &roof_shared_reach, true, &roof_support_union);
                     Polygons sharp_tail_contact_area = contact_for_support(support_area, sharp_tail_contact_roof, false, &roof_shared_reach, false, &roof_support_union);
                     Polygons tip_contact_area = contact_for_support(support_area, tip_contact_roof, true, &roof_shared_tip_reach, false, &roof_support_union);
-                    const auto sample_started = std::chrono::steady_clock::now();
                     sample_overhang_area(std::move(support_area), std::move(contact_area), std::move(sharp_tail_contact_area), std::move(tip_contact_area), true, layer_idx, num_support_roof_layers, connect_length,
                         mesh_group_settings, rich_interface_placer);
-                    roof_sample_nanoseconds += size_t(std::chrono::duration_cast<std::chrono::nanoseconds>(
-                        std::chrono::steady_clock::now() - sample_started).count());
                     throw_on_cancel();
                 }
             }
@@ -2380,16 +2066,11 @@ static void generate_initial_areas(
                 Polygons contact_area = contact_for_support(support_area, ordinary_contact_roof, false, nullptr, true, nullptr);
                 Polygons sharp_tail_contact_area = contact_for_support(support_area, sharp_tail_contact_roof, false, &regular_shared_reach, false, &regular_support_union);
                 Polygons tip_contact_area = contact_for_support(support_area, tip_contact_roof, true, &regular_shared_tip_reach, false, &regular_support_union);
-                const auto sample_started = std::chrono::steady_clock::now();
                 sample_overhang_area(std::move(support_area), std::move(contact_area), std::move(sharp_tail_contact_area), std::move(tip_contact_area),
                     false, layer_idx, num_support_roof_layers, connect_length,
                     mesh_group_settings, rich_interface_placer);
-                regular_sample_nanoseconds += size_t(std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::steady_clock::now() - sample_started).count());
                 throw_on_cancel();
             }
-            const size_t completed = completed_raw_overhangs.fetch_add(1, std::memory_order_relaxed) + 1;
-            (void) completed;
         }
     });
 
@@ -3447,10 +3128,6 @@ static void create_layer_pathing(const TreeModelVolumes &volumes, const TreeSupp
     double progress_total = TREE_PROGRESS_PRECALC_AVO + TREE_PROGRESS_PRECALC_COLL + TREE_PROGRESS_GENERATE_NODES;
 #endif // SLIC3R_TREESUPPORTS_PROGRESS
 
-    auto dur_inc   = std::chrono::duration_values<std::chrono::nanoseconds>::zero();
-    auto dur_merge = std::chrono::duration_values<std::chrono::nanoseconds>::zero();
-    auto dur_total = std::chrono::duration_values<std::chrono::nanoseconds>::zero();
-
     LayerIndex last_merge_layer_idx = move_bounds.size();
     bool new_element = false;
     const auto _tiny_area_threshold = tiny_area_threshold();
@@ -3467,7 +3144,6 @@ static void create_layer_pathing(const TreeModelVolumes &volumes, const TreeSupp
             const bool merge_this_layer = had_new_element || size_t(last_merge_layer_idx - layer_idx) >= merge_every_x_layers;
             if (had_new_element)
                 merge_every_x_layers = 1;
-            const auto ta               = std::chrono::high_resolution_clock::now();
 
             // ### Increase the influence areas by the allowed movement distance
             std::vector<SupportElementMerging> influence_areas;
@@ -3502,7 +3178,6 @@ static void create_layer_pathing(const TreeModelVolumes &volumes, const TreeSupp
                 }),
                 influence_areas.end());
 
-            dur_inc += std::chrono::high_resolution_clock::now() - ta;
             new_element = ! move_bounds[layer_idx - 1].empty();
             // Re-check layers where two compatible influence boxes have just
             // become close enough to merge. This keeps a vertical branch from
@@ -3514,9 +3189,7 @@ static void create_layer_pathing(const TreeModelVolumes &volumes, const TreeSupp
                 bool reduced_by_merging = false;
                 if (size_t count_before_merge = influence_areas.size(); count_before_merge > 1) {
                     // ### Calculate which influence areas overlap, and merge them into a new influence area (simplified: an intersection of influence areas that have such an intersection)
-                    const auto merge_started = std::chrono::high_resolution_clock::now();
                     merge_influence_areas(volumes, config, layer_idx, influence_areas, throw_on_cancel);
-                    dur_merge += std::chrono::high_resolution_clock::now() - merge_started;
                     reduced_by_merging = count_before_merge > influence_areas.size();
                 }
                 last_merge_layer_idx = layer_idx;
@@ -3524,7 +3197,6 @@ static void create_layer_pathing(const TreeModelVolumes &volumes, const TreeSupp
                     merge_every_x_layers = std::min(max_merge_every_x_layers, merge_every_x_layers + 1);
             }
 
-            dur_total += std::chrono::high_resolution_clock::now() - ta;
 
             // Save calculated elements to output, and allocate Polygons on heap, as they will not be changed again.
             for (SupportElementMerging &elem : influence_areas)
@@ -3544,8 +3216,6 @@ static void create_layer_pathing(const TreeModelVolumes &volumes, const TreeSupp
             throw_on_cancel();
         }
 
-    BOOST_LOG_TRIVIAL(info) << "Time spent with creating influence areas' subtasks: Increasing areas " << dur_inc.count() / 1000000 <<
-        " ms merging areas: " << (dur_total - dur_inc).count() / 1000000 << " ms";
 }
 
 // A merge cadence may skip several layers when no merge was found recently.
@@ -4299,16 +3969,6 @@ static std::pair<float, float> extrude_branch(
 //            sprintf(fname, "d:\\temp\\meshes\\tree-partial-%d.obj", ++irun);
 //            its_write_obj(result, fname);
         }
-#if 0
-        if (circles_intersect(p1, nprev, support_element_radius(settings, prev), p2, ncurrent, support_element_radius(settings, current))) {
-            // Cannot connect previous and current slice using a simple zig-zag triangulation,
-            // because the two circles intersect.
-
-        } else {
-            // Continue with chaining.
-
-        }
-#endif
     }
 
     return std::make_pair(zmin, zmax);
@@ -4566,14 +4226,6 @@ static void organic_smooth_branches_avoid_collisions(
                     throw_on_cancel();
                 }
         });
-#if 0
-        std::vector<double> stat;
-        for (CollisionSphere& collision_sphere : collision_spheres)
-            if (!collision_sphere.locked)
-                stat.emplace_back(collision_sphere.last_collision_depth);
-        std::sort(stat.begin(), stat.end());
-        printf("iteration: %d, moved: %d, collision depth: min %lf, max %lf, median %lf\n", int(iter), int(num_moved), stat.front(), stat.back(), stat[stat.size() / 2]);
-#endif
         if (num_moved == 0)
             break;
     }
@@ -4706,8 +4358,6 @@ static void connect_organic_generic_interfaces_to_base(
 {
     if (!volumes.m_belt_floor.empty())
         return;
-    const auto profile_started = std::chrono::steady_clock::now();
-    size_t components = 0, closest_point_queries = 0;
     const coord_t half_width = support_params.support_material_flow.scaled_width() / 2;
     const coord_t overlap = scale_(support_params.support_material_flow.nozzle_diameter() * 0.5);
     const coord_t max_link = config.settings.support_tree_branch_distance + 2 * half_width;
@@ -4729,7 +4379,6 @@ static void connect_organic_generic_interfaces_to_base(
         if (!collision.empty())
             collision = union_(std::move(collision));
         for (const ExPolygon &component : union_ex(interface->polygons)) {
-            ++components;
             const Polygons region = diff(to_polygons(component), offset(base->polygons, float(overlap)));
             if (area(region) <= minimum_overlap)
                 continue;
@@ -4746,7 +4395,6 @@ static void connect_organic_generic_interfaces_to_base(
                 for (size_t vertex = 0; vertex < polygon.size(); ++vertex) {
                     const Polyline edge({polygon[vertex], polygon[(vertex + 1) % polygon.size()]});
                     for (const Point &point : edge.equally_spaced_points(sample_step)) {
-                        ++closest_point_queries;
                         auto candidate = grid.closest_point_signed_distance(point, max_link);
                         if (candidate.valid() && std::abs(candidate.distance) < std::abs(nearest.distance))
                             nearest = candidate;
@@ -4799,22 +4447,6 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
         // Contains config settings to avoid loading them in every function. This was done to improve readability of the code.
         const TreeSupportSettings &config = processing.first;
         BOOST_LOG_TRIVIAL(info) << "Processing support tree mesh group " << counter + 1 << " of " << grouped_meshes.size() << " containing " << grouped_meshes[counter].second.size() << " meshes.";
-        auto t_start = std::chrono::high_resolution_clock::now();
-#if 0
-        std::vector<Polygons> exclude(num_support_layers);
-        // get all already existing support areas and exclude them
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, num_support_layers),
-            [&](const tbb::blocked_range<size_t> &range) {
-            for (size_t layer_idx = range.begin(); layer_idx < range.end(); ++ layer_idx) {
-                Polygons exlude_at_layer;
-                append(exlude_at_layer, storage.support.supportLayers[layer_idx].support_bottom);
-                append(exlude_at_layer, storage.support.supportLayers[layer_idx].support_roof);
-                for (auto part : storage.support.supportLayers[layer_idx].support_infill_parts)
-                    append(exlude_at_layer, part.outline);
-                exclude[layer_idx] = union_(exlude_at_layer);
-            }
-        });
-#endif
 #ifdef SLIC3R_TREESUPPORTS_PROGRESS
         m_progress_multiplier = 1.0 / double(grouped_meshes.size());
         m_progress_offset = counter == 0 ? 0 : TREE_PROGRESS_TOTAL * (double(counter) * m_progress_multiplier);
@@ -4927,7 +4559,6 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
             layer_storage, top_contacts, interface_layers, base_interface_layers };
 
         if (has_support) {
-            auto t_precalc = std::chrono::high_resolution_clock::now();
 
             // value is the area where support may be placed. As this is calculated in CreateLayerPathing it is saved and reused in draw_areas
             std::vector<SupportElements> move_bounds(num_support_layers);
@@ -4936,7 +4567,6 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
             for (size_t mesh_idx : processing.second)
                 generate_initial_areas(*print.get_object(mesh_idx), volumes, config, overhangs, tip_contact_overhangs, sharp_tail_overhangs,
                     move_bounds, interface_placer, throw_on_cancel);
-            auto t_gen = std::chrono::high_resolution_clock::now();
 
 
             // ### Propagate the influence areas downwards. This is an inherently serial operation.
@@ -4952,11 +4582,9 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
             if (merged_buildplate_roots > 0)
                 BOOST_LOG_TRIVIAL(info) << "Organic support root reconciliation: merged "
                     << merged_buildplate_roots << " compatible buildplate roots";
-            auto t_path = std::chrono::high_resolution_clock::now();
 
             // ### Set a point in each influence area
             create_nodes_from_area(volumes, config, move_bounds, throw_on_cancel);
-            auto t_place = std::chrono::high_resolution_clock::now();
 
             // ### draw these points as circles
             // this new function give correct result when raft is also enabled
@@ -4977,20 +4605,6 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
 
             std::tie(interface_layers, base_interface_layers) = generate_interface_layers(print_object.config(), support_params,
                 bottom_contacts, top_contacts, interface_layers, base_interface_layers, intermediate_layers, layer_storage);
-            auto t_draw = std::chrono::high_resolution_clock::now();
-            auto dur_pre_gen = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_precalc - t_start).count();
-            auto dur_gen = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_gen - t_precalc).count();
-            auto dur_path = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_path - t_gen).count();
-            auto dur_place = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_place - t_path).count();
-            auto dur_draw = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_draw - t_place).count();
-            auto dur_total = 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_draw - t_start).count();
-            BOOST_LOG_TRIVIAL(info) <<
-                "Total time used creating Tree support for the currently grouped meshes: " << dur_total << " ms. "
-                "Different subtasks:\nCalculating Avoidance: " << dur_pre_gen << " ms "
-                "Creating inital influence areas: " << dur_gen << " ms "
-                "Influence area creation: " << dur_path << "ms "
-                "Placement of Points in InfluenceAreas: " << dur_place << "ms "
-                "Drawing result as support " << dur_draw << " ms";
     //        if (config.branch_radius==2121)
     //            BOOST_LOG_TRIVIAL(error) << "Why ask questions when you already know the answer twice.\n (This is not a real bug, please dont report it.)";
             
@@ -5113,7 +4727,6 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
         }
 
         print.set_status(69, _L("Generating support"));
-        const auto t_toolpaths = std::chrono::steady_clock::now();
         std::vector<coordf_t> height_adjusted_layers;
         const size_t physical_height_adjustments = generate_support_toolpaths(
             print_object.support_layers(), print_object.config(), support_params, print_object.slicing_parameters(),
@@ -5136,7 +4749,6 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
         release_generator_payloads(interface_layers);
         release_generator_payloads(base_interface_layers);
 
-        const auto t_reconnect = std::chrono::steady_clock::now();
         // Always run the inexpensive topology cleanup. The full reconnect
         // walk is required after a physical-height change, and isolated printed
         // fragments are still removed even when that walk is unnecessary.
@@ -5145,42 +4757,6 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
             reconnect_organic_support_paths(print_object, volumes, config, output_plan, support_params, layers_sorted, throw_on_cancel,
                 !full_printed_repair, &height_adjusted_layers);
         }
-        BOOST_LOG_TRIVIAL(info) << "Organic support toolpaths: generation " <<
-            std::chrono::duration<double>(t_reconnect - t_toolpaths).count() << " seconds, reconnection " <<
-            std::chrono::duration<double>(std::chrono::steady_clock::now() - t_reconnect).count() << " seconds";
-
-        // Optional local profiling payload, inactive in ordinary slicing.
-                auto t_end = std::chrono::high_resolution_clock::now();
-        BOOST_LOG_TRIVIAL(info) << "Total time of organic tree support: " << 0.001 * std::chrono::duration_cast<std::chrono::microseconds>(t_end - t_start).count() << " ms";
- #if 0
-//#ifdef SLIC3R_DEBUG
-        {
-            static int iRun = 0;
-            ++ iRun;
-            size_t layer_id = 0;
-            for (int i = 0; i < int(layers_sorted.size());) {
-                // Find the last layer with roughly the same print_z, find the minimum layer height of all.
-                // Due to the floating point inaccuracies, the print_z may not be the same even if in theory they should.
-                int j = i + 1;
-                coordf_t zmax = layers_sorted[i]->print_z + EPSILON;
-                bool empty = layers_sorted[i]->polygons.empty();
-                for (; j < layers_sorted.size() && layers_sorted[j]->print_z <= zmax; ++j)
-                    if (!layers_sorted[j]->polygons.empty())
-                        empty = false;
-                if (!empty) {
-                    export_print_z_polygons_to_svg(
-                        debug_out_path("support-%d-%lf.svg", iRun, layers_sorted[i]->print_z).c_str(),
-                        layers_sorted.data() + i, j - i);
-                    export_print_z_polygons_and_extrusions_to_svg(
-                        debug_out_path("support-w-fills-%d-%lf.svg", iRun, layers_sorted[i]->print_z).c_str(),
-                        layers_sorted.data() + i, j - i,
-                        *print_object.support_layers()[layer_id]);
-                    ++layer_id;
-                }
-                i = j;
-            }
-        }
-#endif /* SLIC3R_DEBUG */
 
         ++ counter;
     }
@@ -5261,7 +4837,6 @@ static bool anchor_organic_support_components(
     SupportGeneratorLayersPtr &intermediate_layers, SupportGeneratorLayerStorage &storage,
     std::function<void()> throw_on_cancel)
 {
-    const auto anchor_profile_started = std::chrono::steady_clock::now();
     if (plan.size() < 2)
         return false;
     const double min_area = sqr(double(config.support_line_width)) * 0.05;
@@ -5353,10 +4928,6 @@ static bool anchor_organic_support_components(
     std::vector<bool> footprint_bounds_ready(plan.size(), false);
     std::vector<std::vector<BoundingBox>> footprint_polygon_bounds(plan.size());
     std::vector<bool> footprint_polygon_bounds_ready(plan.size(), false);
-    size_t footprint_builds = 0;
-    size_t collision_builds = 0;
-    std::atomic<size_t> bbox_rejections{0};
-    std::atomic<size_t> exact_overlap_tests{0};
     auto invalidate_footprint = [&](size_t idx) {
         if (idx >= plan.size())
             return;
@@ -5369,7 +4940,6 @@ static bool anchor_organic_support_components(
     };
     auto footprint = [&](size_t idx) -> const Polygons & {
         if (!footprint_ready[idx]) {
-            ++footprint_builds;
             Polygons polygons;
             size_t contributors = 0;
             const Polygons *single_source = nullptr;
@@ -5425,7 +4995,6 @@ static bool anchor_organic_support_components(
     std::vector<bool> collision_ready(plan.size(), false);
     auto collision = [&](size_t idx) -> const Polygons & {
         if (!collision_ready[idx]) {
-            ++collision_builds;
             Polygons polygons;
             // The topology cache rounds Z distances to source layers. A union
             // of those masks can reserve an extra model layer at an independent
@@ -5462,11 +5031,8 @@ static bool anchor_organic_support_components(
     };
     auto exact_overlap = [&](const Polygons &lhs, const BoundingBox &lhs_bounds,
                              const Polygons &rhs, const BoundingBox &rhs_bounds) {
-        if (lhs_bounds.defined && rhs_bounds.defined && !lhs_bounds.overlap(rhs_bounds)) {
-            bbox_rejections.fetch_add(1, std::memory_order_relaxed);
+        if (lhs_bounds.defined && rhs_bounds.defined && !lhs_bounds.overlap(rhs_bounds))
             return false;
-        }
-        exact_overlap_tests.fetch_add(1, std::memory_order_relaxed);
         return Slic3r::area(intersection(lhs, rhs)) > min_area;
     };
     auto model_landing = [&](double bottom_z, const Polygons &region, const BoundingBox &region_bounds) {
@@ -5516,10 +5082,8 @@ static bool anchor_organic_support_components(
             for (size_t polygon_idx = 0; polygon_idx < polygons.size(); ++polygon_idx)
                 if (bounds[polygon_idx].defined && area_bounds.overlap(bounds[polygon_idx]))
                     nearby.emplace_back(polygons[polygon_idx]);
-            if (nearby.empty()) {
-                bbox_rejections.fetch_add(1, std::memory_order_relaxed);
+            if (nearby.empty())
                 return false;
-            }
             if (nearby.size() < polygons.size())
                 return exact_overlap(area, area_bounds, nearby, get_extents(nearby));
         }
@@ -5675,14 +5239,9 @@ static bool anchor_organic_support_components(
             throw_on_cancel();
         }
     }
-    BOOST_LOG_TRIVIAL(info) << "Organic support anchoring: repaired " << repaired
-        << " disconnected components and relocated " << relocated << " clipped root ends"
-        << ", layers=" << plan.size() << ", elapsed "
-        << std::chrono::duration<double>(std::chrono::steady_clock::now() - anchor_profile_started).count()
-        << " seconds, footprint builds=" << footprint_builds
-        << ", collision builds=" << collision_builds
-        << ", exact overlap tests=" << exact_overlap_tests
-        << ", AABB rejections=" << bbox_rejections;
+    if (repaired > 0 || relocated > 0)
+        BOOST_LOG_TRIVIAL(info) << "Organic support anchoring: repaired " << repaired
+            << " disconnected components and relocated " << relocated << " clipped root ends";
     return repaired > 0 || relocated > 0;
 }
 
@@ -5716,7 +5275,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         return !affected_filter_valid || std::binary_search(required_layers.begin(), required_layers.end(), LayerIndex(idx)) ||
             (idx > 0 && std::binary_search(required_layers.begin(), required_layers.end(), LayerIndex(idx - 1)));
     };
-    const auto profile_started = std::chrono::steady_clock::now();
     const bool independent_organic = plan.independent();
     std::vector<SupportLayer *> output(plan.size(), nullptr);
     for (SupportLayer *layer : object.support_layers()) {
@@ -5768,22 +5326,13 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
     auto compute_bead = [&bead_arc_tolerance](const ExtrusionPath &path) {
         return make_organic_support_bead_geometry(path.polyline.to_polyline(), path.width, bead_arc_tolerance);
     };
-    double printed_bead_seconds = 0., printed_bead_lookup_seconds = 0.;
-    size_t printed_bead_cache_hits = 0, printed_bead_computations = 0, printed_bead_cache_clears = 0;
     auto printed_bead = [&](const ExtrusionPath &path, const Polyline &line) -> BeadPtr {
-        const auto lookup_started = std::chrono::steady_clock::now();
         BeadKey key{line, path.width};
         if (road_cache_limit > 0) {
             const auto found = bead_cache.find(key);
-            if (found != bead_cache.end()) {
-                ++printed_bead_cache_hits;
-                printed_bead_lookup_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - lookup_started).count();
+            if (found != bead_cache.end())
                 return found->second;
-            }
         }
-        ++printed_bead_computations;
-        printed_bead_lookup_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - lookup_started).count();
-        const auto started = std::chrono::steady_clock::now();
         // Square offset joins can falsely connect a thin isolated road to the
         // corner of its neighbour. Match the rounded deposited bead instead.
         BeadPtr bead = make_organic_support_bead_geometry(key.line, path.width, bead_arc_tolerance);
@@ -5793,7 +5342,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             if (bead_cache_bytes + bytes > road_cache_limit) {
                 bead_cache.clear();
                 bead_cache_bytes = 0;
-                ++printed_bead_cache_clears;
             }
             try {
                 bead_cache.emplace(std::move(key), bead);
@@ -5801,13 +5349,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             } catch (const std::bad_alloc &) {
                 bead_cache.clear();
                 bead_cache_bytes = 0;
-                ++printed_bead_cache_clears;
             }
         }
-        printed_bead_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count();
         return bead;
     };
-    size_t collected_paths = 0, collected_path_points = 0;
     std::function<void(const ExtrusionEntity &, ExtrusionPaths &)> collect_paths;
     collect_paths = [&](const ExtrusionEntity &entity, ExtrusionPaths &paths) {
         if (const auto *path = dynamic_cast<const ExtrusionPath *>(&entity)) {
@@ -5815,8 +5360,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             // repair candidates are filtered separately below, so an existing
             // interface anchors a trunk without being copied as ordinary fill.
             if (is_support(path->role()) && !path->is_force_no_extrusion() && path->mm3_per_mm > 0.) {
-                ++collected_paths;
-                collected_path_points += path->polyline.points.size();
                 paths.push_back(*path);
             }
         } else if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection *>(&entity)) {
@@ -5831,13 +5374,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         }
     };
     using ExtrusionPathRefs = std::vector<std::reference_wrapper<const ExtrusionPath>>;
-    size_t collected_path_refs = 0, collected_path_ref_points = 0;
     std::function<void(const ExtrusionEntity &, ExtrusionPathRefs &)> collect_path_refs;
     collect_path_refs = [&](const ExtrusionEntity &entity, ExtrusionPathRefs &paths) {
         if (const auto *path = dynamic_cast<const ExtrusionPath *>(&entity)) {
             if (is_support(path->role()) && !path->is_force_no_extrusion() && path->mm3_per_mm > 0.) {
-                ++collected_path_refs;
-                collected_path_ref_points += path->polyline.points.size();
                 paths.emplace_back(*path);
             }
         } else if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection *>(&entity)) {
@@ -5912,7 +5452,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
     std::vector<uint8_t> layer_query_ready(plan.size(), 0);
     bool use_layer_queries = false;
     size_t layer_query_bytes = 0;
-    size_t footprint_hits = 0;
     auto layer_query = [&](size_t idx) -> std::shared_ptr<const LayerQuery> {
         if (!use_layer_queries)
             return nullptr;
@@ -5920,14 +5459,12 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             const std::shared_ptr<const LayerQuery> &cached = layer_queries[idx];
             if (cached == nullptr) {
                 if (output[idx] == nullptr) {
-                    ++footprint_hits;
                     return nullptr;
                 }
             } else {
                 ExtrusionPaths current;
                 collect_paths(output[idx]->support_fills, current);
                 if (paths_equal(current, cached->paths)) {
-                    ++footprint_hits;
                     return cached;
                 }
             }
@@ -5993,7 +5530,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             if (cached != footprint_cache.end()) {
                 footprint_polygons = cached->second;
                 footprint_idx = idx;
-                ++footprint_hits;
                 return footprint_polygons;
             }
             Polygons polygons;
@@ -6530,7 +6066,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
     }
 }
     footprint_cache.clear();
-    const auto profile_anchored = std::chrono::steady_clock::now();
     auto &layers = object.support_layers();
     std::sort(layers.begin(), layers.end(), [](const SupportLayer *a, const SupportLayer *b) { return a->print_z < b->print_z; });
     // A fork can introduce a curved inner wall over the empty interior of an
@@ -6543,23 +6078,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             sections.push_back(source);
     std::sort(sections.begin(), sections.end(), [](const auto *a, const auto *b) { return *a < *b; });
     sections.erase(std::unique(sections.begin(), sections.end()), sections.end());
-    double bounded_union_seconds = 0.;
-    size_t bounded_union_calls = 0, bounded_union_max_nanoseconds = 0;
-    auto timed_bounded_union = [&](const Polygons &polygons) {
-        const auto started = std::chrono::steady_clock::now();
-        Polygons result = organic_bounded_union(polygons);
-        const size_t elapsed = size_t(std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::steady_clock::now() - started).count());
-        ++bounded_union_calls;
-        bounded_union_seconds += double(elapsed) / 1000000000.;
-        bounded_union_max_nanoseconds = std::max(bounded_union_max_nanoseconds, elapsed);
-        return result;
+    auto bounded_union = [](const Polygons &polygons) {
+        return organic_bounded_union(polygons);
     };
-    double parallel_bounded_union_seconds = 0., parallel_chunk_union_seconds = 0., parallel_final_union_seconds = 0.;
-    size_t parallel_bounded_union_calls = 0, parallel_bounded_union_max_nanoseconds = 0;
-    size_t parallel_union_input_polygons = 0, parallel_union_merged_polygons = 0;
-    auto timed_bounded_union_parallel = [&](const Polygons &polygons) {
-        const auto started = std::chrono::steady_clock::now();
+    auto bounded_union_parallel = [](const Polygons &polygons) {
         constexpr size_t chunk_size = 128;
         const size_t chunk_count = (polygons.size() + chunk_size - 1) / chunk_size;
         std::vector<Polygons> chunks(chunk_count);
@@ -6570,21 +6092,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 chunks[chunk] = union_(polygons.begin() + begin, polygons.begin() + end);
             }
         });
-        const auto chunks_finished = std::chrono::steady_clock::now();
-        parallel_chunk_union_seconds += std::chrono::duration<double>(chunks_finished - started).count();
-        parallel_union_input_polygons += polygons.size();
         Polygons merged;
         for (Polygons &chunk : chunks)
             append_support_polygons(merged, std::move(chunk));
-        parallel_union_merged_polygons += merged.size();
-        Polygons result = union_(merged);
-        const auto finished = std::chrono::steady_clock::now();
-        parallel_final_union_seconds += std::chrono::duration<double>(finished - chunks_finished).count();
-        const size_t elapsed = size_t(std::chrono::duration_cast<std::chrono::nanoseconds>(finished - started).count());
-        ++parallel_bounded_union_calls;
-        parallel_bounded_union_seconds += double(elapsed) / 1000000000.;
-        parallel_bounded_union_max_nanoseconds = std::max(parallel_bounded_union_max_nanoseconds, elapsed);
-        return result;
+        return union_(merged);
     };
     struct SectionCacheEntry {
         double z{0.};
@@ -6593,15 +6104,12 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
     };
     SectionCacheEntry section_cache[2][2];
     size_t section_cache_next[2] = {0, 0};
-    size_t section_cache_hits = 0, section_cache_misses = 0;
     auto section_at = [&](double z, bool interfaces) -> const Polygons & {
         const size_t kind = interfaces ? 1 : 0;
         for (const SectionCacheEntry &cache : section_cache[kind])
             if (cache.valid && cache.z == z) {
-                ++section_cache_hits;
                 return cache.polygons;
             }
-        ++section_cache_misses;
         Polygons result;
         auto source = std::lower_bound(sections.begin(), sections.end(), z - EPSILON,
             [](const auto *part, double plane) { return part->print_z < plane; });
@@ -6612,7 +6120,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         SectionCacheEntry &cache = section_cache[kind][section_cache_next[kind]];
         section_cache_next[kind] ^= 1;
         cache.z = z;
-        cache.polygons = timed_bounded_union(result);
+        cache.polygons = bounded_union(result);
         cache.valid = true;
         return cache.polygons;
     };
@@ -6624,13 +6132,12 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
     using LayerGeometryPtr = std::shared_ptr<const LayerGeometry>;
     std::unordered_map<const SupportLayer *, LayerGeometryPtr> layer_cache;
     std::deque<const SupportLayer *> layer_cache_order;
-    size_t layer_cache_bytes = 0, layer_cache_evictions = 0;
+    size_t layer_cache_bytes = 0;
     using FoundationIndex = AABBTreeLines::LinesDistancer<Linef>;
     std::unordered_map<const SupportLayer *, std::unique_ptr<FoundationIndex>> foundation_indexes;
     std::unordered_map<const SupportLayer *, size_t> foundation_index_bytes;
     std::deque<const SupportLayer *> foundation_index_order;
-    size_t index_cache_bytes = 0, foundation_index_evictions = 0;
-    size_t largest_foundation = 0, rejected_foundations = 0, built_foundations = 0;
+    size_t index_cache_bytes = 0;
     auto erase_layer_cache = [&](const SupportLayer &layer) {
         const auto it = layer_cache.find(&layer);
         if (it != layer_cache.end()) {
@@ -6680,19 +6187,14 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         foundation_index_order.clear();
         index_cache_bytes = 0;
     };
-    double layer_bead_seconds = 0.;
-    size_t layer_bead_cache_hits = 0, layer_bead_cache_misses = 0, layer_bead_sequence_hits = 0;
     auto layer_beads = [&](const SupportLayer &layer) -> LayerGeometryPtr {
-        const auto started = std::chrono::steady_clock::now();
         if (layer_cache_limit > 0) {
             const auto found = layer_cache.find(&layer);
             if (found != layer_cache.end()) {
-                ++layer_bead_cache_hits;
                 touch_layer_cache(layer);
                 return found->second;
             }
         }
-        ++layer_bead_cache_misses;
         std::vector<BeadPtr> source_beads;
         for_each_extrusion_path(layer.support_fills, [&](const ExtrusionPath &path) {
             if (is_support(path.role()) && !path.is_force_no_extrusion() && path.mm3_per_mm > 0.)
@@ -6700,19 +6202,17 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         });
         for (const auto &entry : layer_cache)
             if (entry.second->source_beads == source_beads) {
-                ++layer_bead_sequence_hits;
                 return entry.second;
             }
         Polygons polygons = organic_support_accumulate_bead_polygons(source_beads);
         polygons = polygons.size() >= 256 ?
-            timed_bounded_union_parallel(polygons) : timed_bounded_union(polygons);
+            bounded_union_parallel(polygons) : bounded_union(polygons);
         auto result = std::make_shared<LayerGeometry>(std::move(polygons));
         result->source_beads = std::move(source_beads);
         result->bytes = polygon_bytes(result->polygons) + result->spatial_bytes() + sizeof(LayerGeometry);
         if (result->bytes <= layer_cache_limit) {
             while (!layer_cache_order.empty() &&
                 (layer_cache_bytes + result->bytes > layer_cache_limit || layer_cache.size() >= 8)) {
-                ++layer_cache_evictions;
                 erase_layer_cache(*layer_cache_order.front());
             }
             try {
@@ -6723,7 +6223,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 invalidate_layers();
             }
         }
-        layer_bead_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count();
         return result;
     };
     auto foundation_index = [&](const SupportLayer &layer, const Polygons &polygons) -> const FoundationIndex * {
@@ -6735,9 +6234,8 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         }
         size_t vertices = 0;
         for (const Polygon &polygon : polygons) vertices += polygon.size();
-        largest_foundation = std::max(largest_foundation, vertices);
         const size_t bytes = vertices * sizeof(Linef) * 16 + 256;
-        if (bytes > index_cache_limit) { ++rejected_foundations; return nullptr; }
+        if (bytes > index_cache_limit) return nullptr;
         try {
             std::vector<Linef> edges;
             edges.reserve(vertices);
@@ -6749,11 +6247,9 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             if (edges.empty()) return nullptr;
             while (!foundation_index_order.empty() &&
                 (index_cache_bytes + bytes > index_cache_limit || foundation_indexes.size() >= 8)) {
-                ++foundation_index_evictions;
                 erase_foundation_index(*foundation_index_order.front());
             }
             auto index = std::make_unique<FoundationIndex>(std::move(edges));
-            ++built_foundations;
             const FoundationIndex *result = index.get();
             foundation_indexes.emplace(&layer, std::move(index));
             foundation_index_bytes.emplace(&layer, bytes);
@@ -6772,16 +6268,13 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         return organic_support_clipped_intersection(bead.polygons, bead.bounds, material);
     };
     std::unordered_map<const Layer *, OrganicSupportPolygonGeometry> model_bearing_cache;
-    size_t model_bearing_cache_bytes = 0, model_surface_hits = 0, model_surface_builds = 0;
+    size_t model_bearing_cache_bytes = 0;
     constexpr size_t model_bearing_cache_limit = size_t(128) << 20;
-    double model_conversion_seconds = 0.;
     auto model_surface = [&](const Layer *layer) -> const OrganicSupportPolygonGeometry & {
         const auto found = model_bearing_cache.find(layer);
         if (found != model_bearing_cache.end()) {
-            ++model_surface_hits;
             return found->second;
         }
-        const auto started = std::chrono::steady_clock::now();
         OrganicSupportPolygonGeometry surface(to_polygons(layer->lslices));
         const size_t bytes = polygon_bytes(surface.polygons) + surface.spatial_bytes();
         if (bytes > model_bearing_cache_limit || model_bearing_cache_bytes > model_bearing_cache_limit - bytes) {
@@ -6790,8 +6283,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         }
         model_bearing_cache_bytes += bytes;
         model_bearing_cache.emplace(layer, std::move(surface));
-        ++model_surface_builds;
-        model_conversion_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count();
         return model_bearing_cache.find(layer)->second;
     };
     auto model_bearing = [&](const OrganicSupportBeadGeometry &bead, double bottom, Polygons &bearing) {
@@ -6813,15 +6304,12 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             max_height = std::max(max_height, double(path.height));
         });
     std::deque<std::pair<size_t, LayerGeometryPtr>> recent;
-    size_t selective_invalidations = 0, recent_refreshes = 0;
     auto invalidate_layer = [&](const SupportLayer &layer) {
-        ++selective_invalidations;
         erase_layer_cache(layer);
         erase_foundation_index(layer);
         for (auto &entry : recent)
             if (layers[entry.first] == &layer) {
                 entry.second = layer_beads(layer);
-                ++recent_refreshes;
             }
     };
     std::set<const ExtrusionEntity *> joined_interfaces;
@@ -6889,30 +6377,11 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
     }
     if (modulate_joined_support_paths(layers, float(object.slicing_parameters().min_layer_height), joined_interfaces) > 0)
         invalidate_layers();
-    const auto profile_joined = std::chrono::steady_clock::now();
     size_t braces = 0;
-    size_t certified_roads = 0;
-    size_t largest_road = 0;
-    double certificate_seconds = 0., bearing_seconds = 0., span_seconds = 0.;
-    double root_seconds = 0., inspection_seconds = 0., brace_seconds = 0.;
-    double direction_seconds = 0., brace_check_seconds = 0., ordered_plane_seconds = 0.;
-    double ordered_plane_index_seconds = 0., ordered_plane_intersection_seconds = 0.;
-    size_t ordered_plane_calls = 0, ordered_plane_builds = 0;
-    size_t ordered_plane_visited = 0, ordered_plane_candidates = 0;
-    size_t certified_bridges = 0;
-    size_t needed_planes = 0, allowed_parts = 0, directed_parts = 0, planned_roads = 0;
-    size_t candidate_roads = 0, short_roads = 0, coverage_pairs = 0, coverage_samples = 0;
-    size_t span_calls = 0, span_endpoint_offsets = 0;
-    size_t road_snapshot_calls = 0;
-    double road_snapshot_seconds = 0.;
     auto measured_unbacked_spans = [&](const Polyline &line, const Polygons &foundation, double lateral_reach,
         double line_width, double maximum_bridge_deviation, bool complete_contour) {
-        OrganicSupportSpanStats stats;
-        Polylines result = organic_support_unbacked_spans(line, foundation, lateral_reach, line_width, scale_(0.002),
-            0., maximum_bridge_deviation, complete_contour, &stats);
-        ++span_calls;
-        span_endpoint_offsets += stats.endpoint_offset_calls;
-        return result;
+        return organic_support_unbacked_spans(line, foundation, lateral_reach, line_width, scale_(0.002),
+            0., maximum_bridge_deviation, complete_contour, nullptr);
     };
     Polygons transitioning;
     double transition_z = -std::numeric_limits<double>::max();
@@ -7064,9 +6533,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             collection.entities = std::move(kept);
         };
         const size_t previous_root_changes = shaped_roots + discarded_whiskers;
-        const auto root_started = std::chrono::steady_clock::now();
         shape_roots(current.support_fills);
-        root_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - root_started).count();
         if (shaped_roots + discarded_whiskers != previous_root_changes)
             invalidate_layer(current);
         if (!new_transition.empty()) {
@@ -7079,7 +6546,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         Polygons needs;
         struct BearingSample { Point point; double width; };
         std::vector<BearingSample> bearing_samples;
-        const auto inspection_started = std::chrono::steady_clock::now();
         for (size_t future = idx; future < layers.size() && layers[future]->print_z <= lower.print_z + max_height + EPSILON; ++future) {
         SupportLayer &target = *layers[future];
         bool can_add_bearing = false;
@@ -7092,10 +6558,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         auto append_ordered_plane = [&](const Polygons &polygons) {
             if (polygons.empty())
                 return;
-            const auto started = std::chrono::steady_clock::now();
             ordered_plane.append(polygons);
-            ++ordered_plane_builds;
-            ordered_plane_index_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count();
         };
         std::function<void(const ExtrusionEntity &)> inspect_road;
         inspect_road = [&](const ExtrusionEntity &entity) {
@@ -7108,10 +6571,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             collect_path_refs(entity, road);
             if (road.empty())
                 return;
-            const auto snapshot_started = std::chrono::steady_clock::now();
             const OrganicSupportRoadGeometry snapshot = make_organic_support_road_geometry(road, target.print_z, printed_bead);
-            ++road_snapshot_calls;
-            road_snapshot_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - snapshot_started).count();
             if (!snapshot.continuous)
                 return;
             const Polyline &line = snapshot.line;
@@ -7128,7 +6588,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 repairable &= bottom <= lower.print_z + EPSILON;
                 append(road_beads, path_beads[path_index]->polygons);
             }
-            road_beads = timed_bounded_union(road_beads);
+            road_beads = bounded_union(road_beads);
             if (grounded) {
                 append_ordered_plane(road_beads);
                 return;
@@ -7137,8 +6597,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             if (road_area < sqr(double(scale_(support_params.support_material_flow.nozzle_diameter()))) * 0.05)
                 return;
             const double required_bearing = std::min(road_area * 0.05, sqr(double(scale_(max_width))) * 0.5);
-            largest_road = std::max(largest_road, line.size());
-            const auto certificate_started = std::chrono::steady_clock::now();
             auto definitely_backed = [&](const SupportLayer &below, const Polygons &material) {
                 if (below.print_z < latest_bottom - EPSILON) return false;
                 const FoundationIndex *index = foundation_index(below, material);
@@ -7150,13 +6608,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             for (size_t between = idx; !certified && between < future; ++between)
                 if (layers[between]->print_z >= latest_bottom - EPSILON)
                     certified = definitely_backed(*layers[between], layer_beads(*layers[between])->polygons);
-            certificate_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - certificate_started).count();
             if (certified) {
                 append_ordered_plane(road_beads);
-                ++certified_roads;
                 return;
             }
-            const auto bearing_started = std::chrono::steady_clock::now();
             for (size_t path_index = 0; path_index < road.size(); ++path_index) {
                 const ExtrusionPath &path = road[path_index];
                 const OrganicSupportBeadGeometry &bead = *path_beads[path_index];
@@ -7175,30 +6630,18 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             // interface connector may join two supported ends, but it must
             // not make a new hollow trunk wall appear vertically supported.
             if (!structural_wall) {
-                const auto ordered_plane_started = std::chrono::steady_clock::now();
                 const BoundingBox road_bounds = snapshot.bead_bounds.inflated(SCALED_EPSILON);
                 Polygons candidates;
-                size_t indexed_visits = 0;
                 ordered_plane.for_each_geometry(road_bounds, [&](const OrganicSupportPolygonGeometry &geometry) {
-                    ++indexed_visits;
                     append(candidates, organic_support_clipped_candidates(road_bounds, geometry));
                 });
-                ordered_plane_visited += indexed_visits;
-                ordered_plane_candidates += candidates.size();
                 if (!candidates.empty()) {
-                    const auto intersection_started = std::chrono::steady_clock::now();
                     append(bearing, intersection(road_beads, candidates));
-                    ordered_plane_intersection_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - intersection_started).count();
                 }
-                ++ordered_plane_calls;
-                ordered_plane_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - ordered_plane_started).count();
             }
-            bearing = timed_bounded_union(bearing);
-            bearing_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - bearing_started).count();
-            const auto span_started = std::chrono::steady_clock::now();
+            bearing = bounded_union(bearing);
             const Polylines unsupported = measured_unbacked_spans(line, bearing,
                 scale_(width * 0.5), scale_(width), scale_(width * 0.5), structural_wall);
-            span_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - span_started).count();
             if (unsupported.empty() && area(bearing) + sqr(double(scale_(0.001))) >=
                     std::min(road_area * 0.05, sqr(double(scale_(max_width))) * 0.5))
                 append_ordered_plane(road_beads);
@@ -7226,11 +6669,8 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         };
         inspect_road(target.support_fills);
         }
-        inspection_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - inspection_started).count();
         if (needs.empty())
             continue;
-        ++needed_planes;
-        const auto brace_started = std::chrono::steady_clock::now();
         const Polygons &structural_section = section_at(lower.print_z, false);
         if (!get_extents(needs).overlap(get_extents(structural_section)))
             continue;
@@ -7259,9 +6699,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             const Polygons demand = intersection(needs, allowed);
             if (demand.empty())
                 continue;
-            ++allowed_parts;
             if (!bridge_anchors) bridge_anchors = union_ex(recent.back().second->polygons);
-            const auto direction_started = std::chrono::steady_clock::now();
             const ExPolygons air = diff_ex(allowed, recent.back().second->polygons);
             BridgeDetector bridge(air, *bridge_anchors, scale_(flow.width()));
             double angle = bridge.angle;
@@ -7271,8 +6709,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 const auto [axis, distance] = detect_bridging_direction(to_polygons(air), recent.back().second->polygons);
                 angle = std::atan2(axis.y(), axis.x());
             }
-            direction_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - direction_started).count();
-            ++directed_parts;
             // Limit bracing to the perpendicular extent of the unsupported
             // curve; the parallel extent reaches the original trunk walls.
             const Vec2d direction(std::cos(angle), std::sin(angle));
@@ -7316,7 +6752,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             for (const ExPolygon &region : intersection_ex(allowed, union_(bands))) {
                 const Surface surface(stInternal, region);
                 for (Polyline &line : fill->fill_surface(&surface, params)) {
-                    ++planned_roads;
                     // The predecessor stays unchanged across every component
                     // and candidate in this plane. Preserve the exact native
                     // inset while computing it only when the first road needs it.
@@ -7324,7 +6759,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                         inset_foundation = offset(recent.back().second->polygons, -scale_(flow.width() * 0.25));
                     for (Polyline &extra : diff_pl(Polylines{line}, *inset_foundation)) {
                         if (extra.length() < scale_(flow.width())) {
-                            ++short_roads;
                             continue;
                         }
                         // The bed is the foundation of a first-layer brace.
@@ -7332,13 +6766,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                         // very flange rows needed by the next hollow trunk.
                         const bool on_bed = !belt.is_active() &&
                             lower.bottom_z() <= object.slicing_parameters().raft_contact_top_z + EPSILON;
-                        const auto check_started = std::chrono::steady_clock::now();
                         const bool certified = brace_foundation != nullptr &&
                             organic_support_definitely_bridged(extra, *brace_foundation, scale_(0.002));
-                        certified_bridges += certified;
                         const bool printable = on_bed || certified || measured_unbacked_spans(extra,
                             recent.back().second->polygons, scale_(flow.width() * 0.5), scale_(flow.width()), -1., false).empty();
-                        brace_check_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - check_started).count();
                         if (!printable)
                             continue;
                         ExtrusionPath brace(erSupportMaterial, flow.mm3_per_mm(), flow.width(), flow.height());
@@ -7350,8 +6781,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             // Keep only the few native bridge roads needed by the future
             // bends. Straight spans between those bearings remain bridges;
             // they do not require a dense plate across the whole trunk.
-            candidate_roads += candidates.size();
-            coverage_samples += bearing_samples.size();
             std::vector<std::vector<size_t>> coverage(candidates.size());
             for (size_t candidate = 0; candidate < candidates.size(); ++candidate) {
                 const Polyline line = candidates[candidate].polyline.to_polyline();
@@ -7368,7 +6797,6 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                             break;
                         }
                 }
-                coverage_pairs += coverage[candidate].size();
             }
             std::vector<double> candidate_lengths;
             candidate_lengths.reserve(candidates.size());
@@ -7384,31 +6812,11 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         if (braces != previous_braces)
             invalidate_layer(lower);
         recent.back().second = layer_beads(lower);
-        brace_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - brace_started).count();
     }
-    BOOST_LOG_TRIVIAL(info) << "Organic path validation: anchoring " <<
-        std::chrono::duration<double>(profile_anchored - profile_started).count() << " seconds, joining " <<
-        std::chrono::duration<double>(profile_joined - profile_anchored).count() << " seconds, bracing " <<
-        std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_joined).count() <<
-        " seconds, certified roads=" << certified_roads << ", footprint hits=" << footprint_hits;
-    BOOST_LOG_TRIVIAL(info) << "Organic bearing details: certificates " << certificate_seconds <<
-        " seconds, native bearing " << bearing_seconds << " seconds, spans " << span_seconds <<
-        " seconds, largest road=" << largest_road << ", largest foundation=" << largest_foundation <<
-        ", indexes=" << built_foundations << ", skipped indexes=" << rejected_foundations;
-    BOOST_LOG_TRIVIAL(info) << "Organic repair details: roots " << root_seconds << " seconds, inspection " <<
-        inspection_seconds << " seconds, braces " << brace_seconds << " seconds";
-    BOOST_LOG_TRIVIAL(info) << "Organic brace details: direction " << direction_seconds << " seconds, checking " <<
-        brace_check_seconds << " seconds, certified bridges=" << certified_bridges;
-    BOOST_LOG_TRIVIAL(debug) << "Organic junction bracing: " << braces << " straight roads, needed=" << needed_planes <<
-        ", sections=" << sections.size() << ", allowed=" << allowed_parts << ", directed=" << directed_parts << ", planned=" << planned_roads <<
-        ", root transitions=" << shaped_roots << ", thin contact remnants=" << discarded_whiskers;
     for (size_t idx = 0; idx < layers.size(); ++idx) {
         layers[idx]->set_id(idx);
         layers[idx]->support_fills.no_sort = true;
     }
-    BOOST_LOG_TRIVIAL(debug) << "Organic support path anchoring: reconnected " << repaired <<
-        " hollow-wall components, removed " << removed << " contact fragments, remaining candidates " << unresolved << ", output planes=" << plan.size() <<
-        ", final Z=" << plan[plan.size() - 1].print_z;
 }
 
 // Organic specific: Smooth branches and produce one cumulative mesh to be sliced.
@@ -7430,7 +6838,6 @@ OrganicSupportLayerPlan organic_draw_branches(
     std::function<void()>            throw_on_cancel,
     bool                             *source_repaired)
 {
-    const auto profile_start = std::chrono::steady_clock::now();
     // All SupportElements are put into a layer independent storage to improve parallelization.
     std::vector<std::pair<SupportElement*, int>> elements_with_link_down;
     std::vector<size_t>                          linear_data_layers;
@@ -7477,8 +6884,6 @@ OrganicSupportLayerPlan organic_draw_branches(
     throw_on_cancel();
 
     organic_smooth_branches_avoid_collisions(print_object, volumes, config, move_bounds, elements_with_link_down, linear_data_layers, throw_on_cancel);
-    const auto profile_smoothed = std::chrono::steady_clock::now();
-    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: smoothing " << std::chrono::duration<double>(profile_smoothed - profile_start).count() << " seconds";
 
     // The linearization vectors are only inputs to smoothing. Release their
     // backing storage before branch rasterization so a large tree does not
@@ -7698,29 +7103,10 @@ OrganicSupportLayerPlan organic_draw_branches(
 //        int ielement;
         for (SupportElement& start_element : move_bounds[layer_idx]) {
             if (!start_element.state.marked && !start_element.parents.empty()) {
-#if 0
-                int found = 0;
-                if (layer_idx > 0) {
-                    for (auto& el : move_bounds[layer_idx - 1]) {
-                        for (auto iparent : el.parents)
-                            if (iparent == ielement)
-                                ++found;
-                    }
-                    if (found != 0)
-                        printf("Found: %d\n", found);
-                }
-#endif
                 trees.push_back({});
                 TreeVisitor::visit_recursive(move_bounds, start_element, trees.back());
                 assert(!trees.back().branches.empty());
                 //FIXME debugging
-#if 0
-                if (start_element.state.lost) {
-                }
-                else if (start_element.state.verylost) {
-                } else
-                    trees.pop_back();
-#endif
             }
 //            ++ ielement;
         }
@@ -8276,197 +7662,6 @@ OrganicSupportLayerPlan organic_draw_branches(
     // Experimental branch-demand deduplication is retained as design notes
     // but disabled until a model-specific trace proves the duplicate-root
     // predicate. The native tree merge and anchoring checks remain authoritative.
-#if 0
-    // Remove only a provably redundant long/thin branch. A previous version
-    // treated every leaf without a detected model footprint as invalid and
-    // recursively deleted its ancestors. That confused a branch which carries
-    // another support path with an orphan and removed large valid regions.
-    // Branches without an explicit demand remain valid; the normal collision,
-    // landing and merge checks continue to own their geometry.
-    struct TipModelDemand {
-        LayerIndex source{-1};
-        LayerIndex probe_span{1};
-        Polygon footprint;
-        Polygons demand;
-        BoundingBox bounds;
-    };
-    auto tip_model_demand = [&](const Branch &branch) -> std::optional<TipModelDemand> {
-        if (!branch.has_tip || branch.path.empty())
-            return std::nullopt;
-        const SupportElement &tip = *branch.path.back();
-        if (tip.state.target_height < 0 || size_t(tip.state.target_height) >= move_bounds.size() ||
-            !tip.state.result_on_layer_is_set())
-            return std::nullopt;
-        const LayerIndex source = tip.state.layer_idx;
-        const LayerIndex model_layer_count = LayerIndex(print_object.layer_count() + config.raft_layers.size());
-        if (source < 0 || source >= model_layer_count)
-            return std::nullopt;
-        const coord_t radius = std::max<coord_t>(support_element_radius(config, tip), config.support_line_width / 2);
-        Polygon footprint = make_circle(radius, SUPPORT_TREE_CIRCLE_RESOLUTION);
-        footprint.translate(tip.state.result_on_layer);
-        const LayerIndex probe_span = std::max<LayerIndex>(1, LayerIndex(organic_tree_topology_gap_layers + 1));
-        const LayerIndex first = std::max<LayerIndex>(0, source - probe_span);
-        const LayerIndex last = std::min<LayerIndex>(model_layer_count - 1, source + probe_span);
-        Polygons demand;
-        for (LayerIndex probe = first; probe <= last; ++probe) {
-            const Polygons &collision = volumes.getCollision(0, probe, false);
-            if (collision.empty())
-                continue;
-            Polygons contact = intersection(Polygons{footprint}, collision);
-            if (area(contact) > sqr(double(config.support_line_width)) * 0.002)
-                append(demand, std::move(contact));
-        }
-        if (demand.empty())
-            return std::nullopt;
-        return TipModelDemand{source, probe_span, std::move(footprint), std::move(demand), get_extents(footprint)};
-    };
-    auto branch_is_long_and_thin = [&](const Branch &branch) {
-        if (branch.path.size() < 2)
-            return false;
-        double minimum_radius = std::numeric_limits<double>::max();
-        for (const SupportElement *element : branch.path)
-            minimum_radius = std::min(minimum_radius, unscaled<double>(support_element_radius(config, *element)));
-        const double thin_limit = std::max(unscaled<double>(config.support_line_width) * 1.5,
-            unscaled<double>(config.min_radius) * 1.25);
-        const double branch_spacing = std::max(unscaled<double>(config.settings.support_tree_branch_distance), 0.5);
-        const double span = std::abs(double(layer_z(slicing_params, config, branch.path.back()->state.layer_idx) -
-            layer_z(slicing_params, config, branch.path.front()->state.layer_idx)));
-        return minimum_radius <= thin_limit && span >= std::max(4.0 * thin_limit, 8.0 * branch_spacing);
-    };
-    auto branches_share_upper_trunk = [&](const Branch &first, const Branch &second) {
-        size_t compared = 0;
-        size_t overlapping = 0;
-        for (const SupportElement *a : first.path) {
-            if (!a->state.result_on_layer_is_set())
-                continue;
-            for (const SupportElement *b : second.path) {
-                if (!b->state.result_on_layer_is_set() || a->state.layer_idx != b->state.layer_idx)
-                    continue;
-                ++compared;
-                const coord_t reach = std::max(support_element_radius(config, *a),
-                    support_element_radius(config, *b)) + config.support_line_width;
-                if ((a->state.result_on_layer - b->state.result_on_layer).cast<int64_t>().squaredNorm() <=
-                    int64_t(reach) * int64_t(reach))
-                    ++overlapping;
-            }
-        }
-        // Require a real upper run, rather than a single coincident tip. A
-        // short run is enough for a junction because the merge planner has
-        // already validated every layer's collision and radius constraints.
-        return compared >= 8 && overlapping * 4 >= compared * 3;
-    };
-    auto duplicate_roof_target = [&](const Branch &first, const Branch &second) {
-        if (!first.has_root || !second.has_root || !first.has_tip || !second.has_tip ||
-            first.path.empty() || second.path.empty())
-            return false;
-        const SupportElement &first_tip = *first.path.back();
-        const SupportElement &second_tip = *second.path.back();
-        if (std::abs(first_tip.state.target_height - second_tip.state.target_height) >
-            LayerIndex(organic_tree_topology_gap_layers + 1))
-            return false;
-        if (!first_tip.state.result_on_layer_is_set() || !second_tip.state.result_on_layer_is_set())
-            return false;
-        const coord_t reach = std::max(config.settings.support_tree_branch_distance,
-            config.support_line_width * 2);
-        return (first_tip.state.target_position - second_tip.state.target_position).cast<int64_t>().squaredNorm() <=
-            int64_t(reach) * int64_t(reach) && branches_share_upper_trunk(first, second);
-    };
-    size_t pruned_redundant_branches = 0;
-    for (Tree &tree : trees) {
-        if (tree.branches.empty())
-            continue;
-        std::unordered_map<const SupportElement *, std::vector<size_t>> children;
-        for (size_t branch_idx = 0; branch_idx < tree.branches.size(); ++branch_idx)
-            if (!tree.branches[branch_idx].path.empty())
-                children[tree.branches[branch_idx].path.front()].push_back(branch_idx);
-
-        std::vector<int> parent_of(tree.branches.size(), -1);
-        for (size_t parent_idx = 0; parent_idx < tree.branches.size(); ++parent_idx) {
-            const Branch &parent = tree.branches[parent_idx];
-            if (parent.path.empty())
-                continue;
-            const auto found = children.find(parent.path.back());
-            if (found != children.end())
-                for (size_t child_idx : found->second)
-                    parent_of[child_idx] = int(parent_idx);
-        }
-        std::vector<bool> long_thin_context(tree.branches.size(), false);
-        for (size_t pass = 0; pass < tree.branches.size(); ++pass)
-            for (size_t branch_idx = 0; branch_idx < tree.branches.size(); ++branch_idx)
-                long_thin_context[branch_idx] = branch_is_long_and_thin(tree.branches[branch_idx]) ||
-                    (parent_of[branch_idx] >= 0 && long_thin_context[size_t(parent_of[branch_idx])]);
-
-        std::vector<std::optional<TipModelDemand>> tip_demands(tree.branches.size());
-        for (size_t branch_idx = 0; branch_idx < tree.branches.size(); ++branch_idx)
-            if (tree.branches[branch_idx].has_tip)
-                tip_demands[branch_idx] = tip_model_demand(tree.branches[branch_idx]);
-
-        std::vector<bool> valid(tree.branches.size(), true);
-        for (size_t branch_idx = 0; branch_idx < tree.branches.size(); ++branch_idx) {
-            if (!tree.branches[branch_idx].has_tip || !tip_demands[branch_idx].has_value() ||
-                !long_thin_context[branch_idx])
-                continue;
-            const TipModelDemand &demand = *tip_demands[branch_idx];
-            Polygons covering_footprints;
-            for (size_t other_idx = 0; other_idx < tree.branches.size(); ++other_idx) {
-                if (other_idx == branch_idx || !tip_demands[other_idx].has_value() ||
-                    !long_thin_context[other_idx])
-                    continue;
-                const TipModelDemand &other = *tip_demands[other_idx];
-                if (std::abs(other.source - demand.source) > demand.probe_span + other.probe_span ||
-                    !demand.bounds.inflated(config.support_line_width).overlap(other.bounds))
-                    continue;
-                if (!branches_share_upper_trunk(tree.branches[branch_idx], tree.branches[other_idx]))
-                    continue;
-                covering_footprints.emplace_back(other.footprint);
-            }
-            if (covering_footprints.empty())
-                continue;
-            covering_footprints = union_(std::move(covering_footprints));
-            const double uncovered = area(diff(demand.demand, covering_footprints));
-            const double tolerance = std::max(tiny_area_threshold(),
-                sqr(double(config.support_line_width)) * 0.01);
-            if (uncovered <= tolerance) {
-                valid[branch_idx] = false;
-                ++pruned_redundant_branches;
-            }
-        }
-        // A long, grounded branch can have no direct model-demand polygon
-        // when its tip is already swallowed by a joined roof. If an earlier
-        // grounded branch has the same roof target and a continuous upper
-        // trunk, keep the earlier branch and remove only this duplicate root.
-        for (size_t branch_idx = 0; branch_idx < tree.branches.size(); ++branch_idx) {
-            if (!valid[branch_idx] || !long_thin_context[branch_idx] || !tree.branches[branch_idx].has_root)
-                continue;
-            for (size_t other_idx = 0; other_idx < branch_idx; ++other_idx) {
-                if (!valid[other_idx] || !long_thin_context[other_idx])
-                    continue;
-                if (duplicate_roof_target(tree.branches[branch_idx], tree.branches[other_idx])) {
-                    valid[branch_idx] = false;
-                    ++pruned_redundant_branches;
-                    break;
-                }
-            }
-        }
-        // A non-leaf segment is removable only when every child segment was
-        // removed. Keep a branch with no recorded child conservatively.
-        for (size_t branch_idx = tree.branches.size(); branch_idx-- > 0;) {
-            const Branch &branch = tree.branches[branch_idx];
-            if (branch.has_tip)
-                continue;
-            const auto found = children.find(branch.path.empty() ? nullptr : branch.path.back());
-            if (found != children.end() && !found->second.empty())
-                valid[branch_idx] = std::any_of(found->second.begin(), found->second.end(),
-                    [&](size_t child_idx) { return child_idx < valid.size() && valid[child_idx]; });
-        }
-        size_t branch_idx = 0;
-        tree.branches.erase(std::remove_if(tree.branches.begin(), tree.branches.end(),
-            [&](const Branch &) { return !valid[branch_idx++]; }), tree.branches.end());
-    }
-    if (pruned_redundant_branches > 0)
-        BOOST_LOG_TRIVIAL(info) << "Organic support demand validation: pruned " << pruned_redundant_branches
-            << " redundant long thin branches with fully covered model demand";
-#endif
 
 
     // Branch nodes end below their roofs. A synchronized plan still needs the
@@ -8643,7 +7838,6 @@ OrganicSupportLayerPlan organic_draw_branches(
 
     MeshSlicingParams mesh_slicing_params;
     mesh_slicing_params.mode = MeshSlicingParams::SlicingMode::Positive;
-    const auto profile_planned = std::chrono::steady_clock::now();
 
     size_t estimated_branch_bytes = 0;
     for (const Tree &tree : trees)
@@ -8678,7 +7872,6 @@ OrganicSupportLayerPlan organic_draw_branches(
         std::vector<Polygons> slices;
         std::vector<Polygons> bottom_contacts;
     };
-    const bool legacy_scheduling = std::getenv("INLONG_SUPPORT_LEGACY_SCHEDULING") != nullptr;
     tbb::parallel_for(tbb::blocked_range<size_t>(0, trees.size(), 1),
         [&](const tbb::blocked_range<size_t> &range) {
             for (size_t tree_id = range.begin(); tree_id < range.end(); ++tree_id) {
@@ -8709,7 +7902,7 @@ OrganicSupportLayerPlan organic_draw_branches(
                             std::numeric_limits<size_t>::max() : maximum_branch_layers * bytes_per_branch_layer);
                     const size_t requested_bytes = desired > std::numeric_limits<size_t>::max() / branch_allowance ?
                         std::numeric_limits<size_t>::max() : desired * branch_allowance;
-                    SupportBatchBudget budget(legacy_scheduling ? 0 : requested_bytes, support_memory_snapshot());
+                    SupportBatchBudget budget(requested_bytes, support_memory_snapshot());
                     const size_t batch_size = std::min(desired, std::max<size_t>(1, budget.bytes() / branch_allowance));
                     std::vector<BranchResult> results(batch_size);
                     auto rasterize = [&](const tbb::blocked_range<size_t> &branches) {
@@ -8908,24 +8101,6 @@ OrganicSupportLayerPlan organic_draw_branches(
                                             break;
                                     }
                                     // Now remove those bottom slices that are not supported at all.
-        #if 0
-                                    while (! bottom_extra_slices.empty()) {
-                                        const LayerIndex output_layer = layer_begin - LayerIndex(bottom_extra_slices.size());
-                                        const LayerIndex source_layer = layer_plan.independent() ?
-                                            layer_plan[size_t(output_layer)].source_layer_end : output_layer;
-                                        Polygons this_bottom_contacts = intersection_clipped(
-                                            bottom_extra_slices.back().polygons, volumes.getPlaceableAreas(0, source_layer, [] {}));
-                                        if (area(this_bottom_contacts) < support_area_min)
-                                            bottom_extra_slices.pop_back();
-                                        else {
-                                            // At least a fraction of the tree bottom is considered to be supported.
-                                            if (config.settings.support_floor_layers > 0)
-                                                // Turn this fraction of the tree bottom into a contact layer.
-                                                bottom_contacts.emplace_back(std::move(this_bottom_contacts));
-                                            break;
-                                        }
-                                    }
-        #endif
                                     // Belt mode: no solid support-floor pad under these branches — it is what
                                     // welds neighbouring belt-terminating branches into the dense Z=0 slab.
                                     // They simply taper out onto the tilted belt as distributed thin contacts.
@@ -9073,9 +8248,6 @@ OrganicSupportLayerPlan organic_draw_branches(
             }
         }, tbb::simple_partitioner());
 
-    const auto profile_rasterized = std::chrono::steady_clock::now();
-    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: rasterization " << std::chrono::duration<double>(profile_rasterized - profile_planned).count() << " seconds";
-
     // Branch paths and the node graph are no longer needed after publication;
     // all subsequent stages consume only the rasterized slices. Release them
     // before layer unions and final assembly so completed regions can reclaim
@@ -9108,8 +8280,7 @@ OrganicSupportLayerPlan organic_draw_branches(
     const size_t job_bytes = union_count * sizeof(Slice *);
     const SupportMemorySnapshot memory = support_memory_snapshot();
     SupportBatchBudget union_budget(job_bytes + requested_workers * estimated_worker_bytes, memory);
-    const bool legacy_unions = std::getenv("INLONG_SUPPORT_LEGACY_SCHEDULING") != nullptr;
-    const size_t union_workers = union_count == 0 || legacy_unions || union_budget.bytes() <= job_bytes ? 1 :
+    const size_t union_workers = union_count == 0 || union_budget.bytes() <= job_bytes ? 1 :
         std::max<size_t>(1, (union_budget.bytes() - job_bytes) / estimated_worker_bytes);
     auto merge_slice = [&throw_on_cancel, defer_tree_unions](Slice &slice) {
         if (slice.num_branches > 1 && !defer_tree_unions) {
@@ -9141,10 +8312,6 @@ OrganicSupportLayerPlan organic_draw_branches(
             }, tbb::simple_partitioner());
         });
     }
-    const auto profile_united = std::chrono::steady_clock::now();
-    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: tree-layer unions " << std::chrono::duration<double>(profile_united - profile_rasterized).count()
-                            << " seconds, jobs " << union_count << ", workers " << union_workers << ", reserved bytes " << union_budget.bytes();
-
     size_t num_layers = 0;
     for (Tree &tree : trees) {
         if (tree.spool)
@@ -9198,23 +8365,8 @@ OrganicSupportLayerPlan organic_draw_branches(
             }
     }
 
-    std::atomic<size_t> union_nanoseconds{0}, smooth_nanoseconds{0}, diff_nanoseconds{0}, contact_nanoseconds{0}, disk_nanoseconds{0};
-    std::mutex assembly_profile_mutex;
-    const auto assembly_started = std::chrono::steady_clock::now();
-    auto measure = [](auto &&fn) {
-        const auto started = std::chrono::steady_clock::now();
-        auto result = fn();
-        return std::pair{std::move(result), size_t(std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::steady_clock::now() - started).count())};
-    };
-    auto record_measurement = [](std::atomic<size_t> &total, auto &&measurement) {
-        total.fetch_add(measurement.second, std::memory_order_relaxed);
-        return std::move(measurement.first);
-    };
-    auto union_for_assembly = [&](const Polygons &polygons) {
-        auto result = measure([&] { return organic_bounded_union(polygons); });
-        union_nanoseconds.fetch_add(result.second, std::memory_order_relaxed);
-        return std::move(result.first);
+    auto union_for_assembly = [](const Polygons &polygons) {
+        return organic_bounded_union(polygons);
     };
     auto assemble_slice = [&](size_t layer_idx, Slice &slice) {
             if ((layer_idx + 1) % 100 == 0 || layer_idx + 1 == num_layers)
@@ -9233,25 +8385,18 @@ OrganicSupportLayerPlan organic_draw_branches(
 
             if (! base_layer_polygons.empty()) {
                 // Smooth the merged support before simplifying its contours.
-                base_layer_polygons = record_measurement(smooth_nanoseconds, measure([&] {
-                    return organic_smooth_outward_if_needed(std::move(base_layer_polygons), config.support_line_width);
-                })); //FIXME was .smooth(50);
-                //smooth_outward(closing(std::move(bottom), closing_distance + minimum_island_radius, closing_distance, SUPPORT_SURFACES_OFFSET_PARAMETERS), smoothing_distance) :
+                base_layer_polygons = organic_smooth_outward_if_needed(std::move(base_layer_polygons), config.support_line_width);
                 // simplify a bit, to ensure the output does not contain outrageous amounts of vertices. Should not be necessary, just a precaution.
-                base_layer_polygons = record_measurement(smooth_nanoseconds, measure([&] {
-                    return polygons_simplify(base_layer_polygons, std::min(scaled<double>(0.03), double(config.resolution)));
-                }));
+                base_layer_polygons = polygons_simplify(base_layer_polygons, std::min(scaled<double>(0.03), double(config.resolution)));
             }
 
             // Subtract top contact layer polygons from support base.
             SupportGeneratorLayer *top_contact_layer = top_contacts.empty() ? nullptr : top_contacts[layer_idx];
             if (top_contact_layer && ! top_contact_layer->polygons.empty() && ! base_layer_polygons.empty()) {
-                base_layer_polygons = record_measurement(diff_nanoseconds,
-                    measure([&] { return diff(base_layer_polygons, top_contact_layer->polygons); }));
+                base_layer_polygons = diff(base_layer_polygons, top_contact_layer->polygons);
                 if (! bottom_contact_polygons.empty())
                     //FIXME it may be better to clip bottom contacts with top contacts first after they are propagated to produce interface layers.
-                    bottom_contact_polygons = record_measurement(diff_nanoseconds,
-                        measure([&] { return diff(bottom_contact_polygons, top_contact_layer->polygons); }));
+                    bottom_contact_polygons = diff(bottom_contact_polygons, top_contact_layer->polygons);
             }
             if (! bottom_contact_polygons.empty()) {
                 // A gracious root can partly rest on another tree instead of
@@ -9265,28 +8410,22 @@ OrganicSupportLayerPlan organic_draw_branches(
                 if (bottom_contact_polygons.size() == 1 && bottom_contact_polygons.front().is_valid())
                     contact_components.emplace_back(std::move(bottom_contact_polygons.front()));
                 else
-                    contact_components = record_measurement(contact_nanoseconds,
-                        measure([&] { return union_ex(bottom_contact_polygons); }));
+                    contact_components = union_ex(bottom_contact_polygons);
                 for (const ExPolygon &component : contact_components) {
                     const Polygons footprint = to_polygons(component);
-                    const Layer *model = record_measurement(contact_nanoseconds, measure([&] {
-                        return organic_bottom_contact_model_layer(print_object, footprint, bottom_z - gap, &model_layer_bounds);
-                    }));
+                    const Layer *model = organic_bottom_contact_model_layer(print_object, footprint, bottom_z - gap, &model_layer_bounds);
                     if (model != nullptr)
-                        append(model_contacts, record_measurement(contact_nanoseconds,
-                            measure([&] { return intersection(model->lslices, footprint); })));
+                        append(model_contacts, intersection(model->lslices, footprint));
                 }
                 if (model_contacts.size() == 1 && model_contacts.front().is_valid())
                     bottom_contact_polygons = std::move(model_contacts);
                 else if (model_contacts.empty())
                     bottom_contact_polygons.clear();
                 else
-                    bottom_contact_polygons = record_measurement(contact_nanoseconds,
-                        measure([&] { return union_(model_contacts); }));
+                    bottom_contact_polygons = union_(model_contacts);
             }
             if (! bottom_contact_polygons.empty()) {
-                base_layer_polygons = record_measurement(diff_nanoseconds,
-                    measure([&] { return diff(base_layer_polygons, bottom_contact_polygons); }));
+                base_layer_polygons = diff(base_layer_polygons, bottom_contact_polygons);
                 SupportGeneratorLayer *bottom_contact_layer;
                 if (layer_plan.independent()) {
                     bottom_contact_layer = &layer_storage.allocate(SupporLayerType::BottomContact);
@@ -9336,14 +8475,9 @@ OrganicSupportLayerPlan organic_draw_branches(
         const SupportMemorySnapshot assembly_memory = support_memory_snapshot();
         SupportBatchBudget assembly_budget(job_bytes + requested_workers * assembly_worker_bytes,
             assembly_memory);
-        const bool legacy_assembly = std::getenv("INLONG_SUPPORT_LEGACY_SCHEDULING") != nullptr;
-        const size_t assembly_workers = legacy_assembly || num_layers == 0 ||
-            assembly_budget.bytes() <= job_bytes ? 1 :
+        const size_t assembly_workers = num_layers == 0 || assembly_budget.bytes() <= job_bytes ? 1 :
             std::max<size_t>(1, std::min(requested_workers,
                 (assembly_budget.bytes() - job_bytes) / assembly_worker_bytes));
-        BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: disk final assembly workers="
-            << assembly_workers << ", requested=" << requested_workers
-            << ", reserved bytes=" << assembly_budget.bytes();
 
         auto assemble_disk_layer = [&](size_t layer_idx) {
             Slice slice;
@@ -9353,10 +8487,7 @@ OrganicSupportLayerPlan organic_draw_branches(
                 for (uint64_t offset : tree.spool->offsets[layer_idx]) {
                     Polygons polygons;
                     Polygons bottom_contacts_for_slice;
-                    const auto started = std::chrono::steady_clock::now();
                     tree.spool->read(offset, polygons, bottom_contacts_for_slice);
-                    disk_nanoseconds.fetch_add(size_t(std::chrono::duration_cast<std::chrono::nanoseconds>(
-                        std::chrono::steady_clock::now() - started).count()), std::memory_order_relaxed);
                     if (!polygons.empty())
                         append_support_polygons(slice.polygons, std::move(polygons));
                     if (!bottom_contacts_for_slice.empty())
@@ -9428,7 +8559,6 @@ OrganicSupportLayerPlan organic_draw_branches(
     if (repaired)
         BOOST_LOG_TRIVIAL(info) << "Organic source repair changed support topology";
 
-    BOOST_LOG_TRIVIAL(info) << "Organic draw profiling: final polygon assembly " << std::chrono::duration<double>(std::chrono::steady_clock::now() - profile_united).count() << " seconds";
     return layer_plan;
 }
 

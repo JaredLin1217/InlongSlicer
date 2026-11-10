@@ -548,23 +548,6 @@ public:
                && support_tip_xy_distance == other.support_tip_xy_distance
                && support_tip_z_distance == other.support_tip_z_distance
                // The infill class now wants the settings object and reads a lot of settings, and as the infill class is used to calculate support roof lines for interface-preference. Not all of these may be required to be identical, but as I am not sure, better safe than sorry
-#if 0
-                && (interface_preference == InterfacePreference::InterfaceAreaOverwritesSupport || interface_preference == InterfacePreference::SupportAreaOverwritesInterface
-                // Perimeter generator parameters
-                   || 
-                        (settings.get<bool>("fill_outline_gaps") == other.settings.get<bool>("fill_outline_gaps") && 
-                         settings.get<coord_t>("min_bead_width") == other.settings.get<coord_t>("min_bead_width") && 
-                         settings.get<double>("wall_transition_angle") == other.settings.get<double>("wall_transition_angle") && 
-                         settings.get<coord_t>("wall_transition_length") == other.settings.get<coord_t>("wall_transition_length") && 
-                         settings.get<Ratio>("wall_split_middle_threshold") == other.settings.get<Ratio>("wall_split_middle_threshold") && 
-                         settings.get<Ratio>("wall_add_middle_threshold") == other.settings.get<Ratio>("wall_add_middle_threshold") && 
-                         settings.get<int>("wall_distribution_count") == other.settings.get<int>("wall_distribution_count") && 
-                         settings.get<coord_t>("wall_transition_filter_distance") == other.settings.get<coord_t>("wall_transition_filter_distance") && 
-                         settings.get<coord_t>("wall_transition_filter_deviation") == other.settings.get<coord_t>("wall_transition_filter_deviation") && 
-                         settings.get<coord_t>("wall_line_width_x") == other.settings.get<coord_t>("wall_line_width_x") && 
-                         settings.get<int>("meshfix_maximum_extrusion_area_deviation") == other.settings.get<int>("meshfix_maximum_extrusion_area_deviation"))
-                    )
-#endif
                && raft_layers == other.raft_layers
             ;
     }
@@ -595,27 +578,6 @@ public:
         return num_layers_widened > 0 ? branch_radius + num_layers_widened * bp_radius_increase_per_layer : 0;
     }
 
-#if 0
-    /*!
-     * \brief Return on which z in microns the layer will be printed. Used only for support infill line generation.
-     * \param layer_idx[in] The layer.
-     * \return The radius every element should aim to achieve.
-     */
-    [[nodiscard]] inline coord_t getActualZ(LayerIndex layer_idx)
-    {
-        return layer_idx < coord_t(known_z.size()) ? known_z[layer_idx] : (layer_idx - known_z.size()) * layer_height + known_z.size() ? known_z.back() : 0;
-    }
-
-    /*!
-     * \brief Set the z every Layer is printed at. Required for getActualZ to work
-     * \param z[in] The z every LayerIndex is printed. Vector is used as a map<LayerIndex,coord_t> with the index of each element being the corresponding LayerIndex
-     * \return The radius every element should aim to achieve.
-     */
-    void setActualZ(std::vector<coord_t>& z)
-    {
-        known_z = z;
-    }
-#endif
 
 private:
 //    std::vector<coord_t> known_z;

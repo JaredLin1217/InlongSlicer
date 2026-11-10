@@ -678,7 +678,6 @@ std::string MoonrakerPrinterAgent::map_filament_type_to_generic_id(const std::st
     // Normalize reported material names (trimmed, uppercased) to an InlongFilamentLibrary
     // generic family. The family's filament_id is resolved from the loaded system presets
     // below rather than hardcoded, so profile id re-mints never require touching this table.
-    // scripts/test_moonraker_lane_data.py parses this initializer; keep the {"A", "B"} format.
     static const std::map<std::string, std::string> type_to_ofl_family = {
         // PLA variants
         {"PLA", "PLA"},

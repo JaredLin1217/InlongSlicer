@@ -205,7 +205,7 @@ if ($Compiler -eq "clang-cl" -and -not (Has "clang-cl")) {
 # slashes keep CMake from reading a backslash as an escape.
 $cmakeArgs = @("-S", ".", "-B", $BuildDir, "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release",
     "-DCMAKE_C_COMPILER=$Compiler", "-DCMAKE_CXX_COMPILER=$Compiler",
-    "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON", "-DSLIC3R_PCH=OFF", "-DINLONG_TOOLS=ON", "-DBUILD_TESTS=ON",
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON", "-DSLIC3R_PCH=OFF", "-DINLONG_TOOLS=ON",
     "-DDEP_BUILD_DIR=$($DepsDir -replace '\\', '/')")
 Write-Host "Configuring $BuildDir with $Compiler"
 New-Item -ItemType Directory -Force -Path $BuildDir | Out-Null

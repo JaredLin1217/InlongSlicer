@@ -1585,22 +1585,9 @@ std::string DesignSketchTool::dimtype_title(DimType k) const {
 // Draw-then-edit dispatcher: mirror the Select-mode quote-click logic, but target the
 // freshly-drawn selection's PRIMARY value and use the tentative (clean-cancel) path for
 // scalar quotes. Runs after render_live_quotes, so the live-quote state is populated.
-// Why a draw-then-edit chain did not start. Four early returns can swallow it, and from outside
-// they are indistinguishable: the shape appears, no field opens, and nothing says which guard
-// fired. check-gui-click-edit.py reports that as "a value field opened (nothing did)" for every
-// tool at once, which reads like a total product failure and is not necessarily one.
-static void trace_autoedit(const char* why, size_t n)
-{
-    if (!std::getenv("ORCA_CAD_UXTRACE")) return;
-    fprintf(stderr, "[UX] autoedit %s steps=%zu\n", why, n);
-    fflush(stderr);
-}
-
 void DesignSketchTool::open_primary_autoedit()
 {
-    if (!on_inline_edit) { trace_autoedit("skip: no on_inline_edit host", 0); return; }
-    if (m_awaiting_length) { trace_autoedit("skip: a field is already open", 0); return; }
-    if (!m_active) { trace_autoedit("skip: session ended before the deferred tick", 0); return; }
+    if (!on_inline_edit || m_awaiting_length || !m_active) return;
 
     // Build ONE ordered list of edit steps covering EVERY characteristic dimension of the
     // freshly-drawn shape — scalar quotes (constraint-based) AND geometric editors — so every
@@ -1714,8 +1701,6 @@ void DesignSketchTool::open_primary_autoedit()
             [this, fi](double v){ set_rect_angle(fi, v); }, span(fi), _u8L("Angle (°)") });
     }
 
-    trace_autoedit(m_autoedit_dims.empty() ? "built NO steps (no live quote matched)" : "opening",
-                   m_autoedit_dims.size());
     if (!m_autoedit_dims.empty()) {
         m_autoedit_dim_idx = 0;
         open_next_autoedit_dim();
@@ -3371,28 +3356,11 @@ DesignSketchTool::region_entity_indices_with_holes(const std::vector<SketchEntit
 // so there was no way to select it and therefore none to edit or delete it. Whether a stroke
 // bounds a region has nothing to do with whether the user can point at it. Region membership
 // decides what a hit REPORTS, not whether the hit can happen.
-static void dp_pick_trace(const char* fmt, ...);   // defined below; used by the diagnostics here
-static bool dp_pick_trace_on();                    // ditto — lets callers skip building a message
 void DesignSketchTool::hit_display_sketch(const DisplaySketch& d, const Vec2d& p, double tol,
                                           int& edge_feat, int& edge_reg, int& edge_ent,
                                           double& edge_d, int& face_feat, int& face_reg) const
 {
     const std::vector<RegionLoop> loops = region_loops(d.entities);
-    // What did the sketch decompose into, and what is under the click? This is the trace that
-    // settled txp8 — it prints the loop table with each loop's hole count, so
-    // "containment is wrong" and "the click landed elsewhere" stop being indistinguishable.
-    // Guarded rather than merely silent: hit_display_sketch runs on every pick, and the message
-    // costs a string build and a heap allocation per loop even when nothing consumes it.
-    if (dp_pick_trace_on()) {
-        std::string h;
-        for (size_t r = 0; r < loops.size(); ++r) {
-            h += " loop" + std::to_string(r) + "(ents=" + std::to_string(loops[r].ents.size())
-               + ",poly=" + std::to_string(loops[r].poly.size())
-               + ",holes=" + std::to_string(loops[r].holes.size()) + ")";
-        }
-        dp_pick_trace("sketch feat=%d entities=%zu loops=%zu:%s", d.feature, d.entities.size(),
-                      loops.size(), h.c_str());
-    }
     std::vector<int> ent_region(d.entities.size(), -1);
     for (int r = 0; r < int(loops.size()); ++r)
         for (int ei : loops[r].ents)
@@ -3417,11 +3385,6 @@ void DesignSketchTool::hit_display_sketch(const DisplaySketch& d, const Vec2d& p
             if (h >= 0 && h < int(loops.size()) && point_in_poly(p, loops[h].poly)) { in_hole = true; break; }
         if (!in_hole) { face_feat = d.feature; face_reg = r; }
     }
-    // edge_ent is printed because it is now DELIVERED (3648) — a tool can ask for the
-    // line you pointed at, not just its loop, and "which entity did that click resolve to" is
-    // otherwise unanswerable from outside.
-    dp_pick_trace("region hit -> feat=%d reg=%d (edge_feat=%d edge_reg=%d edge_ent=%d)",
-                  face_feat, face_reg, edge_feat, edge_reg, edge_ent);
 }
 
 std::vector<SketchEntity> DesignSketchTool::selected_loop_entities() const
@@ -3873,27 +3836,6 @@ void DesignSketchTool::render_face_outline(const FaceHighlight& h, bool quiet)
     }
 }
 
-// Pick tracing. Selection failures on a real desktop have repeatedly turned out to be an
-// event that never arrived rather than a ray that missed, and the two look identical from
-// the UI. Set ORCA_CAD_PICK_TRACE=1 and the whole press->release->ray path narrates itself
-// on stderr. Off by default: no cost, no noise.
-static bool dp_pick_trace_on()
-{
-    static const bool on = ::getenv("ORCA_CAD_PICK_TRACE") != nullptr;
-    return on;
-}
-
-static void dp_pick_trace(const char* fmt, ...)
-{
-    if (!dp_pick_trace_on()) return;
-    va_list ap; va_start(ap, fmt);
-    std::fputs("[pick] ", stderr);
-    std::vfprintf(stderr, fmt, ap);
-    std::fputc('\n', stderr);
-    va_end(ap);
-    std::fflush(stderr);
-}
-
 // Resolve a swept rubber band into a whole-body selection.
 //
 // Sample points are the display mesh's triangle vertices plus each triangle's centroid. That
@@ -3939,7 +3881,6 @@ void DesignSketchTool::pick_bodies_in_rectangle()
 
     if (best < 0) clear_solid_selection();        // swept empty space -> drop the selection
     else          select_body(best);
-    dp_pick_trace("rubber band -> body=%d (%d samples)", best, best_n);
     if (on_solid_selection_changed)
         on_solid_selection_changed(int(m_solid_sel), m_sel_body, m_sel_face, m_sel_edge);
     if (best < 0 && on_empty_pick) on_empty_pick();
@@ -3951,8 +3892,6 @@ bool DesignSketchTool::resolve_solid_pick(GLCanvas3D& canvas, int mx, int my, So
 {
     out = SolidPick{};
     if (m_solid_bodies == nullptr || m_solid_mesh == nullptr) {
-        dp_pick_trace("no solid data (bodies=%p mesh=%p)",
-                      (const void*) m_solid_bodies, (const void*) m_solid_mesh);
         return false;
     }
     const Linef3 r = canvas.mouse_ray(Point(mx, my));
@@ -3976,8 +3915,6 @@ bool DesignSketchTool::resolve_solid_pick(GLCanvas3D& canvas, int mx, int my, So
             best_body = cand_body;
         }
     }
-    dp_pick_trace("ray tris=%zu -> body=%d face=%d t=%.3f", its.indices.size(),
-                  best_body, best_face, best_t);
     if (best_face < 0 || best_body < 0 || best_body >= int(m_solid_bodies->size()))
         return false;   // missed the solid
 
@@ -4119,7 +4056,6 @@ bool DesignSketchTool::handle_solid_click(GLCanvas3D& canvas, const wxMouseEvent
             m_sel_edge_pts = std::move(p.edge_pts);
             m_sel_face     = p.face;
         }
-        dp_pick_trace("edge set -> %zu edge(s), current %d", selected_edges().size(), m_sel_edge);
         if (on_solid_selection_changed)
             on_solid_selection_changed(int(m_solid_sel), m_sel_body, m_sel_face, m_sel_edge);
         return true;
@@ -4165,10 +4101,7 @@ bool DesignSketchTool::handle_solid_click(GLCanvas3D& canvas, const wxMouseEvent
                                             : true);
     if (same_pick && m_escalate_repick) {
         select_body(m_sel_body);   // clears face/edge/vertex, tints the whole body
-        dp_pick_trace("re-pick -> escalated to whole body %d", m_sel_body);
     }
-    dp_pick_trace("pick -> sel=%d body=%d face=%d edge=%d",
-                  int(m_solid_sel), m_sel_body, m_sel_face, m_sel_edge);
     if (on_solid_selection_changed)
         on_solid_selection_changed(int(m_solid_sel), m_sel_body, m_sel_face, m_sel_edge);
     return true;
@@ -4454,24 +4387,10 @@ void DesignSketchTool::clear_extrude_gizmo()
 // cone travels, an open collar receives. No surveyed CAD system encodes this at all; both ends of
 // their mates are drawn identically, which is why "which part moves?" is a standing complaint.
 //
-// ORCA_CAD_GLYPH=A|B selects the treatment while this is being judged on the rig:
-//   A  three short axis arms, no head differentiation  (the Onshape baseline)
-//   B  one-sided Z arrow, filled vs open head          (the proposal)          -- default
 void DesignSketchTool::render_mate_connectors()
 {
     if (m_mate_connectors.empty()) return;
-    static const bool style_A = [] {
-        const char* s = ::getenv("ORCA_CAD_GLYPH");
-        return s && (*s == 'A' || *s == 'a');
-    }();
-    // The face treatment, on by default. Read every frame rather than latched in a static, so
-    // toggling the preference takes effect on the next repaint instead of at the next launch —
-    // it is a look, and a look you cannot A/B without restarting will not get compared.
-    // ORCA_CAD_GLYPH=D forces the disc regardless, which is how the rig drives the other branch.
-    const bool face_style = !style_A
-                         && wxGetApp().app_config->get_bool("design_connector_face_glyph")
-                         && [] { const char* s = ::getenv("ORCA_CAD_GLYPH");
-                                 return !(s && (*s == 'D' || *s == 'd')); }();
+    const bool face_style = wxGetApp().app_config->get_bool("design_connector_face_glyph");
 
     const Camera& cam = wxGetApp().plater()->get_camera();
     const Vec3d right = cam.get_dir_right().normalized();
@@ -4611,13 +4530,7 @@ void DesignSketchTool::render_mate_connectors()
             draw_strokes(m_mc_stroke_model, segs, lw, col);
         };
 
-        if (style_A) {
-            arrow(X, R * 1.15, ColorRGBA(0.85f, 0.29f, 0.24f, 1.0f), true);
-            arrow(Y, R * 1.15, ColorRGBA(0.23f, 0.65f, 0.35f, 1.0f), true);
-            arrow(Z, R * 1.60, blue, true);
-        } else {
-            arrow(Z, R * 2.10, body, g.role == 2);   // +Z only. Nothing is ever drawn on -Z.
-        }
+        arrow(Z, R * 2.10, body, g.role == 2);   // +Z only. Nothing is ever drawn on -Z.
     }
 
     // ---- the pair line. Dashed, drawn IN WORLD along the segment joining the two origins, so it
@@ -4665,15 +4578,14 @@ void DesignSketchTool::render_mate_connectors()
 // the information. The same bear rendered flat vs in relief gives 164 vs 210 lit pixels at 16
 // degrees and 66 vs 120 at 6. So the glyph is a small shaded solid, not an outline.
 //
-// The geometry is EMITTED from the real part by scripts/CAD/mate-glyph/emit_glyph_table.py,
-// not hand-drawn, so the glyph and the printed connector cannot drift apart. Two vertices stand
-// above the 3 mm plate in the actual B-rep, which is why the snout here is a tent with one crest
-// edge and four flanks drafted at 20 degrees rather than anything more elaborate.
+// The geometry is generated from the connector solid so the glyph and the printed connector
+// cannot drift apart. Two vertices stand above the 3 mm plate in the actual B-rep, which is why
+// the snout here is a tent with one crest edge and four flanks drafted at 20 degrees.
 //
 // The cheek dot is the handedness mark. Without it the glyph differs from its own mirror by only
 // 5-9 % of its lit pixels, which is not enough to read; the dot roughly doubles that and, unlike
 // making the eyes uneven, identifies the side from that cheek alone instead of by comparison.
-// Emitted by scripts/CAD/mate-glyph/emit_glyph_table.py from bear.step — do not hand-edit.
+// Generated geometry — do not hand-edit.
 // Normalised to the part's bounding span and centred: the renderer scales by one radius.
 static const Vec2d kBearOutline[] = {        // 12 verts, RDP eps 0.030, CCW
     {+0.3842, +0.3294}, {+0.3156, +0.4002}, {+0.2424, +0.3294},
@@ -9963,7 +9875,6 @@ void DesignSketchTool::render(GLCanvas3D& canvas)
     // next render_live_quotes(), so the deferred open still sees this frame's values.
     if (m_autoedit_pending) {
         m_autoedit_pending = false;
-        trace_autoedit("pending -> deferring open", 0);
         wxGetApp().CallAfter([this] { open_primary_autoedit(); });
     }
     if (is_edit_op_mode())
@@ -10840,7 +10751,6 @@ bool DesignSketchTool::on_mouse_impl(wxMouseEvent& evt, GLCanvas3D& canvas)
             }
             const int target = (f >= 0) ? f : ff;
             if (target >= 0 && on_display_sketch_activated) {
-                dp_pick_trace("double-click -> edit sketch feature %d (entity %d)", target, e);
                 on_display_sketch_activated(target);
                 return true;
             }
@@ -11157,24 +11067,18 @@ bool DesignSketchTool::on_mouse_impl(wxMouseEvent& evt, GLCanvas3D& canvas)
             m_pick_press_x = evt.GetX();
             m_pick_press_y = evt.GetY();
             m_pick_pending = true;
-            dp_pick_trace("down x=%d y=%d", evt.GetX(), evt.GetY());
             return false;
         }
         if (!(evt.LeftUp() && m_pick_pending)) {
-            if (evt.LeftUp()) dp_pick_trace("up with no pending press (press was eaten upstream)");
             return false;
         }
         m_pick_pending = false;
-        dp_pick_trace("up x=%d y=%d drift=%d", evt.GetX(), evt.GetY(),
-                      std::max(std::abs(evt.GetX() - m_pick_press_x),
-                               std::abs(evt.GetY() - m_pick_press_y)));
         // Threshold per axis, at GTK's own drag threshold. A hand-held mouse drifts several
         // pixels during an ordinary click — a tight budget silently swallowed real clicks and
         // looked exactly like "selection does not work". Synthetic clicks never drift, which
         // is why the headless rig could not show this.
         if (std::max(std::abs(evt.GetX() - m_pick_press_x),
                      std::abs(evt.GetY() - m_pick_press_y)) > 8) {
-            dp_pick_trace("rejected as drag");
             return false;   // it was a drag: the canvas already orbited, don't also select
         }
         // Committed-sketch loop pick is computed FIRST. A click that lands on a loop's
@@ -11187,7 +11091,6 @@ bool DesignSketchTool::on_mouse_impl(wxMouseEvent& evt, GLCanvas3D& canvas)
         const Linef3 ray8 = canvas.mouse_ray(Point(evt.GetX() + 8, evt.GetY()));
         int    edge_feat = -1, edge_reg = -1, edge_ent = -1; double edge_d = 1e30;  // nearest stroke
         int    face_feat = -1, face_reg = -1;                        // interior (fallback)
-        dp_pick_trace("display sketches available: %zu", m_display_sketches.size());
         for (const DisplaySketch& d : m_display_sketches) {
             const Vec2d p   = d.plane.project(ray.a,  ray.vector());
             const Vec2d p8  = d.plane.project(ray8.a, ray8.vector());
@@ -11226,7 +11129,6 @@ bool DesignSketchTool::on_mouse_impl(wxMouseEvent& evt, GLCanvas3D& canvas)
         // the callback re-renders the open card's preview.
         if (m_solid_sel != SolidSel::None) {
             clear_solid_selection();
-            dp_pick_trace("clicked empty space -> selection cleared");
             if (on_solid_selection_changed)
                 on_solid_selection_changed(int(m_solid_sel), m_sel_body, m_sel_face, m_sel_edge);
         }

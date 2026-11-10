@@ -27,7 +27,6 @@
 #include <wx/stopwatch.h>
 
 #include <cassert>
-#include <cstdarg>                        // offer_trace: diagnostic row dump for the offer ladder
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -4192,25 +4191,6 @@ DesignPanel::DesignPanel(wxWindow* parent)
         // Delete/Ctrl+Z there must edit the text, not the model.
         const bool in_text = (dynamic_cast<wxTextCtrl*>(wxWindow::FindFocus()) != nullptr)
                              || (m_viewport && m_viewport->inline_busy());
-        if (getenv("ORCA_CAD_KEYTRACE")) {
-            wxWindow* fw = wxWindow::FindFocus();
-            fprintf(stderr, "[KEYTRACE] key=%d ui_mode=%d is_sketching=%d in_text=%d inline_busy=%d focus=%s\n",
-                    key, int(m_ui_mode), (m_viewport && m_viewport->is_sketching()) ? 1 : 0, in_text ? 1 : 0,
-                    (m_viewport && m_viewport->inline_busy()) ? 1 : 0,
-                    // wxString, not a cast: GetClassName() returns const wxChar* — wchar_t* in
-                    // this build — and casting THAT to const char* and printing it with %s emits
-                    // the first byte and stops at the padding NUL. Every focus= field this tracer
-                    // has ever printed was a single letter: "wxGLCanvas" came out as "w", and so
-                    // did "wxWindow". An instrument that silently truncates its most important
-                    // field is worse than no instrument, and this one was trusted for a whole
-                    // day's diagnosis.
-                    fw ? wxString(fw->GetClassInfo()->GetClassName()).utf8_str().data() : "(none)");
-            fflush(stderr);
-        }
-
-        // NOTE the position: this sits AFTER the KEYTRACE block on purpose. It returns early,
-        // and putting it first made every forwarded key invisible to the tracer — the one
-        // instrument that diagnosed this bug in the first place.
         // The in-canvas value field is a borderless, always-on-top top-level frame, so whether it
         // may take keyboard focus is the platform's decision, not ours: macOS denies key status to a
         // borderless window, mutter's focus-stealing prevention refuses a re-mapped window, and the
@@ -5274,10 +5254,6 @@ void DesignPanel::on_add_extrude()
     } else if (extrude_uses_loop()) {
         // Extrude just the selected loop (its entity subset), leaving the source sketch's
         // other loops intact and still selectable.
-        if (::getenv("ORCA_CAD_PICK_TRACE"))
-            std::fprintf(stderr, "[pick] on_add_extrude: feat=%d reg=%d ents=%zu\n",
-                         m_extrude_sketch_ref, m_viewport->loop_pick_region(),
-                         m_viewport->selected_loop_entities().size());
         idx = m_doc.add_extrude_entities(m_viewport->selected_loop_entities(),
                                          m_doc.features[m_extrude_sketch_ref].plane,
                                          m_distance->GetValue(), false, mode, name);
@@ -6621,22 +6597,6 @@ wxMenuItem* DesignPanel::append_offer_item(wxMenu* menu, int id, const wxString&
     return item;
 }
 
-// Diagnostic only: what the offer is about to show, line per row, on stderr. Costs one getenv
-// per menu when off. The ladder that drives right-click needs to assert the ROW SET, and the only
-// honest source for that is the loop that builds the rows.
-static void offer_trace(const char* fmt, ...)
-{
-    static const bool on = std::getenv("ORCA_CAD_KEYTRACE") != nullptr;
-    if (!on) return;
-    va_list ap;
-    va_start(ap, fmt);
-    fprintf(stderr, "[OFFER] ");
-    vfprintf(stderr, fmt, ap);
-    fprintf(stderr, "\n");
-    va_end(ap);
-    fflush(stderr);
-}
-
 // The offer menu's title line for selection `kind` (an OfferSel), or empty for none.
 wxString DesignPanel::offer_header(int kind) const
 {
@@ -6683,11 +6643,6 @@ void DesignPanel::show_offer_menu(const wxPoint& screen_pos)
     // is_sketching() the offer opened on entering a sketch showing the FEATURE rows, every one
     // of them refusing the sketch selection, so it read as a menu of nine dead entries.
     const bool     sketching = sketch_map_applies();
-    // The offer ladder reads THIS, not the pixels: the trace is emitted from the same loop that
-    // builds the menu, so it cannot drift from what the user is shown. Gated on the existing
-    // ORCA_CAD_KEYTRACE so a rig run needs one env var, not two. <offer ladder>.
-    offer_trace("open kind=%d sketching=%d bodies=%d", kind, sketching ? 1 : 0,
-                int(m_doc.bodies.size()));
 
     const int bodies = int(m_doc.bodies.size());
     int sketches = 0;
@@ -6761,13 +6716,9 @@ void DesignPanel::show_offer_menu(const wxPoint& screen_pos)
                 if (!(v->accepts & bit)) continue;
                 const int id = base + int(bound.size());
                 if (applies(*v)) {
-                    offer_trace("row=%d %s -> %s%s", row, kOfferRowNames[row], v->id,
-                                v->action ? "" : " (no GUI route)");
                     append_offer_item(&menu, id, label(*v), *v)->Enable(v->action != nullptr);
                     bound.push_back(v);
                 } else {
-                    offer_trace("row=%d %s DISABLED (%s)", row, kOfferRowNames[row],
-                                v->refusal ? v->refusal : "blocked");
                     wxString s = I18N::translate(v->name, "Design");
                     if (v->refusal) s += wxString::FromUTF8("   —   ") + tr(v->refusal);
                     append_offer_item(&menu, id, s, *v)->Enable(false);
@@ -6803,14 +6754,10 @@ void DesignPanel::show_offer_menu(const wxPoint& screen_pos)
                 s += wxString::FromUTF8("   —   ") + tr(why);
             else if (OfferSel(kind) == OfferSel::None)
                 s += wxString::FromUTF8("   —   ") + _L("select something first");
-            offer_trace("row=%d %s DISABLED (%s)", row, kOfferRowNames[row],
-                        why ? why : "no verb accepts this selection");
             menu.Append(base + int(bound.size()), s)->Enable(false);
             bound.push_back(nullptr);
         } else if (live.size() == 1 && std::none_of(family.begin(), family.end(), [&](const OfferVerb* v) {
                        return (v->accepts & bit) && !applies(*v); })) {
-            offer_trace("row=%d %s -> %s%s", row, kOfferRowNames[row], live[0]->id,
-                        live[0]->action ? "" : " (no GUI route)");
             append_offer_item(&menu, base + int(bound.size()), label(*live[0]), *live[0])
                 ->Enable(live[0]->action != nullptr);
             bound.push_back(live[0]);
@@ -6842,17 +6789,12 @@ void DesignPanel::show_offer_menu(const wxPoint& screen_pos)
                     }
                 }
                 if (!ok) {
-                    offer_trace("row=%d %s ~ %s BLOCKED", row, kOfferRowNames[row], v->id);
                     wxString s = I18N::translate(v->name, "Design");
                     if (v->refusal) s += wxString::FromUTF8("   —   ") + tr(v->refusal);
                     append_offer_item(target, base + int(bound.size()), s, *v)->Enable(false);
                     bound.push_back(nullptr);
                     continue;
                 }
-                offer_trace("row=%d %s > %s%s%s%s", row, kOfferRowNames[row],
-                            (v->family && *v->family) ? v->family : "",
-                            (v->family && *v->family) ? " > " : "", v->id,
-                            v->action ? "" : " (no GUI route)");
                 append_offer_item(target, base + int(bound.size()), label(*v), *v)
                     ->Enable(v->action != nullptr);
                 bound.push_back(v);

@@ -140,7 +140,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-          -DSLIC3R_PCH=OFF -DINLONG_TOOLS=ON -DBUILD_TESTS=ON
+          -DSLIC3R_PCH=OFF -DINLONG_TOOLS=ON
           -DDEP_BUILD_DIR=${{ github.workspace }}/deps/build
 
       # The one header the build generates rather than the configure.

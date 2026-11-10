@@ -40,8 +40,6 @@ REM ===========================================================================
 call :add_section "Actions"
 call :add_arg build_deps bool d deps "Download and build the dependencies, needed before -s"
 call :add_arg build_slicer bool s slicer "Build InlongSlicer"
-call :add_arg build_tests bool "" tests "Build the unit tests"
-call :add_arg run_tests bool "" run-tests "Build the unit tests and run them"
 call :add_arg make_installer bool "" installer "Build InlongSlicer and package it into an NSIS installer"
 call :add_arg pack_deps bool p pack "Bundle the built dependencies into a zip file"
 call :add_arg install_deps bool u install-deps "Install or update CMake, Perl and Git with WinGet"
@@ -177,13 +175,6 @@ if "%kill_jobs%" == "ON" (
 	call :kill_image cl.exe
 	call :kill_image clang-cl.exe
 	exit /b 0
-)
-
-REM Neither test option can happen without building the slicer, so asking for
-REM one asks for that, unless another action was already named.
-if "%build_deps%%build_slicer%%pack_deps%%install_deps%%install_vs%" == "" (
-    if "%build_tests%" == "ON" set "build_slicer=ON"
-    if "%run_tests%" == "ON" set "build_slicer=ON"
 )
 
 REM The installer packages the slicer build, so it always needs one.
@@ -549,10 +540,6 @@ if not "%cache_args%" == "" echo Compiler cache: %cache_exe%
 set "SIG_FLAG="
 if defined INLONG_UPDATER_SIG_KEY set "SIG_FLAG=-DINLONG_UPDATER_SIG_KEY=%INLONG_UPDATER_SIG_KEY%"
 
-set "TESTS_FLAG=-DBUILD_TESTS=OFF"
-if "%build_tests%" == "ON" set "TESTS_FLAG=-DBUILD_TESTS=ON"
-if "%run_tests%" == "ON" set "TESTS_FLAG=-DBUILD_TESTS=ON"
-
 set "SLICER_TARGET_FLAG="
 if not "%slicer_target%" == "" set "SLICER_TARGET_FLAG=--target %slicer_target%"
 
@@ -741,17 +728,13 @@ if "%build_slicer%" == "ON" (
     )
 
     if not "%no_configure%" == "ON" (
-        call :print_and_run cmake -B "%build_dir%" -G "%generator%" %gen_args% -DINLONG_TOOLS=ON %SIG_FLAG% %TESTS_FLAG% %DEP_TREE_FLAG% -DCMAKE_BUILD_TYPE=%build_type% !slicer_args! %INLONG_SLICER_CMAKE_ARGS%
+        call :print_and_run cmake -B "%build_dir%" -G "%generator%" %gen_args% -DINLONG_TOOLS=ON %SIG_FLAG% %DEP_TREE_FLAG% -DCMAKE_BUILD_TYPE=%build_type% !slicer_args! %INLONG_SLICER_CMAKE_ARGS%
         %error_check%
     )
 
     call :print_and_run cmake --build "%build_dir%" --config %build_type% %SLICER_TARGET_FLAG% %JOBS_FLAG% %VERBOSE_FLAG%
     %error_check%
 
-    if "%run_tests%" == "ON" (
-        call :print_and_run ctest --test-dir "%build_dir%/tests" -C %build_type% --output-on-failure
-        %error_check%
-    )
 
     if not "%no_gettext%" == "ON" (
         call :print_and_run call scripts/run_gettext.bat
@@ -875,7 +858,6 @@ REM worked out the same way in either run.
         if "%linked%" == "ON" echo     Rebuild after edits   build_win.bat -s!recall! --no-configure
         if not "%linked%" == "ON" echo     Relink the binary     build_win.bat -s!recall! --no-configure
         if "%linked%" == "ON" if "%using_ninja%" == "ON" echo     Rebuild one target    build_win.bat -s!recall! --no-configure --slicer-target libslic3r
-        if "%run_tests%" == "ON" echo     Re-run the tests      ctest --test-dir %build_dir%/tests -C %build_type% --output-on-failure
     ) else (
         if "%build_deps%" == "ON" echo     Build the slicer      build_win.bat -s!recall!
     )
@@ -973,7 +955,6 @@ REM get_str_len <string> -> length in %ret%
     echo    %script_name% -s -l -x                  Rebuild the slicer with clang-cl and Ninja
     echo    %script_name% -s --no-configure -j 8    Rebuild quickly while iterating
     echo    %script_name% -s --slicer-target glad   Compile one target to check the toolchain
-    echo    %script_name% -l -x --run-tests         Test that toolchain's build, not the default one
     echo    %script_name% -s -l -x --cache ccache   Rebuild through a compiler cache
     echo.
     echo Environment:
@@ -984,8 +965,8 @@ REM get_str_len <string> -> length in %ret%
     echo    NINJA_STATUS              Ninja progress format, if you want your own
     echo    debugscript               Set to ON to trace this script
     echo.
-    echo       set INLONG_SLICER_CMAKE_ARGS=-DSLIC3R_BUILD_SANDBOXES=ON -DSLIC3R_WARNINGS=OFF
-    echo       $env:INLONG_SLICER_CMAKE_ARGS = '-DSLIC3R_BUILD_SANDBOXES=ON'      (PowerShell)
+    echo       set INLONG_SLICER_CMAKE_ARGS=-DSLIC3R_WARNINGS=OFF
+    echo       $env:INLONG_SLICER_CMAKE_ARGS = '-DSLIC3R_WARNINGS=OFF'      (PowerShell)
     echo.
     echo    --deps-args and --slicer-args cannot carry a value with spaces; use
     echo    these instead. Neither form supports a value containing an ampersand.

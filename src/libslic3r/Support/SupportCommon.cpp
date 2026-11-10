@@ -4224,17 +4224,6 @@ size_t generate_support_toolpaths(
                     base_interface_layer.set_polygons_to_extrude(diff(base_interface_layer.polygons_to_extrude(), trimmed_interface));
             }
 
-#if 0
-            if ( ! interface_layer.empty() && ! base_layer.empty()) {
-                // turn base support into interface when it's contained in our holes
-                // (this way we get wider interface anchoring)
-                //FIXME The intention of the code below is unclear. One likely wanted to just merge small islands of base layers filling in the holes
-                // inside interface layers, but the code below fills just too much, see GH #4570
-                Polygons islands = top_level_islands(interface_layer.layer->polygons);
-                polygons_append(interface_layer.layer->polygons, intersection(base_layer.layer->polygons, islands));
-                base_layer.layer->polygons = diff(base_layer.layer->polygons, islands);
-            }
-#endif
 
             // Top and bottom contacts, interface layers.
             enum class InterfaceLayerType { TopContact, BottomContact, RaftContact, Interface, InterfaceAsBase };

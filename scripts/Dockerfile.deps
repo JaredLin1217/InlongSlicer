@@ -77,12 +77,8 @@ RUN ./build_linux.sh -dr -j 12
 # to change one directory name. Same tree, two names.
 RUN ln -sfn /OrcaSlicer/deps/build/InlongSlicer_dep /OrcaSlicer/deps/build/destdir
 
-# The rig's GUI runtime. This used to arrive for free because orcacad-deps was layered on
-# snapmaker-deps; that lineage is Trap 1 in docs/rig_build_traps.md (a baked project(Snapmaker_Orca)
-# tree) and building from this Dockerfile is what removes it — along with the X stack the rig
-# needs. scripts/CAD/start-headless-gui.sh requires Xvfb and openbox (without a window manager `xdotool
-# windowactivate` aborts with "windowmanager claims not to support..."), drives the UI with
-# xdotool, and captures to /shots with scrot/ImageMagick. Same set snapmaker-deps carries.
+# GUI runtime packages for the CAD container: Xvfb and openbox provide the display,
+# xdotool drives the UI, and scrot/ImageMagick capture screenshots.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     imagemagick \
     openbox \
