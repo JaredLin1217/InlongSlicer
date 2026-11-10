@@ -64,6 +64,8 @@ Polygons organic_bounded_union(const Polygons &polygons)
     constexpr size_t chunk_size = 64;
     if (polygons.empty())
         return {};
+    if (polygons.size() == 1 && polygons.front().is_valid())
+        return polygons;
     Polygons merged;
     for (size_t begin = 0; begin < polygons.size(); begin += chunk_size) {
         const size_t end = std::min(begin + chunk_size, polygons.size());

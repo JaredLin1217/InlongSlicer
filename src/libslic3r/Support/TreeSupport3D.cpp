@@ -6555,10 +6555,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         });
         if (!can_add_bearing) continue;
         OrganicSupportOrderedPlane ordered_plane;
-        auto append_ordered_plane = [&](const Polygons &polygons) {
+        auto append_ordered_plane = [&](Polygons &&polygons) {
             if (polygons.empty())
                 return;
-            ordered_plane.append(polygons);
+            ordered_plane.append(std::move(polygons));
         };
         std::function<void(const ExtrusionEntity &)> inspect_road;
         inspect_road = [&](const ExtrusionEntity &entity) {
@@ -6590,7 +6590,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
             }
             road_beads = bounded_union(road_beads);
             if (grounded) {
-                append_ordered_plane(road_beads);
+                append_ordered_plane(std::move(road_beads));
                 return;
             }
             const double road_area = area(road_beads);
@@ -6609,7 +6609,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 if (layers[between]->print_z >= latest_bottom - EPSILON)
                     certified = definitely_backed(*layers[between], layer_beads(*layers[between])->polygons);
             if (certified) {
-                append_ordered_plane(road_beads);
+                append_ordered_plane(std::move(road_beads));
                 return;
             }
             for (size_t path_index = 0; path_index < road.size(); ++path_index) {
@@ -6644,7 +6644,7 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 scale_(width * 0.5), scale_(width), scale_(width * 0.5), structural_wall);
             if (unsupported.empty() && area(bearing) + sqr(double(scale_(0.001))) >=
                     std::min(road_area * 0.05, sqr(double(scale_(max_width))) * 0.5))
-                append_ordered_plane(road_beads);
+                append_ordered_plane(std::move(road_beads));
             else if (repairable)
                 for (const Polyline &span : unsupported) {
                     Polyline simplified = span;

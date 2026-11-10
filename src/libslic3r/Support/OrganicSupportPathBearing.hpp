@@ -62,8 +62,19 @@ public:
         if (polygons.empty())
             return;
         const size_t index = m_entries.size();
-        m_entries.emplace_back(polygons);
+        m_entries.push_back({polygons, get_extents(polygons), nullptr});
         const BoundingBox &bounds = m_entries.back().bounds;
+        if (bounds.defined)
+            m_min_x.emplace(bounds.min.x(), index);
+    }
+
+    void append(Polygons &&polygons)
+    {
+        if (polygons.empty())
+            return;
+        const size_t index = m_entries.size();
+        const BoundingBox bounds = get_extents(polygons);
+        m_entries.push_back({std::move(polygons), bounds, nullptr});
         if (bounds.defined)
             m_min_x.emplace(bounds.min.x(), index);
     }
@@ -83,12 +94,22 @@ public:
                 candidates.push_back(index);
         }
         std::sort(candidates.begin(), candidates.end());
-        for (const size_t index : candidates)
-            callback(m_entries[index]);
+        for (const size_t index : candidates) {
+            const Entry &entry = m_entries[index];
+            if (!entry.geometry)
+                entry.geometry = std::make_shared<OrganicSupportPolygonGeometry>(std::move(entry.polygons));
+            callback(*entry.geometry);
+        }
     }
 
 private:
-    std::vector<OrganicSupportPolygonGeometry> m_entries;
+    struct Entry {
+        mutable Polygons polygons;
+        BoundingBox bounds;
+        mutable std::shared_ptr<OrganicSupportPolygonGeometry> geometry;
+    };
+
+    std::vector<Entry> m_entries;
     std::multimap<coord_t, size_t> m_min_x;
 };
 
