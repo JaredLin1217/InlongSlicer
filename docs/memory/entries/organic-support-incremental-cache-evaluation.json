@@ -1,0 +1,44 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "organic-support-incremental-cache-evaluation",
+  "key": "organic-support-incremental-cache-evaluation",
+  "type": "fact",
+  "conclusion": "For the 1178-layer test.3mf workload, the evaluated structural filter changed support geometry. RoadAnalysis, cross-tree indexing, a 64 MiB candidate cache, and grounded-root early exit preserved all 351973 support paths but showed no robust slicing-time benefit over a current-host clean-source baseline of 607.785 seconds; the source was therefore restored to the clean commit rather than retaining unproductive complexity.",
+  "scope": "organic-support-performance",
+  "modules": [
+    "libslic3r/Support"
+  ],
+  "tags": [
+    "organic-support",
+    "performance",
+    "cache",
+    "validation"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "f3724ddca9df7412f2e54a1a583b778c62ac0bb9bcb0637ac5d2c1047ef0b44e",
+      "commit": "0bf7d63a721aa3c5d305024d38421004493c1bba",
+      "locator": "reconnect_organic_support_paths and organic_draw_branches demand validation"
+    }
+  ],
+  "verified_utc": "2026-11-11T16:54:50Z",
+  "verification": {
+    "method": "Incremental Release builds, real CLI slices of the original 3MF, full support-stream comparisons at 0.01 mm, and repeated wall-clock measurements",
+    "summary": "Clean source: 607.785 seconds. RoadAnalysis: 611.160; cross-tree: 612.581 and 630.050; candidate cache: 721.779; grounded-root early exit: 697.751 seconds. All these variants matched 1178 layers and 351973 support paths with zero geometry differences. Structural-only, structural-copy, and structural-empty variants had 21153 different support segments and were rejected.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}
