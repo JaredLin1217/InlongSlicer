@@ -2390,6 +2390,51 @@ SupportGeneratorLayersPtr generate_support_layers(
 // an extrusion bridge across an unprintable part.
 static void remove_unprintable_interface_paths(ExtrusionEntitiesPtr &entities)
 {
+    // Organic contact fills may wrap several independent roads in one
+    // ExtrusionMultiPath/ExtrusionEntityCollection.  Checking only the
+    // container length lets a short, detached road survive whenever another
+    // road in the same container is long enough.  Prune those roads before
+    // the physical-height filter below, so a retraction/travel jump cannot
+    // become a printed floating interface tail.
+    const coord_t minimum_interface_length = scale_(3.5);
+    std::function<bool(ExtrusionEntity *)> prune_short_children =
+        [&](ExtrusionEntity *entity) {
+        if (auto *collection = dynamic_cast<ExtrusionEntityCollection *>(entity)) {
+            collection->entities.erase(std::remove_if(collection->entities.begin(), collection->entities.end(),
+                [&](ExtrusionEntity *child) {
+                    if (prune_short_children(child)) {
+                        delete child;
+                        return true;
+                    }
+                    return false;
+                }), collection->entities.end());
+            return collection->empty();
+        }
+        if (auto *multi = dynamic_cast<ExtrusionMultiPath *>(entity)) {
+            multi->paths.erase(std::remove_if(multi->paths.begin(), multi->paths.end(),
+                [&](ExtrusionPath &path) {
+                    return path.role() == erSupportMaterialInterface && !path.z_contoured &&
+                        path.length() < minimum_interface_length;
+                }), multi->paths.end());
+            return multi->paths.empty();
+        }
+        if (auto *loop = dynamic_cast<ExtrusionLoop *>(entity)) {
+            loop->paths.erase(std::remove_if(loop->paths.begin(), loop->paths.end(),
+                [&](ExtrusionPath &path) {
+                    return path.role() == erSupportMaterialInterface && !path.z_contoured &&
+                        path.length() < minimum_interface_length;
+                }), loop->paths.end());
+            return loop->paths.empty();
+        }
+        return entity->role() == erSupportMaterialInterface && entity->length() < minimum_interface_length;
+    };
+    entities.erase(std::remove_if(entities.begin(), entities.end(), [&](ExtrusionEntity *entity) {
+        if (!prune_short_children(entity))
+            return false;
+        delete entity;
+        return true;
+    }), entities.end());
+
     auto invalid = [](const ExtrusionPath &path) {
         return path.role() == erSupportMaterialInterface && !path.z_contoured &&
             path.height > 0.f && path.width + float(EPSILON) < path.height;
@@ -2402,7 +2447,7 @@ static void remove_unprintable_interface_paths(ExtrusionEntitiesPtr &entities)
             else result.push_back(collection);
             continue;
         }
-        if (entity->role() == erSupportMaterialInterface && entity->length() < scale_(0.3)) {
+        if (entity->role() == erSupportMaterialInterface && entity->length() < scale_(3.5)) {
             delete entity;
             continue;
         }

@@ -2891,20 +2891,12 @@ bool FillRectilinear::fill_surface_by_lines(const Surface *surface, const FillPa
     }
 
     if (! support_native_paths.empty()) {
-        // The native rectilinear graph chose the alternating paths through
-        // contours, holes and concave regions. Merge remaining chains only
-        // through short native boundary arcs, without structural arches.
-        FillParams boundary_params = params;
-        boundary_params.anchor_length = 0.f;
-        boundary_params.anchor_length_max = float(3. * unscale<double>(line_spacing));
-        boundary_params.dont_sort = false;
-        connect_infill(
-            std::move(support_native_paths),
-            poly_with_offset.polygons_outer,
-            poly_with_offset.bounding_box_outer(),
-            polylines_out,
-            this->spacing,
-            boundary_params);
+        // Keep organic interface rows as the native clipped paths. Connecting
+        // the remaining chains through the outer contour can create a long,
+        // thin return segment at a concave contact end, which is printed as a
+        // suspended interface spur. Extra travel/retraction is safer than
+        // inventing material outside the clipped interface footprint.
+        append(polylines_out, std::move(support_native_paths));
     }
 
 #ifdef SLIC3R_DEBUG

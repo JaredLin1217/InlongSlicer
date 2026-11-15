@@ -8777,7 +8777,6 @@ std::string GCode::extrude_multi_path(const ExtrusionMultiPath& multipath, const
 {
     // extrude along the path
     std::string gcode;
-
     //Inlong: calculate multipath average mm3_per_mm value over the length of the path.
     //This is used for adaptive PA
     m_multi_flow_segment_path_pa_set = false; // always emit PA on the first path of the multi-path
@@ -8833,7 +8832,30 @@ std::string GCode::extrude_path(const ExtrusionPath& path, const std::string& de
     m_multi_flow_segment_path_pa_set = false;
     m_multi_flow_segment_path_average_mm3_per_mm = 0;
     //    description += ExtrusionEntity::role_to_string(path.role());
-    std::string gcode = this->_extrude(path, description, speed);
+    std::string gcode;
+    if (m_config.support_style == smsTreeOrganic && path.role() == erSupportMaterialInterface &&
+        path.width > 0.f && path.polyline.points.size() >= 2) {
+        const double maximum_segment = scaled<double>(4. * double(path.width));
+        size_t long_segment = path.polyline.points.size();
+        for (size_t point = 1; point < path.polyline.points.size(); ++point) {
+            const double segment_length =
+                (path.polyline.points[point] - path.polyline.points[point - 1]).cast<double>().norm();
+            if (segment_length > maximum_segment) { long_segment = point; break; }
+        }
+        if (long_segment < path.polyline.points.size()) {
+            const double minimum_path = scaled<double>(3.5);
+            Polyline3 prefix;
+            prefix.points.assign(path.polyline.points.begin(), path.polyline.points.begin() + long_segment);
+            if (prefix.length() >= minimum_path)
+                gcode += this->_extrude(ExtrusionPath(std::move(prefix), path), description, speed);
+            Polyline3 suffix;
+            suffix.points.assign(path.polyline.points.begin() + long_segment, path.polyline.points.end());
+            if (suffix.length() >= minimum_path)
+                gcode += this->_extrude(ExtrusionPath(std::move(suffix), path), description, speed);
+        } else
+            gcode = this->_extrude(path, description, speed);
+    } else
+        gcode = this->_extrude(path, description, speed);
     if (m_wipe.enable && FILAMENT_CONFIG(wipe)) {
         m_wipe.reset_path();
         m_wipe.path = path.polyline.to_polyline();

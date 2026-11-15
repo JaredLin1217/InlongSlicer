@@ -374,10 +374,220 @@ void Layer::simplify_support_entity_collection(ExtrusionEntityCollection* entity
         else
             throw Slic3r::InvalidArgument("Invalid extrusion entity supplied to simplify_support_entity_collection()");
     }
+
+    // Organic support interface paths can be assembled from a clipped roof
+    // and a sparse contact row after the normal support topology pass.  If
+    // that assembly contains a long two-leg U-turn, it prints a suspended
+    // return segment between nearly coincident points.  Split only this
+    // unambiguous spur at the final mutable support stage, retaining the two
+    // supported fragments and all ordinary support paths.
+    if (this->object()->config().support_style == smsTreeOrganic) {
+        // A fragment shorter than one millimetre cannot form a bearing road
+        // for this organic interface and otherwise remains as a floating
+        // speck after a detour is split out.
+        const double minimum_path = scaled<double>(1.0);
+        for (size_t i = 0; i < entity_collection->entities.size();) {
+            auto *path = dynamic_cast<ExtrusionPath *>(entity_collection->entities[i]);
+            if (path != nullptr && is_support(path->role()) && path->overhang_degree != -999.0 && path->length() < minimum_path) {
+                delete path;
+                entity_collection->entities.erase(entity_collection->entities.begin() + i);
+                continue;
+            }
+            if (path == nullptr || path->role() != erSupportMaterialInterface ||
+                path->polyline.points.size() < 2 || path->width <= 0.f) {
+                ++i;
+                continue;
+            }
+            if (path->length() < minimum_path && path->overhang_degree != -999.0) {
+                delete path;
+                entity_collection->entities.erase(entity_collection->entities.begin() + i);
+                continue;
+            }
+            const double minimum_detour = scaled<double>(4. * double(path->width));
+            const double maximum_chord  = scaled<double>(1.25 * double(path->width));
+            size_t detour_begin = path->polyline.points.size();
+            if (!path->z_contoured && path->polyline.points.size() >= 4) {
+                for (size_t point = 1; point + 2 < path->polyline.points.size(); ++point) {
+                    const auto distance = [&](size_t a, size_t b) {
+                        return (path->polyline.points[a] - path->polyline.points[b]).cast<double>().norm();
+                    };
+                    if (distance(point, point + 1) >= minimum_detour &&
+                        distance(point + 1, point + 2) >= minimum_detour &&
+                        distance(point, point + 2) <= maximum_chord) {
+                        detour_begin = point;
+                        break;
+                    }
+                }
+            }
+            if (detour_begin == path->polyline.points.size()) {
+                // A clipped interface road can also contain one long bridge
+                // between two otherwise valid fragments.  It is not the
+                // two-leg U-turn above, so remove only that single segment
+                // instead of discarding the whole interface island.  The
+                // limit is tied to the bead width: normal organic interface
+                // roads stay below it, while the suspended return roads seen
+                // on a sharp slope are several bead widths long.
+                const double maximum_segment = scaled<double>(4. * double(path->width));
+                size_t long_segment = path->polyline.points.size();
+                for (size_t point = 1; point < path->polyline.points.size(); ++point) {
+                    const double segment_length =
+                        (path->polyline.points[point] - path->polyline.points[point - 1]).cast<double>().norm();
+                    if (segment_length > maximum_segment) {
+                        long_segment = point;
+                        break;
+                    }
+                }
+                if (long_segment == path->polyline.points.size()) {
+                    ++i;
+                    continue;
+                }
+                ExtrusionEntitiesPtr replacement;
+                Polyline3 prefix;
+                prefix.points.assign(path->polyline.points.begin(), path->polyline.points.begin() + long_segment);
+                if (prefix.length() >= minimum_path)
+                    replacement.emplace_back(new ExtrusionPath(std::move(prefix), *path));
+                Polyline3 suffix;
+                suffix.points.assign(path->polyline.points.begin() + long_segment, path->polyline.points.end());
+                if (suffix.length() >= minimum_path)
+                    replacement.emplace_back(new ExtrusionPath(std::move(suffix), *path));
+                delete path;
+                entity_collection->entities.erase(entity_collection->entities.begin() + i);
+                entity_collection->entities.insert(entity_collection->entities.begin() + i,
+                    replacement.begin(), replacement.end());
+                i += replacement.size();
+                continue;
+            }
+            ExtrusionEntitiesPtr replacement;
+            Polyline3 prefix;
+            prefix.points.assign(path->polyline.points.begin(), path->polyline.points.begin() + detour_begin + 1);
+            if (prefix.length() >= minimum_path)
+                replacement.emplace_back(new ExtrusionPath(std::move(prefix), *path));
+            Polyline3 suffix;
+            suffix.points.assign(path->polyline.points.begin() + detour_begin + 2, path->polyline.points.end());
+            if (suffix.length() >= minimum_path)
+                replacement.emplace_back(new ExtrusionPath(std::move(suffix), *path));
+            delete path;
+            entity_collection->entities.erase(entity_collection->entities.begin() + i);
+            entity_collection->entities.insert(entity_collection->entities.begin() + i,
+                replacement.begin(), replacement.end());
+            i += replacement.size();
+        }
+
+        // Remove tiny interface children that are stored inside a composite
+        // entity.  They do not reach the model or the trunk and show up as
+        // isolated floating beads after the composite is emitted.
+        for (size_t i = 0; i < entity_collection->entities.size();) {
+            if (auto *multipath = dynamic_cast<ExtrusionMultiPath *>(entity_collection->entities[i])) {
+                multipath->paths.erase(std::remove_if(multipath->paths.begin(), multipath->paths.end(),
+                    [minimum_path](const ExtrusionPath &item) {
+                        return (is_support(item.role()) || item.role() == erNone) && item.overhang_degree != -999.0 && item.length() < minimum_path;
+                    }), multipath->paths.end());
+                if (multipath->paths.empty()) {
+                    delete multipath;
+                    entity_collection->entities.erase(entity_collection->entities.begin() + i);
+                    continue;
+                }
+            } else if (auto *loop = dynamic_cast<ExtrusionLoop *>(entity_collection->entities[i])) {
+                loop->paths.erase(std::remove_if(loop->paths.begin(), loop->paths.end(),
+                    [minimum_path](const ExtrusionPath &item) {
+                        return (is_support(item.role()) || item.role() == erNone) && item.overhang_degree != -999.0 && item.length() < minimum_path;
+                    }), loop->paths.end());
+                if (loop->paths.empty()) {
+                    delete loop;
+                    entity_collection->entities.erase(entity_collection->entities.begin() + i);
+                    continue;
+                }
+            }
+            ++i;
+        }
+
+        // Run the same bearing-chain test after all support simplification,
+        // including nested composite entities.  A later chain/reorder pass
+        // must never be allowed to carry a short road across a retraction
+        // jump and print it as a floating interface tail.
+        const coord_t minimum_chain_length = scale_(3.5);
+        const coord_t maximum_chain_gap = scale_(2.0);
+        auto trim_chain = [&](ExtrusionPath &path) {
+            const bool interface = path.role() == erSupportMaterialInterface;
+            const bool support = path.role() == erSupportMaterial;
+            if ((!interface && !support) || path.z_contoured || path.overhang_degree == -999.0 || path.polyline.points.size() < 2)
+                return true;
+            size_t best_begin = 0, best_end = path.polyline.points.size() - 1;
+            size_t run_begin = 0;
+            double best_length = 0., run_length = 0.;
+            bool split = false;
+            for (size_t point = 1; point < path.polyline.points.size(); ++point) {
+                const double segment = (path.polyline.points[point] - path.polyline.points[point - 1]).cast<double>().norm();
+                if (segment > double(maximum_chain_gap)) {
+                    split = true;
+                    if (run_length > best_length) {
+                        best_length = run_length;
+                        best_begin = run_begin;
+                        best_end = point - 1;
+                    }
+                    run_begin = point;
+                    run_length = 0.;
+                } else {
+                    run_length += segment;
+                }
+            }
+            if (run_length > best_length) {
+                best_length = run_length;
+                best_begin = run_begin;
+                best_end = path.polyline.points.size() - 1;
+            }
+            if (split) {
+                if (best_length < double(minimum_chain_length))
+                    return false;
+                Points3 connected;
+                connected.reserve(best_end - best_begin + 1);
+                for (size_t point = best_begin; point <= best_end; ++point)
+                    connected.emplace_back(path.polyline.points[point]);
+                path.polyline = Polyline3(std::move(connected));
+            }
+            return !interface || path.length() >= minimum_chain_length;
+        };
+        std::function<bool(ExtrusionEntity *)> prune_bearing_chain = [&](ExtrusionEntity *entity) {
+            if (auto *child_collection = dynamic_cast<ExtrusionEntityCollection *>(entity)) {
+                child_collection->entities.erase(std::remove_if(child_collection->entities.begin(), child_collection->entities.end(),
+                    [&](ExtrusionEntity *child) {
+                        if (!prune_bearing_chain(child)) {
+                            delete child;
+                            return true;
+                        }
+                        return false;
+                    }), child_collection->entities.end());
+                return !child_collection->empty();
+            }
+            if (auto *multipath = dynamic_cast<ExtrusionMultiPath *>(entity)) {
+                multipath->paths.erase(std::remove_if(multipath->paths.begin(), multipath->paths.end(),
+                    [&](ExtrusionPath &path) { return !trim_chain(path); }), multipath->paths.end());
+                return !multipath->paths.empty();
+            }
+            if (auto *loop = dynamic_cast<ExtrusionLoop *>(entity)) {
+                loop->paths.erase(std::remove_if(loop->paths.begin(), loop->paths.end(),
+                    [&](ExtrusionPath &path) { return !trim_chain(path); }), loop->paths.end());
+                return !loop->paths.empty();
+            }
+            if (auto *path = dynamic_cast<ExtrusionPath *>(entity))
+                return trim_chain(*path);
+            return true;
+        };
+        entity_collection->entities.erase(std::remove_if(entity_collection->entities.begin(), entity_collection->entities.end(),
+            [&](ExtrusionEntity *entity) {
+                if (prune_bearing_chain(entity))
+                    return false;
+                delete entity;
+                return true;
+            }), entity_collection->entities.end());
+
+    }
 }
 //BBS: method to simplify support path
 void Layer::simplify_support_path(ExtrusionPath * path)
 {
+    if (path != nullptr && path->overhang_degree == -999.0)
+        return;
     const auto &print_config = this->object()->print()->config();
     const bool spiral_mode = print_config.spiral_mode;
     const bool enable_arc_fitting = print_config.enable_arc_fitting;

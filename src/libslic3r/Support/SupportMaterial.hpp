@@ -7,6 +7,7 @@
 #include "SupportLayer.hpp"
 #include "SupportParameters.hpp"
 #include <vector>
+#include <utility>
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/Config.hpp"
 namespace Slic3r {
@@ -37,6 +38,12 @@ public:
 	// New support layers will be added to the object,
 	// with extrusion paths and islands filled in for each support layer.
 	void 		generate(PrintObject &object);
+
+	// Calculate the ordinary-support top-contact envelope without emitting
+	// support layers. Tree support uses this geometry to keep its outer
+	// interface boundary consistent with the normal support algorithm.
+	std::vector<Polygons> ordinary_contact_envelopes(PrintObject &object) const;
+	std::vector<std::pair<double, Polygons>> ordinary_top_interface_envelopes(PrintObject &object) const;
 
 private:
 	std::vector<Polygons> buildplate_covered(const PrintObject &object) const;

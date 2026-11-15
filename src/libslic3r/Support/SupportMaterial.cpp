@@ -1395,13 +1395,14 @@ static inline ExPolygons detect_overhangs(
 #ifdef SLIC3R_DEBUG
     , size_t                 iRun
 #endif // SLIC3R_DEBUG
+    , const bool               force_normal_auto = false
     )
 {
     // Snug overhang polygons.
     Polygons overhang_polygons;
 
     // BBS.
-    const bool   auto_normal_support = object_config.support_type.value == stNormalAuto;
+    const bool   auto_normal_support = force_normal_auto || object_config.support_type.value == stNormalAuto;
     const bool   buildplate_only = ! annotations.buildplate_covered.empty();
     // If user specified a custom angle threshold, convert it to radians.
     // Zero means automatic overhang detection.
@@ -1597,6 +1598,7 @@ static inline std::tuple<Polygons, Polygons, double> detect_contacts(
 #ifdef SLIC3R_DEBUG
     , size_t                 iRun
 #endif // SLIC3R_DEBUG
+    , const bool               force_normal_auto = false
 )
 {
     // Expanded for stability, trimmed by gap_xy.
@@ -1605,7 +1607,7 @@ static inline std::tuple<Polygons, Polygons, double> detect_contacts(
     Polygons enforcer_polygons;
 
     // BBS.
-    const bool   auto_normal_support = object_config.support_type.value == stNormalAuto;
+    const bool   auto_normal_support = force_normal_auto || object_config.support_type.value == stNormalAuto;
     const bool   buildplate_only = !annotations.buildplate_covered.empty();
     float        no_interface_offset = 0.f;
 
@@ -2375,6 +2377,84 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::top_contact_layers(
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::top_contact_layers() in parallel - end";
 
     return contact_out;
+}
+
+std::vector<Polygons> PrintObjectSupportMaterial::ordinary_contact_envelopes(PrintObject &object) const
+{
+    std::vector<Polygons> contacts(object.layer_count());
+    if (object.layer_count() == 0)
+        return contacts;
+
+    const std::vector<Polygons> buildplate_covered = this->buildplate_covered(object);
+    SupportAnnotations annotations(object, buildplate_covered);
+    const size_t layer_id_start = this->has_raft() ? 0 : 1;
+    size_t overhang_layers = 0;
+    for (size_t layer_id = layer_id_start; layer_id < object.layer_count(); ++layer_id) {
+        Layer &layer = *object.layers()[layer_id];
+        Polygons lower_layer_polygons = layer.lower_layer == nullptr ?
+            Polygons{} : to_polygons(layer.lower_layer->lslices);
+        ExPolygons overhangs = detect_overhangs(layer, layer_id, lower_layer_polygons,
+            *m_print_config, *m_object_config, annotations, m_support_params.gap_xy, true);
+        if (overhangs.empty())
+            continue;
+        ++overhang_layers;
+        Polygons overhang_polygons = to_polygons(overhangs);
+        SlicesMarginCache slices_margin;
+        auto [contact_polygons, enforcer_polygons, no_interface_offset] = detect_contacts(
+            layer, layer_id, overhang_polygons, lower_layer_polygons,
+            *m_print_config, *m_object_config, annotations, slices_margin,
+            m_support_params.gap_xy, true);
+        // Snug support interfaces are projected from the complete overhang
+        // footprint; the narrower contact band is only used to trim the
+        // support body. Keep the overhang envelope as the alignment target.
+        contacts[layer_id] = std::move(overhang_polygons);
+    }
+    size_t nonempty = 0;
+    std::string indices;
+    for (size_t idx = 0; idx < contacts.size(); ++idx)
+        if (!contacts[idx].empty()) {
+            ++nonempty;
+            indices += std::to_string(idx) + ",";
+        }
+    BOOST_LOG_TRIVIAL(info) << "Ordinary contact envelope calculation: nonempty " << nonempty
+        << " of " << contacts.size() << " layers [" << indices << "], overhang layers " << overhang_layers;
+    return contacts;
+}
+
+std::vector<std::pair<double, Polygons>> PrintObjectSupportMaterial::ordinary_top_interface_envelopes(PrintObject &object) const
+{
+    std::vector<std::pair<double, Polygons>> result;
+    auto *mutable_config = const_cast<PrintObjectConfig *>(m_object_config);
+    const SupportType original_support_type = mutable_config->support_type.value;
+    const SupportMaterialStyle original_support_style = mutable_config->support_style.value;
+    mutable_config->support_type.value = stNormalAuto;
+    mutable_config->support_style.value = smsSnug;
+    try {
+        // The owning generator may have cached organic parameters. Construct
+        // a short-lived normal generator after switching the config enums so
+        // all derived values (layer-height mode, spacing and contact flags)
+        // come from the normal/snug configuration as well.
+        PrintObjectSupportMaterial ordinary_generator(&object, m_slicing_params);
+        SupportGeneratorLayerStorage layer_storage;
+        const std::vector<Polygons> buildplate_covered = ordinary_generator.buildplate_covered(object);
+        SupportGeneratorLayersPtr top_contacts = ordinary_generator.top_contact_layers(object, buildplate_covered, layer_storage);
+        result.reserve(top_contacts.size());
+        for (const SupportGeneratorLayer *layer : top_contacts) {
+            if (layer == nullptr)
+                continue;
+            const Polygons *envelope = layer->overhang_polygons != nullptr ?
+                layer->overhang_polygons.get() : &layer->polygons;
+            if (envelope != nullptr && !envelope->empty())
+                result.emplace_back(double(layer->print_z), *envelope);
+        }
+    } catch (...) {
+        mutable_config->support_type.value = original_support_type;
+        mutable_config->support_style.value = original_support_style;
+        throw;
+    }
+    mutable_config->support_type.value = original_support_type;
+    mutable_config->support_style.value = original_support_style;
+    return result;
 }
 
 // Find the bottom contact layers above the top surfaces of this layer.
