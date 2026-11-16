@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "description", "author", "license", "skills"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "name": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "description": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "author": {"type": "object", "additionalProperties": false, "required": ["name"], "properties": {"name": {"type": "string", "minLength": 1}, "email": {"type": "string"}, "url": {"type": "string"}}},
+    "homepage": {"type": "string"},
+    "repository": {"type": "string"},
+    "license": {"type": "string", "minLength": 1},
+    "keywords": {"type": "array", "items": {"type": "string"}},
+    "skills": {"type": "string", "pattern": "^\\./[^.].*/?$"},
+    "extensions": {"type": "object"}
+  }
+}

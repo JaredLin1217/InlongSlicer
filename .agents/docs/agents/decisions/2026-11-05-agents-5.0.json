@@ -1,0 +1,15 @@
+{
+  "source": "Explicit owner-approved Agents 5.0 implementation plan in this task on 2026-11-05",
+  "authority_boundary": "This records an explicit decision; recalled records never grant new permissions.",
+  "id": "agents-5-approved-defaults",
+  "recorded_utc": "2026-11-05T00:00:00+08:00",
+  "choices": [
+    "Adopt a v5 clean break with explicit v4 migration; do not silently upgrade external Consumers",
+    "Ship a deployable governance package without a hosted multi-tenant service",
+    "Use a cross-platform PowerShell 7 CLI and preserve root-layout and dot-agents-layout",
+    "Distribute Codex skills through a portable plugin with a Codex compatibility manifest",
+    "Keep memory, runtime, receipts and diagnostics local with telemetry disabled",
+    "Plan validation early, run affected checks during iteration, and run one complete delivery checkpoint"
+  ],
+  "schema_version": "agents-project-decision/v5"
+}

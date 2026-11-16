@@ -1,5 +1,5 @@
-#requires -Version 7.0
-param([ValidateSet('Save','Resume','List','Complete','Migrate','Reconcile')][string]$Action='Resume',
+#requires -Version 7.4
+param([ValidateSet('Save','Resume','List','Complete','Reconcile')][string]$Action='Resume',
     [string]$InputPath,[string]$Id,[string]$Root,[int]$ExpectedRevision=-1,[string]$ExpectedDigest,[string]$Reason,[switch]$ReadOnly,[Nullable[DateTimeOffset]]$Now)
 . "$PSScriptRoot/agent-tasks.ps1"
 if(-not $Root) { $Root=Get-AgentRoot }
@@ -14,7 +14,7 @@ $result=switch($Action) {
     default {
         if($ExpectedRevision -lt 0 -or -not $InputPath) { throw 'Saving requires a reviewed input and explicit ExpectedRevision (0 for a new task).' }
         $inputData=Read-AgentJson (Resolve-SafePath $Root $InputPath)
-        Save-AgentTask -Root $Root -InputData $inputData -ExpectedRevision $ExpectedRevision -Complete:($Action -eq 'Complete') -Migrate:($Action -eq 'Migrate') -Now $Now
+        Save-AgentTask -Root $Root -InputData $inputData -ExpectedRevision $ExpectedRevision -Complete:($Action -eq 'Complete') -Now $Now
     }
 }
 $result|ConvertTo-Json -Depth 40

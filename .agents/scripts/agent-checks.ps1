@@ -7,11 +7,15 @@ function Test-AgentSyntax([string]$Root,[string[]]$Files) {
     }
 }
 function Test-AgentSchemas([string]$Root,[string[]]$Files) {
-    $schemas=@{'agents-knowledge/v3'='knowledge';'agents-knowledge/v4'='knowledge';'agents-task/v3'='task-state';'agents-task/v4'='task-state';'agents-managed/v3'='managed';
-        'agents-sources/v3'='sources';'agents-runtime-evidence/v5'='release-evidence';'agents-runtime-evidence/v6'='release-evidence';'agents-project/v4'='project';'agents-deployment/v3'='deployment';
-        'agents-runtime-policy/v4'='runtime-policy';'agents-artifact/v4'='runtime-artifact';'agents-validation/v4'='validation-report';'agents-source-review/v4'='source-review';'agents-project-decision/v4'='project-decision'}
-    foreach($p in $Files | Where-Object { $_ -like '*.json' }) {
+    $schemas=@{'agents-knowledge/v5'='knowledge';'agents-task/v5'='task-state';'agents-managed/v5'='managed';
+        'agents-sources/v5'='sources';'agents-runtime-evidence/v5'='release-evidence';'agents-project/v5'='project';'agents-deployment/v5'='deployment';
+        'agents-runtime-policy/v5'='runtime-policy';'agents-artifact/v5'='runtime-artifact';'agents-validation/v5'='validation-report';'agents-source-review/v5'='source-review';'agents-project-decision/v5'='project-decision'}
+    foreach($p in $Files | Where-Object { $_ -like '*.json' -and $_ -notmatch '^(docs/history|migrations)/' }) {
         $data=Read-AgentJson (Resolve-SafePath $Root $p)
+        if($p -eq 'plugins/agents-governance/plugin.json') {
+            $null=Read-AgentJson (Resolve-SafePath $Root $p) (Resolve-SafePath $Root 'schemas/plugin.schema.json')
+            continue
+        }
         if($data -is [Collections.IDictionary] -and $data.Contains('schema_version') -and $schemas.ContainsKey($data.schema_version)) {
             $schema=Get-AgentAsset $Root "schemas/$($schemas[$data.schema_version]).schema.json"
             $null=Read-AgentJson (Resolve-SafePath $Root $p) $schema
@@ -64,16 +68,19 @@ function Test-AgentEvidence([string]$Root,[switch]$Capture) {
     $entry=Read-AgentJson $full (Join-Path $Root 'schemas/release-evidence.schema.json')
     if($entry.excluded_paths.Count -ne 1 -or $entry.excluded_paths[0] -ne $path) { throw 'Unexpected evidence exclusions.' }
     $files=@(Get-AgentFiles $Root|Where-Object { $_ -ne $path })
-    if($entry.schema_version -ne 'agents-runtime-evidence/v6' -or $entry.workflow_version -ne (Read-AgentJson (Join-Path $Root 'agents.json')).version) { return @{status='needs_review';details=@('Release evidence belongs to an older contract.')} }
+    if($entry.schema_version -ne 'agents-runtime-evidence/v5' -or $entry.workflow_version -ne (Read-AgentJson (Join-Path $Root 'agents.json')).version) { return @{status='needs_review';details=@('Release evidence belongs to an older contract.')} }
     if([DateTimeOffset]::UtcNow -ge [DateTimeOffset]::Parse($entry.review_after_utc)) { return @{status='needs_review';details=@('Release evidence requires review.')} }
     if($entry.validated_content_digest -ne (Get-SourceDigest $Root $files)) { return @{status='needs_review';details=@('Release evidence does not match current source.')} }
-    if(@(Invoke-AgentGit $Root @('status','--porcelain')|Where-Object { $_.Substring(3) -ne $path }).Count) { return @{status='needs_review';details=@('Source has uncommitted changes.')} }
+    $status=@(Invoke-AgentGit $Root @('status','--porcelain=v1','--untracked-files=all')|ForEach-Object {
+        if($_.Length -ge 4) { $_.Substring(3) } else { $_ }
+    })
+    if(@($status|Where-Object { $_ -ne $path }).Count) { return @{status='needs_review';details=@('Source has uncommitted changes.')} }
     $null=Invoke-AgentGit $Root @('merge-base','--is-ancestor',$entry.source_commit,'HEAD')
     $changes=@(Invoke-AgentGit $Root @('diff','--name-only',"$($entry.source_commit)..HEAD"))
     if(@($changes|Where-Object { $_ -ne $path }).Count) { throw 'Evidence commit range contains undeclared source changes.' }
     if($entry.result -ne 'passed' -or @($entry.commands|Where-Object { $_.result -ne 'passed' -and -not($_.id -eq 'evidence' -and $_.result -eq 'not_applicable') }).Count) { throw 'Release evidence contains incomplete or failed checks.' }
     if(@($entry.commands|Group-Object id|Where-Object Count -GT 1).Count) { throw 'Duplicate evidence commands.' }
-    foreach($id in @('syntax','json-schema','ownership','knowledge','sources','size','regression','regression-v4','evidence','package','diff')) {
+    foreach($id in @('syntax','json-schema','ownership','knowledge','sources','size','regression','regression-v5','regression-deployment','evidence','package','plugin-package','diff')) {
         if($id -notin $entry.commands.id) { throw "Required evidence check missing: $id" }
     }
     return @{status='passed';details=@('Evidence matches committed source content and current contract.')}
@@ -109,9 +116,10 @@ function Invoke-AgentChecks {
         if($Profile -eq 'Checkpoint' -or @($selected|Where-Object { $_ -match 'docs/agents/sources\.json$' }).Count) {
             $checks.Add(@{id='sources';command='Test-AgentSources';action={Test-AgentSources $Root}})
         }
-        if($Scope -eq 'Provider' -and ($Profile -eq 'Checkpoint' -or @($impact|Where-Object { $_ -match '^(scripts|tests|schemas|docs/agents)/' }).Count)) {
+        $deepPaths=@($impact|Where-Object { $_ -match '^(tests/|schemas/|scripts/(agent-|runtime-artifacts|validate|agents|migrate-|package-plugin))' })
+        if($Scope -eq 'Provider' -and ($Profile -eq 'Checkpoint' -or $deepPaths.Count)) {
             $checks.Add(@{id='size';command='Test-AgentSizes (measurement only)';action={Test-AgentSizes $Root}})
-            foreach($test in @(@{id='regression';path='tests/test-workflow.ps1'},@{id='regression-v4';path='tests/test-v4.ps1'})) {
+            foreach($test in @(@{id='regression';path='tests/test-workflow.ps1'},@{id='regression-v5';path='tests/test-v5.ps1'},@{id='regression-deployment';path='tests/test-v5-deployment.ps1'})) {
                 $scriptCopy=Resolve-SafePath $Root $test.path
                 $action={ Invoke-AgentChild $Root $run.id {
                     $out=@(& pwsh -NoProfile -File $scriptCopy 2>&1)
@@ -123,6 +131,7 @@ function Invoke-AgentChecks {
         if($Scope -eq 'Provider' -and $Profile -eq 'Checkpoint') {
             $checks.Add(@{id='evidence';command='Test-AgentEvidence';action={Test-AgentEvidence $Root -Capture:$EvidenceCapture}})
             $checks.Add(@{id='package';command='export-release-package.ps1';action={& (Join-Path $Root 'scripts/export-release-package.ps1')}})
+            $checks.Add(@{id='plugin-package';command='package-plugin.ps1';action={& (Join-Path $Root 'scripts/package-plugin.ps1')}})
         }
         if($Scope -eq 'Consumer') {
             foreach($check in (Get-ProjectSettings $Root).consumer_checks) {
@@ -163,7 +172,7 @@ function Invoke-AgentChecks {
         $failed=$true
         $receipts.Add(@{id='fatal';command='checkpoint setup/integrity';result='failed';exit_code=1;duration_ms=0;retry_count=0;details=@($_.Exception.Message)})
     }
-    $report=[ordered]@{schema_version='agents-validation/v4';run_id=$run.id;receipt_path=$receiptPath;started_utc=$started.ToString('o');finished_utc=[DateTimeOffset]::UtcNow.ToString('o');
+    $report=[ordered]@{schema_version='agents-validation/v5';run_id=$run.id;receipt_path=$receiptPath;started_utc=$started.ToString('o');finished_utc=[DateTimeOffset]::UtcNow.ToString('o');
         scope=$Scope;profile=$Profile;input_digest=$inputDigest;paths=@($selected);host=$hostInfo;checks=@($receipts.ToArray());
         result=$(if($failed){'failed'}elseif(@($receipts|Where-Object result -EQ 'needs_review').Count){'needs_review'}else{'passed'});
         passed=(-not $failed);release_ready=$releaseReady;require_release_ready=[bool]$RequireReleaseReady}

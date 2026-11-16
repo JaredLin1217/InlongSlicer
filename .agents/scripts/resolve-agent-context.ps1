@@ -1,4 +1,4 @@
-#requires -Version 7.0
+#requires -Version 7.4
 param([string[]]$Path = @(), [string]$Query = '', [ValidateRange(512,1048576)][int]$BudgetBytes = 8192,
       [ValidateSet('Compact','Json')][string]$Format = 'Compact', [string]$Root)
 . "$PSScriptRoot/agent-core.ps1"
@@ -55,7 +55,7 @@ foreach ($p in $candidates.Keys) {
         $items.Add($item)
     } catch { $gaps.Add("Inspection failed: $p ($($_.Exception.Message))") }
 }
-$result=[ordered]@{schema_version='agents-context/v3';files=@($items.ToArray());gaps=@($gaps.ToArray());complete=$false;
+$result=[ordered]@{schema_version='agents-context/v5';files=@($items.ToArray());gaps=@($gaps.ToArray());complete=$false;
     guidance='Pointers do not establish impact completeness or authorize skipping tests.'}
 $output=$result|ConvertTo-Json -Depth 10 -Compress
 while([Text.Encoding]::UTF8.GetByteCount($output) -gt $BudgetBytes) {

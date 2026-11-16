@@ -1,39 +1,28 @@
 ---
 name: project-memory
-description: Recall verified project knowledge, automatically save reviewed reusable findings, or checkpoint and resume unfinished repository work.
+description: Recall, review and maintain immutable Agents v5 knowledge and task checkpoints without granting action authority.
 ---
 
 # Project memory
 
-Resolve tools from `.agents/managed.json` in a Consumer. Start with
-`project-memory.ps1 -Action Recall -Query <terms>`; Query accepts multiple terms.
-Use Module, Tag, File or Scope filters and Expand only when evidence is needed.
-Recall rechecks immutable records; the index never supplies authority or permission.
-Native Codex memory is a supplementary recall layer, not required project storage.
+Use `scripts/agents.ps1 memory recall` before relying on a past finding. Queries
+accept multiple terms and may filter by module, tag, file or scope. The index is
+an advisory cache; every returned record is rechecked against its source, hash,
+freshness and retirement graph. Expand only when evidence is needed.
 
-After checking sources and the conclusion, automatically save reusable,
-nonsensitive findings as reviewed v4 proposals with Promote -Automatic. Record
-source kind, locator, snapshot hash, verification and freshness. Official-document
-promotion also requires VerifyOfficial and a matching live content hash. File
-commit fields identify checkout anchors; they do not prove uncommitted bytes are
-in that commit. Keep official summaries or decision evidence in durable project
-files; temporary receipts cannot be the only knowledge evidence. Mechanical
-checks do not prove semantic truth. Unverified hypotheses stay in runtime.
+Promote only reviewed, reusable, nonsensitive facts. Record the source kind,
+locator, snapshot hash, verification method and review deadline. Official claims
+need a live source comparison before automatic promotion. User decisions require
+an explicit recorded decision; memory never grants permission. Keep hypotheses,
+temporary receipts and unresolved conclusions in runtime.
 
-Existing entries are immutable. Migrate uses a reviewed v4 proposal identifying
-legacy IDs in supersedes; Retract creates a new record with retracts. Source drift,
-expiry, explicit conflicts, duplicate keys and broken retirement chains suppress
-recall. Resolve with a newly reviewed record; retired knowledge never revives just
-because its replacement becomes unusable. Never auto-share project knowledge.
+Records are immutable. Resolve drift, expiry, conflict, duplicate keys and
+retraction with a new reviewed record. A retired fact cannot revive because a
+replacement became unusable. Native Codex memory is an optional local recall
+layer; required rules and project knowledge remain explicit files.
 
-For long work, copy the task-input template into a registered runtime draft.
-Save with an explicit ExpectedRevision (0 for new tasks). Record the latest goal,
-acceptance criteria, boundaries, completed work, knowledge IDs, receipt references
-and completed external actions. Meaningful changes create immutable revisions;
-requirements changes also append their own history. Resume rechecks HEAD, index,
-worktree and file hashes. Multiple tasks require explicit selection. Complete
-closes the task and starts 90 days; its registered receipt dependencies remain
-protected until the task expires. See the operator guide for migration or recovery.
-
-Plan/read-only work only recalls and inspects; it never promotes or cleans. Hooks
-provide advisory inspection, while explicit commands work without hook activation.
+Use `scripts/agents.ps1 task` for checkpoints. Save with an expected revision,
+record the latest objective, adjustment, acceptance criteria, boundaries,
+knowledge IDs, receipts and completed external actions. Resume checks Git, files
+and evidence. Multiple active tasks require an explicit ID. Plan and read-only
+operations never promote knowledge, clean runtime or replay actions.

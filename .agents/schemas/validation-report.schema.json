@@ -2,7 +2,7 @@
  "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
  "required":["schema_version","run_id","receipt_path","started_utc","finished_utc","scope","profile","input_digest","paths","host","checks","result","passed","release_ready","require_release_ready"],
  "properties":{
-  "schema_version":{"const":"agents-validation/v4"},"run_id":{"type":"string","pattern":"^run-[a-f0-9]{32}$"},"receipt_path":{"type":"string","pattern":"^\\.agents/runtime/runs/"},
+  "schema_version":{"const":"agents-validation/v5"},"run_id":{"type":"string","pattern":"^run-[a-f0-9]{32}$"},"receipt_path":{"type":"string","pattern":"^\\.agents/runtime/runs/"},
   "started_utc":{"type":"string","format":"date-time"},"finished_utc":{"type":"string","format":"date-time"},
   "scope":{"enum":["Provider","Consumer"]},"profile":{"enum":["Changed","Checkpoint"]},"input_digest":{"type":"string","pattern":"^[a-f0-9]{64}$"},
   "paths":{"type":"array","items":{"type":"string"}},"host":{"type":"object","additionalProperties":false,"required":["powershell","git"],"properties":{"powershell":{"type":"string"},"git":{"type":"string"}}},

@@ -4348,7 +4348,8 @@ static void organic_smooth_branches_avoid_collisions(
 static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolumes &volumes,
     const TreeSupportSettings &config, const OrganicSupportLayerPlan &plan,
     const SupportParameters &support_params, const SupportGeneratorLayersPtr &structural_layers,
-    std::function<void()> throw_on_cancel, bool cleanup_only, const std::vector<coordf_t> *affected_print_zs);
+    std::function<void()> throw_on_cancel, bool cleanup_only, const std::vector<coordf_t> *affected_print_zs,
+    bool bridge_interface_roads = false);
 
 static void connect_organic_generic_interfaces_to_base(
     PrintObject &print_object, TreeModelVolumes &volumes, const TreeSupportSettings &config,
@@ -4429,12 +4430,96 @@ static void connect_organic_generic_interfaces_to_base(
         BOOST_LOG_TRIVIAL(info) << "Organic generic interface base connectors: " << connected;
 }
 
-static size_t prune_final_organic_interface_tails(PrintObject &object)
+static size_t prune_final_organic_interface_tails(PrintObject &object, bool preserve_connected_template_paths = false)
 {
     constexpr double max_gap_mm = 2.0;
     const coord_t max_gap = scale_(max_gap_mm);
+    const coord_t min_interface_length = scale_(3.5);
     size_t removed = 0;
-    for (SupportLayer *layer : object.support_layers()) {
+    std::vector<SupportLayer *> cleanup_layers = object.support_layers();
+    std::sort(cleanup_layers.begin(), cleanup_layers.end(), [](const SupportLayer *lhs, const SupportLayer *rhs) {
+        return lhs->print_z < rhs->print_z;
+    });
+
+    std::vector<double> template_layer_lengths(cleanup_layers.size(), 0.);
+    if (preserve_connected_template_paths) {
+        std::function<void(ExtrusionEntity *, double &)> collect_template_lengths =
+            [&](ExtrusionEntity *entity, double &length) {
+                if (entity == nullptr)
+                    return;
+                if (auto *path = dynamic_cast<ExtrusionPath *>(entity)) {
+                    if (path->role() == ExtrusionRole::erSupportMaterialInterface && path->overhang_degree == -999.0)
+                        length += double(path->length());
+                    return;
+                }
+                if (auto *loop = dynamic_cast<ExtrusionLoop *>(entity)) {
+                    for (ExtrusionPath &path : loop->paths)
+                        collect_template_lengths(&path, length);
+                    return;
+                }
+                if (auto *multi = dynamic_cast<ExtrusionMultiPath *>(entity)) {
+                    for (ExtrusionPath &path : multi->paths)
+                        collect_template_lengths(&path, length);
+                    return;
+                }
+                if (auto *collection = dynamic_cast<ExtrusionEntityCollection *>(entity))
+                    for (ExtrusionEntity *child : collection->entities)
+                        collect_template_lengths(child, length);
+            };
+        for (size_t layer_idx = 0; layer_idx < cleanup_layers.size(); ++layer_idx) {
+            if (cleanup_layers[layer_idx] == nullptr)
+                continue;
+            for (ExtrusionEntity *entity : cleanup_layers[layer_idx]->support_fills.entities)
+                collect_template_lengths(entity, template_layer_lengths[layer_idx]);
+        }
+    }
+
+    std::vector<uint8_t> preserve_template_layers(cleanup_layers.size(), 0);
+    if (preserve_connected_template_paths) {
+        const double min_taper_length = double(scale_(0.7));
+        const double max_taper_length = double(scale_(3.5));
+        const double max_layer_growth = double(scale_(0.25));
+        for (size_t start = 0; start < cleanup_layers.size(); ++start) {
+            if (template_layer_lengths[start] < min_taper_length || template_layer_lengths[start] >= max_taper_length)
+                continue;
+            size_t previous = start;
+            while (previous > 0) {
+                --previous;
+                if (template_layer_lengths[previous] > 0.)
+                    break;
+            }
+            bool has_long_predecessor = previous < start && template_layer_lengths[previous] >= max_taper_length;
+            if (!has_long_predecessor)
+                continue;
+            size_t end = start;
+            for (size_t next = start + 1; next < cleanup_layers.size(); ++next) {
+                if (template_layer_lengths[next] <= 0.)
+                    continue;
+                if (template_layer_lengths[next] < min_taper_length ||
+                    template_layer_lengths[next] > template_layer_lengths[end] + max_layer_growth)
+                    break;
+                end = next;
+            }
+            size_t count = 0;
+            for (size_t idx = start; idx <= end; ++idx)
+                if (template_layer_lengths[idx] >= min_taper_length && template_layer_lengths[idx] < max_taper_length)
+                    ++count;
+            if (count < 2)
+                continue;
+            for (size_t idx = start; idx <= end; ++idx)
+                if (template_layer_lengths[idx] >= min_taper_length && template_layer_lengths[idx] < max_taper_length)
+                    preserve_template_layers[idx] = 1;
+        }
+    }
+
+    auto keep_template_path = [&](const ExtrusionPath &candidate, size_t layer_idx) {
+        return preserve_connected_template_paths && layer_idx < preserve_template_layers.size() &&
+            preserve_template_layers[layer_idx] != 0 && candidate.role() == ExtrusionRole::erSupportMaterialInterface &&
+            candidate.overhang_degree == -999.0;
+    };
+
+    for (size_t layer_idx = 0; layer_idx < cleanup_layers.size(); ++layer_idx) {
+        SupportLayer *layer = cleanup_layers[layer_idx];
         if (layer == nullptr)
             continue;
         std::unordered_set<ExtrusionPath *> drop;
@@ -4487,9 +4572,9 @@ static size_t prune_final_organic_interface_tails(PrintObject &object)
                 const bool contact_role = path->role() == ExtrusionRole::erSupportMaterialInterface ||
                     path->role() == ExtrusionRole::erSupportMaterial;
                 const bool valid = trim_large_internal_jump(*path);
-                if (valid && path->role() == ExtrusionRole::erSupportMaterialInterface && path->length() >= scale_(3.5))
+                if (valid && path->role() == ExtrusionRole::erSupportMaterialInterface && path->length() >= min_interface_length)
                     ordered.push_back(path);
-                else if (!valid || path->length() < scale_(3.5))
+                else if (!keep_template_path(*path, layer_idx) && (!valid || path->length() < min_interface_length))
                     drop.insert(path);
                 return;
             }
@@ -4498,9 +4583,9 @@ static size_t prune_final_organic_interface_tails(PrintObject &object)
                     const bool contact_role = path.role() == ExtrusionRole::erSupportMaterialInterface ||
                         path.role() == ExtrusionRole::erSupportMaterial;
                     const bool valid = trim_large_internal_jump(path);
-                    if (valid && path.role() == ExtrusionRole::erSupportMaterialInterface && path.length() >= scale_(3.5))
+                    if (valid && path.role() == ExtrusionRole::erSupportMaterialInterface && path.length() >= min_interface_length)
                         ordered.push_back(&path);
-                    else if (!valid || path.length() < scale_(3.5))
+                    else if (!keep_template_path(path, layer_idx) && (!valid || path.length() < min_interface_length))
                         drop.insert(&path);
                 }
                 return;
@@ -4510,9 +4595,9 @@ static size_t prune_final_organic_interface_tails(PrintObject &object)
                     const bool contact_role = path.role() == ExtrusionRole::erSupportMaterialInterface ||
                         path.role() == ExtrusionRole::erSupportMaterial;
                     const bool valid = trim_large_internal_jump(path);
-                    if (valid && path.role() == ExtrusionRole::erSupportMaterialInterface && path.length() >= scale_(3.5))
+                    if (valid && path.role() == ExtrusionRole::erSupportMaterialInterface && path.length() >= min_interface_length)
                         ordered.push_back(&path);
-                    else if (!valid || path.length() < scale_(3.5))
+                    else if (!keep_template_path(path, layer_idx) && (!valid || path.length() < min_interface_length))
                         drop.insert(&path);
                 }
                 return;
@@ -4675,9 +4760,17 @@ static std::vector<OrganicNormalInterfaceTemplate> capture_normal_interface_temp
     std::sort(result.begin(), result.end(), [](const auto &lhs, const auto &rhs) {
         return lhs.print_z < rhs.print_z;
     });
+    const double template_length_mm = std::accumulate(result.begin(), result.end(), 0.0,
+        [](double total, const auto &entry) {
+            return total + std::accumulate(entry.paths.begin(), entry.paths.end(), 0.0,
+                [](double layer_total, const ExtrusionPath &path) {
+                    return layer_total + unscaled<double>(path.length());
+                });
+        });
     BOOST_LOG_TRIVIAL(info) << "Organic normal-interface template: captured " << result.size()
         << " layers and " << std::accumulate(result.begin(), result.end(), size_t(0),
-            [](size_t total, const auto &entry) { return total + entry.paths.size(); }) << " roads";
+            [](size_t total, const auto &entry) { return total + entry.paths.size(); })
+        << ", length " << template_length_mm << " mm";
     return result;
 }
 
@@ -4892,12 +4985,113 @@ static bool erase_interface_entity(ExtrusionEntity *entity)
     return false;
 }
 
+// The final ordinary template may contain an exact contact plane above the
+// last organic branch plane.  Keep that interface printable by carrying the
+// nearest lower body road onto the plane, while trimming the copied road by
+// the exact interface bead so the two materials never overlap.
+static size_t ensure_interface_layer_body_predecessors(PrintObject &object)
+{
+    std::vector<SupportLayer *> layers = object.support_layers();
+    std::sort(layers.begin(), layers.end(), [](const SupportLayer *lhs, const SupportLayer *rhs) {
+        return lhs->print_z < rhs->print_z;
+    });
+    size_t inserted = 0;
+    size_t unresolved = 0;
+    for (SupportLayer *target : layers) {
+        if (target == nullptr)
+            continue;
+        std::vector<ExtrusionPath> interfaces;
+        for (const ExtrusionEntity *entity : target->support_fills.entities)
+            if (entity != nullptr)
+                collect_interface_template_paths(*entity, interfaces);
+        if (interfaces.empty())
+            continue;
+        std::vector<ExtrusionPath> existing_body;
+        for (const ExtrusionEntity *entity : target->support_fills.entities)
+            if (entity != nullptr)
+                collect_support_paths(*entity, existing_body);
+        if (!existing_body.empty())
+            continue;
+
+        Polygons interface_footprint;
+        for (const ExtrusionPath &path : interfaces)
+            path.polygons_covered_by_width(interface_footprint, 1.f);
+        if (interface_footprint.empty())
+            continue;
+
+        // Search the closest lower plane with a real body road.  A template
+        // plane can be inserted between two topology planes, so requiring an
+        // exact Z predecessor would reintroduce a floating contact layer.
+        std::optional<ExtrusionPath> best_source;
+        double best_distance = std::numeric_limits<double>::max();
+        for (auto it = std::find(layers.begin(), layers.end(), target); it != layers.begin();) {
+            --it;
+            if (*it == nullptr || (*it)->print_z >= target->print_z - EPSILON)
+                continue;
+            std::vector<ExtrusionPath> candidates;
+            for (const ExtrusionEntity *entity : (*it)->support_fills.entities)
+                if (entity != nullptr)
+                    collect_support_paths(*entity, candidates);
+            for (const ExtrusionPath &candidate : candidates) {
+                Polygons candidate_footprint;
+                candidate.polygons_covered_by_width(candidate_footprint, 1.f);
+                if (candidate_footprint.empty())
+                    continue;
+                const BoundingBox lhs = get_extents(candidate_footprint);
+                const BoundingBox rhs = get_extents(interface_footprint);
+                const double dx = std::max({0., double(lhs.min.x() - rhs.max.x()), double(rhs.min.x() - lhs.max.x())});
+                const double dy = std::max({0., double(lhs.min.y() - rhs.max.y()), double(rhs.min.y() - lhs.max.y())});
+                const double distance = std::sqrt(dx * dx + dy * dy) +
+                    std::max(0., target->print_z - (*it)->print_z) * 0.1;
+                if (distance < best_distance) {
+                    best_distance = distance;
+                    best_source = candidate;
+                }
+            }
+            if (best_source.has_value())
+                break;
+        }
+        if (!best_source.has_value()) {
+            ++unresolved;
+            continue;
+        }
+
+        ExtrusionPath continuation(*best_source);
+        continuation.set_extrusion_role(ExtrusionRole::erSupportMaterial);
+        continuation.height = float(target->height > EPSILON ? target->height : best_source->height);
+        Points3 points;
+        points.reserve(continuation.polyline.points.size());
+        const coord_t target_z = scale_(target->print_z);
+        for (const Point3 &point : continuation.polyline.points)
+            points.emplace_back(point.x(), point.y(), target_z);
+        continuation.polyline = Polyline3(std::move(points));
+        bool clipped = false;
+        size_t removed = 0, split = 0;
+        ExtrusionPaths fragments = trim_support_path_against_interface(
+            continuation, interface_footprint, clipped, removed, split);
+        if (fragments.empty()) {
+            ++unresolved;
+            continue;
+        }
+        for (ExtrusionPath &fragment : fragments) {
+            target->support_fills.append(std::move(fragment));
+            ++inserted;
+        }
+        Polygons covered;
+        target->support_fills.polygons_covered_by_width(covered, 1.f);
+        target->support_islands = covered.empty() ? ExPolygons() : union_ex(std::move(covered));
+    }
+    if (inserted > 0 || unresolved > 0)
+        BOOST_LOG_TRIVIAL(info) << "Organic interface layer body predecessors: inserted " << inserted
+            << " roads, unresolved " << unresolved;
+    return inserted;
+}
+
 static size_t apply_normal_interface_templates(
     PrintObject &object, const std::vector<OrganicNormalInterfaceTemplate> &templates)
 {
     if (templates.empty())
         return 0;
-    const double minimum_overlap = sqr(double(scale_(0.001)));
     size_t replaced_layers = 0;
     size_t replaced_paths = 0;
     size_t removed_body_paths = 0;
@@ -4908,14 +5102,6 @@ static size_t apply_normal_interface_templates(
         path.polygons_covered_by_width(footprint, 1.f);
         return footprint;
     };
-    auto layer_body_paths = [](const SupportLayer &layer) {
-        std::vector<ExtrusionPath> paths;
-        for (const ExtrusionEntity *entity : layer.support_fills.entities)
-            if (entity != nullptr)
-                collect_support_paths(*entity, paths);
-        return paths;
-    };
-
     // Reuse an existing tree layer when it already has the same Z. Otherwise
     // insert a real support layer into the sorted layer vector. Keeping the
     // original tree slots untouched is important for the first-layer support
@@ -4985,27 +5171,11 @@ static size_t apply_normal_interface_templates(
         // the branch roads that actually bear this interface footprint. This
         // preserves the tree body topology instead of stamping every branch
         // across the whole model.
-        Polygons existing_body;
-        for (const ExtrusionPath &path : layer_body_paths(*target))
-            append(existing_body, path_footprint(path));
-        existing_body = existing_body.empty() ? Polygons() : union_(std::move(existing_body));
-        if (!interface_footprint.empty() && area(intersection(existing_body, interface_footprint)) <= minimum_overlap) {
-            SupportLayer *source = nullptr;
-            for (SupportLayer *candidate : object.support_layers()) {
-                if (candidate == nullptr || candidate->print_z > entry.print_z + EPSILON || candidate->support_fills.empty())
-                    continue;
-                if (source == nullptr || candidate->print_z > source->print_z)
-                    source = candidate;
-            }
-            if (source != nullptr) {
-                for (const ExtrusionPath &path : layer_body_paths(*source)) {
-                    const Polygons footprint = path_footprint(path);
-                    if (area(intersection(footprint, interface_footprint)) > minimum_overlap)
-                        target->support_fills.append(ExtrusionPath(path));
-                }
-            }
-        }
-
+        // Do not copy a previous tree body path merely because the ordinary
+        // interface envelope reaches outside the current branch footprint.
+        // That fallback turned an interface-only envelope extension into a
+        // second organic trunk.  Branch continuation/bearing remains owned by
+        // the organic planner; the template replaces interface roads only.
         for (const ExtrusionPath &path : entry.paths) {
             ExtrusionPath templated_path(path);
             templated_path.overhang_degree = -999.0;
@@ -5070,9 +5240,24 @@ static size_t apply_normal_interface_templates(
             layer->support_islands = covered.empty() ? ExPolygons() : union_ex(std::move(covered));
         }
     }
+    size_t final_interface_paths = 0;
+    double final_interface_length_mm = 0.0;
+    for (const SupportLayer *layer : support_layers) {
+        if (layer == nullptr)
+            continue;
+        std::vector<ExtrusionPath> paths;
+        for (const ExtrusionEntity *entity : layer->support_fills.entities)
+            if (entity != nullptr)
+                collect_interface_template_paths(*entity, paths);
+        final_interface_paths += paths.size();
+        for (const ExtrusionPath &path : paths)
+            final_interface_length_mm += unscaled<double>(path.length());
+    }
     BOOST_LOG_TRIVIAL(info) << "Organic normal-interface template applied: " << replaced_layers
         << " layers, " << replaced_paths << " roads; body overlap cleanup removed "
         << removed_body_paths << " roads and split " << split_body_paths << " roads";
+    BOOST_LOG_TRIVIAL(info) << "Organic normal-interface template resident after apply: "
+        << final_interface_paths << " roads, " << final_interface_length_mm << " mm";
     return replaced_layers;
 }
 
@@ -5480,6 +5665,15 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
         // follows the normal support result exactly.
         const std::vector<OrganicNormalInterfaceTemplate> ordinary_interface_templates =
             capture_normal_interface_templates(print_object);
+        std::vector<std::pair<double, Polygons>> ordinary_interface_footprints;
+        ordinary_interface_footprints.reserve(ordinary_interface_templates.size());
+        for (const OrganicNormalInterfaceTemplate &entry : ordinary_interface_templates) {
+            Polygons footprint;
+            for (const ExtrusionPath &path : entry.paths)
+                path.polygons_covered_by_width(footprint, 1.f);
+            if (!footprint.empty())
+                ordinary_interface_footprints.emplace_back(entry.print_z, union_(std::move(footprint)));
+        }
 
 #if 1
         // use smart overhang detection
@@ -5610,7 +5804,7 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
             output_plan = organic_draw_branches(
                 *print.get_object(processing.second.front()), volumes, config, move_bounds,
                 bottom_contacts, top_contacts, interface_placer, intermediate_layers, layer_storage,
-                throw_on_cancel, &organic_source_repaired);
+                throw_on_cancel, &organic_source_repaired, &ordinary_interface_footprints);
 
             //tree_support->move_bounds_to_contact_nodes(move_bounds, print_object, config);
 
@@ -5795,6 +5989,26 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
         // exact normal roads are not discarded merely because their source
         // layer used a different tree plane.
         apply_normal_interface_templates(print_object, ordinary_interface_templates);
+        // The template is the authoritative ordinary-support envelope.  Do
+        // not run the organic branch-topology tail pruner after this point:
+        // ordinary interface roads intentionally extend beyond the narrow
+        // tree trunk footprint, and treating that footprint as a connectivity
+        // proof deletes the same continuous interface paths we just copied.
+        BOOST_LOG_TRIVIAL(info) << "Organic template interface cleanup: skipped; ordinary template roads preserved";
+        // The ordinary template is installed after the native organic bearing
+        // pass.  Treat its interface roads as bearing demand for this second
+        // pass so missing predecessors are emitted as Support continuations;
+        // the template roads themselves remain interface material.
+        const OrganicSupportLayerPlan final_support_plan = OrganicSupportLayerPlan::from_support_layers(
+            print_object.slicing_parameters(), config, print_object.support_layers(),
+            print_object.layer_count() + config.raft_layers.size());
+        reconnect_organic_support_paths(print_object, volumes, config, final_support_plan, support_params,
+            layers_sorted, throw_on_cancel, false, nullptr, true);
+        const size_t predecessor_roads = ensure_interface_layer_body_predecessors(print_object);
+        if (predecessor_roads > 0)
+            BOOST_LOG_TRIVIAL(info) << "Organic interface layer predecessor pass added "
+                << predecessor_roads << " roads";
+        BOOST_LOG_TRIVIAL(info) << "Organic post-template interface bearing validation completed";
 
         ++ counter;
     }
@@ -6289,7 +6503,8 @@ static bool anchor_organic_support_components(
 static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolumes &volumes,
     const TreeSupportSettings &config, const OrganicSupportLayerPlan &plan,
     const SupportParameters &support_params, const SupportGeneratorLayersPtr &structural_layers,
-    std::function<void()> throw_on_cancel, bool cleanup_only, const std::vector<coordf_t> *affected_print_zs)
+    std::function<void()> throw_on_cancel, bool cleanup_only, const std::vector<coordf_t> *affected_print_zs,
+    bool bridge_interface_roads)
 {
     if (plan.size() < 2)
         return;
@@ -7002,7 +7217,8 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 const Polygons &bead = beads[path_index]->polygons;
                 if (Slic3r::area(intersection(bead, area)) <= min_area)
                     continue;
-                if (path.role() == ExtrusionRole::erSupportMaterial)
+                if (path.role() == ExtrusionRole::erSupportMaterial ||
+                    (bridge_interface_roads && path.role() == ExtrusionRole::erSupportMaterialInterface))
                     selected.push_back(path);
                 else
                     has_interface = true;
@@ -7063,6 +7279,20 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                 }
             }
             if (!landed) {
+                if (bridge_interface_roads && !selected.empty()) {
+                    // A copied ordinary interface road with no collision-safe
+                    // predecessor is an airborne fragment.  Remove only its
+                    // interface material; any organic body in the same
+                    // component remains available as a trunk anchor.
+                    remove_fragment(output[idx]->support_fills, area,
+                        ExtrusionRole::erSupportMaterialInterface);
+                    invalidate_footprints(idx);
+                    output[idx]->support_islands = union_ex(footprint(idx));
+                    ++removed;
+                    BOOST_LOG_TRIVIAL(info) << "Organic interface bearing removed unresolved component at Z="
+                        << output[idx]->print_z << " area=" << component.area();
+                    continue;
+                }
                 if (independent_organic) {
                     // A component without a collision-safe route to the bed,
                     // another support, or a model landing is an airborne tree
@@ -7073,6 +7303,10 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
                     output[idx]->support_islands = union_ex(footprint(idx));
                     ++removed;
                 } else {
+                    if (bridge_interface_roads && has_interface)
+                        BOOST_LOG_TRIVIAL(info) << "Organic interface bearing unresolved component at Z="
+                            << output[idx]->print_z << " area=" << component.area()
+                            << " selected_roads=" << selected.size() << " missing_planes=" << missing.size();
                     // Keep the legacy synchronized-grid behavior for classic
                     // organic output; only discard sub-bead interface debris.
                     if (component.area() < sqr(double(config.support_line_width)) &&
@@ -7868,6 +8102,9 @@ static void reconnect_organic_support_paths(PrintObject &object, TreeModelVolume
         layers[idx]->set_id(idx);
         layers[idx]->support_fills.no_sort = true;
     }
+    if (bridge_interface_roads)
+        BOOST_LOG_TRIVIAL(info) << "Organic interface bearing bridge: repaired " << repaired
+            << " planes, removed " << removed << " disconnected fragments, unresolved " << unresolved;
 }
 
 // Organic specific: Smooth branches and produce one cumulative mesh to be sliced.
@@ -7887,7 +8124,8 @@ OrganicSupportLayerPlan organic_draw_branches(
     SupportGeneratorLayerStorage    &layer_storage,
 
     std::function<void()>            throw_on_cancel,
-    bool                             *source_repaired)
+    bool                             *source_repaired,
+    const std::vector<std::pair<double, Polygons>> *ordinary_interface_footprints)
 {
     // All SupportElements are put into a layer independent storage to improve parallelization.
     std::vector<std::pair<SupportElement*, int>> elements_with_link_down;
@@ -7988,9 +8226,6 @@ OrganicSupportLayerPlan organic_draw_branches(
             const uint64_t stamp = uint64_t(std::chrono::steady_clock::now().time_since_epoch().count());
             path = std::filesystem::temp_directory_path() /
                 ("inlong-organic-slices-" + std::to_string(stamp) + "-" + std::to_string(id) + ".bin");
-            output.open(path, std::ios::binary | std::ios::trunc);
-            if (!output)
-                throw std::runtime_error("Unable to create organic support spill file.");
         }
 
         ~DiskSliceSpool()
@@ -8054,12 +8289,25 @@ OrganicSupportLayerPlan organic_draw_branches(
             return true;
         }
 
+        void finish_write()
+        {
+            if (output.is_open()) {
+                output.flush();
+                output.close();
+            }
+        }
+
         void append(size_t layer_idx, const Polygons &polygons, const Polygons &bottom_contacts)
         {
             if (polygons.empty() && bottom_contacts.empty())
                 return;
             if (layer_idx >= offsets.size())
                 throw std::runtime_error("Organic support spill layer index out of range.");
+            if (!output.is_open()) {
+                output.open(path, std::ios::binary | std::ios::app);
+                if (!output)
+                    throw std::runtime_error("Unable to create organic support spill file.");
+            }
             const uint64_t offset = uint64_t(output.tellp());
             offsets[layer_idx].push_back(offset);
             write_polygons(output, polygons);
@@ -8070,18 +8318,19 @@ OrganicSupportLayerPlan organic_draw_branches(
 
         void prepare_read()
         {
-            output.close();
-            input.open(path, std::ios::binary);
-            if (!input)
-                throw std::runtime_error("Unable to open organic support spill file.");
+            finish_write();
         }
 
         bool read(uint64_t offset, Polygons &polygons, Polygons &bottom_contacts)
         {
             const std::lock_guard<std::mutex> lock(input_mutex);
-            input.clear();
-            input.seekg(std::streamoff(offset));
-            if (!input || !read_polygons(input, polygons) || !read_polygons(input, bottom_contacts))
+            std::ifstream input_stream(path, std::ios::binary);
+            if (!input_stream) {
+                throw std::runtime_error("Unable to open organic support spill file.");
+            }
+            input_stream.seekg(std::streamoff(offset));
+            if (!input_stream || !read_polygons(input_stream, polygons) ||
+                !read_polygons(input_stream, bottom_contacts))
                 throw std::runtime_error("Unable to read organic support spill file.");
             return true;
         }
@@ -8269,6 +8518,7 @@ OrganicSupportLayerPlan organic_draw_branches(
             }
         };
         tbb::concurrent_unordered_map<DemandSignature, std::optional<TipModelDemand>, DemandSignatureHash> demand_cache;
+        std::atomic<size_t> pruned_without_ordinary_contact{0};
         auto tip_model_demand = [&](const Branch &branch, Polygons &nearby) -> std::optional<TipModelDemand> {
             if (!branch.has_tip || branch.path.empty())
                 return std::nullopt;
@@ -8312,6 +8562,29 @@ OrganicSupportLayerPlan organic_draw_branches(
                 Polygons contact = intersection(Polygons{footprint}, surface);
                 if (area(contact) > sqr(double(config.support_line_width)) * 0.002)
                     append(demand, std::move(contact));
+            }
+            // Keep tree tips inside the same ordinary-support contact
+            // envelope that will be installed on the final support layers.
+            // A tree can otherwise acquire a valid full-model contact on a
+            // supported surface and grow an isolated buildplate trunk that
+            // never appears in ordinary support.  Recovered roof and
+            // buildplate tips are checked against the same envelope below.
+            if (!demand.empty() && ordinary_interface_footprints != nullptr &&
+                !ordinary_interface_footprints->empty()) {
+                const double source_z = layer_z(slicing_params, config, source);
+                auto ordinary_it = std::min_element(ordinary_interface_footprints->begin(),
+                    ordinary_interface_footprints->end(), [source_z](const auto &lhs, const auto &rhs) {
+                        return std::abs(lhs.first - source_z) < std::abs(rhs.first - source_z);
+                    });
+                const double required_overlap = std::max(tiny_area_threshold(),
+                    sqr(double(config.support_line_width)) * 0.002);
+                const double ordinary_overlap = ordinary_it == ordinary_interface_footprints->end() || ordinary_it->second.empty() ?
+                    0.0 : area(intersection(demand, ordinary_it->second));
+                if (ordinary_it == ordinary_interface_footprints->end() || ordinary_it->second.empty() ||
+                    ordinary_overlap <= required_overlap) {
+                    demand.clear();
+                    pruned_without_ordinary_contact.fetch_add(1, std::memory_order_relaxed);
+                }
             }
             std::optional<TipModelDemand> result;
             if (!demand.empty())
@@ -8426,7 +8699,6 @@ OrganicSupportLayerPlan organic_draw_branches(
             return (a.state.target_position - b.state.target_position).cast<int64_t>().squaredNorm() <=
                 int64_t(reach) * int64_t(reach);
         };
-
         std::vector<std::pair<size_t, size_t>> branch_refs;
         std::vector<std::optional<TipModelDemand>> demands;
         std::vector<bool> long_thin;
@@ -8457,6 +8729,27 @@ OrganicSupportLayerPlan organic_draw_branches(
                 branch_refs.emplace_back(tree_id, branch_id);
                 long_thin.push_back(long_thin_context[tree_id][branch_id]);
             }
+        auto tips_share_bearing_target = [&](size_t first, size_t second) {
+            const auto [first_tree, first_branch] = branch_refs[first];
+            const auto [second_tree, second_branch] = branch_refs[second];
+            if (first_tree != second_tree)
+                return false;
+            const Branch &a = trees[first_tree].branches[first_branch];
+            const Branch &b = trees[second_tree].branches[second_branch];
+            if (!a.has_tip || !b.has_tip || a.path.empty() || b.path.empty())
+                return false;
+            const SupportElement &first_tip = *a.path.back();
+            const SupportElement &second_tip = *b.path.back();
+            if (!first_tip.state.result_on_layer_is_set() || !second_tip.state.result_on_layer_is_set() ||
+                std::abs(first_tip.state.target_height - second_tip.state.target_height) >
+                    LayerIndex(organic_tree_topology_gap_layers + 1))
+                return false;
+            const coord_t reach = std::max(support_element_radius(config, first_tip),
+                support_element_radius(config, second_tip)) + std::max<coord_t>(
+                    2 * config.support_line_width, config.settings.support_tree_branch_distance);
+            return (first_tip.state.target_position - second_tip.state.target_position).cast<int64_t>().squaredNorm() <=
+                int64_t(reach) * int64_t(reach);
+        };
         demands.assign(branch_refs.size(), std::nullopt);
         const LayerIndex model_layer_count = LayerIndex(print_object.layer_count() + config.raft_layers.size());
         const auto &model_layers = print_object.layers();
@@ -8579,6 +8872,42 @@ OrganicSupportLayerPlan organic_draw_branches(
                 ++pruned_no_model_demand_terminals;
             }
         }
+        std::vector<uint8_t> outside_ordinary_contact(branch_refs.size(), false);
+        std::atomic<size_t> pruned_outside_ordinary_contact{0};
+        if (ordinary_interface_footprints != nullptr && !ordinary_interface_footprints->empty()) {
+            tbb::parallel_for(tbb::blocked_range<size_t>(0, branch_refs.size()), [&](const tbb::blocked_range<size_t> &range) {
+                for (size_t idx = range.begin(); idx != range.end(); ++idx) {
+                    const auto [tree_id, branch_id] = branch_refs[idx];
+                    const Branch &branch = trees[tree_id].branches[branch_id];
+                    if (!branch.has_tip || branch.path.empty())
+                        continue;
+                    const SupportElement &tip = *branch.path.back();
+                    if (!tip.state.result_on_layer_is_set())
+                        continue;
+                    const LayerIndex source = tip.state.supports_roof ? tip.state.target_height : tip.state.layer_idx;
+                    if (source < 0 || source >= model_layer_count)
+                        continue;
+                    const double source_z = layer_z(slicing_params, config, source);
+                    const auto ordinary_it = std::min_element(ordinary_interface_footprints->begin(),
+                        ordinary_interface_footprints->end(), [source_z](const auto &lhs, const auto &rhs) {
+                            return std::abs(lhs.first - source_z) < std::abs(rhs.first - source_z);
+                        });
+                    if (ordinary_it == ordinary_interface_footprints->end() || ordinary_it->second.empty())
+                        continue;
+                    const coord_t radius = std::max<coord_t>(support_element_radius(config, tip), config.support_line_width / 2);
+                    const Point center = tip.state.supports_roof ? tip.state.target_position : tip.state.result_on_layer;
+                    Polygon footprint = make_circle(radius, SUPPORT_TREE_CIRCLE_RESOLUTION);
+                    footprint.translate(center);
+                    const double overlap = area(intersection(Polygons{footprint}, ordinary_it->second));
+                    const double required_overlap = std::max(tiny_area_threshold(),
+                        sqr(double(config.support_line_width)) * 0.002);
+                    if (overlap <= required_overlap) {
+                        outside_ordinary_contact[idx] = true;
+                        pruned_outside_ordinary_contact.fetch_add(1, std::memory_order_relaxed);
+                    }
+                }
+            });
+        }
         std::vector<uint8_t> duplicate_demand_terminal(branch_refs.size(), false);
         std::atomic<size_t> pruned_duplicate_demand{0};
         tbb::parallel_for(tbb::blocked_range<size_t>(0, branch_refs.size()), [&](const tbb::blocked_range<size_t> &range) {
@@ -8594,6 +8923,11 @@ OrganicSupportLayerPlan organic_draw_branches(
                     if (other_idx == candidate_idx || !demands[other_idx].has_value() ||
                         no_model_demand_terminal[other_idx])
                         continue;
+                    if (other_idx < candidate_idx && tips_share_bearing_target(candidate_idx, other_idx)) {
+                        duplicate_demand_terminal[candidate_idx] = 1;
+                        pruned_duplicate_demand.fetch_add(1, std::memory_order_relaxed);
+                        break;
+                    }
                     const TipModelDemand &other_demand = *demands[other_idx];
                     if (std::abs(other_demand.source - demand.source) > demand.probe_span + other_demand.probe_span ||
                         !demand.bounds.inflated(config.support_line_width).overlap(other_demand.bounds))
@@ -8636,8 +8970,9 @@ OrganicSupportLayerPlan organic_draw_branches(
             bool all_demands_covered = true;
             for (size_t branch_id = 0; branch_id < tree.branches.size(); ++branch_id) {
                 const Branch &branch = tree.branches[branch_id];
-                if (branch.has_root && long_thin_context[tree_id][branch_id])
+                if (branch.has_root && long_thin_context[tree_id][branch_id]) {
                     grounded_root = true;
+                }
                 if (!branch.has_tip)
                     continue;
                 has_tip = true;
@@ -8698,6 +9033,29 @@ OrganicSupportLayerPlan organic_draw_branches(
         for (size_t idx = 0; idx < no_model_demand_terminal.size(); ++idx)
             if (no_model_demand_terminal[idx])
                 valid[branch_refs[idx].first][branch_refs[idx].second] = false;
+        for (size_t idx = 0; idx < outside_ordinary_contact.size(); ++idx)
+            if (outside_ordinary_contact[idx])
+                valid[branch_refs[idx].first][branch_refs[idx].second] = false;
+        // The exact demand-union test above identifies terminal branches
+        // whose model contact is fully covered by neighbouring branches.  The
+        // marker used to be diagnostic only, so those duplicate continuations
+        // still reached rasterization and could grow a second buildplate
+        // trunk.  Feed the proven duplicate result into the same validity
+        // walk; surviving children keep their common parent, while a branch
+        // with no remaining demand is removed together with its redundant
+        // continuation.
+        size_t applied_duplicate_pruning = 0;
+        for (size_t idx = 0; idx < duplicate_demand_terminal.size(); ++idx) {
+            if (!duplicate_demand_terminal[idx])
+                continue;
+            if (valid[branch_refs[idx].first][branch_refs[idx].second]) {
+                valid[branch_refs[idx].first][branch_refs[idx].second] = false;
+                ++applied_duplicate_pruning;
+            }
+        }
+        if (applied_duplicate_pruning > 0)
+            BOOST_LOG_TRIVIAL(info) << "Organic support duplicate-demand pruning applied: "
+                << applied_duplicate_pruning << " terminal branches";
         size_t pruned_cross_tree_roots = 0;
         for (size_t candidate_idx = 0; candidate_idx < branch_refs.size(); ++candidate_idx) {
             const auto [tree_id, branch_id] = branch_refs[candidate_idx];
@@ -8768,17 +9126,39 @@ OrganicSupportLayerPlan organic_draw_branches(
             tree.branches.erase(std::remove_if(tree.branches.begin(), tree.branches.end(),
                 [&](const Branch &) { return !valid[tree_id][branch_id++]; }), tree.branches.end());
         }
-        if (pruned_no_model_demand_terminals > 0 || pruned_duplicate_demand > 0 || pruned_cross_tree_trees > 0 || pruned_cross_tree_roots > 0)
+        if (pruned_no_model_demand_terminals > 0 || pruned_duplicate_demand > 0 ||
+            pruned_without_ordinary_contact > 0 || pruned_outside_ordinary_contact > 0 ||
+            pruned_cross_tree_trees > 0 || pruned_cross_tree_roots > 0)
             BOOST_LOG_TRIVIAL(info) << "Organic support cross-tree demand validation: pruned "
                 << pruned_no_model_demand_terminals << " terminal branches without model demand, "
                 << pruned_duplicate_demand << " duplicate demand branches, "
+                << pruned_without_ordinary_contact << " tips outside ordinary contact, "
+                << pruned_outside_ordinary_contact << " terminal footprints outside ordinary contact, "
                 << pruned_cross_tree_trees << " redundant trees and " << pruned_cross_tree_roots
                 << " grounded leaf roots";
+        size_t active_tree_count = 0;
+        size_t active_root_branch_count = 0;
+        size_t active_tip_branch_count = 0;
+        for (const Tree &tree : trees) {
+            bool active = false;
+            for (const Branch &branch : tree.branches) {
+                active |= branch.has_root || branch.has_tip;
+                if (branch.has_root)
+                    ++active_root_branch_count;
+                if (branch.has_tip)
+                    ++active_tip_branch_count;
+            }
+            if (active)
+                ++active_tree_count;
+        }
+        BOOST_LOG_TRIVIAL(info) << "Organic support tree graph after demand validation: "
+            << active_tree_count << " active trees, " << active_root_branch_count
+            << " roots, " << active_tip_branch_count << " tips";
     }
 
-    // Experimental branch-demand deduplication is retained as design notes
-    // but disabled until a model-specific trace proves the duplicate-root
-    // predicate. The native tree merge and anchoring checks remain authoritative.
+    // The native tree merge and anchoring checks remain authoritative; the
+    // demand-union pass above only removes terminal continuations whose model
+    // footprint is already completely covered by neighbouring branches.
 
 
     // Branch nodes end below their roofs. A synchronized plan still needs the
@@ -8957,30 +9337,59 @@ OrganicSupportLayerPlan organic_draw_branches(
     mesh_slicing_params.mode = MeshSlicingParams::SlicingMode::Positive;
 
     size_t estimated_branch_bytes = 0;
-    for (const Tree &tree : trees)
-        for (const Branch &branch : tree.branches) {
+    std::vector<size_t> estimated_tree_bytes(trees.size(), 0);
+    for (size_t tree_id = 0; tree_id < trees.size(); ++tree_id)
+        for (const Branch &branch : trees[tree_id].branches) {
             const size_t estimate = branch.path.size() > std::numeric_limits<size_t>::max() / (size_t(4) << 20) ?
                 std::numeric_limits<size_t>::max() : branch.path.size() * (size_t(4) << 20);
             estimated_branch_bytes = estimated_branch_bytes > std::numeric_limits<size_t>::max() - estimate ?
                 std::numeric_limits<size_t>::max() : estimated_branch_bytes + estimate;
+            estimated_tree_bytes[tree_id] = estimated_tree_bytes[tree_id] > std::numeric_limits<size_t>::max() - estimate ?
+                std::numeric_limits<size_t>::max() : estimated_tree_bytes[tree_id] + estimate;
         }
     const SupportMemorySnapshot raster_memory = support_memory_snapshot();
-    // The branch-span estimate is intentionally diagnostic only.  Polygon
-    // vertex density varies by model, so using that coarse estimate as a hard
-    // switch forced large, well-provisioned hosts onto the disk path and made
-    // ordinary jobs dramatically slower.  Select the spill path from actual
-    // host pressure instead; the dynamic batch budget still limits transient
-    // allocations on hosts that stay in memory mode.
+    // The estimate is deliberately conservative, but it is still needed as a
+    // safety guard: a large STL can generate terabytes of branch raster data
+    // even when the host currently reports plenty of free RAM.  Small jobs
+    // remain in memory, while an estimate that consumes more than half the
+    // available memory uses the bounded spill path.
     constexpr size_t low_physical_memory = size_t(16) << 30;
     constexpr size_t low_available_memory = size_t(12) << 30;
+    const bool estimated_over_memory = raster_memory.available != 0 &&
+        (estimated_branch_bytes == std::numeric_limits<size_t>::max() ||
+         estimated_branch_bytes > raster_memory.available / 2);
     const bool disk_backed_slices = raster_memory.available == 0 ||
         (raster_memory.physical != 0 && raster_memory.physical <= low_physical_memory) ||
-        (raster_memory.available != 0 && raster_memory.available < low_available_memory);
+        (raster_memory.available != 0 && raster_memory.available < low_available_memory) ||
+        estimated_over_memory;
+    size_t in_memory_tree_bytes = 0;
+    size_t spooled_tree_count = 0;
     if (disk_backed_slices) {
-        for (Tree &tree : trees)
-            tree.spool = std::make_unique<DiskSliceSpool>(layer_plan.size());
+        // Keep small trees in memory while spilling only the large trees.  A
+        // large print can contain hundreds of tiny independent roots; writing
+        // and reopening a file for each of those roots costs more than their
+        // polygons and needlessly serializes final assembly.  The allowance
+        // is deliberately bounded so the hybrid path cannot turn a low-memory
+        // host into the all-in-memory path.
+        const size_t memory_allowance = raster_memory.available > (size_t(1) << 30) ?
+            raster_memory.available / 6 : 0;
+        constexpr size_t maximum_tree_memory = size_t(256) << 20;
+        for (size_t tree_id = 0; tree_id < trees.size(); ++tree_id) {
+            const size_t tree_estimate = estimated_tree_bytes[tree_id];
+            const bool keep_in_memory = tree_estimate <= maximum_tree_memory &&
+                in_memory_tree_bytes <= memory_allowance &&
+                tree_estimate <= memory_allowance - in_memory_tree_bytes;
+            if (keep_in_memory)
+                in_memory_tree_bytes += tree_estimate;
+            else {
+                trees[tree_id].spool = std::make_unique<DiskSliceSpool>(layer_plan.size());
+                ++spooled_tree_count;
+            }
+        }
         BOOST_LOG_TRIVIAL(info) << "Organic support rasterization: using disk-backed slice streaming; estimated branch bytes "
-            << estimated_branch_bytes << ", available bytes " << raster_memory.available;
+            << estimated_branch_bytes << ", available bytes " << raster_memory.available
+            << ", retained in-memory tree bytes " << in_memory_tree_bytes
+            << ", spooled trees " << spooled_tree_count << "/" << trees.size();
     }
 
 
@@ -8989,6 +9398,7 @@ OrganicSupportLayerPlan organic_draw_branches(
         std::vector<Polygons> slices;
         std::vector<Polygons> bottom_contacts;
     };
+    const auto rasterization_start = std::chrono::steady_clock::now();
     tbb::parallel_for(tbb::blocked_range<size_t>(0, trees.size(), 1),
         [&](const tbb::blocked_range<size_t> &range) {
             for (size_t tree_id = range.begin(); tree_id < range.end(); ++tree_id) {
@@ -9362,8 +9772,14 @@ OrganicSupportLayerPlan organic_draw_branches(
                     batch_begin += batch_size;
                     throw_on_cancel();
                 }
+                if (tree.spool)
+                    tree.spool->finish_write();
             }
         }, tbb::simple_partitioner());
+    const auto rasterization_end = std::chrono::steady_clock::now();
+    BOOST_LOG_TRIVIAL(info) << "Organic support branch rasterization: "
+        << std::chrono::duration_cast<std::chrono::milliseconds>(rasterization_end - rasterization_start).count()
+        << " ms";
 
     // Branch paths and the node graph are no longer needed after publication;
     // all subsequent stages consume only the rasterized slices. Release them
@@ -9599,17 +10015,31 @@ OrganicSupportLayerPlan organic_draw_branches(
         auto assemble_disk_layer = [&](size_t layer_idx) {
             Slice slice;
             for (Tree &tree : trees) {
-                if (!tree.spool || layer_idx >= tree.spool->offsets.size())
-                    continue;
-                for (uint64_t offset : tree.spool->offsets[layer_idx]) {
-                    Polygons polygons;
-                    Polygons bottom_contacts_for_slice;
-                    tree.spool->read(offset, polygons, bottom_contacts_for_slice);
-                    if (!polygons.empty())
-                        append_support_polygons(slice.polygons, std::move(polygons));
-                    if (!bottom_contacts_for_slice.empty())
-                        append_support_polygons(slice.bottom_contacts, std::move(bottom_contacts_for_slice));
-                    ++slice.num_branches;
+                if (tree.spool) {
+                    if (layer_idx >= tree.spool->offsets.size())
+                        continue;
+                    for (uint64_t offset : tree.spool->offsets[layer_idx]) {
+                        Polygons polygons;
+                        Polygons bottom_contacts_for_slice;
+                        tree.spool->read(offset, polygons, bottom_contacts_for_slice);
+                        if (!polygons.empty())
+                            append_support_polygons(slice.polygons, std::move(polygons));
+                        if (!bottom_contacts_for_slice.empty())
+                            append_support_polygons(slice.bottom_contacts, std::move(bottom_contacts_for_slice));
+                        ++slice.num_branches;
+                    }
+                } else if (tree.first_layer_id >= 0 &&
+                           layer_idx >= size_t(tree.first_layer_id) &&
+                           layer_idx <= size_t(tree.last_layer_id)) {
+                    // Hybrid disk mode keeps small trees in memory.  Consume
+                    // their layer in the same tree order as the spill records
+                    // so polygon/path ordering remains identical.
+                    Slice &source = tree.slices[layer_idx - size_t(tree.first_layer_id)];
+                    if (!source.polygons.empty())
+                        append_support_polygons(slice.polygons, std::move(source.polygons));
+                    if (!source.bottom_contacts.empty())
+                        append_support_polygons(slice.bottom_contacts, std::move(source.bottom_contacts));
+                    slice.num_branches += source.num_branches;
                 }
             }
             assemble_slice(layer_idx, slice);
@@ -9635,6 +10065,10 @@ OrganicSupportLayerPlan organic_draw_branches(
                     assemble_slice(layer_idx, slices[layer_idx]);
             }, tbb::simple_partitioner());
     }
+
+    BOOST_LOG_TRIVIAL(info) << "Organic support layer assembly: "
+        << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - rasterization_end).count()
+        << " ms after branch rasterization";
 
     // Final assembly has consumed every spill record. Remove the files and
     // release their offset indexes before anchoring and interface generation.

@@ -3,7 +3,7 @@
   "type": "object", "additionalProperties": false,
   "required": ["schema_version", "days", "clock", "protected", "outside_scope"],
   "properties": {
-    "schema_version": {"const": "agents-runtime-policy/v4"},
+    "schema_version": {"const": "agents-runtime-policy/v5"},
     "days": {"type": "object", "additionalProperties": false, "required": ["scratch", "package", "validation", "task", "backup"], "properties": {
       "scratch": {"const": 7}, "package": {"const": 7}, "validation": {"const": 30}, "task": {"const": 90}, "backup": {"const": 7}
     }},

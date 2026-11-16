@@ -1,32 +1,23 @@
 ---
 name: project-checkpoint
-description: Validate affected work, persist checkpoint evidence, or safely deploy and roll back owned AI Agents files.
+description: Plan and validate Agents v5 changes, persist evidence, or safely deploy and roll back owned project files.
 ---
 
 # Project checkpoint
 
-Use validate.ps1: Provider for this distribution, Consumer for installed rules.
-Changed checks affected files; Checkpoint checks the complete owned boundary once.
-Run warranted product tests through registered project wrappers. A saved receipt
-precedes output and reports passed, failed, needs_review or not_applicable.
-Check passed separately from release_ready: missing/stale release evidence remains
-needs_review. RequireReleaseReady fails the publication gate. No composite score,
-model-accuracy guarantee or inferred test exemption is provided.
+Use `scripts/agents.ps1 plan` before material work. It is read-only and records
+the affected boundary, acceptance conditions and intended checks. Use
+`validate changed` while editing and one `validate checkpoint` at handoff. A
+receipt is saved before output and reports individual states: passed, failed,
+needs_review or not_applicable.
 
-Capture official evidence only from clean committed source using the collector;
-verify its schema and content digest after generation. Commit only the declared
-evidence path in the evidence commit. Read the operator guide for that sequence.
-Current remote state, permissions and side effects always need fresh checks.
-Do not nest another Provider validator or collector inside the regression suite.
+Publication additionally requires clean committed source, matching formal
+evidence and `-RequireReleaseReady`. Missing or stale evidence is review-needed;
+never replace evidence with a score or a model-behavior claim. Pure receipts may
+be reused only when their source digest, command contract and host match.
 
-Deploy from a validated Provider to an authorized existing target. DryRun returns
-an exact digest without state writes. Review conflicts, operations and ownership;
-apply with ExpectedPlanDigest. Both layouts retain explicit ownership. Modified
-managed files or unowned existing files stop writes; never force adoption. Consumer
-business code, README, knowledge and local Codex settings are outside deployment.
-
-Rollback uses the transaction ID and validates current hashes and original bytes
-before writes. Journals/backups are registered and pinned in the target runtime.
-Interrupted transactions block new deployment, including no-ops. Reconcile or
-roll back before retirement. Keep rollback dependencies until explicitly retired
-with a reviewed reason. Read project-runtime when cleaning or recovering locks.
+Deploy an authorized existing Consumer with a dry-run plan. Review ownership,
+conflicts and operations, then apply the exact plan digest. Both layouts are
+supported. Modified managed files and unowned existing files stop writes.
+Rollback validates every original byte and current target hash before restoring.
+Read project-runtime for runtime cleanup or interrupted transactions.

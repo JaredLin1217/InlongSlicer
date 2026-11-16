@@ -3,11 +3,12 @@
   "additionalProperties": false,
   "required": [
     "schema_version",
+    "reviewed_utc",
     "sources"
   ],
   "properties": {
     "schema_version": {
-      "const": "agents-sources/v3"
+      "const": "agents-sources/v5"
     },
     "sources": {
       "type": "array",
@@ -18,9 +19,11 @@
         "required": [
           "id",
           "url",
+          "retrieved_url",
           "checked",
           "refresh_interval_days",
           "next_review_due",
+          "content_sha256",
           "boundary",
           "drift_risk",
           "topics"
@@ -62,9 +65,21 @@
               "type": "string",
               "minLength": 1
             }
+          },
+          "retrieved_url": {
+            "pattern": "^https://(learn\\.chatgpt\\.com|developers\\.openai\\.com)/",
+            "type": "string"
+          },
+          "content_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
           }
         }
       }
+    },
+    "reviewed_utc": {
+      "format": "date-time",
+      "type": "string"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema"

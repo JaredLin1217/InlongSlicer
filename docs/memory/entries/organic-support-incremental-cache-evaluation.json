@@ -1,42 +1,38 @@
 {
-  "schema_version": "agents-knowledge/v4",
+  "schema_version": "agents-knowledge/v5",
   "id": "organic-support-incremental-cache-evaluation",
-  "key": "organic-support-incremental-cache-evaluation",
-  "type": "fact",
-  "conclusion": "For the 1178-layer test.3mf workload, the evaluated structural filter changed support geometry. RoadAnalysis, cross-tree indexing, a 64 MiB candidate cache, and grounded-root early exit preserved all 351973 support paths but showed no robust slicing-time benefit over a current-host clean-source baseline of 607.785 seconds; the source was therefore restored to the clean commit rather than retaining unproductive complexity.",
-  "scope": "organic-support-performance",
-  "modules": [
-    "libslic3r/Support"
-  ],
+  "key": "historical-organic-support-incremental-cache-evaluation",
+  "type": "lesson",
+  "conclusion": "Historical v4 record retained only as migration lineage; its original bytes and verification remain preserved under docs/history/memory/v4.",
+  "scope": "Historical lineage only",
+  "modules": [],
   "tags": [
-    "organic-support",
-    "performance",
-    "cache",
-    "validation"
+    "superseded",
+    "migration"
   ],
   "files": [
-    "src/libslic3r/Support/TreeSupport3D.cpp"
+    "docs/history/memory/v4/organic-support-incremental-cache-evaluation.json"
   ],
   "sources": [
     {
       "kind": "file_snapshot",
-      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
-      "sha256": "f3724ddca9df7412f2e54a1a583b778c62ac0bb9bcb0637ac5d2c1047ef0b44e",
-      "commit": "0bf7d63a721aa3c5d305024d38421004493c1bba",
-      "locator": "reconnect_organic_support_paths and organic_draw_branches demand validation"
+      "path": "docs/history/memory/v4/organic-support-incremental-cache-evaluation.json",
+      "sha256": "d8f761cb9c53d72fa2f814eac419b3247f0197a2e8c331acf7eb901b9fe50720",
+      "commit": "fca00d02962f46eda9b3f2292296de1d7e6112df",
+      "locator": "Byte-identical v4 record preserved as migration provenance"
     }
   ],
-  "verified_utc": "2026-11-11T16:54:50Z",
+  "verified_utc": "2026-11-12T01:23:52.1541716+00:00",
   "verification": {
-    "method": "Incremental Release builds, real CLI slices of the original 3MF, full support-stream comparisons at 0.01 mm, and repeated wall-clock measurements",
-    "summary": "Clean source: 607.785 seconds. RoadAnalysis: 611.160; cross-tree: 612.581 and 630.050; candidate cache: 721.779; grounded-root early exit: 697.751 seconds. All these variants matched 1178 layers and 351973 support paths with zero geometry differences. Structural-only, structural-copy, and structural-empty variants had 21153 different support segments and were rejected.",
+    "method": "Verified the moved v4 record hash and preserved its original bytes",
+    "summary": "The original v4 knowledge record remains available as read-only lineage and is excluded from the active v5 evidence set.",
     "result": "passed",
-    "reviewed_by": "Kimi Code"
+    "reviewed_by": "Codex"
   },
   "freshness": {
     "review_after_utc": null
   },
-  "status": "active",
+  "status": "superseded",
   "supersedes": [],
   "retracts": [],
   "sensitive": false,

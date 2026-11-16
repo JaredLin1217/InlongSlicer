@@ -1,0 +1,56 @@
+{
+  "schema_version": "agents-knowledge/v5",
+  "id": "gcode-header-abi-stale-objects-20261112",
+  "key": "gcode-header-abi-stale-objects",
+  "type": "lesson",
+  "conclusion": "On Windows Ninja builds, adding data members to GCode.hpp can leave direct consumers with stale object layouts. A stale Print.cpp.obj can allocate GCode with the old class size and corrupt members, surfacing as an access violation in m_skirt_group_done.clear() during GCode::do_export. After changing GCode.hpp, rebuild GCode.cpp, Print.cpp, calib.cpp and BeltGCode.cpp together; do not attribute this build-ABI failure to the organic support stage named by the last flushed log line.",
+  "scope": "windows-ninja-gcode-incremental-build",
+  "modules": [
+    "GCode",
+    "Print"
+  ],
+  "tags": [
+    "build",
+    "abi",
+    "ninja",
+    "incremental-build",
+    "crash-diagnosis"
+  ],
+  "files": [
+    "src/libslic3r/GCode.hpp",
+    "src/libslic3r/Print.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/GCode.hpp",
+      "sha256": "790035eac119ad75c8c016b84017325775374da3ee39748ac9c2ca9de5d6f7fe",
+      "commit": "fca00d02962f46eda9b3f2292296de1d7e6112df",
+      "locator": "Current GCode class support-state members near lines 841-843 and helper declarations near lines 941-944"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Print.cpp",
+      "sha256": "7c6da241ae17085c03d51dc9f4cd38583ebb679b19c4b05e2dc36cf480ded3fc",
+      "commit": "fca00d02962f46eda9b3f2292296de1d7e6112df",
+      "locator": "Current Print::export_gcode constructs BeltGCode and GCode with std::make_unique near lines 3874-3876"
+    }
+  ],
+  "verified_utc": "2026-11-12T01:19:06.3408533+00:00",
+  "verification": {
+    "method": "Reviewed current HEAD source snapshots against the superseded incident record and confirmed the current GCode.hpp layout change and Print::export_gcode direct consumers",
+    "summary": "The replacement preserves the reviewed ABI diagnosis while rebinding its durable source evidence to current HEAD. The historical crash log is retained only through the superseded record lineage; no new crash reproduction is claimed here.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [
+    "gcode-header-abi-stale-objects-20261110"
+  ],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

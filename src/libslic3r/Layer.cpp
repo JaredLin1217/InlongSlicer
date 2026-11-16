@@ -398,6 +398,15 @@ void Layer::simplify_support_entity_collection(ExtrusionEntityCollection* entity
                 ++i;
                 continue;
             }
+            // Roads copied from the ordinary-support interface template are
+            // authoritative geometry.  They already passed the normal
+            // support generator's simplification and bearing rules; running
+            // the organic detour/long-segment cleanup here would split at a
+            // boundary and drop the segment between the two fragments.
+            if (path->overhang_degree == -999.0) {
+                ++i;
+                continue;
+            }
             if (path->length() < minimum_path && path->overhang_degree != -999.0) {
                 delete path;
                 entity_collection->entities.erase(entity_collection->entities.begin() + i);

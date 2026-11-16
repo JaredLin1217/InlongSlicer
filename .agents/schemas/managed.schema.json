@@ -9,7 +9,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "agents-managed/v3"
+      "const": "agents-managed/v5"
     },
     "version": {
       "type": "string",

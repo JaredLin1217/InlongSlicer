@@ -1,82 +1,87 @@
 {
-  "schema_version": "agents-managed/v3",
-  "version": "4.0.0",
+  "schema_version": "agents-managed/v5",
+  "version": "5.0.0",
   "layout": "dot-agents-layout",
   "files": [
     {
       "source": "AGENTS.md",
       "path": "AGENTS.md",
-      "sha256": "da1a1ccf24a1e722bb644d8d6e5b5baa07e4f8e8a739f94bcc275d2be00d9f02"
+      "sha256": "65b5cb607b357d95ed4a0372007acde4ad0ea83257a64242fba17583b7417e3f"
     },
     {
       "source": ".agents/skills/project-memory/SKILL.md",
       "path": ".agents/skills/project-memory/SKILL.md",
-      "sha256": "d3d62a69b9e9d229a12df7d7a47d57b44680a358a04a6ee2a2b58e0e5017e4fb"
+      "sha256": "876a411065e12b10f65134ec3b3f9953c6c02e07b9488db254cb42810ba41ad1"
     },
     {
       "source": ".agents/skills/project-checkpoint/SKILL.md",
       "path": ".agents/skills/project-checkpoint/SKILL.md",
-      "sha256": "58b51908a8af291a2d05bf66dfd6c58fb33f897c06c707ec061d62949b3807d0"
+      "sha256": "ac77a3b8124146aed96abb264ec32a5bc2ac5a6b753a11079130ccf01dd9b734"
     },
     {
       "source": "scripts/agent-core.ps1",
       "path": ".agents/scripts/agent-core.ps1",
-      "sha256": "301a55b3304fd0db8c6fa7f7991f16c5db5c26f608fc448faf39858ec4a902eb"
+      "sha256": "6d690709749027494dc041d0a530ec2847adff79cafff0acb45d51daebf22587"
     },
     {
       "source": "scripts/agent-checks.ps1",
       "path": ".agents/scripts/agent-checks.ps1",
-      "sha256": "e6f4908af336d62191c3e4ce788120208c4feed82b7cc29f11ba616a8e0636de"
+      "sha256": "2e083ee80e654ef67664cc0758843489940bc553e147699c4080ab569e453e93"
     },
     {
       "source": "scripts/validate.ps1",
       "path": ".agents/scripts/validate.ps1",
-      "sha256": "655a3068389efcc3c829dfa11a3ca7651d593df15063c248931ce2da676fe1b5"
+      "sha256": "8237cf38c7e75832cf0b94281db28d599d731d0010b26efc74277d20f50fe1a1"
     },
     {
       "source": "scripts/resolve-agent-context.ps1",
       "path": ".agents/scripts/resolve-agent-context.ps1",
-      "sha256": "78dd477fd213b5b4ca08b0075231b280450d3c0cdcc76ae2fbec485befab349b"
+      "sha256": "9dd8324883cf1fcb09971d633e15c0a78c0341855f0197c053f8294ea09da459"
     },
     {
       "source": "scripts/project-memory.ps1",
       "path": ".agents/scripts/project-memory.ps1",
-      "sha256": "3dbe62ca1aadebbc44cf84ea10a025116c2a4e72b7a9a5d96357eda74271ee3c"
+      "sha256": "61461aa4977af8806c4a42ff1d552a8845d4eed41c8150ac20b00b206d091f2e"
     },
     {
       "source": "scripts/task-state.ps1",
       "path": ".agents/scripts/task-state.ps1",
-      "sha256": "96f11f8af66fe29dbdd8326f30e80466efe00182c4a6383a6c5031341b54a00e"
+      "sha256": "7a1d3ef8cd9f59790da6ae868806436d991f136a48668ac5f1ab9e923ccd3d66"
     },
     {
       "source": "schemas/knowledge.schema.json",
       "path": ".agents/schemas/knowledge.schema.json",
-      "sha256": "aacbf1a173251d011bcd698baec502b91dbcb1d934024dde7eb70f5b05285a37"
+      "sha256": "120411f8c120ecb1b6bba121878fef999238c67e9a2f7cb73b8f9d6b25a37760"
     },
     {
       "source": "schemas/task-state.schema.json",
       "path": ".agents/schemas/task-state.schema.json",
-      "sha256": "1f93ee8a55c902c9802aa85e0783b12bebd980946f7eaeafe74d6b201b6bec1f"
+      "sha256": "4a0171210dc98774c2649a9583e036ada2006cc6574e13df0a2222a1a2800fdb"
     },
     {
       "source": "schemas/managed.schema.json",
       "path": ".agents/schemas/managed.schema.json",
-      "sha256": "f88b30092498af1c4ef440d0e0372b55bc8a9416546f790e7cb0dde8ed8c8e2a"
+      "sha256": "f2d9b80c32a3272f5663b324373577e000c2b602eee398166e95b094bfda96d5"
     },
     {
       "source": "schemas/sources.schema.json",
       "path": ".agents/schemas/sources.schema.json",
-      "sha256": "e98edc30339da4e40b5393fc5d57762d8786008dc7ff1ef6b2a035dbe59c488c"
+      "sha256": "9aed2bea4d464941dcde53d139d6cda0c3678bc0e2a193ba61e97ebd58f092a3"
+    },
+    {
+      "source": "schemas/project-decision.schema.json",
+      "path": ".agents/schemas/project-decision.schema.json",
+      "sha256": "757d579d9868aad92ec21c740c12df9b65c253a0aecc49098f904c066c0bb250"
     },
     {
       "source": "docs/agents/sources.json",
       "path": ".agents/docs/agents/sources.json",
-      "sha256": "dcde96c01d98d8dcb42978146560850ee87f4aeb9c887adc6e38eb00a13bb7c1"
+      "sha256": "580855cc43f68eb0dfe07c12812ebaebb1a458434870a6e9c29abd2bcf430085"
     },
     {
       "source": "docs/runbooks/agents-operator-guide.md",
       "path": ".agents/docs/runbooks/agents-operator-guide.md",
-      "sha256": "596e10b1e4fd2bdc2d892351ae7c3e629d86c8b41c8fc6a0babdd84ae43ef24f"
+      "sha256": "229749045baef8572f9b9bc80b04241cc46ea244eb46921d4f67ab4e993d8ea5"
     },
     {
       "source": ".agents/deploy-ignore",
@@ -86,57 +91,57 @@
     {
       "source": ".agents/skills/project-runtime/SKILL.md",
       "path": ".agents/skills/project-runtime/SKILL.md",
-      "sha256": "70ddb17bc1cd834d71f0dcdbeff364f76a1234ef7716423718e1a0f2670dd178"
+      "sha256": "9a3c0eabbd9280b0b18a2a0f562c189f52930dcd67f5d4e4680b0dabe4dc4ee5"
     },
     {
       "source": "scripts/agent-runtime.ps1",
       "path": ".agents/scripts/agent-runtime.ps1",
-      "sha256": "a43fa0ab8fbe61b31f3bd27618688223ea4a2f3158ebc129f6c1c103dc8d266e"
+      "sha256": "16881702fad236940dea8f934373bd6850494a3a67acf2f65a549aee754a4604"
     },
     {
       "source": "scripts/runtime-artifacts.ps1",
       "path": ".agents/scripts/runtime-artifacts.ps1",
-      "sha256": "965066f79bc22b2564e9f9ab942fda0bf69d337225a689d727cc9d3d50fc66d3"
+      "sha256": "2b8b45933e2314dc48e9728cb528f47569df12b8a17c96dede35715cd182e9d9"
     },
     {
       "source": "scripts/agent-memory.ps1",
       "path": ".agents/scripts/agent-memory.ps1",
-      "sha256": "626cb591ff4a210b01ac9280ea7454f1b9e3d24197650f60039f579646f4960c"
+      "sha256": "cbc4ecf789f8de04637461a2acf821661d2aa101ad4eebcafd5e3b79e7578a4c"
     },
     {
       "source": "scripts/agent-tasks.ps1",
       "path": ".agents/scripts/agent-tasks.ps1",
-      "sha256": "a3197f2622b9d7b3a4918dd818f8b2cf547d7c2629d93d9e42c64e675c13ddcc"
+      "sha256": "3ec790241d3f288cb0585bc9017409ce03e47d0fc288854d4161bb6cccfed81a"
     },
     {
       "source": "scripts/project-hooks.ps1",
       "path": ".agents/scripts/project-hooks.ps1",
-      "sha256": "901fd401cd77856e40f5499b028559cef5490423f809f3a451d89b72bec75570"
+      "sha256": "aa81c0a7e5c3a7185b3ab2b54f5f8320f566e5fc144bd8bbe21e976868aaee2f"
     },
     {
       "source": "schemas/runtime-artifact.schema.json",
       "path": ".agents/schemas/runtime-artifact.schema.json",
-      "sha256": "7562ff2fd46873ce47bb25717a1ebce5ba345e70bc72385b0c999357671ed754"
+      "sha256": "f0c3b3b2f9bb8ec9bc2d1bb27fdc6707e09d3d2546a2b13a3b1d57ae37c6d93f"
     },
     {
       "source": "schemas/runtime-policy.schema.json",
       "path": ".agents/schemas/runtime-policy.schema.json",
-      "sha256": "e09a7cc2cce5e50f73945d7e3a1585c8b612c68932ff8a31279e79c8ad49726f"
+      "sha256": "4492dfb3ee2f2f2f026d7e2738c7b7e949810d4eb30032fd044c39f3fd41f315"
     },
     {
       "source": "schemas/validation-report.schema.json",
       "path": ".agents/schemas/validation-report.schema.json",
-      "sha256": "ea1013f5ff6930d0dbb405dadbaaaade255cd6cf8518764eb52254ae13387774"
+      "sha256": "0c40d9a46367fa23892eff8874da4cf097013a32dbf1073ce6b21bf0d92c11bf"
     },
     {
       "source": "docs/agents/runtime-policy.json",
       "path": ".agents/docs/agents/runtime-policy.json",
-      "sha256": "c0979819a832ca0942a75a7e7e4f710156d6089af8bb72cc1ef9182793c4c936"
+      "sha256": "05dd519a5edf5c4a7100eb2e4b3ba8f1929f9b240f761367f2dae44c8abfd5c0"
     },
     {
       "source": "docs/templates/codex-hooks.json",
       "path": ".agents/docs/templates/codex-hooks.json",
-      "sha256": "279490d499260cbf3d950ad8301641b727b03aba699dd91753105cfeebacdbeb"
+      "sha256": "7405f22476d92749ff5a69dda2ebde67a6109781f8e5961f682bebf262ed7a59"
     },
     {
       "source": "docs/templates/task-input.json",
@@ -146,7 +151,52 @@
     {
       "source": "docs/templates/knowledge-entry.json",
       "path": ".agents/docs/templates/knowledge-entry.json",
-      "sha256": "1c98e214b6708ef8c0382400a3ac3a2484c831ff137f5e8fc5dadcdb8133e2a4"
+      "sha256": "4fd7ceccba2efa3679ac20d165b4aaed1659acc3a06777b05dba6eb25b027613"
+    },
+    {
+      "source": "scripts/agents.ps1",
+      "path": ".agents/scripts/agents.ps1",
+      "sha256": "fe3873ed58870dd75b48035a6b1f010f0dc6b29bd63f37553400f3713ef28bf4"
+    },
+    {
+      "source": "scripts/migrate-v4-to-v5.ps1",
+      "path": ".agents/scripts/migrate-v4-to-v5.ps1",
+      "sha256": "d85e5fcdfb110f1067dff3ac2f527a152a6d3d58fbf6791ad3b98d6b0e8859ac"
+    },
+    {
+      "source": "scripts/package-plugin.ps1",
+      "path": ".agents/scripts/package-plugin.ps1",
+      "sha256": "2c92b2dfd8de9ea143d1bb17d000176471e932e461f28fbdf38997c246124381"
+    },
+    {
+      "source": "schemas/plugin.schema.json",
+      "path": ".agents/schemas/plugin.schema.json",
+      "sha256": "73073e15970610f43cade85526efbae62fc5c9e37e06720a951fb62998d89b1a"
+    },
+    {
+      "source": "bin/agents",
+      "path": ".agents/bin/agents",
+      "sha256": "9a3468da63ae692840e824b2e4dc192de390ee55264da4b5fbaecd8cbd06563c"
+    },
+    {
+      "source": "bin/agents.cmd",
+      "path": ".agents/bin/agents.cmd",
+      "sha256": "425353c01bf2b96b012b46d06fff5bc3f68b6605294bd356b1e679db7c89f799"
+    },
+    {
+      "source": "docs/agents/decisions/2026-11-05-agents-5.0.json",
+      "path": ".agents/docs/agents/decisions/2026-11-05-agents-5.0.json",
+      "sha256": "3dc7277c0a2cf838f03c1bfce0eff13e2525c16cd6dce7d45f47a22adedadbad"
+    },
+    {
+      "source": "docs/reviews/agents-5.0-review-2026-11-05.md",
+      "path": ".agents/docs/reviews/agents-5.0-review-2026-11-05.md",
+      "sha256": "985b256bd1b9fc974b4400f2c35f7d4a76af531b6391c6e4fe6315e092d7a553"
+    },
+    {
+      "source": "scripts/migrate-runtime-v4-to-v5.ps1",
+      "path": ".agents/scripts/migrate-runtime-v4-to-v5.ps1",
+      "sha256": "37e5ef1503e5cdc53e11eeff445c89b2a14f0cd09dfe99348feb8b88cab4efd9"
     }
   ]
 }

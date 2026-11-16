@@ -339,7 +339,8 @@ OrganicSupportLayerPlan organic_draw_branches(
     SupportGeneratorLayerStorage    &layer_storage,
 
     std::function<void()> throw_on_cancel,
-    bool                         *source_repaired = nullptr);
+    bool                         *source_repaired = nullptr,
+    const std::vector<std::pair<double, Polygons>> *ordinary_interface_footprints = nullptr);
 
 } // namespace TreeSupport3D
 

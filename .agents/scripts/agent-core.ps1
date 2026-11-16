@@ -1,4 +1,4 @@
-#requires -Version 7.0
+#requires -Version 7.4
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
@@ -29,7 +29,7 @@ function Resolve-SafePath {
     return $full
 }
 function Get-AgentRoot {
-    param([string]$Start = $PSScriptRoot)
+    param([string]$Start = (Get-Location).Path)
     $dir = [IO.Path]::GetFullPath($Start)
     while ($dir) {
         if ((Test-Path -LiteralPath (Join-Path $dir 'agents.json')) -or
@@ -68,7 +68,7 @@ function Write-AgentJson {
     $raw=$PSBoundParameters.ContainsKey('Bytes')
     $digest=if($raw){[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($Bytes)).ToLowerInvariant()}else{Get-TextHash $text}
     # Immutable, flushed journal frames bootstrap atomic writes without recursively staging the journal itself.
-    $start=@{schema_version='agents-write/v4';id=$id;phase='started';destination=$relative;
+    $start=@{schema_version='agents-write/v5';id=$id;phase='started';destination=$relative;
         staging=".agents/runtime/state/staging/$id.tmp";sha256=$digest;utc=[DateTimeOffset]::UtcNow.ToString('o')}
     Write-AgentJournalFrame (Join-Path $journalRoot "$id.start.json") $start
     $outcome='failed'
@@ -81,7 +81,7 @@ function Write-AgentJson {
     } finally {
         if (Test-Path -LiteralPath $temp) { $null=Resolve-SafePath $Root $start.staging; Remove-Item -LiteralPath $temp }
         Write-AgentJournalFrame (Join-Path $journalRoot "$id.end.json") @{
-            schema_version='agents-write/v4';id=$id;phase=$outcome;destination=$relative;sha256=$digest;
+            schema_version='agents-write/v5';id=$id;phase=$outcome;destination=$relative;sha256=$digest;
             staging_removed=$true;utc=[DateTimeOffset]::UtcNow.ToString('o')}
     }
 }

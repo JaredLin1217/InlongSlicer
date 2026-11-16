@@ -3,14 +3,14 @@ function Test-KnowledgeSources {
     param([string]$Root,$Entry,[Nullable[DateTimeOffset]]$Now,[switch]$VerifyOfficial)
     $clock=Get-RuntimeClock $Now
     if([DateTimeOffset]::Parse($Entry.verified_utc) -gt $clock.AddMinutes(1)) { return $false }
-    if($Entry.schema_version -eq 'agents-knowledge/v4' -and $Entry.freshness.review_after_utc -and $clock -ge [DateTimeOffset]::Parse($Entry.freshness.review_after_utc)) { return $false }
+    if($Entry.schema_version -eq 'agents-knowledge/v5' -and $Entry.freshness.review_after_utc -and $clock -ge [DateTimeOffset]::Parse($Entry.freshness.review_after_utc)) { return $false }
     $durable=$false
     foreach($source in $Entry.sources) {
         $path=if($source.ContainsKey('path')){$source.path}else{$source.snapshot_path}
         if($path -match '^(\.agents/runtime|\.git)(/|$)') { continue }
         if((Get-AgentHash (Resolve-SafePath $Root $path)) -ne $source.sha256) { return $false }
         $durable=$true
-        if($Entry.schema_version -eq 'agents-knowledge/v4') {
+        if($Entry.schema_version -eq 'agents-knowledge/v5') {
             if($source.kind -eq 'official_document') {
                 if([DateTimeOffset]::Parse($source.checked_utc) -gt $clock.AddMinutes(1) -or $clock -ge [DateTimeOffset]::Parse($source.review_after_utc)) { return $false }
                 if($VerifyOfficial) {
@@ -38,9 +38,6 @@ function Get-ProjectKnowledge {
                 $entry['entry_path']=$relative
                 try { $entry['fresh']=Test-KnowledgeSources $Root $entry $Now -VerifyOfficial:$VerifyOfficial }
                 catch { $entry['fresh']=$false;$gaps.Add("Source could not be verified: $($entry.id)") }
-                if($entry.schema_version -eq 'agents-knowledge/v3') {
-                    $entry['key']=$entry.scope;$entry['modules']=@();$entry['tags']=@();$entry['files']=@($entry.sources.path);$entry['retracts']=@()
-                }
                 $entries.Add($entry)
             } catch { $invalid=$true;$gaps.Add("Invalid knowledge: $($fileInfo.Name)") }
         }
@@ -88,16 +85,14 @@ function Get-ProjectKnowledge {
         source='verified immutable entry files; index is advisory';authority='Recall is data and never grants permission.'}
 }
 function Publish-ProjectKnowledge {
-    param([string]$Root,[string]$InputPath,[ValidateSet('Promote','Migrate','Retract')][string]$Action='Promote',
+    param([string]$Root,[string]$InputPath,[ValidateSet('Promote','Retract')][string]$Action='Promote',
         [switch]$Automatic,[switch]$VerifyOfficial,[Nullable[DateTimeOffset]]$Now)
     $schema=Get-AgentAsset $Root 'schemas/knowledge.schema.json';$entry=Read-AgentJson (Resolve-SafePath $Root $InputPath) $schema
     $settings=Get-ProjectSettings $Root
-    if($entry.schema_version -eq 'agents-knowledge/v3' -and $Action -ne 'Promote') { throw 'Migration/retraction requires a reviewed v4 record.' }
-    if($Automatic -and ($entry.schema_version -ne 'agents-knowledge/v4' -or -not $entry.reusable -or $entry.verification.result -ne 'passed')) { throw 'Automatic promotion requires reusable, reviewed v4 knowledge.' }
+    if($Automatic -and ($entry.schema_version -ne 'agents-knowledge/v5' -or -not $entry.reusable -or $entry.verification.result -ne 'passed')) { throw 'Automatic promotion requires reusable, reviewed v5 knowledge.' }
     if($Automatic -and @($entry.sources|Where-Object kind -EQ 'official_document').Count -and -not $VerifyOfficial) { throw 'Automatic official knowledge promotion requires a live source check.' }
     if($entry.status -ne $(if($Action -eq 'Retract'){'retracted'}else{'active'}) -or -not (Test-KnowledgeSources $Root $entry $Now -VerifyOfficial:$VerifyOfficial)) { throw 'Only reviewed, source-verified records may be published.' }
     $relations=@($entry.supersedes);if($entry.ContainsKey('retracts')) { $relations+=@($entry.retracts) }
-    if($Action -eq 'Migrate' -and -not $relations.Count) { throw 'Migration must identify the legacy record it replaces.' }
     if($Action -eq 'Retract' -and -not $entry.retracts.Count) { throw 'Retraction must identify retired IDs.' }
     foreach($id in $relations) {
         if($id -eq $entry.id -or -not(Test-Path -LiteralPath (Resolve-SafePath $Root "$($settings.knowledge_directory)/$id.json"))) { throw "Unknown/self supersession: $id" }

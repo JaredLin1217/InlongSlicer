@@ -1,5 +1,35 @@
 # Operator guide
 
+## Unified CLI
+
+`scripts/agents.ps1` is the stable project interface. `plan` is read-only and
+returns the affected paths, acceptance conditions, intended checks and side
+effects. `validate changed` is the iteration command; `validate checkpoint` is
+the delivery command. `memory`, `task`, `runtime`, `deploy`, `doctor` and
+`package` expose the corresponding v5 workflows with JSON output and stable
+failure reporting. `bin/agents` and `bin/agents.cmd` provide platform shims.
+
+The CLI never enables hooks, writes Codex native memory or sends telemetry.
+
+## v4 migration
+
+Run `scripts/migrate-v4-to-v5.ps1 -Root <consumer> -Action Plan` first. Review
+the digest, managed paths, current hashes and business-file boundary. Apply needs
+the exact `-ExpectedDigest` and a reviewed `-Reason`; it creates a registered
+rollback backup before writing the v5 manifest. A changed managed file, unknown
+path or missing v4 manifest stops the migration.
+
+## Plugin packaging
+
+`plugins/agents-governance/plugin.json` is the portable manifest and
+`.codex-plugin/plugin.json` is its Codex compatibility fallback. The package
+contains skills and local scripts but no MCP server, lifecycle hook, telemetry,
+secret or transcript. The v4 migration schema is included so an extracted
+plugin can perform its guarded migration without a repository-relative
+dependency. Run `scripts/package-plugin.ps1` to create a deterministic ZIP and
+SHA-256 record under registered runtime storage. Hooks remain a separate trusted
+template.
+
 ## Validation and publication
 
 Inspect relevant files and Git before edits. Provider validates this distribution;
@@ -17,13 +47,14 @@ external side effects cannot be reused from prior receipts.
 
 Publication sequence:
 
-1. Run Provider Checkpoint, review individual results and commit source.
+1. Run `scripts/agents.ps1 plan`, review the affected boundary and acceptance
+   conditions, then run one Provider Checkpoint and commit source.
 2. From clean committed source run `scripts/capture-runtime-evidence.ps1`. The
    collector uses the same registry without nesting another validator. Its own
    evidence check is not_applicable during capture; all source checks must pass.
 3. Generation rechecks source stability, validates schema and binds content to
    the commit, including only the declared evidence-file exclusion.
-4. Commit only `docs/evidence/releases/v4.0.0-runtime-evidence.json` as evidence.
+4. Commit only `docs/evidence/releases/v5.0.0-runtime-evidence.json` as evidence.
 5. Run Checkpoint -RequireReleaseReady before publication and freshly verify its
    actual target/remote permissions. Evidence freshness is 30 days, independent
    of retaining the versioned file. Missing/stale/mismatched evidence never passes
@@ -31,14 +62,14 @@ Publication sequence:
 
 ## Knowledge
 
-Use `project-memory.ps1 -Action Recall` before relying on a past finding. Query is
+Use `scripts/agents.ps1 memory recall` before relying on a past finding. Query is
 a string array; Module, Tag, File and Scope narrow it. Expand returns source and
 verification details. Index rebuilds an advisory cache from records.
 Recall checks file hashes and review deadlines by default; official knowledge is
 an as-of snapshot. Add VerifyOfficial for a live content comparison before making
 current OpenAI claims. A network failure suppresses that finding visibly.
 
-Prepare a reviewed v4 proposal using `docs/templates/knowledge-entry.json` inside
+Prepare a reviewed v5 proposal using `docs/templates/knowledge-entry.json` inside
 a registered draft artifact. Fill actual hashes, locators, verification and UTC
 time. `Promote -Automatic` saves only reusable nonsensitive verified knowledge.
 The reviewer must check semantic support; JSON validation alone is insufficient.
@@ -48,8 +79,8 @@ User decisions use an explicit recorded project decision with locator/hash, neve
 an implied authorization from memory. File commit fields are checkout anchors;
 the file SHA-256 proves the reviewed bytes, including an uncommitted snapshot.
 
-Never overwrite an entry. Migrate publishes a reviewed v4 replacement with legacy
-IDs in supersedes. Retract publishes a new retracted record with retracts IDs.
+Never overwrite an entry. A reviewed v5 replacement records legacy IDs in
+supersedes. Retract publishes a new retracted record with retracts IDs.
 Drift/expiry suppresses active facts. Conflicts and duplicate active keys pause
 recall until explicit resolution. Retirement survives stale or unreadable
 replacements. Invalid JSON suspends recall because its retirement scope is unknown.
@@ -68,18 +99,16 @@ updated. Completed external-action records cannot be rewritten or replayed.
 An interrupted pointer is not silently overwritten. Inspect the candidate immutable
 revision, then use task Reconcile with its InputPath, Id, ExpectedRevision,
 ExpectedDigest and a reviewed Reason. Recovery restores only the pointer and
-reports actual state drift; retired v4 tasks never fall back to an old v3 snapshot.
+reports actual state drift; retired v5 tasks never fall back to a historical snapshot.
 
 Resume with an explicit Id. Without Id, multiple active tasks are listed rather
 than chosen by time. Inspect HEAD, index digest, worktree status, boundary hashes,
 receipt hashes and knowledge freshness before action. List does not resume work.
 Complete requires the latest revision and reviewed input, closes the task and
 starts 90 days. Registered receipt dependencies survive their shorter 30-day
-window until all dependent tasks are removed. v3 state remains read-only until
-explicit Migrate; it is retained as migration provenance.
-Migration atomically archives the exact v3 bytes inside the task's registered run,
-then removes only the hash-matching old copy after the v4 pointer is saved. Original
-location/hash stay in the lineage; the archive follows that task's 90-day lifecycle.
+window until all dependent tasks are removed. v4 Consumers are migrated explicitly
+with `scripts/migrate-v4-to-v5.ps1`; the dry-run digest and rollback backup are
+required before Apply. Original locations and hashes stay in migration lineage.
 
 ## Runtime inventory and cleanup
 
@@ -145,7 +174,7 @@ Journals and original bytes are registered pinned backups. Rollback uses the
 transaction Id, validates every original backup and current target hash before
 writes, then restores the full owned boundary. Do not remove a live lock.
 After rollback or deliberate retirement of a committed rollback option, explicitly
-Retire the artifact. v3 journal paths remain readable for recovery.
+Retire the artifact. Historical v4 journal paths are migration input only.
 
 ## Optional native hooks
 
@@ -168,8 +197,8 @@ Hook failures are advisory and visible; native activation is a separate trust st
 Manual equivalents remain available without hooks:
 
 ```powershell
-pwsh -NoProfile -File scripts/project-memory.ps1 -Action Recall -Expand
-pwsh -NoProfile -File scripts/task-state.ps1 -Action Resume -Id <task>
-pwsh -NoProfile -File scripts/runtime-artifacts.ps1 -Action List
+pwsh -NoProfile -File scripts/agents.ps1 memory recall -Expand -Json
+pwsh -NoProfile -File scripts/agents.ps1 task resume -Id <task> -Json
+pwsh -NoProfile -File scripts/agents.ps1 runtime list -Json
 pwsh -NoProfile -File scripts/project-hooks.ps1 -Event SessionStart -InputJson '{}' -ReadOnly
 ```

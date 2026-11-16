@@ -1,28 +1,24 @@
 ---
 name: project-runtime
-description: Register Agents temporary and verification artifacts, preview retention cleanup, or reconcile interrupted runtime work.
+description: Register, inspect, retain, clean and reconcile Agents v5 runtime artifacts safely.
 ---
 
 # Project runtime
 
-Use this for Agents-created scratch, test data, diagnostics, packages, checkpoints
-and rollback backups. Resolve tools through `.agents/managed.json` in a Consumer.
-Read the operator guide's runtime section only when cleaning or reconciling.
+Use `scripts/agents.ps1 runtime` for Agents-created scratch, tests, receipts,
+packages, checkpoints and rollback backups. Register every payload under
+`.agents/runtime/runs/<run-id>` before producing it. State belongs in `state` and
+provenance/deletion history belongs in `ledger`.
 
-Create a run with `runtime-artifacts.ps1 -Action Create -Purpose <purpose>`.
-Register each payload under its `runs/<run-id>` directory before producing data.
-Record dependencies and retention reasons. Close the run with `Complete`, marking
-failed/interrupted work accurately. Supported child processes inherit run-local
-TEMP/TMP through `Invoke-AgentChild`; arbitrary external caches remain outside scope.
+Completed scratch and rebuildable packages use 7 days, receipts and diagnostics
+30 days, and completed task revisions 90 days. Active work, unresolved failures,
+interrupted transactions and rollback dependencies remain protected until an
+explicit reviewed resolution.
 
-Cleanup requires `PlanCleanup`, a saved plan, and its exact digest. `Cleanup`
-rechecks hashes, ownership, links, dependencies and locks before deleting any
-eligible payload. Never clear the runtime root, force changed files into ownership,
-or delete unknown content. Keep active tasks, unresolved failures and rollback
-dependencies pinned. `Retire` requires a reviewed reason after resolution; it
-starts a new retention window. Plan/read-only work may inspect but never clean.
+Cleanup requires a saved plan and exact digest. Recheck ownership, links, hashes,
+dependencies, locks and unknown content before deleting each payload. Preserve
+changed or unknown files; never clear the runtime root. Reconcile staging,
+abandoned locks and interrupted deletion only with an observed digest and reason.
 
-Use `Reconcile` without mutation arguments first. Migrate legacy packages only
-when their managed manifest and complete file list prove ownership. Recover staging
-transactions or abandoned locks with the observed digest and reason; a running
-owner blocks lock removal. See `docs/agents/runtime-policy.json` for 7/30/90 days.
+Supported child processes use a run-local temporary directory. External caches,
+Git state and native Codex state are outside the project runtime contract.

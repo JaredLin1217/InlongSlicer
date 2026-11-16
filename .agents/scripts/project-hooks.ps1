@@ -1,5 +1,5 @@
-#requires -Version 7.0
-param([string]$Root,[string]$InputJson,[ValidateSet('SessionStart','PreCompact','Stop')][string]$Event,[switch]$ReadOnly)
+#requires -Version 7.4
+param([string]$Root,[string]$InputJson,[ValidateSet('SessionStart','PreCompact','PostCompact','Stop')][string]$Event,[switch]$ReadOnly)
 . "$PSScriptRoot/agent-tasks.ps1"
 try {
     if(-not $InputJson) {
@@ -39,7 +39,7 @@ try {
         $text=$context|ConvertTo-Json -Depth 12 -Compress
         if($text.Length -gt 6000) { $text=(@{notice=$context.notice;tasks=@($candidates|Select-Object id,revision,path);warnings=@('Recall summary exceeds output budget; use project-memory Recall -Expand and task-state Resume.')}|ConvertTo-Json -Depth 8 -Compress) }
         $output=@{hookSpecificOutput=@{hookEventName='SessionStart';additionalContext=$text}}
-    } elseif($Event -eq 'PreCompact') {
+    } elseif($Event -in @('PreCompact','PostCompact')) {
         $output=@{systemMessage=$(if($candidates.Count){'Project checkpoint inspection: '+(($warnings|Select-Object -First 4) -join ' ')+' Save any newer user requirements explicitly before compaction.'}else{'No active project checkpoint. Save unfinished work explicitly if needed; compact SessionStart will recall saved state.'})}
     } elseif($warnings.Count) {
         $output=@{systemMessage=($warnings|Select-Object -First 4) -join ' '}
@@ -49,7 +49,7 @@ try {
             $marker=Get-RuntimePath $Root "state/hooks/$id.json"
             if(-not(Test-Path -LiteralPath $marker)) {
                 try {
-                    Write-AgentJson $marker @{schema_version='agents-hook-state/v4';continued_once=$true;utc=[DateTimeOffset]::UtcNow.ToString('o')} -NoClobber -Root $Root
+                    Write-AgentJson $marker @{schema_version='agents-hook-state/v5';continued_once=$true;utc=[DateTimeOffset]::UtcNow.ToString('o')} -NoClobber -Root $Root
                     $output['decision']='block';$output['reason']='Inspect the latest project checkpoint and unregistered artifacts once. Save authorized unfinished state if needed. Preserve unknown files; do not replay external actions, promote knowledge, or clean runtime from this hook.'
                 } catch [IO.IOException] { }
             }

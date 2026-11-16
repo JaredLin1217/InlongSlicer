@@ -6,8 +6,8 @@ $ErrorActionPreference = 'Stop'
 $Root = [IO.Path]::GetFullPath($Root)
 $manifest = Get-Content -LiteralPath (Join-Path $Root '.agents/managed.json') -Raw |
     ConvertFrom-Json -AsHashtable
-if ($manifest.version -ne '4.0.0' -or $manifest.layout -ne 'dot-agents-layout') {
-    throw 'This check expects the reviewed Agents 4.0 dot-layout deployment.'
+if ($manifest.version -ne '5.0.0' -or $manifest.layout -ne 'dot-agents-layout') {
+    throw 'This check expects the reviewed Agents 5.0 dot-agents deployment.'
 }
 if (Test-Path -LiteralPath (Join-Path $Root 'agents.json')) {
     throw 'This product checkout must remain a Consumer, not a distribution Provider.'

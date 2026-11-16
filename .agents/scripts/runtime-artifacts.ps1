@@ -1,4 +1,4 @@
-#requires -Version 7.0
+#requires -Version 7.4
 param([ValidateSet('Create','Register','Complete','List','PlanCleanup','Cleanup','Retire','Reconcile')][string]$Action='List',
     [string]$Root,[string]$RunId,[string]$Id,[string]$Path,[string]$Purpose,[string]$TaskId='',
     [ValidateSet('scratch','package','validation','task','backup')][string]$Category='scratch',
@@ -115,7 +115,7 @@ $result=switch($Action) {
                 Remove-Item -LiteralPath $stage
             }
             $committed=(Get-AgentHash (Resolve-SafePath $Root $start.destination)) -eq $start.sha256
-            Write-AgentJournalFrame $end @{schema_version='agents-write/v4';id=$Id;phase='reconciled';committed=$committed;reason=$Reason;utc=[DateTimeOffset]::UtcNow.ToString('o')}
+            Write-AgentJournalFrame $end @{schema_version='agents-write/v5';id=$Id;phase='reconciled';committed=$committed;reason=$Reason;utc=[DateTimeOffset]::UtcNow.ToString('o')}
             @{reconciled=$Id;destination_matches=$committed;guidance='Inspect destination before resuming; no external action replay.'}
         }
     }

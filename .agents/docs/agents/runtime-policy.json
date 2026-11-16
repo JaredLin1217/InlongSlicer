@@ -1,5 +1,5 @@
 {
-  "schema_version": "agents-runtime-policy/v4",
+  "schema_version": "agents-runtime-policy/v5",
   "days": {"scratch": 7, "package": 7, "validation": 30, "task": 90, "backup": 7},
   "clock": "UTC; retention starts at completion or explicit retirement",
   "protected": ["active tasks", "unresolved failures", "rollback dependencies", "interrupted transactions"],

@@ -1,0 +1,56 @@
+{
+  "schema_version": "agents-knowledge/v5",
+  "id": "first-start-wizard-parallel-loading-20261112",
+  "key": "first-start-wizard-parallel-loading",
+  "type": "fact",
+  "conclusion": "Retired pending a fresh benchmark: the historical first-start timing claim depends on a runtime cache artifact that is no longer available, so it must not be used as current evidence.",
+  "scope": "first-start-web-wizard-initialization",
+  "modules": [
+    "WebGuideDialog",
+    "PresetBundle"
+  ],
+  "tags": [
+    "startup",
+    "wizard",
+    "performance",
+    "parallel-loading",
+    "retired"
+  ],
+  "files": [
+    "src/slic3r/GUI/WebGuideDialog.cpp",
+    "src/libslic3r/PresetBundle.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/WebGuideDialog.cpp",
+      "sha256": "48825a256c16e97ec6a23a513e1d830c25b4fc4b6199215875fbc980d3246449",
+      "commit": "fca00d02962f46eda9b3f2292296de1d7e6112df",
+      "locator": "Current BuildProfileDataFromVendors implementation"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/PresetBundle.cpp",
+      "sha256": "eefc6b7cc1a72ada2dbc600580549a86b9a7fa33c771ef1e5ad980ad121763fa",
+      "commit": "fca00d02962f46eda9b3f2292296de1d7e6112df",
+      "locator": "Current PresetBundle vendor-loading implementation"
+    }
+  ],
+  "verified_utc": "2026-11-12T01:23:52.1541716+00:00",
+  "verification": {
+    "method": "Rechecked current source snapshots and confirmed the historical runtime benchmark artifact is unavailable",
+    "summary": "The old v4 timing result is preserved as lineage but retracted from active knowledge until a fresh benchmark is run.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "retracted",
+  "supersedes": [],
+  "retracts": [
+    "first-start-wizard-parallel-loading-20261103"
+  ],
+  "sensitive": false,
+  "reusable": true
+}

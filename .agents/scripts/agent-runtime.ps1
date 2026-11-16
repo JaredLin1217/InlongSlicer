@@ -71,13 +71,13 @@ function Read-RuntimeArtifacts([string]$Root) {
 function Add-RuntimeEvent([string]$Root,[string]$Id,[string]$Action,$Details) {
     Assert-RuntimeId $Id
     $path=Get-RuntimePath $Root "ledger/events/$([guid]::NewGuid().ToString('N')).json"
-    Write-AgentJson $path @{schema_version='agents-runtime-event/v4';id=$Id;action=$Action;utc=[DateTimeOffset]::UtcNow.ToString('o');details=$Details} -NoClobber -Root $Root
+    Write-AgentJson $path @{schema_version='agents-runtime-event/v5';id=$Id;action=$Action;utc=[DateTimeOffset]::UtcNow.ToString('o');details=$Details} -NoClobber -Root $Root
 }
 function New-AgentRun {
     param([string]$Root,[string]$Purpose,[string]$Creator='Agents',[string]$TaskId='', [Nullable[DateTimeOffset]]$Now)
     if(-not $Purpose) { throw 'Run purpose is required.' }
     $id='run-'+[guid]::NewGuid().ToString('N');$path=".agents/runtime/runs/$id"
-    $run=[ordered]@{schema_version='agents-run/v4';id=$id;path=$path;creator=$Creator;purpose=$Purpose;task_id=$TaskId;
+    $run=[ordered]@{schema_version='agents-run/v5';id=$id;path=$path;creator=$Creator;purpose=$Purpose;task_id=$TaskId;
         created_utc=(Get-RuntimeClock $Now).ToString('o');completed_utc=$null;status='active'}
     [IO.Directory]::CreateDirectory((Resolve-SafePath $Root $path))|Out-Null
     Write-AgentJson (Get-RuntimePath $Root "ledger/runs/$id.json") $run -NoClobber -Root $Root
@@ -100,7 +100,7 @@ function Register-AgentArtifact {
     $full=Resolve-SafePath $Root $Path
     if(-not(Test-Path -LiteralPath $full)) { [IO.Directory]::CreateDirectory($full)|Out-Null }
     $footprint=Get-RuntimeFootprint $Root $Path
-    $entry=[ordered]@{schema_version='agents-artifact/v4';id='artifact-'+[guid]::NewGuid().ToString('N');run_id=$RunId;task_id=$run.task_id;
+    $entry=[ordered]@{schema_version='agents-artifact/v5';id='artifact-'+[guid]::NewGuid().ToString('N');run_id=$RunId;task_id=$run.task_id;
         creator=$Creator;purpose=$Purpose;category=$Category;path=$Path;created_utc=(Get-RuntimeClock $Now).ToString('o');
         completed_utc=$null;expires_utc=$null;status='active';sha256=$footprint.digest;items=$footprint.items;
         dependencies=@($Dependencies);retain_reasons=@($RetainReasons);deleted_utc=$null}
@@ -126,7 +126,8 @@ function Complete-AgentRun {
         })
         foreach($entry in $prepared) { Write-AgentJson (Get-RuntimePath $Root "ledger/artifacts/$($entry.id).json") $entry -Root $Root }
         $run.status=$Status;$run.completed_utc=$clock.ToString('o');Write-AgentJson $runPath $run -Root $Root
-        Add-RuntimeEvent $Root $RunId $Status @{artifacts=@($prepared.id)}
+        $artifactIds=@($prepared|ForEach-Object id)
+        Add-RuntimeEvent $Root $RunId $Status @{artifacts=$artifactIds}
         return $run
     } finally { Exit-RuntimeLock $lock }
 }
@@ -218,7 +219,7 @@ function Get-RuntimeCleanupPlan {
             $candidates.Add(@{id=$entry.id;path=$entry.path;sha256=$entry.sha256;record_sha256=(Get-AgentHash (Get-RuntimePath $Root "ledger/artifacts/$($entry.id).json"));state_pointers=$pointers})
         } catch { $blocked.Add($_.Exception.Message) }
     }
-    $plan=[ordered]@{schema_version='agents-cleanup-plan/v4';root=[IO.Path]::GetFullPath($Root);as_of_utc=$clock.ToString('o');
+    $plan=[ordered]@{schema_version='agents-cleanup-plan/v5';root=[IO.Path]::GetFullPath($Root);as_of_utc=$clock.ToString('o');
         candidates=@($candidates.ToArray()|Sort-Object { $_.id });blocked=@($blocked.ToArray()|Sort-Object -Unique)}
     $plan['digest']=Get-TextHash (ConvertTo-AgentCanonicalJson $plan)
     return $plan

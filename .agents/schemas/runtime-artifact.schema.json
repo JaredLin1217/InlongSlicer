@@ -3,7 +3,7 @@
   "type": "object", "additionalProperties": false,
   "required": ["schema_version", "id", "run_id", "task_id", "creator", "purpose", "category", "path", "created_utc", "completed_utc", "expires_utc", "status", "sha256", "items", "dependencies", "retain_reasons", "deleted_utc"],
   "properties": {
-    "schema_version": {"const": "agents-artifact/v4"},
+    "schema_version": {"const": "agents-artifact/v5"},
     "id": {"type": "string", "pattern": "^artifact-[a-f0-9]{32}$"},
     "run_id": {"type": "string", "pattern": "^run-[a-f0-9]{32}$"},
     "task_id": {"type": "string"}, "creator": {"type": "string", "minLength": 1}, "purpose": {"type": "string", "minLength": 1},

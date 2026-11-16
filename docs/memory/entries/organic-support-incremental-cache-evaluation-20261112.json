@@ -1,0 +1,47 @@
+{
+  "schema_version": "agents-knowledge/v5",
+  "id": "organic-support-incremental-cache-evaluation-20261112",
+  "key": "organic-support-incremental-cache-evaluation",
+  "type": "fact",
+  "conclusion": "Retired pending a fresh benchmark: the historical organic-support performance measurements depend on runtime evidence that is no longer available, so they must not be used as current evidence.",
+  "scope": "organic-support-performance",
+  "modules": [
+    "libslic3r/Support"
+  ],
+  "tags": [
+    "organic-support",
+    "performance",
+    "cache",
+    "validation",
+    "retired"
+  ],
+  "files": [
+    "src/libslic3r/Support/TreeSupport3D.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/libslic3r/Support/TreeSupport3D.cpp",
+      "sha256": "f3724ddca9df7412f2e54a1a583b778c62ac0bb9bcb0637ac5d2c1047ef0b44e",
+      "commit": "fca00d02962f46eda9b3f2292296de1d7e6112df",
+      "locator": "Current organic support implementation"
+    }
+  ],
+  "verified_utc": "2026-11-12T01:23:52.1541716+00:00",
+  "verification": {
+    "method": "Rechecked the current support source snapshot and confirmed the historical runtime benchmark artifacts are unavailable",
+    "summary": "The old v4 performance result is preserved as lineage but retracted from active knowledge until a fresh benchmark is run.",
+    "result": "passed",
+    "reviewed_by": "Codex"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "retracted",
+  "supersedes": [],
+  "retracts": [
+    "organic-support-incremental-cache-evaluation"
+  ],
+  "sensitive": false,
+  "reusable": true
+}

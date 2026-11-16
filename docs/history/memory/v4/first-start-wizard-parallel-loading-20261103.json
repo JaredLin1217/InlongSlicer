@@ -1,0 +1,53 @@
+{
+  "schema_version": "agents-knowledge/v4",
+  "id": "first-start-wizard-parallel-loading-20261103",
+  "key": "first-start-wizard-parallel-loading",
+  "type": "fact",
+  "conclusion": "The setup wizard's first profile build should use PresetBundle::load_vendors inside a bounded task arena rather than the legacy serial per-vendor loop. Four workers reduced the measured first-start profile build on the Windows host from about 23 seconds to about 11.9 seconds; unrestricted parallelism was slower. The existing ordered merge and cancellation behavior is retained. The second start used the existing profile cache in about 0.38 seconds, and normalized profile JSON was identical.",
+  "scope": "first-start-web-wizard-initialization",
+  "modules": [
+    "WebGuideDialog",
+    "PresetBundle"
+  ],
+  "tags": [
+    "startup",
+    "wizard",
+    "performance",
+    "parallel-loading"
+  ],
+  "files": [
+    "src/slic3r/GUI/WebGuideDialog.cpp",
+    "src/libslic3r/PresetBundle.cpp"
+  ],
+  "sources": [
+    {
+      "kind": "file_snapshot",
+      "path": "src/slic3r/GUI/WebGuideDialog.cpp",
+      "sha256": "48825a256c16e97ec6a23a513e1d830c25b4fc4b6199215875fbc980d3246449",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "BuildProfileDataFromVendors bounded load_vendors call; uncommitted worktree bytes"
+    },
+    {
+      "kind": "file_snapshot",
+      "path": ".agents/runtime/runs/run-4f3453d92fc04b29bcda0fc275808c4a/parallel4/cache/wizard_profile_data.json",
+      "sha256": "0b02834e6ae946b9532a25d3f675bf5ca119fa134b82507b20223fa433ee8aa2",
+      "commit": "ac0ee58db820cd49eeb813e6a9b861eec9518882",
+      "locator": "Four-worker first-start cache with 463 models, 1247 machines, 6720 filaments and 3259 processes; normalized equality with serial cache"
+    }
+  ],
+  "verified_utc": "2026-11-03T23:20:00Z",
+  "verification": {
+    "method": "Release build, two disposable first-start measurements, cached restart measurement, normalized JSON comparison, five web contract tests, and Consumer Changed validation",
+    "summary": "Serial baseline was about 23 seconds. Four-worker first start was about 11.9 seconds and cached restart was about 0.38 seconds. Model, machine, filament and process content matched after normalizing the disposable data-directory prefix. Five web UI contract tests passed and the final Release target built. Consumer Changed passed at .agents/runtime/runs/run-6ac537f39e50429699eeb821224dc183/validation/report.json.",
+    "result": "passed",
+    "reviewed_by": "Kimi Code"
+  },
+  "freshness": {
+    "review_after_utc": null
+  },
+  "status": "active",
+  "supersedes": [],
+  "retracts": [],
+  "sensitive": false,
+  "reusable": true
+}

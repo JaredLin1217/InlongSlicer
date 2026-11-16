@@ -1,104 +1,141 @@
 {
-  "schema_version": "agents-sources/v3",
+  "schema_version": "agents-sources/v5",
+  "reviewed_utc": "2026-11-04T16:00:00Z",
   "sources": [
     {
       "id": "model",
       "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
-      "checked": "2026-10-08",
+      "retrieved_url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol.md",
+      "checked": "2026-11-04",
       "refresh_interval_days": 30,
-      "next_review_due": "2026-11-07",
-      "boundary": "GPT-6.1 Sol is the review model. Responses API for tool calls; API reasoning controls are separate from Codex host settings.",
-      "drift_risk": "Model guidance and hosted controls can change.",
+      "next_review_due": "2026-12-04",
+      "content_sha256": "ebcc1b0ae6c729a64411dacf303c0ae8b91b11a9be176dc8997b2652bec4b9b0",
+      "boundary": "GPT-6.1 Sol supports low, medium, high, xhigh and max reasoning. Tool calling requires Responses; API capability does not configure the Codex host.",
+      "drift_risk": "Model guidance, pricing and hosted controls can change.",
       "topics": [
         "model",
         "configuration"
       ]
     },
     {
-      "id": "configuration",
-      "url": "https://learn.chatgpt.com/docs/config-file/config-reference",
-      "checked": "2026-10-08",
+      "id": "prompting",
+      "url": "https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-sol",
+      "retrieved_url": "https://developers.openai.com/api/docs/guides/latest-model.md",
+      "checked": "2026-11-04",
       "refresh_interval_days": 30,
-      "next_review_due": "2026-11-07",
-      "boundary": "Project settings only; preserve user permissions and global settings.",
-      "drift_risk": "CLI and desktop versions may expose different keys.",
+      "next_review_due": "2026-12-04",
+      "content_sha256": "746dd4b734bbc9f0221710c3aabaf5ffc4a6e1e03f3538cdbea5bd0a9ec4d828",
+      "boundary": "GPT-6 family prompting is a starting point based on Astra observations; evaluate the selected model and workload. Preserve Sol API migration rules.",
+      "drift_risk": "Family and model-specific prompting guidance can change.",
       "topics": [
-        "configuration"
+        "prompting",
+        "model"
+      ]
+    },
+    {
+      "id": "agents-md",
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
+      "retrieved_url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md.md",
+      "checked": "2026-11-04",
+      "refresh_interval_days": 90,
+      "next_review_due": "2027-02-02",
+      "content_sha256": "9d1f87a2d1cb55b4782b95abe710692b35b9659789c2db31a22c7074a3383e8e",
+      "boundary": "Instruction files merge from global and project roots downward; overrides and fallback names are host behavior, not project permission.",
+      "drift_risk": "Native loading order and size defaults depend on host version.",
+      "topics": [
+        "rules",
+        "instruction-discovery"
       ]
     },
     {
       "id": "skills",
       "url": "https://learn.chatgpt.com/docs/build-skills",
-      "checked": "2026-10-08",
+      "retrieved_url": "https://learn.chatgpt.com/docs/build-skills.md",
+      "checked": "2026-11-04",
       "refresh_interval_days": 90,
-      "next_review_due": "2027-01-06",
-      "boundary": "Use native progressive disclosure; skills do not add tool authority.",
-      "drift_risk": "Skill metadata limits and discovery may change.",
+      "next_review_due": "2027-02-02",
+      "content_sha256": "95b5ef4d0581d9eeeee342ef4718e77ed7574fe9c61ae28e1c2bffa4c6bdb411",
+      "boundary": "Skills use progressive disclosure; concise descriptions improve discovery. Plugins are the installable distribution unit.",
+      "drift_risk": "Skill metadata, plugin packaging and discovery may change.",
       "topics": [
-        "skills"
+        "skills",
+        "plugins"
+      ]
+    },
+    {
+      "id": "plugins",
+      "url": "https://developers.openai.com/plugins/build/plugins",
+      "retrieved_url": "https://developers.openai.com/plugins/build/plugins",
+      "checked": "2026-11-04",
+      "refresh_interval_days": 90,
+      "next_review_due": "2027-02-02",
+      "content_sha256": "5d21c324eb432a6d6fcfe9bb7781177f1e43106232f6e178c91dcd1bfc578302",
+      "boundary": "Use a portable root plugin.json; a Codex .codex-plugin manifest is a compatibility fallback. Keep hooks separate from public plugin distribution.",
+      "drift_risk": "Plugin schemas, public eligibility and marketplace rules may change.",
+      "topics": [
+        "plugins",
+        "distribution"
+      ]
+    },
+    {
+      "id": "hooks",
+      "url": "https://learn.chatgpt.com/docs/hooks",
+      "retrieved_url": "https://learn.chatgpt.com/docs/hooks.md",
+      "checked": "2026-11-04",
+      "refresh_interval_days": 30,
+      "next_review_due": "2026-12-04",
+      "content_sha256": "3aacad763bc074bf4f3521dc942ff445fb4ad90032fdb20d379074dc02a02030",
+      "boundary": "Hooks receive JSON events and require trust review. Use stable fields and do not parse transcript internals.",
+      "drift_risk": "Event schemas, trust behavior and lifecycle support can change.",
+      "topics": [
+        "hooks",
+        "recovery"
       ]
     },
     {
       "id": "memory",
       "url": "https://learn.chatgpt.com/docs/customization/memories",
-      "checked": "2026-10-08",
+      "retrieved_url": "https://learn.chatgpt.com/docs/customization/memories.md",
+      "checked": "2026-11-04",
       "refresh_interval_days": 90,
-      "next_review_due": "2027-01-06",
-      "boundary": "Native memory is not the sole durable store or a guarantee of recall.",
-      "drift_risk": "Generation availability and scope may change.",
+      "next_review_due": "2027-02-02",
+      "content_sha256": "1776e4e65a523214e7a3c428e57f002348c096f2eec6bf2fe5583d968cdc43a3",
+      "boundary": "Native Codex memories are local generated recall state; required rules and project knowledge remain checked-in files.",
+      "drift_risk": "Memory stores, controls and extraction behavior may change.",
       "topics": [
-        "memory"
+        "memory",
+        "privacy"
+      ]
+    },
+    {
+      "id": "configuration",
+      "url": "https://learn.chatgpt.com/docs/config-file/config-reference",
+      "retrieved_url": "https://learn.chatgpt.com/docs/config-file/config-reference.md",
+      "checked": "2026-11-04",
+      "refresh_interval_days": 90,
+      "next_review_due": "2027-02-02",
+      "content_sha256": "54cbd27aa84fddd4a35dd801dfd2850d988611e47d8f16c007d6e3210a50cd76",
+      "boundary": "Project settings remain user-controlled; Agents does not edit global Codex configuration or force a model.",
+      "drift_risk": "CLI, desktop and managed configuration keys can differ.",
+      "topics": [
+        "configuration",
+        "privacy"
       ]
     },
     {
       "id": "subagents",
       "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
-      "checked": "2026-10-08",
+      "retrieved_url": "https://learn.chatgpt.com/docs/agent-configuration/subagents.md",
+      "checked": "2026-11-04",
       "refresh_interval_days": 90,
-      "next_review_due": "2027-01-06",
-      "boundary": "Delegate only with current authorization and available tools; count worker usage.",
-      "drift_risk": "Available tools and host concurrency differ.",
+      "next_review_due": "2027-02-02",
+      "content_sha256": "e7469d41c5a18a4ee66ee40ca4a9a2617a697e42554a0198ac4481e1e597357f",
+      "boundary": "Delegation is an authorized task choice; available host capacity and project ownership still govern use.",
+      "drift_risk": "Available tools, profiles and concurrency differ by host.",
       "topics": [
-        "subagents"
+        "subagents",
+        "coordination"
       ]
-    },
-    {
-      "checked": "2026-10-08",
-      "boundary": "Family guidance is a starting point; Astra observations are not measured Sol results.",
-      "refresh_interval_days": 30,
-      "drift_risk": "Family/model-specific prompting guidance may change.",
-      "topics": [
-        "prompting",
-        "model"
-      ],
-      "url": "https://developers.openai.com/api/docs/guides/latest-model",
-      "id": "prompting",
-      "next_review_due": "2026-11-07"
-    },
-    {
-      "checked": "2026-10-08",
-      "boundary": "Keep mandatory project conventions in versioned rules; respect native discovery and instruction priority.",
-      "refresh_interval_days": 90,
-      "drift_risk": "Native loading behavior depends on host version.",
-      "topics": [
-        "rules"
-      ],
-      "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
-      "id": "agents-md",
-      "next_review_due": "2027-01-06"
-    },
-    {
-      "checked": "2026-10-08",
-      "boundary": "JSON event interface and native trust review; advisory templates do not parse full transcripts or enforce isolation.",
-      "refresh_interval_days": 30,
-      "drift_risk": "Hooks schema and local/cloud support can change.",
-      "topics": [
-        "hooks",
-        "recovery"
-      ],
-      "url": "https://learn.chatgpt.com/docs/hooks",
-      "id": "hooks",
-      "next_review_due": "2026-11-07"
     }
   ]
 }

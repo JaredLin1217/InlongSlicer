@@ -46,6 +46,46 @@ public:
         return result;
     }
 
+    // Build a post-toolpath plan from the actual SupportLayer Z records.  The
+    // normal-interface template can insert exact contact planes which are not
+    // present in the organic branch grid; bearing validation must still see
+    // those planes instead of silently skipping them through find_exact().
+    static OrganicSupportLayerPlan from_support_layers(
+        const SlicingParameters &slicing_params,
+        const TreeSupportSettings &config,
+        const std::vector<SupportLayer *> &support_layers,
+        size_t source_layer_count)
+    {
+        OrganicSupportLayerPlan result;
+        if (support_layers.empty() || source_layer_count == 0)
+            return result;
+        std::vector<const SupportLayer *> sorted;
+        sorted.reserve(support_layers.size());
+        for (const SupportLayer *layer : support_layers)
+            if (layer != nullptr && layer->has_extrusions())
+                sorted.push_back(layer);
+        std::sort(sorted.begin(), sorted.end(), [](const SupportLayer *lhs, const SupportLayer *rhs) {
+            return lhs->print_z < rhs->print_z;
+        });
+        sorted.erase(std::unique(sorted.begin(), sorted.end(), [](const SupportLayer *lhs, const SupportLayer *rhs) {
+            return std::abs(lhs->print_z - rhs->print_z) <= EPSILON;
+        }), sorted.end());
+        result.m_entries.reserve(sorted.size());
+        for (size_t idx = 0; idx < sorted.size(); ++idx) {
+            const SupportLayer &layer = *sorted[idx];
+            const coordf_t print_z = layer.print_z;
+            const coordf_t bottom_z = idx == 0 ? std::max<coordf_t>(0., print_z - layer.height) :
+                sorted[idx - 1]->print_z;
+            const coordf_t height = print_z - bottom_z > EPSILON ? print_z - bottom_z : layer.height;
+            LayerIndex source_begin = layer_idx_floor(slicing_params, config, bottom_z + EPSILON);
+            LayerIndex source_end = layer_idx_ceil(slicing_params, config, print_z - EPSILON);
+            source_begin = std::clamp<LayerIndex>(source_begin, 0, LayerIndex(source_layer_count - 1));
+            source_end = std::clamp<LayerIndex>(source_end, source_begin, LayerIndex(source_layer_count - 1));
+            result.m_entries.push_back({print_z, bottom_z, height, source_begin, source_end});
+        }
+        return result;
+    }
+
     static std::optional<OrganicSupportLayerPlan> independent(
         const SlicingParameters              &slicing_params,
         const TreeSupportSettings            &config,

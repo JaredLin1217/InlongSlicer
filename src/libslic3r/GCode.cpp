@@ -8836,22 +8836,30 @@ std::string GCode::extrude_path(const ExtrusionPath& path, const std::string& de
     if (m_config.support_style == smsTreeOrganic && path.role() == erSupportMaterialInterface &&
         path.width > 0.f && path.polyline.points.size() >= 2) {
         const double maximum_segment = scaled<double>(4. * double(path.width));
-        size_t long_segment = path.polyline.points.size();
-        for (size_t point = 1; point < path.polyline.points.size(); ++point) {
-            const double segment_length =
-                (path.polyline.points[point] - path.polyline.points[point - 1]).cast<double>().norm();
-            if (segment_length > maximum_segment) { long_segment = point; break; }
-        }
-        if (long_segment < path.polyline.points.size()) {
-            const double minimum_path = scaled<double>(3.5);
-            Polyline3 prefix;
-            prefix.points.assign(path.polyline.points.begin(), path.polyline.points.begin() + long_segment);
-            if (prefix.length() >= minimum_path)
-                gcode += this->_extrude(ExtrusionPath(std::move(prefix), path), description, speed);
-            Polyline3 suffix;
-            suffix.points.assign(path.polyline.points.begin() + long_segment, path.polyline.points.end());
-            if (suffix.length() >= minimum_path)
-                gcode += this->_extrude(ExtrusionPath(std::move(suffix), path), description, speed);
+        if (maximum_segment > 0.) {
+            // Keep the organic-interface segment limit, but subdivide every
+            // long segment instead of dropping it at the split boundary.  The
+            // old prefix/suffix split omitted the complete segment between
+            // points [long_segment - 1] and [long_segment], which removed
+            // large portions of a copied ordinary-support interface from the
+            // emitted G-code.
+            Polyline3 segmented;
+            segmented.points.reserve(path.polyline.points.size());
+            segmented.points.push_back(path.polyline.points.front());
+            for (size_t point = 1; point < path.polyline.points.size(); ++point) {
+                const Point3 &from = path.polyline.points[point - 1];
+                const Point3 &to = path.polyline.points[point];
+                const double segment_length = (to - from).cast<double>().norm();
+                const size_t pieces = std::max<size_t>(1, size_t(std::ceil(segment_length / maximum_segment)));
+                for (size_t piece = 1; piece <= pieces; ++piece) {
+                    const double fraction = double(piece) / double(pieces);
+                    segmented.points.emplace_back(
+                        coord_t(std::llround(double(from.x()) + fraction * double(to.x() - from.x()))),
+                        coord_t(std::llround(double(from.y()) + fraction * double(to.y() - from.y()))),
+                        coord_t(std::llround(double(from.z()) + fraction * double(to.z() - from.z()))));
+                }
+            }
+            gcode = this->_extrude(ExtrusionPath(std::move(segmented), path), description, speed);
         } else
             gcode = this->_extrude(path, description, speed);
     } else
